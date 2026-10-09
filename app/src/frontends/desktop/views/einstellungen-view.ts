@@ -41,6 +41,7 @@ import { showToast } from '../toast.ts';
 import type { SettingsHost } from './einstellungen/rows.ts';
 import { buildDmsGroup, buildInvoicingGroup } from './einstellungen/dms-invoicing.ts';
 import { buildBelegeMailGroup } from './einstellungen/belege-mail.ts';
+import { buildBackupGroup, buildGeneralGroup } from './einstellungen/allgemein.ts';
 import { buildMailGroup } from './einstellungen/mail-versand.ts';
 import { buildMailTemplatesGroup } from './einstellungen/mail-vorlagen.ts';
 import { buildKinderGroup } from './einstellungen/kinder.ts';
@@ -73,6 +74,8 @@ const GROUP_LABEL: Record<McpGroup, string> = {
 export class BhEinstellungenView extends Adw.Bin {
     declare private _scroller: Gtk.ScrolledWindow;
     declare private _save_banner: Adw.Banner;
+    declare private _general_group: Adw.PreferencesGroup;
+    declare private _backup_group: Adw.PreferencesGroup;
     declare private _entity_groups: Gtk.Box;
     declare private _lernmodus_group: Adw.PreferencesGroup;
     declare private _sync_group: Adw.PreferencesGroup;
@@ -88,6 +91,8 @@ export class BhEinstellungenView extends Adw.Bin {
                 InternalChildren: [
                     'scroller',
                     'save_banner',
+                    'general_group',
+                    'backup_group',
                     'entity_groups',
                     'lernmodus_group',
                     'sync_group',
@@ -102,6 +107,7 @@ export class BhEinstellungenView extends Adw.Bin {
 
     private settings: AppSettings | null = null;
     private globalBuilt = false;
+    private userBuilt = false;
     private entity: AppEntity | null = null;
     private year = new Date().getFullYear();
     /** True while programmatically populating rows — suppresses the notify/apply-driven persist. */
@@ -126,6 +132,12 @@ export class BhEinstellungenView extends Adw.Bin {
     reload(entity: AppEntity, year: number): void {
         this.entity = entity;
         this.year = year;
+        if (!this.userBuilt) {
+            // Independent of the manifest — see einstellungen/allgemein.ts.
+            buildGeneralGroup(this._general_group);
+            buildBackupGroup(this._backup_group);
+            this.userBuilt = true;
+        }
         this.buildGlobalRows();
         this.buildEntityGroups(entity, year);
         applyScrollHook(this._scroller);

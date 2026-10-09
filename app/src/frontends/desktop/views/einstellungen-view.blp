@@ -25,6 +25,16 @@ template $BhEinstellungenView: Adw.Bin {
 
         // Per-entity groups (Anbindungen · Stammdaten) — built + rebuilt programmatically per active
         // entity/year in einstellungen-view.ts. Empty here; the global groups below build once.
+        // Per-user groups (settings.json, not the manifest) — filled by einstellungen/allgemein.ts.
+        Adw.PreferencesGroup general_group {
+          title: _("General");
+        }
+
+        Adw.PreferencesGroup backup_group {
+          title: _("Backup");
+          description: _("A copy of your configuration, transactions and receipts. Restoring is done by hand, see the manual.");
+        }
+
         Gtk.Box entity_groups {
           orientation: vertical;
           spacing: 18;
