@@ -1,7 +1,7 @@
 /**
  * <BhGlossaryHelp> — the native counterpart of the web `<bh-help>`: a small "?" Gtk.MenuButton that
- * opens a Gtk.Popover with a term's plain-German explanation (title in bold + text) from the shared
- * {@link GLOSSARY}. It is the Lernmodus affordance — VISIBLE only when Lernmodus is on AND the term
+ * opens a Gtk.Popover with a term's plain-language explanation (title in bold + text) from the shared
+ * glossary, in the UI language. It is the Lernmodus affordance — VISIBLE only when Lernmodus is on AND the term
  * exists in the glossary, so a view can unconditionally attach one next to a label and it simply
  * stays hidden otherwise.
  *
@@ -19,9 +19,9 @@ import type Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 import GObject from '@girs/gobject-2.0';
 
-import { GLOSSARY } from '../../../core/lib/glossary.ts';
+import { glossaryFor } from '../../../core/lib/glossary.ts';
 import { loadAppSettings } from '../../../core/config/index.ts';
-import { _ } from '../i18n.ts';
+import { _, uiLanguage } from '../i18n.ts';
 
 import Template from './glossary-help.blp';
 
@@ -47,7 +47,7 @@ export class BhGlossaryHelp extends Gtk.MenuButton {
 
     /** Point the button at another glossary term (fills the popover; hides the button for unknown terms). */
     setTerm(term: string): void {
-        const entry = GLOSSARY[term];
+        const entry = glossaryFor(uiLanguage())[term];
         this.hasEntry = !!entry;
         this._title_label.set_label(entry?.title ?? '');
         this._text_label.set_label(entry?.text ?? '');

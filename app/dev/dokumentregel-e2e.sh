@@ -68,7 +68,7 @@ launch() {
   echo '{"name":"dokumentregel-e2e","private":true}' > "$T/package.json"
   ID="eu.jumplink.Steuererklaerung.E2e$$x$RANDOM"
   OBJ="/$(printf '%s' "$ID" | tr . /)/devtools"
-  ( cd "$T" && exec setsid env -i PATH="$PATH" HOME="$T/home" XDG_CONFIG_HOME="$T/cfg" XDG_DATA_HOME="$T/data" \
+  ( cd "$T" && exec setsid env -i LANG="${E2E_LANG:-de_DE.UTF-8}" PATH="$PATH" HOME="$T/home" XDG_CONFIG_HOME="$T/cfg" XDG_DATA_HOME="$T/data" \
       XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-}" DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-}" \
       WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}" DISPLAY="${DISPLAY:-:0}" \
       DOTENV_CONFIG_PATH="$T/empty.env" PAPERLESS_BASE_URL=http://127.0.0.1:$STUB_PORT PAPERLESS_API_TOKEN=demo GJSIFY_DEVTOOLS=1 STEUER_APP_ID="$ID" STEUER_DEMO=1 \
@@ -111,7 +111,7 @@ shot() {
 
 # The CLI against the same isolated demo copy as the app.
 cli() {
-  ( cd "$T" && env -i PATH="$PATH" HOME="$T/home" XDG_CONFIG_HOME="$T/cfg" XDG_DATA_HOME="$T/data" \
+  ( cd "$T" && env -i LANG="${E2E_LANG:-de_DE.UTF-8}" PATH="$PATH" HOME="$T/home" XDG_CONFIG_HOME="$T/cfg" XDG_DATA_HOME="$T/data" \
       DOTENV_CONFIG_PATH="$T/empty.env" STEUER_DEMO=1 STEUER_WORKSPACE="$T/demo/steuererklaerung.json" \
       TRANSACTIONS_DATA_DIR="$T/demo/transactions-data" LEDGER_DB_PATH="$T/demo/ledger.db" \
       "$GJSIFY" run "$APP/dist/steuer.gjs.mjs" "$@" )

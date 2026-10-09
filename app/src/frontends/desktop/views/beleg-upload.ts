@@ -22,6 +22,7 @@ import { RECEIPT_FORMATS_LABEL, RECEIPT_PATTERNS, storeReceipt } from '../../../
 import { dmsProviderFor } from '../data/dms.ts';
 import type { AppEntity } from '../entities.ts';
 import { markup } from './util.ts';
+import { _, _n, fmt } from '../i18n.ts';
 
 export interface UploadOutcome {
     stored: number;
@@ -79,12 +80,12 @@ export async function pickAndStoreReceipts(
  * outcome, not an error to report.
  */
 async function pickReceiptFiles(parent: Gtk.Window): Promise<string[]> {
-    const filter = new Gtk.FileFilter({ name: `Belege (${RECEIPT_FORMATS_LABEL})` });
+    const filter = new Gtk.FileFilter({ name: fmt(_('Receipts ({formats})'), { formats: RECEIPT_FORMATS_LABEL }) });
     for (const pattern of RECEIPT_PATTERNS) filter.add_pattern(pattern);
     const filters = new Gio.ListStore({ itemType: Gtk.FileFilter.$gtype });
     filters.append(filter);
 
-    const dialog = new Gtk.FileDialog({ title: 'Beleg(e) hinzufügen', filters, defaultFilter: filter });
+    const dialog = new Gtk.FileDialog({ title: _('Add receipt(s)'), filters, defaultFilter: filter });
 
     return new Promise<string[]>((resolve) => {
         dialog.open_multiple(parent, null, (source, result) => {
@@ -106,10 +107,10 @@ async function pickReceiptFiles(parent: Gtk.Window): Promise<string[]> {
 /** One line summarising an upload, for a toast. */
 export function summarizeUpload(outcome: UploadOutcome): string {
     if (outcome.failed.length === 0) {
-        return outcome.stored === 1 ? '1 Beleg hinzugefügt' : `${outcome.stored} Belege hinzugefügt`;
+        return fmt(_n('{n} receipt added', '{n} receipts added', outcome.stored), { n: outcome.stored });
     }
-    if (outcome.stored === 0) return `Kein Beleg hinzugefügt (${outcome.failed.length} fehlgeschlagen)`;
-    return `${outcome.stored} hinzugefügt, ${outcome.failed.length} fehlgeschlagen`;
+    if (outcome.stored === 0) return fmt(_('No receipt added ({failed} failed)'), { failed: outcome.failed.length });
+    return fmt(_('{stored} added, {failed} failed'), { stored: outcome.stored, failed: outcome.failed.length });
 }
 
 /**
@@ -123,12 +124,9 @@ export function presentUploadFailures(parent: Gtk.Widget, outcome: UploadOutcome
     if (outcome.failed.length === 0) return;
     const lines = outcome.failed.map((f) => `• ${f.filename}: ${f.reason}`).join('\n');
     const dialog = new Adw.AlertDialog({
-        heading:
-            outcome.stored > 0
-                ? 'Nicht alle Belege konnten gespeichert werden'
-                : 'Beleg konnte nicht gespeichert werden',
+        heading: outcome.stored > 0 ? _('Not all receipts could be saved') : _('Receipt could not be saved'),
         body: markup(lines),
     });
-    dialog.add_response('close', 'Schließen');
+    dialog.add_response('close', _('Close'));
     dialog.present(parent);
 }

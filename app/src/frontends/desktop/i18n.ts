@@ -23,10 +23,17 @@
  *
  * The binding itself is `initLocale()` from `@gjsify/adwaita-app`, which also owns the
  * empty-`GJSIFY_LOCALE_DIR` guard and the system-directory default.
+ *
+ * Which language: `setlocale(LC_ALL, "")` inside `initLocale()` reads the usual POSIX chain —
+ * `LANGUAGE` (a priority list, ignored while the locale itself is `C`), then `LC_ALL`,
+ * `LC_MESSAGES`, `LANG`. A `de_*` session therefore gets `de.po`, everything else English.
  */
 
+import GLib from '@girs/glib-2.0';
 import { initLocale } from '@gjsify/adwaita-app';
 import Gettext from 'gettext';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 /** The gettext domain. Deliberately a literal — see the note above about `STEUER_APP_ID`. */
 export const TEXT_DOMAIN = 'eu.jumplink.Steuererklaerung';
@@ -37,7 +44,23 @@ export const TEXT_DOMAIN = 'eu.jumplink.Steuererklaerung';
  * Call once, before any widget is built: a label already realised keeps the string it was given.
  */
 export function initI18n(): string | undefined {
-    return initLocale(TEXT_DOMAIN).localeDir;
+    return initLocale(TEXT_DOMAIN, { fallbackDir: devLocaleDir() }).localeDir;
+}
+
+/**
+ * `<app>/dist/locale` when the app runs straight from the build tree, else `undefined`.
+ *
+ * `gjsify run dist/app/…` sets no `GJSIFY_LOCALE_DIR` (only the `gjsify ship` launcher does), so
+ * without this the binding fell through to `/usr/share/locale`, where nothing of ours lives — and a
+ * German developer saw every converted string in English while the shipped package was correct.
+ * Checked for existence, so an installed copy without the tree keeps the system default.
+ */
+function devLocaleDir(): string | undefined {
+    const fileUrl = import.meta.url;
+    if (!fileUrl.startsWith('file:') || !fileUrl.includes('/dist/')) return undefined;
+    // bundled: <app>/dist/app/steuer-app.gjs.mjs → <app>/dist/locale
+    const dir = join(dirname(fileURLToPath(fileUrl)), '..', 'locale');
+    return GLib.file_test(dir, GLib.FileTest.IS_DIR) ? dir : undefined;
 }
 
 /** Translate one string. */
@@ -63,4 +86,27 @@ export function _n(singular: string, plural: string, n: number): string {
  */
 export function _p(context: string, msgid: string): string {
     return Gettext.dpgettext(TEXT_DOMAIN, context, msgid);
+}
+
+/**
+ * Fill `{name}` placeholders in an already translated string.
+ *
+ * Named, not `%s`, so a translation can reorder them — German puts the verb last and the count
+ * elsewhere than English. `dev/check-i18n.js` verifies that every msgstr keeps the msgid's names.
+ */
+export function fmt(template: string, values: Record<string, string | number>): string {
+    return template.replace(/\{(\w+)\}/g, (whole, name: string) => (name in values ? String(values[name]) : whole));
+}
+
+/**
+ * The language the active catalogue speaks: `en` with no catalogue, else the translator's answer.
+ *
+ * For content that is not a msgid but a whole text set — the glossary — so it follows the UI
+ * language exactly, including the case "German session, catalogue not compiled" (English UI,
+ * English glossary) that a look at `LANG` would get wrong.
+ */
+export function uiLanguage(): string {
+    // TRANSLATORS: Not shown. The two-letter code of THIS catalogue's language ("de" in de.po);
+    // it picks the matching glossary of tax terms.
+    return _p('language code', 'en');
 }

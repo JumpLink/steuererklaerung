@@ -17,6 +17,7 @@ import { herkunftSatz } from '../../../core/dokumentregeln/regeln.ts';
 import type { DmsDocument } from '../../../core/presenters/belege.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 import { markup } from './util.ts';
+import { _ } from '../i18n.ts';
 
 function baseRow(title: string, icon: string): Adw.ActionRow {
     const row = new Adw.ActionRow({ title: markup(title) });
@@ -36,15 +37,15 @@ export function regelHerkunftRow(doc: Pick<DmsDocument, 'ruleOrigin'>): Adw.Acti
 
 /** The Paperless row: a placeholder now, the explanation once Paperless has answered. */
 export function paperlessZuordnungRow(entityId: string, doc: Pick<DmsDocument, 'id'>): Adw.ActionRow {
-    const row = baseRow('Paperless-Zuordnung …', 'emblem-system-symbolic');
-    row.set_subtitle('Prüfe, welche Paperless-Regel gegriffen hat');
+    const row = baseRow(_('Paperless assignment …'), 'emblem-system-symbolic');
+    row.set_subtitle(_('Checking which Paperless rule applied'));
     void paperlessZuordnungForEntity(entityId, Number(doc.id)).then(
         (result) => {
             row.set_title(markup(result.kopf));
             row.set_subtitle(markup(result.eintraege.map((e) => e.satz).join('\n')));
         },
         (err: unknown) => {
-            row.set_title('Paperless-Zuordnung nicht verfügbar');
+            row.set_title(_('Paperless assignment not available'));
             row.set_subtitle(markup(err instanceof Error ? err.message : String(err)));
         },
     );

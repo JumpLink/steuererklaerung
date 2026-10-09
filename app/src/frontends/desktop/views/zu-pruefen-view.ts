@@ -32,6 +32,7 @@ import { BhRegelAusAuswahlDialog } from './regel-aus-auswahl-dialog.ts';
 import { erstattungGroup } from './erstattung-group.ts';
 import { navigateTo } from '../nav.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
+import { _, _p, fmt } from '../i18n.ts';
 
 interface QueueRow {
     row: Gtk.ListBoxRow;
@@ -105,7 +106,7 @@ export class BhZuPruefenView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'Buchungen zu prüfen konnten nicht geladen werden',
+            errorContext: _('Transactions to review could not be loaded'),
             load: () => loadZuPruefen(appSession(), entity, year),
             fill: (data) => {
                 this.items = data.rows;
@@ -146,7 +147,7 @@ export class BhZuPruefenView extends Adw.Bin {
             this.renderDetail();
             this.focusCurrentRow();
         } catch (err) {
-            await errorDialog(this, 'Neu laden fehlgeschlagen', err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Reload failed'), err instanceof Error ? err.message : String(err));
         }
     }
 
@@ -165,7 +166,10 @@ export class BhZuPruefenView extends Adw.Bin {
             const action = new Adw.ActionRow({ titleLines: 1, subtitleLines: 2 });
             const check = new Gtk.CheckButton({ valign: Gtk.Align.CENTER, active: this.marked.has(item.id) });
             check.set_tooltip_text(
-                `Für „Regel aus Auswahl" markieren: ${item.counterparty?.trim() || item.purpose?.trim() || '—'} · ${deDate(item.bookingDate)}`,
+                fmt(_('Mark for “Rule from selection”: {name} · {date}'), {
+                    name: item.counterparty?.trim() || item.purpose?.trim() || '—',
+                    date: deDate(item.bookingDate),
+                }),
             );
             check.connect('toggled', () => {
                 if (check.get_active()) this.marked.add(item.id);
@@ -221,7 +225,7 @@ export class BhZuPruefenView extends Adw.Bin {
     private updateRegelButton(): void {
         const n = this.marked.size;
         this._regel_button.set_sensitive(n > 0);
-        this._regel_button.set_label(n > 0 ? `Regel aus Auswahl (${n})` : 'Regel aus Auswahl');
+        this._regel_button.set_label(n > 0 ? fmt(_('Rule from selection ({n})'), { n }) : _('Rule from selection'));
     }
 
     private doneIds(): Set<string> {
@@ -300,11 +304,11 @@ export class BhZuPruefenView extends Adw.Bin {
             amountLabel(eur(item.amount), { heading: true, accent: item.amount < 0 ? 'error' : 'success' }),
         );
         if (item.purpose) {
-            const purpose = new Adw.ActionRow({ title: 'Verwendungszweck', subtitle: markup(item.purpose) });
+            const purpose = new Adw.ActionRow({ title: _('Purpose'), subtitle: markup(item.purpose) });
             purpose.set_subtitle_lines(0);
             group.add(purpose);
         }
-        const details = new Adw.ActionRow({ title: 'Alle Details', activatable: true });
+        const details = new Adw.ActionRow({ title: _('All details'), activatable: true });
         details.add_suffix(new Gtk.Image({ iconName: 'go-next-symbolic', cssClasses: ['dim-label'] }));
         details.connect('activated', () => this.openDetail(item));
         group.add(details);
@@ -313,15 +317,17 @@ export class BhZuPruefenView extends Adw.Bin {
 
     /** Why the booking is here and what it is booked as now. */
     private warumGroup(item: ZuPruefenRow): Gtk.Widget {
-        const group = new Adw.PreferencesGroup({ title: 'Zu prüfen' });
+        const group = new Adw.PreferencesGroup({ title: _('To review') });
         const lernmodus = lernmodusOn();
         group.set_header_suffix(new BhGlossaryHelp('zu-pruefen', lernmodus));
         const unklar = item.grund === 'unklassifiziert';
         const row = new Adw.ActionRow({
-            title: unklar ? 'Keine Regel und kein Beleg' : markup(item.category),
+            title: unklar ? _('No rule and no receipt') : markup(item.category),
             subtitle: unklar
-                ? 'Weder ein Beleg noch eine Regel ordnet diese Buchung ein — bitte umbuchen.'
-                : markup(`${item.herkunft} — nur geraten, nicht über die Gegenseite erkannt`),
+                ? _('Neither a receipt nor a rule classifies this transaction — please mark it as a transfer.')
+                : markup(
+                      fmt(_('{origin} — only a guess, not recognised by the counterparty'), { origin: item.herkunft }),
+                  ),
         });
         row.set_subtitle_lines(0);
         row.add_prefix(
@@ -339,28 +345,29 @@ export class BhZuPruefenView extends Adw.Bin {
     private actionsRow(item: ZuPruefenRow): Gtk.Widget {
         const box = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 6 });
         const buttons = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 10 });
-        const back = new Gtk.Button({ iconName: 'go-previous-symbolic', tooltipText: 'Vorherige Buchung (←)' });
+        const back = new Gtk.Button({ iconName: 'go-previous-symbolic', tooltipText: _('Previous transaction (←)') });
         back.connect('clicked', () => this.step(-1));
-        const fwd = new Gtk.Button({ iconName: 'go-next-symbolic', tooltipText: 'Nächste Buchung (→)' });
+        const fwd = new Gtk.Button({ iconName: 'go-next-symbolic', tooltipText: _('Next transaction (→)') });
         fwd.connect('clicked', () => this.step(1));
         const nav = new Gtk.Box({ cssClasses: ['linked'] });
         nav.append(back);
         nav.append(fwd);
         buttons.append(nav);
         buttons.append(new Gtk.Box({ hexpand: true }));
-        const umbuchen = new Gtk.Button({ label: 'Umbuchen', cssClasses: ['pill'] });
+        const umbuchen = new Gtk.Button({ label: _('Mark as transfer'), cssClasses: ['pill'] });
         umbuchen.connect('clicked', () => this.openUmbuchen(item));
         buttons.append(umbuchen);
-        const confirm = new Gtk.Button({ label: 'Bestätigen und weiter', cssClasses: ['suggested-action', 'pill'] });
+        const confirm = new Gtk.Button({ label: _('Confirm and continue'), cssClasses: ['suggested-action', 'pill'] });
         confirm.set_sensitive(item.grund === 'auffangregel' && !this.busy);
-        if (item.grund === 'unklassifiziert') confirm.set_tooltip_text('Ohne Kategorie gibt es nichts zu bestätigen');
+        if (item.grund === 'unklassifiziert')
+            confirm.set_tooltip_text(_('Without a category there is nothing to confirm'));
         if (item.grund === 'erstattung') confirm.set_visible(false);
         confirm.connect('clicked', () => void this.confirm());
         buttons.append(confirm);
         box.append(buttons);
         box.append(
             new Gtk.Label({
-                label: 'Tipp: ←/→ blättern · Eingabetaste bestätigt',
+                label: _('Tip: ←/→ to browse · Enter confirms'),
                 xalign: 1,
                 cssClasses: ['dim-label', 'caption'],
             }),
@@ -370,7 +377,7 @@ export class BhZuPruefenView extends Adw.Bin {
 
     private renderDoneDetail(item: ZuPruefenRow): void {
         const group = new Adw.PreferencesGroup();
-        const row = new Adw.ActionRow({ title: 'Erledigt', subtitle: this.done.get(item.id) ?? '' });
+        const row = new Adw.ActionRow({ title: _p('reviewed item', 'Done'), subtitle: this.done.get(item.id) ?? '' });
         row.add_prefix(new Gtk.Image({ iconName: 'object-select-symbolic', cssClasses: ['success'] }));
         group.add(row);
         this._detail_box.append(group);
@@ -381,15 +388,19 @@ export class BhZuPruefenView extends Adw.Bin {
         const fresh = this.done.size === 0;
         const page = new Adw.StatusPage({
             iconName: 'object-select-symbolic',
-            title: 'Alles geprüft',
+            title: _('All reviewed'),
             description: fresh
-                ? `Jede Buchung in ${this.year} ist über einen Beleg, eine eigene Regel oder von Hand eingeordnet.`
-                : 'Alle Buchungen dieser Liste sind bestätigt oder umgebucht. Neue Buchungen, die nur geraten eingeordnet werden, erscheinen hier.',
+                ? fmt(_('Every transaction in {year} is classified by a receipt, an own rule or by hand.'), {
+                      year: this.year,
+                  })
+                : _(
+                      'All transactions in this list are confirmed or reclassified. New transactions that are only classified by a guess show up here.',
+                  ),
             vexpand: true,
         });
         page.add_css_class('compact');
         const btn = new Gtk.Button({
-            label: 'Alle Buchungen',
+            label: _('All transactions'),
             cssClasses: ['pill'],
             halign: Gtk.Align.CENTER,
         });
@@ -407,10 +418,10 @@ export class BhZuPruefenView extends Adw.Bin {
         this.busy = true;
         try {
             await confirmZuPruefen(appSession(), entity, this.year, item.id);
-            this.done.set(item.id, `bestätigt: ${item.category}`);
+            this.done.set(item.id, fmt(_('confirmed: {category}'), { category: item.category }));
             this.fillRow(item);
             this.updateProgress();
-            showToast(`Bestätigt: ${markup(item.category)}`);
+            showToast(fmt(_('Confirmed: {category}'), { category: markup(item.category) }));
             if (this.currentId === item.id) {
                 this.currentId = nextOpenId(this.items, this.doneIds(), item.id);
                 this.selectRow(this.currentId);
@@ -418,7 +429,7 @@ export class BhZuPruefenView extends Adw.Bin {
                 this.focusCurrentRow();
             }
         } catch (err) {
-            await errorDialog(this, 'Bestätigen fehlgeschlagen', err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Confirming failed'), err instanceof Error ? err.message : String(err));
         } finally {
             this.busy = false;
         }
@@ -440,7 +451,7 @@ export class BhZuPruefenView extends Adw.Bin {
             },
             (message, changed) => {
                 showToast(message);
-                if (changed) void this.refresh('umgebucht');
+                if (changed) void this.refresh(_('reclassified'));
             },
         ).present(this);
     }
@@ -457,7 +468,7 @@ export class BhZuPruefenView extends Adw.Bin {
         new BhTxDetailDialog().open(this, item, paperlessBase, {
             entity,
             year: this.year,
-            onChanged: () => void this.refresh('geändert'),
+            onChanged: () => void this.refresh(_('changed')),
         });
     }
 
@@ -466,7 +477,7 @@ export class BhZuPruefenView extends Adw.Bin {
         if (!entity || this.marked.size === 0) return;
         new BhRegelAusAuswahlDialog(entity, this.year, [...this.marked], (message) => {
             showToast(message);
-            void this.refresh('per Regel');
+            void this.refresh(_('by rule'));
         }).present(this);
     }
 

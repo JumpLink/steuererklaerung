@@ -27,29 +27,35 @@ import { deDate, eur } from '../../../core/lib/format.ts';
 import { loadRecurringInvoices } from '../../../core/config/index.ts';
 import { loadEntityMailStatus, withLegacySent } from '../../../core/actions/send-invoice-email.ts';
 import type { InvoiceMailRecord } from '@steuererklaerung/store';
-import {
-    type DisplayInvoiceStatus,
-    displayInvoiceStatus,
-    INVOICE_STATUS_LABEL,
-} from '../../../core/invoices/status.ts';
+import { type DisplayInvoiceStatus, displayInvoiceStatus } from '../../../core/invoices/status.ts';
 import { createRecurringInvoiceDraft, reconcileRecurringInvoices } from '../../../core/actions/recurring-invoices.ts';
 import { listSchedules } from '../../../core/actions/recurring-schedules.ts';
 import type { RecurringInvoice } from '../../../core/config/schema/recurring.ts';
 import { BhWiederkehrendDialog } from './wiederkehrend-dialog.ts';
-import { GroupRows, LoadToken, amountLabel, emptyState, kpiFlow, loadIntoStack, markup } from './util.ts';
+import {
+    GroupRows,
+    INVOICE_STATUS_LABEL,
+    LoadToken,
+    amountLabel,
+    emptyState,
+    kpiFlow,
+    loadIntoStack,
+    markup,
+} from './util.ts';
 import { BhRechnungDetailDialog } from './rechnung-detail-dialog.ts';
 import { BhRechnungVersandDialog } from './rechnung-versand-dialog.ts';
 import { BhRechnungFormDialog } from './rechnung-form-dialog.ts';
 import { errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
+import { _, _n, _p, fmt } from '../i18n.ts';
 
 /** Status label + colour class for a recurring reminder. */
 const DUE_META: Record<string, { label: string; css: string }> = {
-    overdue: { label: 'überfällig', css: 'error' },
-    'due-soon': { label: 'bald fällig', css: 'warning' },
-    upcoming: { label: 'geplant', css: 'dim-label' },
-    paused: { label: 'pausiert', css: 'dim-label' },
-    cancelled: { label: 'storniert', css: 'dim-label' },
+    overdue: { label: _p('recurring status', 'overdue'), css: 'error' },
+    'due-soon': { label: _p('recurring status', 'due soon'), css: 'warning' },
+    upcoming: { label: _p('recurring status', 'planned'), css: 'dim-label' },
+    paused: { label: _p('recurring status', 'paused'), css: 'dim-label' },
+    cancelled: { label: _p('recurring status', 'cancelled'), css: 'dim-label' },
 };
 
 /** GTK css class per normalized display status (shared vocabulary from invoices/status.ts). */
@@ -63,12 +69,12 @@ const STATUS_CSS: Record<DisplayInvoiceStatus, string> = {
 
 /** Filter chips over the issued-invoice list. */
 const FILTERS: { key: 'all' | DisplayInvoiceStatus; label: string }[] = [
-    { key: 'all', label: 'Alle' },
-    { key: 'draft', label: 'Entwürfe' },
-    { key: 'open', label: 'Offen' },
-    { key: 'overdue', label: 'Überfällig' },
-    { key: 'paid', label: 'Bezahlt' },
-    { key: 'cancelled', label: 'Storniert' },
+    { key: 'all', label: _('All') },
+    { key: 'draft', label: _('Drafts') },
+    { key: 'open', label: _p('invoice status', 'Open') },
+    { key: 'overdue', label: _p('invoice status', 'Overdue') },
+    { key: 'paid', label: _p('invoice status', 'Paid') },
+    { key: 'cancelled', label: _p('invoice status', 'Cancelled') },
 ];
 
 export class BhRechnungenView extends Adw.Bin {
@@ -148,7 +154,7 @@ export class BhRechnungenView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'Rechnungen konnten nicht geladen werden',
+            errorContext: _('Invoices could not be loaded'),
             load: () => loadRecurring(entity.id), // synchronous
             fill: (entries) => {
                 this.fillRecurring(entries);
@@ -168,17 +174,24 @@ export class BhRechnungenView extends Adw.Bin {
         const overdue = entries.filter((e) => e.status === 'overdue').length;
         const soon = entries.filter((e) => e.status === 'due-soon').length;
         this._recurring_group.set_description(
-            entries.length ? `${overdue} überfällig · ${soon} bald fällig · ${entries.length} gesamt` : 'keine erfasst',
+            entries.length
+                ? fmt(_('{overdue} overdue · {soon} due soon · {total} total'), {
+                      overdue,
+                      soon,
+                      total: entries.length,
+                  })
+                : _('none recorded'),
         );
         if (entries.length === 0) {
             this.recurring.add(
                 emptyState({
                     icon: 'view-refresh-symbolic',
-                    title: 'Keine wiederkehrenden Rechnungen',
-                    description:
-                        'Was jedes Jahr oder jeden Monat gleich abgerechnet wird — Hosting, Wartung, ' +
-                        'Miete — steht hier einmal und erinnert dann von selbst.',
-                    action: { label: 'Wiederkehrend anlegen', run: () => this.editSchedule(null) },
+                    title: _('No recurring invoices'),
+                    description: _(
+                        'What is billed the same every year or month — hosting, maintenance, ' +
+                            'rent — is set up here once and then reminds you by itself.',
+                    ),
+                    action: { label: _('Add recurring invoice'), run: () => this.editSchedule(null) },
                 }),
             );
             return;
@@ -199,7 +212,7 @@ export class BhRechnungenView extends Adw.Bin {
         if (id) {
             existing = listSchedules(entity.id).find((s) => s.id === id) ?? null;
             if (!existing) {
-                showToast(`Wiederkehrender Posten „${id}" nicht gefunden.`);
+                showToast(fmt(_('Recurring item “{id}” not found.'), { id }));
                 return;
             }
         }
@@ -214,15 +227,17 @@ export class BhRechnungenView extends Adw.Bin {
         const meta = DUE_META[e.status] ?? DUE_META.upcoming;
         const when =
             e.daysUntilDue < 0
-                ? `seit ${Math.abs(e.daysUntilDue)} Tagen`
+                ? fmt(_n('{n} day overdue', '{n} days overdue', Math.abs(e.daysUntilDue)), {
+                      n: Math.abs(e.daysUntilDue),
+                  })
                 : e.daysUntilDue === 0
-                  ? 'heute'
-                  : `in ${e.daysUntilDue} Tagen`;
+                  ? _('today')
+                  : fmt(_n('in {n} day', 'in {n} days', e.daysUntilDue), { n: e.daysUntilDue });
         const what = e.description || e.domains.join(', ') || e.customer;
         const sub = [
             what,
-            `fällig ${deDate(e.dueDate)} (${when})`,
-            e.lastInvoiceNumber ? `zuletzt ${e.lastInvoiceNumber}` : null,
+            fmt(_('due {date} ({when})'), { date: deDate(e.dueDate), when }),
+            e.lastInvoiceNumber ? fmt(_('last {number}'), { number: e.lastInvoiceNumber }) : null,
         ].filter(Boolean);
         const row = new Adw.ActionRow({ title: markup(e.customer), subtitle: markup(sub.join(' · ')) });
         row.add_suffix(amountLabel(eur(e.totals.gross)));
@@ -233,7 +248,7 @@ export class BhRechnungenView extends Adw.Bin {
         // which the createDraft capability gates off for Qonto. So gate on status, not capabilities.
         if (e.status !== 'paused' && e.status !== 'cancelled') {
             const btn = new Gtk.Button({
-                label: 'Entwurf erstellen',
+                label: _('Create draft'),
                 cssClasses: ['suggested-action'],
                 valign: Gtk.Align.CENTER,
             });
@@ -244,7 +259,7 @@ export class BhRechnungenView extends Adw.Bin {
         // you intend to come back to, and coming back means changing it.
         const edit = new Gtk.Button({ iconName: 'document-edit-symbolic', valign: Gtk.Align.CENTER });
         edit.add_css_class('flat');
-        edit.set_tooltip_text('Wiederkehrenden Posten bearbeiten');
+        edit.set_tooltip_text(_('Edit recurring item'));
         edit.connect('clicked', () => this.editSchedule(e.id));
         row.add_suffix(edit);
         return row;
@@ -259,23 +274,27 @@ export class BhRechnungenView extends Adw.Bin {
     private async createDraftFromRecurring(e: RecurringDueEntry, btn: Gtk.Button): Promise<void> {
         if (!this.entity) return;
         btn.set_sensitive(false);
-        btn.set_label('Erstelle Entwurf …');
+        btn.set_label(_('Creating draft …'));
         try {
             const result = await createRecurringInvoiceDraft(e.id);
-            showToast(result.draft?.number ? `Entwurf ${result.draft.number} erstellt` : 'Entwurf erstellt');
+            showToast(
+                result.draft?.number
+                    ? fmt(_('Draft {number} created'), { number: result.draft.number })
+                    : _('Draft created'),
+            );
             // fillRecurring rebuilds the rows (this button included); safe — nothing touches btn after.
             this.fillRecurring(loadRecurring(this.entity.id));
             this.loadInvoices(this.entity);
         } catch (err) {
             btn.set_sensitive(true);
-            btn.set_label('Entwurf erstellen');
-            await errorDialog(this, 'Entwurf fehlgeschlagen', err instanceof Error ? err.message : String(err));
+            btn.set_label(_('Create draft'));
+            await errorDialog(this, _('Draft failed'), err instanceof Error ? err.message : String(err));
         }
     }
 
     private loadInvoices(entity: AppEntity): void {
         this.invoices.clear();
-        this.invoices.add(new Adw.ActionRow({ title: 'Lade Rechnungen aus dem Back-End …' }));
+        this.invoices.add(new Adw.ActionRow({ title: _('Loading invoices from the back end …') }));
         const token = this.invoicesToken.next();
         loadOutgoingInvoices(entity.id)
             .then((list) => {
@@ -306,7 +325,7 @@ export class BhRechnungenView extends Adw.Bin {
                 this.invoices.clear();
                 this.invoices.add(
                     new Adw.ActionRow({
-                        title: 'Rechnungen nicht verfügbar',
+                        title: _('Invoices not available'),
                         subtitle: markup(err instanceof Error ? err.message : String(err)),
                     }),
                 );
@@ -385,14 +404,23 @@ export class BhRechnungenView extends Adw.Bin {
         const paid = sum((d) => d === 'paid');
         this._kpi_box.append(
             kpiFlow([
-                { label: 'Offen', value: eur(open.total), sub: `${open.count} Rechnung(en)` },
                 {
-                    label: 'Überfällig',
+                    label: _p('invoice status', 'Open'),
+                    value: eur(open.total),
+                    sub: fmt(_n('{n} invoice', '{n} invoices', open.count), { n: open.count }),
+                },
+                {
+                    label: _p('invoice status', 'Overdue'),
                     value: eur(overdue.total),
                     accent: overdue.total > 0 ? 'error' : undefined,
-                    sub: `${overdue.count} Rechnung(en)`,
+                    sub: fmt(_n('{n} invoice', '{n} invoices', overdue.count), { n: overdue.count }),
                 },
-                { label: 'Bezahlt', value: eur(paid.total), accent: 'success', sub: `${paid.count} Rechnung(en)` },
+                {
+                    label: _p('invoice status', 'Paid'),
+                    value: eur(paid.total),
+                    accent: 'success',
+                    sub: fmt(_n('{n} invoice', '{n} invoices', paid.count), { n: paid.count }),
+                },
             ]),
         );
     }
@@ -403,7 +431,7 @@ export class BhRechnungenView extends Adw.Bin {
         box.append(this.buildFilterToggle());
         if (this.capabilities?.createDraft) {
             const btn = new Gtk.Button({
-                label: 'Neue Rechnung',
+                label: _('New invoice'),
                 cssClasses: ['suggested-action'],
                 valign: Gtk.Align.CENTER,
             });
@@ -435,22 +463,22 @@ export class BhRechnungenView extends Adw.Bin {
     private renderInvoices(): void {
         this.invoices.clear();
         const shown = this.allInvoices.filter((i) => this.filter === 'all' || this.dispStatus(i) === this.filter);
-        this._invoices_group.set_description(`${this.allInvoices.length} gesamt`);
+        this._invoices_group.set_description(fmt(_('{n} total'), { n: this.allInvoices.length }));
         if (shown.length === 0) {
             const filtered = this.filter !== 'all';
             this.invoices.add(
                 filtered
                     ? emptyState({
                           icon: 'edit-find-symbolic',
-                          title: 'Nichts in diesem Status',
-                          description: 'Keine Rechnung hat diesen Status — ein anderer Filter zeigt mehr.',
-                          action: { label: 'Alle zeigen', run: () => this.resetInvoiceFilter() },
+                          title: _('Nothing in this status'),
+                          description: _('No invoice has this status — another filter shows more.'),
+                          action: { label: _('Show all'), run: () => this.resetInvoiceFilter() },
                       })
                     : emptyState({
                           icon: 'document-send-symbolic',
-                          title: 'Noch keine Rechnungen',
-                          description: 'Ausgangsrechnungen entstehen hier — als PDF und als E-Rechnung (XRechnung).',
-                          action: { label: 'Rechnung anlegen', run: () => this.newInvoice() },
+                          title: _('No invoices yet'),
+                          description: _('Outgoing invoices are created here — as PDF and as e-invoice (XRechnung).'),
+                          action: { label: _('Create invoice'), run: () => this.newInvoice() },
                       }),
             );
             return;
@@ -492,19 +520,19 @@ export class BhRechnungenView extends Adw.Bin {
 
     private invoiceRow(inv: OutgoingInvoiceSummary): Adw.ActionRow {
         const disp = this.dispStatus(inv);
-        const who = inv.customerName || inv.number || inv.clientId || 'Rechnung';
+        const who = inv.customerName || inv.number || inv.clientId || _('Invoice');
         const sub = [
-            inv.number ? `Nr. ${inv.number}` : null,
-            inv.issueDate ? `ausgestellt ${deDate(inv.issueDate)}` : null,
-            inv.dueDate ? `fällig ${deDate(inv.dueDate)}` : null,
+            inv.number ? fmt(_('No. {number}'), { number: inv.number }) : null,
+            inv.issueDate ? fmt(_('issued {date}'), { date: deDate(inv.issueDate) }) : null,
+            inv.dueDate ? fmt(_('due {date}'), { date: deDate(inv.dueDate) }) : null,
         ].filter(Boolean);
         const row = new Adw.ActionRow({ title: markup(who), subtitle: markup(sub.join(' · ')), activatable: true });
         if (inv.total != null) row.add_suffix(amountLabel(eur(inv.total)));
         if (disp !== 'draft' && disp !== 'cancelled') {
             const mail = this.mailStatus.get(inv.id);
-            if (mail?.result === 'sent') row.add_suffix(this.badge('gesendet', 'success'));
-            else if (mail) row.add_suffix(this.badge('Versand fehlgeschlagen', 'error'));
-            else row.add_suffix(this.badge('nicht gesendet', 'dim-label'));
+            if (mail?.result === 'sent') row.add_suffix(this.badge(_('sent'), 'success'));
+            else if (mail) row.add_suffix(this.badge(_('Sending failed'), 'error'));
+            else row.add_suffix(this.badge(_('not sent'), 'dim-label'));
         }
         row.add_suffix(this.badge(INVOICE_STATUS_LABEL[disp], STATUS_CSS[disp]));
         row.add_suffix(new Gtk.Image({ iconName: 'go-next-symbolic', cssClasses: ['dim-label'] }));

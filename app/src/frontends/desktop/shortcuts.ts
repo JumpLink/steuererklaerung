@@ -19,6 +19,7 @@ import Gio from '@girs/gio-2.0';
 import type Gtk from '@girs/gtk-4.0';
 
 import { NAV_ITEMS, type NavViewId } from './nav.ts';
+import { _, _p } from './i18n.ts';
 
 /** A view that owns a search entry and can put the cursor in it. */
 export interface Searchable {
@@ -43,16 +44,21 @@ interface ShortcutSpec {
     accel: string;
     title: string;
     /** Which group of the shortcuts window it belongs to. */
-    group: 'Navigation' | 'Ansicht' | 'Allgemein';
+    group: 'view' | 'general';
 }
 
 const EXTRA_SHORTCUTS: ShortcutSpec[] = [
-    { accel: '<primary>f', title: 'Suchen', group: 'Ansicht' },
-    { accel: 'F5', title: 'Neu laden', group: 'Ansicht' },
-    { accel: '<primary>comma', title: 'Einstellungen', group: 'Allgemein' },
-    { accel: '<primary>question', title: 'Tastenkürzel', group: 'Allgemein' },
-    { accel: '<primary>q', title: 'Beenden', group: 'Allgemein' },
+    { accel: '<primary>f', title: _('Search'), group: 'view' },
+    { accel: 'F5', title: _('Reload'), group: 'view' },
+    { accel: '<primary>comma', title: _('Settings'), group: 'general' },
+    { accel: '<primary>question', title: _('Keyboard shortcuts'), group: 'general' },
+    { accel: '<primary>q', title: _('Quit'), group: 'general' },
 ];
+
+const GROUP_TITLE: Record<ShortcutSpec['group'], () => string> = {
+    view: () => _p('shortcuts group', 'View'),
+    general: () => _p('shortcuts group', 'General'),
+};
 
 /**
  * Install every window action and its accelerator.
@@ -111,14 +117,14 @@ export function installShortcuts(window: Gtk.ApplicationWindow, host: ShortcutHo
 export function presentShortcuts(parent: Gtk.Widget): void {
     const dialog = new Adw.ShortcutsDialog();
 
-    const navigation = Adw.ShortcutsSection.new('Navigation');
+    const navigation = Adw.ShortcutsSection.new(_p('shortcuts group', 'Navigation'));
     NAV_ITEMS.slice(0, 9).forEach((item, index) => {
         navigation.add(Adw.ShortcutsItem.new(item.label, `<primary>${index + 1}`));
     });
     dialog.add(navigation);
 
-    for (const group of ['Ansicht', 'Allgemein'] as const) {
-        const section = Adw.ShortcutsSection.new(group);
+    for (const group of ['view', 'general'] as const) {
+        const section = Adw.ShortcutsSection.new(GROUP_TITLE[group]());
         for (const spec of EXTRA_SHORTCUTS.filter((s) => s.group === group)) {
             section.add(Adw.ShortcutsItem.new(spec.title, spec.accel));
         }

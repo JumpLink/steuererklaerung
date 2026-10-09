@@ -43,16 +43,17 @@ import { BhProjektZuordnenDialog } from './projekt-zuordnen-dialog.ts';
 import { BhTxDetailDialog } from './tx-detail-dialog.ts';
 import { GroupRows, LoadToken, amountLabel, emptyState, kpiFlow, loadIntoStack, markup } from './util.ts';
 import { navigateTo } from '../nav.ts';
+import { _, fmt } from '../i18n.ts';
 
 /** Cap the rendered rows — a non-virtualised boxed list stays snappy up to a few hundred. */
 const MAX_ROWS = 400;
 
 type TxFilter = 'all' | 'income' | 'expense' | 'ohneBeleg';
 const FILTERS: { id: TxFilter; label: string }[] = [
-    { id: 'all', label: 'Alle' },
-    { id: 'income', label: 'Einnahmen' },
-    { id: 'expense', label: 'Ausgaben' },
-    { id: 'ohneBeleg', label: 'Ohne Beleg' },
+    { id: 'all', label: _('All') },
+    { id: 'income', label: _('Income') },
+    { id: 'expense', label: _('Expenses') },
+    { id: 'ohneBeleg', label: _('Without receipt') },
 ];
 
 /** The audit-relevant Beleg gap: a Vorsteuer-bearing expense with no linked receipt. */
@@ -128,7 +129,7 @@ export class BhTransactionsView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'Buchungen konnten nicht geladen werden',
+            errorContext: _('Could not load the transactions'),
             load: async () => ({
                 data: business
                     ? await loadEnrichedTransactions(appSession(), entity, year)
@@ -171,10 +172,15 @@ export class BhTransactionsView extends Adw.Bin {
         // is the classified rows. Ausgaben is a positive magnitude in the aggregate — show it signed.
         this._kpi_box.append(
             kpiFlow([
-                { label: `Buchungen ${year}`, value: String(data.rows.length) },
-                { label: 'Einnahmen', value: eur(t.incomeNet), accent: 'success', sub: `netto ${year}` },
-                { label: 'Ausgaben', value: eur(-t.expenseNet), accent: 'error', sub: `netto ${year}` },
-                { label: 'Saldo', value: eur(t.profit), accent: t.profit >= 0 ? 'success' : 'error' },
+                { label: fmt(_('Transactions {year}'), { year }), value: String(data.rows.length) },
+                { label: _('Income'), value: eur(t.incomeNet), accent: 'success', sub: fmt(_('net {year}'), { year }) },
+                {
+                    label: _('Expenses'),
+                    value: eur(-t.expenseNet),
+                    accent: 'error',
+                    sub: fmt(_('net {year}'), { year }),
+                },
+                { label: _('Balance'), value: eur(t.profit), accent: t.profit >= 0 ? 'success' : 'error' },
             ]),
         );
     }
@@ -243,9 +249,11 @@ export class BhTransactionsView extends Adw.Bin {
     private fillList(rows: EnrichedTxRow[]): void {
         this.list.clear();
         const shown = rows.slice(0, MAX_ROWS);
-        this._list_group.set_title('Buchungen');
+        this._list_group.set_title(_('Transactions'));
         this._list_group.set_description(
-            rows.length > shown.length ? `${shown.length} von ${rows.length} angezeigt` : `${rows.length} gesamt`,
+            rows.length > shown.length
+                ? fmt(_('{shown} of {total} shown'), { shown: shown.length, total: rows.length })
+                : fmt(_('{total} total'), { total: rows.length }),
         );
         this.buildSelectBar();
         if (shown.length === 0) {
@@ -257,16 +265,15 @@ export class BhTransactionsView extends Adw.Bin {
                 filtered
                     ? emptyState({
                           icon: 'edit-find-symbolic',
-                          title: 'Nichts gefunden',
-                          description: 'Keine Buchung passt auf Suche und Filter.',
-                          action: { label: 'Filter zurücksetzen', run: () => this.resetFilters() },
+                          title: _('Nothing found'),
+                          description: _('No transaction matches the search and filter.'),
+                          action: { label: _('Reset filter'), run: () => this.resetFilters() },
                       })
                     : emptyState({
                           icon: 'view-list-symbolic',
-                          title: 'Noch keine Buchungen',
-                          description:
-                              'Buchungen kommen aus einem verbundenen Konto oder aus einer importierten Datei.',
-                          action: { label: 'Konto verbinden', run: () => navigateTo(this, 'konten') },
+                          title: _('No transactions yet'),
+                          description: _('Transactions come from a connected account or from an imported file.'),
+                          action: { label: _('Connect account'), run: () => navigateTo(this, 'konten') },
                       }),
             );
             return;
@@ -283,16 +290,14 @@ export class BhTransactionsView extends Adw.Bin {
         }
         const bar = new Gtk.Box({ spacing: 6, valign: Gtk.Align.CENTER });
         if (this.selecting) {
-            this.zuordnenButton = new Gtk.Button({ label: 'Projekt zuordnen', cssClasses: ['suggested-action'] });
-            this.zuordnenButton.set_tooltip_text('Die markierten Ausgaben einem Projekt zuordnen');
+            this.zuordnenButton = new Gtk.Button({ label: _('Assign to project'), cssClasses: ['suggested-action'] });
+            this.zuordnenButton.set_tooltip_text(_('Assign the marked expenses to a project'));
             this.zuordnenButton.connect('clicked', () => this.openZuordnen());
             bar.append(this.zuordnenButton);
             this.updateZuordnen();
         }
-        const toggle = new Gtk.Button({ label: this.selecting ? 'Fertig' : 'Auswählen', cssClasses: ['flat'] });
-        toggle.set_tooltip_text(
-            this.selecting ? 'Auswahl beenden' : 'Ausgaben markieren, um sie einem Projekt zuzuordnen',
-        );
+        const toggle = new Gtk.Button({ label: this.selecting ? _('Done') : _('Select'), cssClasses: ['flat'] });
+        toggle.set_tooltip_text(this.selecting ? _('End selection') : _('Mark expenses to assign them to a project'));
         toggle.connect('clicked', () => {
             this.selecting = !this.selecting;
             this.marked.clear();
@@ -304,7 +309,7 @@ export class BhTransactionsView extends Adw.Bin {
 
     private updateZuordnen(): void {
         const n = this.marked.size;
-        this.zuordnenButton?.set_label(n > 0 ? `Projekt zuordnen (${n})` : 'Projekt zuordnen');
+        this.zuordnenButton?.set_label(n > 0 ? fmt(_('Assign to project ({n})'), { n }) : _('Assign to project'));
         this.zuordnenButton?.set_sensitive(n > 0);
     }
 
@@ -319,7 +324,7 @@ export class BhTransactionsView extends Adw.Bin {
             if (geaendert.length === 0) return showToast(message);
             showUndoToast(message, () => {
                 void nimmProjektZuordnungZurueck(appSession(), entity, this.year, geaendert).then((r) => {
-                    showToast(r.zurueckgenommen[0]?.danach ?? 'Zuordnung zurückgenommen');
+                    showToast(r.zurueckgenommen[0]?.danach ?? _('Assignment taken back'));
                     this.reload(entity, this.year);
                 });
             });
@@ -333,12 +338,13 @@ export class BhTransactionsView extends Adw.Bin {
         if (r.purpose && r.counterparty) sub.push(r.purpose.trim());
         if (r.category && r.category !== '(unklassifiziert)') sub.push(r.category);
         const projekt = this.projekte?.buchungen[r.id]?.projekte;
-        if (projekt?.length) sub.push(`Projekt ${[...new Set(projekt.map((p) => p.projektName))].join(', ')}`);
+        if (projekt?.length)
+            sub.push(fmt(_('Project {names}'), { names: [...new Set(projekt.map((p) => p.projektName))].join(', ') }));
         const row = new Adw.ActionRow({ title: markup(title), subtitle: markup(sub.join('  ·  ')), activatable: true });
 
         if (this.selecting && r.amount < 0) {
             const check = new Gtk.CheckButton({ active: this.marked.has(r.id), valign: Gtk.Align.CENTER });
-            check.set_tooltip_text(`Auswählen: ${title} · ${deDate(r.bookingDate)}`);
+            check.set_tooltip_text(fmt(_('Select: {title} · {date}'), { title, date: deDate(r.bookingDate) }));
             check.connect('toggled', () => {
                 if (check.get_active()) this.marked.add(r.id);
                 else this.marked.delete(r.id);
@@ -352,7 +358,7 @@ export class BhTransactionsView extends Adw.Bin {
 
         if (isOhneBeleg(r)) {
             row.add_suffix(
-                new Gtk.Label({ label: 'ohne Beleg', cssClasses: ['caption', 'warning'], valign: Gtk.Align.CENTER }),
+                new Gtk.Label({ label: _('no receipt'), cssClasses: ['caption', 'warning'], valign: Gtk.Align.CENTER }),
             );
         }
         row.add_suffix(amountLabel(eur(r.amount), { accent: r.amount < 0 ? 'error' : 'success' }));

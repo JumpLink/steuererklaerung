@@ -29,6 +29,7 @@ import { deDate, eur } from '../../../core/lib/format.ts';
 import type { AppEntity } from '../entities.ts';
 import type { HomeModel, HomeTask } from '../../../core/elster/home.ts';
 import type { FreiErgebnis, FreiVerfuegbarModel } from '../../../core/elster/frei-verfuegbar.ts';
+import { _, fmt } from '../i18n.ts';
 
 const ACCENT = '#3584e4';
 const EXPENSE = '#c25d52';
@@ -63,7 +64,7 @@ export class BhHomeView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'Übersicht konnte nicht geladen werden',
+            errorContext: _('Could not load the overview'),
             load: () =>
                 Promise.all([
                     loadHome(appSession(), entity, year),
@@ -148,20 +149,20 @@ export class BhHomeView extends Adw.Bin {
         const k = m.kpis;
         // Demonstration of the Lernmodus glossar: the Gewinn (and, when shown, the tax) KPI carries a "?".
         fb.append(
-            this.kpiCard(`Gewinn ${m.year}`, eur(k.profit), {
+            this.kpiCard(fmt(_('Profit {year}'), { year: m.year }), eur(k.profit), {
                 accent: k.profit >= 0 ? 'success' : 'error',
-                sub: 'Einnahmen − Ausgaben',
+                sub: _('Income − expenses'),
                 spark: { values: m.profitSparkline, color: k.profit >= 0 ? '#26a269' : EXPENSE },
                 help: { term: 'gewinn', lernmodus },
             }),
         );
-        fb.append(this.kpiCard('Einnahmen', eur(k.income), { sub: `netto ${m.year}` }));
-        fb.append(this.kpiCard('Ausgaben', eur(k.expense), { sub: `netto ${m.year}` }));
+        fb.append(this.kpiCard(_('Income'), eur(k.income), { sub: fmt(_('net {year}'), { year: m.year }) }));
+        fb.append(this.kpiCard(_('Expenses'), eur(k.expense), { sub: fmt(_('net {year}'), { year: m.year }) }));
         if (k.tax) {
             fb.append(
-                this.kpiCard(`Steuer-Prognose ${m.year}`, eur(Math.abs(k.tax.total)), {
+                this.kpiCard(fmt(_('Tax forecast {year}'), { year: m.year }), eur(Math.abs(k.tax.total)), {
                     accent: k.tax.total >= 0 ? 'error' : 'success',
-                    sub: k.tax.label,
+                    sub: k.tax.total >= 0 ? _('expected additional payment') : _('expected refund'),
                     help: { term: 'ust-zahllast', lernmodus },
                 }),
             );
@@ -182,7 +183,7 @@ export class BhHomeView extends Adw.Bin {
         });
         if (frei instanceof Error) {
             fb.append(
-                this.kpiCard('Frei verfügbar', 'nicht berechenbar', {
+                this.kpiCard(_('Free to spend'), _('not computable'), {
                     sub: frei.message,
                     help: { term: 'frei-verfuegbar', lernmodus },
                 }),
@@ -192,23 +193,25 @@ export class BhHomeView extends Adw.Bin {
         const f = frei.freiVerfuegbar;
         fb.append(
             this.freiCard(f, {
-                value: f.betrag == null ? 'nicht berechenbar' : eur(f.betrag),
+                title: _('Free to spend'),
+                value: f.betrag == null ? _('not computable') : eur(f.betrag),
                 sub: f.vollstaendig
-                    ? `Stand ${deDate(frei.stichtag)} · eine Rechnung, keine Empfehlung`
-                    : 'unvollständig — siehe Herleitung',
+                    ? fmt(_('As of {date} · a calculation, not advice'), { date: deDate(frei.stichtag) })
+                    : _('incomplete — see derivation'),
                 help: { term: 'frei-verfuegbar', lernmodus },
             }),
         );
         const r = frei.steuerruecklage;
         fb.append(
             this.freiCard(r, {
-                value: r.betrag == null ? 'nicht berechenbar' : eur(Math.abs(r.betrag)),
+                title: fmt(_('Tax reserve {year} (estimate)'), { year: r.jahr }),
+                value: r.betrag == null ? _('not computable') : eur(Math.abs(r.betrag)),
                 accent: r.erstattung ? 'success' : undefined,
                 sub: r.erstattung
-                    ? 'vsl. Erstattung'
+                    ? _('expected refund')
                     : r.vollstaendig
-                      ? 'ESt + GewSt − Vorauszahlungen'
-                      : 'unvollständig — siehe Herleitung',
+                      ? _('ESt + GewSt − prepayments')
+                      : _('incomplete — see derivation'),
                 help: { term: 'steuerruecklage', lernmodus },
             }),
         );
@@ -218,10 +221,16 @@ export class BhHomeView extends Adw.Bin {
     /** A KPI card that is a button: activating it opens the figure's Herleitung. */
     private freiCard(
         e: FreiErgebnis,
-        opts: { value: string; sub: string; accent?: 'success'; help: { term: string; lernmodus: boolean } },
+        opts: {
+            title: string;
+            value: string;
+            sub: string;
+            accent?: 'success';
+            help: { term: string; lernmodus: boolean };
+        },
     ): Gtk.Widget {
         const content = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 4 });
-        content.append(this.dimWithHelp(e.label, opts.help));
+        content.append(this.dimWithHelp(opts.title, opts.help));
         content.append(
             new Gtk.Label({
                 label: opts.value,
@@ -235,7 +244,11 @@ export class BhHomeView extends Adw.Bin {
         content.set_margin_start(16);
         content.set_margin_end(16);
         // The tooltip names the action for the pointer and gives the devtools rig a text to find the card by.
-        const button = new Gtk.Button({ child: content, cssClasses: ['card'], tooltipText: `Herleitung: ${e.label}` });
+        const button = new Gtk.Button({
+            child: content,
+            cssClasses: ['card'],
+            tooltipText: fmt(_('Derivation: {label}'), { label: opts.title }),
+        });
         button.connect('clicked', () => new BhHerleitungDialog().openErgebnis(this, e));
         return button;
     }
@@ -276,7 +289,7 @@ export class BhHomeView extends Adw.Bin {
 
     // ── "Als Nächstes" ──
     private tasksGroup(m: HomeModel): Gtk.Widget {
-        const group = new Adw.PreferencesGroup({ title: 'Als Nächstes' });
+        const group = new Adw.PreferencesGroup({ title: _('Up next') });
         for (const t of m.tasks) {
             const row = new Adw.ActionRow({ title: t.title, subtitle: t.sub });
             // Leading marker tinted by the task tone (warn = amber) — same signal as the web badge.
@@ -290,17 +303,17 @@ export class BhHomeView extends Adw.Bin {
             } else if (t.kind === 'zu-pruefen' || t.kind === 'erstattungen') {
                 // The open Erstattungen sit in the „Zu prüfen" queue with their Ja/Nein.
                 row.set_activatable(true);
-                row.set_tooltip_text('Zu prüfen öffnen');
+                row.set_tooltip_text(_('Open “To review”'));
                 row.add_suffix(new Gtk.Image({ iconName: 'go-next-symbolic', cssClasses: ['dim-label'] }));
                 row.connect('activated', () => navigateTo(this, 'transactions', 'zu-pruefen'));
             } else if (t.kind === 'forderungen') {
                 row.set_activatable(true);
-                row.set_tooltip_text('Offene Forderungen öffnen');
+                row.set_tooltip_text(_('Open receivables'));
                 row.add_suffix(new Gtk.Image({ iconName: 'go-next-symbolic', cssClasses: ['dim-label'] }));
                 row.connect('activated', () => navigateTo(this, 'rechnungen', 'forderungen'));
             } else if (t.kind === 'laufende-kosten') {
                 row.set_activatable(true);
-                row.set_tooltip_text('Laufende Kosten öffnen');
+                row.set_tooltip_text(_('Open recurring costs'));
                 row.add_suffix(new Gtk.Image({ iconName: 'go-next-symbolic', cssClasses: ['dim-label'] }));
                 row.connect('activated', () => navigateTo(this, 'transactions', 'laufende-kosten'));
             } else if (t.kind === 'hinweis' && t.ref && t.handlung && this.entity) {
@@ -330,12 +343,12 @@ export class BhHomeView extends Adw.Bin {
         if (!entity) return;
         try {
             const invoice = (await loadOutgoingInvoices(entity.id)).find((i) => i.id === invoiceId);
-            if (!invoice) throw new Error('Die Rechnung wurde nicht gefunden.');
+            if (!invoice) throw new Error(_('The invoice was not found.'));
             const dialog = new BhRechnungDetailDialog();
             dialog.onChanged = () => this.reload(entity, this.year);
             dialog.open(this, entity, invoice, loadCapabilities(entity.id));
         } catch (err) {
-            await errorDialog(this, 'Rechnung nicht ladbar', err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Could not load the invoice'), err instanceof Error ? err.message : String(err));
         }
     }
 
@@ -352,12 +365,12 @@ export class BhHomeView extends Adw.Bin {
     private barsCard(m: HomeModel): Gtk.Widget {
         const content = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 10 });
         const head = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 12 });
-        const heading = this.heading('Einnahmen und Ausgaben');
+        const heading = this.heading(_('Income and expenses'));
         heading.set_hexpand(true);
         head.append(heading);
         const legend = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 14, valign: Gtk.Align.CENTER });
-        legend.append(this.legendItem('Einnahmen', ACCENT));
-        legend.append(this.legendItem('Ausgaben', EXPENSE));
+        legend.append(this.legendItem(_('Income'), ACCENT));
+        legend.append(this.legendItem(_('Expenses'), EXPENSE));
         head.append(legend);
         content.append(head);
         const chart = new BhChart();
@@ -376,7 +389,7 @@ export class BhHomeView extends Adw.Bin {
     // ── expense by category ──
     private catsCard(m: HomeModel): Gtk.Widget {
         const content = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 12 });
-        content.append(this.heading('Ausgaben nach Kategorie'));
+        content.append(this.heading(_('Expenses by category')));
         const max = m.categories[0]?.amount || 1;
         for (const c of m.categories) {
             const rowBox = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 4 });
@@ -387,7 +400,7 @@ export class BhHomeView extends Adw.Bin {
             rowBox.append(new Gtk.LevelBar({ minValue: 0, maxValue: 1, value: c.amount / max }));
             content.append(rowBox);
         }
-        if (!m.categories.length) content.append(this.dim('Keine Ausgaben erfasst'));
+        if (!m.categories.length) content.append(this.dim(_('No expenses recorded')));
         return this.card(content);
     }
 
@@ -395,7 +408,7 @@ export class BhHomeView extends Adw.Bin {
     private liqCard(m: HomeModel): Gtk.Widget {
         const content = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 10 });
         const head = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 8 });
-        head.append(new Gtk.Label({ label: 'Liquidität', xalign: 0, hexpand: true, cssClasses: ['heading'] }));
+        head.append(new Gtk.Label({ label: _('Liquidity'), xalign: 0, hexpand: true, cssClasses: ['heading'] }));
         head.append(new Gtk.Label({ label: eur(m.liquidity.now), cssClasses: ['numeric', 'heading'] }));
         content.append(head);
         const chart = new BhChart();

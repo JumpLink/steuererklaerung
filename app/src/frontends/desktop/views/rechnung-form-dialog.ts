@@ -31,6 +31,7 @@ import { computeFormTotals, emptyItem, type InvoiceItemDraft, validateFormDraft 
 import { num2 } from '../../../core/lib/format.ts';
 import { errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
+import { _, _n, fmt } from '../i18n.ts';
 
 const VAT_OPTIONS = ['19', '7', '0'];
 const vatIndex = (rate: string): number => Math.max(0, VAT_OPTIONS.indexOf(rate));
@@ -112,32 +113,32 @@ export class BhRechnungFormDialog {
         const today = new Date().toISOString().slice(0, 10);
         const header = new Adw.HeaderBar();
         header.set_title_widget(
-            new Adw.WindowTitle({ title: existing ? 'Rechnung bearbeiten' : 'Neue Rechnung', subtitle: '' }),
+            new Adw.WindowTitle({ title: existing ? _('Edit invoice') : _('New invoice'), subtitle: '' }),
         );
 
         const page = new Adw.PreferencesPage();
 
         // Empfänger.
-        const recipientGroup = new Adw.PreferencesGroup({ title: 'Empfänger' });
+        const recipientGroup = new Adw.PreferencesGroup({ title: _('Recipient') });
         const names = new Gtk.StringList();
         for (const c of this.customers) names.append(contactDisplayName(c));
-        this.customerRow = new Adw.ComboRow({ title: 'Kunde', model: names });
+        this.customerRow = new Adw.ComboRow({ title: _('Customer'), model: names });
         if (existing?.contactId) {
             const idx = this.customers.findIndex((c) => c.id === existing.contactId);
             if (idx >= 0) this.customerRow.set_selected(idx);
         }
         if (this.customers.length === 0)
-            this.customerRow.set_subtitle('Kein Kunde vorhanden — lege zuerst einen unter Kontakte an.');
+            this.customerRow.set_subtitle(_('No customer yet — create one under Contacts first.'));
         recipientGroup.add(this.customerRow);
         page.add(recipientGroup);
 
         // Projekt + Zeiten übernehmen.
         this.projects = listProjects(this.entity.id);
-        const projectGroup = new Adw.PreferencesGroup({ title: 'Projekt' });
+        const projectGroup = new Adw.PreferencesGroup({ title: _('Project') });
         const projectNames = new Gtk.StringList();
-        projectNames.append('Kein Projekt');
+        projectNames.append(_('No project'));
         for (const p of this.projects) projectNames.append(p.name);
-        this.projectRow = new Adw.ComboRow({ title: 'Projekt', model: projectNames });
+        this.projectRow = new Adw.ComboRow({ title: _('Project'), model: projectNames });
         const assigned = existing ? getRechnungProjekt(this.entity.id, existing.id) : null;
         const assignedIdx = this.projects.findIndex((p) => p.id === assigned);
         if (assignedIdx >= 0) this.projectRow.set_selected(assignedIdx + 1);
@@ -153,40 +154,44 @@ export class BhRechnungFormDialog {
         page.add(projectGroup);
 
         this.timeGroup = new Adw.PreferencesGroup({
-            title: 'Zeiten übernehmen',
-            description:
-                'Offene Zeiten des Projekts werden Positionen. Abgerechnet gelten sie erst beim Festschreiben.',
+            title: _('Import time entries'),
+            description: _(
+                'Open time entries of the project become line items. They count as billed only once the invoice is finalized.',
+            ),
         });
         page.add(this.timeGroup);
 
         // Eckdaten.
-        const meta = new Adw.PreferencesGroup({ title: 'Eckdaten' });
+        const meta = new Adw.PreferencesGroup({ title: _('Details') });
         this.issueRow = new Adw.EntryRow({
-            title: 'Ausstellungsdatum (JJJJ-MM-TT)',
+            title: _('Issue date (YYYY-MM-DD)'),
             text: existing?.issueDate ?? today,
         });
         // On edit, derive the term from the existing dates so re-saving keeps the same due date.
         const termDays = daysBetween(existing?.issueDate ?? null, existing?.dueDate ?? null) ?? 14;
-        this.termRow = new Adw.EntryRow({ title: 'Zahlungsziel (Tage)', text: String(termDays) });
+        this.termRow = new Adw.EntryRow({ title: _('Payment term (days)'), text: String(termDays) });
         this.perfStartRow = new Adw.EntryRow({
-            title: 'Leistung von (optional)',
+            title: _('Service from (optional)'),
             text: existing?.performanceStart ?? '',
         });
-        this.perfEndRow = new Adw.EntryRow({ title: 'Leistung bis (optional)', text: existing?.performanceEnd ?? '' });
+        this.perfEndRow = new Adw.EntryRow({
+            title: _('Service until (optional)'),
+            text: existing?.performanceEnd ?? '',
+        });
         for (const r of [this.issueRow, this.termRow, this.perfStartRow, this.perfEndRow]) meta.add(r);
         page.add(meta);
 
         // Positionen (dynamic).
-        this.itemsGroup = new Adw.PreferencesGroup({ title: 'Positionen' });
+        this.itemsGroup = new Adw.PreferencesGroup({ title: _('Line items') });
         page.add(this.itemsGroup);
 
         const actionsGroup = new Adw.PreferencesGroup();
-        this.totalsRow = new Adw.ActionRow({ title: 'Summe' });
+        this.totalsRow = new Adw.ActionRow({ title: _('Total') });
         actionsGroup.add(this.totalsRow);
-        const addRow = new Adw.ButtonRow({ title: '＋ Position hinzufügen' });
+        const addRow = new Adw.ButtonRow({ title: _('＋ Add line item') });
         addRow.connect('activated', () => this.addItemRow(emptyItem()));
         actionsGroup.add(addRow);
-        this.saveButton = new Adw.ButtonRow({ title: 'Entwurf speichern' });
+        this.saveButton = new Adw.ButtonRow({ title: _('Save draft') });
         this.saveButton.add_css_class('suggested-action');
         this.saveButton.connect('activated', () => void this.save());
         actionsGroup.add(this.saveButton);
@@ -217,18 +222,18 @@ export class BhRechnungFormDialog {
 
     /** Append one position expander row and track its widgets. */
     private addItemRow(item: InvoiceItemDraft): void {
-        const row = new Adw.ExpanderRow({ title: item.title || 'Neue Position', expanded: true });
+        const row = new Adw.ExpanderRow({ title: item.title || _('New line item'), expanded: true });
         const w: ItemWidgets = {
             row,
-            title: new Adw.EntryRow({ title: 'Bezeichnung', text: item.title }),
-            description: new Adw.EntryRow({ title: 'Beschreibung (optional)', text: item.description ?? '' }),
-            quantity: new Adw.EntryRow({ title: 'Menge', text: item.quantity }),
-            unit: new Adw.EntryRow({ title: 'Einheit (optional)', text: item.unit ?? '' }),
-            unitPrice: new Adw.EntryRow({ title: 'Einzelpreis netto (€)', text: item.unitPrice }),
+            title: new Adw.EntryRow({ title: _('Item name'), text: item.title }),
+            description: new Adw.EntryRow({ title: _('Description (optional)'), text: item.description ?? '' }),
+            quantity: new Adw.EntryRow({ title: _('Quantity'), text: item.quantity }),
+            unit: new Adw.EntryRow({ title: _('Unit (optional)'), text: item.unit ?? '' }),
+            unitPrice: new Adw.EntryRow({ title: _('Net unit price (€)'), text: item.unitPrice }),
             vatRate: new Adw.ComboRow({ title: 'USt-Satz', model: this.vatModel() }),
         };
         w.vatRate.set_selected(vatIndex(item.vatRate));
-        const remove = new Adw.ButtonRow({ title: 'Position entfernen' });
+        const remove = new Adw.ButtonRow({ title: _('Remove line item') });
         remove.add_css_class('destructive-action');
         for (const r of [w.title, w.description, w.quantity, w.unit, w.unitPrice, w.vatRate, remove]) row.add_row(r);
 
@@ -239,7 +244,7 @@ export class BhRechnungFormDialog {
             this.updateTotals();
         });
         const recompute = () => {
-            row.set_title(w.title.get_text()?.trim() || 'Neue Position');
+            row.set_title(w.title.get_text()?.trim() || _('New line item'));
             this.updateTotals();
         };
         for (const e of [w.title, w.quantity, w.unitPrice]) e.connect('changed', recompute);
@@ -260,9 +265,7 @@ export class BhRechnungFormDialog {
         const id = vorschlagProjekt(this.projects, contactId);
         const idx = this.projects.findIndex((p) => p.id === id);
         this.projectRow.set_selected(idx >= 0 ? idx + 1 : 0);
-        this.projectRow.set_subtitle(
-            idx >= 0 ? 'Vorschlag: das einzige Projekt dieses Kunden — bitte bestätigen.' : '',
-        );
+        this.projectRow.set_subtitle(idx >= 0 ? _('Suggestion: this customer’s only project — please confirm.') : '');
         this.projectTouched = false;
     }
 
@@ -279,7 +282,7 @@ export class BhRechnungFormDialog {
         if (!project) return;
         const open = listOpenTimeForInvoice(this.entity.id, { projectId: project.id }, this.editId ?? undefined);
         if (open.length === 0) {
-            this.timeGroup.set_description('Dieses Projekt hat keine offenen Zeiten.');
+            this.timeGroup.set_description(_('This project has no open time entries.'));
             return;
         }
         for (const e of open) {
@@ -293,13 +296,13 @@ export class BhRechnungFormDialog {
             this.timeGroup.add(row);
             this.timeRows.push({ entryId: e.id, row, check });
         }
-        this.timeRateRow = new Adw.EntryRow({ title: 'Netto-Stundensatz (€)' });
-        this.timeVatRow = new Adw.ComboRow({ title: 'USt-Satz der Zeiten', model: this.vatModel() });
+        this.timeRateRow = new Adw.EntryRow({ title: _('Net hourly rate (€)') });
+        this.timeVatRow = new Adw.ComboRow({ title: _('VAT rate for the time entries'), model: this.vatModel() });
         const grouping = new Gtk.StringList();
-        grouping.append('Je Tätigkeit eine Position');
-        grouping.append('Eine Position gesamt');
-        this.timeGroupingRow = new Adw.ComboRow({ title: 'Gruppierung', model: grouping });
-        this.timeInsertRow = new Adw.ButtonRow({ title: 'Zeiten als Positionen einfügen' });
+        grouping.append(_('One line item per activity'));
+        grouping.append(_('One line item in total'));
+        this.timeGroupingRow = new Adw.ComboRow({ title: _('Grouping'), model: grouping });
+        this.timeInsertRow = new Adw.ButtonRow({ title: _('Insert time entries as line items') });
         this.timeInsertRow.connect('activated', () => void this.insertTime(project));
         for (const w of [this.timeRateRow, this.timeVatRow, this.timeGroupingRow, this.timeInsertRow])
             this.timeGroup.add(w);
@@ -340,9 +343,18 @@ export class BhRechnungFormDialog {
             if (!this.perfEndRow.get_text()) this.perfEndRow.set_text(built.performanceEnd);
             this.timeEntryIds = built.entryIds;
             this.updateTotals();
-            showToast(`${built.entryIds.length} Zeiten eingefügt — abgerechnet erst beim Festschreiben`);
+            showToast(
+                fmt(
+                    _n(
+                        '{n} time entry inserted — billed only once finalized',
+                        '{n} time entries inserted — billed only once finalized',
+                        built.entryIds.length,
+                    ),
+                    { n: built.entryIds.length },
+                ),
+            );
         } catch (err) {
-            await errorDialog(this.dialog, 'Zeiten übernehmen', err instanceof Error ? err.message : String(err));
+            await errorDialog(this.dialog, _('Import time entries'), err instanceof Error ? err.message : String(err));
         }
     }
 
@@ -365,7 +377,13 @@ export class BhRechnungFormDialog {
 
     private updateTotals(): void {
         const t = computeFormTotals(this.readItems());
-        this.totalsRow.set_subtitle(`Netto ${num2(t.net)} € · USt ${num2(t.vat)} € · Brutto ${num2(t.gross)} €`);
+        this.totalsRow.set_subtitle(
+            fmt(_('Net {net} € · VAT {vat} € · Gross {gross} €'), {
+                net: num2(t.net),
+                vat: num2(t.vat),
+                gross: num2(t.gross),
+            }),
+        );
     }
 
     private async save(): Promise<void> {
@@ -374,7 +392,7 @@ export class BhRechnungFormDialog {
         const items = this.readItems();
         const problems = validateFormDraft({ contactId, issueDate, items });
         if (problems.length) {
-            await errorDialog(this.dialog, 'Bitte prüfen', problems.join('\n'));
+            await errorDialog(this.dialog, _('Please check'), problems.join('\n'));
             return;
         }
         const termDays = Number(this.termRow.get_text()) || 14;
@@ -403,23 +421,19 @@ export class BhRechnungFormDialog {
             })),
         };
         this.saveButton.set_sensitive(false);
-        this.saveButton.set_title('Speichere …');
+        this.saveButton.set_title(_('Saving …'));
         try {
             await saveOutgoingInvoiceDraft(this.entity.id, input, this.editId ?? undefined, undefined, {
                 projectId: this.selectedProject()?.id ?? null,
                 ...(this.timeEntryIds ? { timeEntryIds: this.timeEntryIds } : {}),
             });
             this.dialog.close();
-            showToast('Entwurf gespeichert');
+            showToast(_('Draft saved'));
             this.onSaved?.();
         } catch (err) {
             this.saveButton.set_sensitive(true);
-            this.saveButton.set_title('Entwurf speichern');
-            await errorDialog(
-                this.dialog,
-                'Speichern fehlgeschlagen',
-                err instanceof Error ? err.message : String(err),
-            );
+            this.saveButton.set_title(_('Save draft'));
+            await errorDialog(this.dialog, _('Saving failed'), err instanceof Error ? err.message : String(err));
         }
     }
 }

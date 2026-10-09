@@ -45,13 +45,14 @@ import type { AppEntity } from '../entities.ts';
 import { deDate, deDateTime, eur, pct } from '../../../core/lib/format.ts';
 import { loadRecurringInvoices } from '../../../core/config/index.ts';
 import { loadInvoiceMailHistory, withLegacySent } from '../../../core/actions/send-invoice-email.ts';
-import { displayInvoiceStatus, INVOICE_STATUS_LABEL, normalizeInvoiceStatus } from '../../../core/invoices/status.ts';
+import { displayInvoiceStatus, normalizeInvoiceStatus } from '../../../core/invoices/status.ts';
 import { verdachtTitel, zahlungZeile } from '../../../core/invoices/doppelzahlung-text.ts';
-import { GroupRows, LoadToken, amountLabel, markup } from './util.ts';
+import { GroupRows, INVOICE_STATUS_LABEL, LoadToken, amountLabel, markup } from './util.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { BhRechnungFormDialog } from './rechnung-form-dialog.ts';
 import { BhRechnungVersandDialog } from './rechnung-versand-dialog.ts';
 import { showToast } from '../toast.ts';
+import { _, _p, fmt } from '../i18n.ts';
 
 function msg(err: unknown): string {
     return err instanceof Error ? err.message : String(err);
@@ -146,8 +147,8 @@ export class BhRechnungDetailDialog {
         const today = new Date().toISOString().slice(0, 10);
         const disp = displayInvoiceStatus(summary.status, summary.dueDate, today);
         this.body.setTitles(
-            summary.customerName || summary.number || 'Rechnung',
-            `${summary.number ? `Nr. ${summary.number} · ` : ''}${INVOICE_STATUS_LABEL[disp]}`,
+            summary.customerName || summary.number || _('Invoice'),
+            `${summary.number ? `${fmt(_('No. {number}'), { number: summary.number })} · ` : ''}${INVOICE_STATUS_LABEL[disp]}`,
         );
         this.dialog.set_child(this.body);
         this.dialog.present(parent);
@@ -192,11 +193,11 @@ export class BhRechnungDetailDialog {
         this.appendDoppelzahlung(box);
 
         // Positionen.
-        const positions = new Adw.PreferencesGroup({ title: 'Positionen' });
+        const positions = new Adw.PreferencesGroup({ title: _('Line items') });
         detail.items.forEach((it, i) => {
             const sub = [
                 `${it.quantity.toLocaleString('de-DE')}${it.unit ? ` ${it.unit}` : ''} × ${eur(it.unitPrice)}`,
-                `USt ${pct(it.vatRate)}`,
+                fmt(_('VAT {rate}'), { rate: pct(it.vatRate) }),
             ];
             const row = new Adw.ActionRow({
                 title: markup(`${i + 1}. ${it.title}`),
@@ -208,37 +209,37 @@ export class BhRechnungDetailDialog {
         box.append(positions);
 
         // Beträge.
-        const amounts = new Adw.PreferencesGroup({ title: 'Beträge' });
+        const amounts = new Adw.PreferencesGroup({ title: _('Amounts') });
         const amtRows = new GroupRows(amounts);
-        this.kv(amtRows, 'Nettobetrag', eur(detail.totals.net));
-        for (const r of detail.totals.byRate) this.kv(amtRows, `USt ${pct(r.rate)}`, eur(r.vat));
-        this.kv(amtRows, 'Bruttobetrag', eur(detail.totals.gross), true);
+        this.kv(amtRows, _('Net amount'), eur(detail.totals.net));
+        for (const r of detail.totals.byRate) this.kv(amtRows, fmt(_('VAT {rate}'), { rate: pct(r.rate) }), eur(r.vat));
+        this.kv(amtRows, _('Gross amount'), eur(detail.totals.gross), true);
         box.append(amounts);
 
         // Daten.
-        const dates = new Adw.PreferencesGroup({ title: 'Daten' });
+        const dates = new Adw.PreferencesGroup({ title: _('Dates') });
         const dRows = new GroupRows(dates);
-        this.kv(dRows, 'Rechnungsdatum', deDate(detail.issueDate));
-        if (detail.dueDate) this.kv(dRows, 'Fällig bis', deDate(detail.dueDate));
+        this.kv(dRows, _('Invoice date'), deDate(detail.issueDate));
+        if (detail.dueDate) this.kv(dRows, _('Due by'), deDate(detail.dueDate));
         if (detail.performanceStart && detail.performanceEnd)
             this.kv(
                 dRows,
-                'Leistungszeitraum',
+                _('Service period'),
                 `${deDate(detail.performanceStart)} – ${deDate(detail.performanceEnd)}`,
             );
-        if (detail.recipient?.name) this.kv(dRows, 'Empfänger', detail.recipient.name);
+        if (detail.recipient?.name) this.kv(dRows, _('Recipient'), detail.recipient.name);
         box.append(dates);
 
         if (detail.kind !== 'storno') box.append(this.projektGroup(detail.id));
 
         // Zahlung / Storno.
         if (detail.paidOn || detail.cancelsId || detail.cancelledById) {
-            const pay = new Adw.PreferencesGroup({ title: markup('Zahlung & Storno') });
+            const pay = new Adw.PreferencesGroup({ title: markup(_('Payment & cancellation')) });
             const pRows = new GroupRows(pay);
-            if (detail.paidOn) this.kv(pRows, 'Bezahlt am', deDate(detail.paidOn));
-            if (detail.paidTxId) this.kv(pRows, 'Transaktion', detail.paidTxId);
-            if (detail.cancelsId) this.kv(pRows, 'Storniert Rechnung', detail.cancelsId);
-            if (detail.cancelledById) this.kv(pRows, 'Storniert durch', detail.cancelledById);
+            if (detail.paidOn) this.kv(pRows, _('Paid on'), deDate(detail.paidOn));
+            if (detail.paidTxId) this.kv(pRows, _p('invoice payment', 'Transaction'), detail.paidTxId);
+            if (detail.cancelsId) this.kv(pRows, _('Cancels invoice'), detail.cancelsId);
+            if (detail.cancelledById) this.kv(pRows, _('Cancelled by'), detail.cancelledById);
             box.append(pay);
         }
 
@@ -257,37 +258,37 @@ export class BhRechnungDetailDialog {
 
     /** The invoice's project: where it comes from, set/change it, and take a direct assignment back with its „Danach gilt …". */
     private projektGroup(invoiceId: string): Adw.PreferencesGroup {
-        const group = new Adw.PreferencesGroup({ title: 'Projekt' });
+        const group = new Adw.PreferencesGroup({ title: _('Project') });
         const a = rechnungProjektAnsicht(this.entity.id, invoiceId);
         const projects = listProjects(this.entity.id);
         const shown = a.direkt
-            ? `${a.direkt.name} · direkt zugeordnet`
+            ? fmt(_('{name} · assigned directly'), { name: a.direkt.name })
             : a.ueberZeiten.length > 0
-              ? `${a.ueberZeiten.map((p) => p.name).join(', ')} · über Zeiten`
-              : 'Kein Projekt';
-        const row = new Adw.ActionRow({ title: 'Projekt', subtitle: markup(shown) });
+              ? fmt(_('{names} · via time entries'), { names: a.ueberZeiten.map((p) => p.name).join(', ') })
+              : _('No project');
+        const row = new Adw.ActionRow({ title: _('Project'), subtitle: markup(shown) });
         const set = new Gtk.Button({
-            label: a.direkt ? 'Ändern …' : 'Zuordnen …',
+            label: a.direkt ? _('Change …') : _('Assign …'),
             valign: Gtk.Align.CENTER,
             cssClasses: ['flat'],
         });
         set.set_sensitive(projects.length > 0);
         set.connect('clicked', () =>
             pickDialog(this.dialog, {
-                title: 'Projekt wählen',
-                empty: 'Keine Projekte vorhanden.',
+                title: _('Choose project'),
+                empty: _('No projects yet.'),
                 items: projects.map((p) => ({
                     title: p.name,
-                    sub: 'Die Rechnung zählt mit ihrem vollen Nettobetrag zu diesem Projekt.',
+                    sub: _('The invoice counts toward this project with its full net amount.'),
                 })),
                 onPick: (i) => {
                     try {
                         setRechnungProjekt(this.entity.id, invoiceId, projects[i].id, 'app');
-                        showToast(`Rechnung gehört jetzt zu „${projects[i].name}“`);
+                        showToast(fmt(_('Invoice now belongs to “{name}”'), { name: projects[i].name }));
                         this.onChanged?.();
                         this.reload();
                     } catch (err) {
-                        void errorDialog(this.dialog, 'Konnte nicht zuordnen', msg(err));
+                        void errorDialog(this.dialog, _('Could not assign'), msg(err));
                     }
                 },
             }),
@@ -295,14 +296,14 @@ export class BhRechnungDetailDialog {
         row.add_suffix(set);
         if (a.direkt) {
             const undo = new Gtk.Button({
-                label: 'Zuordnung aufheben',
+                label: _('Remove assignment'),
                 valign: Gtk.Align.CENTER,
                 cssClasses: ['flat'],
             });
             undo.set_tooltip_text(a.danach ?? '');
             undo.connect('clicked', () => {
                 clearRechnungProjekt(this.entity.id, invoiceId, 'app');
-                showToast(a.danach ?? 'Zuordnung aufgehoben');
+                showToast(a.danach ?? _('Assignment removed'));
                 this.onChanged?.();
                 this.reload();
             });
@@ -357,15 +358,15 @@ export class BhRechnungDetailDialog {
             );
             row.add_row(
                 this.buttonRow(
-                    'Ist eine Doppelzahlung',
-                    () => void this.decide(t.id, { art: 'ist_doppelzahlung' }, 'Als Doppelzahlung erfasst'),
+                    _('Is a double payment'),
+                    () => void this.decide(t.id, { art: 'ist_doppelzahlung' }, _('Recorded as double payment')),
                 ),
             );
-            row.add_row(this.buttonRow('Gehört zu einer anderen Rechnung …', () => void this.pickAndereRechnung(t.id)));
+            row.add_row(this.buttonRow(_('Belongs to another invoice …'), () => void this.pickAndereRechnung(t.id)));
             row.add_row(
                 this.buttonRow(
-                    'Ist in Ordnung',
-                    () => void this.decide(t.id, { art: 'in_ordnung' }, 'Als in Ordnung erfasst'),
+                    _('Is fine'),
+                    () => void this.decide(t.id, { art: 'in_ordnung' }, _('Recorded as fine')),
                 ),
             );
             group.add(row);
@@ -376,8 +377,8 @@ export class BhRechnungDetailDialog {
     /** Recorded double payments of this invoice that still wait for the refund to the customer. */
     private rueckzahlungGroup(open: OffeneRueckzahlung[]): Gtk.Widget {
         const group = new Adw.PreferencesGroup({
-            title: 'Rückzahlung offen',
-            description: 'Der zu viel erhaltene Betrag ist noch nicht an den Kunden zurückgezahlt.',
+            title: _('Refund outstanding'),
+            description: _('The overpaid amount has not been refunded to the customer yet.'),
         });
         for (const r of open) {
             const z =
@@ -392,8 +393,8 @@ export class BhRechnungDetailDialog {
                     valign: Gtk.Align.CENTER,
                 }),
             );
-            row.add_row(this.buttonRow('Rückzahlung verknüpfen …', () => this.pickRueckzahlung(r)));
-            row.add_row(this.buttonRow('Außerhalb zurückgezahlt …', () => void this.rueckzahlungExtern(r.txId)));
+            row.add_row(this.buttonRow(_('Link refund …'), () => this.pickRueckzahlung(r)));
+            row.add_row(this.buttonRow(_('Refunded elsewhere …'), () => void this.rueckzahlungExtern(r.txId)));
             group.add(row);
         }
         return group;
@@ -407,7 +408,7 @@ export class BhRechnungDetailDialog {
             this.reloadDoppelzahlung();
             this.onChanged?.();
         } catch (err) {
-            await errorDialog(this.dialog, 'Entscheidung nicht gespeichert', msg(err));
+            await errorDialog(this.dialog, _('Decision not saved'), msg(err));
         }
     }
 
@@ -415,10 +416,10 @@ export class BhRechnungDetailDialog {
         try {
             const open = await loadOpenInvoicesForPicker(this.entity.id, this.summary.id);
             pickDialog(this.dialog, {
-                title: 'Gehört zu welcher Rechnung?',
-                empty: 'Keine weitere offene Rechnung vorhanden.',
+                title: _('Belongs to which invoice?'),
+                empty: _('No other open invoice.'),
                 items: open.map((i) => ({
-                    title: `${i.number ? `Nr. ${i.number} · ` : ''}${i.customerName ?? ''}`,
+                    title: `${i.number ? `${fmt(_('No. {number}'), { number: i.number })} · ` : ''}${i.customerName ?? ''}`,
                     sub: [i.issueDate ? deDate(i.issueDate) : '', i.total != null ? eur(i.total) : '']
                         .filter(Boolean)
                         .join(' · '),
@@ -427,11 +428,11 @@ export class BhRechnungDetailDialog {
                     void this.decide(
                         txId,
                         { art: 'andere_rechnung', rechnungId: open[n].id },
-                        'Der anderen Rechnung zugeordnet',
+                        _('Assigned to the other invoice'),
                     ),
             });
         } catch (err) {
-            await errorDialog(this.dialog, 'Rechnungen nicht ladbar', msg(err));
+            await errorDialog(this.dialog, _('Could not load invoices'), msg(err));
         }
     }
 
@@ -439,41 +440,37 @@ export class BhRechnungDetailDialog {
         try {
             const debits = loadRueckzahlungKandidaten(this.entity.id, r.amount ?? 0);
             pickDialog(this.dialog, {
-                title: 'Welche Überweisung war die Rückzahlung?',
-                empty: 'Keine Abbuchung gefunden. Lief die Rückzahlung außerhalb der Konten, „Außerhalb zurückgezahlt“ wählen.',
+                title: _('Which transfer was the refund?'),
+                empty: _('No debit found. If the refund was paid outside the accounts, choose “Refunded elsewhere”.'),
                 items: debits.map((d) => {
                     const z = zahlungZeile(d);
                     return { title: `${z.title}`, sub: z.sub || d.accountKey };
                 }),
                 onPick: (n) =>
-                    void this.decide(
-                        r.txId,
-                        { art: 'rueckzahlung', refundTxId: debits[n].id },
-                        'Rückzahlung verknüpft',
-                    ),
+                    void this.decide(r.txId, { art: 'rueckzahlung', refundTxId: debits[n].id }, _('Refund linked')),
             });
         } catch (err) {
-            void errorDialog(this.dialog, 'Abbuchungen nicht ladbar', msg(err));
+            void errorDialog(this.dialog, _('Could not load debits'), msg(err));
         }
     }
 
     /** Ask for the date of a refund that ran outside the entity's accounts. */
     private async rueckzahlungExtern(txId: string): Promise<void> {
         const dlg = new Adw.AlertDialog({
-            heading: 'Außerhalb zurückgezahlt',
-            body: 'Datum der Rückzahlung (JJJJ-MM-TT), z. B. bei Zahlung aus privaten Mitteln.',
+            heading: _('Refunded elsewhere'),
+            body: _('Date of the refund (YYYY-MM-DD), e.g. when paid from private funds.'),
         });
         const entry = new Gtk.Entry({ text: new Date().toISOString().slice(0, 10) });
         dlg.set_extra_child(entry);
-        dlg.add_response('cancel', 'Abbrechen');
-        dlg.add_response('confirm', 'Speichern');
+        dlg.add_response('cancel', _('Cancel'));
+        dlg.add_response('confirm', _('Save'));
         dlg.set_response_appearance('confirm', Adw.ResponseAppearance.SUGGESTED);
         dlg.set_close_response('cancel');
         const answer = await new Promise<string>((resolve) =>
             dlg.choose(this.dialog, null, (_s, res) => resolve(dlg.choose_finish(res))),
         );
         if (answer !== 'confirm') return;
-        await this.decide(txId, { art: 'rueckzahlung_extern', datum: entry.get_text().trim() }, 'Rückzahlung erfasst');
+        await this.decide(txId, { art: 'rueckzahlung_extern', datum: entry.get_text().trim() }, _('Refund recorded'));
     }
 
     /** The send attempts of this invoice, newest first; nothing when it was never mailed. */
@@ -509,18 +506,20 @@ export class BhRechnungDetailDialog {
         } catch {
             return null;
         }
-        const group = new Adw.PreferencesGroup({ title: 'E-Mail-Verlauf' });
+        const group = new Adw.PreferencesGroup({ title: _('Email history') });
         if (!history.length) {
-            group.set_description('Noch nicht per E-Mail gesendet.');
+            group.set_description(_('Not sent by email yet.'));
         }
         for (const h of history) {
             group.add(
                 new Adw.ActionRow({
-                    title: markup(`${deDateTime(h.at)} · ${h.result === 'sent' ? 'gesendet' : 'fehlgeschlagen'}`),
+                    title: markup(`${deDateTime(h.at)} · ${h.result === 'sent' ? _('sent') : _('failed')}`),
                     subtitle: markup(
                         h.result === 'sent'
-                            ? [`an ${h.to.join(', ')}`, h.subject].filter(Boolean).join(' · ')
-                            : (h.error ?? 'Fehler'),
+                            ? [fmt(_('to {recipients}'), { recipients: h.to.join(', ') }), h.subject]
+                                  .filter(Boolean)
+                                  .join(' · ')
+                            : (h.error ?? _('Error')),
                     ),
                 }),
             );
@@ -530,11 +529,11 @@ export class BhRechnungDetailDialog {
 
     private fillSummaryOnly(): void {
         const { page, box } = this.contentClamp();
-        const group = new Adw.PreferencesGroup({ title: 'Übersicht' });
+        const group = new Adw.PreferencesGroup({ title: _('Overview') });
         const rows = new GroupRows(group);
-        this.kv(rows, 'Rechnungsdatum', deDate(this.summary.issueDate));
-        if (this.summary.dueDate) this.kv(rows, 'Fällig bis', deDate(this.summary.dueDate));
-        if (this.summary.total != null) this.kv(rows, 'Betrag', eur(this.summary.total));
+        this.kv(rows, _('Invoice date'), deDate(this.summary.issueDate));
+        if (this.summary.dueDate) this.kv(rows, _('Due by'), deDate(this.summary.dueDate));
+        if (this.summary.total != null) this.kv(rows, _('Amount'), eur(this.summary.total));
         box.append(group);
         this.appendDoppelzahlung(box);
         this.appendMailHistory(box);
@@ -545,28 +544,26 @@ export class BhRechnungDetailDialog {
 
     /** Action buttons group, gated by capabilities + status. */
     private actions(status: string): Adw.PreferencesGroup {
-        const group = new Adw.PreferencesGroup({ title: 'Aktionen' });
+        const group = new Adw.PreferencesGroup({ title: _('Actions') });
         const isDraft = status === 'draft';
         const norm = normalizeInvoiceStatus(status);
-        if (isDraft && this.caps.editDraft)
-            group.add(this.buttonRow('Bearbeiten', () => this.edit(), 'suggested-action'));
+        if (isDraft && this.caps.editDraft) group.add(this.buttonRow(_('Edit'), () => this.edit(), 'suggested-action'));
         if (isDraft && this.caps.finalize)
-            group.add(this.buttonRow('Festschreiben', () => void this.finalize(), 'suggested-action'));
+            group.add(this.buttonRow(_('Finalize'), () => void this.finalize(), 'suggested-action'));
         if (isDraft && this.caps.deleteDraft)
-            group.add(this.buttonRow('Entwurf löschen', () => void this.deleteDraft(), 'destructive-action'));
+            group.add(this.buttonRow(_('Delete draft'), () => void this.deleteDraft(), 'destructive-action'));
         if (norm === 'open' && this.caps.markPaid)
-            group.add(this.buttonRow('Als bezahlt markieren', () => this.openPaidDialog()));
+            group.add(this.buttonRow(_('Mark as paid'), () => this.openPaidDialog()));
         if ((norm === 'open' || norm === 'paid') && this.caps.cancelStorno)
-            group.add(this.buttonRow('Stornieren', () => void this.storno(), 'destructive-action'));
+            group.add(this.buttonRow(_('Cancel invoice'), () => void this.storno(), 'destructive-action'));
         if (this.caps.pdf === 'local' && !isDraft)
-            group.add(this.buttonRow('PDF öffnen', () => void this.openPdf(false)));
+            group.add(this.buttonRow(_('Open PDF'), () => void this.openPdf(false)));
         if (this.caps.pdf === 'local' && !isDraft)
-            group.add(this.buttonRow('Speichern unter …', () => void this.openPdf(true)));
-        if (this.caps.pdf && !isDraft) group.add(this.buttonRow('Per E-Mail senden …', () => this.openVersand()));
+            group.add(this.buttonRow(_('Save as …'), () => void this.openPdf(true)));
+        if (this.caps.pdf && !isDraft) group.add(this.buttonRow(_('Send by email …'), () => this.openVersand()));
         if (this.caps.pdf === 'hosted' && this.summary.url)
-            group.add(this.buttonRow('In Qonto öffnen', () => this.openUri(this.summary.url as string)));
-        if (this.caps.xml && !isDraft)
-            group.add(this.buttonRow('XRechnung (XML) speichern', () => void this.saveXml()));
+            group.add(this.buttonRow(_('Open in Qonto'), () => this.openUri(this.summary.url as string)));
+        if (this.caps.xml && !isDraft) group.add(this.buttonRow(_('Save XRechnung (XML)'), () => void this.saveXml()));
         return group;
     }
 
@@ -601,41 +598,39 @@ export class BhRechnungDetailDialog {
     /** Festschreiben with an irreversible-action confirmation. */
     private async finalize(): Promise<void> {
         const ok = await confirmDialog(this.dialog, {
-            heading: 'Rechnung festschreiben?',
-            body: 'Die Rechnung erhält eine fortlaufende Nummer und kann danach nicht mehr bearbeitet werden. Dieser Schritt ist unwiderruflich.',
-            confirmLabel: 'Festschreiben',
+            heading: _('Finalize invoice?'),
+            body: _(
+                'The invoice gets a sequential number and can no longer be edited afterwards. This step cannot be undone.',
+            ),
+            confirmLabel: _('Finalize'),
         });
         if (!ok) return;
         try {
             await finalizeOutgoingInvoice(this.entity.id, this.summary.id);
-            showToast('Rechnung festgeschrieben');
+            showToast(_('Invoice finalized'));
             this.onChanged?.();
             this.dialog.close();
         } catch (err) {
-            await errorDialog(
-                this.dialog,
-                'Festschreiben fehlgeschlagen',
-                err instanceof Error ? err.message : String(err),
-            );
+            await errorDialog(this.dialog, _('Finalizing failed'), err instanceof Error ? err.message : String(err));
         }
     }
 
     /** Delete the draft (destructive confirmation). */
     private async deleteDraft(): Promise<void> {
         const ok = await confirmDialog(this.dialog, {
-            heading: 'Entwurf löschen?',
-            body: 'Der Rechnungsentwurf wird endgültig entfernt.',
-            confirmLabel: 'Löschen',
+            heading: _('Delete draft?'),
+            body: _('The invoice draft is removed permanently.'),
+            confirmLabel: _('Delete'),
             destructive: true,
         });
         if (!ok) return;
         try {
             await deleteOutgoingInvoiceDraft(this.entity.id, this.summary.id);
-            showToast('Entwurf gelöscht');
+            showToast(_('Draft deleted'));
             this.onChanged?.();
             this.dialog.close();
         } catch (err) {
-            await errorDialog(this.dialog, 'Löschen fehlgeschlagen', err instanceof Error ? err.message : String(err));
+            await errorDialog(this.dialog, _('Deleting failed'), err instanceof Error ? err.message : String(err));
         }
     }
 
@@ -645,20 +640,20 @@ export class BhRechnungDetailDialog {
         const dlg = new Adw.Dialog();
         dlg.set_content_width(520);
         const header = new Adw.HeaderBar();
-        header.set_title_widget(new Adw.WindowTitle({ title: 'Als bezahlt markieren', subtitle: '' }));
+        header.set_title_widget(new Adw.WindowTitle({ title: _('Mark as paid'), subtitle: '' }));
         const page = new Adw.PreferencesPage();
 
         const group = new Adw.PreferencesGroup();
-        const dateRow = new Adw.EntryRow({ title: 'Bezahlt am (JJJJ-MM-TT)', text: today });
+        const dateRow = new Adw.EntryRow({ title: _('Paid on (YYYY-MM-DD)'), text: today });
         group.add(dateRow);
         const txList = new Gtk.StringList();
-        txList.append('Ohne Verknüpfung');
-        const txRow = new Adw.ComboRow({ title: 'Transaktion', model: txList });
+        txList.append(_('Without link'));
+        const txRow = new Adw.ComboRow({ title: _p('invoice payment', 'Transaction'), model: txList });
         group.add(txRow);
         page.add(group);
 
         const actions = new Adw.PreferencesGroup();
-        const confirm = new Adw.ButtonRow({ title: 'Als bezahlt buchen' });
+        const confirm = new Adw.ButtonRow({ title: _('Book as paid') });
         confirm.add_css_class('suggested-action');
         actions.add(confirm);
         page.add(actions);
@@ -687,13 +682,13 @@ export class BhRechnungDetailDialog {
             void markOutgoingInvoicePaid(this.entity.id, this.summary.id, { paidAt: paidOn, txId })
                 .then(() => {
                     dlg.close();
-                    showToast('Rechnung als bezahlt markiert');
+                    showToast(_('Invoice marked as paid'));
                     this.onChanged?.();
                     this.dialog.close();
                 })
                 .catch(
                     (err: unknown) =>
-                        void errorDialog(dlg, 'Fehlgeschlagen', err instanceof Error ? err.message : String(err)),
+                        void errorDialog(dlg, _('Failed'), err instanceof Error ? err.message : String(err)),
                 );
         });
     }
@@ -701,23 +696,21 @@ export class BhRechnungDetailDialog {
     /** Cancel via storno (destructive confirmation). */
     private async storno(): Promise<void> {
         const ok = await confirmDialog(this.dialog, {
-            heading: 'Rechnung stornieren?',
-            body: 'Es wird eine Stornorechnung erstellt; die Rechnung gilt danach als aufgehoben. Dieser Schritt ist unwiderruflich.',
-            confirmLabel: 'Stornieren',
+            heading: _('Cancel invoice?'),
+            body: _(
+                'A cancellation invoice is created; the invoice then counts as voided. This step cannot be undone.',
+            ),
+            confirmLabel: _('Cancel invoice'),
             destructive: true,
         });
         if (!ok) return;
         try {
             await cancelOutgoingInvoice(this.entity.id, this.summary.id, {});
-            showToast('Stornorechnung erstellt');
+            showToast(_('Cancellation invoice created'));
             this.onChanged?.();
             this.dialog.close();
         } catch (err) {
-            await errorDialog(
-                this.dialog,
-                'Stornieren fehlgeschlagen',
-                err instanceof Error ? err.message : String(err),
-            );
+            await errorDialog(this.dialog, _('Cancelling failed'), err instanceof Error ? err.message : String(err));
         }
     }
 
@@ -745,7 +738,7 @@ export class BhRechnungDetailDialog {
                         const dest = dialog.save_finish(res);
                         if (dest) {
                             Gio.File.new_for_path(path).copy(dest, Gio.FileCopyFlags.OVERWRITE, null, null);
-                            showToast('Rechnung gespeichert');
+                            showToast(_('Invoice saved'));
                         }
                     } catch {
                         /* user cancelled */
@@ -755,7 +748,7 @@ export class BhRechnungDetailDialog {
                 new Gtk.FileLauncher({ file: Gio.File.new_for_path(path) }).launch(this.rootWindow(), null, () => {});
             }
         } catch (err) {
-            await errorDialog(this.dialog, 'PDF nicht verfügbar', err instanceof Error ? err.message : String(err));
+            await errorDialog(this.dialog, _('PDF not available'), err instanceof Error ? err.message : String(err));
         }
     }
 
@@ -770,7 +763,7 @@ export class BhRechnungDetailDialog {
                     const dest = dialog.save_finish(res);
                     if (dest) {
                         Gio.File.new_for_path(path).copy(dest, Gio.FileCopyFlags.OVERWRITE, null, null);
-                        showToast('XRechnung gespeichert');
+                        showToast(_('XRechnung saved'));
                     }
                 } catch {
                     /* cancelled */
@@ -779,7 +772,7 @@ export class BhRechnungDetailDialog {
         } catch (err) {
             await errorDialog(
                 this.dialog,
-                'XRechnung nicht verfügbar',
+                _('XRechnung not available'),
                 err instanceof Error ? err.message : String(err),
             );
         }

@@ -19,7 +19,7 @@ template $BhTransactionsView: Adw.Bin {
         }
 
         Gtk.Label {
-          label: "Lade Transaktionen …";
+          label: _("Loading transactions …");
           styles ["dim-label"]
         }
       };
@@ -29,7 +29,7 @@ template $BhTransactionsView: Adw.Bin {
       name: "error";
       child: Adw.StatusPage error_page {
         icon-name: "dialog-error-symbolic";
-        title: "Konnte nicht laden";
+        title: _("Could not load");
       };
     }
 
@@ -55,7 +55,7 @@ template $BhTransactionsView: Adw.Bin {
             }
 
             Gtk.SearchEntry search_entry {
-              placeholder-text: "Buchungen durchsuchen …";
+              placeholder-text: _("Search transactions …");
               hexpand: true;
             }
 

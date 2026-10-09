@@ -5,6 +5,7 @@
  */
 
 import Adw from '@girs/adw-1';
+import { _ } from './i18n.ts';
 
 let overlay: Adw.ToastOverlay | null = null;
 
@@ -25,7 +26,7 @@ export function showToast(title: string, timeoutSeconds = 3): void {
  */
 export function showUndoToast(title: string, onUndo: () => void, timeoutSeconds = 6): void {
     if (!overlay) return;
-    const toast = new Adw.Toast({ title, timeout: timeoutSeconds, buttonLabel: 'Rückgängig' });
+    const toast = new Adw.Toast({ title, timeout: timeoutSeconds, buttonLabel: _('Undo') });
     let used = false;
     toast.connect('button-clicked', () => {
         if (used) return;

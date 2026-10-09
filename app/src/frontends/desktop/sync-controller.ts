@@ -10,7 +10,7 @@ import GLib from '@girs/glib-2.0';
 import { isDemoMode } from '../../core/config/demo.ts';
 import { loadAppSettings } from '../../core/config/index.ts';
 import { createDemoRunners } from '../../core/sync/demo-runners.ts';
-import { DEFAULT_SYNC_SCHEDULE, affectsView, SYNC_SOURCE_LABEL, type SyncSchedule } from '../../core/sync/plan.ts';
+import { DEFAULT_SYNC_SCHEDULE, affectsView, type SyncSchedule, type SyncSource } from '../../core/sync/plan.ts';
 import { syncEntityInfo } from '../../core/sync/entity-info.ts';
 import { createRunners, defaultRunnerDeps } from '../../core/sync/runners.ts';
 import { createSyncService, type SyncRunResult } from '../../core/sync/service.ts';
@@ -18,6 +18,7 @@ import { appSession } from './data/session.ts';
 import { clearYearCache } from './data/assistent.ts';
 import type { AppEntity } from './entities.ts';
 import { showToast } from './toast.ts';
+import { _, fmt } from './i18n.ts';
 
 const TICK_SECONDS = 60;
 
@@ -31,10 +32,22 @@ function schedule(): SyncSchedule {
 
 export function relativeTime(then: number, now = Date.now()): string {
     const mins = Math.max(0, Math.round((now - then) / 60_000));
-    if (mins < 1) return 'gerade eben';
-    if (mins < 60) return `vor ${mins} Min.`;
+    if (mins < 1) return _('just now');
+    if (mins < 60) return fmt(_('{n} min ago'), { n: mins });
     const hours = Math.round(mins / 60);
-    return hours < 24 ? `vor ${hours} Std.` : `vor ${Math.round(hours / 24)} Tg.`;
+    return hours < 24 ? fmt(_('{n} h ago'), { n: hours }) : fmt(_('{n} d ago'), { n: Math.round(hours / 24) });
+}
+
+/** The desktop's own names for the sync sources — the core's `SYNC_SOURCE_LABEL` stays German for CLI/MCP. */
+function sourceLabel(source: SyncSource): string {
+    switch (source) {
+        case 'qonto-invoices':
+            return _('Qonto invoices');
+        case 'qonto-transactions':
+            return _('Qonto transactions');
+        default:
+            return 'Paperless';
+    }
 }
 
 export interface SyncHost {
@@ -117,11 +130,13 @@ export class SyncController {
         if (result.failures.length > 0) {
             if (manual)
                 showToast(
-                    `Abgleich: ${result.failures.map((f) => `${SYNC_SOURCE_LABEL[f.source]} — ${f.message}`).join(' · ')}`,
+                    fmt(_('Sync: {failures}'), {
+                        failures: result.failures.map((f) => `${sourceLabel(f.source)} — ${f.message}`).join(' · '),
+                    }),
                     5,
                 );
         } else if (manual) {
-            showToast(result.ran.length === 0 ? 'Nichts abzugleichen' : 'Abgleich abgeschlossen');
+            showToast(result.ran.length === 0 ? _('Nothing to sync') : _('Sync complete'));
         }
     }
 
@@ -138,15 +153,25 @@ export class SyncController {
             const spinner = new Gtk.Spinner({ spinning: true });
             this.button.set_child(spinner);
             this.button.set_sensitive(false);
-            this.button.set_tooltip_text(`Gleicht ab: ${s.current ? SYNC_SOURCE_LABEL[s.current] : ''} …`);
+            this.button.set_tooltip_text(
+                fmt(_('Syncing: {source} …'), { source: s.current ? sourceLabel(s.current) : '' }),
+            );
             return;
         }
         this.button.set_child(
             new Gtk.Image({ iconName: s.lastError ? 'dialog-warning-symbolic' : 'view-refresh-symbolic' }),
         );
         this.button.set_sensitive(true);
-        const last = s.lastSuccessAt ? `Letzter Abgleich ${relativeTime(s.lastSuccessAt)}` : 'Noch nicht abgeglichen';
-        const err = s.lastError ? `\nFehler: ${SYNC_SOURCE_LABEL[s.lastError.source]} — ${s.lastError.message}` : '';
+        const last = s.lastSuccessAt
+            ? fmt(_('Last sync {when}'), { when: relativeTime(s.lastSuccessAt) })
+            : _('Not synced yet');
+        const err = s.lastError
+            ? '\n' +
+              fmt(_('Error: {source} — {message}'), {
+                  source: sourceLabel(s.lastError.source),
+                  message: s.lastError.message,
+              })
+            : '';
         this.button.set_tooltip_text(`${last}${err}`);
     }
 }

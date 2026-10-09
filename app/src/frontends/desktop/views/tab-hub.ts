@@ -136,13 +136,13 @@ export const makeReviewHub = (): BhTabHub =>
 
 export const makeBuchungenHub = (): BhTabHub =>
     new BhTabHub().configure([
-        { id: 'buchungen', title: 'Alle', make: () => new BhTransactionsView() },
-        { id: 'zu-pruefen', title: 'Zu prüfen', make: () => new BhZuPruefenView(), businessOnly: true },
-        { id: 'laufende-kosten', title: 'Laufende Kosten', make: () => new BhLaufendeKostenView() },
+        { id: 'buchungen', title: _('All'), make: () => new BhTransactionsView() },
+        { id: 'zu-pruefen', title: _('To review'), make: () => new BhZuPruefenView(), businessOnly: true },
+        { id: 'laufende-kosten', title: _('Recurring costs'), make: () => new BhLaufendeKostenView() },
     ]);
 
 export const makeRechnungenHub = (): BhTabHub =>
     new BhTabHub().configure([
-        { id: 'rechnungen', title: 'Rechnungen', make: () => new BhRechnungenView() },
-        { id: 'forderungen', title: 'Offene Forderungen', make: () => new BhForderungenView() },
+        { id: 'rechnungen', title: _('Invoices'), make: () => new BhRechnungenView() },
+        { id: 'forderungen', title: _('Outstanding invoices'), make: () => new BhForderungenView() },
     ]);

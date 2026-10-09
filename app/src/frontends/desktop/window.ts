@@ -43,6 +43,7 @@ import { BhAssistentPanel } from './assistent-panel.ts';
 
 import Template from './window.blp';
 import type { PortedView } from './view.ts';
+import { _, fmt } from './i18n.ts';
 
 // window.blp names these three as `$BhEntitySwitcher`, `$BhYearSwitcher` and `$BhAssistentPanel`,
 // which GtkBuilder resolves by GType at instantiation — so each class has to be REGISTERED before
@@ -392,12 +393,14 @@ export class MainWindow extends Adw.ApplicationWindow {
         // Manifest gefunden" only tells the user something is broken while they are fixing it.
         if (this.loadError && !isFirstRun()) {
             // Banner title is Pango markup — escape the (raw exception) error text.
-            this._banner.set_title(markup(`Daten konnten nicht vollständig geladen werden: ${this.loadError}`));
+            this._banner.set_title(
+                markup(fmt(_('Data could not be loaded completely: {error}'), { error: this.loadError })),
+            );
             this._banner.set_revealed(true);
             return;
         }
         if (this.currentEntity?.demo) {
-            this._banner.set_title(markup('Demodaten – fiktive Beispieldaten, keine echten Finanzdaten'));
+            this._banner.set_title(markup(_('Demo data – fictional examples, no real financial data')));
             this._banner.set_revealed(true);
             return;
         }
@@ -411,7 +414,7 @@ export class MainWindow extends Adw.ApplicationWindow {
             this.workspace.entities.map((e) => ({
                 id: e.id,
                 name: e.name,
-                sub: e.kind === 'privat' ? 'Privat' : 'Unternehmen',
+                sub: e.kind === 'privat' ? _('Private') : _('Business'),
             })),
             this.currentEntity.id,
         );
@@ -473,8 +476,13 @@ export class MainWindow extends Adw.ApplicationWindow {
             iconName: item.icon,
             title: markup(item.label),
             description: markup(
-                `„${item.sub}“ — diese Ansicht wird Schritt für Schritt auf native Adwaita-Widgets ` +
-                    'portiert. In der Web-Oberfläche (steuer web) ist sie bereits verfügbar.',
+                fmt(
+                    _(
+                        '“{view}” — this view is being ported to native Adwaita widgets step by step. ' +
+                            'It is already available in the web interface (steuer web).',
+                    ),
+                    { view: item.sub },
+                ),
             ),
         });
     }

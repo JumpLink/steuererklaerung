@@ -23,11 +23,12 @@ import { deDate, eur } from '../../../core/lib/format.ts';
 import { prefillRecordOf } from '../../../core/invoices/e-rechnung/index.ts';
 import { rechnungsartLabel } from './rechnungsart-row.ts';
 import { GroupRows, LoadToken, amountLabel, emptyState, loadIntoStack, markup } from './util.ts';
+import { _, _n, fmt } from '../i18n.ts';
 
 /** Cap the rendered rows — a non-virtualised boxed list stays snappy up to a few hundred. */
 const MAX_ROWS = 400;
 
-const DMS_LABEL: Record<string, string> = { builtin: 'eigenes DMS', paperless: 'Paperless' };
+const DMS_LABEL: Record<string, string> = { builtin: _('built-in DMS'), paperless: 'Paperless' };
 
 export class BhDokumenteView extends Adw.Bin {
     declare private _stack: Gtk.Stack;
@@ -68,7 +69,7 @@ export class BhDokumenteView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'Belege konnten nicht geladen werden',
+            errorContext: _('Could not load the receipts'),
             load: () => loadDocuments(appSession(), entity, year),
             fill: ({ docs, kind }) => this.fill(docs, kind, year),
         });
@@ -84,11 +85,11 @@ export class BhDokumenteView extends Adw.Bin {
 
     private fillSummary(docs: DmsDocument[], kind: 'builtin' | 'paperless', year: number): void {
         this.summary.clear();
-        this._summary_group.set_title(`Belege ${year}`);
+        this._summary_group.set_title(fmt(_('Receipts {year}'), { year }));
         const linked = docs.filter((d) => d.linkedTxIds.length > 0).length;
         const row = new Adw.ActionRow({
-            title: `${docs.length} Belege`,
-            subtitle: `${DMS_LABEL[kind] ?? humanizeKey(kind)} · ${linked} mit Buchung verknüpft`,
+            title: fmt(_n('{n} receipt', '{n} receipts', docs.length), { n: docs.length }),
+            subtitle: `${DMS_LABEL[kind] ?? humanizeKey(kind)} · ${fmt(_('{n} linked to a transaction'), { n: linked })}`,
         });
 
         // The way IN. There was no file upload anywhere in the desktop tree, so this list could
@@ -98,7 +99,7 @@ export class BhDokumenteView extends Adw.Bin {
         // Paperless has its own ingestion (mail rules, consume folder) and no store() in this
         // provider, so offering the button there would only ever produce an error.
         if (kind === 'builtin') {
-            const add = new Gtk.Button({ label: 'Beleg hinzufügen', valign: Gtk.Align.CENTER });
+            const add = new Gtk.Button({ label: _('Add receipt'), valign: Gtk.Align.CENTER });
             add.add_css_class('suggested-action');
             add.connect('clicked', () => void this.onAddReceipts());
             row.add_suffix(add);
@@ -142,17 +143,20 @@ export class BhDokumenteView extends Adw.Bin {
         this.list.clear();
         const shown = docs.slice(0, MAX_ROWS);
         this._list_group.set_description(
-            docs.length > shown.length ? `${shown.length} von ${docs.length} angezeigt` : `${docs.length} gesamt`,
+            docs.length > shown.length
+                ? fmt(_('{shown} of {total} shown'), { shown: shown.length, total: docs.length })
+                : fmt(_('{total} total'), { total: docs.length }),
         );
         if (shown.length === 0) {
             this.list.add(
                 emptyState({
                     icon: 'document-open-symbolic',
-                    title: 'Keine Belege in diesem Jahr',
-                    description:
-                        'Rechnungen und Quittungen gehören hierher — sie sind es, aus denen Vorsteuer und ' +
-                        'Betriebsausgaben gelesen werden.',
-                    action: { label: 'Belege hinzufügen', run: () => void this.onAddReceipts() },
+                    title: _('No receipts this year'),
+                    description: _(
+                        'Invoices and receipts belong here — they are what input VAT and ' +
+                            'business expenses are read from.',
+                    ),
+                    action: { label: _('Add receipts'), run: () => void this.onAddReceipts() },
                 }),
             );
             return;
@@ -168,18 +172,18 @@ export class BhDokumenteView extends Adw.Bin {
     private buildRow(d: DmsDocument): Adw.ActionRow {
         const linked =
             d.linkedTxIds.length > 0
-                ? `⇄ ${d.linkedTxIds.length} Buchung${d.linkedTxIds.length === 1 ? '' : 'en'}`
-                : 'ohne Buchung';
+                ? `⇄ ${fmt(_n('{n} transaction', '{n} transactions', d.linkedTxIds.length), { n: d.linkedTxIds.length })}`
+                : _('no transaction');
         const sub = [
             d.correspondent,
             d.created ? deDate(d.created) : null,
-            d.invoiceNumber ? `Nr. ${d.invoiceNumber}` : null,
+            d.invoiceNumber ? fmt(_('No. {number}'), { number: d.invoiceNumber }) : null,
             rechnungsartLabel(d),
-            d.ruleOrigin ? `via Regel ${d.ruleOrigin.label}` : null,
+            d.ruleOrigin ? fmt(_('via rule {rule}'), { rule: d.ruleOrigin.label }) : null,
             linked,
         ].filter(Boolean);
         const row = new Adw.ActionRow({
-            title: markup(d.title?.trim() || '(ohne Titel)'),
+            title: markup(d.title?.trim() || _('(untitled)')),
             subtitle: markup(sub.join(' · ')),
         });
         row.add_prefix(new Gtk.Image({ iconName: 'mail-attachment-symbolic' }));

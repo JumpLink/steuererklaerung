@@ -31,26 +31,26 @@ template $BhEinstellungenView: Adw.Bin {
         }
 
         Adw.PreferencesGroup lernmodus_group {
-          title: "Verständlichkeit";
+          title: _("Clarity");
         }
 
         Adw.PreferencesGroup sync_group {
-          title: "Abgleich";
-          description: "Holt neue Daten im Hintergrund. Bank-Abrufe mit TAN/PIN und ELSTER laufen nie automatisch.";
+          title: C_("sync settings", "Sync");
+          description: _("Fetches new data in the background. Bank fetches with TAN/PIN and ELSTER never run automatically.");
         }
 
         Adw.PreferencesGroup assistant_group {
-          title: "Assistent";
+          title: _("Assistant");
         }
 
         Adw.PreferencesGroup mcp_group {
           title: "MCP";
-          description: "Externe Assistenten anbinden — Änderungen wirken beim nächsten Start des MCP-Servers.";
+          description: _("Connect external assistants — changes take effect the next time the MCP server starts.");
         }
 
         Adw.PreferencesGroup groups_group {
-          title: "MCP-Tool-Gruppen";
-          description: "Welche Gruppen nach außen sichtbar sind.";
+          title: _("MCP tool groups");
+          description: _("Which groups are visible to the outside.");
         }
       };
     };

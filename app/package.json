@@ -12,7 +12,7 @@
     },
     "scripts": {
         "start": "gjsify run dist/steuer.gjs.mjs",
-        "check": "gjsify tsc --noEmit && gjsify run check:glossary && gjsify run check:fields && gjsify run check:ai && gjsify run check:cli-commands && gjsify run check:blp-handlers && gjsify run check:markup",
+        "check": "gjsify tsc --noEmit && gjsify run check:glossary && gjsify run check:fields && gjsify run check:ai && gjsify run check:cli-commands && gjsify run check:blp-handlers && gjsify run check:markup && gjsify run check:i18n",
         "check:fields": "node dev/check-field-coverage.js",
         "check:ai": "node dev/check-ai-boundary.js",
         "check:cli-commands": "node dev/check-cli-commands.js",
@@ -43,7 +43,8 @@
         "check:test-bundle": "gjs -m dev/check-test-bundle.js",
         "i18n:extract": "./dev/i18n.sh extract",
         "i18n:compile": "./dev/i18n.sh compile",
-        "check:blp-handlers": "node dev/check-blp-handlers.js"
+        "check:blp-handlers": "node dev/check-blp-handlers.js",
+        "check:i18n": "node dev/check-i18n.js"
     },
     "optionalDependencies": {
         "@anthropic-ai/claude-agent-sdk": "^0.3.186"

@@ -19,7 +19,7 @@ template $BhRechnungenView: Adw.Bin {
         }
 
         Gtk.Label {
-          label: "Lade Rechnungen …";
+          label: _("Loading invoices …");
           styles ["dim-label"]
         }
       };
@@ -29,7 +29,7 @@ template $BhRechnungenView: Adw.Bin {
       name: "error";
       child: Adw.StatusPage error_page {
         icon-name: "dialog-error-symbolic";
-        title: "Konnte nicht laden";
+        title: _("Could not load");
       };
     }
 
@@ -37,7 +37,7 @@ template $BhRechnungenView: Adw.Bin {
       name: "notice";
       child: Adw.StatusPage notice_page {
         icon-name: "dialog-information-symbolic";
-        title: "Kein Qonto-Konto";
+        title: _("No Qonto account");
       };
     }
 
@@ -63,7 +63,7 @@ template $BhRechnungenView: Adw.Bin {
             }
 
             Adw.PreferencesGroup recurring_group {
-              title: "Wiederkehrende Rechnungen";
+              title: _("Recurring invoices");
             }
 
             // The filter chips + "Neue Rechnung" used to be this group's header_suffix. At 1280 px
@@ -77,7 +77,7 @@ template $BhRechnungenView: Adw.Bin {
             }
 
             Adw.PreferencesGroup invoices_group {
-              title: "Alle Rechnungen";
+              title: _("All invoices");
             }
           };
         };

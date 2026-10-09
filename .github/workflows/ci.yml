@@ -54,6 +54,7 @@ jobs:
           libsoup3 json-glib gnutls libnghttp2
           libgda libgda-sqlite
           pango cairo
+          gettext
 
       - uses: actions/checkout@v4
 

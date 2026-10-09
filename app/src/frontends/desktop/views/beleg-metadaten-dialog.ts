@@ -41,6 +41,7 @@ import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 import { rechnungsartRow } from './rechnungsart-row.ts';
 import { markup } from './util.ts';
 import { parseGermanInput } from '../../../core/lib/parsing.ts';
+import { _, fmt } from '../i18n.ts';
 
 /** Report the outcome; the caller toasts it and reloads. */
 export type MetadataResult = (message: string, changed: boolean) => void;
@@ -51,8 +52,8 @@ const CATEGORIES: readonly string[] = [NO_CATEGORY, ...ACCOUNTING_CATEGORY_OPTIO
 
 const DIRECTIONS: Array<{ id: 'incoming' | 'outgoing' | null; label: string }> = [
     { id: null, label: '—' },
-    { id: 'incoming', label: 'Eingang (Ausgabe)' },
-    { id: 'outgoing', label: 'Ausgang (Einnahme)' },
+    { id: 'incoming', label: _('Incoming (expense)') },
+    { id: 'outgoing', label: _('Outgoing (income)') },
 ];
 
 /** `1.234,56` and `1234.56` both mean the same thing; empty means "not set". */
@@ -80,23 +81,24 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
 
     // NOT `title`: Adw.Dialog already has a string property of that name and the override is a
     // type error — the sort that only surfaces once someone subclasses.
-    private readonly titleRow = new Adw.EntryRow({ title: 'Titel' });
-    private readonly correspondent = new Adw.EntryRow({ title: 'Korrespondent' });
-    private readonly invoiceNumber = new Adw.EntryRow({ title: 'Rechnungsnummer' });
-    private readonly created = new Adw.EntryRow({ title: 'Datum (JJJJ-MM-TT)' });
+    private readonly titleRow = new Adw.EntryRow({ title: _('Title') });
+    private readonly correspondent = new Adw.EntryRow({ title: _('Correspondent') });
+    private readonly invoiceNumber = new Adw.EntryRow({ title: _('Invoice number') });
+    private readonly created = new Adw.EntryRow({ title: _('Date (YYYY-MM-DD)') });
     private readonly direction: Adw.ComboRow;
-    private readonly documentType = new Adw.EntryRow({ title: 'Dokumenttyp' });
+    private readonly documentType = new Adw.EntryRow({ title: _('Document type') });
     private readonly category: Adw.ComboRow;
     /** The picker's entries; a category outside the SKR03 list (typed into a rule) is kept, not blanked. */
     private readonly categories: readonly string[];
     private readonly remember = new Adw.SwitchRow({
-        title: 'Als Regel merken',
-        subtitle:
-            'Künftige Belege mit diesem Korrespondenten bekommen Dokumenttyp, Kategorie und Richtung automatisch — ohne KI.',
+        title: _('Remember as rule'),
+        subtitle: _(
+            'Future receipts from this correspondent get document type, category and direction automatically — without AI.',
+        ),
     });
-    private readonly net = new Adw.EntryRow({ title: 'Netto' });
+    private readonly net = new Adw.EntryRow({ title: _('Net') });
     private readonly vat = new Adw.EntryRow({ title: 'USt' });
-    private readonly gross = new Adw.EntryRow({ title: 'Brutto' });
+    private readonly gross = new Adw.EntryRow({ title: _('Gross') });
     private readonly rate: Adw.ComboRow;
     private readonly banner = new Adw.Banner({ revealed: false });
 
@@ -108,23 +110,23 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
         this.done = done;
 
         this.direction = new Adw.ComboRow({
-            title: 'Richtung',
+            title: _('Direction'),
             model: Gtk.StringList.new(DIRECTIONS.map((d) => d.label)),
         });
         this.categories =
             doc.category && !CATEGORIES.includes(doc.category) ? [...CATEGORIES, doc.category] : CATEGORIES;
         this.category = new Adw.ComboRow({
-            title: 'Kategorie',
+            title: _('Category'),
             model: Gtk.StringList.new([...this.categories]),
         });
         this.rate = new Adw.ComboRow({
-            title: 'Steuersatz',
-            subtitle: 'Ergänzen füllt aus einer Zahl die beiden anderen',
+            title: _('Tax rate'),
+            subtitle: _('Complete fills in the other two from one figure'),
             model: Gtk.StringList.new(VAT_RATES.map((r) => `${Math.round(r * 100)} %`)),
         });
         this.rate.set_selected(VAT_RATES.indexOf(0.19));
 
-        this.set_title('Beleg bearbeiten');
+        this.set_title(_('Edit receipt'));
         this.set_content_width(540);
         this.set_content_height(800);
         this.set_child(this.build());
@@ -148,8 +150,8 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
         });
 
         const identity = new Adw.PreferencesGroup({
-            title: 'Beleg',
-            description: markup(this.doc.title ?? 'Ohne Titel'),
+            title: _('Receipt'),
+            description: markup(this.doc.title ?? _('Untitled')),
         });
         identity.add(this.titleRow);
         identity.add(this.correspondent);
@@ -164,21 +166,21 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
 
         const art = rechnungsartRow(this.doc);
         if (art) {
-            const artGroup = new Adw.PreferencesGroup({ title: 'Rechnungsart' });
+            const artGroup = new Adw.PreferencesGroup({ title: _('Invoice type') });
             artGroup.add(art);
             box.append(artGroup);
         }
 
         const amounts = new Adw.PreferencesGroup({
-            title: 'Beträge',
-            description: 'Zwei Zahlen genügen — die dritte wird ergänzt. Komma als Dezimaltrennzeichen.',
+            title: _('Amounts'),
+            description: _('Two figures are enough — the third is filled in. Comma as decimal separator.'),
         });
 
         // Rate + "ergänzen" FIRST, and the button as a suffix on the rate row rather than a
         // trailing widget: at the window heights this dialog actually opens at, a button below
         // three entry rows falls below the fold — the affordance that makes the form quick to fill
         // was the one thing the user could not see.
-        const derive = new Gtk.Button({ label: 'Ergänzen', valign: Gtk.Align.CENTER });
+        const derive = new Gtk.Button({ label: _('Complete'), valign: Gtk.Align.CENTER });
         derive.connect('clicked', () => this.onDerive());
         this.rate.add_suffix(derive);
         amounts.add(this.rate);
@@ -202,7 +204,7 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
             marginStart: 12,
             marginEnd: 12,
         });
-        const save = new Gtk.Button({ label: 'Speichern' });
+        const save = new Gtk.Button({ label: _('Save') });
         save.add_css_class('suggested-action');
         save.add_css_class('pill');
         save.connect('clicked', () => void this.onSave());
@@ -217,7 +219,7 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
      * that turns what is on screen into a rule for the next receipt of this sender.
      */
     private ruleGroup(): Gtk.Widget {
-        const group = new Adw.PreferencesGroup({ title: 'Regel' });
+        const group = new Adw.PreferencesGroup({ title: _('Rule') });
         group.set_header_suffix(new BhGlossaryHelp('dokumentregel', lernmodusOn()));
         const origin = this.doc.ruleOrigin;
         if (origin) {
@@ -225,9 +227,9 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
             row.set_title_lines(0);
             row.add_prefix(new Gtk.Image({ iconName: 'emblem-system-symbolic', cssClasses: ['dim-label'] }));
             const undo = new Gtk.Button({
-                label: 'Zurücknehmen',
+                label: _('Revert'),
                 valign: Gtk.Align.CENTER,
-                tooltipText: 'Werte der Regel von diesem Beleg entfernen',
+                tooltipText: _('Remove the rule’s values from this receipt'),
             });
             undo.connect('clicked', () => void this.onUndoRule());
             row.add_suffix(undo);
@@ -268,7 +270,7 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
             const index = VAT_RATES.findIndex((r) => Math.abs(r - prefill.vatRate!) < 0.001);
             if (index >= 0) {
                 this.rate.set_selected(index);
-                parts.push(`Steuersatz ${Math.round(VAT_RATES[index] * 100)} %`);
+                parts.push(fmt(_('tax rate {rate} %'), { rate: Math.round(VAT_RATES[index] * 100) }));
             }
         }
         if (prefill.direction && doc.direction == null) {
@@ -278,7 +280,7 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
                     DIRECTIONS.findIndex((d) => d.id === prefill.direction),
                 ),
             );
-            parts.push(prefill.direction === 'incoming' ? 'Eingang' : 'Ausgang');
+            parts.push(prefill.direction === 'incoming' ? _('incoming') : _('outgoing'));
         }
         if (parts.length > 0) {
             this.rate.set_subtitle(`${prefillReason(prefill, doc.correspondent)} (${parts.join(', ')})`);
@@ -304,7 +306,7 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
     private collect(): ReceiptMetadataInput | null {
         const amounts = this.readAmounts();
         if (!amounts) {
-            this.warn('Betrag ist keine Zahl — bitte prüfen (Komma als Dezimaltrennzeichen).');
+            this.warn(_('Amount is not a number — please check (comma as decimal separator).'));
             return null;
         }
         const text = (row: Adw.EntryRow): string | null => {
@@ -329,13 +331,13 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
     private onDerive(): void {
         const amounts = this.readAmounts();
         if (!amounts) {
-            this.warn('Betrag ist keine Zahl — bitte prüfen (Komma als Dezimaltrennzeichen).');
+            this.warn(_('Amount is not a number — please check (comma as decimal separator).'));
             return;
         }
         const rate = VAT_RATES[this.rate.get_selected()] ?? 0.19;
         const derived = deriveAmounts(amounts, rate);
         if (derived.net === amounts.net && derived.vat === amounts.vat && derived.gross === amounts.gross) {
-            this.warn('Zu wenig Angaben — trage mindestens einen Betrag ein.');
+            this.warn(_('Not enough information — enter at least one amount.'));
             return;
         }
         this.net.set_text(formatAmount(derived.net));
@@ -357,11 +359,11 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
         }
         try {
             await updateReceiptMetadata(dmsProviderFor(this.entity), this.doc.id, input);
-            const message = this.remember.get_active() ? this.rememberRule(input) : 'Beleg gespeichert';
+            const message = this.remember.get_active() ? this.rememberRule(input) : _('Receipt saved');
             this.done(message, true);
             this.close();
         } catch (err) {
-            this.warn(`Speichern fehlgeschlagen: ${err instanceof Error ? err.message : String(err)}`);
+            this.warn(fmt(_('Saving failed: {error}'), { error: err instanceof Error ? err.message : String(err) }));
         }
     }
 
@@ -374,15 +376,17 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
             direction: input.direction ?? null,
         };
         const muster = suggestDokumentMuster(values);
-        if (!muster) return 'Beleg gespeichert — für eine Regel fehlt der Korrespondent';
+        if (!muster) return _('Receipt saved — a rule needs a correspondent');
         try {
             const { added, changed } = rememberDokumentRegelFromDocument(this.entity.id, values, muster);
-            if (added) return `Beleg gespeichert · Regel für „${muster}“ gemerkt`;
+            if (added) return fmt(_('Receipt saved · rule for “{pattern}” remembered'), { pattern: muster });
             return changed
-                ? `Beleg gespeichert · Regel für „${muster}“ aktualisiert`
-                : `Beleg gespeichert · Regel für „${muster}“ gab es schon`;
+                ? fmt(_('Receipt saved · rule for “{pattern}” updated'), { pattern: muster })
+                : fmt(_('Receipt saved · rule for “{pattern}” already existed'), { pattern: muster });
         } catch (err) {
-            return `Beleg gespeichert — Regel nicht gemerkt: ${err instanceof Error ? err.message : String(err)}`;
+            return fmt(_('Receipt saved — rule not remembered: {error}'), {
+                error: err instanceof Error ? err.message : String(err),
+            });
         }
     }
 
@@ -393,7 +397,7 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
             this.done(satz, true);
             this.close();
         } catch (err) {
-            this.warn(`Zurücknehmen fehlgeschlagen: ${err instanceof Error ? err.message : String(err)}`);
+            this.warn(fmt(_('Reverting failed: {error}'), { error: err instanceof Error ? err.message : String(err) }));
         }
     }
 
