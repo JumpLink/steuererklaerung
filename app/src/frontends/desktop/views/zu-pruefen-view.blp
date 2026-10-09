@@ -20,7 +20,7 @@ template $BhZuPruefenView: Adw.Bin {
         }
 
         Gtk.Label {
-          label: "Lade Buchungen zu prüfen …";
+          label: _("Loading transactions to review …");
           styles ["dim-label"]
         }
       };
@@ -30,7 +30,7 @@ template $BhZuPruefenView: Adw.Bin {
       name: "error";
       child: Adw.StatusPage error_page {
         icon-name: "dialog-error-symbolic";
-        title: "Konnte nicht laden";
+        title: _("Could not load");
       };
     }
 
@@ -72,13 +72,13 @@ template $BhZuPruefenView: Adw.Bin {
 
           // Mehrfachauswahl: the check boxes in the rows feed this one action.
           Gtk.Button regel_button {
-            label: "Regel aus Auswahl";
+            label: _("Rule from selection");
             sensitive: false;
             margin-top: 8;
             margin-bottom: 12;
             margin-start: 12;
             margin-end: 12;
-            tooltip-text: "Gemeinsames Muster der markierten Buchungen als Regel vorschlagen";
+            tooltip-text: _("Suggest the common pattern of the marked transactions as a rule");
 
             styles ["pill"]
           }

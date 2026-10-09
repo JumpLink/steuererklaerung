@@ -15,8 +15,9 @@ import { appSession } from '../data/session.ts';
 import { loadEuerCategories } from '../data/decisions.ts';
 import type { AppEntity } from '../entities.ts';
 import { markup } from './util.ts';
+import { _, _n, fmt } from '../i18n.ts';
 
-const KEINE_KATEGORIE = '— Kategorie wählen —';
+const KEINE_KATEGORIE = _('— Choose category —');
 
 export class BhRegelAusAuswahlDialog extends Adw.Dialog {
     static {
@@ -45,7 +46,7 @@ export class BhRegelAusAuswahlDialog extends Adw.Dialog {
         this.year = year;
         this.ids = ids;
         this.saved = saved;
-        this.set_title('Regel aus Auswahl');
+        this.set_title(_('Rule from selection'));
         this.set_content_width(620);
         this.set_content_height(720);
 
@@ -56,7 +57,7 @@ export class BhRegelAusAuswahlDialog extends Adw.Dialog {
             spacing: 12,
         });
         loading.append(new Adw.Spinner({ widthRequest: 32, heightRequest: 32 }));
-        loading.append(new Gtk.Label({ label: 'Suche das gemeinsame Muster …', cssClasses: ['dim-label'] }));
+        loading.append(new Gtk.Label({ label: _('Looking for the common pattern …'), cssClasses: ['dim-label'] }));
         this.stack.add_named(loading, 'loading');
 
         const toolbar = new Adw.ToolbarView();
@@ -77,7 +78,7 @@ export class BhRegelAusAuswahlDialog extends Adw.Dialog {
         } catch (err) {
             const page = new Adw.StatusPage({
                 iconName: 'dialog-error-symbolic',
-                title: 'Keine Vorschau möglich',
+                title: _('No preview possible'),
                 description: markup(err instanceof Error ? err.message : String(err)),
             });
             this.showContent(page);
@@ -102,19 +103,25 @@ export class BhRegelAusAuswahlDialog extends Adw.Dialog {
         });
 
         const regel = new Adw.PreferencesGroup({
-            title: 'Regel',
+            title: _('Rule'),
             description: markup(
-                `Aus ${this.ids.length} markierten Buchung(en). Das Muster wird als Text im Buchungstext gesucht ` +
-                    '(Gegenseite, Verwendungszweck, Referenz), Groß- und Kleinschreibung egal.',
+                fmt(
+                    _n(
+                        'From {n} marked transaction. The pattern is searched as text in the booking text (counterparty, purpose, reference), ignoring case.',
+                        'From {n} marked transactions. The pattern is searched as text in the booking text (counterparty, purpose, reference), ignoring case.',
+                        this.ids.length,
+                    ),
+                    { n: this.ids.length },
+                ),
             ),
         });
-        this.musterRow = new Adw.EntryRow({ title: 'Muster', showApplyButton: true });
+        this.musterRow = new Adw.EntryRow({ title: _('Pattern'), showApplyButton: true });
         this.musterRow.set_text(v.muster);
         this.musterRow.connect('apply', () => this.refreshPreview());
         regel.add(this.musterRow);
         this.options = [KEINE_KATEGORIE, ...this.categories];
         if (v.kategorie && !this.options.includes(v.kategorie)) this.options.splice(1, 0, v.kategorie);
-        this.combo = new Adw.ComboRow({ title: 'Kategorie', model: Gtk.StringList.new(this.options) });
+        this.combo = new Adw.ComboRow({ title: _('Category'), model: Gtk.StringList.new(this.options) });
         this.combo.set_selected(Math.max(0, this.options.indexOf(v.kategorie)));
         this.combo.connect('notify::selected', () => this.refreshPreview());
         regel.add(this.combo);
@@ -123,8 +130,12 @@ export class BhRegelAusAuswahlDialog extends Adw.Dialog {
         if (v.eingaenge > 0) {
             const hint = new Adw.Banner({
                 title: markup(
-                    `${v.eingaenge} der markierten Buchungen sind Eingänge — eigene Regeln buchen als Ausgabe. ` +
-                        'Kunden besser unter Einstellungen → Klassifizierung eintragen.',
+                    fmt(
+                        _(
+                            '{n} of the marked transactions are incoming — own rules book as expense. Better add customers under Settings → Classification.',
+                        ),
+                        { n: v.eingaenge },
+                    ),
                 ),
                 revealed: true,
             });
@@ -132,18 +143,23 @@ export class BhRegelAusAuswahlDialog extends Adw.Dialog {
         }
 
         const treffer = new Adw.PreferencesGroup({
-            title: `Trifft ${v.treffer.length} Buchung(en)`,
+            title: fmt(_n('Matches {n} transaction', 'Matches {n} transactions', v.treffer.length), {
+                n: v.treffer.length,
+            }),
             description:
                 v.treffer.length > 0
-                    ? 'Abgewählte Buchungen werden Ausnahmen der Regel und bleiben, wie sie sind.'
-                    : 'Mit diesem Muster und dieser Kategorie erfasst die Regel keine vorhandene Buchung.',
+                    ? _('Deselected transactions become exceptions to the rule and stay as they are.')
+                    : _('With this pattern and this category the rule matches no existing transaction.'),
         });
         for (const t of v.treffer) {
             const check = new Gtk.CheckButton({ active: true, valign: Gtk.Align.CENTER });
-            check.set_tooltip_text(`Erfassen: ${t.zeile}`);
+            check.set_tooltip_text(fmt(_('Include: {line}'), { line: t.zeile }));
             const row = new Adw.ActionRow({
                 title: markup(t.zeile),
-                subtitle: markup(`jetzt: ${t.category} · ${t.herkunft}${t.beispiel ? ' · markiert' : ''}`),
+                subtitle: markup(
+                    fmt(_('now: {category} · {origin}'), { category: t.category, origin: t.herkunft }) +
+                        (t.beispiel ? _(' · marked') : ''),
+                ),
             });
             row.set_title_lines(1);
             row.add_prefix(check);
@@ -158,7 +174,7 @@ export class BhRegelAusAuswahlDialog extends Adw.Dialog {
         box.append(treffer);
 
         if (v.nichtErfasst.length > 0) {
-            const nicht = new Adw.PreferencesGroup({ title: 'Nicht erfasst' });
+            const nicht = new Adw.PreferencesGroup({ title: _('Not matched') });
             for (const n of v.nichtErfasst) {
                 const row = new Adw.ActionRow({ title: markup(n.zeile), subtitle: markup(n.warum) });
                 row.set_title_lines(1);
@@ -182,7 +198,7 @@ export class BhRegelAusAuswahlDialog extends Adw.Dialog {
             marginStart: 12,
             marginEnd: 12,
         });
-        this.saveButton = new Gtk.Button({ label: 'Regel speichern', cssClasses: ['suggested-action', 'pill'] });
+        this.saveButton = new Gtk.Button({ label: _('Save rule'), cssClasses: ['suggested-action', 'pill'] });
         this.saveButton.connect('clicked', () => this.onSave());
         bottom.append(this.saveButton);
         wrapper.append(bottom);
@@ -215,14 +231,27 @@ export class BhRegelAusAuswahlDialog extends Adw.Dialog {
         if (!v || !v.muster || !v.kategorie) return;
         try {
             const result = saveRegelAusAuswahl(appSession(), this.entity, v.muster, v.kategorie, [...this.abgewaehlt]);
-            const ausnahmen = this.abgewaehlt.size > 0 ? ` · ${this.abgewaehlt.size} Ausnahme(n)` : '';
+            const ausnahmen =
+                this.abgewaehlt.size > 0
+                    ? fmt(_n(' · {n} exception', ' · {n} exceptions', this.abgewaehlt.size), {
+                          n: this.abgewaehlt.size,
+                      })
+                    : '';
             this.saved(
-                `${result.added ? 'Regel gespeichert' : 'Regel bestand bereits'}: „${markup(v.muster)}“ → ${markup(v.kategorie)}${ausnahmen}`,
+                fmt(
+                    result.added
+                        ? _('Rule saved: “{pattern}” → {category}')
+                        : _('Rule already existed: “{pattern}” → {category}'),
+                    {
+                        pattern: markup(v.muster),
+                        category: markup(v.kategorie),
+                    },
+                ) + ausnahmen,
             );
             this.close();
         } catch (err) {
             this.banner.set_title(
-                markup(`Konnte nicht speichern: ${err instanceof Error ? err.message : String(err)}`),
+                markup(fmt(_('Could not save: {error}'), { error: err instanceof Error ? err.message : String(err) })),
             );
             this.banner.set_revealed(true);
         }

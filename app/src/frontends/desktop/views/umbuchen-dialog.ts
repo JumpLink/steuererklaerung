@@ -24,6 +24,7 @@ import { removeDecision, saveDecision } from '../data/decisions.ts';
 import { loadEuerCategories } from '../data/decisions.ts';
 import type { AppEntity } from '../entities.ts';
 import { markup } from './util.ts';
+import { _, fmt } from '../i18n.ts';
 
 /** The booking being reclassified — the subset both call sites can supply. */
 export interface UmbuchenTarget {
@@ -67,7 +68,7 @@ export class BhUmbuchenDialog extends Adw.Dialog {
         this.target = target;
         this.done = done;
 
-        this.set_title('Umbuchen');
+        this.set_title(_('Mark as transfer'));
         this.set_content_width(520);
         this.set_content_height(520);
 
@@ -78,7 +79,7 @@ export class BhUmbuchenDialog extends Adw.Dialog {
             spacing: 12,
         });
         loading.append(new Adw.Spinner({ widthRequest: 32, heightRequest: 32 }));
-        loading.append(new Gtk.Label({ label: 'Lade Kategorien …', cssClasses: ['dim-label'] }));
+        loading.append(new Gtk.Label({ label: _('Loading categories …'), cssClasses: ['dim-label'] }));
         this.stack.add_named(loading, 'loading');
 
         const toolbar = new Adw.ToolbarView();
@@ -114,7 +115,7 @@ export class BhUmbuchenDialog extends Adw.Dialog {
             marginEnd: 16,
         });
 
-        const summary = new Adw.PreferencesGroup({ title: 'Buchung' });
+        const summary = new Adw.PreferencesGroup({ title: _('Transaction') });
         summary.add(
             new Adw.ActionRow({
                 title: markup(this.target.counterparty?.trim() || this.target.purpose?.trim() || '—'),
@@ -124,19 +125,19 @@ export class BhUmbuchenDialog extends Adw.Dialog {
         box.append(summary);
 
         const group = new Adw.PreferencesGroup({
-            title: 'Kategorie',
-            description: 'Eine manuelle Buchung gewinnt über Beleg und Regel.',
+            title: _('Category'),
+            description: _('A manual classification wins over receipt and rule.'),
         });
         // The current category is always in the list, even when it is not among the year's
         // categories — otherwise reopening the dialog would silently propose a different one.
         const options = this.categories.includes(this.target.category)
             ? this.categories
             : [this.target.category, ...this.categories];
-        this.combo = new Adw.ComboRow({ title: 'Kategorie', model: Gtk.StringList.new(options) });
+        this.combo = new Adw.ComboRow({ title: _('Category'), model: Gtk.StringList.new(options) });
         this.combo.set_selected(Math.max(0, options.indexOf(this.target.category)));
         group.add(this.combo);
 
-        this.note = new Adw.EntryRow({ title: 'Begründung' });
+        this.note = new Adw.EntryRow({ title: _('Reason') });
         this.note.set_text(this.target.note ?? '');
         group.add(this.note);
         box.append(group);
@@ -152,12 +153,12 @@ export class BhUmbuchenDialog extends Adw.Dialog {
         const pattern = suggestPattern(this.target);
         if (pattern) {
             const learn = new Adw.PreferencesGroup({
-                title: 'Merken',
-                description: 'Damit die nächste Buchung dieser Gegenseite von selbst richtig landet.',
+                title: _('Remember'),
+                description: _('So the next transaction from this counterparty lands in the right place by itself.'),
             });
             this.rememberRow = new Adw.SwitchRow({
-                title: markup(`Als Regel merken: „${pattern}“`),
-                subtitle: 'Wird in den Einstellungen unter Klassifizierung gepflegt.',
+                title: markup(fmt(_('Remember as rule: “{pattern}”'), { pattern })),
+                subtitle: _('Maintained in Settings under Classification.'),
                 active: false,
             });
             this.pattern = pattern;
@@ -171,15 +172,14 @@ export class BhUmbuchenDialog extends Adw.Dialog {
         // an undo for something the user never did.
         if (this.target.source === 'manual') {
             const undo = new Adw.PreferencesGroup({
-                title: 'Zurücknehmen',
+                title: _('Revert'),
                 description: markup(
                     this.target.danach ??
-                        'Entfernt die manuelle Entscheidung. Die Buchung fällt danach wieder auf das zurück, ' +
-                            'was Beleg oder Regel sagen.',
+                        _('Removes the manual decision. The transaction then falls back to what receipt or rule say.'),
                 ),
             });
-            const row = new Adw.ActionRow({ title: 'Umbuchung zurücknehmen' });
-            const button = new Gtk.Button({ label: 'Zurücknehmen', valign: Gtk.Align.CENTER });
+            const row = new Adw.ActionRow({ title: _('Revert transfer') });
+            const button = new Gtk.Button({ label: _('Revert'), valign: Gtk.Align.CENTER });
             button.add_css_class('destructive-action');
             button.connect('clicked', () => this.onRemove());
             row.add_suffix(button);
@@ -201,7 +201,7 @@ export class BhUmbuchenDialog extends Adw.Dialog {
             marginStart: 12,
             marginEnd: 12,
         });
-        const save = new Gtk.Button({ label: 'Speichern' });
+        const save = new Gtk.Button({ label: _('Save') });
         save.add_css_class('suggested-action');
         save.add_css_class('pill');
         save.connect('clicked', () => this.onSave());
@@ -222,7 +222,7 @@ export class BhUmbuchenDialog extends Adw.Dialog {
         // recordClassificationDecision refuses an empty decision, and rightly so — but the user
         // pressing Speichern without changing anything deserves an explanation, not that error.
         if (category === this.target.category && text === (this.target.note ?? '')) {
-            this.warn('Nichts geändert.');
+            this.warn(_('Nothing changed.'));
             return;
         }
         try {
@@ -238,25 +238,27 @@ export class BhUmbuchenDialog extends Adw.Dialog {
             if (this.rememberRow?.get_active() && this.pattern) {
                 try {
                     const result = rememberRule(this.entity.id, this.pattern, category);
-                    learned = result.added ? ' · Regel gemerkt' : ' · Regel bestand bereits';
+                    learned = result.added ? _(' · rule remembered') : _(' · rule already existed');
                 } catch (err) {
-                    learned = ` · Regel NICHT gemerkt (${err instanceof Error ? err.message : String(err)})`;
+                    learned = fmt(_(' · rule NOT remembered ({error})'), {
+                        error: err instanceof Error ? err.message : String(err),
+                    });
                 }
             }
-            this.done(`Umgebucht auf ${category}${learned}`, true);
+            this.done(fmt(_('Reclassified to {category}'), { category }) + learned, true);
             this.close();
         } catch (err) {
-            this.warn(`Konnte nicht speichern: ${err instanceof Error ? err.message : String(err)}`);
+            this.warn(fmt(_('Could not save: {error}'), { error: err instanceof Error ? err.message : String(err) }));
         }
     }
 
     private onRemove(): void {
         try {
             removeDecision(this.entity, this.target.transactionId);
-            this.done('Umbuchung zurückgenommen', true);
+            this.done(_('Transfer reverted'), true);
             this.close();
         } catch (err) {
-            this.warn(`Konnte nicht zurücknehmen: ${err instanceof Error ? err.message : String(err)}`);
+            this.warn(fmt(_('Could not revert: {error}'), { error: err instanceof Error ? err.message : String(err) }));
         }
     }
 

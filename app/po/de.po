@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-09 19:20+0200\n"
+"POT-Creation-Date: 2026-10-09 19:23+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -281,6 +281,128 @@ msgstr "Fehler: {source} — {message}"
 msgid "Undo"
 msgstr "Rückgängig"
 
+#: src/frontends/desktop/views/aufteilen-dialog.ts:58
+#: src/frontends/desktop/views/aufteilen-dialog.ts:160
+msgid "Period already filed"
+msgstr "Zeitraum schon eingereicht"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:78
+msgid "Remove split?"
+msgstr "Aufteilung aufheben?"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:79
+msgid "The parts are deleted, the transaction counts as a whole again."
+msgstr "Die Teile werden gelöscht, die Buchung zählt wieder als Ganzes."
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:80
+#: src/frontends/desktop/views/tx-detail-dialog.ts:286
+msgid "Remove split"
+msgstr "Aufteilung aufheben"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:87
+msgid "Remove anyway"
+msgstr "Trotzdem aufheben"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:91
+msgid "Split removed"
+msgstr "Aufteilung aufgehoben"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:94
+msgid "Could not remove"
+msgstr "Konnte nicht aufheben"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:103
+msgid "Parts"
+msgstr "Teile"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:111
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:207
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:466
+#: src/frontends/desktop/views/umbuchen-dialog.ts:204
+msgid "Save"
+msgstr "Speichern"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:121
+msgid "Split transaction"
+msgstr "Buchung aufteilen"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:138
+#: src/frontends/desktop/views/tx-detail-dialog.ts:140
+msgid "Split"
+msgstr "Aufteilen"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:146
+#: src/frontends/desktop/views/beleg-eingang-view.ts:451
+#: src/frontends/desktop/views/tx-detail-dialog.ts:62
+#: src/frontends/desktop/views/umbuchen-dialog.ts:118
+msgid "Transaction"
+msgstr "Buchung"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:148
+msgid ""
+"Each part counts with its own amount, category and tax rate. One part takes "
+"the remainder."
+msgstr ""
+"Jeder Teil zählt mit eigenem Betrag, eigener Kategorie und eigenem "
+"Steuersatz. Ein Teil nimmt den Rest."
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:153
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:536
+msgid "Amount"
+msgstr "Betrag"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:162
+msgid "{periods} — saving asks once more."
+msgstr "{periods} — Speichern fragt noch einmal nach."
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:170
+msgid "Not possible"
+msgstr "Nicht möglich"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:177
+msgid "Business meals 70/30"
+msgstr "Bewirtung 70/30"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:179
+msgid ""
+"70 % business meals, 30 % not deductible — the input VAT stays fully "
+"deductible"
+msgstr ""
+"70 % Bewirtungskosten, 30 % nicht abziehbar — die Vorsteuer bleibt voll "
+"abziehbar"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:183
+msgid "Add part"
+msgstr "Teil hinzufügen"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:228
+msgid "Part {n} · Remainder"
+msgstr "Teil {n} · Rest"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:228
+#: src/frontends/desktop/views/tx-detail-dialog.ts:189
+#: src/frontends/desktop/views/tx-detail-dialog.ts:238
+msgid "Part {n}"
+msgstr "Teil {n}"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:268
+msgid "Remove part {n}"
+msgstr "Teil {n} entfernen"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:317
+msgid "Split anyway"
+msgstr "Trotzdem aufteilen"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:324
+msgid "Split into {n} part"
+msgid_plural "Split into {n} parts"
+msgstr[0] "Aufgeteilt in {n} Teil"
+msgstr[1] "Aufgeteilt in {n} Teile"
+
+#: src/frontends/desktop/views/aufteilen-dialog.ts:328
+msgid "Could not split"
+msgstr "Konnte nicht aufteilen"
+
 #: src/frontends/desktop/views/beleg-eingang-view.blp:24
 msgid "Loading receipt inbox …"
 msgstr "Lade Beleg-Eingang …"
@@ -296,6 +418,7 @@ msgstr "Lade Beleg-Eingang …"
 #: src/frontends/desktop/views/transactions-view.blp:32
 #: src/frontends/desktop/views/util.ts:404
 #: src/frontends/desktop/views/util.ts:407
+#: src/frontends/desktop/views/zu-pruefen-view.blp:33
 msgid "Could not load"
 msgstr "Konnte nicht laden"
 
@@ -406,11 +529,6 @@ msgstr ""
 "Keine unverknüpfte Buchung passt auf Betrag, Datum und Gegenseite — "
 "überspringen."
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:451
-#: src/frontends/desktop/views/tx-detail-dialog.ts:62
-msgid "Transaction"
-msgstr "Buchung"
-
 #: src/frontends/desktop/views/beleg-eingang-view.ts:473
 msgid "Check & confirm"
 msgstr "Prüfen & bestätigen"
@@ -422,7 +540,10 @@ msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:481
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:119
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:124
 #: src/frontends/desktop/views/tx-detail-dialog.ts:182
+#: src/frontends/desktop/views/umbuchen-dialog.ts:128
+#: src/frontends/desktop/views/umbuchen-dialog.ts:136
 msgid "Category"
 msgstr "Kategorie"
 
@@ -443,10 +564,12 @@ msgid "Skip"
 msgstr "Überspringen"
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:521
+#: src/frontends/desktop/views/zu-pruefen-view.ts:360
 msgid "Confirm and continue"
 msgstr "Bestätigen und weiter"
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:528
+#: src/frontends/desktop/views/zu-pruefen-view.ts:370
 msgid "Tip: ←/→ to browse · Enter confirms"
 msgstr "Tipp: ←/→ blättern · Eingabetaste bestätigt"
 
@@ -500,6 +623,7 @@ msgid "Receipt “{vendor}” booked"
 msgstr "Beleg „{vendor}\" gebucht"
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:641
+#: src/frontends/desktop/views/zu-pruefen-view.ts:432
 msgid "Confirming failed"
 msgstr "Bestätigen fehlgeschlagen"
 
@@ -691,18 +815,16 @@ msgstr ""
 msgid "Complete"
 msgstr "Ergänzen"
 
-#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:207
-#: src/frontends/desktop/views/rechnung-detail-dialog.ts:466
-msgid "Save"
-msgstr "Speichern"
-
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:222
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:106
 #: src/frontends/desktop/views/tx-detail-dialog.ts:37
 #: src/frontends/desktop/views/tx-detail-dialog.ts:184
 msgid "Rule"
 msgstr "Regel"
 
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:230
+#: src/frontends/desktop/views/umbuchen-dialog.ts:175
+#: src/frontends/desktop/views/umbuchen-dialog.ts:182
 msgid "Revert"
 msgstr "Zurücknehmen"
 
@@ -1035,6 +1157,8 @@ msgstr "Mutierende MCP-Tools nach außen öffnen (Standard: nur lesen)"
 
 #: src/frontends/desktop/views/einstellungen-view.ts:299
 #: src/frontends/desktop/views/einstellungen-view.ts:406
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:254
+#: src/frontends/desktop/views/umbuchen-dialog.ts:251
 msgid "Could not save: {error}"
 msgstr "Konnte nicht speichern: {error}"
 
@@ -1707,10 +1831,6 @@ msgstr "an {recipients}"
 msgid "Error"
 msgstr "Fehler"
 
-#: src/frontends/desktop/views/rechnung-detail-dialog.ts:536
-msgid "Amount"
-msgstr "Betrag"
-
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:547
 msgid "Actions"
 msgstr "Aktionen"
@@ -2364,6 +2484,104 @@ msgstr ""
 msgid "Invoice sent"
 msgstr "Rechnung gesendet"
 
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:20
+msgid "— Choose category —"
+msgstr "— Kategorie wählen —"
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:49
+#: src/frontends/desktop/views/zu-pruefen-view.blp:75
+#: src/frontends/desktop/views/zu-pruefen-view.ts:228
+msgid "Rule from selection"
+msgstr "Regel aus Auswahl"
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:60
+msgid "Looking for the common pattern …"
+msgstr "Suche das gemeinsame Muster …"
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:81
+msgid "No preview possible"
+msgstr "Keine Vorschau möglich"
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:110
+msgid ""
+"From {n} marked transaction. The pattern is searched as text in the booking "
+"text (counterparty, purpose, reference), ignoring case."
+msgid_plural ""
+"From {n} marked transactions. The pattern is searched as text in the booking "
+"text (counterparty, purpose, reference), ignoring case."
+msgstr[0] ""
+"Aus {n} markierten Buchung. Das Muster wird als Text im Buchungstext gesucht "
+"(Gegenseite, Verwendungszweck, Referenz), Groß- und Kleinschreibung egal."
+msgstr[1] ""
+"Aus {n} markierten Buchungen. Das Muster wird als Text im Buchungstext "
+"gesucht (Gegenseite, Verwendungszweck, Referenz), Groß- und Kleinschreibung "
+"egal."
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:118
+msgid "Pattern"
+msgstr "Muster"
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:135
+msgid ""
+"{n} of the marked transactions are incoming — own rules book as expense. "
+"Better add customers under Settings → Classification."
+msgstr ""
+"{n} der markierten Buchungen sind Eingänge — eigene Regeln buchen als "
+"Ausgabe. Kunden besser unter Einstellungen → Klassifizierung eintragen."
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:146
+msgid "Matches {n} transaction"
+msgid_plural "Matches {n} transactions"
+msgstr[0] "Trifft {n} Buchung"
+msgstr[1] "Trifft {n} Buchungen"
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:151
+msgid ""
+"Deselected transactions become exceptions to the rule and stay as they are."
+msgstr ""
+"Abgewählte Buchungen werden Ausnahmen der Regel und bleiben, wie sie sind."
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:152
+msgid ""
+"With this pattern and this category the rule matches no existing transaction."
+msgstr ""
+"Mit diesem Muster und dieser Kategorie erfasst die Regel keine vorhandene "
+"Buchung."
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:156
+msgid "Include: {line}"
+msgstr "Erfassen: {line}"
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:160
+msgid "now: {category} · {origin}"
+msgstr "jetzt: {category} · {origin}"
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:161
+msgid " · marked"
+msgstr " · markiert"
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:177
+msgid "Not matched"
+msgstr "Nicht erfasst"
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:201
+msgid "Save rule"
+msgstr "Regel speichern"
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:236
+msgid " · {n} exception"
+msgid_plural " · {n} exceptions"
+msgstr[0] " · {n} Ausnahme"
+msgstr[1] " · {n} Ausnahmen"
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:243
+msgid "Rule saved: “{pattern}” → {category}"
+msgstr "Regel gespeichert: „{pattern}“ → {category}"
+
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:244
+msgid "Rule already existed: “{pattern}” → {category}"
+msgstr "Regel bestand bereits: „{pattern}“ → {category}"
+
 #: src/frontends/desktop/views/tab-hub.ts:122
 msgid "Tax return"
 msgstr "Erklärung"
@@ -2389,6 +2607,7 @@ msgid "All receipts"
 msgstr "Alle Belege"
 
 #: src/frontends/desktop/views/tab-hub.ts:140
+#: src/frontends/desktop/views/zu-pruefen-view.ts:320
 msgid "To review"
 msgstr "Zu prüfen"
 
@@ -2524,6 +2743,7 @@ msgid "Value date"
 msgstr "Wertstellung"
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:126
+#: src/frontends/desktop/views/zu-pruefen-view.ts:307
 msgid "Purpose"
 msgstr "Verwendungszweck"
 
@@ -2535,27 +2755,20 @@ msgstr "Klassifizierung (EÜR)"
 msgid "Change split"
 msgstr "Aufteilung ändern"
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:140
-msgid "Split"
-msgstr "Aufteilen"
-
 #: src/frontends/desktop/views/tx-detail-dialog.ts:141
 msgid "Split the transaction into parts with their own category and tax rate"
 msgstr ""
 "Die Buchung in Teile mit eigener Kategorie und eigenem Steuersatz zerlegen"
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:150
+#: src/frontends/desktop/views/umbuchen-dialog.ts:71
+#: src/frontends/desktop/views/zu-pruefen-view.ts:357
 msgid "Mark as transfer"
 msgstr "Umbuchen"
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:189
 msgid "Part {n} · remainder"
 msgstr "Teil {n} · Rest"
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:189
-#: src/frontends/desktop/views/tx-detail-dialog.ts:238
-msgid "Part {n}"
-msgstr "Teil {n}"
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:190
 msgid "private, no input VAT"
@@ -2602,10 +2815,6 @@ msgstr "Zuordnung zurücknehmen: {what}"
 #: src/frontends/desktop/views/tx-detail-dialog.ts:319
 msgid "Could not take back"
 msgstr "Konnte nicht zurücknehmen"
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:286
-msgid "Remove split"
-msgstr "Aufteilung aufheben"
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:288
 msgctxt "split"
@@ -2720,6 +2929,76 @@ msgstr "Quelle (Import)"
 #: src/frontends/desktop/views/tx-detail-dialog.ts:383
 msgid "Transaction ID"
 msgstr "Transaktions-ID"
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:82
+msgid "Loading categories …"
+msgstr "Lade Kategorien …"
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:129
+msgid "A manual classification wins over receipt and rule."
+msgstr "Eine manuelle Buchung gewinnt über Beleg und Regel."
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:140
+msgid "Reason"
+msgstr "Begründung"
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:156
+msgid "Remember"
+msgstr "Merken"
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:157
+msgid ""
+"So the next transaction from this counterparty lands in the right place by "
+"itself."
+msgstr "Damit die nächste Buchung dieser Gegenseite von selbst richtig landet."
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:160
+msgid "Remember as rule: “{pattern}”"
+msgstr "Als Regel merken: „{pattern}“"
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:161
+msgid "Maintained in Settings under Classification."
+msgstr "Wird in den Einstellungen unter Klassifizierung gepflegt."
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:178
+msgid ""
+"Removes the manual decision. The transaction then falls back to what receipt "
+"or rule say."
+msgstr ""
+"Entfernt die manuelle Entscheidung. Die Buchung fällt danach wieder auf das "
+"zurück, was Beleg oder Regel sagen."
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:181
+msgid "Revert transfer"
+msgstr "Umbuchung zurücknehmen"
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:225
+msgid "Nothing changed."
+msgstr "Nichts geändert."
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:241
+msgid " · rule remembered"
+msgstr " · Regel gemerkt"
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:241
+msgid " · rule already existed"
+msgstr " · Regel bestand bereits"
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:243
+msgid " · rule NOT remembered ({error})"
+msgstr " · Regel NICHT gemerkt ({error})"
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:248
+msgid "Reclassified to {category}"
+msgstr "Umgebucht auf {category}"
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:258
+msgid "Transfer reverted"
+msgstr "Umbuchung zurückgenommen"
+
+#: src/frontends/desktop/views/umbuchen-dialog.ts:261
+msgid "Could not revert: {error}"
+msgstr "Konnte nicht zurücknehmen: {error}"
 
 #: src/frontends/desktop/views/util.ts:54
 msgid "{what} saved"
@@ -2871,6 +3150,110 @@ msgstr "Bereits abgerechnet"
 #: src/frontends/desktop/views/zeiten-view.ts:420
 msgid "Delete entry"
 msgstr "Eintrag löschen"
+
+#: src/frontends/desktop/views/zu-pruefen-view.blp:23
+msgid "Loading transactions to review …"
+msgstr "Lade Buchungen zu prüfen …"
+
+#: src/frontends/desktop/views/zu-pruefen-view.blp:81
+msgid "Suggest the common pattern of the marked transactions as a rule"
+msgstr "Gemeinsames Muster der markierten Buchungen als Regel vorschlagen"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:109
+msgid "Transactions to review could not be loaded"
+msgstr "Buchungen zu prüfen konnten nicht geladen werden"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:150
+msgid "Reload failed"
+msgstr "Neu laden fehlgeschlagen"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:169
+msgid "Mark for “Rule from selection”: {name} · {date}"
+msgstr "Für „Regel aus Auswahl\" markieren: {name} · {date}"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:228
+msgid "Rule from selection ({n})"
+msgstr "Regel aus Auswahl ({n})"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:311
+msgid "All details"
+msgstr "Alle Details"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:325
+msgid "No rule and no receipt"
+msgstr "Keine Regel und kein Beleg"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:327
+msgid ""
+"Neither a receipt nor a rule classifies this transaction — please mark it as "
+"a transfer."
+msgstr ""
+"Weder ein Beleg noch eine Regel ordnet diese Buchung ein — bitte umbuchen."
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:329
+msgid "{origin} — only a guess, not recognised by the counterparty"
+msgstr "{origin} — nur geraten, nicht über die Gegenseite erkannt"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:348
+msgid "Previous transaction (←)"
+msgstr "Vorherige Buchung (←)"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:350
+msgid "Next transaction (→)"
+msgstr "Nächste Buchung (→)"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:363
+msgid "Without a category there is nothing to confirm"
+msgstr "Ohne Kategorie gibt es nichts zu bestätigen"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:380
+msgctxt "reviewed item"
+msgid "Done"
+msgstr "Erledigt"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:391
+msgid "All reviewed"
+msgstr "Alles geprüft"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:393
+msgid ""
+"Every transaction in {year} is classified by a receipt, an own rule or by "
+"hand."
+msgstr ""
+"Jede Buchung in {year} ist über einen Beleg, eine eigene Regel oder von Hand "
+"eingeordnet."
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:397
+msgid ""
+"All transactions in this list are confirmed or reclassified. New "
+"transactions that are only classified by a guess show up here."
+msgstr ""
+"Alle Buchungen dieser Liste sind bestätigt oder umgebucht. Neue Buchungen, "
+"die nur geraten eingeordnet werden, erscheinen hier."
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:403
+msgid "All transactions"
+msgstr "Alle Buchungen"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:421
+msgid "confirmed: {category}"
+msgstr "bestätigt: {category}"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:424
+msgid "Confirmed: {category}"
+msgstr "Bestätigt: {category}"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:454
+msgid "reclassified"
+msgstr "umgebucht"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:471
+msgid "changed"
+msgstr "geändert"
+
+#: src/frontends/desktop/views/zu-pruefen-view.ts:480
+msgid "by rule"
+msgstr "per Regel"
 
 #: src/frontends/desktop/widgets/entity-switcher.ts:100
 msgid "New entity …"

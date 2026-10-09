@@ -33,6 +33,7 @@ import { showToast } from '../toast.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { markup } from './util.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
+import { _, _n, fmt } from '../i18n.ts';
 
 const satzLabel = (s: number) => `${Math.round(s * 100)} %`;
 
@@ -54,7 +55,7 @@ interface TeilZeile {
 /** The filed-period confirmation; resolves true when the owner wants to go ahead anyway. */
 function trotzAbgabeFragen(parent: Gtk.Widget, warnung: string, confirmLabel: string): Promise<boolean> {
     return confirmDialog(parent, {
-        heading: 'Zeitraum schon eingereicht',
+        heading: _('Period already filed'),
         body: warnung,
         confirmLabel,
         destructive: true,
@@ -74,23 +75,23 @@ export async function aufteilungAufheben(
     onDone: () => void,
 ): Promise<void> {
     const ok = await confirmDialog(parent, {
-        heading: 'Aufteilung aufheben?',
-        body: `Die Teile werden gelöscht, die Buchung zählt wieder als Ganzes. ${danach ?? ''}`.trim(),
-        confirmLabel: 'Aufteilung aufheben',
+        heading: _('Remove split?'),
+        body: `${_('The parts are deleted, the transaction counts as a whole again.')} ${danach ?? ''}`.trim(),
+        confirmLabel: _('Remove split'),
         destructive: true,
     });
     if (!ok) return;
     try {
         let r = await hebeAufteilungAuf(appSession(), entity, year, txId);
         if (!r.ok && 'bestaetigungNoetig' in r) {
-            if (!(await trotzAbgabeFragen(parent, r.warnung, 'Trotzdem aufheben'))) return;
+            if (!(await trotzAbgabeFragen(parent, r.warnung, _('Remove anyway')))) return;
             r = await hebeAufteilungAuf(appSession(), entity, year, txId, { trotzAbgabe: true });
         }
         appSession().invalidate(entity.id, year);
-        showToast('Aufteilung aufgehoben');
+        showToast(_('Split removed'));
         onDone();
     } catch (err) {
-        void errorDialog(parent, 'Konnte nicht aufheben', err instanceof Error ? err.message : String(err));
+        void errorDialog(parent, _('Could not remove'), err instanceof Error ? err.message : String(err));
     }
 }
 
@@ -99,7 +100,7 @@ export class BhAufteilenDialog extends Adw.Dialog {
         GObject.registerClass({ GTypeName: 'BhAufteilenDialog' }, this);
     }
 
-    private readonly teileGroup = new Adw.PreferencesGroup({ title: 'Teile' });
+    private readonly teileGroup = new Adw.PreferencesGroup({ title: _('Parts') });
     private readonly hinweis = new Gtk.Label({
         wrap: true,
         xalign: 0,
@@ -107,7 +108,7 @@ export class BhAufteilenDialog extends Adw.Dialog {
         marginTop: 6,
         visible: false,
     });
-    private readonly save = new Gtk.Button({ label: 'Speichern', cssClasses: ['suggested-action'], sensitive: false });
+    private readonly save = new Gtk.Button({ label: _('Save'), cssClasses: ['suggested-action'], sensitive: false });
     private zeilen: TeilZeile[] = [];
     private ansicht: AufteilungAnsicht | null = null;
 
@@ -117,7 +118,7 @@ export class BhAufteilenDialog extends Adw.Dialog {
         private readonly txId: string,
         private readonly done: () => void,
     ) {
-        super({ title: 'Buchung aufteilen', contentWidth: 720, contentHeight: 600 });
+        super({ title: _('Split transaction'), contentWidth: 720, contentHeight: 600 });
         const header = new Adw.HeaderBar();
         header.pack_end(this.save);
         this.save.connect('clicked', () => void this.speichern());
@@ -134,7 +135,7 @@ export class BhAufteilenDialog extends Adw.Dialog {
                 this.pruefen();
             })
             .catch((err) => {
-                void errorDialog(this, 'Aufteilen', err instanceof Error ? err.message : String(err));
+                void errorDialog(this, _('Split'), err instanceof Error ? err.message : String(err));
                 this.close();
             });
     }
@@ -142,39 +143,44 @@ export class BhAufteilenDialog extends Adw.Dialog {
     private build(a: AufteilungAnsicht): Gtk.Widget {
         const page = new Adw.PreferencesPage();
         const summary = new Adw.PreferencesGroup({
-            title: 'Buchung',
-            description:
-                'Jeder Teil zählt mit eigenem Betrag, eigener Kategorie und eigenem Steuersatz. Ein Teil nimmt den Rest.',
+            title: _('Transaction'),
+            description: _(
+                'Each part counts with its own amount, category and tax rate. One part takes the remainder.',
+            ),
         });
         summary.set_header_suffix(new BhGlossaryHelp('splitbuchung', lernmodusOn()));
         const betrag = new Adw.ActionRow({
-            title: 'Betrag',
+            title: _('Amount'),
             subtitle: `${a.bookingDate.split('-').reverse().join('.')}`,
         });
         betrag.add_suffix(new Gtk.Label({ label: `${fmtDe(a.amount)} €`, cssClasses: ['numeric', 'title-4'] }));
         summary.add(betrag);
         if (a.abgaben.length > 0) {
             const row = new Adw.ActionRow({
-                title: 'Zeitraum schon eingereicht',
-                subtitle: markup(`${a.abgaben.map((x) => x.label).join(', ')} — Speichern fragt noch einmal nach.`),
+                title: _('Period already filed'),
+                subtitle: markup(
+                    fmt(_('{periods} — saving asks once more.'), { periods: a.abgaben.map((x) => x.label).join(', ') }),
+                ),
             });
             row.set_subtitle_lines(0);
             row.add_prefix(new Gtk.Image({ iconName: 'dialog-warning-symbolic', cssClasses: ['warning'] }));
             summary.add(row);
         }
         if (a.gesperrt) {
-            const row = new Adw.ActionRow({ title: 'Nicht möglich', subtitle: markup(a.gesperrt) });
+            const row = new Adw.ActionRow({ title: _('Not possible'), subtitle: markup(a.gesperrt) });
             row.set_subtitle_lines(0);
             summary.add(row);
         }
         page.add(summary);
 
         const actions = new Gtk.Box({ spacing: 6 });
-        const bewirtung = new Gtk.Button({ label: 'Bewirtung 70/30', cssClasses: ['flat'] });
-        bewirtung.set_tooltip_text('70 % Bewirtungskosten, 30 % nicht abziehbar — die Vorsteuer bleibt voll abziehbar');
+        const bewirtung = new Gtk.Button({ label: _('Business meals 70/30'), cssClasses: ['flat'] });
+        bewirtung.set_tooltip_text(
+            _('70 % business meals, 30 % not deductible — the input VAT stays fully deductible'),
+        );
         bewirtung.connect('clicked', () => this.setTeile(bewirtungsTeile(a.amount, a.belegSatz ?? 0.19)));
         const plus = new Gtk.Button({ iconName: 'list-add-symbolic', cssClasses: ['flat'] });
-        plus.set_tooltip_text('Teil hinzufügen');
+        plus.set_tooltip_text(_('Add part'));
         plus.connect('clicked', () => {
             const eingaben = this.eingaben();
             const rest = eingaben.pop()!;
@@ -218,7 +224,9 @@ export class BhAufteilenDialog extends Adw.Dialog {
         const ordered = [...eingaben.filter((_, i) => i !== restIndex), eingaben[restIndex]];
         ordered.forEach((t, i) => {
             const rest = i === ordered.length - 1;
-            const row = new Adw.ActionRow({ title: rest ? `Teil ${i + 1} · Rest` : `Teil ${i + 1}` });
+            const row = new Adw.ActionRow({
+                title: rest ? fmt(_('Part {n} · Remainder'), { n: i + 1 }) : fmt(_('Part {n}'), { n: i + 1 }),
+            });
             const kategorie = Gtk.DropDown.new_from_strings([...a.kategorien]);
             kategorie.set_selected(Math.max(0, a.kategorien.indexOf(t.category)));
             kategorie.set_valign(Gtk.Align.CENTER);
@@ -257,7 +265,7 @@ export class BhAufteilenDialog extends Adw.Dialog {
                         cssClasses: ['flat'],
                         valign: Gtk.Align.CENTER,
                     });
-                    del.set_tooltip_text(`Teil ${i + 1} entfernen`);
+                    del.set_tooltip_text(fmt(_('Remove part {n}'), { n: i + 1 }));
                     del.connect('clicked', () => this.setTeile(this.eingaben().filter((_, j) => j !== i)));
                     row.add_suffix(del);
                 }
@@ -306,18 +314,18 @@ export class BhAufteilenDialog extends Adw.Dialog {
         try {
             let r = await speichereAufteilung(appSession(), this.entity, this.year, this.txId, eingaben);
             if (!r.ok) {
-                if (!(await trotzAbgabeFragen(this, r.warnung, 'Trotzdem aufteilen'))) return;
+                if (!(await trotzAbgabeFragen(this, r.warnung, _('Split anyway')))) return;
                 r = await speichereAufteilung(appSession(), this.entity, this.year, this.txId, eingaben, {
                     trotzAbgabe: true,
                 });
             }
             if (!r.ok) return;
             appSession().invalidate(this.entity.id, this.year);
-            showToast(`Aufgeteilt in ${r.teile.length} Teile`);
+            showToast(fmt(_n('Split into {n} part', 'Split into {n} parts', r.teile.length), { n: r.teile.length }));
             this.close();
             this.done();
         } catch (err) {
-            void errorDialog(this, 'Konnte nicht aufteilen', err instanceof Error ? err.message : String(err));
+            void errorDialog(this, _('Could not split'), err instanceof Error ? err.message : String(err));
         }
     }
 }
