@@ -45,7 +45,7 @@ async function readSecret(prompt: string): Promise<string> {
 export const pinSubcommand: YargsCommandModule = {
     command: 'pin <aktion>',
     describe: 'Zertifikats-PIN im Schlüsselbund ablegen (speichern), löschen oder prüfen (status).',
-    builder: (y: any) =>
+    builder: (y) =>
         y
             .positional('aktion', { choices: ['speichern', 'loeschen', 'status'], describe: 'Was getan werden soll' })
             .option('entity', {
