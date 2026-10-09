@@ -153,6 +153,8 @@ export class MainWindow extends Adw.ApplicationWindow {
         // save with "Kein Manifest … zum Speichern vorhanden", and its only remedy is a terminal.
         if (!isDemoMode() && shouldShowWelcome()) this.presentWelcome();
         else if (isFirstRun()) this.presentSetup();
+        // Dev/testing hook: STEUER_APP_SETUP_PAGE also opens the new-entity assistant on a workspace.
+        else if (process.env.STEUER_APP_SETUP_PAGE) this.presentSetup();
     }
 
     /** `win.welcome` (menu) and `win.use-own-data` (demo banner). */
