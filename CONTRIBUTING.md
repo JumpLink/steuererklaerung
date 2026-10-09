@@ -29,6 +29,29 @@ gjsify run build
 Register a new `*.test.ts` in `app/tests/test.mts`. If you change tax logic, rebuild before
 trying the CLI, since it runs off the bundle.
 
+## Translations
+
+The desktop UI is written with English source strings; German comes from `app/po/de.po`.
+Progress and terminology: [`docs/app/i18n-status.md`](docs/app/i18n-status.md).
+
+- In TypeScript import from `frontends/desktop/i18n.ts`: `_('Text')`, `_n('1 item',
+  '{n} items', n)` for plurals, `_p('context', 'Word')` when a word is ambiguous, and
+  `fmt(_('Due {date}'), { date })` for placeholders. Never build a sentence by concatenating
+  translated fragments.
+- In Blueprint use `_("Text")` and `C_("context", "Text")`.
+- Official German tax terms (EÜR, USt-VA, Kz, Anlage EÜR, Finanzamt, …) stay German in the
+  English UI.
+- After changing strings, from `app/`:
+
+```bash
+gjsify run i18n:extract      # refresh the .pot and merge it into po/de.po
+# edit po/de.po: fill every new msgstr, remove the fuzzy flags
+gjsify run check:i18n        # fails on a missing, fuzzy or placeholder-mismatched entry
+```
+
+`gjsify run build` compiles the catalogues to `dist/locale/`. Core, CLI and MCP output stay
+German and are not translated.
+
 ## Commits
 
 [Conventional commits](https://www.conventionalcommits.org/): `type(scope): description`,
