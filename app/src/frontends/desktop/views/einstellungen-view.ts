@@ -45,6 +45,7 @@ import { buildBackupGroup, buildGeneralGroup } from './einstellungen/allgemein.t
 import { buildMailGroup } from './einstellungen/mail-versand.ts';
 import { buildMailTemplatesGroup } from './einstellungen/mail-vorlagen.ts';
 import { buildKinderGroup } from './einstellungen/kinder.ts';
+import { buildLandSteuerGroup } from './einstellungen/land-steuer.ts';
 import { buildKlassifizierungGroup } from './einstellungen/klassifizierung.ts';
 import { buildBetriebGroup, buildUstGroup } from './einstellungen/betrieb-ust.ts';
 import { buildAufgabeGroup, buildGewerbeGroup } from './einstellungen/gewerbe-aufgabe.ts';
@@ -322,8 +323,10 @@ export class BhEinstellungenView extends Adw.Bin {
         try {
             this.clearBox(this._entity_groups);
 
-            // A) Every entity: document management + invoicing back-ends.
+            // A) Every entity: country + tax switch first (it decides which groups follow), then
+            //    document management + invoicing back-ends.
             try {
+                this._entity_groups.append(buildLandSteuerGroup(this.host, entity));
                 this._entity_groups.append(buildDmsGroup(this.host, entity));
                 this._entity_groups.append(buildBelegeMailGroup(this.host, entity, this));
                 this._entity_groups.append(buildInvoicingGroup(this.host, entity));

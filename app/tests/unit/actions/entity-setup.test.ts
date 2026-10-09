@@ -116,6 +116,19 @@ export default async () => {
             expect(entitySetupSections(privat, 'y', manifest).est).toBeUndefined();
         });
 
+        await it('writes the country and tax switch only when they differ from the default', async () => {
+            const manifest = loadManifest(path);
+            const base = { ...newEntitySetupDraft(null, 'einzelunternehmen'), name: 'Muster' };
+            const germany = entitySetupSections({ ...base, country: 'DE', taxModule: 'de' }, 'x', manifest);
+            expect('country' in germany || 'taxModule' in germany).toBe(false);
+            const off = entitySetupSections({ ...base, country: 'DE', taxModule: 'none' }, 'x', manifest);
+            expect(off.taxModule).toBe('none');
+            expect('country' in off).toBe(false);
+            const other = entitySetupSections({ ...base, country: 'ZZ', taxModule: 'none' }, 'x', manifest);
+            expect(other.country).toBe('ZZ');
+            expect('taxModule' in other).toBe(false);
+        });
+
         await it('maps every answer onto an existing field', async () => {
             const manifest = loadManifest(path);
             const business = {

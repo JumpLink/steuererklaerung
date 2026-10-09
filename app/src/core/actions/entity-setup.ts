@@ -21,12 +21,15 @@
 
 import { entityIdAliases } from '@steuererklaerung/store';
 import {
+    DEFAULT_COUNTRY,
+    defaultTaxModuleFor,
     getManifestPath,
     loadManifest,
     type Manifest,
     manifestExists,
     matchAccount,
     slugFromName,
+    type TaxModuleId,
 } from '../config/index.ts';
 import { addEntity, assertAccountsMovable, initWorkspace } from './entities.ts';
 
@@ -55,6 +58,10 @@ export interface EntitySetupDraft {
     paperlessToken: string;
     /** The entity whose Paperless setup was preselected; its token is reused when none is typed. */
     dmsFrom?: string;
+    /** ISO country; unset = Germany (ADR 0001). */
+    country?: string;
+    /** The German tax features; unset = the country's own module. */
+    taxModule?: TaxModuleId;
 }
 
 /** Whether a kind is a business (ELSTER section, USt questions) rather than a private household. */
@@ -143,6 +150,12 @@ export function entitySetupSections(
 ): Record<string, unknown> {
     const sections: Record<string, unknown> = {};
     const taxNumber = draft.taxNumber.trim();
+
+    // Only a choice that differs from the default is written, so the default run creates the same
+    // entity it created before the switch existed.
+    const country = draft.country ?? DEFAULT_COUNTRY;
+    if (country !== DEFAULT_COUNTRY) sections.country = country;
+    if (draft.taxModule && draft.taxModule !== defaultTaxModuleFor(country)) sections.taxModule = draft.taxModule;
 
     if (isBusinessKind(draft.kind)) {
         // Same shape `ensureElsterSection` creates, so a business entity from either path is alike.

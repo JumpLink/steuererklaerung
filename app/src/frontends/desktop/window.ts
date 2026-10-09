@@ -145,6 +145,7 @@ export class MainWindow extends Adw.ApplicationWindow {
         this.buildUi();
         this.installNavAction();
         this.installSetupAction();
+        this.installWorkspaceChangedAction();
         this.installWelcomeActions();
         this.installShortcutActions();
         this.loadData();
@@ -261,6 +262,50 @@ export class MainWindow extends Adw.ApplicationWindow {
         const action = new Gio.SimpleAction({ name: 'setup' });
         action.connect('activate', () => this.presentSetup());
         this.add_action(action);
+    }
+
+    /**
+     * `win.workspace-changed` — a view rewrote something the nav is built from (the tax switch, ADR
+     * 0001). Unlike loadData() this keeps the active entity, year and view, so the person stays on
+     * the page where they flipped the switch. Deferred to idle: renderNav destroys the very view
+     * whose handler fired the action.
+     */
+    private installWorkspaceChangedAction(): void {
+        const action = new Gio.SimpleAction({ name: 'workspace-changed' });
+        action.connect('activate', () => {
+            GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
+                this.reloadWorkspaceInPlace();
+                return GLib.SOURCE_REMOVE;
+            });
+        });
+        this.add_action(action);
+    }
+
+    private reloadWorkspaceInPlace(): void {
+        const entityId = this.currentEntity?.id;
+        const view = this._stack.get_visible_child_name();
+        try {
+            this.workspace = loadAppWorkspace();
+            this.loadError = null;
+        } catch (err) {
+            this.loadError = err instanceof Error ? err.message : String(err);
+            this.refreshBanner();
+            return;
+        }
+        appSession().invalidate(entityId);
+        const entity = this.workspace.entities.find((e) => e.id === entityId);
+        if (!entity) {
+            this.loadData();
+            return;
+        }
+        this.currentEntity = entity;
+        if (!entity.years.includes(this.currentYear)) this.currentYear = entity.defaultYear;
+        this.renderEntitySwitcher();
+        this.renderYearSwitcher();
+        this.renderNav();
+        if (view) this.selectNavByView(view);
+        this.refreshBanner();
+        this.syncAssistantContext();
     }
 
     /**
