@@ -186,7 +186,7 @@ export function registerDocumentWorkflowTools(server: McpServer, ctx: AppContext
         const entities = session.workspace.entities;
         const entity = wanted
             ? entities.find((e) => e.id === wanted)
-            : (entities.find((e) => e.hasElster) ?? entities[0]);
+            : (entities.find((e) => !!e.elster) ?? entities[0]);
         if (!entity) throw new Error(`Unknown entity '${wanted}'. Known: ${entities.map((e) => e.id).join(', ')}`);
         return { session, entity };
     };

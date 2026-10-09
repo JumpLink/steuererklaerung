@@ -43,6 +43,9 @@ const errText = (err: unknown) => (err instanceof Error ? err.message : String(e
 /** Close a "weil …" clause with exactly one full stop. */
 const satz = (s: string) => (/[.!?]$/.test(s.trim()) ? s.trim() : `${s.trim()}.`);
 
+const STEUER_AUS =
+    'die deutschen Steuerfunktionen für diese Entität ausgeschaltet sind (Einstellungen → Land & Steuern).';
+
 function konten(entity: EntityModel): KontoSaldo[] {
     const byKey = new Map<string, KontoSaldo>();
     for (const t of searchAccountKeys(entity.accountKeys, {})) {
@@ -74,6 +77,7 @@ async function ust(
     filings: Teil<Filing[]>,
     stichtag: string,
 ): Promise<Teil<UstSeitVaInput>> {
+    if (!entity.capabilities.vatReturn) return { status: 'entfaellt', grund: STEUER_AUS };
     const elster = entity.elster;
     if (!elster) return { status: 'entfaellt', grund: 'hier keine Umsatzsteuer anfällt (keine ELSTER-Angaben).' };
     if (filings.status !== 'ok') return filings;
@@ -107,6 +111,7 @@ async function ust(
 }
 
 function steuerzahlungen(entity: EntityModel, filings: Teil<Filing[]>, stichtag: string): Teil<OffeneSteuerzahlung[]> {
+    if (!entity.capabilities.taxDeadlines) return { status: 'entfaellt', grund: STEUER_AUS };
     if (filings.status !== 'ok') return filings;
     const self = {
         ids: entityIdAliases(entity.id),
@@ -186,6 +191,7 @@ function laufendeKosten(session: PresenterSession, entity: EntityModel): Teil<La
 }
 
 function est(entity: EntityModel, year: number): Teil<EstSchaetzung> {
+    if (!entity.capabilities.taxForecast) return { status: 'entfaellt', grund: STEUER_AUS };
     if (!entity.est) {
         if (entity.elster?.gesellschafter.length) {
             return {
@@ -222,6 +228,7 @@ function est(entity: EntityModel, year: number): Teil<EstSchaetzung> {
 }
 
 async function gewst(session: PresenterSession, entity: EntityModel, year: number): Promise<Teil<GewstSchaetzung>> {
+    if (!entity.capabilities.tradeTax) return { status: 'entfaellt', grund: STEUER_AUS };
     const elster = entity.elster;
     if (!elster) return { status: 'entfaellt', grund: 'kein Gewerbebetrieb hinterlegt ist (keine ELSTER-Angaben).' };
     if (elster.business_end_date && elster.business_end_date < `${year}-01-01`) {

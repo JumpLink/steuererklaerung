@@ -21,7 +21,7 @@ import { runAndExit } from './output.ts';
 const LEVEL: Record<string, string> = { warnung: '⚠', tipp: '★', info: 'ℹ' };
 
 function pickEntity(entities: EntityModel[], wanted?: string): EntityModel {
-    const entity = wanted ? entities.find((e) => e.id === wanted) : (entities.find((e) => e.hasElster) ?? entities[0]);
+    const entity = wanted ? entities.find((e) => e.id === wanted) : (entities.find((e) => !!e.elster) ?? entities[0]);
     if (!entity) {
         throw new Error(
             wanted

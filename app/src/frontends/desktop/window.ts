@@ -28,6 +28,7 @@ import { isFirstRun } from '../../core/actions/entities.ts';
 import { belegeAusMailAbrufenFuer } from '../../core/actions/mail-eingang.ts';
 import { gioMailConnector } from '../../core/clients/imap/index.ts';
 import { loadMailEingang } from '../../core/config/index.ts';
+import { capabilities } from '../../core/countries/index.ts';
 import { loadAppWorkspace, type AppEntity, type AppWorkspace } from './entities.ts';
 import { showToast } from './toast.ts';
 import { presentRemoveEntity, presentRenameEntity } from './views/entity-dialogs.ts';
@@ -398,6 +399,9 @@ export class MainWindow extends Adw.ApplicationWindow {
                         id: 'default',
                         name: 'Steuererklärung',
                         kind: 'gbr',
+                        country: 'DE',
+                        taxModule: 'de',
+                        capabilities: capabilities({}),
                         hasElster: false,
                         hasEst: false,
                         dmsType: 'builtin',

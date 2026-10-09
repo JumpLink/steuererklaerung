@@ -19,6 +19,8 @@ export interface EntityMeta {
     hasElster: boolean;
     /** True for a `privat` entity with a loadable ESt config → the Einkommensteuer view. */
     hasEst: boolean;
+    /** The entity's tax module (ADR 0001); `none` = bookkeeping only, every tax view hidden. */
+    taxModule: 'de' | 'none';
     /** Years that were actually loaded (have data) for this entity. */
     years: number[];
     defaultYear: number;

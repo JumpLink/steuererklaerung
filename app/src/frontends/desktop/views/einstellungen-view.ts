@@ -355,6 +355,10 @@ export class BhEinstellungenView extends Adw.Bin {
                 } catch (err) {
                     this.banner(fmt(_('Could not read the ELSTER configuration: {error}'), { error: msg(err) }));
                 }
+            } else if (entity.elster) {
+                // Tax module off, ELSTER section kept: categorisation still reads its rules, so only
+                // that group stays — the filing groups would edit data no view uses (ADR 0001).
+                this._entity_groups.append(buildKlassifizierungGroup(this.host, entity, this));
             }
 
             // C) Privat entity: Person + the active year's Lohnsteuerbescheinigung / Vorsorge / Werbungskosten /

@@ -114,6 +114,12 @@ export class BhKontenView extends Adw.Bin {
      * failure surfaces in the banner; it never crashes the view.
      */
     private refreshEricStatus(): void {
+        const filing = this.entity?.capabilities.electronicFiling ?? true;
+        this._eric_group.set_visible(filing);
+        if (!filing) {
+            this._eric_banner.set_revealed(false);
+            return;
+        }
         this._eric_group.set_description(
             'Wird für die Prüfung und die spätere Übermittlung an ELSTER benötigt. ERiC ist selbst zu ' +
                 'installieren (ELSTER-Entwicklerbereich) und nicht Teil der App. Leer = ERIC_HOME / Standardpfad.',

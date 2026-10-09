@@ -11,6 +11,8 @@
 
 import { loadAppSettings, resolveWorkspaceEntities, type ElsterConfig, type EstConfig } from '../config/index.ts';
 import { searchTransactions, transactionsSummary } from '../actions/transactions.ts';
+import { capabilities, type Capabilities } from '../countries/index.ts';
+import type { TaxModuleId } from '../config/index.ts';
 
 /**
  * One legal entity as the frontends need it — the merge of the desktop `AppEntity` and the web's
@@ -24,9 +26,19 @@ export interface EntityModel {
     name: string;
     /** gbr · einzelunternehmen · privat · … (display/grouping). */
     kind: string;
-    /** Whether an ELSTER config is present — gates the Steuer view. */
+    /** Country the entity is taxed in (ISO 3166-1 alpha-2; 'DE' when the manifest does not say). */
+    country: string;
+    /** The tax module in effect ('none' = bookkeeping only). */
+    taxModule: TaxModuleId;
+    /** What the tax module offers — the gate for every tax view, KPI, guard and setting. */
+    capabilities: Capabilities;
+    /**
+     * ELSTER config present AND tax filing on — gates the Steuer view. Bookkeeping that reads the
+     * `elster` section (classification, the EÜR-based reports) checks `elster` instead: it keeps
+     * working when the tax module is off.
+     */
     hasElster: boolean;
-    /** Whether a private-ESt config is present — gates the Einkommensteuer view for a `privat` entity. */
+    /** Private-ESt config present AND income tax on — gates the Einkommensteuer view for `privat`. */
     hasEst: boolean;
     /** The entity's inline ELSTER config (normalised), if any — used by the Steuer/EÜR view. */
     elster?: ElsterConfig;
@@ -88,12 +100,16 @@ export function loadWorkspaceModel(opts: { years?: number[] } = {}): WorkspaceMo
 
     const entities: EntityModel[] = resolved.map((entity) => {
         const years = yearsWithData(entity.accountKeys, probe);
+        const caps = capabilities(entity);
         return {
             id: entity.id,
             name: entity.name,
             kind: entity.kind,
-            hasElster: !!entity.elster,
-            hasEst: !!entity.est,
+            country: entity.country,
+            taxModule: entity.taxModule,
+            capabilities: caps,
+            hasElster: caps.taxFiling && !!entity.elster,
+            hasEst: caps.incomeTax && !!entity.est,
             elster: entity.elster,
             est: entity.est,
             years,
