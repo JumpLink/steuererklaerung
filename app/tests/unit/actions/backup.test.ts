@@ -4,7 +4,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from '@gjsify/unit';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
@@ -17,6 +17,8 @@ import {
     pruneBackups,
     runConfiguredBackup,
 } from '../../../src/core/actions/backup.ts';
+import { migrateConfig } from '../../../src/core/config/migrate.ts';
+import { setBeforeMigrationWrite } from '../../../src/core/config/migrate-forward.ts';
 import { loadUserSettings, updateUserSettings } from '../../../src/core/config/user-settings.ts';
 
 export default async () => {
@@ -163,6 +165,29 @@ export default async () => {
                 vi.stubEnv('STEUER_WORKSPACE', prev.ws);
                 vi.stubEnv('TRANSACTIONS_DATA_DIR', prev.td);
                 vi.stubEnv('LEDGER_DB_PATH', prev.lp);
+            }
+        });
+
+        await it('config migrate runs the before-migration hook BEFORE writing; a failing hook aborts', async () => {
+            const ws = join(dir, 'legacy');
+            cpSync(join(process.cwd(), 'tests', 'fixtures', 'legacy-config'), ws, { recursive: true });
+            const before = readFileSync(join(ws, 'steuererklaerung.json'), 'utf-8');
+            const seen: string[] = [];
+            const previous = setBeforeMigrationWrite((path) => {
+                // The manifest must still be the untouched original when the hook runs.
+                seen.push(readFileSync(path, 'utf-8') === before ? 'original' : 'already-written');
+                throw new Error('Sicherung fehlgeschlagen');
+            });
+            try {
+                expect(() => migrateConfig({ dir: ws, now: 'T' })).toThrow();
+                expect(seen.join()).toBe('original');
+                expect(readFileSync(join(ws, 'steuererklaerung.json'), 'utf-8')).toBe(before);
+                expect(existsSync(join(ws, 'steuererklaerung.json.bak-T'))).toBe(false);
+                setBeforeMigrationWrite(() => seen.push('ok'));
+                migrateConfig({ dir: ws, now: 'T' });
+                expect(seen.join()).toBe('original,ok');
+            } finally {
+                setBeforeMigrationWrite(previous);
             }
         });
     });

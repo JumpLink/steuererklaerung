@@ -47,6 +47,7 @@ import { DatabaseSync } from 'node:sqlite';
 
 import { getStoreDir, ledgerDbPath } from '@steuererklaerung/store';
 import { getManifestPath, LEGACY_MANIFEST_FILENAME, MANIFEST_FILENAME } from '../config/manifest.ts';
+import { setBeforeMigrationWrite } from '../config/migrate-forward.ts';
 import { defaultBackupRoot, loadUserSettings, updateUserSettings, type UserSettings } from '../config/user-settings.ts';
 
 /** Marks a folder as one of ours — retention never touches a folder without it. */
@@ -353,4 +354,16 @@ export function runConfiguredBackup(
         s.backup.lastPath = result.path;
     });
     return result;
+}
+
+/**
+ * Take a full backup before any migration rewrites the manifest. Installed once at process entry
+ * by the CLI and the desktop app; a failed backup aborts the migration, because migrating without
+ * the safety net the person was promised is worse than not migrating.
+ */
+export function installMigrationBackup(): void {
+    setBeforeMigrationWrite((path) => {
+        const r = runConfiguredBackup({ reason: 'before-migration' });
+        console.error(`[backup] Vor der Migration von ${basename(path)} gesichert: ${r.path}`);
+    });
 }

@@ -41,6 +41,29 @@ export interface ManifestUpgrade {
  */
 export const MANIFEST_UPGRADES: readonly ManifestUpgrade[] = [];
 
+/**
+ * Called right before a migration REWRITES a manifest on disk — the v1 assembly in `config migrate`
+ * and a forward upgrade persisted by `mutateManifest`. The `.bak-<ts>` copy beside the file only
+ * covers the manifest itself; the installed hook (see `installMigrationBackup` in
+ * `core/actions/backup.ts`) takes a full backup first. A hook rather than an import because backup
+ * depends on this module, and because tests and pure callers must stay free of side effects.
+ * A hook that throws aborts the migration: no backup, no rewrite.
+ */
+type BeforeMigrationWrite = (path: string, from: number | null) => void;
+let beforeMigrationWrite: BeforeMigrationWrite | null = null;
+
+/** Install (or with `null` remove) the before-migration hook. Returns the previous one. */
+export function setBeforeMigrationWrite(fn: BeforeMigrationWrite | null): BeforeMigrationWrite | null {
+    const previous = beforeMigrationWrite;
+    beforeMigrationWrite = fn;
+    return previous;
+}
+
+/** Run the before-migration hook, if any. */
+export function notifyBeforeMigrationWrite(path: string, from: number | null): void {
+    beforeMigrationWrite?.(path, from);
+}
+
 /** A manifest written by a NEWER version of this program. Not a migration — a refusal. */
 export class ManifestTooNewError extends ConfigError {
     override readonly name = 'ManifestTooNewError';
