@@ -56,17 +56,18 @@ import {
     buildWerbungGroup,
     buildEntlastungGroup,
 } from './einstellungen/privat.ts';
+import { _, _p, fmt } from '../i18n.ts';
 
 const GROUP_LABEL: Record<McpGroup, string> = {
     paperless: 'Paperless (DMS)',
     qonto: 'Qonto (Bank)',
-    transactions: 'Transaktionen',
-    reconcile: 'Abgleich',
-    documentWorkflow: 'Dokument-Workflow',
+    transactions: _p('MCP tool group', 'Transactions'),
+    reconcile: _p('auto-matching', 'Matching'),
+    documentWorkflow: _('Document workflow'),
     crossSystem: 'Cross-System',
     elster: 'ELSTER',
-    invoices: 'Rechnungen (self)',
-    contacts: 'Kontakte',
+    invoices: _('Invoices (self)'),
+    contacts: _('Contacts'),
 };
 
 export class BhEinstellungenView extends Adw.Bin {
@@ -147,29 +148,30 @@ export class BhEinstellungenView extends Adw.Bin {
             // "not configured" is the point of it.
         }
         const row = new Adw.ActionRow({
-            title: 'KI-Engine',
+            title: _('AI engine'),
             subtitle: markup(
                 status
                     ? `${status.provider} · ${status.model}` +
-                          (status.source === 'env' ? ' · über LLM_PROVIDER gesetzt' : ' · Standard')
-                    : 'Nicht konfiguriert — LLM_PROVIDER prüfen.',
+                          ` · ${status.source === 'env' ? _('set via LLM_PROVIDER') : _('default')}`
+                    : _('Not configured — check LLM_PROVIDER.'),
             ),
         });
         row.set_subtitle_lines(0);
 
-        const test = new Gtk.Button({ label: 'Verbindung testen', valign: Gtk.Align.CENTER });
-        test.set_tooltip_text('Stellt eine winzige Frage an das Modell — kostet ein paar Token.');
+        const test = new Gtk.Button({ label: _('Test connection'), valign: Gtk.Align.CENTER });
+        test.set_tooltip_text(_('Asks the model a tiny question — costs a few tokens.'));
         test.connect('clicked', () => {
             test.set_sensitive(false);
-            test.set_label('Teste …');
+            test.set_label(_('Testing …'));
             probeEngine()
                 .then((result) => {
                     row.set_subtitle(markup(`${result.ok ? '✓' : '✗'} ${result.message}`));
-                    if (!result.ok) this.banner(`KI-Engine antwortet nicht: ${result.message}`);
+                    if (!result.ok)
+                        this.banner(fmt(_('AI engine does not respond: {message}'), { message: result.message }));
                 })
                 .finally(() => {
                     test.set_sensitive(true);
-                    test.set_label('Verbindung testen');
+                    test.set_label(_('Test connection'));
                 });
         });
         row.add_suffix(test);
@@ -184,15 +186,15 @@ export class BhEinstellungenView extends Adw.Bin {
         try {
             s = loadSettings();
         } catch (err) {
-            this.banner(`Einstellungen nicht verfügbar: ${msg(err)}`);
+            this.banner(fmt(_('Settings not available: {error}'), { error: msg(err) }));
             return; // leave globalBuilt false so a later reload can retry
         }
         this.settings = s;
 
         this._lernmodus_group.add(
             this.switchRow(
-                'Lernmodus',
-                'Blendet neben Fachbegriffen ein „?" ein — Übersicht, Auswertungen, USt-VA und die Stammdaten',
+                _('Learning mode'),
+                _('Shows a “?” next to technical terms — Overview, Reports, USt-VA (VAT return) and the master data'),
                 s.lernmodus,
                 (on) => {
                     s.lernmodus = on;
@@ -201,8 +203,8 @@ export class BhEinstellungenView extends Adw.Bin {
         );
         this._sync_group.add(
             this.switchRow(
-                'Automatisch abgleichen',
-                'Beim Start und danach in festen Abständen, ohne die Ansicht zu blockieren',
+                _('Sync automatically'),
+                _('At start-up and then at fixed intervals, without blocking the view'),
                 s.sync.enabled,
                 (on) => {
                     s.sync.enabled = on;
@@ -210,17 +212,17 @@ export class BhEinstellungenView extends Adw.Bin {
             ),
         );
         const intervals: [string, string, 'invoicesMinutes' | 'transactionsMinutes' | 'paperlessMinutes', number][] = [
-            ['Rechnungen (Qonto)', 'Minuten, mindestens 5; 0 = aus', 'invoicesMinutes', 5],
-            ['Buchungen (Qonto)', 'Minuten, mindestens 15 (Ratenlimit); 0 = aus', 'transactionsMinutes', 15],
-            ['Belege (Paperless)', 'Minuten, mindestens 5; 0 = aus', 'paperlessMinutes', 5],
+            [_('Invoices (Qonto)'), _('Minutes, at least 5; 0 = off'), 'invoicesMinutes', 5],
+            [_('Transactions (Qonto)'), _('Minutes, at least 15 (rate limit); 0 = off'), 'transactionsMinutes', 15],
+            [_('Receipts (Paperless)'), _('Minutes, at least 5; 0 = off'), 'paperlessMinutes', 5],
         ];
         for (const [title, subtitle, key] of intervals) {
             this._sync_group.add(this.minutesRow(title, subtitle, s.sync[key], (n) => (s.sync[key] = n)));
         }
         this._assistant_group.add(
             this.switchRow(
-                'Integrierter Assistent',
-                'Den Assistent-Tab und /api/chat aktivieren',
+                _('Built-in assistant'),
+                _('Enable the assistant tab and /api/chat'),
                 s.assistant.enabled,
                 (on) => {
                     s.assistant.enabled = on;
@@ -230,8 +232,8 @@ export class BhEinstellungenView extends Adw.Bin {
         this._assistant_group.add(this.engineRow());
         this._mcp_group.add(
             this.switchRow(
-                'MCP-Tools bereitstellen',
-                'Externe Assistenten (Claude, ChatGPT …) anbinden',
+                _('Provide MCP tools'),
+                _('Connect external assistants (Claude, ChatGPT …)'),
                 s.mcp.enabled,
                 (on) => {
                     s.mcp.enabled = on;
@@ -240,8 +242,8 @@ export class BhEinstellungenView extends Adw.Bin {
         );
         this._mcp_group.add(
             this.switchRow(
-                'Schreibende Tools erlauben',
-                'Mutierende MCP-Tools nach außen öffnen (Standard: nur lesen)',
+                _('Allow writing tools'),
+                _('Expose mutating MCP tools (default: read-only)'),
                 s.mcp.allowWrite,
                 (on) => {
                     s.mcp.allowWrite = on;
@@ -294,7 +296,7 @@ export class BhEinstellungenView extends Adw.Bin {
             saveSettings(this.settings);
             this._save_banner.set_revealed(false);
         } catch (err) {
-            this.banner(`Konnte nicht speichern: ${msg(err)}`);
+            this.banner(fmt(_('Could not save: {error}'), { error: msg(err) }));
         }
     }
 
@@ -318,7 +320,7 @@ export class BhEinstellungenView extends Adw.Bin {
                     this._entity_groups.append(buildMailTemplatesGroup(this.host, entity, this));
                 }
             } catch (err) {
-                this.banner(`Anbindungen nicht lesbar: ${msg(err)}`);
+                this.banner(fmt(_('Could not read connections: {error}'), { error: msg(err) }));
             }
 
             // B) Business entities: Betrieb + Umsatzsteuer + Jahresabschluss-Anpassungen from the ELSTER config.
@@ -339,7 +341,7 @@ export class BhEinstellungenView extends Adw.Bin {
                     // so it sits below the ones every year needs rather than above them.
                     this._entity_groups.append(buildAufgabeGroup(this.host, entity, elster));
                 } catch (err) {
-                    this.banner(`ELSTER-Konfiguration nicht lesbar: ${msg(err)}`);
+                    this.banner(fmt(_('Could not read the ELSTER configuration: {error}'), { error: msg(err) }));
                 }
             }
 
@@ -358,7 +360,9 @@ export class BhEinstellungenView extends Adw.Bin {
                     this._entity_groups.append(buildKinderGroup(this.host, entity, year, this));
                     this._entity_groups.append(buildEntlastungGroup(this.host, entity, est, year));
                 } catch (err) {
-                    this.banner(`ESt-Konfiguration nicht lesbar: ${msg(err)}`);
+                    this.banner(
+                        fmt(_('Could not read the ESt (income tax) configuration: {error}'), { error: msg(err) }),
+                    );
                 }
             }
         } finally {
@@ -383,8 +387,10 @@ export class BhEinstellungenView extends Adw.Bin {
         const now = manifestRevision();
         if (this.revision !== null && now !== null && now !== this.revision) {
             this.banner(
-                'Die Konfiguration wurde zwischenzeitlich von außen geändert (CLI, MCP oder ein zweites Fenster). ' +
-                    'Die Ansicht wird neu geladen — bitte die Eingabe wiederholen.',
+                _(
+                    'The configuration was changed from outside in the meantime (CLI, MCP or a second window). ' +
+                        'The view is reloaded — please repeat the input.',
+                ),
             );
             this.revision = now;
             if (this.entity) this.buildEntityGroups(this.entity, this.year);
@@ -395,9 +401,9 @@ export class BhEinstellungenView extends Adw.Bin {
             this.revision = manifestRevision(); // our own write moved it — adopt the new state
             this._save_banner.set_revealed(false);
             if (opts.clearCache && this.entity) appSession().invalidate(this.entity.id);
-            showToast('Gespeichert');
+            showToast(_('Saved'));
         } catch (err) {
-            this.banner(`Konnte nicht speichern: ${msg(err)}`);
+            this.banner(fmt(_('Could not save: {error}'), { error: msg(err) }));
         }
     }
 

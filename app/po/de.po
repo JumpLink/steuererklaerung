@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-09 19:16+0200\n"
+"POT-Creation-Date: 2026-10-09 19:18+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -15,6 +15,7 @@ msgstr ""
 #. TRANSLATORS: Title of the AI assistant side panel
 #. TRANSLATORS: Tooltip on the button revealing the AI assistant side panel
 #: src/frontends/desktop/assistent-panel.blp:30
+#: src/frontends/desktop/views/einstellungen-view.blp:43
 #: src/frontends/desktop/views/tab-hub.ts:123
 #: src/frontends/desktop/window.blp:134
 msgid "Assistant"
@@ -135,6 +136,7 @@ msgid "timer & unbilled hours"
 msgstr "Timer & offene Stunden"
 
 #: src/frontends/desktop/nav.ts:58
+#: src/frontends/desktop/views/einstellungen-view.ts:70
 msgid "Contacts"
 msgstr "Kontakte"
 
@@ -876,6 +878,190 @@ msgstr "Prüfe, welche Paperless-Regel gegriffen hat"
 #: src/frontends/desktop/views/dokumentregel-row.ts:48
 msgid "Paperless assignment not available"
 msgstr "Paperless-Zuordnung nicht verfügbar"
+
+#: src/frontends/desktop/views/einstellungen-view.blp:34
+msgid "Clarity"
+msgstr "Verständlichkeit"
+
+#: src/frontends/desktop/views/einstellungen-view.blp:38
+msgctxt "sync settings"
+msgid "Sync"
+msgstr "Abgleich"
+
+#: src/frontends/desktop/views/einstellungen-view.blp:39
+msgid ""
+"Fetches new data in the background. Bank fetches with TAN/PIN and ELSTER "
+"never run automatically."
+msgstr ""
+"Holt neue Daten im Hintergrund. Bank-Abrufe mit TAN/PIN und ELSTER laufen "
+"nie automatisch."
+
+#: src/frontends/desktop/views/einstellungen-view.blp:48
+msgid ""
+"Connect external assistants — changes take effect the next time the MCP "
+"server starts."
+msgstr ""
+"Externe Assistenten anbinden — Änderungen wirken beim nächsten Start des MCP-"
+"Servers."
+
+#: src/frontends/desktop/views/einstellungen-view.blp:52
+msgid "MCP tool groups"
+msgstr "MCP-Tool-Gruppen"
+
+#: src/frontends/desktop/views/einstellungen-view.blp:53
+msgid "Which groups are visible to the outside."
+msgstr "Welche Gruppen nach außen sichtbar sind."
+
+#: src/frontends/desktop/views/einstellungen-view.ts:64
+msgctxt "MCP tool group"
+msgid "Transactions"
+msgstr "Transaktionen"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:65
+msgctxt "auto-matching"
+msgid "Matching"
+msgstr "Abgleich"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:66
+msgid "Document workflow"
+msgstr "Dokument-Workflow"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:69
+msgid "Invoices (self)"
+msgstr "Rechnungen (self)"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:151
+msgid "AI engine"
+msgstr "KI-Engine"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:155
+msgid "set via LLM_PROVIDER"
+msgstr "über LLM_PROVIDER gesetzt"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:155
+msgid "default"
+msgstr "Standard"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:156
+msgid "Not configured — check LLM_PROVIDER."
+msgstr "Nicht konfiguriert — LLM_PROVIDER prüfen."
+
+#: src/frontends/desktop/views/einstellungen-view.ts:161
+#: src/frontends/desktop/views/einstellungen-view.ts:173
+msgid "Test connection"
+msgstr "Verbindung testen"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:162
+msgid "Asks the model a tiny question — costs a few tokens."
+msgstr "Stellt eine winzige Frage an das Modell — kostet ein paar Token."
+
+#: src/frontends/desktop/views/einstellungen-view.ts:165
+msgid "Testing …"
+msgstr "Teste …"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:169
+msgid "AI engine does not respond: {message}"
+msgstr "KI-Engine antwortet nicht: {message}"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:188
+msgid "Settings not available: {error}"
+msgstr "Einstellungen nicht verfügbar: {error}"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:195
+msgid "Learning mode"
+msgstr "Lernmodus"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:196
+msgid ""
+"Shows a “?” next to technical terms — Overview, Reports, USt-VA (VAT return) "
+"and the master data"
+msgstr ""
+"Blendet neben Fachbegriffen ein „?\" ein — Übersicht, Auswertungen, USt-VA "
+"und die Stammdaten"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:205
+msgid "Sync automatically"
+msgstr "Automatisch abgleichen"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:206
+msgid "At start-up and then at fixed intervals, without blocking the view"
+msgstr ""
+"Beim Start und danach in festen Abständen, ohne die Ansicht zu blockieren"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:214
+msgid "Invoices (Qonto)"
+msgstr "Rechnungen (Qonto)"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:214
+#: src/frontends/desktop/views/einstellungen-view.ts:216
+msgid "Minutes, at least 5; 0 = off"
+msgstr "Minuten, mindestens 5; 0 = aus"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:215
+msgid "Transactions (Qonto)"
+msgstr "Buchungen (Qonto)"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:215
+msgid "Minutes, at least 15 (rate limit); 0 = off"
+msgstr "Minuten, mindestens 15 (Ratenlimit); 0 = aus"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:216
+msgid "Receipts (Paperless)"
+msgstr "Belege (Paperless)"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:223
+msgid "Built-in assistant"
+msgstr "Integrierter Assistent"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:224
+msgid "Enable the assistant tab and /api/chat"
+msgstr "Den Assistent-Tab und /api/chat aktivieren"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:234
+msgid "Provide MCP tools"
+msgstr "MCP-Tools bereitstellen"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:235
+msgid "Connect external assistants (Claude, ChatGPT …)"
+msgstr "Externe Assistenten (Claude, ChatGPT …) anbinden"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:244
+msgid "Allow writing tools"
+msgstr "Schreibende Tools erlauben"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:245
+msgid "Expose mutating MCP tools (default: read-only)"
+msgstr "Mutierende MCP-Tools nach außen öffnen (Standard: nur lesen)"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:298
+#: src/frontends/desktop/views/einstellungen-view.ts:403
+msgid "Could not save: {error}"
+msgstr "Konnte nicht speichern: {error}"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:322
+msgid "Could not read connections: {error}"
+msgstr "Anbindungen nicht lesbar: {error}"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:343
+msgid "Could not read the ELSTER configuration: {error}"
+msgstr "ELSTER-Konfiguration nicht lesbar: {error}"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:362
+msgid "Could not read the ESt (income tax) configuration: {error}"
+msgstr "ESt-Konfiguration nicht lesbar: {error}"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:388
+msgid ""
+"The configuration was changed from outside in the meantime (CLI, MCP or a "
+"second window). The view is reloaded — please repeat the input."
+msgstr ""
+"Die Konfiguration wurde zwischenzeitlich von außen geändert (CLI, MCP oder "
+"ein zweites Fenster). Die Ansicht wird neu geladen — bitte die Eingabe "
+"wiederholen."
+
+#: src/frontends/desktop/views/einstellungen-view.ts:401
+msgid "Saved"
+msgstr "Gespeichert"
 
 #: src/frontends/desktop/views/entity-dialogs.ts:32
 msgid "Rename entity"
