@@ -121,6 +121,12 @@
             "fields": [
                 "entity.ts:entschieden_am"
             ]
+        },
+        "land-schalter-oberflaeche-folgt": {
+            "reason": "Land und Steuermodul je Entität (ADR 0001) kommen im selben Branch mit eigener Zeile im Einrichtungsassistenten und in den Einstellungen; bis dahin nur über das Manifest.",
+            "fields": [
+                "entity.ts:country"
+            ]
         }
     }
 }

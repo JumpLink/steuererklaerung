@@ -23,7 +23,9 @@ import type {
     HinweisGeprueft,
     IssuerConfig,
     LaufendeKostenEntscheidung,
+    TaxModuleId,
 } from './schema/entity.ts';
+import { countryOf, DEFAULT_COUNTRY, defaultTaxModuleFor, taxModuleOf } from './country.ts';
 import type { MailAccountConfig, MailTemplate } from './schema/mail.ts';
 import type { MailEingangConfig } from './schema/mail-eingang.ts';
 import type { Project } from './schema/project.ts';
@@ -44,6 +46,10 @@ export interface ResolvedEntity {
     invoicing: EntityInvoicingConfig;
     /** True for the fictional demo entity. */
     demo?: boolean;
+    /** Country the entity is taxed in, resolved by {@link countryOf} ('DE' when unset). */
+    country: string;
+    /** Tax module in effect, resolved by {@link taxModuleOf} ('de' for an unset German entity). */
+    taxModule: TaxModuleId;
     /** Inline ELSTER config, normalised exactly as the former loadElsterConfig. */
     elster?: ElsterConfig;
     /** Inline private-ESt config (identical to the former loadEstConfig output). */
@@ -64,6 +70,8 @@ function resolve(entity: ManifestEntity): ResolvedEntity {
         dms: entity.dms ?? { type: 'builtin' },
         invoicing: { ...entity.invoicing, type: resolveInvoicingType(entity.invoicing?.type, entity.accounts) },
         demo: entity.demo,
+        country: countryOf(entity),
+        taxModule: taxModuleOf(entity),
         elster: entity.elster ? normalizeElsterConfig(entity.elster) : undefined,
         est: entity.est,
         finanzierung: entity.finanzierung,
@@ -91,6 +99,8 @@ export interface ResolvedWorkspaceEntity {
     dms: EntityDmsConfig;
     invoicing: EntityInvoicingConfig;
     demo?: boolean;
+    country: string;
+    taxModule: TaxModuleId;
     /** Inline ELSTER config (normalised), if any. */
     elster?: ElsterConfig;
     /** Inline private-ESt config, if any. */
@@ -117,6 +127,8 @@ export function resolveWorkspaceEntities(
             dms: r.dms,
             invoicing: r.invoicing,
             demo: r.demo,
+            country: r.country,
+            taxModule: r.taxModule,
             elster: r.elster,
             est: r.est,
             recurring: r.recurring,
@@ -325,6 +337,24 @@ export function writeManifestEntity(
             throw new Error(`Entität „${id}" nicht im Manifest gefunden. Bekannte Entitäten: ${known}.`);
         }
         mutate(rawEntity);
+    });
+}
+
+/**
+ * Set where an entity is taxed and whether its tax module is on. A value equal to what the
+ * missing field already means is REMOVED rather than written, so switching back to Germany with
+ * German tax on leaves the entity exactly as an untouched manifest has it.
+ */
+export function saveEntityCountry(
+    entityId: string,
+    choice: { country: string; taxModule: TaxModuleId },
+    path = getManifestPath(),
+): void {
+    writeManifestEntity(path, entityId, (rawEntity) => {
+        if (choice.country === DEFAULT_COUNTRY) delete rawEntity.country;
+        else rawEntity.country = choice.country;
+        if (choice.taxModule === defaultTaxModuleFor(choice.country)) delete rawEntity.taxModule;
+        else rawEntity.taxModule = choice.taxModule;
     });
 }
 
