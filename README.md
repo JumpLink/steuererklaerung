@@ -1,216 +1,218 @@
 # Steuererklärung
 
-Eine native GNOME-Anwendung, die Einnahmenüberschussrechnung, Umsatzsteuer-Voranmeldung
-und Einkommensteuer aus den eigenen Bankbuchungen und Belegen rechnet — und die fertige
-Erklärung über **ERiC** an ELSTER übermittelt.
+*[Deutsche Version](README.de.md)*
 
-Sie existiert, weil es für Linux keine ernstzunehmende Steuersoftware gibt. Das amtliche
-**ElsterFormular** war reine Windows-Software und wurde eingestellt — ab dem
-Veranlagungszeitraum 2020 nicht mehr zugelassen. Was bleibt, ist das Browser-Portal
-*Mein ELSTER*: Zahlen von Hand abtippen, ohne Buchhaltung darunter. Das hier ist der
-Versuch, den Weg von der Bankbuchung bis zum Transferticket auf dem eigenen Rechner
-zusammenhängend zu machen.
+A native GNOME application that computes the annual profit statement (EÜR), the VAT
+pre-return (USt-VA) and income tax from your own bank transactions and receipts, and submits
+the finished return to ELSTER through **ERiC**.
 
-![Übersicht](docs/screenshots/01-uebersicht.png)
+It exists because Linux has no serious tax software. The official ElsterFormular was
+Windows-only and was discontinued. What remains is the browser portal *Mein ELSTER*, where
+you type numbers in by hand with no bookkeeping underneath. This project tries to cover the
+whole path from bank transaction to filed return on your own machine.
+
+![Overview](docs/screenshots/01-uebersicht.png)
 
 | | |
 |---|---|
-| ![Steuererklärung](docs/screenshots/09-steuererklaerung.png) | ![Anlage EÜR](docs/screenshots/10-euer.png) |
-| ![Beleg-Eingang](docs/screenshots/02-beleg-eingang.png) | ![Auswertungen](docs/screenshots/08-auswertungen.png) |
+| ![Tax return](docs/screenshots/09-steuererklaerung.png) | ![Anlage EÜR](docs/screenshots/10-euer.png) |
+| ![Receipt inbox](docs/screenshots/02-beleg-eingang.png) | ![Reports](docs/screenshots/08-auswertungen.png) |
 
-Alle Bilder stammen aus der mitgelieferten Demo-Entität — erfundene Firma, erfundene
-Zahlen. Der [Bildschirm-für-Bildschirm-Rundgang](docs/app/README.md) zeigt jede Ansicht.
+All screenshots use the bundled demo entity: an invented company with invented numbers.
+The app UI and most documentation are in German. A [screen-by-screen tour](docs/app/README.md)
+shows every view.
 
-## Was es kann
+## Who it is for
 
-**Vier Oberflächen auf demselben Kern.** Die Rechenlogik liegt in gemeinsamen Aktionen;
-CLI, App, Web-UI und MCP-Server sind dünne Adapter darüber.
+German freelancers and small businesses who prepare their own tax returns, including
+English speakers living in Germany who file via ELSTER. The tax logic follows German law, so
+the interface and terms stay German. This README glosses them where needed.
 
-- **Native App** (GTK 4 + libadwaita) — Übersicht, Beleg-Eingang, Buchungen, Rechnungen,
-  Zeiten, Kontakte, Auswertungen, Steuer, Konten, Einstellungen.
-- **CLI** — 23 Kommandogruppen; die meisten Lese-Kommandos geben JSON aus. Das ist die
-  Oberfläche, über die alles zuerst funktioniert — auch die Abgabe.
-- **Web-UI** (`steuer web`, lokal auf 127.0.0.1) — dieselben Ansichten im Browser.
-- **MCP-Server** (`steuer mcp`) — damit ein KI-Assistent Belege sucht, prüft und
-  verschlagwortet. Standardmäßig **nur lesend**; schreibende Werkzeuge sind ein Schalter
-  in den Einstellungen.
+## Features
 
-**Steuer.** Anlage EÜR (§ 4 Abs. 3 EStG, transaktionsgetrieben) · Umsatzsteuer-Voranmeldung
-und -Jahreserklärung · Gewerbesteuer (GewSt 1 A) · gesonderte und einheitliche Feststellung
-für Personengesellschaften · private Einkommensteuer (§ 19, Werbungskosten, § 35a, § 24b,
-Kinderbetreuung, Lohnersatz). Dazu Anlageverzeichnis mit linearer AfA, Privatanteile,
-Betriebsaufgabe (§ 16/§ 34), Reverse-Charge (§ 13b) und Querprüfungen zwischen den
-Formularen.
+One core, four interfaces: the logic lives in shared actions, and the CLI, the app, the
+web UI and the MCP server are thin adapters on top.
 
-**Belege und Dokumente.** Ein eingebautes DMS oder **Paperless-ngx**, pro Entität wählbar.
-Belege werden mit Buchungen verknüpft, fehlende Belege für gezogene Vorsteuer werden als
-Arbeitsliste ausgewiesen. Rechnungsfelder zieht wahlweise ein LLM aus dem OCR-Text; jede
-KI-Entscheidung schreibt ihre Begründung in ein Feld am Dokument zurück.
+- **Native app** (GTK 4 + libadwaita): overview, receipt inbox, transactions, invoices,
+  time tracking, contacts, reports, tax, accounts, settings.
+- **CLI** (`steuer`): 23 command groups, most read commands print JSON. Everything works
+  here first, including filing.
+- **Web UI** (`steuer web`, local only, 127.0.0.1): the same views in a browser.
+- **MCP server** (`steuer mcp`): lets an AI assistant search and tag receipts. Read-only by
+  default; write tools are an opt-in setting.
 
-**Bank und Buchungen.** Qonto-API · FinTS/HBCI · CAMT.052/053-Dateien jeder Bank ·
-PayPal- und Amazon-Exporte zur Anreicherung. Alles landet in einem lokalen Store
-(NDJSON + SQLite), aus dem die EÜR gerechnet wird.
+**Taxes.** Anlage EÜR (income-surplus statement, § 4 (3) EStG, driven by transactions),
+USt-VA and annual VAT return, trade tax (GewSt 1 A), separate and uniform assessment for
+partnerships, private income tax (employment income, deductions, § 35a household services,
+§ 24b, childcare). Also an asset register with straight-line depreciation (AfA), private
+use shares, business cessation, reverse charge (§ 13b) and cross-checks between forms.
 
-**Rechnungsstellung.** Ausgangsrechnungen entweder über Qonto oder komplett selbst:
-Entwurf → Festschreiben → PDF nach DIN 5008 mit SEPA-GiroCode → XRechnung-XML → Storno.
-Dazu wiederkehrende Rechnungen mit Fälligkeits-Erinnerungen.
+**Receipts.** A built-in document store or **Paperless-ngx**, chosen per entity. Receipts
+are linked to transactions, and missing receipts for claimed input VAT show up as a to-do
+list. An LLM can optionally extract invoice fields from OCR text; every AI decision writes
+its rationale back to the document.
 
-**Abgabe.** Prüf-PDF und ERiC-XML je Formular, ERiC-Validierung, unveränderliche
-Filing-Snapshots, fingerprint-gebundene Freigabe als Abgabe-Gate, Testversand vor
-Echtversand, GoBD-Festschreibung des Jahres.
+**Banking.** Qonto API (optional), FinTS/HBCI, CAMT.052/053 files from any bank, PayPal and
+Amazon exports for enrichment. Everything lands in a local store (NDJSON + SQLite).
 
-Die vollständige Kommandoreferenz steht in [`app/README.md`](app/README.md).
+**Invoicing.** Outgoing invoices via Qonto or fully self-hosted: draft, finalise, PDF per
+DIN 5008 with SEPA QR code, XRechnung XML, cancellation. Recurring invoices with reminders.
 
-## Voraussetzungen
+**Filing.** Review PDF and ERiC XML per form, ERiC validation, immutable filing snapshots,
+a fingerprint-bound approval gate, test submission before the real one.
 
-Ein aktuelles Linux mit GNOME-Bibliotheken — nichts davon wird mitgeliefert, alles kommt
-aus der Distribution:
+The full command reference is in [`app/README.md`](app/README.md) (German).
 
-- **gjs ≥ 1.86** (SpiderMonkey 140) — Fedora 43+, Ubuntu 25.10+
-- **GTK 4** und **libadwaita** für die native App
-- **libsoup3**, **json-glib**, **gnutls**, **libnghttp2** — der HTTP-Stack
-- **libgda** + **libgda-sqlite** — der Buchungs-Store
-- **pango** + **cairo** — der PDF-Pfad (Rechnungen, Prüf-Datenblätter)
-- **blueprint-compiler** — nur zum Bauen der App-Oberfläche
-- optional: **libsecret** (ELSTER-PIN im Schlüsselbund), **poppler-glib** (Beleg-Vorschau)
+## Requirements
 
-Auf Fedora:
+A current Linux with GNOME libraries, all taken from your distribution:
+
+- gjs 1.86 or newer (Fedora 43+, Ubuntu 25.10+)
+- GTK 4 and libadwaita for the native app
+- libsoup3, json-glib, gnutls, libnghttp2
+- libgda and libgda-sqlite
+- pango and cairo
+- blueprint-compiler, only to build the app UI
+- optional: libsecret (ELSTER PIN in the keyring), poppler-glib (receipt preview)
+
+On Fedora:
 
 ```bash
 sudo dnf install gjs gtk4 libadwaita libsoup3 json-glib gnutls libnghttp2 \
                  libgda libgda-sqlite pango cairo blueprint-compiler
 ```
 
-## Installation
+## Install and build
 
-Die Toolchain ist [**gjsify**](https://github.com/gjsify/gjsify) — TypeScript wird
-direkt für GJS gebaut und läuft dort. **Niemals `npm install`**: das Projekt ist ein
-gjsify-Workspace, und npm entfernt die von gjsify verwalteten Abhängigkeiten wieder.
-
-```bash
-npm install -g @gjsify/cli   # einmalig: die Toolchain bootstrappen — der einzige npm-Aufruf
-gjsify install               # Abhängigkeiten aus gjsify-lock.json (im Wurzelverzeichnis)
-gjsify run build             # CLI, App und Web-UI bauen
-```
-
-Danach läuft alles über `gjsify run` — Kommandos mit Argumenten aus dem Verzeichnis `app/`:
+The toolchain is [**gjsify**](https://github.com/gjsify/gjsify): TypeScript is built for
+GJS and runs there, not on Node. **Never run `npm install`.** This is a gjsify workspace and
+npm prunes the dependencies gjsify manages.
 
 ```bash
-cd app
-gjsify run start --help        # die CLI
-gjsify run start:app           # die native App
-gjsify run start web           # die Web-UI auf http://127.0.0.1:3000
-gjsify run start mcp           # der MCP-Server (stdio)
+npm install -g @gjsify/cli   # once: bootstrap the toolchain, the only npm call
+gjsify install               # dependencies from gjsify-lock.json
+gjsify run build             # build CLI, app and web UI
 ```
 
-Die CLI nennt sich in ihrer eigenen Hilfe `steuer` — so ist sie unten und in
-[`app/README.md`](app/README.md) auch geschrieben. Ein installiertes Kommando dieses Namens
-gibt es noch nicht; bis dahin ist `gjsify run start` davor der Weg dorthin.
-
-### Erst mal ausprobieren
-
-Das Repo bringt eine vollständige, erfundene Beispielfirma mit — die *Fischer & Weber GbR*
-samt zweiter Privat-Entität, Bankbuchungen, Belegen und Rechnungen. `--demo` (oder
-`STEUER_DEMO=1`) schaltet jede Oberfläche darauf um, ohne echte Daten anzufassen:
+Then run from `app/`:
 
 ```bash
 cd app
-gjsify run start --demo demo seed     # Demo-Daten erzeugen (idempotent)
-STEUER_DEMO=1 gjsify run start:app    # die App auf den Demo-Daten
+gjsify run start --help        # the CLI
+gjsify run start:app           # the native app
+gjsify run start web           # the web UI on http://127.0.0.1:3000
+gjsify run start mcp           # the MCP server (stdio)
 ```
 
-### Eigene Daten
+The CLI calls itself `steuer` in its help and in the docs. No installed command of that
+name exists yet; `gjsify run start` stands in for it.
 
-Die gesamte Konfiguration liegt in **einer** Datei, `steuererklaerung.json` — Entitäten,
-Steuernummern, Konten, Belegquellen, Rechnungs-Backend. Sie ist gitignoriert und verlässt
-den Rechner nie. Als Vorlage dient
-[`app/steuererklaerung.example.json`](app/steuererklaerung.example.json):
+### Try the demo
+
+The repo ships a complete invented company, *Fischer & Weber GbR*, with a second private
+entity, transactions, receipts and invoices. `--demo` (or `STEUER_DEMO=1`) switches every
+interface to it without touching real data:
+
+```bash
+cd app
+gjsify run start --demo demo seed     # create the demo data (idempotent)
+STEUER_DEMO=1 gjsify run start:app    # the app on the demo data
+```
+
+### Your own data
+
+All configuration lives in one file, `steuererklaerung.json`: entities, tax numbers,
+accounts, receipt sources, invoicing backend. It is gitignored and never leaves your
+machine. Start from [`app/steuererklaerung.example.json`](app/steuererklaerung.example.json):
 
 ```bash
 cp app/steuererklaerung.example.json app/steuererklaerung.json
-cp app/.env.example app/.env          # Zugangsdaten für Bank, DMS, LLM
+cp app/.env.example app/.env          # credentials for bank, document store, LLM
 cd app && gjsify run start config validate
 ```
 
-## ERiC — die Bibliothek musst du selbst besorgen
+An older `buchhaltung.json` (the project's previous name) is still read, with a notice.
 
-Übermittlung und amtliche Plausibilitätsprüfung laufen über **ERiC** (ELSTER Rich Client),
-die native Bibliothek des Bayerischen Landesamts für Steuern.
+### Optional integrations
 
-> **ERiC ist nicht Teil dieses Projekts und darf nicht weitergegeben werden.**
-> Der Softwarehersteller-Lizenzvertrag verbietet die Weitergabe an Dritte und die
-> Unterlizenzierung (§ 4 Abs. 3). Ausgeliefert wird hier ausschließlich **unser eigener
-> Wrapper** ([`packages/eric`](packages/eric/README.md)) — kein ERiC-Quellcode, keine
-> Binaries, keine Schemata.
+Qonto (bank and invoicing) and Paperless-ngx (documents) are optional. Without them, use
+CAMT/FinTS imports and the built-in document store.
 
-Jede Nutzerin und jeder Nutzer lädt ERiC selbst herunter (Entwickler-Registrierung im
-[ELSTER-Entwicklerbereich](https://www.elster.de/eportal/infoseite/entwickler), Lizenz
-selbst akzeptieren) und bringt es über `ERIC_HOME` mit:
+## ERiC: bring your own binary
+
+Submission and the official plausibility check use **ERiC** (ELSTER Rich Client), the native
+library from the Bavarian tax authority.
+
+> **ERiC is not part of this project and must not be redistributed.** The vendor licence
+> forbids passing it on and sublicensing it. This repo ships only our own wrapper
+> ([`packages/eric`](packages/eric/README.md)): no ERiC source, no binaries, no schemas.
+
+Each user downloads ERiC themselves (developer registration in the
+[ELSTER developer area](https://www.elster.de/eportal/infoseite/entwickler), accepting the
+licence) and points `ERIC_HOME` at it:
 
 ```bash
-export ERIC_HOME=/pfad/zur/eric/runtime          # enthält lib/libericapi.so
-gjsify run -w @steuererklaerung/eric build:meson # unsere Bindung einmal kompilieren
+export ERIC_HOME=/path/to/eric/runtime           # contains lib/libericapi.so
+gjsify run -w @steuererklaerung/eric build:meson # compile our binding once
 export LD_LIBRARY_PATH="$ERIC_HOME/lib:$ERIC_HOME/lib/plugins:$LD_LIBRARY_PATH"
 ```
 
-**Ohne ERiC funktioniert alles außer Validierung und Übermittlung** — rechnen, auswerten,
-Belege verwalten, Rechnungen schreiben, XML und Prüf-PDF erzeugen. Der Loader bricht nicht
-ab, sondern sagt, was fehlt. Das erzeugte XML lässt sich auch von Hand in *Mein ELSTER*
-hochladen.
-
-Zwei Dinge, die aus dem ERiC-Vertrag folgen und beim Verteilen gelten: ERiC-Versionen
-laufen ab (veraltete lehnt das Finanzamt ab), und wer ERiC einsetzt, muss den Nutzern die
-Datenschutz- und Protokolldatei-Hinweise aus § 5 des Vertrags zeigen. Details in
+**Without ERiC everything works except validation and submission**: computing, reports,
+receipts, invoices, XML and review PDF. The loader tells you what is missing instead of
+crashing. You can also upload the generated XML to *Mein ELSTER* by hand. Details:
 [`app/docs/eric-license-considerations.md`](app/docs/eric-license-considerations.md).
 
-## Reifegrad — was das hier ist und was nicht
+## Maturity
 
-Das ist das Arbeitswerkzeug eines Einzelnen. Es ist entstanden, weil kein Steuerberater
-mehr im Spiel ist und die Erklärungen trotzdem korrekt sein müssen. Daraus folgt die
-Bauweise: **jede Zahl muss gegenprüfbar sein.** Steuerrechtliche Konstanten stehen
-zentral mit Quelle, Abrufdatum und Veranlagungszeitraum in
-[`docs/references/tax-sources.md`](docs/references/tax-sources.md), der Code verweist per
-Kommentar dorthin. Jede Kennzahl lässt sich bis auf die einzelnen Buchungen aufklappen
-(`steuer elster explain`). Die letzte vom Steuerberater erstellte Erklärung war die
-Referenz, gegen die die Regeln geprüft wurden.
+This is one person's working tool, built because no tax advisor is involved and the returns
+still have to be right. Every figure is meant to be checkable: tax constants are listed with
+source, retrieval date and tax year in
+[`docs/references/tax-sources.md`](docs/references/tax-sources.md), and each figure can be
+expanded down to single transactions (`steuer elster explain`).
 
-Daraus folgt aber auch, was es nicht ist: kein Produkt, keine getestete Abdeckung aller
-Fälle, keine Garantie, dass dein Sachverhalt abgebildet ist. Gebaut und erprobt wurde es
-an einer aufgelösten GbR, einem Einzelunternehmen und privaten Einkommensteuer-Fällen.
-Alles andere ist ungetestetes Gebiet. Die native App ist als „Native Vorschau"
-gekennzeichnet: lesen und prüfen funktioniert überall, schreiben nur an wenigen Stellen —
-die Abgabe selbst läuft über die CLI.
+It is not a polished product and does not cover every case. It was built and tried on a
+dissolved partnership (GbR), a sole proprietorship and private income tax cases. Anything
+else is untested. The native app is marked as a preview: reading and reviewing work
+everywhere, writing in few places, and filing itself runs through the CLI.
 
-### Haftungsausschluss
+### Transparency: how this is made
 
-Diese Software ist **keine Steuerberatung** und ersetzt keine. Für die Richtigkeit der
-berechneten Werte wird keine Gewähr übernommen. Wer eine Erklärung übermittelt,
-verantwortet ihren Inhalt selbst — prüfe die Zahlen, bevor du sie abgibst.
-Verbindlich ist allein die Prüfung durch ELSTER und der Bescheid des Finanzamts.
+The project is developed largely through vibe coding. The code is written with AI coding
+agents; the maintainer directs the work and reviews the results. Not every line was written
+by hand.
 
-## Weiterlesen
+What backs the numbers is not where the code came from but whether it can be checked. Tax
+rules cite their sources in [`docs/references/tax-sources.md`](docs/references/tax-sources.md),
+and generated returns are validated against ELSTER's ERiC. Still: this is not tax advice,
+there is no warranty (see the [AGPL](LICENSE)), and you must check your return yourself
+before sending it.
 
-- [`docs/`](docs/README.md) — der steuerliche Ablauf, Fristen, Prozesse und die belegten
-  Referenzen, gegen die die Zahlen geprüft werden
-- [`docs/app/README.md`](docs/app/README.md) — die App, Ansicht für Ansicht
-- [`app/README.md`](app/README.md) — vollständige Kommandoreferenz und Konfiguration
-- [`AGENTS.md`](AGENTS.md) — die Arbeitsregeln im Repo, für Menschen wie für KI-Agenten
+### Disclaimer
 
-## Lizenz
+This software is not tax advice and does not replace it. No guarantee is given for the
+correctness of computed values. Whoever submits a return is responsible for its content.
+Only ELSTER's validation and the tax office's assessment are binding.
+
+## Further reading
+
+- [`CONTRIBUTING.md`](CONTRIBUTING.md): how to contribute
+- [`docs/`](docs/README.md): tax workflow, deadlines, and the cited references (German)
+- [`docs/app/README.md`](docs/app/README.md): the app, view by view
+- [`app/README.md`](app/README.md): full command reference and configuration
+- [`AGENTS.md`](AGENTS.md): working rules for humans and AI agents
+
+## License
 
 [AGPL-3.0-or-later](LICENSE) © Pascal Garber.
 
-Die App steht unter der AGPL. Die wiederverwendbaren Pakete unter `packages/*`
-stehen unter der [LGPL-3.0-or-later](packages/eric/LICENSE); jedes Paket bringt
-seinen eigenen Lizenztext mit.
+The app is AGPL. The reusable packages under `packages/*` are
+[LGPL-3.0-or-later](packages/eric/LICENSE), each with its own licence text.
 
-Frei nutzbar, veränderbar und weitergebbar. Die AGPL fügt der GPL eine Bedingung
-hinzu: wer dieses Programm **als Netzdienst anbietet**, muss den Nutzern dieses
-Dienstes den Quelltext seiner Fassung zugänglich machen. Wer es lokal für sich
-betreibt, hat dadurch keine zusätzliche Pflicht.
+You may use, modify and share it freely. The AGPL adds one condition to the GPL: if you
+offer this program **as a network service**, you must give that service's users the source
+of your version. Running it locally for yourself adds no obligation.
 
-Der Wrapper in `packages/eric` ist eigener Code; **ERiC selbst wird nicht ausgeliefert**
-(siehe oben). Abhängigkeiten mit abweichender Lizenz, die beim Bauen mit hineingezogen
-werden: `lib-fints` (LGPL-2.1-or-later, FinTS-Anbindung), `xlsx` (Apache-2.0), die
-Adwaita-Symbole (LGPL-3.0-or-later / CC-BY-SA-3.0) und Adwaita Sans (OFL-1.1) in der
-Web-Oberfläche. Wer ein gebündeltes Artefakt weitergibt, muss deren Bedingungen erfüllen.
+The wrapper in `packages/eric` is our own code; **ERiC itself is not shipped**. Dependencies
+with other licences that get pulled into a build: `lib-fints` (LGPL-2.1-or-later), `xlsx`
+(Apache-2.0), the Adwaita icons (LGPL-3.0-or-later / CC-BY-SA-3.0) and Adwaita Sans
+(OFL-1.1) in the web UI. Whoever distributes a bundled artefact must meet their terms.
