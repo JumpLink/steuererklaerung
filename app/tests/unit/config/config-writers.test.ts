@@ -157,8 +157,8 @@ export default async () => {
 
         await it('saveKeystorePath sets + clears the certificate path (never touches a PIN)', async () => {
             const path = fixture();
-            const set = saveKeystorePath('gbr', '/home/pascal/elster.pfx', path);
-            expect(set.keystore_path).toBe('/home/pascal/elster.pfx');
+            const set = saveKeystorePath('gbr', '/home/user/elster.pfx', path);
+            expect(set.keystore_path).toBe('/home/user/elster.pfx');
             expect(saveKeystorePath('gbr', '  ', path).keystore_path).toBe(undefined);
             const raw = JSON.parse(readFileSync(path, 'utf-8')) as Record<string, unknown>;
             const gbr = (raw.entities as Array<Record<string, unknown>>).find((e) => e.id === 'gbr') as Record<

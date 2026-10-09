@@ -44,7 +44,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     container:
-      image: fedora:44
+      image: quay.io/fedora/fedora:44
     steps:
       - name: Install system prerequisites (gjs + runtime typelibs + prebuild deps)
         run: >
