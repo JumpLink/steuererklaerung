@@ -106,7 +106,7 @@ if [ "$SUFFIX" = "" ]; then
 else
   L_TITLE="Welcome to Steuererklärung"; L_NEXT="Next"; L_OK="Understood"; L_DEMO="Try the demo"
   L_START="Start the demo"; L_BANNER="Demo data"; L_OWN="Use my own data"; L_RESTART="Restart"
-  L_SETUP="Wo die Daten liegen werden"; L_GENERAL="General"; L_BACKUP="Back up now"
+  L_SETUP="Where your data will be stored"; L_GENERAL="General"; L_BACKUP="Back up now"
   L_AGAIN="Show welcome again"; L_LATER="Later"
 fi
 
