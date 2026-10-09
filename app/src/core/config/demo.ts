@@ -39,6 +39,10 @@ export function isDemoMode(): boolean {
  * that is actually there survives the next move — and there IS no next move to remember.
  */
 export function demoDir(): string {
+    // A copy elsewhere wins when it really is a demo workspace — the E2E runs point here so a run
+    // never seeds or migrates the demo that is checked into the repository.
+    const override = process.env.STEUER_DEMO_DIR;
+    if (override && existsSync(join(override, 'steuererklaerung.json'))) return override;
     let dir = dirname(fileURLToPath(import.meta.url));
     // Bounded: `<app>/src/core/config` is three up, `<app>/dist/app` is two. Six is room to spare
     // without ever climbing out of the project into somebody else's `demo/`.
