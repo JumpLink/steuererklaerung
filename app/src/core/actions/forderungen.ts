@@ -57,7 +57,11 @@ export interface ForderungenOptions {
     path?: string;
 }
 
-const heute = (): string => new Date().toISOString().slice(0, 10);
+// The owner's calendar day, not UTC's: right after local midnight toISOString() is still yesterday.
+const heute = (): string => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
 
 function withLedger<T>(fn: (db: LedgerDatabase) => T): T {
     const db = openLedger(ledgerDbPath());
