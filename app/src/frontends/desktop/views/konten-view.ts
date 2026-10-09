@@ -559,7 +559,7 @@ export class BhKontenView extends Adw.Bin {
     }
 
     /**
-     * `STEUER_APP_ADD_ACCOUNT=choose|file|qonto|fints` (dev/testing hook): open the dialog on that
+     * `STEUER_APP_ADD_ACCOUNT=choose|file|qonto|fints|assign` (dev/testing hook): open the dialog on that
      * page. Unlike a popover, an Adw.Dialog renders INSIDE the window and therefore shows up in the
      * devtools capture — so these pages can actually be looked at rather than assumed.
      */

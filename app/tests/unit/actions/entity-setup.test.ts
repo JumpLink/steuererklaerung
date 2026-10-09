@@ -15,6 +15,7 @@ import { afterEach, beforeEach, describe, expect, it } from '@gjsify/unit';
 import { readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { connectionAccountPattern, importedAccountKeys } from '../../../src/core/actions/accounts.ts';
 import { assignAccount } from '../../../src/core/actions/entities.ts';
 import {
     accountOwner,
@@ -191,6 +192,29 @@ export default async () => {
             const moved = assignAccount('camt:DE89370400440532013000', 'privat', path);
             expect(moved.sharedWith).toStrictEqual([]);
             expect(moved.manifest.entities.find((e) => e.id === 'muster')?.accounts).toStrictEqual(['qonto:*']);
+        });
+
+        await it('knows the key pattern a new connection will produce', async () => {
+            expect(connectionAccountPattern('qonto')).toBe('qonto:*');
+            expect(connectionAccountPattern('fints', ' Sparkasse ')).toBe('fints:Sparkasse:*');
+            expect(
+                importedAccountKeys({
+                    format: 'camt',
+                    reports: [
+                        { accountKey: 'camt:DE89370400440532013000' },
+                        { accountKey: 'camt:DE89370400440532013000' },
+                    ] as never,
+                }),
+            ).toStrictEqual(['camt:DE89370400440532013000']);
+            expect(
+                importedAccountKeys({ format: 'amazon', enrich: { matched: 1, updated: 1, accounts: 1 } }),
+            ).toStrictEqual([]);
+        });
+
+        await it('routes a connection pattern to an entity', async () => {
+            const res = assignAccount(connectionAccountPattern('fints', 'Sparkasse'), 'privat', path);
+            expect(res.manifest.entities.find((e) => e.id === 'privat')?.accounts).toStrictEqual(['fints:Sparkasse:*']);
+            expect(res.sharedWith).toStrictEqual([]);
         });
 
         await it('refuses an unknown entity without writing', async () => {

@@ -9,8 +9,15 @@
  * That gap is the whole "ohne KI bedienbar" question in miniature: without a way to get data IN, a
  * tax application is a viewer for data somebody else put there.
  *
- * All three write through the shared core actions (`connectQonto`, `connectFints`, `runImport`), so
- * an account added here is byte-for-byte the same as one added from the web UI or the CLI.
+ * Source first, then the source's form, then WHICH entity the account belongs to. Nothing is written
+ * before that last confirm — picking a file or typing credentials only fills the form — so backing
+ * out at any page leaves `.env`, the store and the manifest as they were. An account that lands in
+ * the store but in no entity is invisible to every tax figure, which is why the assignment is part
+ * of adding it rather than a chore for later.
+ *
+ * All three write through the shared core actions (`connectQonto`, `connectFints`, `runImport`,
+ * `assignAccount`), so an account added here is byte-for-byte the same as one added from the web UI
+ * or the CLI.
  */
 
 import Adw from '@girs/adw-1';
@@ -25,23 +32,51 @@ import PageTemplate from './konto-hinzufuegen-page.blp';
 
 import {
     connectFints,
+    connectionAccountPattern,
     connectQonto,
     detectFormat,
     type ImportFormat,
+    importedAccountKeys,
     runImport,
 } from '../../../core/actions/accounts.ts';
+import { accountOwner } from '../../../core/actions/entity-setup.ts';
+import { assertAccountsMovable, assignAccount } from '../../../core/actions/entities.ts';
+import { loadManifest, type Manifest } from '../../../core/config/index.ts';
+import { _, fmt } from '../i18n.ts';
+import { navigateTo } from '../nav.ts';
 import { markup } from './util.ts';
 
 /** Report the outcome; the caller toasts it and refreshes the account list. */
 export type AddAccountResult = (message: string, changed: boolean) => void;
 
 /** The importable file formats, with the labels a user recognises them by. */
-const FORMATS: Array<{ id: ImportFormat; label: string; hint: string }> = [
-    { id: 'camt', label: 'CAMT.052/053 (XML)', hint: 'Der Standard-Kontoauszug fast jeder Bank' },
-    { id: 'paypal', label: 'PayPal-Aktivitätsbericht (CSV)', hint: 'Nur zur Anreicherung — nicht in der EÜR' },
-    { id: 'qonto-xls', label: 'Qonto-Export (XLS)', hint: 'Reichert vorhandene Buchungen an' },
-    { id: 'amazon', label: 'Amazon-Bestellungen (CSV)', hint: 'Reichert vorhandene Buchungen an' },
-];
+function formats(): Array<{ id: ImportFormat; label: string; hint: string }> {
+    return [
+        { id: 'camt', label: 'CAMT.052/053 (XML)', hint: _('The standard statement of almost every bank') },
+        {
+            id: 'paypal',
+            label: _('PayPal activity report (CSV)'),
+            hint: _('Enrichment only — not in the profit statement'),
+        },
+        { id: 'qonto-xls', label: _('Qonto export (XLS)'), hint: _('Enriches existing transactions') },
+        { id: 'amazon', label: _('Amazon orders (CSV)'), hint: _('Enriches existing transactions') },
+    ];
+}
+
+/** Formats that only annotate rows already in the store: no new account, nothing to assign. */
+const ENRICH_ONLY: ReadonlySet<ImportFormat> = new Set(['qonto-xls', 'amazon']);
+
+/** What the last page commits: the write itself, and the key pattern when it is known beforehand. */
+interface PendingAccount {
+    /** Shown on the assignment page, e.g. "Qonto (all accounts of the connection)". */
+    label: string;
+    /** Known before the write (a live connection); a file import learns its keys from the import. */
+    pattern?: string;
+    /** Perform the write. Returns the toast message and the account keys to assign. */
+    commit: () => Promise<{ message: string; keys: string[] }>;
+}
+
+const msg = (err: unknown) => (err instanceof Error ? err.message : String(err));
 
 /** One page of the dialog's NavigationView: scrolling body plus an optional primary-action bar. */
 class BhAddAccountPage extends Adw.NavigationPage {
@@ -84,22 +119,40 @@ export class BhAddAccountDialog extends Adw.Dialog {
     }
 
     private readonly done: AddAccountResult;
+    /** Read once, never written by the dialog itself; null without a workspace (nothing to assign to). */
+    private readonly manifest: Manifest | null;
 
     constructor(done: AddAccountResult) {
         super();
         this.done = done;
+        let manifest: Manifest | null = null;
+        try {
+            manifest = loadManifest();
+        } catch {
+            // No workspace yet — the account still lands in the store, it just cannot be routed.
+        }
+        this.manifest = manifest;
         this.nav.push(this.pageChoose());
     }
 
     /**
      * Jump straight to one page — the dev hook behind `STEUER_APP_ADD_ACCOUNT`. A page nobody can
-     * screenshot is a page nobody checks, and three of these four are forms where a blank label or
-     * a broken layout would ship unseen.
+     * screenshot is a page nobody checks, and these are forms where a blank label or a broken layout
+     * would ship unseen. `assign` shows the last page for a placeholder FinTS connection.
      */
     openPage(page: string): void {
         if (page === 'file') this.nav.push(this.pageFile());
         else if (page === 'qonto') this.nav.push(this.pageQonto());
         else if (page === 'fints') this.nav.push(this.pageFints());
+        else if (page === 'assign') {
+            this.nav.push(
+                this.pageAssign({
+                    label: 'FinTS · Musterbank',
+                    pattern: connectionAccountPattern('fints', 'Musterbank'),
+                    commit: () => Promise.reject(new Error(_('Preview only — nothing was saved.'))),
+                }),
+            );
+        }
     }
 
     // ── Shell ─────────────────────────────────────────────────────────────────────────────────
@@ -128,6 +181,23 @@ export class BhAddAccountDialog extends Adw.Dialog {
         return row;
     }
 
+    private caption(text: string): Gtk.Label {
+        return new Gtk.Label({ label: text, wrap: true, xalign: 0, cssClasses: ['dim-label', 'caption'] });
+    }
+
+    /** A row that closes the dialog and opens Settings — for what is configured there, not here. */
+    private settingsRow(subtitle: string): Adw.ActionRow {
+        return this.navRow(_('Settings'), subtitle, 'preferences-system-symbolic', () => {
+            navigateTo(this, 'settings');
+            this.close();
+        });
+    }
+
+    private fail(banner: Adw.Banner, text: string): void {
+        banner.set_title(markup(text));
+        banner.set_revealed(true);
+    }
+
     /** Finish: report and close. Failures keep the dialog open so the input can be corrected. */
     private finish(message: string): void {
         this.done(message, true);
@@ -139,31 +209,39 @@ export class BhAddAccountDialog extends Adw.Dialog {
     private pageChoose(): Adw.NavigationPage {
         const box = this.column();
         const group = new Adw.PreferencesGroup({
-            title: 'Woher kommen die Buchungen?',
-            description:
-                'Eine Datei reicht für den Anfang — der Kontoauszug, den deine Bank im Online-Banking ' +
-                'zum Download anbietet. Eine laufende Verbindung holt sie später von selbst.',
+            title: _('Where do the transactions come from?'),
+            description: _(
+                'A file is enough to start — the statement your bank offers for download in online ' +
+                    'banking. A live connection fetches new transactions by itself later.',
+            ),
         });
         group.add(
-            this.navRow('Datei importieren', 'CAMT, PayPal, Qonto-Export oder Amazon', 'document-open-symbolic', () =>
-                this.nav.push(this.pageFile()),
-            ),
-        );
-        group.add(
-            this.navRow('Qonto verbinden', 'Login und Secret Key aus dem Qonto-Konto', 'network-server-symbolic', () =>
-                this.nav.push(this.pageQonto()),
+            this.navRow(
+                _('Import a file (CAMT or CSV)'),
+                _('A statement export from your online banking — no login needed'),
+                'document-open-symbolic',
+                () => this.nav.push(this.pageFile()),
             ),
         );
         group.add(
             this.navRow(
-                'Bank über FinTS/HBCI',
-                'Fast jede deutsche Bank; PIN bleibt lokal',
+                _('Connect Qonto'),
+                _('Fetches transactions through the Qonto API — needs login and secret key'),
+                'network-server-symbolic',
+                () => this.nav.push(this.pageQonto()),
+            ),
+        );
+        group.add(
+            this.navRow(
+                _('Bank via FinTS/HBCI'),
+                _('Almost every German bank — needs your bank’s access details and PIN'),
                 'network-wired-symbolic',
                 () => this.nav.push(this.pageFints()),
             ),
         );
         box.append(group);
-        return this.page('Konto hinzufügen', box);
+        box.append(this.caption(_('Nothing is saved until you confirm on the last page.')));
+        return this.page(_('Add account'), box);
     }
 
     // ── 2a · File import ──────────────────────────────────────────────────────────────────────
@@ -171,95 +249,117 @@ export class BhAddAccountDialog extends Adw.Dialog {
     private pageFile(): Adw.NavigationPage {
         const box = this.column();
         const banner = new Adw.Banner({ revealed: false });
+        const choices = formats();
+        let chosenPath = '';
 
         const group = new Adw.PreferencesGroup({
-            title: 'Datei importieren',
-            description: 'Format wird am Dateinamen erkannt; bei CSV lässt es sich hier festlegen.',
+            title: _('Import a file'),
+            description: _('The format is detected from the file name; for CSV it can be set here.'),
         });
 
+        const file = new Adw.ActionRow({ title: _('File'), subtitle: markup(_('None chosen yet')) });
+        const pick = new Gtk.Button({ label: _('Choose file …'), valign: Gtk.Align.CENTER });
+        pick.connect('clicked', () => {
+            void this.chooseFile().then((path) => {
+                if (!path) return;
+                chosenPath = path;
+                file.set_subtitle(markup(basename(path)));
+                banner.set_revealed(false);
+            });
+        });
+        file.add_suffix(pick);
+        group.add(file);
+
         const format = new Adw.ComboRow({
-            title: 'Format',
-            model: Gtk.StringList.new(['Automatisch erkennen', ...FORMATS.map((f) => f.label)]),
+            title: _('Format'),
+            model: Gtk.StringList.new([_('Detect automatically'), ...choices.map((f) => f.label)]),
         });
         const describe = () => {
             const i = format.get_selected();
-            format.set_subtitle(i === 0 ? 'Aus der Dateiendung' : (FORMATS[i - 1]?.hint ?? ''));
+            format.set_subtitle(i === 0 ? _('From the file extension') : (choices[i - 1]?.hint ?? ''));
         };
         describe();
         format.connect('notify::selected', describe);
         group.add(format);
 
         const full = new Adw.SwitchRow({
-            title: 'Alles importieren',
-            subtitle:
-                'Standard ist, nur Buchungen zu übernehmen, die älter sind als die vorhandenen — das ' +
-                'vermeidet Dubletten im Überlappungsbereich.',
+            title: _('Import everything'),
+            subtitle: _(
+                'By default only transactions older than the existing ones are taken — that avoids ' +
+                    'duplicates where the files overlap.',
+            ),
         });
         group.add(full);
         box.append(group);
         box.append(banner);
+        box.append(
+            this.caption(
+                _('A wrong import can be undone: every import is kept as a batch and can be taken back as a whole.'),
+            ),
+        );
 
-        const hint = new Gtk.Label({
-            label:
-                'Ein Fehlimport lässt sich rückgängig machen: jeder Import wird als Stapel geführt ' +
-                'und kann als Ganzes zurückgenommen werden.',
-            wrap: true,
-            xalign: 0,
-            cssClasses: ['dim-label', 'caption'],
-        });
-        box.append(hint);
-
-        return this.page('Datei', box, {
-            label: 'Datei wählen …',
+        return this.page(_('File'), box, {
+            label: _('Next'),
             run: () => {
+                if (!chosenPath) return this.fail(banner, _('Please choose a file first.'));
+                const filename = basename(chosenPath);
                 const chosen = format.get_selected();
-                const forced = chosen > 0 ? FORMATS[chosen - 1]?.id : undefined;
-                void this.runFileImport(forced, full.get_active(), banner);
+                const resolved = (chosen > 0 ? choices[chosen - 1]?.id : undefined) ?? detectFormat(filename);
+                if (!resolved) {
+                    // A .csv is genuinely ambiguous (PayPal or Amazon), so say which choice is missing
+                    // rather than guessing and importing the wrong shape.
+                    return this.fail(
+                        banner,
+                        fmt(_('Cannot tell the format of “{file}” — please choose one above.'), { file: filename }),
+                    );
+                }
+                const pending = this.fileImport(chosenPath, resolved, full.get_active());
+                // An enrich-only file adds no account, so there is nothing to assign: import right here.
+                if (ENRICH_ONLY.has(resolved) || !this.manifest) {
+                    void pending.commit().then(
+                        (r) => this.finish(r.message),
+                        (err) => this.fail(banner, fmt(_('Import failed: {error}'), { error: msg(err) })),
+                    );
+                    return;
+                }
+                this.nav.push(this.pageAssign(pending));
             },
         });
     }
 
-    /** Pick a file, resolve the format, hand the bytes to the shared import action. */
-    private async runFileImport(forced: ImportFormat | undefined, full: boolean, banner: Adw.Banner): Promise<void> {
+    private chooseFile(): Promise<string | null> {
         // pickFile wants the toplevel WINDOW; an Adw.Dialog is not one, and passing `this` only
         // fails at type-check — at runtime it would present a file chooser with no parent.
         const root = this.get_root() as Gtk.Window | null;
-        if (!root) return;
-        const path = await pickFile(root, {
-            title: 'Kontoauszug oder Export wählen',
+        if (!root) return Promise.resolve(null);
+        return pickFile(root, {
+            title: _('Choose a statement or export'),
             filters: [
-                { name: 'Alle unterstützten', patterns: ['*.xml', '*.csv', '*.xls', '*.xlsx'] },
+                { name: _('All supported'), patterns: ['*.xml', '*.csv', '*.xls', '*.xlsx'] },
                 { name: 'CAMT (*.xml)', patterns: ['*.xml'] },
                 { name: 'CSV (*.csv)', patterns: ['*.csv'] },
-                { name: 'Qonto-Export (*.xls, *.xlsx)', patterns: ['*.xls', '*.xlsx'] },
+                { name: _('Qonto export (*.xls, *.xlsx)'), patterns: ['*.xls', '*.xlsx'] },
             ],
         });
-        if (!path) return; // cancelled
+    }
 
+    /** The import as a pending write: the file is read and handed to the shared action on commit. */
+    private fileImport(path: string, format: ImportFormat, full: boolean): PendingAccount {
         const filename = basename(path);
-        const format = forced ?? detectFormat(filename);
-        if (!format) {
-            // A .csv is genuinely ambiguous (PayPal or Amazon), so say which choice is missing
-            // rather than guessing and importing the wrong shape.
-            banner.set_title(markup(`Format von „${filename}" nicht erkennbar — bitte oben eins auswählen.`));
-            banner.set_revealed(true);
-            return;
-        }
-
-        try {
-            const bytes = readFileSync(path);
-            const result = await runImport(format, filename, bytes, { full });
-            const added = (result.reports ?? []).reduce((n, r) => n + (r.added ?? 0), 0);
-            const enriched = result.enrich?.updated ?? 0;
-            this.finish(
-                result.reports
-                    ? `${filename}: ${added} neue Buchungen importiert.`
-                    : `${filename}: ${enriched} Buchungen angereichert.`,
-            );
-        } catch (err) {
-            banner.set_title(markup(`Import fehlgeschlagen: ${err instanceof Error ? err.message : String(err)}`));
-            banner.set_revealed(true);
-        }
+        return {
+            label: filename,
+            commit: async () => {
+                const result = await runImport(format, filename, readFileSync(path), { full });
+                const added = (result.reports ?? []).reduce((n, r) => n + (r.added ?? 0), 0);
+                const message = result.reports
+                    ? fmt(_('{file}: {count} new transactions imported.'), { file: filename, count: added })
+                    : fmt(_('{file}: {count} transactions enriched.'), {
+                          file: filename,
+                          count: result.enrich?.updated ?? 0,
+                      });
+                return { message, keys: importedAccountKeys(result) };
+            },
+        };
     }
 
     // ── 2b · Qonto ────────────────────────────────────────────────────────────────────────────
@@ -269,50 +369,52 @@ export class BhAddAccountDialog extends Adw.Dialog {
         const banner = new Adw.Banner({ revealed: false });
 
         const group = new Adw.PreferencesGroup({
-            title: 'Qonto verbinden',
-            description: 'Login und Secret Key stehen im Qonto-Konto unter Einstellungen → API.',
+            title: _('Connect Qonto'),
+            description: _('Login and secret key are in your Qonto account under Settings → API.'),
         });
-        const login = new Adw.EntryRow({ title: 'Login' });
+        const login = new Adw.EntryRow({ title: _('Login') });
         group.add(login);
-        const secret = new Adw.PasswordEntryRow({ title: 'Secret Key' });
+        const secret = new Adw.PasswordEntryRow({ title: _('Secret key') });
         group.add(secret);
-        const env = new Adw.ComboRow({ title: 'Umgebung', model: Gtk.StringList.new(['Produktiv', 'Staging']) });
+        const env = new Adw.ComboRow({
+            title: _('Environment'),
+            model: Gtk.StringList.new([_('Production'), 'Staging']),
+        });
         group.add(env);
         box.append(group);
         box.append(banner);
-
         box.append(
-            new Gtk.Label({
-                label: 'Die Zugangsdaten landen in der lokalen .env-Datei — sie verlassen diesen Rechner nicht.',
-                wrap: true,
-                xalign: 0,
-                cssClasses: ['dim-label', 'caption'],
-            }),
+            this.caption(_('The credentials are stored in the local .env file — they never leave this computer.')),
         );
 
+        const more = new Adw.PreferencesGroup();
+        more.add(this.settingsRow(_('How often transactions and invoices are fetched')));
+        box.append(more);
+
         return this.page('Qonto', box, {
-            label: 'Verbinden',
+            label: _('Next'),
             run: () => {
                 const l = (login.get_text() ?? '').trim();
                 const s = (secret.get_text() ?? '').trim();
-                if (!l || !s) {
-                    banner.set_title(markup('Login und Secret Key sind erforderlich.'));
-                    banner.set_revealed(true);
-                    return;
-                }
-                try {
-                    const { env: chosen } = connectQonto({
-                        login: l,
-                        secretKey: s,
-                        env: env.get_selected() === 1 ? 'staging' : 'production',
-                    });
-                    this.finish(`Qonto verbunden (${chosen}). Jetzt synchronisieren, um Buchungen zu holen.`);
-                } catch (err) {
-                    banner.set_title(
-                        markup(`Verbinden fehlgeschlagen: ${err instanceof Error ? err.message : String(err)}`),
-                    );
-                    banner.set_revealed(true);
-                }
+                if (!l || !s) return this.fail(banner, _('Login and secret key are required.'));
+                const staging = env.get_selected() === 1;
+                this.nav.push(
+                    this.pageAssign({
+                        label: _('Qonto (every account of the connection)'),
+                        pattern: connectionAccountPattern('qonto'),
+                        commit: () => {
+                            const { env: chosen } = connectQonto({
+                                login: l,
+                                secretKey: s,
+                                env: staging ? 'staging' : 'production',
+                            });
+                            const message = fmt(_('Qonto connected ({env}). Sync now to fetch transactions.'), {
+                                env: chosen,
+                            });
+                            return Promise.resolve({ message, keys: [connectionAccountPattern('qonto')] });
+                        },
+                    }),
+                );
             },
         });
     }
@@ -324,66 +426,125 @@ export class BhAddAccountDialog extends Adw.Dialog {
         const banner = new Adw.Banner({ revealed: false });
 
         const group = new Adw.PreferencesGroup({
-            title: 'Bank über FinTS/HBCI',
-            description:
-                'BLZ und FinTS-URL nennt deine Bank; die Produkt-ID ist die Registrierungsnummer, die ' +
-                'sie für den Zugriff vergibt.',
+            title: _('Bank via FinTS/HBCI'),
+            description: _(
+                'Your bank provides the bank code and FinTS URL; the product ID is the registration ' +
+                    'number issued for the access.',
+            ),
         });
-        const name = new Adw.EntryRow({ title: 'Name (frei wählbar)' });
-        group.add(name);
-        const url = new Adw.EntryRow({ title: 'FinTS-URL' });
-        group.add(url);
-        const blz = new Adw.EntryRow({ title: 'BLZ' });
-        group.add(blz);
-        const user = new Adw.EntryRow({ title: 'Benutzerkennung' });
-        group.add(user);
-        const product = new Adw.EntryRow({ title: 'Produkt-ID' });
-        group.add(product);
-        const pin = new Adw.PasswordEntryRow({ title: 'PIN' });
-        group.add(pin);
+        const fields = {
+            name: new Adw.EntryRow({ title: _('Name (your choice)') }),
+            url: new Adw.EntryRow({ title: _('FinTS URL') }),
+            blz: new Adw.EntryRow({ title: _('Bank code (BLZ)') }),
+            user_id: new Adw.EntryRow({ title: _('User ID') }),
+            product_id: new Adw.EntryRow({ title: _('Product ID') }),
+            pin: new Adw.PasswordEntryRow({ title: 'PIN' }),
+        };
+        for (const row of Object.values(fields)) group.add(row);
         box.append(group);
         box.append(banner);
+        box.append(this.caption(_('The PIN is stored in the local .env file — it never leaves this computer.')));
 
-        box.append(
-            new Gtk.Label({
-                label: 'Die PIN landet in der lokalen .env-Datei — sie verlässt diesen Rechner nicht.',
-                wrap: true,
-                xalign: 0,
-                cssClasses: ['dim-label', 'caption'],
-            }),
-        );
+        const more = new Adw.PreferencesGroup();
+        more.add(this.settingsRow(_('Automatic sync and the connection test')));
+        box.append(more);
 
         return this.page('FinTS', box, {
-            label: 'Verbinden',
+            label: _('Next'),
             run: () => {
                 const values = {
-                    name: (name.get_text() ?? '').trim(),
-                    url: (url.get_text() ?? '').trim(),
-                    blz: (blz.get_text() ?? '').trim(),
-                    user_id: (user.get_text() ?? '').trim(),
-                    product_id: (product.get_text() ?? '').trim(),
-                    pin: (pin.get_text() ?? '').trim(),
+                    name: (fields.name.get_text() ?? '').trim(),
+                    url: (fields.url.get_text() ?? '').trim(),
+                    blz: (fields.blz.get_text() ?? '').trim(),
+                    user_id: (fields.user_id.get_text() ?? '').trim(),
+                    product_id: (fields.product_id.get_text() ?? '').trim(),
+                    pin: (fields.pin.get_text() ?? '').trim(),
                 };
-                const missing = Object.entries(values)
-                    .filter(([, v]) => !v)
-                    .map(([k]) => k);
+                // Name the empty fields. "All fields are required" over six inputs makes the user
+                // re-check every one of them.
+                const missing = (Object.keys(values) as Array<keyof typeof values>)
+                    .filter((k) => !values[k])
+                    .map((k) => fields[k].get_title());
                 if (missing.length > 0) {
-                    // Name the empty fields. "Alle Felder sind erforderlich" over six inputs makes
-                    // the user re-check every one of them.
-                    banner.set_title(markup(`Noch leer: ${missing.join(', ')}`));
-                    banner.set_revealed(true);
-                    return;
+                    return this.fail(banner, fmt(_('Still empty: {fields}'), { fields: missing.join(', ') }));
                 }
-                try {
-                    connectFints(values);
-                    this.finish(`Bank „${values.name}" verbunden. Jetzt synchronisieren, um Buchungen zu holen.`);
-                } catch (err) {
-                    banner.set_title(
-                        markup(`Verbinden fehlgeschlagen: ${err instanceof Error ? err.message : String(err)}`),
-                    );
-                    banner.set_revealed(true);
-                }
+                const pattern = connectionAccountPattern('fints', values.name);
+                this.nav.push(
+                    this.pageAssign({
+                        label: `FinTS · ${values.name}`,
+                        pattern,
+                        commit: () => {
+                            connectFints(values);
+                            const message = fmt(_('Bank “{name}” connected. Sync now to fetch transactions.'), {
+                                name: values.name,
+                            });
+                            return Promise.resolve({ message, keys: [pattern] });
+                        },
+                    }),
+                );
             },
         });
+    }
+
+    // ── 3 · Which entity ──────────────────────────────────────────────────────────────────────
+
+    private pageAssign(pending: PendingAccount): Adw.NavigationPage {
+        const box = this.column();
+        const banner = new Adw.Banner({ revealed: false });
+        const entities = this.manifest?.entities ?? [];
+
+        const group = new Adw.PreferencesGroup({
+            title: _('Which entity does the account belong to?'),
+            description: _('Its transactions count for this entity’s returns. You can move it later.'),
+        });
+        group.add(
+            new Adw.ActionRow({ title: _('Account'), subtitle: markup(pending.label), cssClasses: ['property'] }),
+        );
+        const entity = new Adw.ComboRow({
+            title: _('Entity'),
+            model: Gtk.StringList.new([_('Later'), ...entities.map((e) => e.name)]),
+        });
+        const owner = pending.pattern ? accountOwner(this.manifest, pending.pattern) : undefined;
+        const preselect = owner ? entities.findIndex((e) => e.id === owner.id) : 0;
+        entity.set_selected(entities.length === 0 ? 0 : preselect + 1);
+        if (owner) entity.set_subtitle(markup(fmt(_('Currently: {entity}'), { entity: owner.name })));
+        group.add(entity);
+        box.append(group);
+        box.append(banner);
+        box.append(this.caption(_('With “Later” the account is added but counts for no entity until you assign it.')));
+
+        return this.page(_('Entity'), box, {
+            label: _('Add account'),
+            run: () => {
+                const target = entities[entity.get_selected() - 1];
+                if (target && pending.pattern) {
+                    // Refuse BEFORE the write: a connection saved to .env but rejected by the GoBD
+                    // lock would be half an account.
+                    try {
+                        assertAccountsMovable([pending.pattern], target.id, this.manifest as Manifest);
+                    } catch (err) {
+                        return this.fail(banner, msg(err));
+                    }
+                }
+                void pending.commit().then(
+                    ({ message, keys }) => this.finish(target ? this.assign(message, keys, target.id) : message),
+                    (err) => this.fail(banner, fmt(_('Adding failed: {error}'), { error: msg(err) })),
+                );
+            },
+        });
+    }
+
+    /** Route `keys` to the entity; the write already happened, so a failure here only adds a note. */
+    private assign(message: string, keys: string[], entityId: string): string {
+        try {
+            const shared = new Set<string>();
+            for (const key of keys) for (const e of assignAccount(key, entityId).sharedWith) shared.add(e.name);
+            if (shared.size === 0) return message;
+            return `${message} ${fmt(_('It also still counts for {entities} through a pattern.'), {
+                entities: [...shared].join(', '),
+            })}`;
+        } catch (err) {
+            return `${message} ${fmt(_('Not assigned: {error}'), { error: msg(err) })}`;
+        }
     }
 }

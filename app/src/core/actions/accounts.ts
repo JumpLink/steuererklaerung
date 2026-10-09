@@ -200,6 +200,20 @@ export function upsertEnv(updates: Record<string, string>): void {
     writeFileSync(p, `${lines.join('\n').replace(/\n+$/, '')}\n`);
 }
 
+/**
+ * The account-key pattern a new live connection will produce, so it can be routed to an entity
+ * before its first sync has created a single key. Mirrors the keys `syncTransactions` writes:
+ * `qonto:<bankAccountId>` and `fints:<configName>:<accountNumber>`.
+ */
+export function connectionAccountPattern(source: 'qonto' | 'fints', fintsName = ''): string {
+    return source === 'qonto' ? 'qonto:*' : `fints:${fintsName.trim()}:*`;
+}
+
+/** The account keys an import created, for routing them to an entity. Enrich formats create none. */
+export function importedAccountKeys(result: ImportResult): string[] {
+    return [...new Set((result.reports ?? []).map((r) => r.accountKey).filter(Boolean))];
+}
+
 export interface QontoConnect {
     login: string;
     secretKey: string;
