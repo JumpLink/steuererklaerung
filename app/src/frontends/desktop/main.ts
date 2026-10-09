@@ -23,6 +23,7 @@ import './i18n-init.ts';
 import 'dotenv/config';
 import Gtk from '@girs/gtk-4.0';
 import { runAdwaitaApp } from '@gjsify/adwaita-app';
+import { installMigrationBackup } from '../../core/actions/backup.ts';
 import { applyDemoEnv } from '../../core/config/demo.ts';
 import { setFinTSInteraction } from '../../core/clients/fints/interaction.ts';
 import { applyPathEnv } from '../../core/paths.ts';
@@ -37,6 +38,7 @@ void Gtk;
 
 // Demo mode (STEUER_DEMO=1): run against the isolated app/demo workspace before any config/store read.
 applyDemoEnv();
+installMigrationBackup();
 // Then give a FRESH installation a home: without this, an app launched from the GNOME overview has
 // cwd `/` or `$HOME` and finds no manifest at all. Strictly additive — an existing installation
 // (a manifest in cwd, an override, a store beside the module) is left exactly as it was.

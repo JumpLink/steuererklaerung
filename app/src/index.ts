@@ -3,6 +3,7 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import {
+    backupCommand,
     checkApisCommand,
     qontoCommand,
     paperlessCommand,
@@ -34,6 +35,7 @@ import {
     projectsCommand,
     zveCommand,
 } from './frontends/cli/index.ts';
+import { installMigrationBackup } from './core/actions/backup.ts';
 import { applyDemoEnv } from './core/config/demo.ts';
 import { setFinTSInteraction } from './core/clients/fints/interaction.ts';
 import { terminalFinTSInteraction } from './frontends/cli/fints-interaction.ts';
@@ -42,6 +44,7 @@ import { applyPathEnv } from './core/paths.ts';
 // Demo mode (STEUER_DEMO=1 / --demo): redirect config + store paths to app/demo BEFORE anything reads
 // them, so the fictional demo data stays fully isolated from real data. No-op in normal use.
 applyDemoEnv();
+installMigrationBackup();
 // Then give a FRESH installation a home: without this, an app launched from the GNOME overview has
 // cwd `/` or `$HOME` and finds no manifest at all. Strictly additive — an existing installation
 // (a manifest in cwd, an override, a store beside the module) is left exactly as it was.
@@ -90,6 +93,7 @@ const parseArgs = () =>
         .command(webCommand)
         .command(demoCommand)
         .command(configCommand)
+        .command(backupCommand)
         .option('demo', {
             type: 'boolean',
             default: false,

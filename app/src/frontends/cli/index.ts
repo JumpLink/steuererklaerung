@@ -28,3 +28,4 @@ export * from './zve.ts';
 export * from './web.ts';
 export * from './demo.ts';
 export * from './config.ts';
+export * from './backup.ts';
