@@ -371,10 +371,10 @@ const recurringCommand: CommandModule = {
                                 };
                             }
                             const result = sendDesktopNotification({
-                                title: `Buchhaltung: ${reminder.title}`,
+                                title: `Steuererklärung: ${reminder.title}`,
                                 body: `${reminder.body}\n\nErstellen:  steuer invoices recurring create <id>`,
                                 urgency: 'critical',
-                                appName: 'Buchhaltung',
+                                appName: 'Steuererklärung',
                                 icon: 'x-office-spreadsheet',
                             });
                             // A reminder that could not be delivered must not look like a quiet
