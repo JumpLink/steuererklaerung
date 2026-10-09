@@ -186,8 +186,8 @@ die Abgabe selbst läuft über die CLI.
 ### Transparenz: wie das entsteht
 
 Das Projekt wird zu großen Teilen per Vibe-Coding entwickelt: Der Code entsteht mit
-KI-Coding-Agenten, der Maintainer gibt die Richtung vor und prüft die Ergebnisse. Das
-heißt nicht, dass jede Zeile von Hand geschrieben wurde.
+KI-Coding-Agenten, der Maintainer gibt die Richtung vor und prüft die Ergebnisse. Die
+meisten Zeilen sind nicht von Hand geschrieben.
 
 Was die Zahlen absichert, ist nicht die Herkunft des Codes, sondern die Überprüfbarkeit:
 Steuerrechtliche Konstanten stehen mit Quelle in

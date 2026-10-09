@@ -136,7 +136,7 @@
             },
             "homepageUrl": "https://github.com/JumpLink/steuererklaerung",
             "license": {
-                "project": "MIT",
+                "project": "AGPL-3.0-or-later",
                 "file": "../LICENSE"
             },
             "localeDir": "dist/locale"

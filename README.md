@@ -178,8 +178,8 @@ everywhere, writing in few places, and filing itself runs through the CLI.
 ### Transparency: how this is made
 
 The project is developed largely through vibe coding. The code is written with AI coding
-agents; the maintainer directs the work and reviews the results. Not every line was written
-by hand.
+agents; the maintainer directs the work and reviews the results. Most lines were not
+written by hand.
 
 What backs the numbers is not where the code came from but whether it can be checked. Tax
 rules cite their sources in [`docs/references/tax-sources.md`](docs/references/tax-sources.md),
