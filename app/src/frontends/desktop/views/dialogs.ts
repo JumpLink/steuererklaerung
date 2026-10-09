@@ -6,6 +6,7 @@
 
 import Adw from '@girs/adw-1';
 import type Gtk from '@girs/gtk-4.0';
+import { _ } from '../i18n.ts';
 
 export interface ConfirmOptions {
     heading: string;
@@ -20,7 +21,7 @@ export interface ConfirmOptions {
 export function confirmDialog(parent: Gtk.Widget, opts: ConfirmOptions): Promise<boolean> {
     return new Promise((resolve) => {
         const dlg = new Adw.AlertDialog({ heading: opts.heading, body: opts.body });
-        dlg.add_response('cancel', opts.cancelLabel ?? 'Abbrechen');
+        dlg.add_response('cancel', opts.cancelLabel ?? _('Cancel'));
         dlg.add_response('confirm', opts.confirmLabel);
         dlg.set_response_appearance(
             'confirm',
@@ -38,7 +39,7 @@ export function confirmDialog(parent: Gtk.Widget, opts: ConfirmOptions): Promise
 export function errorDialog(parent: Gtk.Widget, heading: string, message: string): Promise<void> {
     return new Promise((resolve) => {
         const dlg = new Adw.AlertDialog({ heading, body: message });
-        dlg.add_response('ok', 'OK');
+        dlg.add_response('ok', _('OK'));
         dlg.set_default_response('ok');
         dlg.set_close_response('ok');
         dlg.choose(parent, null, () => resolve());

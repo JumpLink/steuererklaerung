@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-09 18:52+0200\n"
+"POT-Creation-Date: 2026-10-09 18:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,6 +37,7 @@ msgstr ""
 
 #. TRANSLATORS: Tooltip on the button that sends the question
 #: src/frontends/desktop/assistent-panel.blp:117
+#: src/frontends/desktop/fints-interaction.ts:59
 msgid "Send"
 msgstr ""
 
@@ -50,11 +51,291 @@ msgstr ""
 msgid "Context: %s"
 msgstr ""
 
+#: src/frontends/desktop/fints-interaction.ts:44
+msgid "No window is open in which the bank could ask."
+msgstr ""
+
+#: src/frontends/desktop/fints-interaction.ts:58
+#: src/frontends/desktop/views/dialogs.ts:24
+#: src/frontends/desktop/views/entity-dialogs.ts:42
+#: src/frontends/desktop/views/entity-dialogs.ts:101
+msgid "Cancel"
+msgstr ""
+
+#: src/frontends/desktop/fints-interaction.ts:69
+msgid "Cancelled — the bank received no answer."
+msgstr ""
+
+#: src/frontends/desktop/fints-interaction.ts:74
+msgid "Nothing entered — the bank received no answer."
+msgstr ""
+
+#: src/frontends/desktop/fints-interaction.ts:87
+msgid "TAN for “{account}”{method}"
+msgstr ""
+
+#: src/frontends/desktop/fints-interaction.ts:90
+msgid "The bank requires a TAN for this access."
+msgstr ""
+
+#: src/frontends/desktop/fints-interaction.ts:97
+msgid "PIN for “{account}”"
+msgstr ""
+
+#: src/frontends/desktop/fints-interaction.ts:98
+msgid "Online banking PIN of bank {blz}. It is used for this session only."
+msgstr ""
+
 #. TRANSLATORS: Not shown. The two-letter code of THIS catalogue's language ("de" in de.po);
 #. it picks the matching glossary of tax terms.
-#: src/frontends/desktop/i18n.ts:113
+#: src/frontends/desktop/i18n.ts:111
 msgctxt "language code"
 msgid "en"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:53
+msgid "Overview"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:53
+msgid "KPIs & trends"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:54
+msgid "Receipt inbox"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:54
+msgid "Check & match receipts"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:55
+msgid "Transactions"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:55
+msgid "all accounts"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:56
+msgid "Invoices"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:56
+msgid "open items & status"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:57
+msgid "Time"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:57
+msgid "timer & unbilled hours"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:58
+msgid "Contacts"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:58
+msgid "customers & suppliers"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:59
+msgid "Reports"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:59
+msgid "BWA · insights"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:63
+msgid "Deadlines"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:63
+msgid "dates · payments · open items"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:67
+msgid "Tax"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:68
+msgid "Return · EÜR · USt-VA · account"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:73
+msgid "Projects"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:73
+msgid "customer · costs · result"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:74
+msgid "Accounts"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:74
+msgid "connections & import"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:78 src/frontends/desktop/shortcuts.ts:53
+msgid "Settings"
+msgstr ""
+
+#: src/frontends/desktop/nav.ts:79
+msgid "assistant · connections · master data"
+msgstr ""
+
+#: src/frontends/desktop/shortcuts.ts:51
+msgid "Search"
+msgstr ""
+
+#: src/frontends/desktop/shortcuts.ts:52
+msgid "Reload"
+msgstr ""
+
+#. TRANSLATORS: Primary menu item listing the keyboard shortcuts
+#: src/frontends/desktop/shortcuts.ts:54 src/frontends/desktop/window.blp:13
+msgid "Keyboard shortcuts"
+msgstr ""
+
+#. TRANSLATORS: Primary menu item that closes the application
+#: src/frontends/desktop/shortcuts.ts:55 src/frontends/desktop/window.blp:26
+msgid "Quit"
+msgstr ""
+
+#: src/frontends/desktop/shortcuts.ts:59
+msgctxt "shortcuts group"
+msgid "View"
+msgstr ""
+
+#: src/frontends/desktop/shortcuts.ts:60
+msgctxt "shortcuts group"
+msgid "General"
+msgstr ""
+
+#: src/frontends/desktop/shortcuts.ts:120
+msgctxt "shortcuts group"
+msgid "Navigation"
+msgstr ""
+
+#: src/frontends/desktop/sync-controller.ts:35
+msgid "just now"
+msgstr ""
+
+#: src/frontends/desktop/sync-controller.ts:36
+msgid "{n} min ago"
+msgstr ""
+
+#: src/frontends/desktop/sync-controller.ts:38
+msgid "{n} h ago"
+msgstr ""
+
+#: src/frontends/desktop/sync-controller.ts:38
+msgid "{n} d ago"
+msgstr ""
+
+#: src/frontends/desktop/sync-controller.ts:45
+msgid "Qonto invoices"
+msgstr ""
+
+#: src/frontends/desktop/sync-controller.ts:47
+msgid "Qonto transactions"
+msgstr ""
+
+#: src/frontends/desktop/sync-controller.ts:133
+msgid "Sync: {failures}"
+msgstr ""
+
+#: src/frontends/desktop/sync-controller.ts:139
+msgid "Nothing to sync"
+msgstr ""
+
+#: src/frontends/desktop/sync-controller.ts:139
+msgid "Sync complete"
+msgstr ""
+
+#: src/frontends/desktop/sync-controller.ts:156
+msgid "Syncing: {source} …"
+msgstr ""
+
+#: src/frontends/desktop/sync-controller.ts:164
+msgid "Last sync {when}"
+msgstr ""
+
+#: src/frontends/desktop/sync-controller.ts:165
+msgid "Not synced yet"
+msgstr ""
+
+#: src/frontends/desktop/sync-controller.ts:167
+msgid "Error: {source} — {message}"
+msgstr ""
+
+#: src/frontends/desktop/toast.ts:29
+msgid "Undo"
+msgstr ""
+
+#: src/frontends/desktop/views/dialogs.ts:42
+msgid "OK"
+msgstr ""
+
+#: src/frontends/desktop/views/entity-dialogs.ts:32
+msgid "Rename entity"
+msgstr ""
+
+#: src/frontends/desktop/views/entity-dialogs.ts:33
+msgid "New display name for “{name}”."
+msgstr ""
+
+#: src/frontends/desktop/views/entity-dialogs.ts:37
+msgid "Name"
+msgstr ""
+
+#: src/frontends/desktop/views/entity-dialogs.ts:43
+msgid "Rename"
+msgstr ""
+
+#: src/frontends/desktop/views/entity-dialogs.ts:57
+msgid "Entity renamed: {name}"
+msgstr ""
+
+#: src/frontends/desktop/views/entity-dialogs.ts:59
+msgid "Rename failed: {error}"
+msgstr ""
+
+#: src/frontends/desktop/views/entity-dialogs.ts:76
+msgid "Removal blocked"
+msgstr ""
+
+#: src/frontends/desktop/views/entity-dialogs.ts:80
+msgid ""
+"“{name}” has locked years ({years}). Locked books must stay with the entity "
+"under which they were filed (GoBD)."
+msgstr ""
+
+#: src/frontends/desktop/views/entity-dialogs.ts:87
+msgid "Got it"
+msgstr ""
+
+#: src/frontends/desktop/views/entity-dialogs.ts:93
+msgid "Remove “{name}”?"
+msgstr ""
+
+#: src/frontends/desktop/views/entity-dialogs.ts:96
+msgid ""
+"The entity disappears from the list. Transactions, receipts, invoices and "
+"filings are kept — only the entry is removed, not the data."
+msgstr ""
+
+#: src/frontends/desktop/views/entity-dialogs.ts:102
+msgid "Remove"
+msgstr ""
+
+#: src/frontends/desktop/views/entity-dialogs.ts:110
+msgid "Entity removed: {name}"
 msgstr ""
 
 #: src/frontends/desktop/views/herleitung-dialog.blp:7
@@ -165,20 +446,10 @@ msgstr ""
 msgid "Set up entity …"
 msgstr ""
 
-#. TRANSLATORS: Primary menu item listing the keyboard shortcuts
-#: src/frontends/desktop/window.blp:13
-msgid "Keyboard shortcuts"
-msgstr ""
-
 #. TRANSLATORS: Primary menu item opening the about dialog. "Steuererklärung" is the
 #. application name and stays untranslated.
 #: src/frontends/desktop/window.blp:20
 msgid "About Steuererklärung"
-msgstr ""
-
-#. TRANSLATORS: Primary menu item that closes the application
-#: src/frontends/desktop/window.blp:26
-msgid "Quit"
 msgstr ""
 
 #. TRANSLATORS: Subtitle under the app name in the sidebar header, marking this as the
@@ -190,4 +461,26 @@ msgstr ""
 #. TRANSLATORS: Tooltip on the headerbar button that syncs Qonto and Paperless
 #: src/frontends/desktop/window.blp:127
 msgid "Sync"
+msgstr ""
+
+#: src/frontends/desktop/window.ts:396
+msgid "Data could not be loaded completely: {error}"
+msgstr ""
+
+#: src/frontends/desktop/window.ts:401
+msgid "Demo data – fictional examples, no real financial data"
+msgstr ""
+
+#: src/frontends/desktop/window.ts:415
+msgid "Private"
+msgstr ""
+
+#: src/frontends/desktop/window.ts:415
+msgid "Business"
+msgstr ""
+
+#: src/frontends/desktop/window.ts:479
+msgid ""
+"“{view}” — this view is being ported to native Adwaita widgets step by step. "
+"It is already available in the web interface (steuer web)."
 msgstr ""

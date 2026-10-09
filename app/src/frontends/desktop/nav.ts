@@ -1,6 +1,8 @@
 import GLib from '@girs/glib-2.0';
 import type Gtk from '@girs/gtk-4.0';
 
+import { _ } from './i18n.ts';
+
 /**
  * Sidebar navigation model for the native app.
  *
@@ -48,33 +50,33 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: NavItem[] = [
-    { view: 'home', icon: 'go-home-symbolic', label: 'Übersicht', sub: 'KPIs & Trends' },
-    { view: 'review', icon: 'mail-inbox-symbolic', label: 'Beleg-Eingang', sub: 'Belege prüfen & zuordnen' },
-    { view: 'transactions', icon: 'view-list-symbolic', label: 'Buchungen', sub: 'alle Konten' },
-    { view: 'rechnungen', icon: 'document-send-symbolic', label: 'Rechnungen', sub: 'offene Posten & Status' },
-    { view: 'zeiten', icon: 'alarm-symbolic', label: 'Zeiten', sub: 'Timer & offene Stunden' },
-    { view: 'kontakte', icon: 'system-users-symbolic', label: 'Kontakte', sub: 'Kunden & Lieferanten' },
-    { view: 'auswertungen', icon: 'view-grid-symbolic', label: 'Auswertungen', sub: 'BWA · Einblicke' },
+    { view: 'home', icon: 'go-home-symbolic', label: _('Overview'), sub: _('KPIs & trends') },
+    { view: 'review', icon: 'mail-inbox-symbolic', label: _('Receipt inbox'), sub: _('Check & match receipts') },
+    { view: 'transactions', icon: 'view-list-symbolic', label: _('Transactions'), sub: _('all accounts') },
+    { view: 'rechnungen', icon: 'document-send-symbolic', label: _('Invoices'), sub: _('open items & status') },
+    { view: 'zeiten', icon: 'alarm-symbolic', label: _('Time'), sub: _('timer & unbilled hours') },
+    { view: 'kontakte', icon: 'system-users-symbolic', label: _('Contacts'), sub: _('customers & suppliers') },
+    { view: 'auswertungen', icon: 'view-grid-symbolic', label: _('Reports'), sub: _('BWA · insights') },
     // NOT business-only and NOT entity-scoped: this is the one "damit ich das nicht vergesse"
     // screen, and a Frist you cannot see because a different entity is selected is exactly the
     // Frist you miss. A privat entity has ESt deadlines and open items just the same.
-    { view: 'fristen', icon: 'alarm-symbolic', label: 'Fristen', sub: 'Termine · Zahlungen · offene Posten' },
+    { view: 'fristen', icon: 'alarm-symbolic', label: _('Deadlines'), sub: _('dates · payments · open items') },
     {
         view: 'steuer',
         icon: 'accessories-calculator-symbolic',
-        label: 'Steuer',
-        sub: 'Erklärung · EÜR · USt-VA · Konto',
+        label: _('Tax'),
+        sub: _('Return · EÜR · USt-VA · account'),
     },
     // After Steuer, not next to Kontakte where it belongs by content: the first nine entries carry
     // Ctrl+1…9 (shortcuts.ts), and a seat in the middle would silently move Auswertungen, Fristen and
     // Steuer to other numbers under people's fingers.
-    { view: 'projekte', icon: 'folder-symbolic', label: 'Projekte', sub: 'Kunde · Kosten · Ergebnis' },
-    { view: 'konten', icon: 'network-transmit-receive-symbolic', label: 'Konten', sub: 'Anbindungen & Import' },
+    { view: 'projekte', icon: 'folder-symbolic', label: _('Projects'), sub: _('customer · costs · result') },
+    { view: 'konten', icon: 'network-transmit-receive-symbolic', label: _('Accounts'), sub: _('connections & import') },
     {
         view: 'settings',
         icon: 'preferences-system-symbolic',
-        label: 'Einstellungen',
-        sub: 'Assistent · Anbindungen · Stammdaten',
+        label: _('Settings'),
+        sub: _('assistant · connections · master data'),
     },
 ];
 

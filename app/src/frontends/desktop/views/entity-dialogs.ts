@@ -17,6 +17,7 @@ import type Gtk from '@girs/gtk-4.0';
 
 import { lockedYearsFor, removeEntity, updateEntity } from '../../../core/actions/entities.ts';
 import { markup } from './util.ts';
+import { _, fmt } from '../i18n.ts';
 
 /** Report the outcome to the caller (which toasts it and reloads). */
 export type EntityDialogResult = (message: string, changed: boolean) => void;
@@ -28,18 +29,18 @@ export function presentRenameEntity(
     done: EntityDialogResult,
 ): void {
     const dialog = new Adw.AlertDialog({
-        heading: 'Entität umbenennen',
-        body: markup(`Neuer Anzeigename für „${entity.name}".`),
+        heading: _('Rename entity'),
+        body: markup(fmt(_('New display name for “{name}”.'), { name: entity.name })),
     });
 
     const group = new Adw.PreferencesGroup();
-    const row = new Adw.EntryRow({ title: 'Name' });
+    const row = new Adw.EntryRow({ title: _('Name') });
     row.set_text(entity.name);
     group.add(row);
     dialog.set_extra_child(group);
 
-    dialog.add_response('cancel', 'Abbrechen');
-    dialog.add_response('save', 'Umbenennen');
+    dialog.add_response('cancel', _('Cancel'));
+    dialog.add_response('save', _('Rename'));
     dialog.set_response_appearance('save', Adw.ResponseAppearance.SUGGESTED);
     dialog.set_default_response('save');
     dialog.set_close_response('cancel');
@@ -53,9 +54,9 @@ export function presentRenameEntity(
             // `elster.entity_id`, so changing it here would silently orphan them; the assistant
             // derives it once at creation and it stays.
             updateEntity(entity.id, { name });
-            done(`Entität umbenannt: ${name}`, true);
+            done(fmt(_('Entity renamed: {name}'), { name }), true);
         } catch (err) {
-            done(`Umbenennen fehlgeschlagen: ${err instanceof Error ? err.message : String(err)}`, false);
+            done(fmt(_('Rename failed: {error}'), { error: err instanceof Error ? err.message : String(err) }), false);
         }
     });
     dialog.present(parent);
@@ -72,26 +73,33 @@ export function presentRemoveEntity(
     const locked = lockedYearsFor(entity.id);
     if (locked.length > 0) {
         const blocked = new Adw.AlertDialog({
-            heading: 'Entfernen gesperrt',
+            heading: _('Removal blocked'),
             body: markup(
-                `„${entity.name}" hat festgeschriebene Jahre (${locked.join(', ')}). Festgeschriebene Bücher ` +
-                    'müssen der Entität zugeordnet bleiben, unter der sie abgegeben wurden (GoBD).',
+                fmt(
+                    _(
+                        '“{name}” has locked years ({years}). Locked books must stay with the entity ' +
+                            'under which they were filed (GoBD).',
+                    ),
+                    { name: entity.name, years: locked.join(', ') },
+                ),
             ),
         });
-        blocked.add_response('close', 'Verstanden');
+        blocked.add_response('close', _('Got it'));
         blocked.present(parent);
         return;
     }
 
     const dialog = new Adw.AlertDialog({
-        heading: markup(`„${entity.name}" entfernen?`),
+        heading: markup(fmt(_('Remove “{name}”?'), { name: entity.name })),
         body: markup(
-            'Die Entität verschwindet aus der Liste. Buchungen, Belege, Rechnungen und Abgaben bleiben ' +
-                'erhalten — entfernt wird nur der Eintrag, nicht die Daten.',
+            _(
+                'The entity disappears from the list. Transactions, receipts, invoices and filings are ' +
+                    'kept — only the entry is removed, not the data.',
+            ),
         ),
     });
-    dialog.add_response('cancel', 'Abbrechen');
-    dialog.add_response('remove', 'Entfernen');
+    dialog.add_response('cancel', _('Cancel'));
+    dialog.add_response('remove', _('Remove'));
     dialog.set_response_appearance('remove', Adw.ResponseAppearance.DESTRUCTIVE);
     dialog.set_close_response('cancel');
 
@@ -99,7 +107,7 @@ export function presentRemoveEntity(
         if (response !== 'remove') return;
         try {
             removeEntity(entity.id);
-            done(`Entität entfernt: ${entity.name}`, true);
+            done(fmt(_('Entity removed: {name}'), { name: entity.name }), true);
         } catch (err) {
             // The last-entity and GoBD refusals both land here; both messages are already written
             // for a human, so pass them through rather than paraphrasing.

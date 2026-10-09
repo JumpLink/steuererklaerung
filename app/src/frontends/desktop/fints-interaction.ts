@@ -18,6 +18,7 @@ import Gtk from '@girs/gtk-4.0';
 
 import type { FinTSInteraction, PinRequest, TanRequest } from '../../core/clients/fints/interaction.ts';
 import { showToast } from './toast.ts';
+import { _, fmt } from './i18n.ts';
 
 /**
  * The window a dialog should attach to — the app's active window, resolved at ask time.
@@ -40,7 +41,7 @@ function ask(opts: { heading: string; body: string; placeholder: string; secret:
     return new Promise((resolve, reject) => {
         const parent = activeWindow();
         if (!parent) {
-            reject(new Error('Kein Fenster offen, in dem die Bank gefragt werden könnte.'));
+            reject(new Error(_('No window is open in which the bank could ask.')));
             return;
         }
         const dialog = new Adw.AlertDialog({ heading: opts.heading, body: opts.body });
@@ -54,8 +55,8 @@ function ask(opts: { heading: string; body: string; placeholder: string; secret:
         if (entry instanceof Gtk.Entry) entry.set_placeholder_text(opts.placeholder);
         dialog.set_extra_child(entry);
 
-        dialog.add_response('cancel', 'Abbrechen');
-        dialog.add_response('ok', 'Senden');
+        dialog.add_response('cancel', _('Cancel'));
+        dialog.add_response('ok', _('Send'));
         dialog.set_default_response('ok');
         dialog.set_close_response('cancel');
         dialog.set_response_appearance('ok', Adw.ResponseAppearance.SUGGESTED);
@@ -65,12 +66,12 @@ function ask(opts: { heading: string; body: string; placeholder: string; secret:
 
         dialog.connect('response', (_d: Adw.AlertDialog, response: string) => {
             if (response !== 'ok') {
-                reject(new Error('Abgebrochen — die Bank hat keine Antwort bekommen.'));
+                reject(new Error(_('Cancelled — the bank received no answer.')));
                 return;
             }
             const text = (entry.get_text() ?? '').trim();
             if (text === '') {
-                reject(new Error('Nichts eingegeben — die Bank hat keine Antwort bekommen.'));
+                reject(new Error(_('Nothing entered — the bank received no answer.')));
                 return;
             }
             resolve(text);
@@ -83,18 +84,18 @@ export const dialogFinTSInteraction: FinTSInteraction = {
     requestTan(request: TanRequest): Promise<string> {
         const method = request.method ? ` (${request.method})` : '';
         return ask({
-            heading: `TAN für „${request.accountName}"${method}`,
+            heading: fmt(_('TAN for “{account}”{method}'), { account: request.accountName, method }),
             // The bank's own challenge text carries the essentials (amount, recipient, which card),
             // so it is shown verbatim rather than summarised.
-            body: request.challenge ?? 'Die Bank verlangt eine TAN für diesen Zugriff.',
+            body: request.challenge ?? _('The bank requires a TAN for this access.'),
             placeholder: 'TAN',
             secret: false,
         });
     },
     requestPin(request: PinRequest): Promise<string> {
         return ask({
-            heading: `PIN für „${request.accountName}"`,
-            body: `Online-Banking-PIN der Bank ${request.blz}. Sie wird nur für diese Sitzung verwendet.`,
+            heading: fmt(_('PIN for “{account}”'), { account: request.accountName }),
+            body: fmt(_('Online banking PIN of bank {blz}. It is used for this session only.'), { blz: request.blz }),
             placeholder: 'PIN',
             secret: true,
         });
