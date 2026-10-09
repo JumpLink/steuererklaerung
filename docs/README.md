@@ -33,6 +33,7 @@ die belegten Referenzen, gegen die ihre Zahlen geprüft werden.
 |----------|-------------|
 | [references/tax-sources.md](references/tax-sources.md) | **Steuerrechtliche Konstanten je Veranlagungszeitraum — jede mit Quelle und Abrufdatum.** Die zentrale Registry, auf die der Code per Kommentar verweist |
 | [references/elster-schemas.md](references/elster-schemas.md) | Formular → DatenArt / Nutzdaten-Root / Kennzahlen, verifiziert aus der lokalen ERiC-Distribution |
+| [research/austria.md](research/austria.md) | Machbarkeit Österreich (Einzelunternehmer): E/A, UVA, E1/E1a, FinanzOnline-Webservices, Aufwandsschätzung |
 
 ## Oberflächen
 
