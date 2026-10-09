@@ -15,6 +15,7 @@ import { isDmsUnsupported, isManifestMissing, isPaperlessSetupRequired } from '.
 import { navigateTo } from '../nav.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 import { _, _p, fmt } from '../i18n.ts';
+import type { DisplayInvoiceStatus } from '../../../core/invoices/status.ts';
 
 /** Escape a plain string for the Pango-markup labels Adwaita rows / status pages use. */
 export function markup(text: string): string {
@@ -61,6 +62,15 @@ export function saveFileViaDialog(widget: Gtk.Widget, filename: string, bytes: U
 /** Month abbreviations, 1-based (index 0 unused) — shared kernel constant. */
 /** Month abbreviations, 1-based (index 0 unused) so `MONTHS[isoMonth]` reads directly — translated, unlike
  * the kernel's German list in `core/lib/format.ts`, which CLI and MCP output keep using. */
+/** Invoice status labels for the desktop — translated, unlike the kernel's German `INVOICE_STATUS_LABEL`. */
+export const INVOICE_STATUS_LABEL: Record<DisplayInvoiceStatus, string> = {
+    draft: _p('invoice status', 'Draft'),
+    open: _p('invoice status', 'Open'),
+    overdue: _p('invoice status', 'Overdue'),
+    paid: _p('invoice status', 'Paid'),
+    cancelled: _p('invoice status', 'Cancelled'),
+};
+
 export const MONTHS = [
     '',
     _p('month abbreviation', 'Jan'),

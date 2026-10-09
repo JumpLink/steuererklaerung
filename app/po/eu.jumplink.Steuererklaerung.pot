@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-09 19:03+0200\n"
+"POT-Creation-Date: 2026-10-09 19:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,6 +40,7 @@ msgstr ""
 #. TRANSLATORS: Tooltip on the button that sends the question
 #: src/frontends/desktop/assistent-panel.blp:117
 #: src/frontends/desktop/fints-interaction.ts:59
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:365
 msgid "Send"
 msgstr ""
 
@@ -61,6 +62,7 @@ msgstr ""
 #: src/frontends/desktop/views/dialogs.ts:24
 #: src/frontends/desktop/views/entity-dialogs.ts:42
 #: src/frontends/desktop/views/entity-dialogs.ts:101
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:465
 msgid "Cancel"
 msgstr ""
 
@@ -96,6 +98,7 @@ msgid "en"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:53
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:532
 msgid "Overview"
 msgstr ""
 
@@ -292,9 +295,10 @@ msgstr ""
 #: src/frontends/desktop/views/home-view.blp:32
 #: src/frontends/desktop/views/offene-belege-view.blp:32
 #: src/frontends/desktop/views/rechnung-detail-dialog.blp:41
+#: src/frontends/desktop/views/rechnungen-view.blp:32
 #: src/frontends/desktop/views/transactions-view.blp:32
-#: src/frontends/desktop/views/util.ts:394
-#: src/frontends/desktop/views/util.ts:397
+#: src/frontends/desktop/views/util.ts:404
+#: src/frontends/desktop/views/util.ts:407
 msgid "Could not load"
 msgstr ""
 
@@ -320,6 +324,9 @@ msgstr ""
 #: src/frontends/desktop/views/beleg-eingang-view.ts:196
 #: src/frontends/desktop/views/beleg-link-dialog.ts:225
 #: src/frontends/desktop/views/dokumente-view.ts:180
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:422
+#: src/frontends/desktop/views/rechnungen-view.ts:525
 msgid "No. {number}"
 msgstr ""
 
@@ -334,7 +341,7 @@ msgid "Could not determine candidate transactions"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:314
-#: src/frontends/desktop/views/util.ts:412
+#: src/frontends/desktop/views/util.ts:422
 msgid "Try again"
 msgstr ""
 
@@ -579,15 +586,15 @@ msgid "Search failed"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-link-dialog.ts:230
-#: src/frontends/desktop/views/beleg-link-dialog.ts:245
+#: src/frontends/desktop/views/beleg-link-dialog.ts:246
 msgid "Receipt #{id}"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-link-dialog.ts:267
+#: src/frontends/desktop/views/beleg-link-dialog.ts:269
 msgid "Receipt linked"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-link-dialog.ts:271
+#: src/frontends/desktop/views/beleg-link-dialog.ts:273
 msgid "Linking failed"
 msgstr ""
 
@@ -661,6 +668,7 @@ msgid "Invoice type"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:175
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:212
 msgid "Amounts"
 msgstr ""
 
@@ -674,6 +682,7 @@ msgid "Complete"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:207
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:466
 msgid "Save"
 msgstr ""
 
@@ -1082,6 +1091,93 @@ msgstr ""
 msgid "Add account"
 msgstr ""
 
+#: src/frontends/desktop/views/mahnung-dialog.ts:34
+msgid "Draft payment reminder"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:42
+msgid "Level"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:56
+msgid "Invoice {number} · {customer}"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:61
+msgid ""
+"This is a draft. The app sends nothing — you copy the text or open it in "
+"your mail program. Only once you have sent it yourself do you mark the level "
+"as sent."
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:90
+msgid "Copy"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:91
+msgid "Save as text file"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:92
+msgid "Open mail draft"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:94
+msgid "Mark as sent"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:132
+msgid "Drafting …"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:137
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:357
+msgid "Subject: {value}"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:140
+msgid "Draft level {level} · payment deadline {date} · not sent"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:143
+msgid "this level is already recorded as sent"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:162
+msgid "Draft copied to the clipboard"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:169
+msgid "Draft"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:191
+msgid "Mark level {level} as sent?"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:194
+msgid ""
+"The app sends nothing. Mark the {name} for invoice {number} only once you "
+"have sent it to the customer yourself — then this level applies and the next "
+"one is due only after 14 days."
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:199
+msgid "Yes, I sent it"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:200
+msgid "Not yet"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:206
+msgid "Level {level} for {number} recorded as sent"
+msgstr ""
+
+#: src/frontends/desktop/views/mahnung-dialog.ts:214
+msgid "Not saved"
+msgstr ""
+
 #: src/frontends/desktop/views/offene-belege-view.blp:22
 msgid "Looking for missing receipts …"
 msgstr ""
@@ -1160,6 +1256,889 @@ msgstr ""
 msgid "Loading details …"
 msgstr ""
 
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:150
+#: src/frontends/desktop/views/rechnungen-view.ts:523
+msgid "Invoice"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:196
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:185
+msgid "Line items"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:200
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:215
+msgid "VAT {rate}"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:214
+msgid "Net amount"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:216
+msgid "Gross amount"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:220
+msgid "Dates"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:222
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:534
+msgid "Invoice date"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:223
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:535
+msgid "Due by"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:227
+msgid "Service period"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:230
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:122
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:45
+msgid "Recipient"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:237
+msgid "Payment & cancellation"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:239
+msgid "Paid on"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:240
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:651
+msgctxt "invoice payment"
+msgid "Transaction"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:241
+msgid "Cancels invoice"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:242
+msgid "Cancelled by"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:261
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:269
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:137
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:141
+#: src/frontends/desktop/views/tx-detail-dialog.ts:224
+msgid "Project"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:265
+msgid "{name} · assigned directly"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:267
+msgid "{names} · via time entries"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:268
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:139
+#: src/frontends/desktop/views/tx-detail-dialog.ts:244
+msgid "No project"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:271
+msgid "Change …"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:271
+msgid "Assign …"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:278
+msgid "Choose project"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:279
+msgid "No projects yet."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:282
+msgid "The invoice counts toward this project with its full net amount."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:287
+msgid "Invoice now belongs to “{name}”"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:291
+msgid "Could not assign"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:299
+msgid "Remove assignment"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:306
+msgid "Assignment removed"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:361
+msgid "Is a double payment"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:362
+msgid "Recorded as double payment"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:365
+msgid "Belongs to another invoice …"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:368
+msgid "Is fine"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:369
+msgid "Recorded as fine"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:380
+msgid "Refund outstanding"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:381
+msgid "The overpaid amount has not been refunded to the customer yet."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:396
+msgid "Link refund …"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:397
+msgid "Refunded elsewhere …"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:411
+msgid "Decision not saved"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:419
+msgid "Belongs to which invoice?"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:420
+msgid "No other open invoice."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:431
+msgid "Assigned to the other invoice"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:435
+msgid "Could not load invoices"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:443
+msgid "Which transfer was the refund?"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:444
+msgid ""
+"No debit found. If the refund was paid outside the accounts, choose "
+"“Refunded elsewhere”."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:450
+msgid "Refund linked"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:453
+msgid "Could not load debits"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:460
+msgid "Refunded elsewhere"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:461
+msgid "Date of the refund (YYYY-MM-DD), e.g. when paid from private funds."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:473
+msgid "Refund recorded"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:509
+msgid "Email history"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:511
+msgid "Not sent by email yet."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:516
+#: src/frontends/desktop/views/rechnungen-view.ts:533
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:206
+msgid "sent"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:516
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:206
+msgid "failed"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:519
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:209
+msgid "to {recipients}"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:522
+msgid "Error"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:536
+msgid "Amount"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:547
+msgid "Actions"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:550
+msgid "Edit"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:552
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:605
+msgid "Finalize"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:554
+msgid "Delete draft"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:556
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:643
+msgid "Mark as paid"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:558
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:703
+msgid "Cancel invoice"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:560
+msgid "Open PDF"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:562
+msgid "Save as …"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:563
+msgid "Send by email …"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:565
+msgid "Open in Qonto"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:566
+msgid "Save XRechnung (XML)"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:601
+msgid "Finalize invoice?"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:603
+msgid ""
+"The invoice gets a sequential number and can no longer be edited afterwards. "
+"This step cannot be undone."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:610
+msgid "Invoice finalized"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:614
+msgid "Finalizing failed"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:621
+msgid "Delete draft?"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:622
+msgid "The invoice draft is removed permanently."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:623
+msgid "Delete"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:629
+msgid "Draft deleted"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:633
+msgid "Deleting failed"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:647
+msgid "Paid on (YYYY-MM-DD)"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:650
+msgid "Without link"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:656
+msgid "Book as paid"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:685
+msgid "Invoice marked as paid"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:691
+msgid "Failed"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:699
+msgid "Cancel invoice?"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:701
+msgid ""
+"A cancellation invoice is created; the invoice then counts as voided. This "
+"step cannot be undone."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:709
+msgid "Cancellation invoice created"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:713
+msgid "Cancelling failed"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:741
+msgid "Invoice saved"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:751
+msgid "PDF not available"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:766
+msgid "XRechnung saved"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:775
+msgid "XRechnung not available"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.blp:22
+msgid "Loading invoices …"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.blp:40
+msgid "No Qonto account"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.blp:66
+msgid "Recurring invoices"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.blp:80
+msgid "All invoices"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:54
+msgctxt "recurring status"
+msgid "overdue"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:55
+msgctxt "recurring status"
+msgid "due soon"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:56
+msgctxt "recurring status"
+msgid "planned"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:57
+msgctxt "recurring status"
+msgid "paused"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:58
+msgctxt "recurring status"
+msgid "cancelled"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:72
+#: src/frontends/desktop/views/tab-hub.ts:139
+#: src/frontends/desktop/views/transactions-view.ts:53
+msgid "All"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:73
+msgid "Drafts"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:74
+#: src/frontends/desktop/views/rechnungen-view.ts:408
+#: src/frontends/desktop/views/util.ts:68
+msgctxt "invoice status"
+msgid "Open"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:75
+#: src/frontends/desktop/views/rechnungen-view.ts:413
+#: src/frontends/desktop/views/util.ts:69
+msgctxt "invoice status"
+msgid "Overdue"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:76
+#: src/frontends/desktop/views/rechnungen-view.ts:419
+#: src/frontends/desktop/views/util.ts:70
+msgctxt "invoice status"
+msgid "Paid"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:77
+#: src/frontends/desktop/views/util.ts:71
+msgctxt "invoice status"
+msgid "Cancelled"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:157
+msgid "Invoices could not be loaded"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:178
+msgid "{overdue} overdue · {soon} due soon · {total} total"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:183
+msgid "none recorded"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:189
+msgid "No recurring invoices"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:191
+msgid ""
+"What is billed the same every year or month — hosting, maintenance, rent — "
+"is set up here once and then reminds you by itself."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:194
+msgid "Add recurring invoice"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:215
+msgid "Recurring item “{id}” not found."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:230
+msgid "{n} day overdue"
+msgid_plural "{n} days overdue"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:234
+msgid "today"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:235
+msgid "in {n} day"
+msgid_plural "in {n} days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:239
+msgid "due {date} ({when})"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:240
+msgid "last {number}"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:251
+#: src/frontends/desktop/views/rechnungen-view.ts:290
+msgid "Create draft"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:262
+msgid "Edit recurring item"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:277
+msgid "Creating draft …"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:282
+msgid "Draft {number} created"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:283
+msgid "Draft created"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:291
+msgid "Draft failed"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:297
+msgid "Loading invoices from the back end …"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:328
+msgid "Invoices not available"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:410
+#: src/frontends/desktop/views/rechnungen-view.ts:416
+#: src/frontends/desktop/views/rechnungen-view.ts:422
+msgid "{n} invoice"
+msgid_plural "{n} invoices"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:434
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:116
+msgid "New invoice"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:466
+msgid "{n} total"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:473
+msgid "Nothing in this status"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:474
+msgid "No invoice has this status — another filter shows more."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:475
+msgid "Show all"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:479
+msgid "No invoices yet"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:480
+msgid ""
+"Outgoing invoices are created here — as PDF and as e-invoice (XRechnung)."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:481
+msgid "Create invoice"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:526
+msgid "issued {date}"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:527
+msgid "due {date}"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:534
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:384
+msgid "Sending failed"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:535
+msgid "not sent"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:116
+msgid "Edit invoice"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:125
+msgid "Customer"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:131
+msgid "No customer yet — create one under Contacts first."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:157
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:357
+msgid "Import time entries"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:159
+msgid ""
+"Open time entries of the project become line items. They count as billed "
+"only once the invoice is finalized."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:165
+msgid "Details"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:167
+msgid "Issue date (YYYY-MM-DD)"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:172
+msgid "Payment term (days)"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:174
+msgid "Service from (optional)"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:178
+msgid "Service until (optional)"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:189
+msgid "Total"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:191
+msgid "＋ Add line item"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:194
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:435
+msgid "Save draft"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:225
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:247
+msgid "New line item"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:228
+msgid "Item name"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:229
+msgid "Description (optional)"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:230
+msgid "Quantity"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:231
+msgid "Unit (optional)"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:232
+msgid "Net unit price (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:236
+msgid "Remove line item"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:268
+msgid "Suggestion: this customer’s only project — please confirm."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:285
+msgid "This project has no open time entries."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:299
+msgid "Net hourly rate (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:300
+msgid "VAT rate for the time entries"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:302
+msgid "One line item per activity"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:303
+msgid "One line item in total"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:304
+msgid "Grouping"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:305
+msgid "Insert time entries as line items"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:349
+msgid "{n} time entry inserted — billed only once finalized"
+msgid_plural "{n} time entries inserted — billed only once finalized"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:381
+msgid "Net {net} € · VAT {vat} € · Gross {gross} €"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:395
+msgid "Please check"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:424
+msgid "Saving …"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:431
+msgid "Draft saved"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:436
+msgid "Saving failed"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:46
+msgid "Subject"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:54
+msgid "Template"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:55
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:306
+msgid "Note"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:90
+msgid "Cannot send"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:95
+msgid "Invoice by email"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:111
+msgid "Sending account"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:115
+msgid "Caution: already sent on {date} to {recipients}"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:122
+msgid "Last sent on {date} to {recipients}"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:129
+msgid "From: {sender} (SMTP)"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:134
+msgid "The sending account’s password is missing"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:135
+msgid "No sending account set up"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:136
+msgid "Settings → Connections → Email sending"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:138
+msgid "Set up sending account"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:150
+msgid "Message"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:151
+msgid "Invoice {number} is attached as a PDF. Subject and text can be changed."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:190
+msgid "Placeholders"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:191
+msgid "A click inserts the placeholder at the cursor"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:202
+msgid "Previous sends"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:218
+msgid "Preview and send …"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:270
+msgid "Discard your changes?"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:271
+msgid ""
+"Subject and text were edited by hand. Another template discards those "
+"changes."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:272
+msgid "Discard"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:302
+msgid "Unknown placeholders: {list}"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:304
+msgid "Missing values: {list}"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:324
+msgid "The sending account is not set up."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:353
+msgid "Send invoice now?"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:355
+msgid "To: {value}"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:356
+msgid "From: {value}"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:358
+msgid "Attachment: {file} ({size})"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:374
+msgid "Sent, but not recorded"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:375
+msgid ""
+"The mail was sent. The note on the invoice could not be written: {error}"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:380
+msgid "Invoice sent"
+msgstr ""
+
 #: src/frontends/desktop/views/tab-hub.ts:122
 msgid "Tax return"
 msgstr ""
@@ -1182,11 +2161,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/tab-hub.ts:134
 msgid "All receipts"
-msgstr ""
-
-#: src/frontends/desktop/views/tab-hub.ts:139
-#: src/frontends/desktop/views/transactions-view.ts:53
-msgid "All"
 msgstr ""
 
 #: src/frontends/desktop/views/tab-hub.ts:140
@@ -1371,16 +2345,8 @@ msgstr ""
 msgid "VAT (Umsatzsteuer)"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:224
-msgid "Project"
-msgstr ""
-
 #: src/frontends/desktop/views/tx-detail-dialog.ts:226
 msgid "Assign this expense to a project"
-msgstr ""
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:244
-msgid "No project"
 msgstr ""
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:245
@@ -1527,102 +2493,107 @@ msgstr ""
 msgid "Transaction ID"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:53
+#: src/frontends/desktop/views/util.ts:54
 msgid "{what} saved"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:66
-msgctxt "month abbreviation"
-msgid "Jan"
-msgstr ""
-
 #: src/frontends/desktop/views/util.ts:67
-msgctxt "month abbreviation"
-msgid "Feb"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:68
-msgctxt "month abbreviation"
-msgid "Mar"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:69
-msgctxt "month abbreviation"
-msgid "Apr"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:70
-msgctxt "month abbreviation"
-msgid "May"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:71
-msgctxt "month abbreviation"
-msgid "Jun"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:72
-msgctxt "month abbreviation"
-msgid "Jul"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:73
-msgctxt "month abbreviation"
-msgid "Aug"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:74
-msgctxt "month abbreviation"
-msgid "Sep"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:75
-msgctxt "month abbreviation"
-msgid "Oct"
+msgctxt "invoice status"
+msgid "Draft"
 msgstr ""
 
 #: src/frontends/desktop/views/util.ts:76
 msgctxt "month abbreviation"
-msgid "Nov"
+msgid "Jan"
 msgstr ""
 
 #: src/frontends/desktop/views/util.ts:77
 msgctxt "month abbreviation"
+msgid "Feb"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:78
+msgctxt "month abbreviation"
+msgid "Mar"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:79
+msgctxt "month abbreviation"
+msgid "Apr"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:80
+msgctxt "month abbreviation"
+msgid "May"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:81
+msgctxt "month abbreviation"
+msgid "Jun"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:82
+msgctxt "month abbreviation"
+msgid "Jul"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:83
+msgctxt "month abbreviation"
+msgid "Aug"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:84
+msgctxt "month abbreviation"
+msgid "Sep"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:85
+msgctxt "month abbreviation"
+msgid "Oct"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:86
+msgctxt "month abbreviation"
+msgid "Nov"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:87
+msgctxt "month abbreviation"
 msgid "Dec"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:347
+#: src/frontends/desktop/views/util.ts:357
 msgid "Not set up yet"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:349
+#: src/frontends/desktop/views/util.ts:359
 msgid ""
 "There is no configuration yet. The assistant creates it — entity, "
 "Steuernummer (tax number) and where the data should live."
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:352
+#: src/frontends/desktop/views/util.ts:362
 msgid "Start setup"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:357
+#: src/frontends/desktop/views/util.ts:367
 msgid "{capability} needs Paperless"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:358
+#: src/frontends/desktop/views/util.ts:368
 msgid "Receipt management can be switched in the settings."
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:359
 #: src/frontends/desktop/views/util.ts:369
+#: src/frontends/desktop/views/util.ts:379
 msgid "Go to settings"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:364
+#: src/frontends/desktop/views/util.ts:374
 msgid "Paperless is not set up yet"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:366
+#: src/frontends/desktop/views/util.ts:376
 msgid ""
 "Paperless lacks the document types and custom fields the figures are read "
 "from. They can be created in the settings."

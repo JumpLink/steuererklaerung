@@ -25,16 +25,21 @@ import type { AppEntity } from '../entities.ts';
 import { showToast } from '../toast.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { LoadToken, saveFileViaDialog } from './util.ts';
+import { _, fmt } from '../i18n.ts';
 
 const STUFEN: (1 | 2 | 3)[] = [1, 2, 3];
 
 export class BhMahnungDialog {
-    private readonly dialog = new Adw.Dialog({ title: 'Mahnung entwerfen', contentWidth: 640, contentHeight: 720 });
+    private readonly dialog = new Adw.Dialog({
+        title: _('Draft payment reminder'),
+        contentWidth: 640,
+        contentHeight: 720,
+    });
     private readonly token = new LoadToken();
     private readonly status = new Gtk.Label({ xalign: 0, wrap: true, cssClasses: ['dim-label'] });
     private readonly betreff = new Gtk.Label({ xalign: 0, wrap: true, selectable: true, cssClasses: ['heading'] });
     private readonly text = new Gtk.Label({ xalign: 0, yalign: 0, wrap: true, selectable: true });
-    private readonly stufeRow = new Adw.ComboRow({ title: 'Stufe' });
+    private readonly stufeRow = new Adw.ComboRow({ title: _('Level') });
     private readonly buttons: Gtk.Button[] = [];
     private entwurf: MahnungEntwurfErgebnis | null = null;
 
@@ -48,10 +53,14 @@ export class BhMahnungDialog {
         this.stufeRow.set_selected(STUFEN.indexOf(posten.naechsteStufe ?? 3));
 
         const gruppe = new Adw.PreferencesGroup({
-            title: `Rechnung ${posten.nummer ?? posten.rechnungId} · ${posten.kunde}`,
-            description:
-                'Das ist ein Entwurf. Die App versendet nichts — den Text kopierst du oder öffnest ihn im ' +
-                'Mailprogramm. Erst wenn du ihn selbst verschickt hast, merkst du die Stufe als versandt.',
+            title: fmt(_('Invoice {number} · {customer}'), {
+                number: posten.nummer ?? posten.rechnungId,
+                customer: posten.kunde,
+            }),
+            description: _(
+                'This is a draft. The app sends nothing — you copy the text or open it in your ' +
+                    'mail program. Only once you have sent it yourself do you mark the level as sent.',
+            ),
         });
         gruppe.add(this.stufeRow);
 
@@ -78,15 +87,11 @@ export class BhMahnungDialog {
             this.buttons.push(b);
             return b;
         };
-        aktionen.append(knopf('Kopieren', () => this.kopieren()));
-        aktionen.append(knopf('Als Textdatei speichern', () => this.speichern()));
-        aktionen.append(knopf('Mailentwurf öffnen', () => this.mailEntwurf(entity, posten)));
+        aktionen.append(knopf(_('Copy'), () => this.kopieren()));
+        aktionen.append(knopf(_('Save as text file'), () => this.speichern()));
+        aktionen.append(knopf(_('Open mail draft'), () => this.mailEntwurf(entity, posten)));
 
-        const versandt = knopf(
-            'Als versandt markieren',
-            () => void this.alsVersandt(entity, posten),
-            'suggested-action',
-        );
+        const versandt = knopf(_('Mark as sent'), () => void this.alsVersandt(entity, posten), 'suggested-action');
         versandt.set_halign(Gtk.Align.START);
 
         const box = new Gtk.Box({
@@ -124,16 +129,18 @@ export class BhMahnungDialog {
         const token = this.token.next();
         const stufe = this.stufe;
         for (const b of this.buttons) b.set_sensitive(false);
-        this.status.set_label('Entwurf wird erstellt …');
+        this.status.set_label(_('Drafting …'));
         try {
             const e = await entwerfeMahnung(entity.id, posten.rechnungId, stufe);
             if (token !== this.token.current) return;
             this.entwurf = e;
-            this.betreff.set_label(`Betreff: ${e.betreff}`);
+            this.betreff.set_label(fmt(_('Subject: {value}'), { value: e.betreff }));
             this.text.set_label(e.text);
             this.status.set_label(
-                `Entwurf Stufe ${e.stufe} · Zahlungsfrist ${deDate(e.zahlungsfrist)} · nicht versendet` +
-                    (e.schonVersandt ? ' · diese Stufe ist schon als versandt vermerkt' : ''),
+                fmt(_('Draft level {level} · payment deadline {date} · not sent'), {
+                    level: e.stufe,
+                    date: deDate(e.zahlungsfrist),
+                }) + (e.schonVersandt ? ` · ${_('this level is already recorded as sent')}` : ''),
             );
             for (const b of this.buttons) b.set_sensitive(true);
         } catch (err) {
@@ -152,14 +159,14 @@ export class BhMahnungDialog {
     private kopieren(): void {
         if (!this.entwurf) return;
         this.dialog.get_clipboard().set_content(Gdk.ContentProvider.new_for_value(this.volltext()));
-        showToast('Entwurf in die Zwischenablage kopiert');
+        showToast(_('Draft copied to the clipboard'));
     }
 
     private speichern(): void {
         const e = this.entwurf;
         if (!e) return;
         const name = `Mahnung-Stufe-${e.stufe}-${(e.nummer ?? e.rechnungId).replace(/[^A-Za-z0-9._-]/g, '_')}.txt`;
-        saveFileViaDialog(this.dialog, name, new TextEncoder().encode(this.volltext()), 'Entwurf');
+        saveFileViaDialog(this.dialog, name, new TextEncoder().encode(this.volltext()), _('Draft'));
     }
 
     /** The owner's own mail program, with subject and text filled in — it is theirs to send. */
@@ -181,21 +188,30 @@ export class BhMahnungDialog {
         const e = this.entwurf;
         if (!e) return;
         const sure = await confirmDialog(this.dialog, {
-            heading: `Stufe ${e.stufe} als versandt markieren?`,
-            body:
-                `Die App versendet nichts. Markiere die ${MAHNSTUFEN[e.stufe].name} zu Rechnung ${e.nummer ?? e.rechnungId} ` +
-                'nur, wenn du sie selbst an den Kunden geschickt hast — danach gilt diese Stufe und die nächste wird erst nach 14 Tagen fällig.',
-            confirmLabel: 'Ja, ich habe sie versendet',
-            cancelLabel: 'Noch nicht',
+            heading: fmt(_('Mark level {level} as sent?'), { level: e.stufe }),
+            body: fmt(
+                _(
+                    'The app sends nothing. Mark the {name} for invoice {number} only once you have sent it to the ' +
+                        'customer yourself — then this level applies and the next one is due only after 14 days.',
+                ),
+                { name: MAHNSTUFEN[e.stufe].name, number: e.nummer ?? e.rechnungId },
+            ),
+            confirmLabel: _('Yes, I sent it'),
+            cancelLabel: _('Not yet'),
         });
         if (!sure) return;
         try {
             await markiereMahnungVersandt(entity.id, posten.rechnungId, e.stufe);
-            showToast(`Stufe ${e.stufe} zu ${e.nummer ?? e.rechnungId} als versandt vermerkt`);
+            showToast(
+                fmt(_('Level {level} for {number} recorded as sent'), {
+                    level: e.stufe,
+                    number: e.nummer ?? e.rechnungId,
+                }),
+            );
             this.dialog.close();
             this.onChanged();
         } catch (err) {
-            await errorDialog(this.dialog, 'Nicht gespeichert', err instanceof Error ? err.message : String(err));
+            await errorDialog(this.dialog, _('Not saved'), err instanceof Error ? err.message : String(err));
         }
     }
 }
