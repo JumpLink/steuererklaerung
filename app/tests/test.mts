@@ -65,6 +65,7 @@ import presentersKonten from './unit/presenters/konten.test.ts';
 import presentersZeiten from './unit/presenters/zeiten.test.ts';
 
 import afa from './unit/lib/afa.test.ts';
+import glossary from './unit/lib/glossary.test.ts';
 import autoLink from './unit/lib/auto-link.test.ts';
 import belegReview from './unit/actions/beleg-review.test.ts';
 import estTarif from './unit/lib/est-tarif.test.ts';
@@ -251,6 +252,7 @@ run({
     presentersKonten,
     presentersZeiten,
     afa,
+    glossary,
     autoLink,
     belegReview,
     estTarif,

@@ -16,10 +16,12 @@ const ROOT = new URL('..', import.meta.url).pathname;
 const GLOSSARY_FILE = join(ROOT, 'src/core/lib/glossary.ts');
 const SEARCH_DIRS = ['src/frontends/desktop', 'src/frontends/web'];
 
-/** Top-level keys of the GLOSSARY object literal. */
-function knownTerms() {
+/** Top-level keys of one glossary object literal (`GLOSSARY` or `GLOSSARY_EN`). */
+function termsOf(name) {
     const src = readFileSync(GLOSSARY_FILE, 'utf8');
-    const body = src.slice(src.indexOf('export const GLOSSARY'));
+    const start = src.indexOf(`export const ${name}:`);
+    const end = src.indexOf('\n};', start);
+    const body = src.slice(start, end);
     return new Set([...body.matchAll(/^ {4}'?([a-zA-Z0-9_-]+)'?:\s*\{/gm)].map((m) => m[1]));
 }
 
@@ -31,8 +33,12 @@ function* walk(dir) {
     }
 }
 
-const known = knownTerms();
+const known = termsOf('GLOSSARY');
 const missing = [];
+// The English UI reads GLOSSARY_EN: a term only one language explains is the same silent hole.
+const english = termsOf('GLOSSARY_EN');
+for (const term of known) if (!english.has(term)) missing.push(`GLOSSARY_EN: '${term}' fehlt`);
+for (const term of english) if (!known.has(term)) missing.push(`GLOSSARY: '${term}' fehlt (nur in GLOSSARY_EN)`);
 // The three shapes a term is referenced in: the widget constructor, the group helper, and the
 // `help: { term: … }` option object the views pass around.
 const patterns = [/new BhGlossaryHelp\(\s*'([^']+)'/g, /helpFor\([^,]+,\s*'([^']+)'/g, /term:\s*'([^']+)'/g];
