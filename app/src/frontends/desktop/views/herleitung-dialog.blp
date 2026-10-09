@@ -1,0 +1,45 @@
+using Gtk 4.0;
+using Adw 1;
+
+// One page of the Herleitung dialog's NavigationView: header bar + a loading/error/content stack.
+// The "content" child is added programmatically once the figure has loaded (see herleitung-dialog.ts).
+template $BhHerleitungPage: Adw.NavigationPage {
+  title: _("Herleitung");
+
+  child: Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar {}
+
+    content: Gtk.Stack stack {
+      Gtk.StackPage {
+        name: "loading";
+
+        child: Gtk.Box {
+          orientation: vertical;
+          valign: center;
+          halign: center;
+          spacing: 12;
+
+          Adw.Spinner {
+            width-request: 32;
+            height-request: 32;
+          }
+
+          Gtk.Label loading_label {
+            label: _("Berechne Herleitung …");
+            styles ["dim-label"]
+          }
+        };
+      }
+
+      Gtk.StackPage {
+        name: "error";
+
+        child: Adw.StatusPage error_page {
+          icon-name: "dialog-error-symbolic";
+          title: _("Konnte nicht laden");
+        };
+      }
+    };
+  };
+}

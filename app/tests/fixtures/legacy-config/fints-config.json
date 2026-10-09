@@ -1,0 +1,12 @@
+{
+  "accounts": [
+    {
+      "name": "musterbank-privat",
+      "url": "https://fints1.example.de/cgi-bin/hbciservlet",
+      "blz": "12345678",
+      "user_id": "musteruser",
+      "product_id": "MUSTER_PRODUCT_ID",
+      "product_version": "1.0"
+    }
+  ]
+}

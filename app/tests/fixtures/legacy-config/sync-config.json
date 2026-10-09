@@ -1,0 +1,87 @@
+{
+  "document_type_ids": {
+    "incoming_invoice": 0,
+    "outgoing_invoice": 0
+  },
+  "custom_field_ids": {
+    "qonto_transaction_id": 0,
+    "qonto_attachment_id": 0,
+    "qonto_transaction_amount": 0,
+    "qonto_settled_at": 0,
+    "qonto_currency": 0,
+    "qonto_label": 0,
+    "qonto_reference": 0,
+    "qonto_vat_amount": 0,
+    "invoice_currency": 0,
+    "invoice_number": 0,
+    "invoice_date": 0,
+    "due_date": 0,
+    "total_net": 0,
+    "total_gross": 0,
+    "tax_amount": 0,
+    "tax_rate": 0,
+    "customer_number": 0,
+    "service_period": 0,
+    "service_period_start": 0,
+    "service_period_end": 0,
+    "supplier_country": 0,
+    "supplier_vat_id": 0,
+    "reverse_charge": 0,
+    "sale_type": 0,
+    "bb_receipt_id": 0,
+    "bb_transaction_id": 0,
+    "norman_attachment_id": 0,
+    "qonto_category": 0,
+    "norman_category": 0,
+    "accounting_category": 0,
+    "cancelled_by": 0,
+    "cancels": 0,
+    "related_documents": 0,
+    "payment_status": 0,
+    "amount_to_pay": 0,
+    "ai_note": 0,
+    "ai_confidence": 0,
+    "ai_reviewed_at": 0,
+    "data_scope": 0
+  },
+  "tag_ids": {
+    "qonto_import": 0,
+    "ai_reviewed": 0,
+    "irrelevant": 0,
+    "duplicate": 0,
+    "school": 0,
+    "finance": 0,
+    "server_infrastructure": 0,
+    "cancelled": 0,
+    "storno": 0,
+    "water": 0,
+    "wastewater": 0,
+    "ai_conflict": 0
+  },
+  "own_correspondent_ids": [],
+  "exclude_tag_ids": [],
+  "preferred_language": "de",
+  "invoice_providers": {
+    "inwx": {
+      "correspondent_id": 0,
+      "document_type_id": 0,
+      "tag_ids": [],
+      "defaults": {
+        "supplier_country": "DE",
+        "supplier_vat_id": "DE999999999",
+        "sale_type": "SERVICES",
+        "reverse_charge": false,
+        "currency": "EUR"
+      }
+    }
+  },
+  "select_field_options": {
+    "sale_type": {},
+    "tax_rate": {},
+    "supplier_country": {},
+    "accounting_category": {},
+    "payment_status": {},
+    "ai_confidence": {},
+    "data_scope": {}
+  }
+}

@@ -1,0 +1,69 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Kontakte view body. Static chrome in Blueprint; the summary + contact rows are filled
+// programmatically (see kontakte-view.ts).
+template $BhKontakteView: Adw.Bin {
+  Gtk.Stack stack {
+    Gtk.StackPage {
+      name: "loading";
+      child: Gtk.Box {
+        orientation: vertical;
+        valign: center;
+        halign: center;
+        spacing: 12;
+
+        Adw.Spinner {
+          width-request: 32;
+          height-request: 32;
+        }
+
+        Gtk.Label {
+          label: "Lade Kontakte …";
+          styles ["dim-label"]
+        }
+      };
+    }
+
+    Gtk.StackPage {
+      name: "error";
+      child: Adw.StatusPage error_page {
+        icon-name: "dialog-error-symbolic";
+        title: "Konnte nicht laden";
+      };
+    }
+
+    Gtk.StackPage {
+      name: "content";
+      child: Gtk.ScrolledWindow {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        child: Adw.Clamp {
+          maximum-size: 900;
+          margin-top: 18;
+          margin-bottom: 18;
+          margin-start: 12;
+          margin-end: 12;
+
+          child: Gtk.Box {
+            orientation: vertical;
+            spacing: 18;
+
+            Adw.PreferencesGroup summary_group {}
+
+            // Filter chips (Alle · Kunden · Lieferanten) — a linked toggle group, filled in TS.
+            Gtk.Box filter_box {
+              halign: start;
+              styles ["linked"]
+            }
+
+            Adw.PreferencesGroup list_group {
+              title: "Alle Kontakte";
+            }
+          };
+        };
+      };
+    }
+  }
+}

@@ -1,0 +1,46 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Chrome of the invoice detail dialog: header with title/subtitle + a loading/error/content stack.
+// The "content" child is added programmatically once the detail has loaded (see rechnung-detail-dialog.ts).
+// Adw.ToolbarView is a final type since libadwaita 1.9, so the template wraps it in an Adw.Bin.
+template $BhRechnungDetailBody: Adw.Bin {
+  child: Adw.ToolbarView {
+      [top]
+      Adw.HeaderBar {
+        title-widget: Adw.WindowTitle window_title {};
+      }
+
+      content: Gtk.Stack stack {
+        Gtk.StackPage {
+          name: "loading";
+
+          child: Gtk.Box {
+            orientation: vertical;
+            valign: center;
+            halign: center;
+            spacing: 12;
+
+            Adw.Spinner {
+              width-request: 32;
+              height-request: 32;
+            }
+
+            Gtk.Label {
+              label: _("Lade Details …");
+              styles ["dim-label"]
+            }
+          };
+        }
+
+        Gtk.StackPage {
+          name: "error";
+
+          child: Adw.StatusPage {
+            icon-name: "dialog-error-symbolic";
+            title: _("Konnte nicht laden");
+          };
+        }
+      };
+  };
+}

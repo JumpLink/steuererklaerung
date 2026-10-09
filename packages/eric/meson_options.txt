@@ -1,0 +1,2 @@
+option('eric_lib_dir', type: 'string', value: '',
+       description: 'Directory containing libericapi.so (user-provided ERiC; e.g. $ERIC_HOME/lib). Empty = search default linker paths.')

@@ -1,0 +1,57 @@
+{
+  "invoices": [
+    {
+      "id": "example-hosting-basic",
+      "entityId": "soleprop",
+      "status": "active",
+      "customer": {
+        "name": "Example Customer GmbH",
+        "qontoClientId": "00000000-0000-0000-0000-000000000000",
+        "email": "billing@example.com"
+      },
+      "description": "Website Hosting example.com",
+      "domains": ["example.com"],
+      "intervalMonths": 12,
+      "nextPeriod": { "start": "2026-07-08", "end": "2027-07-07" },
+      "nextDueDate": "2026-07-08",
+      "reminderLeadDays": 28,
+      "paymentTermsDays": 15,
+      "currency": "EUR",
+      "items": [
+        {
+          "title": "Website Hosting | Basic",
+          "description": "Hosting example.com, Serviceperiode 08.07.2026 - 07.07.2027",
+          "quantity": 1,
+          "unit": "Jahr",
+          "unitPrice": 108,
+          "vatRate": 19
+        }
+      ],
+      "lastInvoice": {
+        "number": "RE-00000",
+        "issueDate": "2025-07-08",
+        "period": { "start": "2025-07-08", "end": "2026-07-07" }
+      },
+      "notes": "Redacted example. Copy to recurring-invoices.json (gitignored) and fill real data."
+    },
+    {
+      "id": "example-multi-domain",
+      "entityId": "soleprop",
+      "status": "active",
+      "customer": {
+        "name": "Example Verein e.V.",
+        "qontoClientId": "00000000-0000-0000-0000-000000000001"
+      },
+      "description": "Website Hosting + weitere Domain",
+      "domains": ["example.org", "example.net"],
+      "intervalMonths": 12,
+      "nextPeriod": { "start": "2026-09-04", "end": "2027-09-03" },
+      "reminderLeadDays": 28,
+      "currency": "EUR",
+      "items": [
+        { "title": "Website Hosting | Basic", "quantity": 1, "unit": "Jahr", "unitPrice": 108, "vatRate": 19 },
+        { "title": "Website Hosting | weitere Domain", "quantity": 1, "unit": "Jahr", "unitPrice": 14, "vatRate": 19 }
+      ]
+    }
+  ]
+}

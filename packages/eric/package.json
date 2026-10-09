@@ -1,0 +1,36 @@
+{
+  "name": "@steuererklaerung/eric",
+  "version": "0.1.0",
+  "license": "LGPL-3.0-or-later",
+  "author": "Pascal Garber",
+  "private": true,
+  "type": "module",
+  "description": "ERiC (ELSTER Rich Client) binding for Node (koffi) and GJS (native gi:// typelib). The ERiC native library is user-provided via ERIC_HOME and is NEVER bundled or published — see README.",
+  "exports": {
+    ".": {
+      "browser": "./src/index.gjs.ts",
+      "node": "./src/index.node.ts",
+      "default": "./src/index.node.ts"
+    }
+  },
+  "gjsify": {
+    "prebuilds": "prebuilds",
+    "platforms": ["linux-x64"]
+  },
+  "scripts": {
+    "check": "tsc --noEmit --project tsconfig.json",
+    "init:meson": "meson setup build . -Deric_lib_dir=\"${ERIC_HOME:?set ERIC_HOME to your ERiC install}/lib\"",
+    "build:meson": "npm run init:meson && meson compile -C build && npm run copy:prebuilds",
+    "rebuild:meson": "rm -rf build && npm run build:meson",
+    "copy:prebuilds": "mkdir -p prebuilds/linux-x86_64 && cp build/libsteuereric.so build/SteuerEric-1.0.gir build/SteuerEric-1.0.typelib prebuilds/linux-x86_64/"
+  },
+  "files": [
+    "src",
+    "meson.build",
+    "meson_options.txt",
+    "prebuilds"
+  ],
+  "dependencies": {
+    "koffi": "^2.15.2"
+  }
+}

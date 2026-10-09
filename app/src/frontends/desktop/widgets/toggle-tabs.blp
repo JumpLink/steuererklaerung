@@ -1,0 +1,21 @@
+using Gtk 4.0;
+
+// The chip bar and the stack it drives. The chips themselves are added per call to `add()` — one
+// per tab, from data — so they stay in TypeScript; what is declared here is the part that never
+// changes. `Gtk.Stack`, not `Adw.ViewStack`, and NOT homogeneous: see toggle-tabs.ts for why.
+template $BhToggleTabs: Gtk.Box {
+  orientation: vertical;
+  spacing: 14;
+
+  Gtk.Box bar {
+    homogeneous: true;
+    hexpand: true;
+
+    styles ["linked"]
+  }
+
+  Gtk.Stack stack {
+    vhomogeneous: false;
+    hhomogeneous: false;
+  }
+}

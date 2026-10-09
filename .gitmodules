@@ -1,0 +1,6 @@
+[submodule "refs/paperless-ngx"]
+	path = refs/paperless-ngx
+	url = https://github.com/paperless-ngx/paperless-ngx
+[submodule "refs/lib-fints"]
+	path = refs/lib-fints
+	url = https://github.com/robocode13/lib-fints.git

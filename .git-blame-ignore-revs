@@ -1,0 +1,4 @@
+# Bulk reformats to ignore in `git blame` (use: git config blame.ignoreRevsFile .git-blame-ignore-revs)
+
+# style(cli): reformat to gjsify oxfmt style (4-space, printWidth 120)
+b45e71ac5f050b0f00e1568c2269720db2956dc2

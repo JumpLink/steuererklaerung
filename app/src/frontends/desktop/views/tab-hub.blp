@@ -1,0 +1,35 @@
+using Gtk 4.0;
+using Adw 1;
+
+// The switcher bar and the stack it drives. The TABS are data — one hub is `configure([...])`d with
+// six of them, another with three — so the pages are added in TypeScript; the chrome is not data
+// and lives here.
+//
+// Adw.InlineViewSwitcher (libadwaita >= 1.7), not the bare Adw.ViewSwitcher: the latter is meant for
+// header bars and renders icon-over-label tiles in content, with phantom empty tab icons. This one
+// is the HIG's segmented control for in-content switching.
+template $BhTabHub: Adw.Bin {
+  child: Gtk.Box {
+    orientation: vertical;
+
+    Gtk.Box {
+      orientation: horizontal;
+      halign: center;
+      margin-top: 12;
+      margin-bottom: 6;
+
+      Adw.InlineViewSwitcher {
+        stack: stack;
+        display-mode: labels;
+
+        styles ["round"]
+      }
+    }
+
+    // Homogeneous is right here: every page is a full-height view, so equal page heights are the
+    // point rather than the Gtk.Stack workaround the variable-height tabs elsewhere need.
+    Adw.ViewStack stack {
+      vexpand: true;
+    }
+  };
+}

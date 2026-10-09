@@ -1,0 +1,34 @@
+using Gtk 4.0;
+
+// The "?" button and its popover. Entirely static: the only things TypeScript changes are the two
+// label texts, which come from the glossary rather than from a caption.
+template $BhGlossaryHelp: Gtk.MenuButton {
+  icon-name: "help-about-symbolic";
+  valign: center;
+
+  styles ["flat", "circular"]
+
+  popover: Gtk.Popover {
+    child: Gtk.Box {
+      orientation: vertical;
+      spacing: 6;
+      margin-top: 10;
+      margin-bottom: 10;
+      margin-start: 12;
+      margin-end: 12;
+
+      Gtk.Label title_label {
+        xalign: 0;
+        wrap: true;
+
+        styles ["heading"]
+      }
+
+      Gtk.Label text_label {
+        xalign: 0;
+        wrap: true;
+        max-width-chars: 34;
+      }
+    };
+  };
+}

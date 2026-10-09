@@ -1,0 +1,74 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Transaktionen view body. Static chrome in Blueprint; the summary + the transaction rows are
+// filled programmatically (see transactions-view.ts) because they're data-driven.
+template $BhTransactionsView: Adw.Bin {
+  Gtk.Stack stack {
+    Gtk.StackPage {
+      name: "loading";
+      child: Gtk.Box {
+        orientation: vertical;
+        valign: center;
+        halign: center;
+        spacing: 12;
+
+        Adw.Spinner {
+          width-request: 32;
+          height-request: 32;
+        }
+
+        Gtk.Label {
+          label: "Lade Transaktionen …";
+          styles ["dim-label"]
+        }
+      };
+    }
+
+    Gtk.StackPage {
+      name: "error";
+      child: Adw.StatusPage error_page {
+        icon-name: "dialog-error-symbolic";
+        title: "Konnte nicht laden";
+      };
+    }
+
+    Gtk.StackPage {
+      name: "content";
+      child: Gtk.ScrolledWindow {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        child: Adw.Clamp {
+          maximum-size: 900;
+          margin-top: 18;
+          margin-bottom: 18;
+          margin-start: 12;
+          margin-end: 12;
+
+          child: Gtk.Box {
+            orientation: vertical;
+            spacing: 18;
+
+            Gtk.Box kpi_box {
+              orientation: vertical;
+            }
+
+            Gtk.SearchEntry search_entry {
+              placeholder-text: "Buchungen durchsuchen …";
+              hexpand: true;
+            }
+
+            // Filter chips (Alle · Einnahmen · Ausgaben · Ohne Beleg) — a linked toggle group, filled in TS.
+            Gtk.Box filter_box {
+              halign: start;
+              styles ["linked"]
+            }
+
+            Adw.PreferencesGroup list_group {}
+          };
+        };
+      };
+    }
+  }
+}

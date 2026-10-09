@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Steuererklärung
+GenericName=Steuererklärung und Buchhaltung
+Comment=EÜR, Umsatzsteuer und Einkommensteuer rechnen und über ERiC an ELSTER übermitteln
+Exec=steuer-app
+Icon=eu.jumplink.Steuererklaerung
+Terminal=false
+Type=Application
+Categories=Office;Finance;GTK;
+Keywords=Steuer;ELSTER;EÜR;Umsatzsteuer;Buchhaltung;Tax;
+StartupNotify=true
+StartupWMClass=eu.jumplink.Steuererklaerung

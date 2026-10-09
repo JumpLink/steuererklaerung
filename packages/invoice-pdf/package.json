@@ -1,0 +1,26 @@
+{
+  "name": "@steuererklaerung/invoice-pdf",
+  "version": "0.1.0",
+  "license": "LGPL-3.0-or-later",
+  "author": "Pascal Garber",
+  "private": true,
+  "type": "module",
+  "description": "Invoice PDF renderer for the self invoicing provider. Runtime-agnostic layout/model + a GJS (cairo/Pango) renderer; on Node the renderer is a stub (PDF rendering needs the GJS runtime). DIN 5008 layout, per-VAT-rate totals, SEPA GiroCode. Pure TypeScript.",
+  "exports": {
+    ".": {
+      "browser": "./src/index.gjs.ts",
+      "node": "./src/index.node.ts",
+      "default": "./src/index.node.ts"
+    }
+  },
+  "scripts": {
+    "check": "tsc --noEmit --project tsconfig.json"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "@steuererklaerung/store": "*",
+    "qrcode": "^1.5.4"
+  }
+}

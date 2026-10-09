@@ -1,0 +1,132 @@
+name: Release
+
+# Tag-triggered, plus a manual run so the whole chain can be exercised without cutting a release.
+#
+# The point of this workflow is NOT that a package is produced — `gjsify ship` does that in a few
+# seconds and a package that builds proves nothing. The point is the two steps after it: INSTALL the
+# package with the system package manager, and START what it installed. Both findings that cost the
+# most in this project's packaging were invisible until then — `ship` staged the test bundles beside
+# the app, and the `Gda` typelib (the whole database layer) had no declared dependency, so the
+# package would have installed cleanly and died at the first import on a stranger's machine.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    container:
+      # Fedora, because the install proof needs a package manager that resolves the rpm's Requires
+      # for real. The same reasoning as ci.yml: every system library named explicitly, nothing
+      # arriving transitively.
+      image: fedora:44
+    steps:
+      - name: Install build prerequisites
+        run: >
+          dnf install -y --setopt=install_weak_deps=False
+          git tar xz findutils
+          gjs
+          libsoup3 json-glib gnutls libnghttp2
+          libgda libgda-sqlite
+          pango cairo
+          gettext
+
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Bootstrap the gjsify CLI
+        run: |
+          VERSION=$(node -p "require('./app/package.json').devDependencies['@gjsify/cli']")
+          npm install -g "@gjsify/cli@$VERSION"
+
+      - name: Install dependencies
+        run: gjsify install --immutable
+
+      # Not `--skip-build`: a release must package what a clean build produces, not whatever
+      # happens to be lying in dist/ from an earlier step.
+      # BEFORE ship, because `gjsify.ship.localeDir` points at `dist/locale` and nothing else
+      # creates it. Without this the package installs with no catalogues at all and every user sees
+      # English -- which is indistinguishable from an app nobody has translated, so it would not be
+      # reported. `msgfmt` comes from the gettext package added above.
+      - name: Compile the translation catalogues
+        run: cd app && gjsify run i18n:compile
+
+      - name: Build the app bundle
+        run: cd app && gjsify run build:app
+
+      - name: Third-party licences are all decided
+        run: cd app && gjsify run check:licenses
+
+      - name: Pack deb and rpm
+        run: cd app && gjsify ship --skip-build
+
+      # The package must contain the APP and nothing else. `ship` stages every file beside the
+      # bundle, so a stray build output next to it silently becomes part of the release — this is
+      # the check that turns that back into a red build instead of a bloated download.
+      - name: No test or CLI bundle in the package
+        run: |
+          set -eu
+          LIST=$(rpm -qlp app/ship/out/*.rpm)
+          echo "$LIST"
+          for stray in test. steuer.gjs.mjs steuer.node.mjs storybook; do
+            if echo "$LIST" | grep -q "$stray"; then
+              echo "::error::$stray is in the package"; exit 1
+            fi
+          done
+
+      # THE step. `dnf install` resolves every `Requires:` the package declares — an undeclared
+      # runtime dependency fails here instead of on a user's machine after the download.
+      - name: Install the package
+        run: dnf install -y --setopt=install_weak_deps=False ./app/ship/out/*.rpm
+
+      # And the step after THAT: what was installed has to start. Under Xvfb because a GTK app
+      # needs a display, and inside `dbus-run-session` because the devtools control plane — the
+      # only way to ask a running GUI whether it is alive — speaks over the session bus.
+      - name: Install the runtime the start proof needs
+        run: dnf install -y --setopt=install_weak_deps=False xorg-x11-server-Xvfb dbus-daemon
+
+      - name: The installed app starts
+        run: |
+          set -eu
+          cat > /tmp/prove.sh <<'SH'
+          set -eu
+          export GJSIFY_DEVTOOLS=1 STEUER_APP_ID=eu.jumplink.Steuererklaerung.CI
+          export HOME=/tmp/fresh XDG_DATA_HOME=/tmp/fresh/data XDG_CONFIG_HOME=/tmp/fresh/config
+          mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME"
+          steuererklaerung &
+          APP=$!
+          for _ in $(seq 1 60); do
+            if gdbus call --session --dest eu.jumplink.Steuererklaerung.CI \
+                 --object-path /eu/jumplink/Steuererklaerung/CI/devtools \
+                 --method org.gjsify.Devtools.GetStatus >/tmp/status.json 2>/dev/null; then
+              echo "the installed app answered:"; cat /tmp/status.json
+              kill "$APP" 2>/dev/null || true
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::the installed app never answered GetStatus — it did not start"
+          kill "$APP" 2>/dev/null || true
+          exit 1
+          SH
+          chmod +x /tmp/prove.sh
+          # A fresh HOME on purpose: this is the first launch a stranger gets, and the run must
+          # prove THAT one works, not one with a config left behind by an earlier step.
+          xvfb-run -a dbus-run-session -- /tmp/prove.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: app/ship/out/*
+
+      # Only for a tag — a manual run exercises the chain without publishing anything.
+      - name: Attach to the release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${GITHUB_REF_NAME}" app/ship/out/* --clobber

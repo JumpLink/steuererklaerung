@@ -1,0 +1,57 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Übersicht / Home view body. Static chrome in Blueprint; the KPI cards, charts, category bars,
+// liquidity and "Als Nächstes" list are built programmatically into content_box (see home-view.ts).
+template $BhHomeView: Adw.Bin {
+  Gtk.Stack stack {
+    Gtk.StackPage {
+      name: "loading";
+      child: Gtk.Box {
+        orientation: vertical;
+        valign: center;
+        halign: center;
+        spacing: 12;
+
+        Adw.Spinner {
+          width-request: 32;
+          height-request: 32;
+        }
+
+        Gtk.Label {
+          label: "Lade Übersicht …";
+          styles ["dim-label"]
+        }
+      };
+    }
+
+    Gtk.StackPage {
+      name: "error";
+      child: Adw.StatusPage error_page {
+        icon-name: "dialog-error-symbolic";
+        title: "Konnte nicht laden";
+      };
+    }
+
+    Gtk.StackPage {
+      name: "content";
+      child: Gtk.ScrolledWindow {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        child: Adw.Clamp {
+          maximum-size: 1040;
+          margin-top: 18;
+          margin-bottom: 24;
+          margin-start: 12;
+          margin-end: 12;
+
+          child: Gtk.Box content_box {
+            orientation: vertical;
+            spacing: 16;
+          };
+        };
+      };
+    }
+  }
+}

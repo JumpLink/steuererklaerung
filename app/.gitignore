@@ -1,0 +1,83 @@
+# System files
+.DS_Store
+Thumbs.db
+
+# Private/Sensitive data (just in case)
+*.key
+*.pem
+secrets.sh
+.env
+
+# Config files
+sync-config.json
+elster-config.json
+fints-config.json
+
+# Private-ESt config (enthält die persönliche Steuer-IdNr + Lohnsteuerbescheinigung).
+# Die getrackte Vorlage est-config.example.json + die Demo-Datei bleiben bewusst versioniert.
+est-config.json
+est-config-*.json
+
+# Workspace manifest = entity registry (binds IBAN-bearing account keys → firms).
+# BOTH names: `buchhaltung.json` is what the file is called on every installation that predates
+# the rename to `steuererklaerung`, it is still READ (see core/config/manifest.ts), and it holds
+# the same real Steuernummern + account keys. Dropping the old pattern here would have made a
+# live 46 KB config `git add`-able overnight.
+steuererklaerung.json
+buchhaltung.json
+
+# Config-migrate backups (`steuererklaerung.json.bak-<timestamp>`) — snapshots of the pre-migration
+# registry, may contain real account keys. Never commit them.
+*.bak-*
+
+# Recurring outgoing invoices = real customer names + amounts (billing schedule).
+# The redacted recurring-invoices.example.json is tracked as documentation.
+recurring-invoices.json
+
+# Entitätsspezifische ELSTER-Configs (enthalten echte Steuernummern, z. B. elster-config-gbr.json)
+# Die getrackte Vorlage elster-config.example.json wird vom Muster bewusst NICHT erfasst.
+elster-config-*.json
+
+# FinTS persisted banking data (BPD/UPD)
+fints-data/
+
+# Unified transaction store (private + business bank transactions + sync cursors)
+transactions-data/
+
+# cli/elster/ = local ELSTER working dir: generated XML (real tax data) + the
+# user-provided, NON-redistributable ERiC runtime/JAR/schemas. All gitignored
+# except the tracked README that documents the bring-your-own layout.
+/elster/*
+!/elster/README.md
+
+# Downloaded invoices (cli-root output dir; anchored so it does NOT match src/actions/invoices/)
+/invoices/
+
+# ── Demo workspace (cli/demo): INTENTIONALLY committed. Fictional "Fischer & Weber GbR" data that
+# ships with the app so users (and we) can try it via STEUER_DEMO=1. Re-include it despite the privacy
+# by-name ignores above (steuererklaerung.json / buchhaltung.json / sync-config.json /
+# elster-config.json / transactions-data/).
+# The regenerated SQLite ledger + sync cursors stay ignored via cli/demo/.gitignore.
+!demo/steuererklaerung.json
+!demo/sync-config.json
+!demo/elster-config.json
+!demo/est-config.json
+!demo/transactions-data/
+
+# ── Test fixtures (cli/tests/fixtures/legacy-config): INTENTIONALLY committed. Fictional Muster
+# legacy configs the config-migrate tests run against. Re-include them despite the by-name privacy
+# ignores above (steuererklaerung.json / buchhaltung.json / sync-config.json / elster-config*.json /
+# est-config*.json / fints-config.json / recurring-invoices.json) — same mechanism as the demo/
+# re-includes.
+!tests/fixtures/legacy-config/
+!tests/fixtures/legacy-config/*.json
+
+# Exported documents (cli-root output dir)
+/exports/
+
+# Temporary files
+*.tmp
+*.log
+
+# NPM
+node_modules

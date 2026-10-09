@@ -1,0 +1,48 @@
+using Gtk 4.0;
+using Adw 1;
+
+// The card: avatar, name, role line, chevron, inside the button that opens the entity popover.
+// The popover's CONTENT is the entity list plus the manage rows, which are data — see
+// entity-switcher.ts. Everything the card itself is made of is fixed and lives here.
+template $BhEntitySwitcher: Adw.Bin {
+  child: Gtk.MenuButton button {
+    styles ["flat"]
+
+    popover: Gtk.Popover popover {};
+
+    child: Gtk.Box {
+      orientation: horizontal;
+      spacing: 10;
+
+      Adw.Avatar avatar {
+        size: 32;
+        show-initials: true;
+      }
+
+      Gtk.Box {
+        orientation: vertical;
+        hexpand: true;
+
+        Gtk.Label name_label {
+          xalign: 0;
+          ellipsize: end;
+
+          styles ["heading"]
+        }
+
+        Gtk.Label sub_label {
+          xalign: 0;
+          ellipsize: end;
+
+          styles ["dim-label", "caption"]
+        }
+      }
+
+      Gtk.Image chevron {
+        icon-name: "pan-down-symbolic";
+
+        styles ["dim-label"]
+      }
+    };
+  };
+}

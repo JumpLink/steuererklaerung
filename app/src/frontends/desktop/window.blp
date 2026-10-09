@@ -1,0 +1,170 @@
+using Gtk 4.0;
+using Adw 1;
+
+menu primary_menu {
+  item {
+    // TRANSLATORS: Primary menu item opening the assistant that adds a further entity
+    label: _("Set up entity …");
+    action: "win.setup";
+  }
+
+  item {
+    // TRANSLATORS: Primary menu item listing the keyboard shortcuts
+    label: _("Keyboard shortcuts");
+    action: "win.shortcuts";
+  }
+
+  item {
+    // TRANSLATORS: Primary menu item opening the about dialog. "Steuererklärung" is the
+    // application name and stays untranslated.
+    label: _("About Steuererklärung");
+    action: "app.about";
+  }
+
+  item {
+    // TRANSLATORS: Primary menu item that closes the application
+    label: _("Quit");
+    action: "app.quit";
+  }
+}
+
+template $BhMainWindow: Adw.ApplicationWindow {
+  width-request: 360;
+  height-request: 480;
+
+  // Collapse to a single pane on narrow widths (phone/tablet), like the web sidebar overlay.
+  // In TypeScript each of these needed a boxed GObject.Value: `add_setter` takes one, and the
+  // looser @girs typings happened to accept a raw boolean while the stricter ones do not.
+  [breakpoint]
+  Adw.Breakpoint {
+    condition ("max-width: 720px")
+
+    setters {
+      split_view.collapsed: true;
+    }
+  }
+
+  // The assistant panel docks side-by-side at >=1180px and overlays below that.
+  [breakpoint]
+  Adw.Breakpoint {
+    condition ("min-width: 1180px")
+
+    setters {
+      assistant_split.collapsed: false;
+    }
+  }
+
+  content: Adw.NavigationSplitView split_view {
+    min-sidebar-width: 260;
+    max-sidebar-width: 340;
+
+    sidebar: Adw.NavigationPage sidebar_page {
+      tag: "sidebar";
+
+      child: Adw.ToolbarView {
+        [top]
+        Adw.HeaderBar {
+          title-widget: Adw.WindowTitle sidebar_title {
+            // TRANSLATORS: Subtitle under the app name in the sidebar header, marking this as the
+            // native front-end beside the web one
+            subtitle: _("Native preview");
+          };
+
+          [end]
+          Gtk.MenuButton {
+            icon-name: "open-menu-symbolic";
+            primary: true;
+            menu-model: primary_menu;
+          }
+        }
+
+        content: Gtk.Box {
+          orientation: vertical;
+
+          // Identity block over the nav (design): whose books, and which year, where the
+          // navigation lives.
+          Gtk.Box {
+            orientation: vertical;
+            spacing: 10;
+            margin-top: 8;
+            margin-bottom: 10;
+            margin-start: 10;
+            margin-end: 10;
+
+            $BhEntitySwitcher entity_switcher {}
+
+            $BhYearSwitcher year_switcher {}
+          }
+
+          Gtk.Separator {}
+
+          Gtk.ScrolledWindow {
+            vexpand: true;
+            hscrollbar-policy: never;
+
+            child: Gtk.ListBox nav_list {
+              selection-mode: single;
+
+              styles ["navigation-sidebar"]
+            };
+          }
+        };
+      };
+    };
+
+    content: Adw.NavigationPage content_page {
+      tag: "content";
+
+      child: Adw.ToolbarView {
+        [top]
+        Adw.HeaderBar {
+          title-widget: Adw.WindowTitle content_title {};
+
+          [end]
+          Gtk.Button sync_button {
+            icon-name: "view-refresh-symbolic";
+            // TRANSLATORS: Tooltip on the headerbar button that syncs Qonto and Paperless
+            tooltip-text: _("Sync");
+          }
+
+          [end]
+          Gtk.ToggleButton {
+            icon-name: "starred-symbolic";
+            // TRANSLATORS: Tooltip on the button revealing the AI assistant side panel
+            tooltip-text: _("Assistant");
+            // Two-way, so the panel's own close button unpresses the toggle.
+            active: bind assistant_split.show-sidebar bidirectional;
+          }
+        }
+
+        content: Adw.OverlaySplitView assistant_split {
+          sidebar-position: end;
+          collapsed: true;
+          show-sidebar: false;
+          min-sidebar-width: 300;
+          max-sidebar-width: 460;
+          sidebar-width-fraction: 0.32;
+
+          // A ToastOverlay around the content so views and dialogs can show transient
+          // confirmations from anywhere.
+          content: Adw.ToastOverlay toast_overlay {
+            child: Gtk.Box {
+              orientation: vertical;
+
+              Adw.Banner banner {
+                revealed: false;
+              }
+
+              Gtk.Stack stack {
+                transition-type: crossfade;
+                vexpand: true;
+              }
+            };
+          };
+
+          sidebar: $BhAssistentPanel assistant_panel {};
+        };
+      };
+    };
+  };
+}

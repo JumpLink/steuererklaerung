@@ -1,0 +1,47 @@
+{
+  "domrobot-client": {
+    "route": "MIT laut README",
+    "note": "Das package.json trägt kein license-Feld; README.md sagt MIT. Kein Konflikt mit der Auslieferung, nur eine fehlende maschinenlesbare Angabe — bei INWX gemeldet gehört es trotzdem."
+  },
+  "lib-fints": {
+    "route": "mitgebündelt, LGPL-Auflagen erfüllt",
+    "shipText": true,
+    "note": "LGPL-2.1-or-later, unverändert und statisch ins Bundle gelinkt. Die Auflagen sind erfüllt: der Lizenztext liegt unter licenses/, die Version steht oben, und der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich — damit kann jeder die Bibliothek durch eine eigene Fassung ersetzen und neu bauen (§6). Upstream: https://github.com/robocode13/lib-fints"
+  },
+  "@curlew/smtp": {
+    "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
+    "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
+  },
+  "@steuererklaerung/charts": {
+    "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
+    "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
+  },
+  "@steuererklaerung/dms": {
+    "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
+    "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
+  },
+  "@steuererklaerung/eric": {
+    "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
+    "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
+  },
+  "@steuererklaerung/invoice-pdf": {
+    "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
+    "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
+  },
+  "@steuererklaerung/kredit": {
+    "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
+    "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
+  },
+  "@steuererklaerung/paperless": {
+    "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
+    "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
+  },
+  "@steuererklaerung/shared": {
+    "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
+    "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
+  },
+  "@steuererklaerung/store": {
+    "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
+    "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
+  }
+}

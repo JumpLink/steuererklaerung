@@ -1,0 +1,81 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Steuer/EÜR view body. Static chrome in Blueprint; the figures, category lines and Kennzahlen
+// are filled programmatically (see steuer-view.ts) from the EÜR aggregate.
+template $BhSteuerView: Adw.Bin {
+  Gtk.Stack stack {
+    Gtk.StackPage {
+      name: "loading";
+      child: Gtk.Box {
+        orientation: vertical;
+        valign: center;
+        halign: center;
+        spacing: 12;
+
+        Adw.Spinner {
+          width-request: 32;
+          height-request: 32;
+        }
+
+        Gtk.Label {
+          label: "Berechne EÜR …";
+          styles ["dim-label"]
+        }
+      };
+    }
+
+    Gtk.StackPage {
+      name: "error";
+      child: Adw.StatusPage error_page {
+        icon-name: "dialog-error-symbolic";
+        title: "Konnte nicht laden";
+      };
+    }
+
+    Gtk.StackPage {
+      name: "content";
+      child: Gtk.ScrolledWindow {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        child: Adw.Clamp {
+          maximum-size: 900;
+          margin-top: 18;
+          margin-bottom: 18;
+          margin-start: 12;
+          margin-end: 12;
+
+          child: Gtk.Box {
+            orientation: vertical;
+            spacing: 18;
+
+            Adw.Banner unclassified_banner {
+              revealed: false;
+            }
+
+            Adw.PreferencesGroup summary_group {}
+
+            Adw.PreferencesGroup income_group {
+              title: "Einnahmen";
+              description: "Betriebseinnahmen nach Kategorie";
+            }
+
+            Adw.PreferencesGroup expense_group {
+              title: "Ausgaben";
+              description: "Betriebsausgaben nach Kategorie";
+            }
+
+            Adw.PreferencesGroup kennzahlen_group {}
+
+            Adw.PreferencesGroup uste_group {}
+
+            Adw.PreferencesGroup gewst_group {}
+
+            Adw.PreferencesGroup fest_group {}
+          };
+        };
+      };
+    }
+  }
+}

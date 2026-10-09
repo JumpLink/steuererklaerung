@@ -1,0 +1,58 @@
+using Gtk 4.0;
+using Adw 1;
+
+// „Offene Forderungen" tab of the Rechnungen hub — open items by age, the open invoices with Mahnstufe and
+// Verjährung, and how each customer pays. The groups are filled programmatically (see
+// forderungen-view.ts).
+template $BhForderungenView: Adw.Bin {
+  Gtk.Stack stack {
+    Gtk.StackPage {
+      name: "loading";
+      child: Gtk.Box {
+        orientation: vertical;
+        valign: center;
+        halign: center;
+        spacing: 12;
+
+        Adw.Spinner {
+          width-request: 32;
+          height-request: 32;
+        }
+
+        Gtk.Label {
+          label: "Lade Forderungen …";
+          styles ["dim-label"]
+        }
+      };
+    }
+
+    Gtk.StackPage {
+      name: "error";
+      child: Adw.StatusPage error_page {
+        icon-name: "dialog-error-symbolic";
+        title: "Konnte nicht laden";
+      };
+    }
+
+    Gtk.StackPage {
+      name: "content";
+      child: Gtk.ScrolledWindow scroller {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        child: Adw.Clamp {
+          maximum-size: 860;
+          margin-top: 18;
+          margin-bottom: 24;
+          margin-start: 16;
+          margin-end: 16;
+
+          child: Gtk.Box content_box {
+            orientation: vertical;
+            spacing: 24;
+          };
+        };
+      };
+    }
+  }
+}

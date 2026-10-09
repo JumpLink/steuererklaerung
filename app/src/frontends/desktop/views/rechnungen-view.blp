@@ -1,0 +1,87 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Rechnungen view body. Static chrome in Blueprint; the recurring reminders + the issued-invoice
+// rows are filled programmatically (see rechnungen-view.ts).
+template $BhRechnungenView: Adw.Bin {
+  Gtk.Stack stack {
+    Gtk.StackPage {
+      name: "loading";
+      child: Gtk.Box {
+        orientation: vertical;
+        valign: center;
+        halign: center;
+        spacing: 12;
+
+        Adw.Spinner {
+          width-request: 32;
+          height-request: 32;
+        }
+
+        Gtk.Label {
+          label: "Lade Rechnungen …";
+          styles ["dim-label"]
+        }
+      };
+    }
+
+    Gtk.StackPage {
+      name: "error";
+      child: Adw.StatusPage error_page {
+        icon-name: "dialog-error-symbolic";
+        title: "Konnte nicht laden";
+      };
+    }
+
+    Gtk.StackPage {
+      name: "notice";
+      child: Adw.StatusPage notice_page {
+        icon-name: "dialog-information-symbolic";
+        title: "Kein Qonto-Konto";
+      };
+    }
+
+    Gtk.StackPage {
+      name: "content";
+      child: Gtk.ScrolledWindow {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        child: Adw.Clamp {
+          maximum-size: 900;
+          margin-top: 18;
+          margin-bottom: 18;
+          margin-start: 12;
+          margin-end: 12;
+
+          child: Gtk.Box {
+            orientation: vertical;
+            spacing: 18;
+
+            Gtk.Box kpi_box {
+              orientation: vertical;
+            }
+
+            Adw.PreferencesGroup recurring_group {
+              title: "Wiederkehrende Rechnungen";
+            }
+
+            // The filter chips + "Neue Rechnung" used to be this group's header_suffix. At 1280 px
+            // with the assistant docked they ask for more width than the header has, and GTK takes
+            // it out of the TITLE and DESCRIPTION: the title became a bare "…" and "7 gesamt"
+            // wrapped to one character per line. Above the group they simply have the full width.
+            Gtk.Box invoices_toolbar {
+              orientation: horizontal;
+              spacing: 8;
+              margin-bottom: 6;
+            }
+
+            Adw.PreferencesGroup invoices_group {
+              title: "Alle Rechnungen";
+            }
+          };
+        };
+      };
+    }
+  }
+}

@@ -1,0 +1,126 @@
+{
+    "$schema-note": "Gelesen von dev/check-field-coverage.js. Schlüssel sind <Schema-Datei>:<Feld> — nie ein nackter Feldname, weil `spenden` und `adresse` je zweimal vorkommen. Jede Gruppe braucht eine Begründung; die Feldliste soll schrumpfen.",
+    "groups": {
+        "finanzierung-hat-keine-ansicht": {
+            "reason": "Die Immobilien-/Sanierungsfinanzierung hat heute nur eine CLI-Oberfläche (src/frontends/cli/finanzierung.ts). Hier fehlt keine einzelne Zeile, sondern die ganze Ansicht — jedes Feld einzeln zu begründen hieße, dieselbe Begründung dreißigmal zu schreiben. Wenn die Ansicht kommt, verschwindet diese Gruppe am Stück.",
+            "fields": [
+                "finanzierung.ts:adresse",
+                "finanzierung.ts:eigentuemer",
+                "finanzierung.ts:wohnflaeche_qm",
+                "finanzierung.ts:baujahr",
+                "finanzierung.ts:grunderwerbsteuer_prozent",
+                "finanzierung.ts:notar_grundbuch_prozent",
+                "finanzierung.ts:makler_prozent",
+                "finanzierung.ts:abloesung",
+                "finanzierung.ts:auszahlung_verkaeufer",
+                "finanzierung.ts:sanierung",
+                "finanzierung.ts:kaufpreis",
+                "finanzierung.ts:eigenkapital",
+                "finanzierung.ts:betrag_monat",
+                "finanzierung.ts:sicher",
+                "finanzierung.ts:quelle",
+                "finanzierung.ts:entfaellt_nach_kauf",
+                "finanzierung.ts:erst_nach_kauf",
+                "finanzierung.ts:in_pauschale",
+                "finanzierung.ts:erster_erwachsener",
+                "finanzierung.ts:weiterer_erwachsener",
+                "finanzierung.ts:erwachsene",
+                "finanzierung.ts:puffer_prozent",
+                "finanzierung.ts:sollzins",
+                "finanzierung.ts:tilgung",
+                "finanzierung.ts:zinsbindung_jahre",
+                "finanzierung.ts:sondertilgung_pro_jahr",
+                "finanzierung.ts:disagio_prozent",
+                "finanzierung.ts:gebuehren",
+                "finanzierung.ts:notiz",
+                "finanzierung.ts:paperless_id"
+            ]
+        },
+        "klassifizierung-ueber-needle-list-meta": {
+            "reason": "Erreichbar im Einstellungs-Editor „Klassifizierung“, aber nicht unter diesem Namen: die Ansicht iteriert NEEDLE_LIST_META aus core/actions/classification-rules.ts, statt die fünf Listen einzeln zu nennen. Der Prüfer sieht nur den Text der Desktop-Dateien — bewusst, weil ihn eine Runde weiter zu lassen drei echte Lücken (finanzamt, rechtsform, einkunftsart) verschluckt hat.",
+            "fields": [
+                "elster.ts:eigene_konten",
+                "elster.ts:privat_gegenseiten",
+                "elster.ts:gesellschafter_gegenseiten",
+                "elster.ts:ksk_kennungen",
+                "elster.ts:erloes_gegenseiten",
+                "elster.ts:nachtraeglich_gbr_ausgaben_gegenseiten"
+            ]
+        },
+        "paperless-ids-kommen-von-paperless": {
+            "reason": "Nummern, die die Paperless-Instanz vergibt (Tags, Custom Fields, Korrespondenten). Sie werden beim Einrichten ermittelt und geschrieben; eine Zeile, in die man eine nackte ID tippt, wäre keine bedienbare Oberfläche, sondern der Texteditor mit Rahmen. own_correspondent_ids und exclude_tag_ids sind die Ausnahme davon — das sind echte Entscheidungen („welcher Korrespondent bin ich“, „welche Tags sind privat“) und gehören als Auswahl über die vorhandenen Tags gebaut, nicht als Zahlenfeld.",
+            "fields": [
+                "paperless.ts:supplier_country",
+                "paperless.ts:supplier_vat_id",
+                "paperless.ts:sale_type",
+                "paperless.ts:tag_ids",
+                "paperless.ts:own_correspondent_ids",
+                "paperless.ts:exclude_tag_ids",
+                "elster.ts:exclude_tags",
+                "elster.ts:include_tags"
+            ]
+        },
+        "fints-aus-dem-dialog-ermittelt": {
+            "reason": "Der FinTS-Dialog fragt, was die Bank einem nennt: BLZ, URL, Login, Produkt-ID. Diese vier fallen dagegen im Protokoll an — die TAN-Verfahren und -Medien liefert die Bank beim ersten Dialog, die Kunden-ID ist in aller Regel der Login, und product_version ist eine Registrierungskonstante. Von Hand eingetippt wären sie nur eine weitere Gelegenheit, sich zu vertippen.",
+            "fields": [
+                "fints.ts:product_version",
+                "fints.ts:tan_method_id",
+                "fints.ts:tan_media_name",
+                "fints.ts:customer_id"
+            ]
+        },
+        "anlage-kind-zusatzangaben": {
+            "reason": "Der Kinder-Editor pflegt Name, IdNr, Geburtsdatum und die Zuordnung. Diese vier gehören zur ausführlichen Anlage Kind (Schulbesuch, Wohnsitz beim anderen Elternteil) und haben noch keine Zeile — nicht weil sie unwichtig sind, sondern weil der Dialog dafür einen zweiten Abschnitt braucht.",
+            "fields": [
+                "est.ts:schule",
+                "est.ts:von_mir",
+                "est.ts:adresse",
+                "est.ts:wohnsitz_unbekannt"
+            ]
+        },
+        "gesellschafter-haben-keinen-editor": {
+            "reason": "Anrede gehört zum Gesellschafter der Anlage FB. Die Gesellschafterliste hat überhaupt keinen Editor in den Einstellungen — sie wird im Einrichtungs-Assistenten angelegt und danach nur noch angezeigt. Auch hier fehlt eine Ansicht, kein Feld.",
+            "fields": ["elster.ts:anrede"]
+        },
+        "interne-und-abgeleitete-felder": {
+            "reason": "Keine Eingaben: schema_version schreibt die Migration, quell_transaktion_id und transaktion_id sind Verweise, die beim Verbuchen entstehen, ziel ist ein Intake-Ergebnis, und arbeitskosten ist der Lohnanteil eines §35a-Postens, der mit dem Posten selbst gepflegt wird. Eine Zeile dafür würde etwas zum Eintippen anbieten, das die Anwendung besser weiß.",
+            "fields": [
+                "elster.ts:schema_version",
+                "elster.ts:quell_transaktion_id",
+                "est.ts:transaktion_id",
+                "est.ts:ziel",
+                "est.ts:arbeitskosten"
+            ]
+        },
+        "pfade-und-experten-uebersteuerungen": {
+            "reason": "Ausgabeverzeichnis und XSD-Pfad sind Angaben für den CLI-Lauf; in der App entscheidet der Speichern-Dialog, wohin eine Datei geht. afa_override setzt die berechnete AfA außer Kraft — eine Übersteuerung, die man begründen können muss, und deshalb bewusst kein Feld neben dem Anlagegut, sondern eine Angabe im Manifest.",
+            "fields": [
+                "elster.ts:output_directory",
+                "elster.ts:xsd_path",
+                "est.ts:output_directory",
+                "elster.ts:afa_override"
+            ]
+        },
+        "doppelzahlung-ueber-entscheidung": {
+            "reason": "Erreichbar im Rechnungsdetail (views/rechnung-detail-dialog.ts, „Ist eine Doppelzahlung“, „Rückzahlung verknüpfen“, „Außerhalb zurückgezahlt“), aber nicht unter diesem Namen: die Ansicht ruft entscheideDoppelzahlung() aus core/actions/invoices/doppelzahlung.ts mit txId / refundTxId / datum auf, und erst der Core schreibt daraus transaktion_id, rueckzahlung_transaktion_id und rueckzahlung_am in die Anpassungen. Der Prüfer sieht nur den Text der Desktop-Dateien.",
+            "fields": [
+                "elster.ts:transaktion_id",
+                "elster.ts:rueckzahlung_transaktion_id",
+                "elster.ts:rueckzahlung_am"
+            ]
+        },
+        "hinweis-in-ordnung": {
+            "reason": "Erreichbar über „Als in Ordnung markieren“ an jedem Hinweis (views/hinweis-handlung.ts, Einblicke-Karten und „Als Nächstes“), aber nicht unter diesem Namen: die Ansicht ruft markHinweisInOrdnung() aus core/presenters/hinweise.ts mit dem Schlüssel des Hinweises auf, und erst der Core schreibt den Fingerabdruck des aktuellen Befunds und das Datum. Beides zum Eintippen anzubieten hieße, etwas abzufragen, das die Anwendung besser weiß.",
+            "fields": [
+                "entity.ts:fingerprint",
+                "entity.ts:geprueft_am"
+            ]
+        },
+        "laufende-kosten-entscheidungsdatum": {
+            "reason": "Schlüssel, Status, Abstand und Betrag setzt der Tab „Laufende Kosten“ im Buchungen-Hub (views/laufende-kosten-view.ts: Bestätigen, Korrigieren, Keine, Beendet, Zurücknehmen). Das Datum der Entscheidung schreibt der Core (entscheideLaufendeKosten() in core/presenters/laufende-kosten.ts) beim Klick — es zum Eintippen anzubieten hieße, etwas abzufragen, das die Anwendung besser weiß. Es entscheidet, ob eine spätere Preisänderung als Hinweis kommt.",
+            "fields": [
+                "entity.ts:entschieden_am"
+            ]
+        }
+    }
+}

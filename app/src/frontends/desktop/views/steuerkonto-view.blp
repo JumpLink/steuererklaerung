@@ -1,0 +1,67 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Zahlungen / Steuerkonto view body. Static chrome in Blueprint; the summary, the internal-reserve
+// banner and the per-tax-type groups are filled programmatically (see steuerkonto-view.ts).
+template $BhSteuerkontoView: Adw.Bin {
+  Gtk.Stack stack {
+    Gtk.StackPage {
+      name: "loading";
+      child: Gtk.Box {
+        orientation: vertical;
+        valign: center;
+        halign: center;
+        spacing: 12;
+
+        Adw.Spinner {
+          width-request: 32;
+          height-request: 32;
+        }
+
+        Gtk.Label {
+          label: "Lade Steuerzahlungen …";
+          styles ["dim-label"]
+        }
+      };
+    }
+
+    Gtk.StackPage {
+      name: "error";
+      child: Adw.StatusPage error_page {
+        icon-name: "dialog-error-symbolic";
+        title: "Konnte nicht laden";
+      };
+    }
+
+    Gtk.StackPage {
+      name: "content";
+      child: Gtk.ScrolledWindow {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        child: Adw.Clamp {
+          maximum-size: 900;
+          margin-top: 18;
+          margin-bottom: 18;
+          margin-start: 12;
+          margin-end: 12;
+
+          child: Gtk.Box {
+            orientation: vertical;
+            spacing: 18;
+
+            Adw.Banner reserve_banner {
+              revealed: false;
+            }
+
+            Adw.PreferencesGroup summary_group {}
+
+            Adw.PreferencesGroup list_group {
+              title: "Nach Steuerart";
+            }
+          };
+        };
+      };
+    }
+  }
+}

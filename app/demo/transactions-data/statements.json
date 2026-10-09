@@ -1,0 +1,114 @@
+{
+  "qonto:demo-fw-geschaeft": [
+    {
+      "from": "2025-01-01",
+      "to": "2025-01-31",
+      "opening": 3200,
+      "closing": 3732.62,
+      "seq": 1,
+      "sum": 532.62,
+      "count": 8,
+      "source": "camt"
+    },
+    {
+      "from": "2025-02-01",
+      "to": "2025-02-28",
+      "opening": 3732.62,
+      "closing": 4643.06,
+      "seq": 2,
+      "sum": 910.44,
+      "count": 9,
+      "source": "camt"
+    },
+    {
+      "from": "2025-03-01",
+      "to": "2025-03-31",
+      "opening": 4643.06,
+      "closing": 5264.55,
+      "seq": 3,
+      "sum": 621.49,
+      "count": 10,
+      "source": "camt"
+    },
+    {
+      "from": "2025-04-01",
+      "to": "2025-04-30",
+      "opening": 5264.55,
+      "closing": 4495.3,
+      "seq": 4,
+      "sum": -769.25,
+      "count": 9,
+      "source": "camt"
+    },
+    {
+      "from": "2025-05-01",
+      "to": "2025-05-31",
+      "opening": 4495.3,
+      "closing": 5072.54,
+      "seq": 5,
+      "sum": 577.24,
+      "count": 7,
+      "source": "camt"
+    },
+    {
+      "from": "2025-06-01",
+      "to": "2025-06-30",
+      "opening": 5072.54,
+      "closing": 6363.78,
+      "seq": 6,
+      "sum": 1291.24,
+      "count": 9,
+      "source": "camt"
+    },
+    {
+      "from": "2025-07-01",
+      "to": "2025-07-31",
+      "opening": 6363.78,
+      "closing": 6977.22,
+      "seq": 7,
+      "sum": 613.44,
+      "count": 9,
+      "source": "camt"
+    },
+    {
+      "from": "2025-08-01",
+      "to": "2025-08-31",
+      "opening": 6977.22,
+      "closing": 6340.66,
+      "seq": 8,
+      "sum": -636.56,
+      "count": 10,
+      "source": "camt"
+    },
+    {
+      "from": "2025-10-01",
+      "to": "2025-10-31",
+      "opening": 6894.32,
+      "closing": 6976.37,
+      "seq": 10,
+      "sum": 82.05,
+      "count": 9,
+      "source": "camt"
+    },
+    {
+      "from": "2025-11-01",
+      "to": "2025-11-30",
+      "opening": 6976.37,
+      "closing": 9267.21,
+      "seq": 11,
+      "sum": 2290.84,
+      "count": 9,
+      "source": "camt"
+    },
+    {
+      "from": "2025-12-01",
+      "to": "2025-12-31",
+      "opening": 9267.21,
+      "closing": 10130.05,
+      "seq": 12,
+      "sum": 862.84,
+      "count": 8,
+      "source": "camt"
+    }
+  ]
+}

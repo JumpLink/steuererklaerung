@@ -1,0 +1,30 @@
+using Gtk 4.0;
+using Adw 1;
+
+// One page of the "Konto hinzufügen" NavigationView: header, scrolling body (filled in TS) and an
+// optional primary-action bar that stays hidden until a label is set.
+template $BhAddAccountPage: Adw.NavigationPage {
+  child: Adw.ToolbarView {
+    [top]
+    Adw.HeaderBar {}
+
+    content: Gtk.ScrolledWindow scroller {
+      hexpand: true;
+      vexpand: true;
+    };
+
+    [bottom]
+    Gtk.Box bottom_bar {
+      visible: false;
+      halign: end;
+      margin-top: 10;
+      margin-bottom: 12;
+      margin-start: 12;
+      margin-end: 12;
+
+      Gtk.Button primary_button {
+        styles ["suggested-action", "pill"]
+      }
+    }
+  };
+}

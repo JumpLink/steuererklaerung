@@ -1,0 +1,29 @@
+{
+    "$schema-note": "Gelesen von dev/check-ai-boundary.js. Schlüssel ist die Datei unter app/. Jede Stelle, die die KI erreicht (direkt per Import oder indirekt über eine andere Stelle), braucht einen Satz „ohneKi“: welcher Weg ohne KI sie ersetzt. Fehlt der Weg noch, steht in „idee“ die Nummer aus docs/ideen-nutzerfuehrung.md. Die Provider selbst (src/core/clients/llm/**) und engine-status.ts sind per Regel im Skript ausgenommen.",
+    "sites": {
+        "src/core/actions/paperless/extract-invoice.ts": {
+            "ohneKi": "E-Rechnungen (XRechnung-XML, ZUGFeRD/Factur-X-PDF) liest `core/invoices/e-rechnung` direkt aus dem Datensatz, ohne KI-Aufruf; nur Scans und PDFs ohne Datensatz brauchen die KI oder die Eingabemaske (eigenes DMS: mit Vorbelegung aus der letzten Rechnung des Absenders, Paperless: dessen Felder)."
+        },
+        "src/core/actions/invoices/import.ts": {
+            "ohneKi": "Der Import legt die Rechnung auch ohne Auslesen an und füllt die Felder bei einer E-Rechnung aus deren Datensatz, ohne KI-Aufruf (auch mit skipExtraction); bei Scans und PDFs ohne Datensatz trägt man sie in der Eingabemaske ein."
+        },
+        "src/core/actions/invoices/update.ts": {
+            "ohneKi": "Bei einer E-Rechnung kommen die Felder aus deren Datensatz, ohne KI-Aufruf (auch mit skipExtraction); alles andere lässt sich in der Eingabemaske von Hand pflegen."
+        },
+        "src/core/actions/paperless/type-handlers.ts": {
+            "ohneKi": "Eingangsrechnungen, die E-Rechnungen sind, liest der Handler direkt aus dem Datensatz, ohne KI-Aufruf; Scans und PDFs ohne Datensatz lassen sich in der Eingabemaske von Hand pflegen."
+        },
+        "src/core/actions/paperless/classify-documents.ts": {
+            "ohneKi": "Paperless ordnet Korrespondent, Dokumenttyp und Schlagwörter nach eigenen Regeln (Muster + Verfahren) selbst zu; die App zeigt nur, welche Regel gegriffen hat (`paperless/zuordnung.ts`, CLI `paperless zuordnung`, Beleg-Eingang, MCP `dokument_herkunft`). Für das eingebaute DMS legen die Dokumentregeln (`actions/dokumentregeln.ts`, „Als Regel merken“ im Beleg-Dialog, CLI `belege`) Dokumenttyp, Kategorie und Richtung beim Hinzufügen fest, vor jeder KI."
+        },
+        "src/core/actions/paperless/review-metadata.ts": {
+            "ohneKi": "Paperless ordnet Korrespondent, Dokumenttyp und Schlagwörter nach eigenen Regeln selbst zu; die App zeigt nur, welche Regel gegriffen hat (`paperless/zuordnung.ts`). Für das eingebaute DMS füllen die Dokumentregeln (`actions/dokumentregeln.ts`) die Felder beim Hinzufügen vor jeder KI, und der Beleg-Dialog lässt jedes Feld von Hand ändern; die KI ergänzt nur, was keine Regel gesetzt hat."
+        },
+        "src/core/actions/assistant/chat.ts": {
+            "ohneKi": "Die Oberfläche bietet dieselben Antworten als Filter, Hinweise und Auswertungen; der Assistent ist nur eine zweite Tür."
+        },
+        "src/core/actions/assistant/chat-agent.ts": {
+            "ohneKi": "Die Oberfläche bietet dieselben Antworten als Filter, Hinweise und Auswertungen; der Assistent ist nur eine zweite Tür."
+        }
+    }
+}

@@ -1,0 +1,116 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'feat/**']
+  pull_request:
+
+# Fully on the gjsify 0.21 toolchain — no bespoke Node build steps. `gjsify install`
+# (native backend, from gjsify-lock.json), `gjsify tsc`, `gjsify build`, and the GJS test
+# bundle all run on gjs. Node is present only to bootstrap the gjsify CLI (its published
+# bin is Node; its work targets gjs). Runs in a Fedora container that ships `gjs` (which the
+# gjsify toolchain spawns) plus the system typelibs the bundles import at load: libgda +
+# libgda-sqlite for the store. The GOA/EDS typelibs moved out with the mail code, which now
+# lives in its own project (postbote). The 0.12-era all-Node workaround
+# (bundler crash + test segfault, node-tsc fallback) is fixed upstream in gjsify 0.13.
+#
+# EVERY system library is named explicitly — nothing may arrive transitively. `fedora:44` is a
+# moving tag, runners cache differently aged layers of it, and `install_weak_deps=False` means
+# nothing comes along by accident. On 2026-08-12 two runs of the SAME workflow file 28 minutes
+# apart resolved to 104 vs 328 packages; the small one lacked libsoup3 and json-glib and went
+# red on an unrelated commit. Whether such a library is present was, until this list, a coin flip.
+#
+# The failures are also badly signposted: the gjsify CLI loads its native prebuilds at MODULE
+# LOAD, so a missing library kills `gjsify tsc`/`gjsify build` before a single line of this
+# repo is read — and the error names OUR file, not the container.
+#
+# The list below is not guesswork. It comes from two enumerations, and BOTH are needed —
+# grepping only for `gi://` misses half of it:
+#
+#  1) Native prebuilds, via their DT_NEEDED set:
+#     for so in $(find node_modules/@gjsify -name '*.so'); do objdump -p "$so" | awk '/NEEDED/{print $2}'; done | sort -u
+#     → libsoup-3.0 (libsoup3) · libjson-glib-1.0 (json-glib) · libgnutls.so.30 (gnutls)
+#       · libnghttp2.so.14 (libnghttp2) · glib/gio/gobject (come with gjs)
+#
+#  2) Typelibs the code imports. `gi://Namespace` is the ESM form and greppable, but
+#     packages/invoice-pdf uses GJS's LEGACY dynamic form (`imports.gi.PangoCairo`,
+#     `imports.cairo`), which no static search for `gi://` finds. It cost a CI round to
+#     notice: three PDF tests failed with "Requiring PangoCairo … not found".
+#     → Gda/GdaSqlite (libgda, libgda-sqlite) · Soup (libsoup3) · PangoCairo (pango, + cairo)
+#     Search BOTH forms after a change:  grep -rn "gi://\|imports\.gi\.\|imports\.cairo" src packages
+#
+# Re-run both after a gjsify bump or a new native dep and extend the list if it grew.
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:44
+    steps:
+      - name: Install system prerequisites (gjs + runtime typelibs + prebuild deps)
+        run: >
+          dnf install -y --setopt=install_weak_deps=False
+          git tar xz findutils
+          gjs
+          libsoup3 json-glib gnutls libnghttp2
+          libgda libgda-sqlite
+          pango cairo
+
+      - uses: actions/checkout@v4
+
+      # Node 24 to bootstrap + run the gjsify CLI. gjsify's native install-backend prebuilds
+      # target node 24 — Fedora's default node 22 loads a mismatched ABI and segfaults
+      # gjsify install (verified in a fedora:44 container). Same pattern as the gjsify references.
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      # Content-addressed tarball store: a warm cache lets `gjsify install --immutable`
+      # skip the download phase. Keyed on the lockfile.
+      - name: Cache gjsify tarball store
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/gjsify/tarballs
+          key: gjsify-tarballs-${{ hashFiles('gjsify-lock.json') }}
+          restore-keys: gjsify-tarballs-
+
+      # Bootstrap the gjsify CLI so `gjsify install` is runnable before node_modules exists
+      # (the chicken-and-egg). After install, package scripts resolve node_modules/.bin/gjsify.
+      # Read the version from app/package.json so the bootstrap CLI ALWAYS matches the pinned
+      # libs — a global-CLI ↔ pinned-libs mismatch produces broken bundles / an unreadable
+      # lockfile (a stale bootstrap could not read the 0.29 gjsify-lock.json: "none found").
+      - name: Bootstrap the gjsify CLI
+        run: |
+          VERSION=$(node -p "require('./app/package.json').devDependencies['@gjsify/cli']")
+          npm install -g "@gjsify/cli@$VERSION"
+
+      - name: Install dependencies (gjsify install --immutable, from gjsify-lock.json)
+        run: gjsify install --immutable
+
+      # EVERY workspace, not a hand-picked two. This step used to name `app` and
+      # `packages/eric` explicitly, so the other six packages were type-checked only
+      # by whoever remembered to run the root `check` locally — `@steuererklaerung/kredit`
+      # had no `check` script at all and was checked nowhere. `foreach -A` is the
+      # root `check` script, so a new workspace is covered the day it is added.
+      - name: Type check (every workspace)
+        run: gjsify run check
+
+      # `format:check` existed as a script and NOTHING called it, so the tree drifted
+      # from its own app/.oxfmtrc.json without anything going red — 36 files by the time
+      # anyone looked, and the drift predates the 0.38.1 bump entirely (the pinned 0.30.0
+      # CLI reported the same 36; both delegate to the same oxfmt 0.56.0). A formatter
+      # nobody runs is a formatter that does not exist.
+      - name: Format check
+        run: cd app && gjsify run format:check
+
+      - name: Build GJS bundle
+        run: cd app && gjsify run build:gjs
+
+      - name: Assert koffi stays out of the GJS bundle
+        run: |
+          if grep -q "koffi" app/dist/steuer.gjs.mjs; then
+            echo "::error::koffi leaked into the GJS bundle"; exit 1
+          fi
+
+      - name: Tests (GJS test bundle under gjs)
+        run: cd app && gjsify run test

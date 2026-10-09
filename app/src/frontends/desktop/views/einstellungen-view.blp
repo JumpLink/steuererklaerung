@@ -1,0 +1,58 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Einstellungen view body. The switch rows are built programmatically (see einstellungen-view.ts)
+// and persist to steuererklaerung.json on toggle.
+template $BhEinstellungenView: Adw.Bin {
+  child: Gtk.ScrolledWindow scroller {
+    hscrollbar-policy: never;
+    vexpand: true;
+
+    child: Adw.Clamp {
+      maximum-size: 800;
+      margin-top: 18;
+      margin-bottom: 18;
+      margin-start: 12;
+      margin-end: 12;
+
+      child: Gtk.Box {
+        orientation: vertical;
+        spacing: 18;
+
+        Adw.Banner save_banner {
+          revealed: false;
+        }
+
+        // Per-entity groups (Anbindungen · Stammdaten) — built + rebuilt programmatically per active
+        // entity/year in einstellungen-view.ts. Empty here; the global groups below build once.
+        Gtk.Box entity_groups {
+          orientation: vertical;
+          spacing: 18;
+        }
+
+        Adw.PreferencesGroup lernmodus_group {
+          title: "Verständlichkeit";
+        }
+
+        Adw.PreferencesGroup sync_group {
+          title: "Abgleich";
+          description: "Holt neue Daten im Hintergrund. Bank-Abrufe mit TAN/PIN und ELSTER laufen nie automatisch.";
+        }
+
+        Adw.PreferencesGroup assistant_group {
+          title: "Assistent";
+        }
+
+        Adw.PreferencesGroup mcp_group {
+          title: "MCP";
+          description: "Externe Assistenten anbinden — Änderungen wirken beim nächsten Start des MCP-Servers.";
+        }
+
+        Adw.PreferencesGroup groups_group {
+          title: "MCP-Tool-Gruppen";
+          description: "Welche Gruppen nach außen sichtbar sind.";
+        }
+      };
+    };
+  };
+}

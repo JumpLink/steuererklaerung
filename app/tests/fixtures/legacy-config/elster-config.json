@@ -1,0 +1,76 @@
+{
+  "tax_number": "",
+  "schema_version": 2025,
+  "period": {
+    "year": 2026,
+    "quarter": 1
+  },
+  "output_directory": "./elster",
+  "xsd_path": "",
+  "business_start_date": "",
+  "business_end_date": "",
+  "deadline_extension_months": 0,
+  "adjustments": {
+    "anlageverzeichnis": [
+      {
+        "id": "0410-1",
+        "bezeichnung": "Beispiel-Laptop",
+        "anschaffung": "2023-03-01",
+        "ahk": 1200.0,
+        "nutzungsdauer_jahre": 3,
+        "restbuchwert_anfang": 400.0,
+        "erinnerungswert": 1,
+        "art": "beweglich"
+      }
+    ],
+    "privatanteile": [
+      {
+        "bezeichnung": "Telefon",
+        "netto": 200.0,
+        "ust_satz": 0.19
+      }
+    ],
+    "sonderbetriebsausgaben": [
+      {
+        "gesellschafter_id": "partner1",
+        "bezeichnung": "Häusliches Arbeitszimmer",
+        "betrag": 630.0
+      }
+    ],
+    "betriebsaufgabe": {
+      "datum": "2026-12-31",
+      "aufgabekosten": 0,
+      "gemeine_werte": [
+        {
+          "anlagegut_id": "0410-1",
+          "gemeiner_wert": 150.0
+        }
+      ]
+    },
+    "nachtraegliche_posten": [
+      {
+        "datum": "2026-02-15",
+        "bezeichnung": "späte Kundenzahlung zu RE-2025-xx (§24 Nr. 2 EStG)",
+        "netto": 500.0,
+        "art": "einnahme",
+        "ust_satz": 0.19,
+        "quell_transaktion_id": "qonto:..."
+      }
+    ],
+    "//nachtraeglich_gbr_ausgaben_gegenseiten": "After a Betriebsaufgabe, post-cutoff INCOME on the old account stays the GbR's §24, but post-cutoff EXPENSES belong to the successor (Einzelunternehmen) UNLESS the counterparty/purpose matches one of these substrings (the genuine wind-down: tax advisor, studio rent). Everything else post-cutoff is excluded.",
+    "nachtraeglich_gbr_ausgaben_gegenseiten": [
+      "Steuerberater",
+      "Vermieter"
+    ],
+    "doppelzahlungen": [
+      {
+        "transaktion_id": "camt_...",
+        "bezeichnung": "Kunde hat dieselbe Rechnung zweimal bezahlt; Rückzahlung läuft ggf. privat"
+      }
+    ]
+  },
+  "account_labels": {
+    "camt:DE00...": "Hauptkonto",
+    "qonto:...": "JumpLink"
+  }
+}

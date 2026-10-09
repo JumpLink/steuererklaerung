@@ -1,0 +1,99 @@
+{
+  "$schema": "./src/core/config/est-config.ts",
+  "_comment": "Vorlage für die private Einkommensteuer-Schätzung. Nach est-config.json kopieren (gitignored) und mit den echten Werten der Lohnsteuerbescheinigung füllen. Die person-Meldedaten (steuernummer, geburtsdatum, Anschrift) und jahre[].steuerklasse braucht erst das E10-XML (elster est generate-xml). kinder[] = eine Anlage Kind je Kind: IdNr/Geburtsdatum sind Pflicht fürs XML; kindergeld_anspruch = Jahres-Anspruch in vollen € (bei nicht zusammenveranlagten Eltern mit halbem Kinderfreibetrag der HALBE Anspruch, 2025: 255 €/Monat je Kind); Schulgeld/Kinderbetreuung sind die GEZAHLTEN Beträge — die abziehbaren Anteile (30 % bzw. 80 %) rechnet das Finanzamt. person.kinder muss zur Länge von kinder[] passen. Alle Zahlen sind eine Schätzung — verbindlich ist der Steuerbescheid. Konstanten/Quellen: docs/references/tax-sources.md.",
+  "entity_id": "privat",
+  "veranlagung": "einzel",
+  "person": {
+    "name": "Vorname Nachname",
+    "steuer_id": "00000000000",
+    "steuernummer": "11/222/55555",
+    "finanzamt": "Finanzamt Musterstadt",
+    "bundesland": "Niedersachsen",
+    "geburtsdatum": "1990-01-01",
+    "beruf": "Musterberuf",
+    "strasse": "Musterstraße",
+    "hausnummer": "1",
+    "plz": "12345",
+    "ort": "Musterstadt",
+    "iban": "DE41370400440532013088",
+    "kirchensteuersatz": 0,
+    "kinder": 1
+  },
+  "kinder": [
+    {
+      "vorname": "Kim",
+      "nachname": "Beispiel",
+      "idnr": "00000000000",
+      "geburtsdatum": "2015-01-01",
+      "familienkasse": "Familienkasse Musterland",
+      "kindschaftsverhaeltnis": "1",
+      "anderer_elternteil": {
+        "name": "Beispiel, Erna",
+        "geburtsdatum": "1990-01-01",
+        "adresse": "Musterweg 1, 12345 Musterstadt",
+        "kindschaftsverhaeltnis": "1",
+        "wohnsitz_unbekannt": false
+      },
+      "jahre": [
+        {
+          "jahr": 2025,
+          "kindergeld_anspruch": 1530,
+          "schulgeld": { "schule": "Freie Musterschule e.V.", "gezahlt": 0, "von_mir": 0 },
+          "haushalt": { "gemeinsam_zeitraum": "01.01-31.12", "gemeinsam_kind_zeitraum": "01.01-31.12" },
+          "kinderbetreuung": [
+            {
+              "bezeichnung": "Kinderhort Musterstadt, Musterweg 5, 12345 Musterstadt",
+              "zeitraum_von": "01.01",
+              "zeitraum_bis": "31.12",
+              "betrag": 0,
+              "erstattet": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "output_directory": "./elster",
+  "test_mode": true,
+  "jahre": [
+    {
+      "jahr": 2025,
+      "bruttoarbeitslohn": 0,
+      "steuerklasse": 1,
+      "lohnsteuer": 0,
+      "soli": 0,
+      "kirchensteuer": 0,
+      "est_vorauszahlung": 0,
+      "einkuenfte_gewerbe": 0,
+      "gewerbe_bezeichnung": "Mustergewerbe",
+      "gewerbe_beteiligungen": [],
+      "spenden": 0,
+      "krankheitskosten": 0,
+      "schulgeld": 0,
+      "kinderbetreuung": 0,
+      "parteibeitrag": 0,
+      "vorsorge": {
+        "rv_arbeitnehmer": 0,
+        "rv_arbeitgeber_steuerfrei": 0,
+        "kv_basis": 0,
+        "pv_basis": 0,
+        "av_arbeitnehmer": 0,
+        "sonstige": 0,
+        "ag_zuschuss": true
+      },
+      "werbungskosten": {
+        "homeoffice_tage": 0,
+        "homeoffice_anderer_arbeitsplatz": false,
+        "pendel": { "arbeitstage": 0, "km_einfach": 0 },
+        "posten": [{ "bezeichnung": "Arbeitsmittel", "betrag": 0 }]
+      },
+      "par35a_manuell": { "handwerker": 0, "haushaltsnah": 0, "minijob": 0 }
+    }
+  ],
+  "par35a_arbeitskosten": [
+    { "transaktion_id": "<store-tx-id>", "bezeichnung": "Handwerker · nur Arbeitslohn (kein Material)", "arbeitskosten": 0 }
+  ],
+  "reklassifizierungen": [
+    { "transaktion_id": "<store-tx-id>", "ziel": "arbeit" }
+  ]
+}

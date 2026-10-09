@@ -1,0 +1,58 @@
+using Gtk 4.0;
+using Adw 1;
+
+// „Laufende Kosten" tab of the Buchungen hub — the detected series to confirm, the confirmed ones with
+// their next expected payment, and the decided ones. The groups are filled programmatically (see
+// laufende-kosten-view.ts).
+template $BhLaufendeKostenView: Adw.Bin {
+  Gtk.Stack stack {
+    Gtk.StackPage {
+      name: "loading";
+      child: Gtk.Box {
+        orientation: vertical;
+        valign: center;
+        halign: center;
+        spacing: 12;
+
+        Adw.Spinner {
+          width-request: 32;
+          height-request: 32;
+        }
+
+        Gtk.Label {
+          label: "Lade laufende Kosten …";
+          styles ["dim-label"]
+        }
+      };
+    }
+
+    Gtk.StackPage {
+      name: "error";
+      child: Adw.StatusPage error_page {
+        icon-name: "dialog-error-symbolic";
+        title: "Konnte nicht laden";
+      };
+    }
+
+    Gtk.StackPage {
+      name: "content";
+      child: Gtk.ScrolledWindow scroller {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        child: Adw.Clamp {
+          maximum-size: 860;
+          margin-top: 18;
+          margin-bottom: 24;
+          margin-start: 16;
+          margin-end: 16;
+
+          child: Gtk.Box content_box {
+            orientation: vertical;
+            spacing: 24;
+          };
+        };
+      };
+    }
+  }
+}

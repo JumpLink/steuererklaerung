@@ -1,0 +1,6 @@
+# Meson build tree + the compiled native artifacts (libsteuereric.so, GIR,
+# typelib). These are built per-arch from src/vala against the user-provided ERiC
+# via `npm run -w @steuererklaerung/eric build:meson` (needs ERIC_HOME). Never commit
+# binaries; CI rebuilds them.
+build/
+prebuilds/

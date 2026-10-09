@@ -1,0 +1,61 @@
+{
+  "//": "LEGACY registry fixture (fictional Muster values, derived from the app/*.example.json files). Drives the config-migrate tests. NOT a v1 manifest — it has no `version` and still references satellite config files via elster_config/est_config paths.",
+  "entities": [
+    {
+      "id": "gbr",
+      "name": "Example GbR",
+      "kind": "gbr",
+      "elster_config": "elster-config-gbr.json",
+      "accounts": ["camt:*"]
+    },
+    {
+      "id": "soleprop",
+      "name": "Example Einzelunternehmen",
+      "kind": "einzelunternehmen",
+      "elster_config": "elster-config.json",
+      "accounts": ["qonto:xxxxxxxx*"],
+      "//invoicing": "Outgoing-invoice back-end; type 'self' creates invoices locally (own numbering + PDF + XRechnung).",
+      "invoicing": {
+        "type": "self",
+        "self": {
+          "numberPrefix": "RE-",
+          "issuer": {
+            "name": "Example Einzelunternehmen",
+            "address": "Musterstraße 1",
+            "zip": "12345",
+            "city": "Musterstadt",
+            "taxNumber": "12/345/67890",
+            "kleinunternehmer": false,
+            "email": "rechnung@example.com",
+            "bank": { "iban": "DE00000000000000000000", "bic": "XXXXDEXXXXX", "bankName": "Example Bank", "accountHolder": "Example Einzelunternehmen" }
+          }
+        }
+      }
+    },
+    {
+      "id": "privat",
+      "name": "Privat",
+      "kind": "privat",
+      "est_config": "est-config.json",
+      "accounts": ["fints:my-bank:*"]
+    }
+  ],
+  "//assistant": "Built-in web assistant on/off (the Adwaita desktop app has none).",
+  "assistant": { "enabled": true },
+  "//mcp": "Which MCP tool groups are exposed to external clients and whether the mutating (write) tools are open.",
+  "mcp": {
+    "enabled": true,
+    "allowWrite": false,
+    "groups": {
+      "paperless": true,
+      "qonto": true,
+      "transactions": true,
+      "reconcile": true,
+      "documentWorkflow": true,
+      "crossSystem": true,
+      "elster": true,
+      "gnome": true,
+      "invoices": true
+    }
+  }
+}

@@ -1,0 +1,96 @@
+import { loadManifest } from '../../../core/config/manifest.ts';
+import { resolveEntity } from '../../../core/config/accessors.ts';
+import { defaultEntityFor, requireEntity, resolveEntityAccounts } from '../../../core/config/entities.ts';
+import type { ElsterConfig } from '../../../core/config/schema/elster.ts';
+import type { EstConfig } from '../../../core/config/schema/est.ts';
+import { transactionsSummary } from '../../../core/actions/transactions.ts';
+import { pickArgv } from '../output.ts';
+
+/** Form types that can be captured as a filing snapshot / signed off / submitted. */
+export const SNAPSHOT_FORMS = ['ustva', 'euer', 'uste', 'gewst', 'feststellung', 'est'] as const;
+
+/**
+ * Resolve the manifest entity a command should act on: an explicit `--entity` (fail-loud via
+ * {@link requireEntity} with the known-id list), else the default business/privat entity. `kind`
+ * biases the no-`--entity` default (`'privat'` for the ESt command).
+ */
+function resolveEntityId(entityId: string | undefined, kind?: string) {
+    const manifest = loadManifest();
+    const entity = entityId ? requireEntity(manifest, entityId) : defaultEntityFor(manifest, kind);
+    return resolveEntity(manifest, entity.id);
+}
+
+/**
+ * The account scope for a report. An explicit `--account-key` always wins; otherwise `--entity` scopes
+ * the report to exactly that manifest entity's accounts. Returns undefined only when NEITHER is given —
+ * the action then derives the scope from the ELSTER config's entity (never a blanket `camt:*` sum).
+ *
+ * A given-but-unresolvable `--entity` (unknown id via {@link requireEntity}, or an entity that owns no
+ * store accounts) THROWS instead of silently falling through. Callers invoke this inside their
+ * try/catch, so the message is printed and the command exits non-zero.
+ */
+export function accountKeysFrom(raw: Record<string, unknown>): string[] | undefined {
+    const keys = (raw['account-key'] as unknown[] | undefined)?.map(String).filter(Boolean) ?? [];
+    if (keys.length) return keys;
+    const entityId = pickArgv<string>(raw, 'entity');
+    if (!entityId) return undefined;
+    const entity = requireEntity(loadManifest(), entityId);
+    const accountKeys = resolveEntityAccounts(
+        entity,
+        transactionsSummary().accounts.map((a) => a.accountKey),
+    );
+    if (accountKeys.length === 0) {
+        throw new Error(
+            `Entität '${entityId}' hat keine Konten im Store (accounts: ${entity.accounts.join(', ') || '—'}). ` +
+                'Erst Transaktionen importieren/synchronisieren oder --account-key explizit setzen.',
+        );
+    }
+    return accountKeys;
+}
+
+/**
+ * Load the ELSTER config for the resolved manifest entity, folding any `--year`/`--quarter`/`--month`
+ * overrides into the period. `--entity` selects the entity (fail-loud on an unknown id); without it the
+ * default business entity is used. Shared by every subcommand that reads an ELSTER config.
+ */
+export function parseElsterArgs(argv: Record<string, unknown>): ElsterConfig {
+    const entity = resolveEntityId(pickArgv<string>(argv, 'entity'));
+    if (!entity.elster) {
+        throw new Error(
+            `Entität '${entity.id}' hat keine ELSTER-Config (elster-Abschnitt im steuererklaerung.json fehlt).`,
+        );
+    }
+    let config = entity.elster;
+    const year = pickArgv<number>(argv, 'year');
+    const quarter = pickArgv<number>(argv, 'quarter');
+    const month = pickArgv<number>(argv, 'month');
+    if (year != null || quarter != null || month != null) {
+        config = {
+            ...config,
+            // schema_version MUST track the filing year: it drives the `ustva/v<year>` namespace +
+            // the derived ERiC datenartVersion (UStVA_<year>). Overriding --year without it left the
+            // namespace at the config default (e.g. v2025) while <Jahr> became 2026 → ERiC rejects
+            // with UStVA_Jahr_gleich_VZ. The annual forms take the year straight from --year, but for
+            // UStVA the two must stay equal (see ustva-xml.ts generateUstvaXmlForPeriod).
+            schema_version: year ?? config.schema_version,
+            period: {
+                year: year ?? config.period.year,
+                quarter: quarter ?? (month == null ? config.period.quarter : undefined),
+                month: month ?? (quarter == null ? config.period.month : undefined),
+            },
+        };
+    }
+    return config;
+}
+
+/**
+ * Load the private-ESt config for the resolved manifest entity (`--entity`, else the default `privat`
+ * entity). Fail-loud when the entity has no `est` section. Used by the `elster est` subcommands.
+ */
+export function parseEstArgs(argv: Record<string, unknown>): EstConfig {
+    const entity = resolveEntityId(pickArgv<string>(argv, 'entity'), 'privat');
+    if (!entity.est) {
+        throw new Error(`Entität '${entity.id}' hat keine ESt-Config (est-Abschnitt im steuererklaerung.json fehlt).`);
+    }
+    return entity.est;
+}

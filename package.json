@@ -1,0 +1,28 @@
+{
+ "name": "steuererklaerung",
+ "version": "0.1.0",
+ "license": "AGPL-3.0-or-later",
+ "author": "Pascal Garber",
+ "private": true,
+ "type": "module",
+ "description": "steuererklaerung workspace: the app (CLI · web · MCP · native, on Node + GJS) + local packages (e.g. eric)",
+ "workspaces": [
+  "app",
+  "packages/*"
+ ],
+ "scripts": {
+  "build": "gjsify workspace steuererklaerung-cli build",
+  "build:cli": "gjsify workspace steuererklaerung-cli build:gjs",
+  "build:app": "gjsify workspace steuererklaerung-cli build:app",
+  "build:web": "gjsify workspace steuererklaerung-cli build:web",
+  "start": "gjsify workspace steuererklaerung-cli start",
+  "start:app": "gjsify workspace steuererklaerung-cli start:app",
+  "start:web": "gjsify workspace steuererklaerung-cli start web",
+  "dev:app": "gjsify workspace steuererklaerung-cli dev:app",
+  "storybook": "gjsify workspace steuererklaerung-cli storybook",
+  "check": "gjsify foreach -A check",
+  "test": "gjsify workspace steuererklaerung-cli test",
+  "format": "gjsify workspace steuererklaerung-cli format",
+  "lint": "gjsify workspace steuererklaerung-cli lint"
+ }
+}

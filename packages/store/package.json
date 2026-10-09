@@ -1,0 +1,19 @@
+{
+  "name": "@steuererklaerung/store",
+  "version": "0.1.0",
+  "license": "LGPL-3.0-or-later",
+  "author": "Pascal Garber",
+  "private": true,
+  "type": "module",
+  "description": "Local data store for steuererklaerung: the unified NDJSON transaction store (with mtime-keyed in-memory memoization) + the SQLite ledger core (schema, periods, entity mapping). The read/query surface the DMS and the future GNOME app build on; sync/normalize/EÜR-seeding stays in the CLI. Pure TypeScript, runs on Node + GJS (node:sqlite/node:fs via gjsify).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check": "tsc --noEmit --project tsconfig.json"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {}
+}

@@ -1,0 +1,43 @@
+steuererklaerung-cli — Drittanbieter-Hinweise
+
+Diese Datei wird erzeugt (dev/check-licenses.js) und listet jede Laufzeit-Abhängigkeit,
+die in das ausgelieferte Bundle eingebunden wird, mit Version und Lizenz.
+
+  @curlew/smtp@0.1.0 — LGPL-3.0-or-later  [eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich]
+      Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen.
+  @hono/node-server@1.19.14 — MIT
+  @inquirer/prompts@8.5.2 — MIT
+  @modelcontextprotocol/sdk@1.29.0 — MIT
+  @steuererklaerung/charts@0.1.0 — LGPL-3.0-or-later  [eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich]
+      Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen.
+  @steuererklaerung/dms@0.1.0 — LGPL-3.0-or-later  [eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich]
+      Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen.
+  @steuererklaerung/eric@0.1.0 — LGPL-3.0-or-later  [eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich]
+      Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen.
+  @steuererklaerung/invoice-pdf@0.1.0 — LGPL-3.0-or-later  [eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich]
+      Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen.
+  @steuererklaerung/kredit@0.1.0 — LGPL-3.0-or-later  [eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich]
+      Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen.
+  @steuererklaerung/paperless@0.1.0 — LGPL-3.0-or-later  [eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich]
+      Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen.
+  @steuererklaerung/shared@0.1.0 — LGPL-3.0-or-later  [eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich]
+      Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen.
+  @steuererklaerung/store@0.1.0 — LGPL-3.0-or-later  [eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich]
+      Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen.
+  domrobot-client@3.3.0 — UNKNOWN  [MIT laut README]
+      Das package.json trägt kein license-Feld; README.md sagt MIT. Kein Konflikt mit der Auslieferung, nur eine fehlende maschinenlesbare Angabe — bei INWX gemeldet gehört es trotzdem.
+  dotenv@17.4.2 — BSD-2-Clause
+  express@5.2.1 — MIT
+  fast-xml-parser@5.9.3 — MIT
+  hono@4.12.27 — MIT
+  jsonrepair@3.14.1 — ISC
+  lib-fints@1.4.8 — LGPL-2.1-or-later  [mitgebündelt, LGPL-Auflagen erfüllt]
+      LGPL-2.1-or-later, unverändert und statisch ins Bundle gelinkt. Die Auflagen sind erfüllt: der Lizenztext liegt unter licenses/, die Version steht oben, und der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich — damit kann jeder die Bibliothek durch eine eigene Fassung ersetzen und neu bauen (§6). Upstream: https://github.com/robocode13/lib-fints
+  qrcode@1.5.4 — MIT
+  typescript@5.9.3 — Apache-2.0
+  xlsx@0.18.5 — Apache-2.0
+  yargs@18.0.0 — MIT
+  zod@4.4.3 — MIT
+Vollständige Lizenztexte liegen unter licenses/:
+  licenses/lib-fints.txt
+

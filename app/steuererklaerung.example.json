@@ -1,0 +1,290 @@
+{
+  "//": "Consolidated steuererklaerung.json v1 manifest — the SINGLE config file (folds the former sync-config / fints-config / elster-config / est-config / recurring-invoices into one). Copy to steuererklaerung.json (gitignored, holds real account keys + tax data) and edit; or run `steuer config migrate` to assemble it from the old per-file configs. `version: 1` is the manifest marker. Each entity binds store account keys to one firm (`accounts` = exact keys or a trailing-`*` prefix glob) and carries its inline `elster` (business tax return) / `est` (private Einkommensteuer) / `recurring` (outgoing invoices) sections. Global `paperless` + `fints` + `app` (assistant/mcp) sit at the top level. Secrets (FinTS PIN, API keys) stay in .env, never here.",
+  "version": 1,
+  "entities": [
+    {
+      "id": "gbr",
+      "name": "Muster & Partner GbR",
+      "kind": "gbr",
+      "accounts": ["camt:*"],
+      "elster": {
+        "tax_number": "11/222/33333",
+        "schema_version": 2025,
+        "period": { "year": 2026, "quarter": 1 },
+        "entity_id": "gbr",
+        "output_directory": "./elster",
+        "deadline_extension_months": 0,
+        "gesellschafter": [
+          { "id": "partner1", "name": "Erika Mustermann", "steuer_id": "00000000000", "quote": 0.5 },
+          { "id": "partner2", "name": "Max Mustermann", "steuer_id": "11111111111", "quote": 0.5 }
+        ],
+        "adjustments": {
+          "anlageverzeichnis": [
+            {
+              "id": "0410-1",
+              "bezeichnung": "Beispiel-Laptop",
+              "anschaffung": "2023-03-01",
+              "ahk": 1200.0,
+              "nutzungsdauer_jahre": 3,
+              "restbuchwert_anfang": 400.0,
+              "erinnerungswert": 1,
+              "art": "beweglich"
+            }
+          ],
+          "privatanteile": [{ "bezeichnung": "Telefon", "netto": 200.0, "ust_satz": 0.19 }],
+          "sonderbetriebsausgaben": [
+            { "gesellschafter_id": "partner1", "bezeichnung": "Häusliches Arbeitszimmer", "betrag": 630.0 }
+          ]
+        },
+        "klassifizierung": {
+          "eigene_konten": ["muster & partner gbr", "verrechnungskonto muster"],
+          "privat_gegenseiten": ["beispiel-spielekonsole", "beispiel-musikstreaming"],
+          "gesellschafter_gegenseiten": ["erika mustermann", "max mustermann"],
+          "ksk_kennungen": [],
+          "erloes_gegenseiten": ["musterkunde ag"],
+          "aufwand_regeln": [
+            { "muster": "kanzlei mustermann", "kategorie": "4950 Rechts-/Beratungskosten" },
+            { "muster": "kundennummer-000000", "kategorie": "4921 Telefon/Internet" }
+          ]
+        },
+        "account_labels": { "camt:DE47370400440532013077": "Hauptkonto" }
+      }
+    },
+    {
+      "id": "soleprop",
+      "name": "Muster Einzelunternehmen",
+      "kind": "einzelunternehmen",
+      "accounts": ["qonto:01234567*"],
+      "//invoicing": "Outgoing-invoice back-end. defaultHeader = cover-letter template for schedules without their own `header` (placeholders {anrede} {kunde} {domain} {periode} {vorperiode} {paket} {gruss} {aussteller}; unknown ones fail loudly); defaultClosing = fallback for {gruss}; defaultHeaderSie/defaultClosingSie = the same for customers with customer.formality 'sie' (unset = 'du'). {anrede} renders empty without customer.greeting. type 'qonto' (default) drafts via the Qonto API; type 'self' creates invoices locally (own numbering + PDF + XRechnung). For 'self' set the §14 issuer identity — one of taxNumber/vatId is required to finalize; kleinunternehmer:true emits the §19 note + 0% VAT. numberPrefix defaults to 'RE-'.",
+      "invoicing": {
+        "type": "self",
+        "defaultHeader": "Hallo {anrede},\n\nanbei die Rechnung für das Hosting {domain} für die Serviceperiode {periode}. Im Paket enthalten sind {paket}. Die Abrechnung erfolgt jährlich im Voraus, die Kündigungsfrist beträgt vier Wochen vor Ende der Laufzeit.\n\n{gruss}\n{aussteller}",
+        "defaultClosing": "Beste Grüße",
+        "defaultHeaderSie": "Guten Tag {anrede},\n\nanbei erhalten Sie die Rechnung für das Hosting {domain} für die Serviceperiode {periode} ({paket}). Das Hosting wird jährlich im Voraus abgerechnet, eine Kündigung ist bis vier Wochen vor Ende der Laufzeit möglich.\n\n{gruss}\n{aussteller}",
+        "defaultClosingSie": "Mit freundlichen Grüßen",
+        "self": {
+          "numberPrefix": "RE-",
+          "issuer": {
+            "name": "Muster Einzelunternehmen",
+            "address": "Musterstraße 1",
+            "zip": "12345",
+            "city": "Musterstadt",
+            "taxNumber": "11/222/44444",
+            "vatId": "DE123456789",
+            "kleinunternehmer": false,
+            "email": "rechnung@example.com",
+            "bank": { "iban": "DE35370400440532013099", "bic": "MUSTDEXXXXX", "bankName": "Musterbank", "accountHolder": "Muster Einzelunternehmen" },
+            "logoPath": "assets/logo.png"
+          }
+        }
+      },
+      "recurring": [
+        {
+          "id": "musterkunde-example-com",
+          "status": "active",
+          "customer": {
+            "name": "Musterkunde GmbH",
+            "qontoClientId": "00000000-0000-0000-0000-000000000000",
+            "email": "billing@example.com",
+            "greeting": "Frau Muster",
+            "formality": "sie",
+            "closing": "Viele Grüße"
+          },
+          "description": "Website Hosting example.com",
+          "domains": ["example.com"],
+          "intervalMonths": 12,
+          "nextPeriod": { "start": "2026-07-08", "end": "2027-07-07" },
+          "nextDueDate": "2026-07-08",
+          "reminderLeadDays": 28,
+          "paymentTermsDays": 15,
+          "currency": "EUR",
+          "items": [
+            {
+              "title": "Website Hosting | Basic",
+              "description": "Hosting example.com, Serviceperiode 08.07.2026 - 07.07.2027",
+              "quantity": 1,
+              "unit": "Jahr",
+              "unitPrice": 108,
+              "vatRate": 19
+            }
+          ],
+          "lastInvoice": {
+            "number": "RE-00000",
+            "issueDate": "2025-07-08",
+            "period": { "start": "2025-07-08", "end": "2026-07-07" }
+          },
+          "notes": "Redacted example. Copy the manifest to steuererklaerung.json (gitignored) and fill real data."
+        }
+      ]
+    },
+    {
+      "id": "privat",
+      "name": "Privat",
+      "kind": "privat",
+      "accounts": ["fints:musterbank-privat:*"],
+      "//est": "Vorlage für die private Einkommensteuer-Schätzung. person-Meldedaten (steuernummer, geburtsdatum, Anschrift) und jahre[].steuerklasse braucht erst das E10-XML (elster est generate-xml). kinder[] = eine Anlage Kind je Kind. Alle Zahlen sind eine Schätzung — verbindlich ist der Steuerbescheid. Konstanten/Quellen: docs/references/tax-sources.md.",
+      "est": {
+        "entity_id": "privat",
+        "veranlagung": "einzel",
+        "person": {
+          "name": "Erika Mustermann",
+          "steuer_id": "00000000000",
+          "steuernummer": "11/222/55555",
+          "finanzamt": "Finanzamt Musterstadt",
+          "bundesland": "Niedersachsen",
+          "geburtsdatum": "1990-01-01",
+          "beruf": "Musterberuf",
+          "strasse": "Musterstraße",
+          "hausnummer": "1",
+          "plz": "12345",
+          "ort": "Musterstadt",
+          "iban": "DE41370400440532013088",
+          "kirchensteuersatz": 0,
+          "kinder": 1
+        },
+        "kinder": [
+          {
+            "vorname": "Kim",
+            "nachname": "Beispiel",
+            "idnr": "00000000000",
+            "geburtsdatum": "2015-01-01",
+            "familienkasse": "Familienkasse Musterland",
+            "kindschaftsverhaeltnis": "1",
+            "jahre": [
+              {
+                "jahr": 2025,
+                "kindergeld_anspruch": 1530,
+                "schulgeld": { "schule": "Freie Musterschule e.V.", "gezahlt": 0, "von_mir": 0 },
+                "haushalt": { "gemeinsam_zeitraum": "01.01-31.12", "gemeinsam_kind_zeitraum": "01.01-31.12" }
+              }
+            ]
+          }
+        ],
+        "output_directory": "./elster",
+        "test_mode": true,
+        "jahre": [
+          {
+            "jahr": 2025,
+            "bruttoarbeitslohn": 0,
+            "steuerklasse": 1,
+            "vorsorge": { "rv_arbeitnehmer": 0, "kv_basis": 0, "pv_basis": 0, "ag_zuschuss": true },
+            "werbungskosten": { "homeoffice_tage": 0, "posten": [{ "bezeichnung": "Arbeitsmittel", "betrag": 0 }] },
+            "par35a_manuell": { "handwerker": 0, "haushaltsnah": 0, "minijob": 0 }
+          }
+        ],
+        "par35a_arbeitskosten": [
+          { "transaktion_id": "<store-tx-id>", "bezeichnung": "Handwerker · nur Arbeitslohn (kein Material)", "arbeitskosten": 0 }
+        ]
+      }
+    }
+  ],
+  "paperless": {
+    "document_type_ids": { "incoming_invoice": 0, "outgoing_invoice": 0 },
+    "custom_field_ids": {
+      "qonto_transaction_id": 0,
+      "qonto_attachment_id": 0,
+      "qonto_transaction_amount": 0,
+      "qonto_settled_at": 0,
+      "qonto_currency": 0,
+      "qonto_label": 0,
+      "qonto_reference": 0,
+      "qonto_vat_amount": 0,
+      "invoice_currency": 0,
+      "invoice_number": 0,
+      "invoice_date": 0,
+      "due_date": 0,
+      "total_net": 0,
+      "total_gross": 0,
+      "tax_amount": 0,
+      "tax_rate": 0,
+      "customer_number": 0,
+      "service_period_start": 0,
+      "service_period_end": 0,
+      "supplier_country": 0,
+      "supplier_vat_id": 0,
+      "reverse_charge": 0,
+      "sale_type": 0,
+      "qonto_category": 0,
+      "accounting_category": 0,
+      "cancelled_by": 0,
+      "cancels": 0,
+      "related_documents": 0,
+      "payment_status": 0,
+      "amount_to_pay": 0,
+      "ai_note": 0,
+      "ai_confidence": 0,
+      "ai_reviewed_at": 0,
+      "data_scope": 0
+    },
+    "tag_ids": {
+      "qonto_import": 0,
+      "ai_reviewed": 0,
+      "irrelevant": 0,
+      "duplicate": 0,
+      "school": 0,
+      "finance": 0,
+      "server_infrastructure": 0,
+      "cancelled": 0,
+      "storno": 0,
+      "water": 0,
+      "wastewater": 0,
+      "ai_conflict": 0
+    },
+    "own_correspondent_ids": [],
+    "exclude_tag_ids": [],
+    "preferred_language": "de",
+    "invoice_providers": {
+      "example-provider": {
+        "correspondent_id": 0,
+        "document_type_id": 0,
+        "tag_ids": [],
+        "defaults": {
+          "supplier_country": "DE",
+          "supplier_vat_id": "DE999999999",
+          "sale_type": "SERVICES",
+          "reverse_charge": false,
+          "currency": "EUR"
+        }
+      }
+    },
+    "select_field_options": {
+      "sale_type": {},
+      "tax_rate": {},
+      "supplier_country": {},
+      "accounting_category": {},
+      "payment_status": {},
+      "ai_confidence": {},
+      "data_scope": {}
+    }
+  },
+  "fints": {
+    "accounts": [
+      {
+        "name": "musterbank-privat",
+        "url": "https://fints.musterbank.example/cgi-bin/hbciservlet",
+        "blz": "12345678",
+        "user_id": "DEIN_USER",
+        "product_id": "DEIN_PRODUCT_ID",
+        "product_version": "1.0"
+      }
+    ]
+  },
+  "//app": "Built-in web assistant on/off + which MCP tool groups are exposed to external clients (ChatGPT/Claude Code) and whether the mutating (write) tools are open. Editable in the web Settings.",
+  "app": {
+    "assistant": { "enabled": true },
+    "mcp": {
+      "enabled": true,
+      "allowWrite": false,
+      "groups": {
+        "paperless": true,
+        "qonto": true,
+        "transactions": true,
+        "reconcile": true,
+        "documentWorkflow": true,
+        "crossSystem": true,
+        "elster": true,
+        "invoices": true
+      }
+    }
+  }
+}

@@ -1,0 +1,107 @@
+using Gtk 4.0;
+using Adw 1;
+
+// „Zu prüfen" tab of the Buchungen hub — the same split as the Beleg-Eingang: the queue with a
+// progress line and the multi-select action on the left, the booking under review on the right.
+// The rows and the detail are filled programmatically (see zu-pruefen-view.ts).
+template $BhZuPruefenView: Adw.Bin {
+  Gtk.Stack stack {
+    Gtk.StackPage {
+      name: "loading";
+      child: Gtk.Box {
+        orientation: vertical;
+        valign: center;
+        halign: center;
+        spacing: 12;
+
+        Adw.Spinner {
+          width-request: 32;
+          height-request: 32;
+        }
+
+        Gtk.Label {
+          label: "Lade Buchungen zu prüfen …";
+          styles ["dim-label"]
+        }
+      };
+    }
+
+    Gtk.StackPage {
+      name: "error";
+      child: Adw.StatusPage error_page {
+        icon-name: "dialog-error-symbolic";
+        title: "Konnte nicht laden";
+      };
+    }
+
+    Gtk.StackPage {
+      name: "content";
+      child: Adw.OverlaySplitView split_view {
+        min-sidebar-width: 260;
+        max-sidebar-width: 340;
+        sidebar-width-fraction: 0.32;
+
+        sidebar: Gtk.Box {
+          orientation: vertical;
+
+          Gtk.Box {
+            orientation: vertical;
+            spacing: 8;
+            margin-top: 12;
+            margin-bottom: 10;
+            margin-start: 12;
+            margin-end: 12;
+
+            Gtk.Label progress_label {
+              xalign: 0;
+              styles ["dim-label", "caption"]
+            }
+
+            Gtk.ProgressBar progress_bar {}
+          }
+
+          Gtk.ScrolledWindow {
+            hscrollbar-policy: never;
+            vexpand: true;
+
+            child: Gtk.ListBox list_box {
+              selection-mode: single;
+              styles ["navigation-sidebar"]
+            };
+          }
+
+          // Mehrfachauswahl: the check boxes in the rows feed this one action.
+          Gtk.Button regel_button {
+            label: "Regel aus Auswahl";
+            sensitive: false;
+            margin-top: 8;
+            margin-bottom: 12;
+            margin-start: 12;
+            margin-end: 12;
+            tooltip-text: "Gemeinsames Muster der markierten Buchungen als Regel vorschlagen";
+
+            styles ["pill"]
+          }
+        };
+
+        content: Gtk.ScrolledWindow {
+          hscrollbar-policy: never;
+          vexpand: true;
+
+          child: Adw.Clamp {
+            maximum-size: 760;
+            margin-top: 18;
+            margin-bottom: 24;
+            margin-start: 16;
+            margin-end: 16;
+
+            child: Gtk.Box detail_box {
+              orientation: vertical;
+              spacing: 18;
+            };
+          };
+        };
+      };
+    }
+  }
+}

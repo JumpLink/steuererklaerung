@@ -1,0 +1,95 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Beleg-Eingang view body — the guided review split view (v3 redesign): queue list + progress on
+// the left, the confirm detail (KI-Hinweis · Beleg · Buchung · Formular) on the right. Static
+// chrome in Blueprint; the queue rows and the detail pane are filled programmatically
+// (see beleg-eingang-view.ts).
+template $BhBelegEingangView: Adw.Bin {
+  Gtk.Stack stack {
+    Gtk.StackPage {
+      name: "loading";
+      child: Gtk.Box {
+        orientation: vertical;
+        valign: center;
+        halign: center;
+        spacing: 12;
+
+        Adw.Spinner {
+          width-request: 32;
+          height-request: 32;
+        }
+
+        Gtk.Label {
+          label: "Lade Beleg-Eingang …";
+          styles ["dim-label"]
+        }
+      };
+    }
+
+    Gtk.StackPage {
+      name: "error";
+      child: Adw.StatusPage error_page {
+        icon-name: "dialog-error-symbolic";
+        title: "Konnte nicht laden";
+      };
+    }
+
+    Gtk.StackPage {
+      name: "content";
+      child: Adw.OverlaySplitView split_view {
+        min-sidebar-width: 240;
+        max-sidebar-width: 320;
+        sidebar-width-fraction: 0.3;
+
+        sidebar: Gtk.Box {
+          orientation: vertical;
+
+          Gtk.Box {
+            orientation: vertical;
+            spacing: 8;
+            margin-top: 12;
+            margin-bottom: 10;
+            margin-start: 12;
+            margin-end: 12;
+
+            Gtk.Label progress_label {
+              xalign: 0;
+              styles ["dim-label", "caption"]
+            }
+
+            Gtk.ProgressBar progress_bar {}
+          }
+
+          Gtk.ScrolledWindow {
+            hscrollbar-policy: never;
+            vexpand: true;
+
+            child: Gtk.ListBox list_box {
+              selection-mode: single;
+              styles ["navigation-sidebar"]
+            };
+          }
+        };
+
+        content: Gtk.ScrolledWindow {
+          hscrollbar-policy: never;
+          vexpand: true;
+
+          child: Adw.Clamp {
+            maximum-size: 760;
+            margin-top: 18;
+            margin-bottom: 24;
+            margin-start: 16;
+            margin-end: 16;
+
+            child: Gtk.Box detail_box {
+              orientation: vertical;
+              spacing: 18;
+            };
+          };
+        };
+      };
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "tax_number": "11/222/33333",
+  "schema_version": 2025,
+  "entity_id": "artcode",
+  "period": {
+    "year": 2026,
+    "quarter": 1
+  },
+  "output_directory": "./elster",
+  "gesellschafter": [
+    { "id": "partner1", "name": "Alex Muster", "steuer_id": "11111111111", "quote": 0.5 },
+    { "id": "partner2", "name": "Kim Muster", "steuer_id": "22222222222", "quote": 0.5 }
+  ],
+  "betrieb": {
+    "name": "Example GbR",
+    "strasse": "Musterstraße 1",
+    "plz": "12345",
+    "ort": "Musterstadt",
+    "art": "Softwareentwicklung"
+  },
+  "account_labels": {
+    "camt:DE00...": "Hauptkonto"
+  }
+}

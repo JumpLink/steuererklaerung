@@ -1,0 +1,29 @@
+using Gtk 4.0;
+using Adw 1;
+
+// BOTH shapes are declared, and TypeScript only fills them. Before this the widget built a fresh
+// Gtk.Box or Gtk.DropDown on every `setYears()` and threw the previous one away; the years are
+// data, but "there are two shapes and which one shows depends on how many" is structure.
+template $BhYearSwitcher: Adw.Bin {
+  child: Gtk.Stack stack {
+    Gtk.StackPage {
+      name: "segments";
+
+      child: Gtk.Box segments {
+        homogeneous: true;
+        hexpand: true;
+
+        styles ["linked"]
+      };
+    }
+
+    Gtk.StackPage {
+      name: "dropdown";
+
+      child: Gtk.DropDown dropdown {
+        hexpand: true;
+        enable-search: false;
+      };
+    }
+  };
+}

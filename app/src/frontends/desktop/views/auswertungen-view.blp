@@ -1,0 +1,116 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Auswertungen view body — the v2 design's single stacked screen: a KPI-card row, the monthly BWA
+// matrix, and the Einblicke card grid (no more BWA|Einblicke tabs). Static chrome + section
+// headings in Blueprint; the KPI cards, the matrix (Gtk.Grid) and the Einblicke cards are built
+// programmatically (see auswertungen-view.ts).
+template $BhAuswertungenView: Adw.Bin {
+  Gtk.Stack stack {
+    Gtk.StackPage {
+      name: "loading";
+      child: Gtk.Box {
+        orientation: vertical;
+        valign: center;
+        halign: center;
+        spacing: 12;
+
+        Adw.Spinner {
+          width-request: 32;
+          height-request: 32;
+        }
+
+        Gtk.Label {
+          label: "Berechne Auswertungen …";
+          styles ["dim-label"]
+        }
+      };
+    }
+
+    Gtk.StackPage {
+      name: "error";
+      child: Adw.StatusPage error_page {
+        icon-name: "dialog-error-symbolic";
+        title: "Konnte nicht laden";
+      };
+    }
+
+    Gtk.StackPage {
+      name: "content";
+      child: Gtk.ScrolledWindow scroller {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        child: Gtk.Box {
+          orientation: vertical;
+          spacing: 18;
+          margin-top: 18;
+          margin-bottom: 18;
+          margin-start: 12;
+          margin-end: 12;
+
+          Gtk.Box kpi_box {
+            orientation: vertical;
+          }
+
+          // ── BWA · monatlich ──────────────────────────────────
+          Gtk.Label {
+            label: "BWA · monatlich";
+            xalign: 0;
+            styles ["title-4"]
+          }
+
+          // The monthly matrix can be wider than the window — scroll it horizontally.
+          Gtk.ScrolledWindow {
+            hscrollbar-policy: automatic;
+            vscrollbar-policy: never;
+
+            child: Adw.Bin {
+              styles ["card"]
+
+              child: Gtk.Grid grid {
+                column-spacing: 24;
+                row-spacing: 8;
+                margin-top: 12;
+                margin-bottom: 12;
+                margin-start: 12;
+                margin-end: 12;
+              };
+            };
+          }
+
+          // ── Einblicke ────────────────────────────────────────
+          Gtk.Box {
+            orientation: vertical;
+            spacing: 2;
+            margin-top: 6;
+
+            Gtk.Label {
+              label: "Einblicke";
+              xalign: 0;
+              styles ["title-4"]
+            }
+
+            Gtk.Label {
+              label: "Hinweise aus deinen eigenen Zahlen — keine Steuerberatung";
+              xalign: 0;
+              styles ["dim-label", "caption"]
+            }
+          }
+
+          // Not homogeneous: a card that lists its affected bookings is taller than a one-line tip,
+          // and a homogeneous grid gave every card that height.
+          Gtk.FlowBox einblicke_box {
+            selection-mode: none;
+            homogeneous: false;
+            min-children-per-line: 1;
+            max-children-per-line: 3;
+            column-spacing: 12;
+            row-spacing: 12;
+            activate-on-single-click: false;
+          }
+        };
+      };
+    }
+  }
+}

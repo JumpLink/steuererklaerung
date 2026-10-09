@@ -1,0 +1,2551 @@
+/* Review UI — Adwaita / GNOME-HIG, minimalist & airy. Surfaces are Adwaita boxed
+   lists on the window background (no heavy borders), grouped under headings, with a
+   clamped content column. Typography follows the HIG scale (title / heading / body /
+   caption + dim). Every colour derives from an Adwaita token; the few semantic accents
+   use the official Adwaita named palette and adapt to dark mode (`:root.theme-dark`). */
+
+:root {
+    /* Adwaita named colours (light): green-5, red-4, yellow-5, blue-3 — fg + soft bg. */
+    --bh-pos: #1a7f4f;
+    --bh-neg: #c01c28;
+    --bh-ok-fg: #1a7f4f;
+    --bh-ok-bg: rgba(38, 162, 105, 0.1);
+    --bh-warn-fg: #a85d00;
+    --bh-warn-bg: rgba(229, 165, 10, 0.12);
+    --bh-info-fg: #1c71d8;
+    --bh-info-bg: rgba(53, 132, 228, 0.1);
+
+    /* Airy layout rhythm (HIG-ish; independent of the theme's --spacing-* so the feel
+       stays consistent across themes). */
+    --bh-clamp: 960px;
+    --bh-pad: 1.25rem; /* inside a boxed list / card */
+    --bh-section-gap: 2rem; /* between major sections */
+    --bh-row-y: 0.62rem; /* a list row's vertical padding */
+    --bh-hairline: color-mix(in srgb, var(--card-shade-color) 60%, transparent);
+}
+:root.theme-dark {
+    --bh-pos: #8ff0a4;
+    --bh-neg: #ff7b63;
+    --bh-ok-fg: #8ff0a4;
+    --bh-ok-bg: rgba(143, 240, 164, 0.1);
+    --bh-warn-fg: #f8e45c;
+    --bh-warn-bg: rgba(248, 228, 92, 0.1);
+    --bh-info-fg: #99c1f1;
+    --bh-info-bg: rgba(153, 193, 241, 0.1);
+    --bh-hairline: color-mix(in srgb, var(--card-shade-color) 80%, transparent);
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    background: var(--window-bg-color);
+    color: var(--window-fg-color);
+    font-family: var(--document-font-family, 'Adwaita Sans', 'Cantarell', system-ui, sans-serif);
+    line-height: 1.45;
+}
+* {
+    box-sizing: border-box;
+}
+
+/* ── Shell ───────────────────────────────────────────────────── */
+bh-app {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+}
+bh-app adw-header-bar {
+    flex: 0 0 auto;
+    z-index: 5;
+}
+bh-app adw-overlay-split-view {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+/* Scrolling only. The pane COLOURS are the toolkit's since @gjsify/adwaita-web 0.34.0,
+ * which moved them off these private classes onto the `.sidebar-pane` / `.content-pane`
+ * classes the element toggles — because which of the two a pane is in is exactly what
+ * decides its colour. Painting `--sidebar-bg-color` on `.adw-osv-sidebar` at every width,
+ * as this did, is the bug that fix removed: it tints a COLLAPSED overlay, which libadwaita
+ * puts on the window background, as though it were docked. `.content-pane` deliberately
+ * gets no colour of its own — the window shows through — so forcing `--window-bg-color`
+ * here overrode the very token the split view sets for the non-window-child case. */
+.adw-osv-content {
+    overflow-y: auto;
+    height: 100%;
+}
+
+.bh-toolbar {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+.bh-icon {
+    font-size: 1.05rem;
+    line-height: 1;
+    min-width: 2rem;
+    opacity: 0.85;
+}
+.bh-select {
+    appearance: none;
+    border: 1px solid transparent;
+    background: var(--card-shade-color);
+    color: inherit;
+    border-radius: var(--button-radius, 8px);
+    padding: 0.4rem 0.7rem;
+    font: inherit;
+    font-size: 0.9rem;
+}
+.bh-select:hover {
+    background: color-mix(in srgb, var(--card-shade-color) 70%, var(--window-fg-color) 8%);
+}
+/* "öffnen" etc. are <a class="adw-button flat bh-linkbtn"> — adw-button doesn't reset
+   the anchor underline, so drop it here. */
+.bh-linkbtn {
+    text-decoration: none;
+}
+
+/* ── Sidebar nav ─────────────────────────────────────────────── */
+.bh-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0.5rem;
+    min-width: 0; /* let the adw-sidebar shrink to the pane instead of its content */
+}
+/* The nav list itself is an <adw-sidebar>; we only tune its density + wrapping so it
+   matches the roomier hand-rolled nav it replaced (and never scrolls sideways). */
+.bh-nav [data-el='sidebar-host'] {
+    min-width: 0;
+}
+.bh-nav adw-sidebar {
+    overflow-x: clip; /* belt-and-suspenders: never a horizontal scrollbar */
+}
+.bh-nav .adw-sidebar-item {
+    min-height: 3rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+/* Show the full subtitle on its own line(s) like the old nav, instead of
+   ellipsizing — the long ones (e.g. "EÜR · USt · GewSt · Feststellung") were what
+   forced the row wider than the pane. */
+.bh-nav .adw-sidebar-item-subtitle {
+    white-space: normal;
+}
+
+/* ── Entity identity (top of sidebar) ────────────────────────── */
+.bh-entity-id {
+    padding: 0.3rem 0.85rem 0.8rem;
+    margin-bottom: 0.4rem;
+    border-bottom: 1px solid var(--bh-hairline);
+}
+.bh-entity-name {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+.bh-entity-kind {
+    margin-top: 0.2rem;
+    font-size: 0.7rem;
+    opacity: var(--dim-opacity, 0.55);
+}
+.bh-entity-select {
+    font-weight: 600;
+    max-width: 12rem;
+}
+
+/* ── Bottom nav (phones): adw-view-switcher-bar mirroring the 5 primary sidebar
+   destinations. The paired adw-view-stack is a data-only model for the bar (never
+   shown). Hidden on wide screens (docked sidebar); revealed on phones (≤700px),
+   below the 820px point where the sidebar already collapses into a drawer —
+   Sidebar → Drawer → Bottom-Bar, like the native app. */
+.bh-bottomnav {
+    flex: 0 0 auto;
+    display: none;
+}
+.bh-bottomnav .bh-bottom-stack {
+    display: none;
+}
+@media (max-width: 700px) {
+    .bh-bottomnav {
+        display: block;
+    }
+}
+
+/* ── Content column (clamped, centered, airy) ────────────────── */
+.bh-content {
+    /* Fill the split-view content pane: it lays children out in a shrink-to-fit
+     * context, so without an explicit width .bh-content collapses to its content
+     * width (~630px) and the whole dashboard cramps. width:100% makes it fill,
+     * then max-width + margin:auto clamp and centre it. */
+    width: 100%;
+    box-sizing: border-box;
+    padding: clamp(1.25rem, 3vw, 2.5rem) clamp(1rem, 4vw, 2rem) 4rem;
+    max-width: var(--bh-clamp);
+    margin: 0 auto;
+}
+.bh-view-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.75rem;
+}
+.bh-result {
+    font-size: 0.95rem;
+}
+.bh-result strong {
+    font-variant-numeric: tabular-nums;
+}
+.bh-muted {
+    opacity: var(--dim-opacity, 0.55);
+}
+.bh-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 4rem 1rem;
+    opacity: var(--dim-opacity, 0.55);
+}
+
+/* ── Boxed-list surface (Adwaita: card-bg on window-bg, no border) ── */
+.bh-summary,
+.bh-table,
+.bh-taxcard,
+.bh-bwa-card {
+    background: var(--card-bg-color);
+    border-radius: var(--card-radius, 12px);
+}
+.bh-summary {
+    padding: var(--bh-pad);
+    margin-bottom: 1.25rem;
+}
+
+/* ── Stats / summary ─────────────────────────────────────────── */
+.bh-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1.1rem 1.75rem;
+}
+.bh-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+.bh-stat-n {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+}
+.bh-stat-l {
+    font-size: 0.76rem;
+    opacity: var(--dim-opacity, 0.55);
+}
+.bh-stat.warn .bh-stat-n {
+    color: var(--bh-warn-fg);
+}
+.bh-stat-n.pos {
+    color: var(--bh-pos);
+}
+
+/* ── Status line (consolidates the old stacked banners) ──────── */
+.bh-statusline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.25rem;
+    padding: 0.7rem var(--bh-pad);
+    margin-bottom: 1.25rem;
+    background: var(--card-bg-color);
+    border-radius: var(--card-radius, 12px);
+    font-size: 0.84rem;
+}
+.bh-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+}
+.bh-status::before {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--bh-pos);
+    flex: 0 0 auto;
+}
+.bh-status.warn::before {
+    background: var(--bh-warn-fg);
+}
+.bh-status.info::before {
+    background: var(--bh-info-fg);
+}
+.bh-status b {
+    font-variant-numeric: tabular-nums;
+}
+/* Inline "Details" expander inside the status line (no JS; full-width when open). */
+.bh-statusmore {
+    margin-left: auto;
+}
+.bh-statusmore[open] {
+    flex-basis: 100%;
+    margin-left: 0;
+}
+.bh-statusmore > summary {
+    cursor: pointer;
+    list-style: none;
+    opacity: 0.7;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.bh-statusmore > summary::-webkit-details-marker {
+    display: none;
+}
+.bh-statusmore > summary::after {
+    content: '⌄';
+    transition: transform 0.15s ease;
+}
+.bh-statusmore[open] > summary {
+    margin-bottom: 0.5rem;
+}
+.bh-statusmore[open] > summary::after {
+    transform: rotate(180deg);
+}
+.bh-statusdetail {
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--bh-hairline);
+}
+.bh-statusdetail p {
+    margin: 0.35rem 0;
+    opacity: 0.8;
+    font-size: 0.82rem;
+}
+.bh-statusdetail strong {
+    font-variant-numeric: tabular-nums;
+}
+
+/* A single quiet banner (kept for the one-off "all good"/warning note). */
+.bh-banner {
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--button-radius, 8px);
+    font-size: 0.82rem;
+    margin: 0.7rem 0;
+}
+.bh-banner.warn {
+    background: var(--bh-warn-bg);
+    color: var(--bh-warn-fg);
+}
+.bh-banner.ok {
+    background: transparent;
+    opacity: var(--dim-opacity, 0.55);
+    padding-left: 0;
+}
+.bh-banner.info {
+    background: var(--bh-info-bg);
+    color: var(--bh-info-fg);
+}
+
+/* ── Filters ─────────────────────────────────────────────────── */
+.bh-filters {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0 0 1rem;
+}
+/* Account filter sits at the trailing end of the chip row (wraps below on narrow screens). */
+.bh-acct-filter {
+    margin-left: auto;
+}
+.bh-chip {
+    border: 0;
+    background: var(--card-shade-color);
+    color: inherit;
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    font: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: background 0.1s ease;
+}
+.bh-chip:hover {
+    background: color-mix(in srgb, var(--card-shade-color) 65%, var(--window-fg-color) 10%);
+}
+.bh-chip.selected {
+    background: var(--accent-bg-color);
+    color: var(--accent-fg-color);
+}
+
+/* ── Transactions table (Adwaita list/column view) ───────────── */
+.bh-table {
+    overflow: hidden;
+}
+.bh-tr {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(10rem, 1.6fr) 7rem minmax(8rem, 1fr) 6rem minmax(6rem, 0.8fr);
+    gap: 0.75rem;
+    align-items: center;
+    padding: var(--bh-row-y) var(--bh-pad);
+    border-bottom: 1px solid var(--bh-hairline);
+    font-size: 0.86rem;
+}
+.bh-thead {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    /* dim via colour, not element opacity (opacity would let rows bleed through the sticky bg) */
+    color: color-mix(in srgb, var(--window-fg-color) 50%, transparent);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    /* opaque composite of the card colour so scrolled rows don't bleed through (dark mode) */
+    background-color: var(--window-bg-color);
+    background-image: linear-gradient(var(--card-bg-color), var(--card-bg-color));
+}
+.bh-tr:last-child {
+    border-bottom: 0;
+}
+.bh-r {
+    text-align: right;
+}
+.bh-cp {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.bh-cp small {
+    opacity: var(--dim-opacity, 0.5);
+    font-size: 0.74rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.bh-amt {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+.bh-amt.neg {
+    color: var(--bh-neg);
+}
+.bh-amt.pos {
+    color: var(--bh-pos);
+}
+.bh-cat {
+    font-size: 0.82rem;
+}
+.bh-kz {
+    font-size: 0.66rem;
+    background: var(--card-shade-color);
+    border-radius: 5px;
+    padding: 0.05rem 0.3rem;
+    opacity: 0.85;
+}
+/* Source: a quiet dotted label, not a coloured pill. */
+.bh-badge {
+    font-size: 0.74rem;
+    white-space: nowrap;
+    opacity: 0.75;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.bh-badge::before {
+    content: '';
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0.6;
+}
+.bh-badge.s-document {
+    color: var(--bh-ok-fg);
+}
+.bh-badge.s-rule {
+    color: var(--bh-info-fg);
+}
+.bh-badge.s-unclassified {
+    color: var(--bh-warn-fg);
+}
+.bh-link {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+.bh-link:hover {
+    text-decoration: underline;
+}
+.bh-empty {
+    padding: 2.5rem;
+    text-align: center;
+    opacity: var(--dim-opacity, 0.5);
+}
+
+/* Row secondary tags: account + transfer/PayPal markers — subtle. */
+.bh-rowtags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 0.25rem;
+    font-size: 0.68rem;
+    opacity: 0.7;
+}
+.bh-acct {
+    font-weight: 600;
+}
+.bh-tag {
+    white-space: nowrap;
+}
+.bh-tag.tf {
+    color: var(--accent-color);
+}
+.bh-tag.pp {
+    color: var(--bh-info-fg);
+}
+.bh-tag.s24 {
+    color: var(--bh-warn-fg);
+    font-weight: 600;
+}
+.bh-tag.excl {
+    color: var(--bh-neg);
+    opacity: 0.85;
+}
+.bh-tr.is-transfer {
+    opacity: 0.5; /* ±0 internal transfers — de-emphasised */
+}
+.bh-tr.is-transfer:hover {
+    opacity: 0.9;
+}
+.bh-tr-click {
+    cursor: pointer;
+}
+.bh-tbody .bh-tr-click:hover {
+    background: var(--card-shade-color);
+}
+
+/* ── Section heading between stacked card grids (e.g. Fristen view) ───────── */
+.bh-section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 1.75rem 0 0.75rem;
+}
+.bh-section-title small {
+    font-weight: 400;
+    font-size: 0.85rem;
+}
+
+/* ── Tax / Steuerkonto sections (heading + boxed list) ───────── */
+.bh-cards {
+    display: grid;
+    /* min(…, 100%) so a single card never overflows a narrow phone viewport */
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: 1.25rem;
+    align-items: start;
+}
+.bh-taxcard {
+    padding: var(--bh-pad);
+}
+.bh-taxcard h2 {
+    font-size: 1.02rem;
+    font-weight: 700;
+    margin: 0;
+}
+.bh-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+}
+/* The card's headline figure — prominent, but a number, not a loud chip. */
+.bh-pill {
+    font-size: 1.05rem;
+    font-weight: 800;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+}
+/* The PDF-export link + the headline figure share the right side of a tax card head. */
+.bh-card-head-actions {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+}
+.bh-pdf-btn {
+    font-size: 0.78rem;
+    padding: 0.1rem 0.5rem;
+    min-height: 0;
+    align-self: center;
+}
+.bh-dl {
+    margin: 0;
+}
+.bh-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.42rem 0;
+    border-bottom: 1px solid var(--bh-hairline);
+    font-size: 0.88rem;
+}
+.bh-line:last-child {
+    border-bottom: 0;
+}
+.bh-line dt {
+    min-width: 0;
+}
+.bh-line dt small {
+    display: block;
+    opacity: var(--dim-opacity, 0.5);
+    font-size: 0.74rem;
+}
+.bh-line dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    font-weight: 600;
+}
+.bh-line dd.pos {
+    color: var(--bh-pos);
+}
+.bh-line dd.neg {
+    color: var(--bh-neg);
+}
+.bh-line.sum {
+    font-weight: 700;
+}
+.bh-line.total {
+    font-weight: 800;
+    border-top: 1px solid var(--card-shade-color);
+    border-bottom: 0;
+    margin-top: 0.3rem;
+    padding-top: 0.55rem;
+}
+.bh-subhead {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: var(--dim-opacity, 0.5);
+    margin: 1rem 0 0.25rem;
+    font-weight: 600;
+}
+.bh-kzrow .bh-kz {
+    margin-right: 0.3rem;
+}
+.bh-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.3rem;
+}
+.bh-chip-static {
+    font-size: 0.72rem;
+    background: var(--card-shade-color);
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    opacity: 0.85;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── Expander row (Adwaita: collapsible detail tucked away) ───── */
+.bh-details {
+    margin-top: 0.85rem;
+    border-top: 1px solid var(--bh-hairline);
+}
+.bh-details > summary {
+    cursor: pointer;
+    list-style: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    opacity: 0.8;
+    padding: 0.6rem 0 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.bh-details > summary::-webkit-details-marker {
+    display: none;
+}
+.bh-details > summary::before {
+    content: '⌄';
+    font-size: 0.9rem;
+    line-height: 1;
+    transition: transform 0.15s ease;
+    opacity: 0.6;
+}
+.bh-details[open] > summary::before {
+    transform: rotate(180deg);
+}
+.bh-details > summary:hover {
+    opacity: 1;
+}
+
+.bh-error {
+    color: var(--bh-neg);
+    font-size: 0.85rem;
+}
+
+/* ── Steuer-Dashboard band (Fristen + geschätzte Steuerlast) ──── */
+.bh-dash {
+    padding: var(--bh-pad);
+    margin-bottom: 1.5rem;
+}
+.bh-dash-stats {
+    margin: 0.9rem 0 1.1rem;
+}
+/* Fristen as a boxed list of rows (hairline-separated, no per-row border). */
+.bh-fristen {
+    display: flex;
+    flex-direction: column;
+}
+.bh-frist {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    padding: 0.7rem 0;
+    border-top: 1px solid var(--bh-hairline);
+}
+.bh-frist-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    flex: 1 1 16rem;
+}
+.bh-frist-main small {
+    opacity: var(--dim-opacity, 0.6);
+    font-size: 0.74rem;
+}
+.bh-frist-amt {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.bh-frist-badge {
+    font-size: 0.72rem;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    opacity: 0.85;
+}
+.bh-frist-badge.ok {
+    color: var(--bh-pos);
+}
+.bh-frist-badge.warn {
+    color: var(--bh-warn-fg);
+}
+.bh-dash-note {
+    margin: 0.9rem 0 0;
+    font-size: 0.76rem;
+}
+/* Recurring-invoice reminder status badges (settings → Rechnungsstellung). */
+.bh-due-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 0.05rem 0.4rem;
+    border-radius: 0.5rem;
+    margin-right: 0.4rem;
+    white-space: nowrap;
+    background: color-mix(in srgb, currentColor 14%, transparent);
+}
+.bh-due-badge.overdue {
+    color: var(--bh-neg);
+}
+.bh-due-badge.soon {
+    color: var(--bh-warn-fg);
+}
+.bh-due-badge.upcoming {
+    color: var(--bh-pos);
+}
+.bh-due-badge.muted {
+    opacity: 0.55;
+}
+
+/* ── BWA / Auswertungen (monthly P&L grid) ───────────────────── */
+.bh-bwa-card {
+    padding: 0.4rem 0;
+    overflow: hidden;
+}
+.bh-bwa-scroll {
+    overflow-x: auto;
+}
+.bh-bwa {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+}
+.bh-bwa th,
+.bh-bwa td {
+    padding: 0.46rem 0.8rem;
+    white-space: nowrap;
+}
+.bh-bwa thead th {
+    font-weight: 600;
+    text-align: right;
+    border-bottom: 1px solid var(--bh-hairline);
+    opacity: var(--dim-opacity, 0.6);
+}
+.bh-bwa thead th:first-child {
+    text-align: left;
+}
+.bh-bwa th[scope='row'] {
+    text-align: left;
+    font-weight: 400;
+}
+.bh-bwa-num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+.bh-bwa .neg {
+    color: var(--bh-neg);
+}
+/* Frosted glass: blur the month columns sliding underneath so the position label stays
+   legible even where --card-bg-color is translucent (notably dark mode). */
+.bh-bwa th:first-child,
+.bh-bwa td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: color-mix(in srgb, var(--window-bg-color) 85%, transparent);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    box-shadow: 6px 0 10px -8px rgba(0, 0, 0, 0.18);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .bh-bwa th:first-child,
+    .bh-bwa td:first-child {
+        background-color: var(--window-bg-color);
+        background-image: linear-gradient(var(--card-bg-color), var(--card-bg-color));
+    }
+}
+.bh-bwa-sum {
+    border-left: 1px solid var(--bh-hairline);
+    font-weight: 600;
+}
+.bh-bwa-costline th[scope='row'] {
+    padding-left: 1.5rem;
+    opacity: 0.85;
+}
+/* Collapsible operating-cost detail (toggle on the "Summe Betriebskosten" row). */
+.bh-bwa.is-collapsed .bh-bwa-costline {
+    display: none;
+}
+.bh-bwa-toggle {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+.bh-bwa-chev {
+    display: inline-block;
+    transition: transform 0.15s ease;
+    opacity: 0.55;
+}
+.bh-bwa:not(.is-collapsed) .bh-bwa-chev {
+    transform: rotate(180deg);
+}
+.bh-bwa-subtotal th,
+.bh-bwa-subtotal td,
+.bh-bwa-result th,
+.bh-bwa-result td {
+    font-weight: 700;
+    border-top: 1px solid var(--bh-hairline);
+}
+.bh-bwa-result th,
+.bh-bwa-result td {
+    border-top: 1px solid var(--card-shade-color);
+}
+.bh-bwa-margin th,
+.bh-bwa-margin td {
+    font-style: italic;
+    font-size: 0.76rem;
+    opacity: var(--dim-opacity, 0.6);
+}
+.bh-bwa-note {
+    margin-top: 0.9rem;
+    font-size: 0.76rem;
+}
+
+/* ── Einblicke (advisory notices, boxed list) ────────────────── */
+.bh-hinweise {
+    background: var(--card-bg-color);
+    border-radius: var(--card-radius, 12px);
+}
+.bh-hinweis {
+    display: flex;
+    gap: 0.85rem;
+    padding: var(--bh-pad);
+    border-top: 1px solid var(--bh-hairline);
+}
+.bh-hinweis:first-child {
+    border-top: 0;
+}
+.bh-hinweis-dot {
+    flex: 0 0 auto;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 999px;
+    margin-top: 0.4rem;
+    background: var(--bh-info-fg);
+}
+.bh-hinweis.l-warnung .bh-hinweis-dot {
+    background: var(--bh-warn-fg);
+}
+.bh-hinweis.l-tipp .bh-hinweis-dot {
+    background: var(--accent-color);
+}
+.bh-hinweis.l-info .bh-hinweis-dot {
+    background: color-mix(in srgb, var(--window-fg-color) 38%, transparent);
+}
+.bh-hinweis-body {
+    min-width: 0;
+}
+.bh-hinweis-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+.bh-hinweis-head strong {
+    font-size: 0.95rem;
+}
+.bh-hinweis-ref {
+    font-size: 0.72rem;
+    opacity: var(--dim-opacity, 0.55);
+    white-space: nowrap;
+}
+.bh-hinweis p {
+    margin: 0.25rem 0 0;
+    font-size: 0.86rem;
+    opacity: 0.85;
+    line-height: 1.5;
+}
+
+/* Einblicke as a responsive card grid — the v2 Auswertungen screen stacks the BWA matrix and these
+   hint cards on one page (each hint its own card), rather than the boxed list above. */
+.bh-hinweise-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.9rem;
+    align-items: start;
+}
+.bh-hinweis-card {
+    display: flex;
+    gap: 0.7rem;
+    padding: var(--bh-pad);
+    background: var(--card-bg-color);
+    border-radius: var(--card-radius, 12px);
+    box-shadow: var(--shadow-card, 0 1px 3px rgba(0, 0, 6, 0.08));
+}
+.bh-hinweis-card.l-warnung .bh-hinweis-dot {
+    background: var(--bh-warn-fg);
+}
+.bh-hinweis-card.l-tipp .bh-hinweis-dot {
+    background: var(--accent-color);
+}
+.bh-hinweis-card.l-info .bh-hinweis-dot {
+    background: color-mix(in srgb, var(--window-fg-color) 38%, transparent);
+}
+.bh-hinweis-card p {
+    margin: 0.25rem 0 0;
+    font-size: 0.86rem;
+    opacity: 0.85;
+    line-height: 1.5;
+}
+
+/* ── Belege-Inbox (missing-receipt rows, grouped by month) ───── */
+.bh-beleg-month {
+    margin-top: 1.25rem;
+}
+.bh-beleg-month:first-child {
+    margin-top: 0;
+}
+.bh-beleg {
+    display: grid;
+    grid-template-columns: 5rem 1fr auto auto;
+    gap: 0.4rem 1rem;
+    align-items: center;
+    padding: var(--bh-row-y) var(--bh-pad);
+    border-top: 1px solid var(--bh-hairline);
+    cursor: pointer;
+}
+.bh-beleg:first-child {
+    border-top: 0;
+}
+.bh-beleg:hover {
+    background: var(--card-shade-color);
+}
+.bh-beleg-date {
+    font-size: 0.82rem;
+    opacity: 0.8;
+    white-space: nowrap;
+}
+.bh-beleg-cp {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.bh-beleg-cp small {
+    opacity: var(--dim-opacity, 0.5);
+    font-size: 0.74rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.bh-beleg-amt {
+    text-align: right;
+    white-space: nowrap;
+}
+.bh-beleg-vst {
+    font-size: 0.8rem;
+    opacity: 0.75;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+@media (max-width: 560px) {
+    .bh-beleg {
+        grid-template-columns: 1fr auto;
+    }
+    .bh-beleg-date {
+        grid-column: 1 / -1;
+    }
+    .bh-beleg-vst {
+        grid-column: 2;
+        text-align: right;
+    }
+}
+
+/* ── KI-Assistent (single-turn Q&A) ──────────────────────────── */
+.bh-chat-answer {
+    min-height: 1rem;
+    margin-bottom: 1.25rem;
+}
+.bh-chat-q {
+    font-weight: 600;
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+}
+.bh-chat-a {
+    background: var(--card-bg-color);
+    border-radius: var(--card-radius, 12px);
+    padding: var(--bh-pad);
+    line-height: 1.6;
+}
+.bh-chat-thinking {
+    opacity: var(--dim-opacity, 0.55);
+    padding: var(--bh-pad) 0;
+}
+.bh-chat-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.85rem;
+}
+.bh-chat-form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-end;
+}
+.bh-chat-input {
+    flex: 1;
+    resize: vertical;
+    font: inherit;
+    padding: 0.65rem 0.8rem;
+    border-radius: var(--button-radius, 8px);
+    border: 1px solid var(--card-shade-color);
+    background: var(--view-bg-color, var(--card-bg-color));
+    color: inherit;
+    min-height: 2.6rem;
+}
+.bh-chat-send {
+    white-space: nowrap;
+}
+
+/* ── Einstellungen (Adwaita switch rows) ─────────────────────── */
+.bh-setlist {
+    background: var(--card-bg-color);
+    border-radius: var(--card-radius, 12px);
+    margin-bottom: 1rem;
+}
+.bh-setrow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem var(--bh-pad);
+    border-top: 1px solid var(--bh-hairline);
+    cursor: pointer;
+}
+/* Round accent avatar with initials (v2 contact/party style). Colour via --bh-av. */
+.bh-avatar {
+    flex: 0 0 2.1rem;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--bh-av, var(--accent-bg-color)) 22%, transparent);
+    color: var(--bh-av, var(--accent-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.8rem;
+    letter-spacing: 0.01em;
+}
+/* Let the text column take the row's free space so the avatar hugs the left and
+ * the action buttons stay right (the row is justify-content:space-between). */
+.bh-setrow .bh-setrow-text {
+    flex: 1;
+    min-width: 0;
+}
+.bh-setrow:first-child {
+    border-top: 0;
+}
+.bh-setrow-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+.bh-setrow-text small {
+    opacity: var(--dim-opacity, 0.55);
+    font-size: 0.76rem;
+}
+.bh-help-btn:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+/* "schreibt" marker on a write-capable tool's action-row (slot="suffix"). */
+.bh-tool-write {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.05rem 0.4rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--warning-bg-color, #e5a50a) 30%, transparent);
+    color: var(--warning-color, #c07f00);
+    white-space: nowrap;
+}
+
+.bh-set-note {
+    font-size: 0.8rem;
+    margin: 0 0 0.75rem;
+}
+.bh-set-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.bh-set-status {
+    font-size: 0.85rem;
+}
+
+/* ── Help (ⓘ popovers) + Lernmodus ───────────────────────────── */
+.bh-icon.active {
+    background: color-mix(in srgb, var(--accent-bg-color) 30%, transparent);
+    color: var(--accent-color);
+    border-radius: var(--button-radius, 8px);
+}
+bh-help {
+    display: inline-flex;
+    vertical-align: middle;
+}
+.bh-help-btn {
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 999px;
+    border: 0;
+    background: var(--card-shade-color);
+    color: inherit;
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.6;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0.15rem;
+}
+.bh-help-btn:hover {
+    opacity: 1;
+    background: var(--accent-bg-color);
+    color: var(--accent-fg-color);
+}
+/* STILL hand-rolled, on purpose — see bh-help.ts. <adw-popover> is an IN-TREE surface
+ * (`position: absolute` against its anchor), and every place a <bh-help> sits is a
+ * container dimmed with `opacity` (.bh-subhead, .bh-muted, .bh-stat-l). `opacity < 1`
+ * both composites the whole subtree — dimming the popover with it — and creates a
+ * stacking context the popover cannot escape, so it paints UNDER the following text.
+ * Measured, not guessed: 320x137 at the right anchor, `elementFromPoint` returning the
+ * paragraph below it. Escaping that means dimming with a colour instead of `opacity`
+ * in ~80 call sites, which is its own change with its own visual review. */
+.bh-help-pop {
+    position: fixed;
+    z-index: 1200;
+    background: var(--view-bg-color, #fff);
+    color: var(--window-fg-color);
+    border-radius: var(--window-radius, 12px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.28);
+    padding: 0.85rem 1rem;
+    font-size: 0.84rem;
+    border: 1px solid var(--bh-hairline);
+}
+.theme-dark .bh-help-pop {
+    background: #2a2a2e;
+}
+.bh-help-pop strong {
+    display: block;
+    margin-bottom: 0.3rem;
+}
+.bh-help-pop p {
+    margin: 0;
+    opacity: 0.85;
+    line-height: 1.5;
+}
+
+/* ── Transaction detail modal ────────────────────────────────── */
+.bh-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+.bh-modal {
+    background: var(--view-bg-color, #ffffff);
+    color: var(--window-fg-color, inherit);
+    border-radius: var(--window-radius, 14px);
+    max-width: 560px;
+    width: 100%;
+    max-height: 88vh;
+    overflow: auto;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+.theme-dark .bh-modal {
+    background: #2a2a2e;
+}
+.bh-modal-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1.1rem var(--bh-pad);
+    border-bottom: 1px solid var(--bh-hairline);
+    position: sticky;
+    top: 0;
+    background: inherit;
+}
+.bh-modal-title {
+    flex: 1;
+    min-width: 0;
+}
+.bh-modal-title h2 {
+    margin: 0;
+    font-size: 1.05rem;
+}
+.bh-modal-sub {
+    opacity: var(--dim-opacity, 0.6);
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+}
+.bh-modal-amt {
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.bh-modal-amt.neg {
+    color: var(--bh-neg);
+}
+.bh-modal-amt.pos {
+    color: var(--bh-pos);
+}
+.bh-modal-x {
+    background: none;
+    border: 0;
+    color: inherit;
+    font-size: 1.1rem;
+    cursor: pointer;
+    opacity: 0.6;
+    padding: 0.1rem 0.3rem;
+}
+.bh-modal-x:hover {
+    opacity: 1;
+}
+.bh-modal-body {
+    padding: 0.5rem var(--bh-pad) var(--bh-pad);
+}
+.bh-d-sec {
+    margin-top: 1.1rem;
+}
+.bh-d-sec h3 {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: var(--dim-opacity, 0.5);
+    margin: 0 0 0.35rem;
+}
+.bh-d-sec dl {
+    margin: 0;
+}
+.bh-d-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.32rem 0;
+    border-bottom: 1px solid var(--bh-hairline);
+    font-size: 0.88rem;
+}
+.bh-d-row:last-child {
+    border-bottom: 0;
+}
+.bh-d-row dt {
+    opacity: var(--dim-opacity, 0.65);
+    flex-shrink: 0;
+}
+.bh-d-row dd {
+    margin: 0;
+    text-align: right;
+    word-break: break-word;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── Mobile: table rows become stacked cards ─────────────────── */
+@media (max-width: 820px) {
+    /* keep the header toolbar from crowding on narrow phones */
+    .bh-toolbar {
+        gap: 0.35rem;
+    }
+    .bh-select {
+        font-size: 0.82rem;
+        padding: 0.35rem 0.5rem;
+    }
+    .bh-entity-select {
+        max-width: 8.5rem;
+    }
+    .bh-thead {
+        display: none;
+    }
+    .bh-tr {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.25rem 0.75rem;
+        padding: 0.85rem var(--bh-pad);
+    }
+    .bh-tr > span {
+        min-width: 0;
+    }
+    .bh-tr > span[data-l]::before {
+        content: attr(data-l) ': ';
+        font-size: 0.66rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        opacity: 0.45;
+        display: block;
+    }
+    .bh-cp,
+    .bh-cat {
+        grid-column: 1 / -1;
+    }
+    .bh-r {
+        text-align: left;
+    }
+}
+
+/* ── PDF report (hidden on screen, shown only when printing) ──── */
+#bh-print {
+    display: none;
+}
+@media print {
+    bh-app {
+        display: none !important;
+    }
+    #bh-print {
+        display: block;
+        color: #000;
+        font-size: 9.5pt;
+        font-family: 'Adwaita Sans', 'Cantarell', system-ui, sans-serif;
+    }
+    @page {
+        size: A4 portrait;
+        margin: 13mm;
+    }
+    .bh-pr-head {
+        border-bottom: 2pt solid #000;
+        padding-bottom: 5pt;
+        margin-bottom: 10pt;
+    }
+    .bh-pr-head h1 {
+        margin: 0;
+        font-size: 15pt;
+    }
+    .bh-pr-title {
+        font-size: 11pt;
+        font-weight: 600;
+    }
+    .bh-pr-meta {
+        font-size: 8pt;
+        color: #555;
+    }
+    #bh-print h2 {
+        font-size: 11pt;
+        border-bottom: 0.75pt solid #999;
+        margin: 14pt 0 5pt;
+        padding-bottom: 2pt;
+    }
+    .bh-pr-break {
+        break-before: page;
+    }
+    .bh-pr-grid2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6pt 16pt;
+    }
+    .bh-pr-tbl {
+        width: 100%;
+        border-collapse: collapse;
+        break-inside: avoid;
+        margin-bottom: 4pt;
+    }
+    .bh-pr-tbl caption {
+        text-align: left;
+        font-weight: 700;
+        padding: 3pt 0 1pt;
+    }
+    .bh-pr-tbl td,
+    .bh-pr-tbl th {
+        border-bottom: 0.5pt solid #ccc;
+        padding: 1.5pt 4pt;
+        text-align: left;
+        vertical-align: top;
+    }
+    .bh-pr-num {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+    .bh-pr-total td {
+        font-weight: 700;
+        border-top: 0.75pt solid #000;
+    }
+    .bh-pr-sub {
+        color: #777;
+        font-size: 8pt;
+    }
+    .bh-pr-warn td {
+        color: #b00020;
+        font-weight: 700;
+    }
+    .bh-pr-note {
+        font-size: 8pt;
+        color: #555;
+        margin: 3pt 0;
+    }
+    .bh-pr-muted td {
+        color: #999;
+    }
+    .bh-pr-txtbl {
+        font-size: 8pt;
+    }
+    .bh-pr-txtbl thead {
+        display: table-header-group;
+    }
+    .bh-pr-txtbl tr {
+        break-inside: avoid;
+    }
+    .bh-pr-txtbl .neg {
+        color: #b00020;
+    }
+    .bh-pr-txtbl .pos {
+        color: #1a7f4f;
+    }
+}
+
+/* ── Konten (account connections) ─────────────────────────────── */
+.bh-konto {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem var(--bh-pad);
+    border-top: 1px solid var(--bh-hairline);
+}
+.bh-konto:first-child {
+    border-top: 0;
+}
+.bh-konto-main {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.bh-konto-h {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.bh-konto-badge {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.05rem 0.4rem;
+    border-radius: 999px;
+    background: var(--card-shade-color);
+    opacity: 0.85;
+}
+.bh-konto-badge.live {
+    background: color-mix(in srgb, var(--accent-bg-color) 30%, transparent);
+    color: var(--accent-color);
+    opacity: 1;
+}
+.bh-konto-entity {
+    font-size: 0.75rem;
+    opacity: var(--dim-opacity, 0.6);
+}
+.bh-konto-sub {
+    font-size: 0.78rem;
+    opacity: var(--dim-opacity, 0.6);
+    margin-top: 0.15rem;
+}
+.bh-konto-net {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.bh-konto-trennen {
+    flex: 0 0 auto;
+    border: 0;
+    background: transparent;
+    color: var(--bh-neg);
+    font: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+    padding: 0.3rem 0.55rem;
+    border-radius: 8px;
+}
+.bh-konto-trennen:hover {
+    background: color-mix(in srgb, var(--bh-neg) 14%, transparent);
+}
+.bh-konto-trennen:focus-visible,
+.bh-connect > summary:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+.bh-import {
+    padding: 1rem var(--bh-pad);
+    margin-bottom: 1rem;
+}
+.bh-import-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.bh-file {
+    flex: 1 1 auto;
+    min-width: 0;
+    font: inherit;
+    font-size: 0.85rem;
+}
+.bh-import-full {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    opacity: 0.85;
+    margin: 0.7rem 0;
+}
+.bh-rebuild {
+    background: color-mix(in srgb, var(--accent-bg-color) 20%, var(--card-bg-color));
+    border-radius: var(--card-radius, 12px);
+    padding: 0.6rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+}
+.bh-dialog {
+    background: var(--view-bg-color, #fff);
+    border-radius: var(--window-radius, 14px);
+    padding: 1.25rem 1.5rem;
+    max-width: 34rem;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+.theme-dark .bh-dialog {
+    background: #2a2a2e;
+}
+.bh-dialog h2 {
+    margin: 0 0 0.5rem;
+}
+.bh-dialog-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+.bh-dialog-status {
+    display: block;
+    margin-top: 0.5rem;
+}
+
+/* ── Live-connection forms (collapsible) ──────────────────────── */
+.bh-connect {
+    background: var(--card-bg-color);
+    border-radius: var(--card-radius, 12px);
+    margin-bottom: 0.75rem;
+}
+.bh-connect > summary {
+    padding: 0.75rem var(--bh-pad);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    list-style: none;
+}
+.bh-connect > summary::-webkit-details-marker {
+    display: none;
+}
+.bh-connect-body {
+    padding: 0 var(--bh-pad) 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+/* Stacked form fields inside a modal dialog need breathing room between them. */
+.bh-dialog .bh-field {
+    margin-bottom: 0.7rem;
+}
+.bh-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.8rem;
+}
+.bh-field > span {
+    opacity: var(--dim-opacity, 0.7);
+}
+.bh-input {
+    font: inherit;
+    font-size: 0.9rem;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid var(--bh-hairline);
+    border-radius: var(--button-radius, 8px);
+    background: var(--view-bg-color, var(--window-bg-color));
+    color: inherit;
+}
+.bh-input:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 1px;
+}
+
+/* ── Belege (documents) view ─────────────────────────────────────── */
+.bh-doc-toolbar {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0 0 1rem;
+}
+.bh-doc-search {
+    flex: 1 1 18rem;
+}
+.bh-doc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
+    gap: 1.1rem;
+    align-items: start;
+}
+.bh-doc-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--card-bg-color);
+    border: 1px solid var(--bh-hairline);
+    border-radius: var(--card-radius, 12px);
+    overflow: hidden;
+    cursor: pointer;
+    transition:
+        box-shadow 0.12s ease,
+        transform 0.12s ease;
+}
+.bh-doc-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-1px);
+}
+.bh-doc-card:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+.bh-doc-thumb {
+    aspect-ratio: 4 / 3;
+    background: var(--window-bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-bottom: 1px solid var(--bh-hairline);
+}
+.bh-doc-thumb img {
+    width: 100%;
+    height: 100%;
+    /* contain (not cover): show the whole Beleg page, no cropping of portrait scans. */
+    object-fit: contain;
+    background: #fff;
+}
+.bh-doc-ico {
+    font-size: 2.4rem;
+    opacity: 0.5;
+}
+.bh-doc-body {
+    padding: var(--bh-pad);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    flex: 1;
+}
+.bh-doc-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.bh-doc-meta {
+    font-size: 0.78rem;
+    opacity: 0.6;
+}
+.bh-doc-amt {
+    font-size: 0.95rem;
+    margin-top: 0.1rem;
+}
+
+/* Detail modal: definition list + inline preview + AI block */
+.bh-deflist {
+    margin: 0 0 0.75rem;
+}
+.bh-def {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid var(--bh-hairline);
+}
+.bh-def dt {
+    flex: 0 0 9rem;
+    opacity: 0.65;
+    font-size: 0.85rem;
+}
+.bh-def dd {
+    margin: 0;
+    flex: 1;
+}
+.bh-doc-preview {
+    margin: 0 0 0.9rem;
+    border: 1px solid var(--bh-hairline);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--window-bg-color);
+    min-height: 8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.bh-doc-preview img {
+    max-width: 100%;
+    max-height: 60vh;
+    display: block;
+}
+.bh-doc-preview iframe {
+    width: 100%;
+    height: 60vh;
+    border: 0;
+}
+.bh-doc-preview .bh-muted {
+    padding: 2rem 1rem;
+}
+.bh-ocr {
+    margin: 0.5rem 0;
+}
+.bh-ocr pre {
+    white-space: pre-wrap;
+    max-height: 14rem;
+    overflow: auto;
+    font-size: 0.8rem;
+    background: var(--window-bg-color);
+    padding: 0.6rem;
+    border-radius: 8px;
+}
+.bh-ai {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+.bh-cand {
+    list-style: none;
+    margin: 0.4rem 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+.bh-tag.tf {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+/* ── Rechnungen: filter chips, clickable rows, detail table, action bar ── */
+.bh-chiprow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0 0 10px;
+}
+.bh-chip {
+    font-size: 0.85em;
+}
+.bh-setrow-click {
+    cursor: pointer;
+}
+.bh-setrow-click:hover {
+    background: var(--card-shade-color, rgba(0, 0, 0, 0.04));
+}
+.bh-set-chevron {
+    color: var(--dim-label-color, #888);
+    font-size: 1.2em;
+    padding: 0 4px;
+}
+.bh-invoice-items {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+.bh-invoice-items th,
+.bh-invoice-items td {
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+    text-align: left;
+    vertical-align: top;
+}
+.bh-invoice-items th {
+    color: var(--dim-label-color, #888);
+    font-weight: 600;
+}
+.bh-invoice-items .bh-num {
+    text-align: right;
+    white-space: nowrap;
+}
+.bh-invoice-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+/* ── Invoice form: live totals + header action button ── */
+.bh-invoice-total {
+    padding: 8px 12px;
+    font-size: 0.95em;
+    color: var(--dim-label-color, #555);
+    text-align: right;
+}
+.bh-view-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+/* ── Mark-paid inline panel ── */
+.bh-paid-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 0 0;
+}
+.bh-paid-date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.bh-cand {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 4px;
+}
+
+/* ── Home / Übersicht dashboard ──────────────────────────────── */
+.bh-home {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 3rem;
+}
+.bh-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 0.9rem;
+}
+.bh-kpi {
+    background: var(--card-bg-color);
+    border-radius: var(--card-radius, 12px);
+    box-shadow: var(--shadow-card, 0 1px 3px rgba(0, 0, 6, 0.08));
+    padding: 1rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+    overflow: hidden;
+}
+.bh-kpi-l {
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+.bh-kpi-n {
+    font-size: 1.65rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.bh-kpi-n.pos {
+    color: var(--bh-pos);
+}
+.bh-kpi-n.neg {
+    color: var(--bh-neg);
+}
+.bh-kpi-s {
+    font-size: 0.78rem;
+    opacity: 0.55;
+}
+.bh-kpi-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-width: 0;
+}
+.bh-kpi-spark {
+    flex: 0 1 96px;
+    min-width: 0;
+    display: flex;
+    justify-content: flex-end;
+}
+.bh-home-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+.bh-home-h2 {
+    font-size: 1.02rem;
+    font-weight: 700;
+    margin: 0;
+}
+.bh-home-card {
+    background: var(--card-bg-color);
+    border-radius: var(--card-radius, 12px);
+    box-shadow: var(--shadow-card, 0 1px 3px rgba(0, 0, 6, 0.08));
+    padding: 1.15rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+}
+.bh-home-2col {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: 0.9rem;
+    align-items: stretch;
+}
+.bh-legend {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    opacity: 0.75;
+}
+.bh-legend-i {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.bh-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    display: inline-block;
+}
+.bh-tasklist {
+    background: var(--card-bg-color);
+    border-radius: var(--card-radius, 12px);
+    box-shadow: var(--shadow-card, 0 1px 3px rgba(0, 0, 6, 0.08));
+    overflow: hidden;
+}
+.bh-task {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem var(--bh-pad);
+    border-top: 1px solid var(--bh-hairline);
+}
+.bh-task:first-child {
+    border-top: 0;
+}
+.bh-task-n {
+    flex: 0 0 1.6rem;
+    height: 1.6rem;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.82rem;
+    background: color-mix(in srgb, var(--accent-bg-color) 18%, transparent);
+    color: var(--accent-bg-color);
+}
+.bh-task.t-warn .bh-task-n {
+    background: var(--bh-warn-bg);
+    color: var(--bh-warn-fg);
+}
+.bh-task-body {
+    min-width: 0;
+}
+.bh-task-title {
+    font-weight: 600;
+    font-size: 0.92rem;
+}
+.bh-task-sub {
+    font-size: 0.78rem;
+    opacity: 0.55;
+}
+.bh-catbars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+.bh-catbar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+.bh-catbar-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.86rem;
+}
+.bh-catbar-track {
+    height: 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--window-fg-color) 8%, transparent);
+    overflow: hidden;
+}
+.bh-catbar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--accent-bg-color);
+}
+.bh-num {
+    font-variant-numeric: tabular-nums;
+    opacity: 0.8;
+    white-space: nowrap;
+}
+.bh-liq-accts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin-top: auto;
+}
+.bh-liq-acc {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.86rem;
+}
+.bh-liq-ini {
+    flex: 0 0 1.4rem;
+    height: 1.4rem;
+    border-radius: 6px;
+    background: var(--accent-bg-color);
+    color: var(--accent-fg-color, #fff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.72rem;
+}
+.bh-liq-name {
+    flex: 1;
+    opacity: 0.85;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ── Tab hubs (consolidated views: Steuer · Auswertungen · Beleg-Eingang) ── */
+.bh-hub {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+/* adw-inline-view-switcher: center the segmented toggle bar, keep the panels full-width. */
+.bh-hub-switcher {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1.1rem;
+    min-width: 0;
+}
+.bh-hub-switcher .adw-inline-view-switcher-pages {
+    align-self: stretch;
+    width: 100%;
+    min-width: 0;
+}
+.bh-hub-page {
+    min-width: 0;
+}
+
+/* ── Steuererklärungs-Wizard (pill stepper) ──────────────────── */
+.bh-wizard {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+/* Money-first result hero (design 01–03): big Nachzahlung/Erstattung + key-figure mini-table. */
+.bh-result-hero {
+    background: var(--card-bg-color);
+    border-radius: var(--card-radius, 12px);
+    box-shadow: var(--shadow-card, 0 1px 3px rgba(0, 0, 6, 0.08));
+    padding: 1.15rem 1.35rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+.bh-hero-primary {
+    flex: 1 1 auto;
+    min-width: 12rem;
+}
+.bh-hero-label {
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+.bh-hero-amt {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    margin: 0.1rem 0;
+}
+.bh-hero-amt.pay {
+    color: var(--bh-warn-fg);
+}
+.bh-hero-amt.refund {
+    color: var(--bh-pos);
+}
+.bh-hero-ctx {
+    font-size: 0.82rem;
+    opacity: 0.6;
+}
+.bh-hero-figures {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 14rem;
+}
+.bh-hero-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+}
+.bh-hero-row > span:first-child {
+    opacity: 0.65;
+}
+.bh-result-banner {
+    background: var(--card-bg-color);
+    border-radius: var(--card-radius, 12px);
+    box-shadow: var(--shadow-card, 0 1px 3px rgba(0, 0, 6, 0.08));
+    padding: 1.15rem 1.35rem;
+    border-left: 4px solid var(--bh-warn-fg);
+}
+.bh-result-banner.ready {
+    border-left-color: var(--bh-pos);
+}
+.bh-result-label {
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+.bh-result-status {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin: 0.1rem 0 0.2rem;
+}
+.bh-result-banner.ready .bh-result-status {
+    color: var(--bh-pos);
+}
+.bh-result-sub {
+    font-size: 0.82rem;
+    opacity: 0.6;
+}
+/* Honest readiness: red banner + status once a machine cross-check errored. */
+.bh-result-banner.error {
+    border-left-color: var(--bh-neg);
+}
+.bh-result-banner.error .bh-result-status {
+    color: var(--bh-neg);
+}
+.bh-cc-errline {
+    color: var(--bh-neg);
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-top: 0.3rem;
+}
+
+/* ── Steuer-Themen cards + Abzugs-Wasserfall (privat ESt) ─────────── */
+.bh-themes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    gap: 0.9rem;
+}
+.bh-theme-hint {
+    font-size: 0.82rem;
+    margin: -0.2rem 0 0.4rem;
+}
+.bh-pill.pos {
+    color: var(--bh-pos);
+}
+.bh-pill.neg {
+    color: var(--bh-neg);
+}
+.bh-waterfall dd.pos {
+    color: var(--bh-pos);
+}
+.bh-waterfall dd.neg {
+    color: var(--bh-neg);
+}
+
+/* ── Machine Querprüfungen (Gegenprüfung) ────────────────────────── */
+.bh-cc-list {
+    background: var(--card-bg-color);
+    border-radius: var(--card-radius, 12px);
+    margin-top: 0.5rem;
+}
+.bh-cc-row {
+    display: flex;
+    gap: 0.7rem;
+    padding: 0.7rem var(--bh-pad, 1rem);
+    border-top: 1px solid var(--bh-hairline);
+}
+.bh-cc-row:first-child {
+    border-top: 0;
+}
+.bh-cc-glyph {
+    flex: 0 0 auto;
+    font-weight: 700;
+}
+.bh-cc-glyph.ok {
+    color: var(--bh-pos);
+}
+.bh-cc-glyph.warn {
+    color: var(--bh-warn-fg);
+}
+.bh-cc-glyph.error {
+    color: var(--bh-neg);
+}
+.bh-cc-glyph.info {
+    opacity: 0.5;
+}
+.bh-cc-body {
+    min-width: 0;
+}
+.bh-cc-body > .bh-muted {
+    font-size: 0.84rem;
+    line-height: 1.45;
+    margin-top: 0.1rem;
+}
+.bh-cc-nums {
+    font-size: 0.78rem;
+    opacity: 0.7;
+    font-variant-numeric: tabular-nums;
+    margin-top: 0.15rem;
+}
+.bh-cc-manual-h {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 1.1rem 0 0.4rem;
+}
+.bh-stepper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.bh-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.85rem 0.45rem 0.45rem;
+    border: 0;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--window-fg-color) 6%, transparent);
+    color: inherit;
+    font: inherit;
+    font-size: 0.86rem;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.bh-step:hover {
+    background: color-mix(in srgb, var(--window-fg-color) 11%, transparent);
+}
+.bh-step.active {
+    background: color-mix(in srgb, var(--accent-bg-color) 20%, transparent);
+    font-weight: 600;
+}
+.bh-step-badge {
+    flex: 0 0 1.5rem;
+    height: 1.5rem;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.78rem;
+    background: color-mix(in srgb, var(--window-fg-color) 12%, transparent);
+}
+.bh-step.active .bh-step-badge {
+    background: var(--accent-bg-color);
+    color: var(--accent-fg-color, #fff);
+}
+.bh-step.s-ok .bh-step-badge {
+    background: color-mix(in srgb, var(--bh-pos) 85%, black);
+    color: #fff;
+}
+.bh-step.s-warn .bh-step-badge {
+    background: var(--bh-warn-fg);
+    color: #fff;
+}
+.bh-step.s-blocked .bh-step-badge {
+    background: var(--bh-neg);
+    color: #fff;
+}
+.bh-step-panel {
+    background: var(--card-bg-color);
+    border-radius: var(--card-radius, 12px);
+    box-shadow: var(--shadow-card, 0 1px 3px rgba(0, 0, 6, 0.08));
+    padding: 1.25rem 1.35rem;
+}
+.bh-step-head {
+    margin-bottom: 0.9rem;
+}
+.bh-step-h {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 0.15rem;
+}
+.bh-step-rows {
+    display: flex;
+    flex-direction: column;
+}
+.bh-step-line {
+    padding: 0.6rem 0;
+    border-top: 1px solid var(--bh-hairline);
+    font-size: 0.9rem;
+}
+.bh-step-line:first-child {
+    border-top: 0;
+}
+.bh-step-line.bh-alloc {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+/* "Hier beheben" deep-links below a step's details (e.g. offene Buchungen → Buchungen-Ansicht). */
+.bh-step-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.95rem;
+}
+.bh-nav-action {
+    font-size: 0.85rem;
+}
+
+/* ── Beleg-Eingang guided review (two-pane) ──────────────────── */
+.bh-review {
+    display: flex;
+    min-height: 0;
+    height: 100%;
+}
+.bh-rev-list {
+    flex: 0 0 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0.75rem;
+    border-right: 1px solid var(--bh-hairline);
+    overflow-y: auto;
+}
+.bh-rev-head {
+    font-size: 0.78rem;
+    opacity: 0.55;
+    padding: 0.25rem 0.5rem 0.5rem;
+}
+.bh-rev-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    text-align: left;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    padding: 0.55rem 0.6rem;
+    border-radius: 9px;
+    cursor: pointer;
+}
+.bh-rev-item:hover {
+    background: color-mix(in srgb, var(--window-fg-color) 6%, transparent);
+}
+.bh-rev-item.sel {
+    background: color-mix(in srgb, var(--accent-bg-color) 16%, transparent);
+}
+.bh-rev-item-main {
+    flex: 1;
+    min-width: 0;
+}
+.bh-rev-item-t {
+    font-weight: 600;
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.bh-rev-item-s {
+    font-size: 0.76rem;
+    opacity: 0.55;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.bh-rev-detail {
+    flex: 1;
+    min-width: 0;
+    overflow-y: auto;
+    padding: 1.25rem;
+}
+/* The confirm/correct step after linking — a centered single column (NOT the .bh-review flex row). */
+.bh-rev-confirm {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    overflow-y: auto;
+}
+.bh-rev-confirm .bh-select,
+.bh-rev-confirm .bh-input {
+    width: 100%;
+}
+.bh-rev-confirm [data-confirm] {
+    align-self: flex-start;
+    margin-top: 0.4rem;
+}
+.bh-rev-why {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--bh-warn-bg);
+    color: var(--bh-warn-fg);
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    font-size: 0.86rem;
+    margin-bottom: 1rem;
+}
+.bh-rev-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: 1.25rem;
+    align-items: start;
+}
+.bh-rev-preview {
+    background: var(--card-bg-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-card, 0 1px 3px rgba(0, 0, 6, 0.08));
+    overflow: hidden;
+    min-height: 260px;
+}
+.bh-rev-frame {
+    width: 100%;
+    height: 340px;
+    border: 0;
+    display: block;
+}
+.bh-rev-img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+.bh-rev-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+.bh-rev-vendor {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 0.3rem;
+}
+.bh-rev-h {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0.9rem 0 0.4rem;
+}
+.bh-rev-cand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    border-top: 1px solid var(--bh-hairline);
+}
+.bh-rev-cand:first-of-type {
+    border-top: 0;
+}
+.bh-rev-cand-main {
+    flex: 1;
+    min-width: 0;
+}
+.bh-rev-cand-t {
+    font-weight: 600;
+    font-size: 0.88rem;
+}
+.bh-rev-cand-s {
+    font-size: 0.76rem;
+    opacity: 0.55;
+}
+.bh-rev-cand-r {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}

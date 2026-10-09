@@ -1,0 +1,181 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the eu.jumplink.Steuererklaerung package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: eu.jumplink.Steuererklaerung\n"
+"Report-Msgid-Bugs-To: https://github.com/JumpLink/buchhaltung/issues\n"
+"POT-Creation-Date: 2026-10-06 11:27+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. TRANSLATORS: Title of the AI assistant side panel
+#. TRANSLATORS: Tooltip on the button revealing the AI assistant side panel
+#: src/frontends/desktop/assistent-panel.blp:30
+#: src/frontends/desktop/views/tab-hub.ts:105
+#: src/frontends/desktop/window.blp:127
+msgid "Assistant"
+msgstr ""
+
+#. TRANSLATORS: Tooltip on the button that hides the assistant panel
+#: src/frontends/desktop/assistent-panel.blp:40
+msgid "Close"
+msgstr ""
+
+#. TRANSLATORS: Placeholder in the assistant's question field
+#: src/frontends/desktop/assistent-panel.blp:108
+msgid "Question about your figures …"
+msgstr ""
+
+#. TRANSLATORS: Tooltip on the button that sends the question
+#: src/frontends/desktop/assistent-panel.blp:117
+msgid "Send"
+msgstr ""
+
+#. TRANSLATORS: Standing note under the assistant's input, stating its limits
+#: src/frontends/desktop/assistent-panel.blp:127
+msgid "Sees aggregated figures only — not tax advice."
+msgstr ""
+
+#: src/frontends/desktop/assistent-panel.ts:91
+#, javascript-format
+msgid "Context: %s"
+msgstr ""
+
+#: src/frontends/desktop/views/herleitung-dialog.blp:7
+msgid "Herleitung"
+msgstr ""
+
+#: src/frontends/desktop/views/herleitung-dialog.blp:29
+msgid "Berechne Herleitung …"
+msgstr ""
+
+#: src/frontends/desktop/views/herleitung-dialog.blp:40
+#: src/frontends/desktop/views/rechnung-detail-dialog.blp:41
+msgid "Konnte nicht laden"
+msgstr ""
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.blp:7
+msgid "Konto hinzufügen"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnung-detail-dialog.blp:30
+msgid "Lade Details …"
+msgstr ""
+
+#: src/frontends/desktop/views/tab-hub.ts:104
+msgid "Tax return"
+msgstr ""
+
+#: src/frontends/desktop/views/tab-hub.ts:107
+msgid "Annexes"
+msgstr ""
+
+#: src/frontends/desktop/views/tab-hub.ts:109
+msgid "Tax account"
+msgstr ""
+
+#: src/frontends/desktop/views/tab-hub.ts:114
+msgid "Inbox"
+msgstr ""
+
+#: src/frontends/desktop/views/tab-hub.ts:115
+msgid "Open receipts"
+msgstr ""
+
+#: src/frontends/desktop/views/tab-hub.ts:116
+msgid "All receipts"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:50
+msgid "Open"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:51
+msgid "Invoiced"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:52
+msgid "Internal"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:346
+msgid "Nothing tracked yet."
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:361
+msgid "Today"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:363
+msgid "Yesterday"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:381
+msgid "estimated"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:406
+msgid "Assign project"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:406
+#: src/frontends/desktop/views/zeiten-view.ts:415
+msgid "Already invoiced"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:415
+msgid "Delete entry"
+msgstr ""
+
+#: src/frontends/desktop/widgets/entity-switcher.ts:100
+msgid "New entity …"
+msgstr ""
+
+#: src/frontends/desktop/widgets/entity-switcher.ts:101
+msgid "Rename …"
+msgstr ""
+
+#: src/frontends/desktop/widgets/entity-switcher.ts:102
+msgid "Remove …"
+msgstr ""
+
+#: src/frontends/desktop/widgets/glossary-help.ts:56
+#, javascript-format
+msgid "Explanation: %s"
+msgstr ""
+
+#. TRANSLATORS: Primary menu item opening the assistant that adds a further entity
+#: src/frontends/desktop/window.blp:7
+msgid "Set up entity …"
+msgstr ""
+
+#. TRANSLATORS: Primary menu item listing the keyboard shortcuts
+#: src/frontends/desktop/window.blp:13
+msgid "Keyboard shortcuts"
+msgstr ""
+
+#. TRANSLATORS: Primary menu item opening the about dialog. "Steuererklärung" is the
+#. application name and stays untranslated.
+#: src/frontends/desktop/window.blp:20
+msgid "About Steuererklärung"
+msgstr ""
+
+#. TRANSLATORS: Primary menu item that closes the application
+#: src/frontends/desktop/window.blp:26
+msgid "Quit"
+msgstr ""
+
+#. TRANSLATORS: Subtitle under the app name in the sidebar header, marking this as the
+#. native front-end beside the web one
+#: src/frontends/desktop/window.blp:70
+msgid "Native preview"
+msgstr ""

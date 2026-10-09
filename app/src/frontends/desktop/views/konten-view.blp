@@ -1,0 +1,74 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Konten view body. Static chrome in Blueprint; the "Aktive Verbindungen" card grid and the ERiC
+// card are filled programmatically (see konten-view.ts).
+template $BhKontenView: Adw.Bin {
+  Gtk.Stack stack {
+    Gtk.StackPage {
+      name: "loading";
+      child: Gtk.Box {
+        orientation: vertical;
+        valign: center;
+        halign: center;
+        spacing: 12;
+
+        Adw.Spinner {
+          width-request: 32;
+          height-request: 32;
+        }
+
+        Gtk.Label {
+          label: "Lade Konten …";
+          styles ["dim-label"]
+        }
+      };
+    }
+
+    Gtk.StackPage {
+      name: "error";
+      child: Adw.StatusPage error_page {
+        icon-name: "dialog-error-symbolic";
+        title: "Konnte nicht laden";
+      };
+    }
+
+    Gtk.StackPage {
+      name: "content";
+      child: Gtk.ScrolledWindow scroller {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        child: Adw.Clamp {
+          maximum-size: 900;
+          margin-top: 18;
+          margin-bottom: 18;
+          margin-start: 12;
+          margin-end: 12;
+
+          child: Gtk.Box {
+            orientation: vertical;
+            spacing: 18;
+
+            // "Aktive Verbindungen" — section heading + a responsive card grid (one card per
+            // connection, with per-card Synchronisieren + Trennen), filled programmatically.
+            Gtk.Box connections_box {
+              orientation: vertical;
+              spacing: 12;
+            }
+
+            // ERiC status/apply errors surface here (adjacent to the ERiC card).
+            Adw.Banner eric_banner {
+              revealed: false;
+            }
+
+            // Systembibliotheken (ELSTER/ERiC) — status + path import, filled programmatically.
+            Adw.PreferencesGroup eric_group {
+              title: "Systembibliotheken (ELSTER/ERiC)";
+            }
+          };
+        };
+      };
+    }
+  }
+}

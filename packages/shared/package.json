@@ -1,0 +1,22 @@
+{
+  "name": "@steuererklaerung/shared",
+  "version": "0.1.0",
+  "license": "LGPL-3.0-or-later",
+  "author": "Pascal Garber",
+  "private": true,
+  "type": "module",
+  "description": "Shared leaf utilities for steuererklaerung (date helpers, lenient LLM-JSON parsing, HTTP error snippets, LLM model defaults). Pure TypeScript, no platform split — runs on Node and GJS via gjsify.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check": "tsc --noEmit --project tsconfig.json"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "jsonrepair": "^3.14.0",
+    "zod": "^4.3.6"
+  }
+}

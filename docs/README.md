@@ -1,0 +1,51 @@
+# Dokumentation
+
+Das Handbuch zur App: der steuerliche Ablauf, den sie unterstützt, die Prozesse rundherum und
+die belegten Referenzen, gegen die ihre Zahlen geprüft werden.
+
+**Kommandoreferenz** (alle CLI-Befehle, Konfiguration, Architektur): [`../app/README.md`](../app/README.md).
+**Für Agenten**: [`../AGENTS.md`](../AGENTS.md).
+
+> **Was hier NICHT steht.** Diese Doku ist bewusst frei von konkreten Zahlen, Steuernummern,
+> Kontoverbindungen und Kundennamen. Alles Betriebsspezifische lebt in der gitignorierten
+> `steuererklaerung.json` (Stammdaten, Steuernummern, Konten, wiederkehrende Rechnungen), im lokalen
+> Ledger-Store und im DMS (Paperless-ngx bzw. das eingebaute DMS) — nie im Repo. Wenn du beim
+> Schreiben eines Dokuments eine echte Zahl brauchst, gehört das Dokument nicht hierher.
+
+## Ablauf & Fristen
+
+| Dokument | Beschreibung |
+|----------|-------------|
+| [steuer-workflow.md](steuer-workflow.md) | Der Quartals- und Jahreszyklus: welche Kommandos in welcher Reihenfolge |
+| [fristen.md](fristen.md) | USt-VA-Termine, Dauerfristverlängerung, Jahreserklärungen |
+
+## Prozesse
+
+| Dokument | Beschreibung |
+|----------|-------------|
+| [prozesse/jahresabschluss.md](prozesse/jahresabschluss.md) | Jahresabschluss & EÜR — Datengrundlage, Ablauf, Formular-Status je Erklärung |
+| [prozesse/elster-web-formular.md](prozesse/elster-web-formular.md) | Ein Jahresformular in Mein ELSTER eintragen: Ablauf, Fallen, offene Tooling-Lücken |
+| [prozesse/rechnungsstellung.md](prozesse/rechnungsstellung.md) | § 14 UStG — Pflichtangaben und Workflow für Ausgangsrechnungen |
+
+## Referenzen
+
+| Dokument | Beschreibung |
+|----------|-------------|
+| [references/tax-sources.md](references/tax-sources.md) | **Steuerrechtliche Konstanten je Veranlagungszeitraum — jede mit Quelle und Abrufdatum.** Die zentrale Registry, auf die der Code per Kommentar verweist |
+| [references/elster-schemas.md](references/elster-schemas.md) | Formular → DatenArt / Nutzdaten-Root / Kennzahlen, verifiziert aus der lokalen ERiC-Distribution |
+
+## Oberflächen
+
+| Dokument | Beschreibung |
+|----------|-------------|
+| [paperless-konfiguration.md](paperless-konfiguration.md) | Vorgeschlagenes Schema für Tags, Korrespondenten und Dokumenttypen in Paperless-NGX |
+| [app/README.md](app/README.md) | Native GNOME-App — Bildschirm für Bildschirm, wofür jede Ansicht da ist (Screenshots aus der Demo-Entität, in [screenshots/](screenshots/)) |
+| [ideen-nutzerfuehrung.md](ideen-nutzerfuehrung.md) | Ideenliste nach Priorität: einfacher bedienen, früher warnen, ohne KI nutzbar (Konzepte, keine Aufträge) |
+
+## Warum die Quellenpflicht
+
+Diese App ersetzt keinen Steuerberater, sie bereitet die Erklärung selbst auf. Damit ist jede
+Zahl, die sie berechnet, nur so viel wert wie ihre Herleitung. Deshalb gilt: **keine
+steuerrechtliche Konstante ohne Quelle, Abrufdatum und Veranlagungszeitraum** in
+[references/tax-sources.md](references/tax-sources.md) — und viele davon ändern sich jährlich.
+Verbindlich ist am Ende der Steuerbescheid; die Übermittlung validiert ERiC.

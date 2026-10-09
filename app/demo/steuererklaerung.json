@@ -1,0 +1,266 @@
+{
+  "version": 1,
+  "entities": [
+    {
+      "id": "gbr",
+      "name": "Fischer & Weber GbR",
+      "kind": "gbr",
+      "demo": true,
+      "accounts": ["qonto:*", "paypal:*", "camt:*"],
+      "dms": { "type": "builtin" },
+      "invoicing": { "type": "self", "self": { "numberPrefix": "RE-" } },
+      "projects": [
+        {
+          "id": "wattkueste-relaunch",
+          "name": "Website-Relaunch Wattküste",
+          "contactId": "demo-c-wattkueste",
+          "domains": ["wattkueste-neu.example"],
+          "notes": "Fiktives Demo-Projekt: Rechnungen, Stunden und Ausgaben (Idee 14)."
+        },
+        {
+          "id": "segelschule-buchung",
+          "name": "Buchungssystem Segelschule",
+          "contactId": "demo-c-segelschule",
+          "notes": "Fiktives Demo-Projekt: Pauschalrechnung ohne Stunden und offene Zeiten (Rechnung ↔ Projekt)."
+        }
+      ],
+      "recurring": [
+        {
+          "id": "nordwerk-studios-wartung",
+          "status": "active",
+          "customer": {
+            "name": "Nordwerk Studios",
+            "email": "buchhaltung@nordwerk-studios.example"
+          },
+          "description": "Website-Wartung & Support (Monatspauschale)",
+          "domains": ["nordwerk-studios.example"],
+          "intervalMonths": 1,
+          "nextPeriod": { "start": "2026-07-01", "end": "2026-07-31" },
+          "nextDueDate": "2026-07-01",
+          "reminderLeadDays": 7,
+          "paymentTermsDays": 14,
+          "currency": "EUR",
+          "items": [
+            {
+              "title": "Website-Wartung & Support",
+              "description": "Updates, Backups, Monitoring, kleine Änderungen",
+              "quantity": 1,
+              "unit": "Monat",
+              "unitPrice": 180,
+              "vatRate": 19
+            }
+          ],
+          "lastInvoice": {
+            "number": "RE-2026-0087",
+            "issueDate": "2026-06-01",
+            "period": { "start": "2026-06-01", "end": "2026-06-30" }
+          },
+          "notes": "Monatlicher Wartungs-Retainer. Fiktiver Demo-Kunde."
+        },
+        {
+          "id": "kranich-verlag-lizenz",
+          "status": "active",
+          "customer": {
+            "name": "Kranich Verlag",
+            "email": "rechnungen@kranich-verlag.example"
+          },
+          "description": "Jahreslizenz Redaktionssystem",
+          "domains": ["kranich-verlag.example"],
+          "intervalMonths": 12,
+          "nextPeriod": { "start": "2026-08-01", "end": "2027-07-31" },
+          "nextDueDate": "2026-08-01",
+          "reminderLeadDays": 28,
+          "currency": "EUR",
+          "items": [
+            {
+              "title": "Software-Lizenz Redaktionssystem",
+              "description": "Jahreslizenz inkl. Sicherheitsupdates",
+              "quantity": 1,
+              "unit": "Jahr",
+              "unitPrice": 1200,
+              "vatRate": 19
+            },
+            {
+              "title": "Update- & Support-Flatrate",
+              "quantity": 1,
+              "unit": "Jahr",
+              "unitPrice": 300,
+              "vatRate": 19
+            }
+          ],
+          "lastInvoice": {
+            "number": "RE-2025-0061",
+            "issueDate": "2025-08-01",
+            "period": { "start": "2025-08-01", "end": "2026-07-31" }
+          },
+          "notes": "Jährliche Lizenz. Fiktiver Demo-Kunde."
+        }
+      ],
+      "elster": {
+        "entity_id": "gbr",
+        "tax_number": "9198081508152",
+        "period": { "year": 2025, "quarter": 1 },
+        "test_mode": true,
+        "taxation_basis": "ist",
+        "betrieb": {
+          "name": "Fischer & Weber GbR",
+          "strasse": "Musterstraße 1",
+          "plz": "12345",
+          "ort": "Musterstadt",
+          "art": "Webdesign und Software"
+        },
+        "gewerbe": { "gemeinde": "Musterstadt", "hebesatz": 400 },
+        "klassifizierung": {
+          "projekt_regeln": [{ "muster": "Relaunch Wattküste", "projekt": "wattkueste-relaunch" }]
+        },
+        "gesellschafter": [
+          { "id": "fischer", "name": "Mara Fischer", "steuer_id": "08635274182", "quote": 0.5 },
+          { "id": "weber", "name": "Jonas Weber", "steuer_id": "04712958348", "quote": 0.5 }
+        ],
+        "adjustments": {
+          "anlageverzeichnis": [
+            {
+              "id": "laptop-2023",
+              "bezeichnung": "Notebook (Entwicklung)",
+              "anschaffung": "2023-01-10",
+              "ahk": 1800,
+              "nutzungsdauer_jahre": 3,
+              "restbuchwert_anfang": 600,
+              "erinnerungswert": 1,
+              "art": "beweglich"
+            },
+            {
+              "id": "monitor-2023",
+              "bezeichnung": "4K-Monitor 32 Zoll",
+              "anschaffung": "2023-09-01",
+              "ahk": 690,
+              "nutzungsdauer_jahre": 3,
+              "restbuchwert_anfang": 230,
+              "erinnerungswert": 1,
+              "art": "beweglich"
+            },
+            {
+              "id": "buerostuhl-2024",
+              "bezeichnung": "Ergonomischer Bürostuhl",
+              "anschaffung": "2024-04-15",
+              "ahk": 520,
+              "nutzungsdauer_jahre": 13,
+              "restbuchwert_anfang": 480,
+              "art": "beweglich"
+            },
+            {
+              "id": "einbauten-2022",
+              "bezeichnung": "Büro-Einbauten (Regale, Akustik)",
+              "anschaffung": "2022-05-01",
+              "ahk": 6000,
+              "nutzungsdauer_jahre": 10,
+              "restbuchwert_anfang": 4200,
+              "art": "gebaeude"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "privat",
+      "name": "Privat",
+      "kind": "privat",
+      "demo": true,
+      "accounts": ["fints:*"],
+      "est": {
+        "entity_id": "privat",
+        "veranlagung": "einzel",
+        "person": {
+          "name": "Alex Fischer",
+          "steuer_id": "09561348291",
+          "steuernummer": "9198081508160",
+          "geburtsdatum": "1988-03-14",
+          "strasse": "Lindenweg",
+          "hausnummer": "7",
+          "plz": "12345",
+          "ort": "Musterstadt",
+          "iban": "DE55370400440532013030",
+          "bundesland": "Niedersachsen",
+          "kirchensteuersatz": 0,
+          "kinder": 1
+        },
+        "kinder": [
+          {
+            "vorname": "Robin",
+            "idnr": "02954736129",
+            "geburtsdatum": "2016-05-12",
+            "familienkasse": "Familienkasse Niedersachsen-Bremen",
+            "kindschaftsverhaeltnis": "1",
+            "anderer_elternteil": {
+              "name": "Muster, Kim",
+              "geburtsdatum": "1987-09-02",
+              "adresse": "Hafenstraße 3, 12345 Musterstadt"
+            },
+            "jahre": [
+              {
+                "jahr": 2025,
+                "kindergeld_anspruch": 3060,
+                "haushalt": {
+                  "getrennt_zeitraum": "01.01-31.12",
+                  "kind_bei_mir_zeitraum": "01.01-31.12"
+                },
+                "kinderbetreuung": [
+                  {
+                    "bezeichnung": "Kita Regenbogen, Musterstadt",
+                    "zeitraum_von": "01.01",
+                    "zeitraum_bis": "31.12",
+                    "betrag": 2400
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "jahre": [
+          {
+            "jahr": 2025,
+            "bruttoarbeitslohn": 34200.0,
+            "steuerklasse": 2,
+            "lohnsteuer": 4800.0,
+            "soli": 0.0,
+            "kirchensteuer": 0.0,
+            "lohnersatz": { "erhalten": 640.0, "zurueckgezahlt": 0.0 },
+            "entlastung_alleinerziehende": { "monate": 12, "weitere_kinder": 0, "kind_idnr": "02954736129" },
+            "vorsorge": {
+              "rv_arbeitnehmer": 3180.0,
+              "rv_arbeitgeber_steuerfrei": 3180.0,
+              "kv_basis": 2600.0,
+              "pv_basis": 600.0,
+              "av_arbeitnehmer": 444.6,
+              "ag_zuschuss": true
+            },
+            "werbungskosten": {
+              "homeoffice_tage": 84,
+              "homeoffice_anderer_arbeitsplatz": true,
+              "pendel": { "arbeitstage": 46, "km_einfach": 26, "ziel": "12345 Musterstadt, Am Deich 12" },
+              "posten": [
+                { "bezeichnung": "Arbeitsmittel (Monitor, Tastatur)", "betrag": 620.0 },
+                { "bezeichnung": "Fortbildung: TypeScript-Kurs", "betrag": 480.0 },
+                { "bezeichnung": "Fachliteratur & Software", "betrag": 200.0 }
+              ]
+            }
+          }
+        ],
+        "par35a_arbeitskosten": [
+          { "transaktion_id": "demo-giro-109", "bezeichnung": "Elektro Petersen · Arbeitslohn + Anfahrt", "arbeitskosten": 160.0 },
+          { "transaktion_id": "demo-giro-112", "bezeichnung": "Malermeister Voss · Arbeitslohn", "arbeitskosten": 420.0 }
+        ]
+      }
+    }
+  ],
+  "paperless": {
+    "document_type_ids": {
+      "incoming_invoice": 1,
+      "outgoing_invoice": 2
+    }
+  },
+  "app": {
+    "assistant": { "enabled": true },
+    "mcp": { "enabled": true, "allowWrite": false }
+  }
+}

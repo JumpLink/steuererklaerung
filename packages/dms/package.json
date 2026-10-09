@@ -1,0 +1,25 @@
+{
+  "name": "@steuererklaerung/dms",
+  "version": "0.1.0",
+  "license": "LGPL-3.0-or-later",
+  "author": "Pascal Garber",
+  "private": true,
+  "type": "module",
+  "description": "Document-management abstraction for steuererklaerung: the back-end-agnostic DmsProvider (built-in DMS + Paperless-ngx), the AI receipt extraction (\"KI statt OCR\"), and the store↔document reconciliation read-path. Shared by the CLI/web and the future native GNOME app. Pure TypeScript, runs on Node + GJS via gjsify.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check": "tsc --noEmit --project tsconfig.json"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.3.186",
+    "@steuererklaerung/paperless": "*",
+    "@steuererklaerung/shared": "*",
+    "@steuererklaerung/store": "*",
+    "zod": "^4.3.6"
+  }
+}

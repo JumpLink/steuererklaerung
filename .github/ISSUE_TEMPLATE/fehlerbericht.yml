@@ -1,0 +1,46 @@
+name: Fehlerbericht
+description: Etwas rechnet falsch, bricht ab oder verhält sich anders als beschrieben.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Keine echten Daten hier hinein.** Keine Steuernummern, IBANs, Kundennamen oder
+        Beträge aus deiner echten Buchhaltung — auch nicht in Screenshots oder Logs.
+        Lässt der Fehler sich auf den Demo-Daten (`--demo`) nachstellen, ist das die
+        beste Grundlage für einen Bericht. Sicherheitslücken bitte **nicht** hier, sondern
+        über [SECURITY.md](../blob/main/SECURITY.md) melden.
+
+  - type: textarea
+    id: was
+    attributes:
+      label: Was passiert, und was hättest du erwartet?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduktion
+    attributes:
+      label: Wie lässt es sich nachstellen?
+      description: Das genaue Kommando bzw. der Weg durch die Oberfläche. Fehlermeldung im Wortlaut, falls es eine gibt.
+      render: shell
+    validations:
+      required: true
+
+  - type: input
+    id: umgebung
+    attributes:
+      label: Umgebung
+      description: "Distribution, `gjs --version`, `gjsify --version`, und welche Oberfläche: App, CLI, Web oder MCP."
+      placeholder: "Fedora 44 · gjs 1.88.1 · gjsify 0.38.1 · native App"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: pruefungen
+    attributes:
+      label: Vorab geprüft
+      options:
+        - label: Der Fehler tritt mit einem frisch gebauten Stand auf (`gjsify run build`).
+        - label: In diesem Bericht stehen keine echten Steuer-, Bank- oder Kundendaten.
+          required: true

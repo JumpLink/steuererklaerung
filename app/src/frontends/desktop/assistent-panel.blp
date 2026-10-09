@@ -1,0 +1,136 @@
+using Gtk 4.0;
+
+// The panel's chrome. What TypeScript still owns is the conversation: chat bubbles and example
+// chips go into `messages`, and the context card's two labels are set per open view.
+//
+// The three signals are connected HERE rather than in TypeScript, which is the framework's
+// convention (`clicked => $_onX()`, handler on the class). It is also the part a screenshot cannot
+// verify — a template that renders perfectly with an unconnected button looks identical — so the
+// close button is driven through the devtools ActivateWidget hook instead.
+template $BhAssistentPanel: Gtk.Box {
+  orientation: vertical;
+  width-request: 320;
+
+  Gtk.Box {
+    orientation: horizontal;
+    spacing: 8;
+    margin-top: 12;
+    margin-bottom: 12;
+    margin-start: 14;
+    margin-end: 10;
+
+    Gtk.Image {
+      icon-name: "starred-symbolic";
+
+      styles ["accent"]
+    }
+
+    Gtk.Label {
+      // TRANSLATORS: Title of the AI assistant side panel
+      label: _("Assistant");
+      xalign: 0;
+      hexpand: true;
+
+      styles ["heading"]
+    }
+
+    Gtk.Button {
+      icon-name: "window-close-symbolic";
+      // TRANSLATORS: Tooltip on the button that hides the assistant panel
+      tooltip-text: _("Close");
+
+      styles ["flat", "circular"]
+
+      clicked => $_onCloseClicked();
+    }
+  }
+
+  Gtk.Separator {}
+
+  // Fixed context card: names the currently open view so the assistant's help is in context.
+  // Hidden until a view sets it.
+  Gtk.Box context_card {
+    orientation: vertical;
+    spacing: 2;
+    visible: false;
+    margin-start: 14;
+    margin-end: 14;
+    margin-top: 12;
+
+    styles ["card"]
+
+    Gtk.Label context_title {
+      xalign: 0;
+      margin-start: 12;
+      margin-end: 12;
+      margin-top: 8;
+
+      styles ["caption", "dim-label"]
+    }
+
+    Gtk.Label context_hint {
+      xalign: 0;
+      wrap: true;
+      margin-start: 12;
+      margin-end: 12;
+      margin-bottom: 10;
+    }
+  }
+
+  Gtk.ScrolledWindow scroller {
+    vexpand: true;
+    hscrollbar-policy: never;
+
+    styles ["undershoot-top"]
+
+    child: Gtk.Box messages {
+      orientation: vertical;
+      spacing: 12;
+      margin-top: 14;
+      margin-bottom: 14;
+      margin-start: 14;
+      margin-end: 14;
+    };
+  }
+
+  Gtk.Separator {}
+
+  Gtk.Box {
+    orientation: horizontal;
+    spacing: 8;
+    margin-top: 10;
+    margin-bottom: 6;
+    margin-start: 14;
+    margin-end: 14;
+
+    Gtk.Entry entry {
+      // TRANSLATORS: Placeholder in the assistant's question field
+      placeholder-text: _("Question about your figures …");
+      hexpand: true;
+
+      activate => $_onSendClicked();
+    }
+
+    Gtk.Button {
+      icon-name: "go-next-symbolic";
+      // TRANSLATORS: Tooltip on the button that sends the question
+      tooltip-text: _("Send");
+
+      styles ["suggested-action", "circular"]
+
+      clicked => $_onSendClicked();
+    }
+  }
+
+  Gtk.Label {
+    // TRANSLATORS: Standing note under the assistant's input, stating its limits
+    label: _("Sees aggregated figures only — not tax advice.");
+    xalign: 0;
+    wrap: true;
+    margin-start: 14;
+    margin-end: 14;
+    margin-bottom: 12;
+
+    styles ["dim-label", "caption"]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "steuererklaerung": {
+      "command": "${CLAUDE_PROJECT_DIR:-.}/node_modules/.bin/gjsify",
+      "args": [
+        "run",
+        "${CLAUDE_PROJECT_DIR:-.}/app/dist/steuer.gjs.mjs",
+        "mcp"
+      ],
+      "cwd": "${CLAUDE_PROJECT_DIR:-.}/app",
+      "env": {
+        "SYNC_CONFIG": "${CLAUDE_PROJECT_DIR:-.}/app/sync-config.json",
+        "DOTENV_CONFIG_PATH": "${CLAUDE_PROJECT_DIR:-.}/app/.env"
+      }
+    }
+  }
+}

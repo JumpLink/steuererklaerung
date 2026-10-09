@@ -1,0 +1,21 @@
+{
+  "name": "@steuererklaerung/paperless",
+  "version": "0.1.0",
+  "license": "LGPL-3.0-or-later",
+  "author": "Pascal Garber",
+  "private": true,
+  "type": "module",
+  "description": "Paperless-ngx REST client + document-field helpers for steuererklaerung. Read/write surface used by the DMS Paperless provider, the sync/AI flows and the future GNOME app. Pure TypeScript (fetch), runs on Node + GJS via gjsify.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check": "tsc --noEmit --project tsconfig.json"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "@steuererklaerung/shared": "*"
+  }
+}
