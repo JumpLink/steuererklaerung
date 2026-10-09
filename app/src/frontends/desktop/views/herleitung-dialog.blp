@@ -4,7 +4,7 @@ using Adw 1;
 // One page of the Herleitung dialog's NavigationView: header bar + a loading/error/content stack.
 // The "content" child is added programmatically once the figure has loaded (see herleitung-dialog.ts).
 template $BhHerleitungPage: Adw.NavigationPage {
-  title: _("Herleitung");
+  title: _("Derivation");
 
   child: Adw.ToolbarView {
     [top]
@@ -26,7 +26,7 @@ template $BhHerleitungPage: Adw.NavigationPage {
           }
 
           Gtk.Label loading_label {
-            label: _("Berechne Herleitung …");
+            label: _("Calculating derivation …");
             styles ["dim-label"]
           }
         };
@@ -37,7 +37,7 @@ template $BhHerleitungPage: Adw.NavigationPage {
 
         child: Adw.StatusPage error_page {
           icon-name: "dialog-error-symbolic";
-          title: _("Konnte nicht laden");
+          title: _("Could not load");
         };
       }
     };

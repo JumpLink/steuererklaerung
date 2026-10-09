@@ -27,7 +27,7 @@ template $BhRechnungDetailBody: Adw.Bin {
             }
 
             Gtk.Label {
-              label: _("Lade Details …");
+              label: _("Loading details …");
               styles ["dim-label"]
             }
           };
@@ -38,7 +38,7 @@ template $BhRechnungDetailBody: Adw.Bin {
 
           child: Adw.StatusPage {
             icon-name: "dialog-error-symbolic";
-            title: _("Konnte nicht laden");
+            title: _("Could not load");
           };
         }
       };

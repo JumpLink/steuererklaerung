@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-06 11:27+0200\n"
+"POT-Creation-Date: 2026-10-09 18:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,8 +20,8 @@ msgstr ""
 #. TRANSLATORS: Title of the AI assistant side panel
 #. TRANSLATORS: Tooltip on the button revealing the AI assistant side panel
 #: src/frontends/desktop/assistent-panel.blp:30
-#: src/frontends/desktop/views/tab-hub.ts:105
-#: src/frontends/desktop/window.blp:127
+#: src/frontends/desktop/views/tab-hub.ts:123
+#: src/frontends/desktop/window.blp:134
 msgid "Assistant"
 msgstr ""
 
@@ -50,48 +50,55 @@ msgstr ""
 msgid "Context: %s"
 msgstr ""
 
+#. TRANSLATORS: Not shown. The two-letter code of THIS catalogue's language ("de" in de.po);
+#. it picks the matching glossary of tax terms.
+#: src/frontends/desktop/i18n.ts:113
+msgctxt "language code"
+msgid "en"
+msgstr ""
+
 #: src/frontends/desktop/views/herleitung-dialog.blp:7
-msgid "Herleitung"
+msgid "Derivation"
 msgstr ""
 
 #: src/frontends/desktop/views/herleitung-dialog.blp:29
-msgid "Berechne Herleitung …"
+msgid "Calculating derivation …"
 msgstr ""
 
 #: src/frontends/desktop/views/herleitung-dialog.blp:40
 #: src/frontends/desktop/views/rechnung-detail-dialog.blp:41
-msgid "Konnte nicht laden"
+msgid "Could not load"
 msgstr ""
 
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.blp:7
-msgid "Konto hinzufügen"
+msgid "Add account"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.blp:30
-msgid "Lade Details …"
+msgid "Loading details …"
 msgstr ""
 
-#: src/frontends/desktop/views/tab-hub.ts:104
+#: src/frontends/desktop/views/tab-hub.ts:122
 msgid "Tax return"
 msgstr ""
 
-#: src/frontends/desktop/views/tab-hub.ts:107
+#: src/frontends/desktop/views/tab-hub.ts:125
 msgid "Annexes"
 msgstr ""
 
-#: src/frontends/desktop/views/tab-hub.ts:109
+#: src/frontends/desktop/views/tab-hub.ts:127
 msgid "Tax account"
 msgstr ""
 
-#: src/frontends/desktop/views/tab-hub.ts:114
+#: src/frontends/desktop/views/tab-hub.ts:132
 msgid "Inbox"
 msgstr ""
 
-#: src/frontends/desktop/views/tab-hub.ts:115
+#: src/frontends/desktop/views/tab-hub.ts:133
 msgid "Open receipts"
 msgstr ""
 
-#: src/frontends/desktop/views/tab-hub.ts:116
+#: src/frontends/desktop/views/tab-hub.ts:134
 msgid "All receipts"
 msgstr ""
 
@@ -123,16 +130,16 @@ msgstr ""
 msgid "estimated"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:406
+#: src/frontends/desktop/views/zeiten-view.ts:411
 msgid "Assign project"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:406
-#: src/frontends/desktop/views/zeiten-view.ts:415
+#: src/frontends/desktop/views/zeiten-view.ts:411
+#: src/frontends/desktop/views/zeiten-view.ts:420
 msgid "Already invoiced"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:415
+#: src/frontends/desktop/views/zeiten-view.ts:420
 msgid "Delete entry"
 msgstr ""
 
@@ -178,4 +185,9 @@ msgstr ""
 #. native front-end beside the web one
 #: src/frontends/desktop/window.blp:70
 msgid "Native preview"
+msgstr ""
+
+#. TRANSLATORS: Tooltip on the headerbar button that syncs Qonto and Paperless
+#: src/frontends/desktop/window.blp:127
+msgid "Sync"
 msgstr ""

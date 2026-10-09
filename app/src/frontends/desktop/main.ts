@@ -18,6 +18,8 @@
  * MainWindow (sidebar nav, per-entity views) stays app-specific; adwaita-app never hides Adw/GTK.
  */
 
+// FIRST: binds the catalogue before any other module evaluates (see i18n-init.ts).
+import './i18n-init.ts';
 import 'dotenv/config';
 import Gtk from '@girs/gtk-4.0';
 import { runAdwaitaApp } from '@gjsify/adwaita-app';
@@ -28,17 +30,11 @@ import { ensureDemoSeeded } from '../cli/demo.ts';
 import { APP_ID, APP_NAME, APP_VERSION } from './constants.ts';
 import { dialogFinTSInteraction } from './fints-interaction.ts';
 import { APP_ICON } from './icons.ts';
-import { initI18n } from './i18n.ts';
 import { MainWindow } from './window.ts';
 
 // Pin GTK 4 before libadwaita pulls it in; keep the import referenced.
 void Gtk;
 
-// Bind the translation catalogue FIRST: a label is translated when it is built, so anything
-// constructed before this call keeps its English msgid for the rest of the process. It also has to
-// precede the first `.blp`-backed widget, because GtkBuilder resolves `translatable="yes"` through
-// the DEFAULT domain that this sets.
-initI18n();
 // Demo mode (STEUER_DEMO=1): run against the isolated app/demo workspace before any config/store read.
 applyDemoEnv();
 // Then give a FRESH installation a home: without this, an app launched from the GNOME overview has

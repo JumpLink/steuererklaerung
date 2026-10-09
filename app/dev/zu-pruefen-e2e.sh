@@ -74,7 +74,7 @@ mkdir -p "$T/home" "$T/cfg" "$T/data"
 : > "$T/empty.env"
 echo '{"name":"zu-pruefen-e2e","private":true}' > "$T/package.json"
 
-ENV=(PATH="$PATH" HOME="$T/home" XDG_CONFIG_HOME="$T/cfg" XDG_DATA_HOME="$T/data"
+ENV=(LANG="${E2E_LANG:-de_DE.UTF-8}" PATH="$PATH" HOME="$T/home" XDG_CONFIG_HOME="$T/cfg" XDG_DATA_HOME="$T/data"
   DOTENV_CONFIG_PATH="$T/empty.env" PAPERLESS_BASE_URL=http://127.0.0.1:$STUB_PORT PAPERLESS_API_TOKEN=demo
   STEUER_DEMO=1 STEUER_WORKSPACE="$T/demo/steuererklaerung.json" TRANSACTIONS_DATA_DIR="$T/demo/transactions-data"
   LEDGER_DB_PATH="$T/demo/ledger.db")
