@@ -31,7 +31,7 @@ extract)
         --keyword=C_:1c,2 \
         --add-comments=TRANSLATORS \
         --package-name="$DOMAIN" \
-        --msgid-bugs-address='https://github.com/JumpLink/buchhaltung/issues'
+        --msgid-bugs-address='https://github.com/JumpLink/steuererklaerung/issues'
     while read -r lang; do
         [ -n "$lang" ] || continue
         # `--previous` keeps the old msgid next to a fuzzy match, which is the only thing that makes
