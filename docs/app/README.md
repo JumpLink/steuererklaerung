@@ -328,6 +328,34 @@ die schreibgeschützte Voreinstellung hinaus geöffnet werden, und welche Werkze
 sind. Änderungen greifen beim nächsten Start des MCP-Servers. Die Gruppe **Abgleich** schaltet den
 Hintergrund-Abgleich ein oder aus und setzt die Abstände.
 
+Ganz oben stehen zwei Gruppen, die nicht im Manifest landen, sondern in der Einstellungsdatei des
+Benutzers (`$XDG_CONFIG_HOME/eu.jumplink.Steuererklaerung/settings.json`):
+
+- **Allgemein:** Wechsel zwischen Demo und eigenen Daten (nach Rückfrage startet die App neu — ein
+  laufender Prozess wird nie auf den anderen Bestand umgebogen), „Einführung erneut anzeigen" und
+  ob der KI-Assistent in der Kopfzeile erscheint.
+- **Sicherung:** „Jetzt sichern", letzte Sicherung, Ordner und wie viele behalten werden. Was
+  gesichert wird und wie man wiederherstellt: [backup.md](backup.md).
+
+![Einstellungen: Allgemein und Sicherung](../screenshots/welcome-settings.png)
+
+## Erster Start — die Einführung
+
+Wer die App zum ersten Mal öffnet — **keine** Einstellungsdatei mit abgeschlossener Einführung und
+**kein** Manifest (`steuererklaerung.json` oder das ältere `buchhaltung.json`) —, sieht eine kurze
+Einführung: was die App tut und dass die Daten lokal bleiben, dass sie keine Steuerberatung ist,
+dann die Wahl zwischen Demo, eigenen Daten (weiter zum Einrichtungsassistenten) und „Ich habe schon
+eine steuererklaerung.json" (zeigt, wo die App sie sucht). Zuletzt die optionalen Anbindungen und
+der KI-Assistent, standardmäßig aus. Bestehende Installationen haben ein Manifest und sehen die
+Einführung deshalb nie. „Später" schließt sie, ohne etwas zu speichern; sie kommt beim nächsten
+Start wieder. Erneut öffnen: Hauptmenü → „Einführung" oder Einstellungen → Allgemein.
+
+| | |
+|---|---|
+| ![Einführung, Start](../screenshots/welcome-start.png) | ![Einführung, Demo oder eigene Daten](../screenshots/welcome-choice.png) |
+
+Englische Fassungen: `welcome-*-en.png`. Erzeugt von `app/dev/welcome-e2e.sh <ordner>`.
+
 ---
 
 ## Nicht abgebildet
