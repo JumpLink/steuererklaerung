@@ -23,20 +23,35 @@ import './i18n-init.ts';
 import 'dotenv/config';
 import Gtk from '@girs/gtk-4.0';
 import { runAdwaitaApp } from '@gjsify/adwaita-app';
+import { installMigrationBackup } from '../../core/actions/backup.ts';
 import { applyDemoEnv } from '../../core/config/demo.ts';
+import { loadUserSettings } from '../../core/config/user-settings.ts';
 import { setFinTSInteraction } from '../../core/clients/fints/interaction.ts';
 import { applyPathEnv } from '../../core/paths.ts';
 import { ensureDemoSeeded } from '../cli/demo.ts';
 import { APP_ID, APP_NAME, APP_VERSION } from './constants.ts';
 import { dialogFinTSInteraction } from './fints-interaction.ts';
 import { APP_ICON } from './icons.ts';
+import { relaunchIfRequested, snapshotLaunchEnv } from './restart.ts';
 import { MainWindow } from './window.ts';
 
 // Pin GTK 4 before libadwaita pulls it in; keep the import referenced.
 void Gtk;
 
+// The environment as launched, for a restart into the other data mode — before anything rewrites it.
+snapshotLaunchEnv();
+// Someone who picked the demo (welcome or Settings) gets it again, unless the launch says otherwise.
+if (
+    process.env.STEUER_DEMO === undefined &&
+    process.env.BH_DEMO === undefined &&
+    !process.argv.includes('--demo') &&
+    loadUserSettings().preferredMode === 'demo'
+) {
+    process.env.STEUER_DEMO = '1';
+}
 // Demo mode (STEUER_DEMO=1): run against the isolated app/demo workspace before any config/store read.
 applyDemoEnv();
+installMigrationBackup();
 // Then give a FRESH installation a home: without this, an app launched from the GNOME overview has
 // cwd `/` or `$HOME` and finds no manifest at all. Strictly additive — an existing installation
 // (a manifest in cwd, an override, a store beside the module) is left exactly as it was.
@@ -65,4 +80,5 @@ const status = await runAdwaitaApp({
     },
     createWindow: (app) => new MainWindow(app),
 });
+relaunchIfRequested();
 process.exit(status);

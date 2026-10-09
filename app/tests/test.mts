@@ -25,6 +25,9 @@ import configManifest from './unit/config/config-manifest.test.ts';
 import exampleManifest from './unit/config/example-manifest.test.ts';
 import testIsolation from './unit/lib/test-isolation.test.ts';
 import renameFallback from './unit/config/rename-fallback.test.ts';
+import userSettings from './unit/config/user-settings.test.ts';
+import backup from './unit/actions/backup.test.ts';
+import entitySetup from './unit/actions/entity-setup.test.ts';
 import configLifecycle from './unit/config/lifecycle.test.ts';
 import migrateForward from './unit/config/migrate-forward.test.ts';
 import manifestRevisionSuite from './unit/config/manifest-revision.test.ts';
@@ -214,6 +217,9 @@ run({
     configManifest,
     exampleManifest,
     renameFallback,
+    userSettings,
+    backup,
+    entitySetup,
     configLifecycle,
     migrateForward,
     manifestRevisionSuite,

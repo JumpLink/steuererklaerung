@@ -17,6 +17,7 @@ import { join } from 'node:path';
 import { entityIdAliases } from '@steuererklaerung/store';
 import { ConfigError } from '../lib/errors.ts';
 import { MANIFEST_FILENAME, isManifest, writeManifestAtomic } from './manifest.ts';
+import { notifyBeforeMigrationWrite } from './migrate-forward.ts';
 import { MANIFEST_VERSION, ManifestSchema } from './schema/manifest.ts';
 
 /**
@@ -346,6 +347,7 @@ export function migrateConfig(opts: MigrateOptions): MigrateResult {
     let backupPath: string | null = null;
     let wrote = false;
     if (!dryRun) {
+        notifyBeforeMigrationWrite(manifestPath, null);
         backupPath = `${manifestPath}.bak-${now}`;
         copyFileSync(manifestPath, backupPath);
         writeManifestAtomic(manifestPath, manifest);

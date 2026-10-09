@@ -9,6 +9,12 @@ menu primary_menu {
   }
 
   item {
+    // TRANSLATORS: Primary menu item reopening the first-run introduction
+    label: _("Welcome");
+    action: "win.welcome";
+  }
+
+  item {
     // TRANSLATORS: Primary menu item listing the keyboard shortcuts
     label: _("Keyboard shortcuts");
     action: "win.shortcuts";
@@ -128,7 +134,7 @@ template $BhMainWindow: Adw.ApplicationWindow {
           }
 
           [end]
-          Gtk.ToggleButton {
+          Gtk.ToggleButton assistant_toggle {
             icon-name: "starred-symbolic";
             // TRANSLATORS: Tooltip on the button revealing the AI assistant side panel
             tooltip-text: _("Assistant");

@@ -15,7 +15,12 @@
 import { existsSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { ConfigError, ManifestMissingError } from '../lib/errors.ts';
-import { ManifestTooNewError, manifestVersionOf, migrateManifestForward } from './migrate-forward.ts';
+import {
+    ManifestTooNewError,
+    manifestVersionOf,
+    migrateManifestForward,
+    notifyBeforeMigrationWrite,
+} from './migrate-forward.ts';
 import { type Manifest, MANIFEST_VERSION, ManifestSchema } from './schema/manifest.ts';
 
 export const MANIFEST_FILENAME = 'steuererklaerung.json';
@@ -222,6 +227,7 @@ export function mutateManifest(path: string, mutate: (raw: Record<string, unknow
         throw new ManifestMissingError(`Kein Manifest unter ${path} zum Speichern vorhanden. ${MIGRATE_HINT}`, path);
     }
     const raw = readRawJson(path);
+    const upgradedFrom = manifestVersionOf(raw);
     if (!isManifest(raw)) {
         const seen = manifestVersionOf(raw);
         // The refusal that matters. Everything else here reports a file this program cannot use;
@@ -246,6 +252,7 @@ export function mutateManifest(path: string, mutate: (raw: Record<string, unknow
         const issues = result.error.issues.map((i) => `  ${i.path.join('.')}: ${i.message}`).join('\n');
         throw new ConfigError(`Ungültige Manifest-Mutation für ${path}:\n${issues}`, path);
     }
+    if (upgradedFrom !== MANIFEST_VERSION) notifyBeforeMigrationWrite(path, upgradedFrom);
     writeManifestAtomic(path, raw);
     return result.data;
 }

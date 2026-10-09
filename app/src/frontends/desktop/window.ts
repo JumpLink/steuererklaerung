@@ -32,6 +32,10 @@ import { loadAppWorkspace, type AppEntity, type AppWorkspace } from './entities.
 import { showToast } from './toast.ts';
 import { presentRemoveEntity, presentRenameEntity } from './views/entity-dialogs.ts';
 import { BhSetupAssistant } from './views/setup-assistant.ts';
+import { BhWelcome, type WelcomeChoice } from './views/welcome.ts';
+import { isDemoMode } from '../../core/config/demo.ts';
+import { loadUserSettings, shouldShowWelcome } from '../../core/config/user-settings.ts';
+import { canRestart, restartInMode } from './restart.ts';
 import { loadDocuments } from '../../core/presenters/belege.ts';
 import { appSession } from './data/session.ts';
 import { reloadEst } from './data/settings.ts';
@@ -85,6 +89,7 @@ export class MainWindow extends Adw.ApplicationWindow {
                     'assistant_split',
                     'toast_overlay',
                     'sync_button',
+                    'assistant_toggle',
                     'assistant_panel',
                     'banner',
                     'stack',
@@ -114,6 +119,7 @@ export class MainWindow extends Adw.ApplicationWindow {
     declare private _assistant_split: Adw.OverlaySplitView;
     declare private _toast_overlay: Adw.ToastOverlay;
     declare private _sync_button: Gtk.Button;
+    declare private _assistant_toggle: Gtk.ToggleButton;
     declare private _assistant_panel: BhAssistentPanel;
     declare private _banner: Adw.Banner;
     declare private _stack: Gtk.Stack;
@@ -138,12 +144,93 @@ export class MainWindow extends Adw.ApplicationWindow {
         this.buildUi();
         this.installNavAction();
         this.installSetupAction();
+        this.installWelcomeActions();
         this.installShortcutActions();
         this.loadData();
-        // A brand-new installation has no manifest at all. Offer setup instead of the pseudo-entity
-        // below, whose every save fails with "Kein Manifest … zum Speichern vorhanden" and whose
-        // only documented remedy is a terminal command.
-        if (isFirstRun()) this.presentSetup();
+        // A new person gets the welcome; it ends in the setup assistant when they choose their own
+        // data. Someone who already finished it — or skipped it with a manifest already on disk —
+        // still gets the assistant when there is no manifest: the pseudo-entity below fails every
+        // save with "Kein Manifest … zum Speichern vorhanden", and its only remedy is a terminal.
+        if (!isDemoMode() && shouldShowWelcome()) this.presentWelcome();
+        else if (isFirstRun()) this.presentSetup();
+        // Dev/testing hook: STEUER_APP_SETUP_PAGE also opens the new-entity assistant on a workspace.
+        else if (process.env.STEUER_APP_SETUP_PAGE) this.presentSetup();
+    }
+
+    /** `win.welcome` (menu) and `win.use-own-data` (demo banner). */
+    private installWelcomeActions(): void {
+        const welcome = new Gio.SimpleAction({ name: 'welcome' });
+        welcome.connect('activate', () => this.presentWelcome());
+        this.add_action(welcome);
+
+        const own = new Gio.SimpleAction({ name: 'use-own-data' });
+        own.connect('activate', () => this.confirmSwitchMode('own'));
+        this.add_action(own);
+
+        const switchMode = new Gio.SimpleAction({ name: 'switch-mode', parameterType: GLib.VariantType.new('s') });
+        switchMode.connect('activate', (_action, param) => {
+            this.confirmSwitchMode(param?.get_string()[0] === 'demo' ? 'demo' : 'own');
+        });
+        this.add_action(switchMode);
+
+        const assistant = new Gio.SimpleAction({ name: 'assistant-preference' });
+        assistant.connect('activate', () => this.applyAssistantPreference());
+        this.add_action(assistant);
+    }
+
+    private presentWelcome(): void {
+        new BhWelcome((choice) => this.onWelcomeFinished(choice)).present(this);
+    }
+
+    private onWelcomeFinished(choice: WelcomeChoice): void {
+        this.applyAssistantPreference();
+        const wantsDemo = choice === 'demo';
+        // Already in the mode that was picked: nothing to restart. Own data without a manifest
+        // goes on to the setup assistant, the one place a configuration is written.
+        if (choice !== 'existing' && wantsDemo === isDemoMode()) {
+            if (!wantsDemo && isFirstRun()) this.presentSetup();
+            return;
+        }
+        this.restartInto(wantsDemo ? 'demo' : 'own');
+    }
+
+    /**
+     * Ask before switching between demo and own data. The switch restarts the app — a running
+     * process re-pointed at another workspace is how the two would get mixed.
+     */
+    private confirmSwitchMode(mode: 'demo' | 'own'): void {
+        const dialog = new Adw.AlertDialog({
+            heading: mode === 'demo' ? _('Switch to the demo?') : _('Switch to your own data?'),
+            body:
+                mode === 'demo'
+                    ? _('The app restarts with fictional sample data. Your own data is not changed.')
+                    : _('The app restarts with your own data. The demo data stays separate.'),
+        });
+        dialog.add_response('cancel', _('Cancel'));
+        dialog.add_response('restart', _('Restart'));
+        dialog.set_response_appearance('restart', Adw.ResponseAppearance.SUGGESTED);
+        dialog.set_default_response('restart');
+        dialog.set_close_response('cancel');
+        dialog.connect('response', (_dialog, response) => {
+            if (response === 'restart') this.restartInto(mode);
+        });
+        dialog.present(this);
+    }
+
+    private restartInto(mode: 'demo' | 'own'): void {
+        const app = this.get_application();
+        if (!app || !canRestart()) {
+            showToast(_('Please restart the app yourself to switch.'));
+            return;
+        }
+        restartInMode(app, mode);
+    }
+
+    /** `aiAssistant: false` hides the panel toggle; unset keeps the toggle, as before the opt-in existed. */
+    private applyAssistantPreference(): void {
+        const visible = loadUserSettings().aiAssistant !== false;
+        this._assistant_toggle.set_visible(visible);
+        if (!visible) this._assistant_split.set_show_sidebar(false);
     }
 
     /**
@@ -290,6 +377,8 @@ export class MainWindow extends Adw.ApplicationWindow {
         this._assistant_panel.onApplied = () => this.refreshEstAfterApply();
         // Dev/testing hook: open the panel on launch (pairs with STEUER_APP_ASSIST_DEMO's seeded chat).
         if (process.env.STEUER_APP_ASSIST_DEMO) this._assistant_split.set_show_sidebar(true);
+        this.applyAssistantPreference();
+        this._banner.connect('button-clicked', () => this.confirmSwitchMode('own'));
     }
 
     /** Load entities/years from the backend, populate the switchers, then render the nav. */
@@ -396,11 +485,13 @@ export class MainWindow extends Adw.ApplicationWindow {
             this._banner.set_title(
                 markup(fmt(_('Data could not be loaded completely: {error}'), { error: this.loadError })),
             );
+            this._banner.set_button_label(null);
             this._banner.set_revealed(true);
             return;
         }
         if (this.currentEntity?.demo) {
             this._banner.set_title(markup(_('Demo data – fictional examples, no real financial data')));
+            this._banner.set_button_label(_('Use my own data'));
             this._banner.set_revealed(true);
             return;
         }

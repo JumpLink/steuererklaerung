@@ -38,6 +38,18 @@ export interface NewEntityInput {
     kind?: string;
     /** Account-key globs routed to this entity (`camt:*`, `qonto:01234567*`, …). */
     accounts?: string[];
+    /**
+     * Further raw entity sections (`elster`, `est`, `dms`, `invoicing`) in manifest shape, written in
+     * the SAME validated write as the entity. An assistant that collects several answers must not
+     * leave half an entity behind when the second of several writes fails.
+     */
+    sections?: Record<string, unknown>;
+    /**
+     * Take the exact keys in {@link accounts} away from every other entity in the same write, so the
+     * account MOVES instead of being counted twice. Globs elsewhere stay — they are a rule somebody
+     * wrote on purpose, not a single account.
+     */
+    moveAccounts?: boolean;
 }
 
 /** The fields {@link renameManifestEntity} may change. Omitted fields stay as they are. */
@@ -127,11 +139,25 @@ function assertIdFree(entities: Array<Record<string, unknown>>, id: string, path
 /** Normalise a {@link NewEntityInput} to the raw shape written into `entities[]`. */
 function rawEntityFrom(input: NewEntityInput): Record<string, unknown> {
     return {
+        ...input.sections,
         id: input.id,
         name: input.name,
         kind: input.kind ?? 'einzelunternehmen',
         accounts: input.accounts ?? [],
     };
+}
+
+/** Drop the exact `keys` from every entity but `keep`. Glob patterns (`camt:*`) are left alone. */
+function releaseAccountKeys(
+    entities: Array<Record<string, unknown>>,
+    keys: string[],
+    keep: Record<string, unknown>,
+): void {
+    const drop = new Set(keys);
+    for (const e of entities) {
+        if (e === keep || !Array.isArray(e.accounts)) continue;
+        e.accounts = (e.accounts as string[]).filter((k) => !drop.has(k));
+    }
 }
 
 /** Locate one entity's raw object by id (alias-aware); fail loud naming the known ids. */
@@ -187,8 +213,24 @@ export function createManifestEntity(path: string, entity: NewEntityInput): Mani
     return mutateManifest(path, (raw) => {
         const entities = (raw.entities ?? []) as Array<Record<string, unknown>>;
         assertIdFree(entities, entity.id, path);
-        entities.push(rawEntityFrom(entity));
+        const created = rawEntityFrom(entity);
+        if (entity.moveAccounts) releaseAccountKeys(entities, entity.accounts ?? [], created);
+        entities.push(created);
         raw.entities = entities;
+    });
+}
+
+/**
+ * Route one exact account key to `entityId`, taking it away from any other entity that lists the same
+ * exact key. An entity that matches it only through a glob keeps matching — the caller reports that.
+ */
+export function assignManifestAccount(path: string, key: string, entityId: string): Manifest {
+    return mutateManifest(path, (raw) => {
+        const entities = (raw.entities ?? []) as Array<Record<string, unknown>>;
+        const { entity } = findRawEntity(entities, entityId, path);
+        const accounts = Array.isArray(entity.accounts) ? (entity.accounts as string[]) : [];
+        if (!accounts.includes(key)) entity.accounts = [...accounts, key];
+        releaseAccountKeys(entities, [key], entity);
     });
 }
 

@@ -20,13 +20,16 @@ import {
     openLedger,
 } from '@steuererklaerung/store';
 import {
+    assignManifestAccount,
     createManifestEntity,
     type EntityPatch,
     getManifestPath,
     initManifest,
     type Manifest,
     type ManifestEntity,
+    loadManifest,
     manifestExists,
+    matchAccount,
     type NewEntityInput,
     removeManifestEntity,
     renameManifestEntity,
@@ -102,3 +105,44 @@ export function isFirstRun(path: string = getManifestPath()): boolean {
 }
 
 export type { EntityPatch, NewEntityInput };
+
+/** Result of {@link assignAccount}: the manifest, plus who still sees the account through a glob. */
+export interface AssignAccountResult {
+    manifest: Manifest;
+    /** Other entities whose glob (`camt:*`) still matches the key — it now counts for them too. */
+    sharedWith: Array<{ id: string; name: string }>;
+}
+
+/**
+ * Refuse to take `keys` away from an entity with festgeschriebene years: its filed books were
+ * computed from those accounts, and moving one would silently change a return that was submitted.
+ */
+export function assertAccountsMovable(keys: string[], targetId: string, manifest: Manifest): void {
+    for (const e of manifest.entities) {
+        if (e.id === targetId || !keys.some((k) => e.accounts.includes(k))) continue;
+        const years = lockedYearsFor(e.id);
+        if (years.length > 0) {
+            throw new Error(
+                `Das Konto gehört zu „${e.name}" mit festgeschriebenen Jahren (${years.join(', ')}) — ` +
+                    'Umziehen ist gesperrt (GoBD).',
+            );
+        }
+    }
+}
+
+/**
+ * Route one account to `entityId` — the last step of adding a bank account. An exact key held by
+ * another entity moves (unless its books are locked); a glob held by another entity keeps matching
+ * and is reported back, because silently narrowing someone's rule is not ours to do.
+ */
+export function assignAccount(key: string, entityId: string, path: string = getManifestPath()): AssignAccountResult {
+    const before = loadManifest(path);
+    const target = before.entities.find((e) => e.id === entityId);
+    if (!target) throw new Error(`Entität „${entityId}" nicht gefunden.`);
+    assertAccountsMovable([key], target.id, before);
+    const manifest = assignManifestAccount(path, key, target.id);
+    const sharedWith = manifest.entities
+        .filter((e) => e.id !== target.id && matchAccount(key, e.accounts))
+        .map((e) => ({ id: e.id, name: e.name }));
+    return { manifest, sharedWith };
+}

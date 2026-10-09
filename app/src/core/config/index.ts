@@ -20,6 +20,7 @@ export {
     createManifestEntity,
     renameManifestEntity,
     removeManifestEntity,
+    assignManifestAccount,
     manifestExists,
     slugFromName,
     type NewEntityInput,
