@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-09 19:23+0200\n"
+"POT-Creation-Date: 2026-10-09 19:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,9 +50,58 @@ msgstr ""
 msgid "Sees aggregated figures only — not tax advice."
 msgstr ""
 
+#: src/frontends/desktop/assistent-panel.ts:30
+msgid "What were my biggest expenses?"
+msgstr ""
+
+#: src/frontends/desktop/assistent-panel.ts:31
+msgid "Which transactions have no receipt yet?"
+msgstr ""
+
+#: src/frontends/desktop/assistent-panel.ts:32
+msgid "How much VAT do I have to pay?"
+msgstr ""
+
+#: src/frontends/desktop/assistent-panel.ts:35
+msgid "Help me with the Entlastungsbetrag (single-parent allowance)."
+msgstr ""
+
+#: src/frontends/desktop/assistent-panel.ts:36
+msgid "I had childcare costs for my child."
+msgstr ""
+
+#: src/frontends/desktop/assistent-panel.ts:37
+msgid "I paid back Elterngeld (parental allowance)."
+msgstr ""
+
 #: src/frontends/desktop/assistent-panel.ts:91
 #, javascript-format
 msgid "Context: %s"
+msgstr ""
+
+#: src/frontends/desktop/assistent-panel.ts:114
+msgid ""
+"Ask me about your figures — or get help entering tax matters. For example:"
+msgstr ""
+
+#: src/frontends/desktop/assistent-panel.ts:115
+msgid "Ask me something about your figures. For example:"
+msgstr ""
+
+#: src/frontends/desktop/assistent-panel.ts:164
+msgid "Suggestion · {title}"
+msgstr ""
+
+#: src/frontends/desktop/assistent-panel.ts:185
+msgid "Apply"
+msgstr ""
+
+#: src/frontends/desktop/assistent-panel.ts:192
+msgid "Applied ✓"
+msgstr ""
+
+#: src/frontends/desktop/assistent-panel.ts:218
+msgid "Assistant is typing …"
 msgstr ""
 
 #: src/frontends/desktop/fints-interaction.ts:44
@@ -1248,7 +1297,7 @@ msgid "The transaction was not found in this year."
 msgstr ""
 
 #: src/frontends/desktop/views/hinweis-handlung.ts:108
-#: src/frontends/desktop/views/home-view.ts:338
+#: src/frontends/desktop/views/home-view.ts:346
 msgid "The invoice was not found."
 msgstr ""
 
@@ -1292,7 +1341,7 @@ msgid "Income − expenses"
 msgstr ""
 
 #: src/frontends/desktop/views/home-view.ts:159
-#: src/frontends/desktop/views/home-view.ts:364
+#: src/frontends/desktop/views/home-view.ts:372
 #: src/frontends/desktop/views/transactions-view.ts:54
 #: src/frontends/desktop/views/transactions-view.ts:176
 msgid "Income"
@@ -1306,7 +1355,7 @@ msgid "net {year}"
 msgstr ""
 
 #: src/frontends/desktop/views/home-view.ts:160
-#: src/frontends/desktop/views/home-view.ts:365
+#: src/frontends/desktop/views/home-view.ts:373
 #: src/frontends/desktop/views/transactions-view.ts:55
 #: src/frontends/desktop/views/transactions-view.ts:178
 msgid "Expenses"
@@ -1316,70 +1365,80 @@ msgstr ""
 msgid "Tax forecast {year}"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:186
-msgid "Free to spend"
+#: src/frontends/desktop/views/home-view.ts:165
+msgid "expected additional payment"
+msgstr ""
+
+#: src/frontends/desktop/views/home-view.ts:165
+#: src/frontends/desktop/views/home-view.ts:211
+msgid "expected refund"
 msgstr ""
 
 #: src/frontends/desktop/views/home-view.ts:186
 #: src/frontends/desktop/views/home-view.ts:196
-#: src/frontends/desktop/views/home-view.ts:206
+msgid "Free to spend"
+msgstr ""
+
+#: src/frontends/desktop/views/home-view.ts:186
+#: src/frontends/desktop/views/home-view.ts:197
+#: src/frontends/desktop/views/home-view.ts:208
 msgid "not computable"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:198
+#: src/frontends/desktop/views/home-view.ts:199
 msgid "As of {date} · a calculation, not advice"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:199
-#: src/frontends/desktop/views/home-view.ts:212
+#: src/frontends/desktop/views/home-view.ts:200
+#: src/frontends/desktop/views/home-view.ts:214
 msgid "incomplete — see derivation"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:209
-msgid "expected refund"
+#: src/frontends/desktop/views/home-view.ts:207
+msgid "Tax reserve {year} (estimate)"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:211
+#: src/frontends/desktop/views/home-view.ts:213
 msgid "ESt + GewSt − prepayments"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:242
+#: src/frontends/desktop/views/home-view.ts:250
 msgid "Derivation: {label}"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:284
+#: src/frontends/desktop/views/home-view.ts:292
 msgid "Up next"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:298
+#: src/frontends/desktop/views/home-view.ts:306
 msgid "Open “To review”"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:303
+#: src/frontends/desktop/views/home-view.ts:311
 msgid "Open receivables"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:308
+#: src/frontends/desktop/views/home-view.ts:316
 msgid "Open recurring costs"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:343
+#: src/frontends/desktop/views/home-view.ts:351
 msgid "Could not load the invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:360
+#: src/frontends/desktop/views/home-view.ts:368
 msgid "Income and expenses"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:384
+#: src/frontends/desktop/views/home-view.ts:392
 msgid "Expenses by category"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:395
+#: src/frontends/desktop/views/home-view.ts:403
 msgid "No expenses recorded"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:403
+#: src/frontends/desktop/views/home-view.ts:411
 msgid "Liquidity"
 msgstr ""
 

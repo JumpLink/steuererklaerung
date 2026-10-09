@@ -162,7 +162,7 @@ export class BhHomeView extends Adw.Bin {
             fb.append(
                 this.kpiCard(fmt(_('Tax forecast {year}'), { year: m.year }), eur(Math.abs(k.tax.total)), {
                     accent: k.tax.total >= 0 ? 'error' : 'success',
-                    sub: k.tax.label,
+                    sub: k.tax.total >= 0 ? _('expected additional payment') : _('expected refund'),
                     help: { term: 'ust-zahllast', lernmodus },
                 }),
             );
@@ -193,6 +193,7 @@ export class BhHomeView extends Adw.Bin {
         const f = frei.freiVerfuegbar;
         fb.append(
             this.freiCard(f, {
+                title: _('Free to spend'),
                 value: f.betrag == null ? _('not computable') : eur(f.betrag),
                 sub: f.vollstaendig
                     ? fmt(_('As of {date} · a calculation, not advice'), { date: deDate(frei.stichtag) })
@@ -203,6 +204,7 @@ export class BhHomeView extends Adw.Bin {
         const r = frei.steuerruecklage;
         fb.append(
             this.freiCard(r, {
+                title: fmt(_('Tax reserve {year} (estimate)'), { year: r.jahr }),
                 value: r.betrag == null ? _('not computable') : eur(Math.abs(r.betrag)),
                 accent: r.erstattung ? 'success' : undefined,
                 sub: r.erstattung
@@ -219,10 +221,16 @@ export class BhHomeView extends Adw.Bin {
     /** A KPI card that is a button: activating it opens the figure's Herleitung. */
     private freiCard(
         e: FreiErgebnis,
-        opts: { value: string; sub: string; accent?: 'success'; help: { term: string; lernmodus: boolean } },
+        opts: {
+            title: string;
+            value: string;
+            sub: string;
+            accent?: 'success';
+            help: { term: string; lernmodus: boolean };
+        },
     ): Gtk.Widget {
         const content = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 4 });
-        content.append(this.dimWithHelp(e.label, opts.help));
+        content.append(this.dimWithHelp(opts.title, opts.help));
         content.append(
             new Gtk.Label({
                 label: opts.value,
@@ -239,7 +247,7 @@ export class BhHomeView extends Adw.Bin {
         const button = new Gtk.Button({
             child: content,
             cssClasses: ['card'],
-            tooltipText: fmt(_('Derivation: {label}'), { label: e.label }),
+            tooltipText: fmt(_('Derivation: {label}'), { label: opts.title }),
         });
         button.connect('clicked', () => new BhHerleitungDialog().openErgebnis(this, e));
         return button;

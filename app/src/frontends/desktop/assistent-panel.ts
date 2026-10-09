@@ -19,7 +19,7 @@ import Gtk from '@girs/gtk-4.0';
 import Pango from '@girs/pango-1.0';
 
 import type { AppEntity } from './entities.ts';
-import { _ } from './i18n.ts';
+import { _, fmt } from './i18n.ts';
 import { askAssistant } from './data/assistent.ts';
 import type { ChatTurn } from '../../core/actions/assistant/chat.ts';
 import { appSession } from './data/session.ts';
@@ -27,14 +27,14 @@ import { showToast } from './toast.ts';
 import { applyProposal, buildProposal, type EstIntakeProposal } from '../../core/actions/elster/est-intake-topics.ts';
 
 const EXAMPLES = [
-    'Was waren meine größten Ausgaben?',
-    'Welche Buchungen haben noch keinen Beleg?',
-    'Wie viel Umsatzsteuer muss ich zahlen?',
+    _('What were my biggest expenses?'),
+    _('Which transactions have no receipt yet?'),
+    _('How much VAT do I have to pay?'),
 ];
 const EST_EXAMPLES = [
-    'Hilf mir beim Entlastungsbetrag für Alleinerziehende.',
-    'Ich hatte Kinderbetreuungskosten für mein Kind.',
-    'Ich habe Elterngeld zurückgezahlt.',
+    _('Help me with the Entlastungsbetrag (single-parent allowance).'),
+    _('I had childcare costs for my child.'),
+    _('I paid back Elterngeld (parental allowance).'),
 ];
 
 export class BhAssistentPanel extends Gtk.Box {
@@ -111,8 +111,8 @@ export class BhAssistentPanel extends Gtk.Box {
         const hasEst = !!this.entity?.hasEst;
         const intro = new Gtk.Label({
             label: hasEst
-                ? 'Frag mich zu deinen Zahlen — oder lass dich beim Eintragen von Steuer-Sachverhalten helfen. Zum Beispiel:'
-                : 'Frag mich etwas zu deinen Zahlen. Zum Beispiel:',
+                ? _('Ask me about your figures — or get help entering tax matters. For example:')
+                : _('Ask me something about your figures. For example:'),
             xalign: 0,
             wrap: true,
             cssClasses: ['dim-label'],
@@ -161,7 +161,7 @@ export class BhAssistentPanel extends Gtk.Box {
             w.set_margin_end(12);
         };
         const title = new Gtk.Label({
-            label: `Vorschlag · ${p.titel}`,
+            label: fmt(_('Suggestion · {title}'), { title: p.titel }),
             xalign: 0,
             wrap: true,
             cssClasses: ['heading'],
@@ -182,14 +182,14 @@ export class BhAssistentPanel extends Gtk.Box {
             pad(hint);
             card.append(hint);
         }
-        const apply = new Gtk.Button({ label: 'Übernehmen', cssClasses: ['suggested-action'] });
+        const apply = new Gtk.Button({ label: _('Apply'), cssClasses: ['suggested-action'] });
         apply.connect('clicked', () => {
             if (!this.entity) return;
             try {
                 const v = applyProposal(p, { entityId: this.entity.id, year: this.year });
                 appSession().invalidate(this.entity.id);
                 apply.set_sensitive(false);
-                apply.set_label('Übernommen ✓');
+                apply.set_label(_('Applied ✓'));
                 showToast(`✓ ${p.titel}: ${v.ergebnis}`);
                 this.onApplied?.(); // shell re-reads the est snapshot + reloads the visible view
             } catch (err) {
@@ -215,7 +215,7 @@ export class BhAssistentPanel extends Gtk.Box {
         const history = [...this.turns];
         this.turns.push({ role: 'user', text: question });
         this.appendBubble(question, true);
-        const typing = new Gtk.Label({ label: 'Assistent schreibt …', xalign: 0, cssClasses: ['dim-label'] });
+        const typing = new Gtk.Label({ label: _('Assistant is typing …'), xalign: 0, cssClasses: ['dim-label'] });
         this._messages.append(typing);
         this.scrollToEnd();
         try {
