@@ -20,7 +20,7 @@ jobs:
       # Fedora, because the install proof needs a package manager that resolves the rpm's Requires
       # for real. The same reasoning as ci.yml: every system library named explicitly, nothing
       # arriving transitively.
-      image: fedora:44
+      image: quay.io/fedora/fedora:44
     steps:
       - name: Install build prerequisites
         run: >
