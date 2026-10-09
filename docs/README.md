@@ -35,6 +35,14 @@ die belegten Referenzen, gegen die ihre Zahlen geprüft werden.
 | [references/elster-schemas.md](references/elster-schemas.md) | Formular → DatenArt / Nutzdaten-Root / Kennzahlen, verifiziert aus der lokalen ERiC-Distribution |
 | [research/austria.md](research/austria.md) | Machbarkeit Österreich (Einzelunternehmer): E/A, UVA, E1/E1a, FinanzOnline-Webservices, Aufwandsschätzung |
 
+## Architektur
+
+| Dokument | Beschreibung |
+|----------|-------------|
+| [adr/README.md](adr/README.md) | Architekturentscheidungen (ADR): Format, Nummerierung, Status, Liste |
+| [adr/0001-country-modules-and-per-entity-tax-switch.md](adr/0001-country-modules-and-per-entity-tax-switch.md) | Ländermodule und ein Schalter je Entität für die deutschen Steuerfunktionen |
+| [architecture/country-inventory.md](architecture/country-inventory.md) | Jede Stelle im Code, die deutsches Steuerrecht annimmt — Grundlage von ADR 0001 |
+
 ## Oberflächen
 
 | Dokument | Beschreibung |
