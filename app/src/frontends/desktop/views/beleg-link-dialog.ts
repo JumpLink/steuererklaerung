@@ -21,6 +21,7 @@ import { deDate, eur } from '../../../core/lib/format.ts';
 import { errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
 import { LoadToken, amountLabel, loadIntoStack, markup } from './util.ts';
+import { _, fmt } from '../i18n.ts';
 
 /** A small confidence badge: percent + a colour class by band (strong / plausible / weak). */
 export function scoreBadge(score: number): Gtk.Label {
@@ -34,7 +35,7 @@ export class BhBelegLinkDialog {
     private readonly stack = new Gtk.Stack();
     private readonly errorPage = new Adw.StatusPage({
         iconName: 'dialog-error-symbolic',
-        title: 'Konnte nicht laden',
+        title: _('Could not load'),
     });
     private readonly token = new LoadToken();
     private entity!: AppEntity;
@@ -47,7 +48,7 @@ export class BhBelegLinkDialog {
     private searchToken = 0;
 
     constructor() {
-        this.dialog.set_title('Beleg verknüpfen');
+        this.dialog.set_title(_('Link receipt'));
         this.dialog.set_content_width(560);
         this.dialog.set_content_height(600);
 
@@ -58,7 +59,7 @@ export class BhBelegLinkDialog {
             spacing: 12,
         });
         loading.append(new Adw.Spinner({ widthRequest: 32, heightRequest: 32 }));
-        loading.append(new Gtk.Label({ label: 'Suche passende Belege …', cssClasses: ['dim-label'] }));
+        loading.append(new Gtk.Label({ label: _('Looking for matching receipts …'), cssClasses: ['dim-label'] }));
         this.stack.add_named(loading, 'loading');
         this.stack.add_named(this.errorPage, 'error');
 
@@ -82,7 +83,7 @@ export class BhBelegLinkDialog {
             stack: this.stack,
             errorPage: this.errorPage,
             token: this.token,
-            errorContext: 'Beleg-Kandidaten konnten nicht ermittelt werden',
+            errorContext: _('Could not determine receipt candidates'),
             load: () => loadLinkCandidates(this.entity, { transactionId: this.row.id }),
             fill: (cands) => {
                 const content = this.buildContent(cands);
@@ -99,10 +100,11 @@ export class BhBelegLinkDialog {
         box.append(this.bookingGroup());
         box.append(this.candidatesGroup(cands));
         this.searchGroup = new Adw.PreferencesGroup({
-            title: 'Anderen Beleg suchen',
-            description:
-                'Die Vorschläge oben stammen aus ±92 Tagen um die Buchung. Hier lässt sich jeder ' +
-                'unverknüpfte Beleg finden — nach Titel, Korrespondent, Rechnungsnummer oder Volltext.',
+            title: _('Find another receipt'),
+            description: _(
+                'The suggestions above come from ±92 days around the transaction. Here any ' +
+                    'unlinked receipt can be found — by title, correspondent, invoice number or full text.',
+            ),
         });
         this.searchGroup.add(this.searchRow());
         box.append(this.searchGroup);
@@ -120,8 +122,8 @@ export class BhBelegLinkDialog {
     /** The expense we are attaching a receipt to (read-only summary). */
     private bookingGroup(): Adw.PreferencesGroup {
         const r = this.row;
-        const group = new Adw.PreferencesGroup({ title: 'Buchung ohne Beleg' });
-        const sub = [deDate(r.bookingDate), `netto ${eur(Math.abs(r.net))}`];
+        const group = new Adw.PreferencesGroup({ title: _('Transaction without receipt') });
+        const sub = [deDate(r.bookingDate), fmt(_('net {amount}'), { amount: eur(Math.abs(r.net)) })];
         if (r.purpose && r.counterparty) sub.push(r.purpose.trim());
         const row = new Adw.ActionRow({
             title: markup(r.counterparty?.trim() || r.purpose?.trim() || '—'),
@@ -135,14 +137,14 @@ export class BhBelegLinkDialog {
     /** The ranked candidate receipts (or a hint when none match). */
     private candidatesGroup(cands: LinkCandidate[]): Adw.PreferencesGroup {
         const group = new Adw.PreferencesGroup({
-            title: 'Passende Belege',
-            description: 'Antippen, um den Beleg mit dieser Buchung zu verknüpfen.',
+            title: _('Matching receipts'),
+            description: _('Tap to link the receipt to this transaction.'),
         });
         if (cands.length === 0) {
             group.add(
                 new Adw.ActionRow({
-                    title: 'Kein passender Beleg gefunden',
-                    subtitle: 'Kein unverknüpfter Beleg passt auf Betrag, Datum und Korrespondent.',
+                    title: _('No matching receipt found'),
+                    subtitle: _('No unlinked receipt matches amount, date and correspondent.'),
                     cssClasses: ['dim-label'],
                 }),
             );
@@ -161,7 +163,7 @@ export class BhBelegLinkDialog {
      * query overwrite a newer one's results.
      */
     private searchRow(): Adw.EntryRow {
-        const entry = new Adw.EntryRow({ title: 'Suchen …' });
+        const entry = new Adw.EntryRow({ title: _('Search …') });
         entry.connect('changed', () => {
             const query = (entry.get_text() ?? '').trim();
             const token = ++this.searchToken;
@@ -194,8 +196,8 @@ export class BhBelegLinkDialog {
         if (docs.length === 0) {
             this.addSearchRow(
                 new Adw.ActionRow({
-                    title: 'Kein unverknüpfter Beleg gefunden',
-                    subtitle: 'Belege, die schon an einer Buchung hängen, werden nicht angezeigt.',
+                    title: _('No unlinked receipt found'),
+                    subtitle: _('Receipts already attached to a transaction are not shown.'),
                     cssClasses: ['dim-label'],
                 }),
             );
@@ -206,7 +208,7 @@ export class BhBelegLinkDialog {
 
     private showSearchError(message: string): void {
         this.addSearchRow(
-            new Adw.ActionRow({ title: 'Suche fehlgeschlagen', subtitle: markup(message), cssClasses: ['dim-label'] }),
+            new Adw.ActionRow({ title: _('Search failed'), subtitle: markup(message), cssClasses: ['dim-label'] }),
         );
     }
 
@@ -220,12 +222,12 @@ export class BhBelegLinkDialog {
         const sub = [
             d.correspondent,
             d.created ? deDate(d.created) : null,
-            d.invoiceNumber ? `Nr. ${d.invoiceNumber}` : null,
+            d.invoiceNumber ? fmt(_('No. {number}'), { number: d.invoiceNumber }) : null,
         ]
             .filter(Boolean)
             .join('  ·  ');
         const row = new Adw.ActionRow({
-            title: markup(d.title?.trim() || `Beleg #${d.id}`),
+            title: markup(d.title?.trim() || fmt(_('Receipt #{id}'), { id: d.id })),
             subtitle: markup(sub),
         });
         const amount = d.gross ?? d.net;
@@ -240,7 +242,9 @@ export class BhBelegLinkDialog {
     private candidateRow(c: LinkCandidate): Adw.ActionRow {
         const subParts = [deDate(c.date), ...c.reasons];
         const row = new Adw.ActionRow({
-            title: markup(c.title?.trim() || c.counterparty?.trim() || `Beleg #${c.documentId}`),
+            title: markup(
+                c.title?.trim() || c.counterparty?.trim() || fmt(_('Receipt #{id}'), { id: String(c.documentId) }),
+            ),
             subtitle: markup(subParts.join('  ·  ')),
         });
         row.set_subtitle_lines(0);
@@ -262,15 +266,11 @@ export class BhBelegLinkDialog {
     private async commitDocument(documentId: string): Promise<void> {
         try {
             await linkDocument(this.entity, documentId, this.row.id);
-            showToast('Beleg verknüpft');
+            showToast(_('Receipt linked'));
             this.dialog.close();
             this.onLinked?.();
         } catch (err) {
-            await errorDialog(
-                this.dialog,
-                'Verknüpfen fehlgeschlagen',
-                err instanceof Error ? err.message : String(err),
-            );
+            await errorDialog(this.dialog, _('Linking failed'), err instanceof Error ? err.message : String(err));
         }
     }
 }

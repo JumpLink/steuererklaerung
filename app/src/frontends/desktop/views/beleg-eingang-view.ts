@@ -43,11 +43,12 @@ import { errorDialog } from './dialogs.ts';
 import { scoreBadge } from './beleg-link-dialog.ts';
 import { neueBelegeAusMailZaehlen } from '../../../core/actions/mail-eingang.ts';
 import { herkunftSatz as mailHerkunftSatz, neueBelegeSatz } from '../../../core/mail-eingang/herkunft.ts';
+import { _, _p, fmt } from '../i18n.ts';
 
-const DMS_LABEL: Record<string, string> = { builtin: 'eigenes DMS', paperless: 'Paperless' };
+const DMS_LABEL: Record<string, string> = { builtin: _('built-in DMS'), paperless: 'Paperless' };
 
 /** The accept option's combo label (index 0) — a category only on an explicit correction. */
-const ACCEPT_LABEL = '— unverändert (KI-Vorschlag übernehmen) —';
+const ACCEPT_LABEL = _('— unchanged (accept AI suggestion) —');
 
 interface QueueRow {
     row: Gtk.ListBoxRow;
@@ -124,7 +125,7 @@ export class BhBelegEingangView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'Beleg-Eingang konnte nicht geladen werden',
+            errorContext: _('Could not load the receipt inbox'),
             load: async () => {
                 const data = await loadBelegEingang(appSession(), entity, year);
                 // Category options are best-effort — without them the confirm is accept-only.
@@ -188,9 +189,12 @@ export class BhBelegEingangView extends Adw.Bin {
         const entry = this.rows.get(d.id);
         if (!entry) return;
         const isDone = this.done.has(d.id);
-        const vendor = markup(d.correspondent?.trim() || d.title?.trim() || '(ohne Titel)');
+        const vendor = markup(d.correspondent?.trim() || d.title?.trim() || _('(untitled)'));
         entry.action.set_title(isDone ? `<s>${vendor}</s>` : vendor);
-        const sub = [d.created ? deDate(d.created) : null, d.invoiceNumber ? `Nr. ${d.invoiceNumber}` : null]
+        const sub = [
+            d.created ? deDate(d.created) : null,
+            d.invoiceNumber ? fmt(_('No. {number}'), { number: d.invoiceNumber }) : null,
+        ]
             .filter(Boolean)
             .join('  ·  ');
         entry.action.set_subtitle(markup(sub));
@@ -300,14 +304,14 @@ export class BhBelegEingangView extends Adw.Bin {
 
     /** A failed candidate load — clearly NOT the same as "no match"; retry re-runs the search. */
     private candidatesErrorGroup(doc: DmsDocument, message: string): Gtk.Widget {
-        const group = new Adw.PreferencesGroup({ title: 'Buchung zuordnen' });
+        const group = new Adw.PreferencesGroup({ title: _('Match transaction') });
         const row = new Adw.ActionRow({
-            title: 'Buchungs-Kandidaten konnten nicht ermittelt werden',
+            title: _('Could not determine candidate transactions'),
             subtitle: markup(message),
         });
         row.set_subtitle_lines(0);
         row.add_prefix(new Gtk.Image({ iconName: 'dialog-warning-symbolic', cssClasses: ['warning'] }));
-        const retry = new Gtk.Button({ label: 'Erneut versuchen', valign: Gtk.Align.CENTER, cssClasses: ['flat'] });
+        const retry = new Gtk.Button({ label: _('Try again'), valign: Gtk.Align.CENTER, cssClasses: ['flat'] });
         retry.connect('clicked', () => {
             this.candidateErrors.delete(doc.id);
             this.renderDetail();
@@ -323,8 +327,8 @@ export class BhBelegEingangView extends Adw.Bin {
         const row = doc.aiNote
             ? new Adw.ActionRow({ title: 'KI-Hinweis', subtitle: markup(doc.aiNote) })
             : new Adw.ActionRow({
-                  title: 'Noch keiner Buchung zugeordnet',
-                  subtitle: 'Passende Buchung wählen, dann bestätigen.',
+                  title: _('Not matched to a transaction yet'),
+                  subtitle: _('Choose the matching transaction, then confirm.'),
               });
         row.set_subtitle_lines(0);
         row.add_prefix(new Gtk.Image({ iconName: 'dialog-warning-symbolic', cssClasses: ['warning'] }));
@@ -336,11 +340,11 @@ export class BhBelegEingangView extends Adw.Bin {
     /** The receipt's read-only facts: Lieferant · Datum · Nr. · Beträge · Original öffnen. */
     private belegGroup(doc: DmsDocument): Gtk.Widget {
         const group = new Adw.PreferencesGroup({
-            title: 'Beleg',
+            title: _('Receipt'),
             description: DMS_LABEL[this.kind] ?? this.kind,
         });
         const title = new Adw.ActionRow({
-            title: markup(doc.title?.trim() || doc.correspondent?.trim() || '(ohne Titel)'),
+            title: markup(doc.title?.trim() || doc.correspondent?.trim() || _('(untitled)')),
             subtitle: markup(doc.correspondent?.trim() ?? ''),
         });
         const gross = doc.gross ?? doc.net;
@@ -353,10 +357,10 @@ export class BhBelegEingangView extends Adw.Bin {
             row.add_suffix(new Gtk.Label({ label: value, cssClasses: ['dim-label'], valign: Gtk.Align.CENTER }));
             group.add(row);
         };
-        fact('Datum', doc.created ? deDate(doc.created) : null);
-        fact('Rechnungsnr.', doc.invoiceNumber);
+        fact(_('Date'), doc.created ? deDate(doc.created) : null);
+        fact(_('Invoice no.'), doc.invoiceNumber);
         if (doc.net != null && doc.vat != null) {
-            fact('Netto', eur(doc.net));
+            fact(_('Net'), eur(doc.net));
             fact('USt', eur(doc.vat));
         }
 
@@ -371,12 +375,12 @@ export class BhBelegEingangView extends Adw.Bin {
         if (herkunft) group.add(herkunft);
 
         if (doc.origin?.kind === 'mail') {
-            const where = new Adw.ActionRow({ title: 'Herkunft', subtitle: markup(mailHerkunftSatz(doc.origin)) });
+            const where = new Adw.ActionRow({ title: _('Source'), subtitle: markup(mailHerkunftSatz(doc.origin)) });
             where.add_prefix(new Gtk.Image({ iconName: 'mail-unread-symbolic' }));
             group.add(where);
         }
 
-        const open = new Adw.ActionRow({ title: 'Original öffnen', subtitle: 'Beleg-Datei anzeigen' });
+        const open = new Adw.ActionRow({ title: _('Open original'), subtitle: _('Show the receipt file') });
         open.add_prefix(new Gtk.Image({ iconName: 'document-open-symbolic' }));
         open.set_activatable(true);
         open.add_suffix(new Gtk.Image({ iconName: 'go-next-symbolic', cssClasses: ['dim-label'] }));
@@ -386,8 +390,8 @@ export class BhBelegEingangView extends Adw.Bin {
     }
 
     private loadingCandidatesGroup(): Gtk.Widget {
-        const group = new Adw.PreferencesGroup({ title: 'Buchung zuordnen' });
-        const row = new Adw.ActionRow({ title: 'Suche passende Buchungen …' });
+        const group = new Adw.PreferencesGroup({ title: _('Match transaction') });
+        const row = new Adw.ActionRow({ title: _('Looking for matching transactions …') });
         row.add_prefix(new Adw.Spinner());
         group.add(row);
         return group;
@@ -406,7 +410,7 @@ export class BhBelegEingangView extends Adw.Bin {
         if (token !== this.detailToken.current || this.currentId !== doc.id) return; // stale
         if (cands == null) {
             // A failed load must NOT masquerade as "no match" — offer a retry, cache nothing.
-            this.candidateErrors.set(doc.id, failure ?? 'Unbekannter Fehler');
+            this.candidateErrors.set(doc.id, failure ?? _('Unknown error'));
             this.renderDetail();
             return;
         }
@@ -423,14 +427,14 @@ export class BhBelegEingangView extends Adw.Bin {
     /** The candidate bookings as a radio list — the chosen one backs the confirm. */
     private candidatesGroup(doc: DmsDocument, cands: LinkCandidate[]): Gtk.Widget {
         const group = new Adw.PreferencesGroup({
-            title: 'Buchung zuordnen',
-            description: 'Der Beleg wird mit der gewählten Buchung verknüpft.',
+            title: _('Match transaction'),
+            description: _('The receipt is linked to the chosen transaction.'),
         });
         if (cands.length === 0) {
             group.add(
                 new Adw.ActionRow({
-                    title: 'Keine passende Buchung gefunden',
-                    subtitle: 'Keine unverknüpfte Buchung passt auf Betrag, Datum und Gegenseite — überspringen.',
+                    title: _('No matching transaction found'),
+                    subtitle: _('No unlinked transaction matches amount, date and counterparty — skip.'),
                     cssClasses: ['dim-label'],
                 }),
             );
@@ -444,7 +448,7 @@ export class BhBelegEingangView extends Adw.Bin {
             if (radio) check.set_group(radio);
             else radio = check;
             const row = new Adw.ActionRow({
-                title: markup(c.counterparty?.trim() || c.title?.trim() || 'Buchung'),
+                title: markup(c.counterparty?.trim() || c.title?.trim() || _('Transaction')),
                 subtitle: markup([deDate(c.date), ...c.reasons].join('  ·  ')),
             });
             row.set_subtitle_lines(0);
@@ -466,24 +470,24 @@ export class BhBelegEingangView extends Adw.Bin {
     private formGroup(doc: DmsDocument): Gtk.Widget {
         const group = new Adw.PreferencesGroup({
             // PreferencesGroup titles parse Pango markup — a raw & would swallow the title.
-            title: markup('Prüfen & bestätigen'),
-            description: 'Kategorie unverändert lassen (KI-Vorschlag übernehmen) oder korrigieren.',
+            title: markup(_('Check & confirm')),
+            description: _('Leave the category unchanged (accept the AI suggestion) or correct it.'),
         });
         const edit = this.edits.get(doc.id) ?? { categoryIndex: 0, note: '' };
 
         const model = new Gtk.StringList();
         model.append(ACCEPT_LABEL);
         for (const cat of this.categories) model.append(cat);
-        const combo = new Adw.ComboRow({ title: 'Kategorie', model });
+        const combo = new Adw.ComboRow({ title: _('Category'), model });
         combo.set_selected(Math.min(edit.categoryIndex, this.categories.length));
         const syncRateHint = () => {
             const sel = combo.get_selected();
             if (sel > 0) {
                 const kind = doc.direction === 'outgoing' ? 'income' : 'expense';
                 const rate = impliedRate(this.categories[sel - 1], kind);
-                combo.set_subtitle(`abgeleiteter USt-Satz: ${Math.round(rate * 100)} %`);
+                combo.set_subtitle(fmt(_('derived VAT rate: {rate} %'), { rate: Math.round(rate * 100) }));
             } else {
-                combo.set_subtitle('USt-Satz wird aus der Kategorie abgeleitet');
+                combo.set_subtitle(_('The VAT rate is derived from the category'));
             }
         };
         syncRateHint();
@@ -495,7 +499,7 @@ export class BhBelegEingangView extends Adw.Bin {
         });
         group.add(combo);
 
-        const note = new Adw.EntryRow({ title: 'Begründung (optional)' });
+        const note = new Adw.EntryRow({ title: _('Reason (optional)') });
         if (edit.note) note.set_text(edit.note);
         note.connect('changed', () => {
             const e = this.edits.get(doc.id) ?? { categoryIndex: 0, note: '' };
@@ -510,18 +514,18 @@ export class BhBelegEingangView extends Adw.Bin {
     private actionsRow(): Gtk.Widget {
         const box = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 6 });
         const buttons = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 10 });
-        const skip = new Gtk.Button({ label: 'Überspringen', cssClasses: ['flat'] });
+        const skip = new Gtk.Button({ label: _('Skip'), cssClasses: ['flat'] });
         skip.connect('clicked', () => this.step(1));
         buttons.append(skip);
         buttons.append(new Gtk.Box({ hexpand: true }));
-        const confirm = new Gtk.Button({ label: 'Bestätigen und weiter', cssClasses: ['suggested-action', 'pill'] });
+        const confirm = new Gtk.Button({ label: _('Confirm and continue'), cssClasses: ['suggested-action', 'pill'] });
         confirm.connect('clicked', () => void this.confirm());
         buttons.append(confirm);
         this.confirmButton = confirm;
         box.append(buttons);
         box.append(
             new Gtk.Label({
-                label: 'Tipp: ←/→ blättern · Eingabetaste bestätigt',
+                label: _('Tip: ←/→ to browse · Enter confirms'),
                 xalign: 1,
                 cssClasses: ['dim-label', 'caption'],
             }),
@@ -539,15 +543,15 @@ export class BhBelegEingangView extends Adw.Bin {
     private renderDoneDetail(doc: DmsDocument): void {
         const group = new Adw.PreferencesGroup();
         const row = new Adw.ActionRow({
-            title: 'Bestätigt',
-            subtitle: 'Dieser Beleg wurde in dieser Sitzung bestätigt und verbucht.',
+            title: _('Confirmed'),
+            subtitle: _('This receipt was confirmed and booked in this session.'),
         });
         row.add_prefix(new Gtk.Image({ iconName: 'object-select-symbolic', cssClasses: ['success'] }));
         group.add(row);
         this._detail_box.append(group);
         this._detail_box.append(this.belegGroup(doc));
         const undoBtn = new Gtk.Button({
-            label: 'Rückgängig machen',
+            label: _p('confirmed receipt', 'Undo'),
             cssClasses: ['pill'],
             halign: Gtk.Align.CENTER,
         });
@@ -560,16 +564,20 @@ export class BhBelegEingangView extends Adw.Bin {
         const fresh = this.done.size === 0; // queue was empty on load, nothing confirmed here
         const page = new Adw.StatusPage({
             iconName: 'object-select-symbolic',
-            title: fresh ? 'Alles zugeordnet' : 'Alles geprüft',
+            title: fresh ? _('All matched') : _('All checked'),
             description: fresh
-                ? `Jeder Beleg in ${this.year} ist einer Buchung zugeordnet. Neue Belege erscheinen hier.`
-                : 'Alle Belege im Eingang sind bestätigt und verbucht. Neue Belege aus Paperless und E-Mail-Import erscheinen automatisch hier.',
+                ? fmt(_('Every receipt in {year} is matched to a transaction. New receipts appear here.'), {
+                      year: this.year,
+                  })
+                : _(
+                      'Every receipt in the inbox is confirmed and booked. New receipts from Paperless and the mail import appear here automatically.',
+                  ),
             vexpand: true,
         });
         page.add_css_class('compact');
         if (!fresh) {
             const btn = new Gtk.Button({
-                label: 'Zu den Buchungen',
+                label: _('Go to transactions'),
                 cssClasses: ['suggested-action', 'pill'],
                 halign: Gtk.Align.CENTER,
             });
@@ -610,13 +618,16 @@ export class BhBelegEingangView extends Adw.Bin {
             this.fillRow(doc);
             this.updateProgress();
             // Toast titles parse Pango markup — Paperless-authored vendor names MUST be escaped.
-            const vendor = markup(doc.correspondent?.trim() || doc.title?.trim() || 'Beleg');
+            const vendor = markup(doc.correspondent?.trim() || doc.title?.trim() || _('Receipt'));
             if (result.documentWrite === 'failed') {
                 // Decision + link stand; only the Paperless mark-up (Tag/Kategorie) did not land.
-                showToast(`Beleg „${vendor}" gebucht — Paperless-Markierung fehlgeschlagen`);
+                showToast(fmt(_('Receipt “{vendor}” booked — marking it in Paperless failed'), { vendor }));
             } else {
                 // The closure carries entity + snapshot so Undo still works after a view reload.
-                showUndoToast(`Beleg „${vendor}" gebucht`, () => void this.undo(doc.id, entity, result.undo));
+                showUndoToast(
+                    fmt(_('Receipt “{vendor}” booked'), { vendor }),
+                    () => void this.undo(doc.id, entity, result.undo),
+                );
             }
             // Advance only when the user did not navigate elsewhere during the write.
             if (this.currentId === doc.id) {
@@ -627,7 +638,7 @@ export class BhBelegEingangView extends Adw.Bin {
                 this.focusCurrentRow();
             }
         } catch (err) {
-            await errorDialog(this, 'Bestätigen fehlgeschlagen', err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Confirming failed'), err instanceof Error ? err.message : String(err));
         } finally {
             this.confirmBusy = false;
             this.updateConfirmSensitive();
@@ -643,12 +654,12 @@ export class BhBelegEingangView extends Adw.Bin {
         const useEntity = entity ?? this.entity;
         const useSnapshot = snapshot ?? this.done.get(docId);
         if (!useSnapshot || !useEntity) {
-            showToast('Rückgängig nicht mehr möglich');
+            showToast(_('Undo is no longer possible'));
             return;
         }
         try {
             await undoConfirmBeleg(useEntity, useSnapshot);
-            showToast('Rückgängig gemacht');
+            showToast(_('Undone'));
             // Update the queue UI only when this view still shows the receipt's entity state.
             if (this.done.delete(docId)) {
                 const doc = this.docs.find((d) => d.id === docId);
@@ -661,7 +672,7 @@ export class BhBelegEingangView extends Adw.Bin {
                 this.focusCurrentRow();
             }
         } catch (err) {
-            await errorDialog(this, 'Rückgängig fehlgeschlagen', err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Undo failed'), err instanceof Error ? err.message : String(err));
         }
     }
 
@@ -676,7 +687,7 @@ export class BhBelegEingangView extends Adw.Bin {
         if (!this.entity) return;
         try {
             const file = await dmsProviderFor(this.entity).getFile(doc.id);
-            if (!file) throw new Error('Die Beleg-Datei ist nicht verfügbar.');
+            if (!file) throw new Error(_('The receipt file is not available.'));
             const dir = GLib.build_filenamev([GLib.get_user_cache_dir(), 'steuererklaerung', 'belege']);
             GLib.mkdir_with_parents(dir, 0o755);
             const safe = doc.id.replace(/[^A-Za-z0-9_-]/g, '_');
@@ -691,7 +702,7 @@ export class BhBelegEingangView extends Adw.Bin {
                 }
             });
         } catch (err) {
-            await errorDialog(this, 'Original konnte nicht geöffnet werden', errText(err));
+            await errorDialog(this, _('Could not open the original'), errText(err));
         }
     }
 }

@@ -19,7 +19,7 @@ template $BhDokumenteView: Adw.Bin {
         }
 
         Gtk.Label {
-          label: "Lade Belege …";
+          label: _("Loading receipts …");
           styles ["dim-label"]
         }
       };
@@ -29,7 +29,7 @@ template $BhDokumenteView: Adw.Bin {
       name: "error";
       child: Adw.StatusPage error_page {
         icon-name: "dialog-error-symbolic";
-        title: "Konnte nicht laden";
+        title: _("Could not load");
       };
     }
 
@@ -53,7 +53,7 @@ template $BhDokumenteView: Adw.Bin {
             Adw.PreferencesGroup summary_group {}
 
             Adw.PreferencesGroup list_group {
-              title: "Belege";
+              title: _("Receipts");
             }
           };
         };

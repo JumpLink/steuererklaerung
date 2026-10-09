@@ -14,6 +14,7 @@ import { showToast } from '../toast.ts';
 import { isDmsUnsupported, isManifestMissing, isPaperlessSetupRequired } from '../../../core/lib/errors.ts';
 import { navigateTo } from '../nav.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
+import { _, _p, fmt } from '../i18n.ts';
 
 /** Escape a plain string for the Pango-markup labels Adwaita rows / status pages use. */
 export function markup(text: string): string {
@@ -49,7 +50,7 @@ export function saveFileViaDialog(widget: Gtk.Widget, filename: string, bytes: U
             const dest = dialog.save_finish(res);
             if (dest) {
                 Gio.File.new_for_path(path).copy(dest, Gio.FileCopyFlags.OVERWRITE, null, null);
-                showToast(`${toastLabel} gespeichert`);
+                showToast(fmt(_('{what} saved'), { what: toastLabel }));
             }
         } catch {
             /* user cancelled the save dialog */
@@ -58,7 +59,23 @@ export function saveFileViaDialog(widget: Gtk.Widget, filename: string, bytes: U
 }
 
 /** Month abbreviations, 1-based (index 0 unused) — shared kernel constant. */
-export { MONTHS } from '../../../core/lib/format.ts';
+/** Month abbreviations, 1-based (index 0 unused) so `MONTHS[isoMonth]` reads directly — translated, unlike
+ * the kernel's German list in `core/lib/format.ts`, which CLI and MCP output keep using. */
+export const MONTHS = [
+    '',
+    _p('month abbreviation', 'Jan'),
+    _p('month abbreviation', 'Feb'),
+    _p('month abbreviation', 'Mar'),
+    _p('month abbreviation', 'Apr'),
+    _p('month abbreviation', 'May'),
+    _p('month abbreviation', 'Jun'),
+    _p('month abbreviation', 'Jul'),
+    _p('month abbreviation', 'Aug'),
+    _p('month abbreviation', 'Sep'),
+    _p('month abbreviation', 'Oct'),
+    _p('month abbreviation', 'Nov'),
+    _p('month abbreviation', 'Dec'),
+];
 
 /** A right-aligned, tabular amount label, optionally accented (success/error) + emphasised. */
 export function amountLabel(value: string, opts: { accent?: 'success' | 'error'; heading?: boolean } = {}): Gtk.Label {
@@ -327,27 +344,29 @@ interface ErrorRemedy {
 function remedyFor(err: unknown): ErrorRemedy | null {
     if (isManifestMissing(err)) {
         return {
-            title: 'Noch nicht eingerichtet',
-            description:
-                'Es gibt noch keine Konfiguration. Der Assistent legt sie an — Entität, Steuernummer ' +
-                'und wo die Daten liegen sollen.',
-            action: { label: 'Einrichtung starten', run: (from) => from.activate_action('win.setup', null) },
+            title: _('Not set up yet'),
+            description: _(
+                'There is no configuration yet. The assistant creates it — entity, Steuernummer (tax number) ' +
+                    'and where the data should live.',
+            ),
+            action: { label: _('Start setup'), run: (from) => from.activate_action('win.setup', null) },
         };
     }
     if (isDmsUnsupported(err)) {
         return {
-            title: `${err.capability} braucht Paperless`,
-            description: `${err.message} Die Beleg-Verwaltung lässt sich in den Einstellungen umstellen.`,
-            action: { label: 'Zu den Einstellungen', run: (from) => navigateTo(from, 'settings') },
+            title: fmt(_('{capability} needs Paperless'), { capability: err.capability }),
+            description: `${err.message} ${_('Receipt management can be switched in the settings.')}`,
+            action: { label: _('Go to settings'), run: (from) => navigateTo(from, 'settings') },
         };
     }
     if (isPaperlessSetupRequired(err)) {
         return {
-            title: 'Paperless ist noch nicht eingerichtet',
-            description:
-                'In Paperless fehlen die Dokumenttypen und Zusatzfelder, aus denen die Zahlen gelesen werden. ' +
-                'Sie lassen sich in den Einstellungen anlegen.',
-            action: { label: 'Zu den Einstellungen', run: (from) => navigateTo(from, 'settings') },
+            title: _('Paperless is not set up yet'),
+            description: _(
+                'Paperless lacks the document types and custom fields the figures are read from. ' +
+                    'They can be created in the settings.',
+            ),
+            action: { label: _('Go to settings'), run: (from) => navigateTo(from, 'settings') },
         };
     }
     return null;
@@ -372,10 +391,10 @@ const originalTitle = new WeakMap<Adw.StatusPage, string>();
 export function applyRemedy(page: Adw.StatusPage, err: unknown, retry?: () => void): void {
     const message = err instanceof Error ? err.message : String(err);
     const remedy = remedyFor(err);
-    if (!originalTitle.has(page)) originalTitle.set(page, page.get_title() ?? 'Konnte nicht laden');
+    if (!originalTitle.has(page)) originalTitle.set(page, page.get_title() ?? _('Could not load'));
     // StatusPage.description is parsed as Pango markup (no use-markup toggle) — escape it.
     page.set_description(markup(remedy ? remedy.description : message));
-    page.set_title(remedy ? remedy.title : (originalTitle.get(page) ?? 'Konnte nicht laden'));
+    page.set_title(remedy ? remedy.title : (originalTitle.get(page) ?? _('Could not load')));
 
     const buttons: Gtk.Button[] = [];
     if (remedy?.action) {
@@ -390,7 +409,7 @@ export function applyRemedy(page: Adw.StatusPage, err: unknown, retry?: () => vo
     // happened yet just reproduces the same error, and two buttons of which one is known useless
     // is worse than one.
     if (retry && !remedy?.action) {
-        const again = new Gtk.Button({ label: 'Erneut versuchen' });
+        const again = new Gtk.Button({ label: _('Try again') });
         again.add_css_class('pill');
         again.add_css_class('suggested-action');
         again.connect('clicked', retry);

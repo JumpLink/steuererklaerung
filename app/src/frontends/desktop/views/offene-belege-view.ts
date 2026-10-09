@@ -21,6 +21,7 @@ import { LoadToken, MONTHS, amountLabel, loadIntoStack, markup } from './util.ts
 import { BhBelegLinkDialog } from './beleg-link-dialog.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { showToast, showUndoToast } from '../toast.ts';
+import { _, _n, fmt } from '../i18n.ts';
 
 export class BhOffeneBelegeView extends Adw.Bin {
     declare private _stack: Gtk.Stack;
@@ -49,7 +50,7 @@ export class BhOffeneBelegeView extends Adw.Bin {
 
     constructor() {
         super();
-        this._gap_banner.set_button_label('Automatisch zuordnen');
+        this._gap_banner.set_button_label(_('Match automatically'));
         this._gap_banner.connect('button-clicked', () => void this.autoLink());
     }
 
@@ -60,7 +61,7 @@ export class BhOffeneBelegeView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'Offene Belege konnten nicht ermittelt werden',
+            errorContext: _('Could not determine the missing receipts'),
             load: () => loadOffeneBelege(appSession(), entity, year),
             fill: (data) => this.fill(data, year),
         });
@@ -69,8 +70,14 @@ export class BhOffeneBelegeView extends Adw.Bin {
     private fill(data: OffeneBelegeData, year: number): void {
         if (data.totalCount > 0) {
             this._gap_banner.set_title(
-                `${data.totalCount} Buchung${data.totalCount === 1 ? '' : 'en'} mit Vorsteuer ohne Beleg · ` +
-                    `${eur(data.totalVat)} betroffen`,
+                fmt(
+                    _n(
+                        '{n} transaction with input VAT but no receipt · {amount} affected',
+                        '{n} transactions with input VAT but no receipt · {amount} affected',
+                        data.totalCount,
+                    ),
+                    { n: data.totalCount, amount: eur(data.totalVat) },
+                ),
             );
             this._gap_banner.set_revealed(true);
         } else {
@@ -98,8 +105,8 @@ export class BhOffeneBelegeView extends Adw.Bin {
     private allClearGroup(year: number): Adw.PreferencesGroup {
         const group = new Adw.PreferencesGroup();
         const row = new Adw.ActionRow({
-            title: 'Keine fehlenden Belege',
-            subtitle: `Alle Vorsteuer-Ausgaben in ${year} sind mit einem Beleg verknüpft.`,
+            title: _('No missing receipts'),
+            subtitle: fmt(_('Every expense with input VAT in {year} is linked to a receipt.'), { year }),
         });
         row.add_prefix(new Gtk.Image({ iconName: 'object-select-symbolic', cssClasses: ['success'] }));
         group.add(row);
@@ -109,7 +116,7 @@ export class BhOffeneBelegeView extends Adw.Bin {
     private monthGroup(m: { month: number; rows: BelegGapRow[]; vat: number }, year: number): Adw.PreferencesGroup {
         const group = new Adw.PreferencesGroup({
             title: `${MONTHS[m.month] ?? m.month} ${year}`,
-            description: `${m.rows.length} offen · ${eur(m.vat)} Vorsteuer`,
+            description: fmt(_('{n} open · {amount} input VAT'), { n: m.rows.length, amount: eur(m.vat) }),
         });
         for (const r of m.rows) group.add(this.buildRow(r));
         return group;
@@ -121,7 +128,7 @@ export class BhOffeneBelegeView extends Adw.Bin {
      * is missing; on a successful link the worklist reloads and the item leaves "offen".
      */
     private buildRow(r: BelegGapRow): Adw.ActionRow {
-        const sub = [deDate(r.bookingDate), `netto ${eur(Math.abs(r.net))}`];
+        const sub = [deDate(r.bookingDate), fmt(_('net {amount}'), { amount: eur(Math.abs(r.net)) })];
         if (r.purpose && r.counterparty) sub.push(r.purpose.trim());
         const row = new Adw.ActionRow({
             title: markup(r.counterparty?.trim() || r.purpose?.trim() || '—'),
@@ -129,7 +136,7 @@ export class BhOffeneBelegeView extends Adw.Bin {
         });
         row.add_suffix(amountLabel(eur(Math.abs(r.vat)), { accent: 'error' }));
         row.set_activatable(true);
-        row.set_tooltip_text('Beleg verknüpfen');
+        row.set_tooltip_text(_('Link receipt'));
         row.add_suffix(new Gtk.Image({ iconName: 'go-next-symbolic', cssClasses: ['dim-label'] }));
         row.connect('activated', () => this.openLinkDialog(r));
         return row;
@@ -149,10 +156,10 @@ export class BhOffeneBelegeView extends Adw.Bin {
         const txIds = [...this.gapTxIds];
         this.autoLinkBusy = true;
         try {
-            showToast('Suche eindeutige Treffer …');
+            showToast(_('Looking for unambiguous matches …'));
             const plan = await runAutoLink(entity, txIds, true);
             if (plan.planned.length === 0) {
-                showToast('Keine eindeutigen Treffer — bitte manuell zuordnen.');
+                showToast(_('No unambiguous matches — please match by hand.'));
                 return;
             }
             const rest = plan.ambiguous.length + plan.unmatched.length;
@@ -163,45 +170,61 @@ export class BhOffeneBelegeView extends Adw.Bin {
                         `• ${deDate(p.bookingDate)} ${p.counterparty ?? '—'} ⇄ ${p.docTitle ?? p.docCorrespondent ?? p.documentId}`,
                 )
                 .join('\n');
-            const more = plan.planned.length > 6 ? `\n… und ${plan.planned.length - 6} weitere` : '';
+            const more =
+                plan.planned.length > 6
+                    ? `\n… ${fmt(_n('and {n} more', 'and {n} more', plan.planned.length - 6), { n: plan.planned.length - 6 })}`
+                    : '';
             const ok = await confirmDialog(this, {
-                heading: 'Automatisch zuordnen',
+                heading: _('Match automatically'),
                 body:
-                    `${plan.planned.length} eindeutige${plan.planned.length === 1 ? 'r' : ''} Treffer ` +
-                    `${plan.planned.length === 1 ? 'wird' : 'werden'} verknüpft:\n\n${pairs}${more}` +
+                    fmt(
+                        _n(
+                            '{n} unambiguous match will be linked:',
+                            '{n} unambiguous matches will be linked:',
+                            plan.planned.length,
+                        ),
+                        { n: plan.planned.length },
+                    ) +
+                    `\n\n${pairs}${more}` +
                     (rest > 0
-                        ? `\n\n${rest} Buchung${rest === 1 ? '' : 'en'} bleib${rest === 1 ? 't' : 'en'} zur Handprüfung.`
+                        ? `\n\n${fmt(
+                              _n(
+                                  '{n} transaction remains for manual review.',
+                                  '{n} transactions remain for manual review.',
+                                  rest,
+                              ),
+                              { n: rest },
+                          )}`
                         : ''),
-                confirmLabel: 'Verknüpfen',
+                confirmLabel: _('Link'),
             });
             if (!ok) return;
             const result = await runAutoLink(entity, txIds, false);
             if (result.errors.length > 0) {
-                await errorDialog(
-                    this,
-                    'Nicht alle Verknüpfungen gelangen',
-                    result.errors.map((e) => e.message).join('\n'),
-                );
+                await errorDialog(this, _('Not every link succeeded'), result.errors.map((e) => e.message).join('\n'));
             }
             const writtenPairs = result.planned.filter(
                 (p) => !result.errors.some((e) => e.txId === p.txId && e.documentId === p.documentId),
             );
-            showUndoToast(`${result.linked} Beleg${result.linked === 1 ? '' : 'e'} verknüpft`, () => {
-                void (async () => {
-                    const failed = await undoAutoLink(entity, writtenPairs);
-                    if (failed.length > 0) {
-                        await errorDialog(this, 'Rückgängig unvollständig', failed.map((f) => f.message).join('\n'));
-                    } else {
-                        showToast('Rückgängig gemacht');
-                    }
-                    // Reload only when the view still shows this entity/year — otherwise the
-                    // cache drop in undoAutoLink is enough and the current view state stands.
-                    if (this.entity?.id === entity.id && this.year === year) this.reload(entity, year);
-                })();
-            });
+            showUndoToast(
+                fmt(_n('{n} receipt linked', '{n} receipts linked', result.linked), { n: result.linked }),
+                () => {
+                    void (async () => {
+                        const failed = await undoAutoLink(entity, writtenPairs);
+                        if (failed.length > 0) {
+                            await errorDialog(this, _('Undo incomplete'), failed.map((f) => f.message).join('\n'));
+                        } else {
+                            showToast(_('Undone'));
+                        }
+                        // Reload only when the view still shows this entity/year — otherwise the
+                        // cache drop in undoAutoLink is enough and the current view state stands.
+                        if (this.entity?.id === entity.id && this.year === year) this.reload(entity, year);
+                    })();
+                },
+            );
             if (this.entity?.id === entity.id && this.year === year) this.reload(entity, year);
         } catch (err) {
-            await errorDialog(this, 'Abgleich fehlgeschlagen', err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Matching failed'), err instanceof Error ? err.message : String(err));
         } finally {
             this.autoLinkBusy = false;
         }

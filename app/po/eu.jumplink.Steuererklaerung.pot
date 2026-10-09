@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-09 18:57+0200\n"
+"POT-Creation-Date: 2026-10-09 19:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,6 +28,7 @@ msgstr ""
 
 #. TRANSLATORS: Tooltip on the button that hides the assistant panel
 #: src/frontends/desktop/assistent-panel.blp:40
+#: src/frontends/desktop/views/beleg-upload.ts:130
 msgid "Close"
 msgstr ""
 
@@ -111,7 +112,7 @@ msgid "Check & match receipts"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:55
-#: src/frontends/desktop/views/transactions-view.ts:247
+#: src/frontends/desktop/views/transactions-view.ts:252
 msgid "Transactions"
 msgstr ""
 
@@ -119,7 +120,7 @@ msgstr ""
 msgid "all accounts"
 msgstr ""
 
-#: src/frontends/desktop/nav.ts:56
+#: src/frontends/desktop/nav.ts:56 src/frontends/desktop/views/tab-hub.ts:146
 msgid "Invoices"
 msgstr ""
 
@@ -280,8 +281,581 @@ msgstr ""
 msgid "Undo"
 msgstr ""
 
+#: src/frontends/desktop/views/beleg-eingang-view.blp:24
+msgid "Loading receipt inbox …"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.blp:34
+#: src/frontends/desktop/views/beleg-link-dialog.ts:38
+#: src/frontends/desktop/views/dokumente-view.blp:32
+#: src/frontends/desktop/views/herleitung-dialog.blp:40
+#: src/frontends/desktop/views/home-view.blp:32
+#: src/frontends/desktop/views/offene-belege-view.blp:32
+#: src/frontends/desktop/views/rechnung-detail-dialog.blp:41
+#: src/frontends/desktop/views/transactions-view.blp:32
+#: src/frontends/desktop/views/util.ts:394
+#: src/frontends/desktop/views/util.ts:397
+msgid "Could not load"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:48
+#: src/frontends/desktop/views/dokumente-view.ts:31
+msgid "built-in DMS"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:51
+msgid "— unchanged (accept AI suggestion) —"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:128
+msgid "Could not load the receipt inbox"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:192
+#: src/frontends/desktop/views/beleg-eingang-view.ts:347
+#: src/frontends/desktop/views/dokumente-view.ts:186
+msgid "(untitled)"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:196
+#: src/frontends/desktop/views/beleg-link-dialog.ts:225
+#: src/frontends/desktop/views/dokumente-view.ts:180
+msgid "No. {number}"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:307
+#: src/frontends/desktop/views/beleg-eingang-view.ts:393
+#: src/frontends/desktop/views/beleg-eingang-view.ts:430
+msgid "Match transaction"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:309
+msgid "Could not determine candidate transactions"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:314
+#: src/frontends/desktop/views/util.ts:412
+msgid "Try again"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:330
+msgid "Not matched to a transaction yet"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:331
+msgid "Choose the matching transaction, then confirm."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:343
+#: src/frontends/desktop/views/beleg-eingang-view.ts:621
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:153
+#: src/frontends/desktop/views/tx-detail-dialog.ts:36
+msgid "Receipt"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:360
+msgid "Date"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:361
+msgid "Invoice no."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:363
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:99
+#: src/frontends/desktop/views/tx-detail-dialog.ts:202
+msgid "Net"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:378
+#: src/frontends/desktop/views/tx-detail-dialog.ts:183
+msgid "Source"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:383
+msgid "Open original"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:383
+msgid "Show the receipt file"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:394
+msgid "Looking for matching transactions …"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:413
+msgid "Unknown error"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:431
+msgid "The receipt is linked to the chosen transaction."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:436
+msgid "No matching transaction found"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:437
+msgid "No unlinked transaction matches amount, date and counterparty — skip."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:451
+#: src/frontends/desktop/views/tx-detail-dialog.ts:62
+msgid "Transaction"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:473
+msgid "Check & confirm"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:474
+msgid "Leave the category unchanged (accept the AI suggestion) or correct it."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:481
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:119
+#: src/frontends/desktop/views/tx-detail-dialog.ts:182
+msgid "Category"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:488
+msgid "derived VAT rate: {rate} %"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:490
+msgid "The VAT rate is derived from the category"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:502
+msgid "Reason (optional)"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:517
+msgid "Skip"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:521
+msgid "Confirm and continue"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:528
+msgid "Tip: ←/→ to browse · Enter confirms"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:546
+msgid "Confirmed"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:547
+msgid "This receipt was confirmed and booked in this session."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:554
+msgctxt "confirmed receipt"
+msgid "Undo"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:567
+msgid "All matched"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:567
+msgid "All checked"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:569
+msgid ""
+"Every receipt in {year} is matched to a transaction. New receipts appear "
+"here."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:573
+msgid ""
+"Every receipt in the inbox is confirmed and booked. New receipts from "
+"Paperless and the mail import appear here automatically."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:580
+msgid "Go to transactions"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:624
+msgid "Receipt “{vendor}” booked — marking it in Paperless failed"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:628
+msgid "Receipt “{vendor}” booked"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:641
+msgid "Confirming failed"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:657
+msgid "Undo is no longer possible"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:662
+#: src/frontends/desktop/views/offene-belege-view.ts:217
+msgid "Undone"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:675
+msgid "Undo failed"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:690
+msgid "The receipt file is not available."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:705
+msgid "Could not open the original"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:51
+#: src/frontends/desktop/views/offene-belege-view.ts:139
+msgid "Link receipt"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:62
+msgid "Looking for matching receipts …"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:86
+msgid "Could not determine receipt candidates"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:103
+msgid "Find another receipt"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:105
+msgid ""
+"The suggestions above come from ±92 days around the transaction. Here any "
+"unlinked receipt can be found — by title, correspondent, invoice number or "
+"full text."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:125
+msgid "Transaction without receipt"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:126
+#: src/frontends/desktop/views/offene-belege-view.ts:131
+msgid "net {amount}"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:140
+msgid "Matching receipts"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:141
+msgid "Tap to link the receipt to this transaction."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:146
+msgid "No matching receipt found"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:147
+msgid "No unlinked receipt matches amount, date and correspondent."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:166
+msgid "Search …"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:199
+msgid "No unlinked receipt found"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:200
+msgid "Receipts already attached to a transaction are not shown."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:211
+msgid "Search failed"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:230
+#: src/frontends/desktop/views/beleg-link-dialog.ts:245
+msgid "Receipt #{id}"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:267
+msgid "Receipt linked"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-link-dialog.ts:271
+msgid "Linking failed"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:55
+msgid "Incoming (expense)"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:56
+msgid "Outgoing (income)"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:84
+#: src/frontends/desktop/views/tx-detail-dialog.ts:331
+msgid "Title"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:85
+msgid "Correspondent"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:86
+#: src/frontends/desktop/views/tx-detail-dialog.ts:330
+msgid "Invoice number"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:87
+msgid "Date (YYYY-MM-DD)"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:89
+msgid "Document type"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:94
+msgid "Remember as rule"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:96
+msgid ""
+"Future receipts from this correspondent get document type, category and "
+"direction automatically — without AI."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:101
+#: src/frontends/desktop/views/tx-detail-dialog.ts:204
+msgid "Gross"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:113
+msgid "Direction"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:123
+msgid "Tax rate"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:124
+msgid "Complete fills in the other two from one figure"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:129
+msgid "Edit receipt"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:154
+msgid "Untitled"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:169
+msgid "Invoice type"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:175
+msgid "Amounts"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:176
+msgid ""
+"Two figures are enough — the third is filled in. Comma as decimal separator."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:183
+msgid "Complete"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:207
+msgid "Save"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:222
+#: src/frontends/desktop/views/tx-detail-dialog.ts:37
+#: src/frontends/desktop/views/tx-detail-dialog.ts:184
+msgid "Rule"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:230
+msgid "Revert"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:232
+msgid "Remove the rule’s values from this receipt"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:273
+msgid "tax rate {rate} %"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:283
+msgid "incoming"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:283
+msgid "outgoing"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:309
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:334
+msgid "Amount is not a number — please check (comma as decimal separator)."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:340
+msgid "Not enough information — enter at least one amount."
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:362
+msgid "Receipt saved"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:366
+msgid "Saving failed: {error}"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:379
+msgid "Receipt saved — a rule needs a correspondent"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:382
+msgid "Receipt saved · rule for “{pattern}” remembered"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:384
+msgid "Receipt saved · rule for “{pattern}” updated"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:385
+msgid "Receipt saved · rule for “{pattern}” already existed"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:387
+msgid "Receipt saved — rule not remembered: {error}"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:400
+msgid "Reverting failed: {error}"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-upload.ts:83
+msgid "Receipts ({formats})"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-upload.ts:88
+msgid "Add receipt(s)"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-upload.ts:110
+msgid "{n} receipt added"
+msgid_plural "{n} receipts added"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/beleg-upload.ts:112
+msgid "No receipt added ({failed} failed)"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-upload.ts:113
+msgid "{stored} added, {failed} failed"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-upload.ts:127
+msgid "Not all receipts could be saved"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-upload.ts:127
+msgid "Receipt could not be saved"
+msgstr ""
+
 #: src/frontends/desktop/views/dialogs.ts:42
 msgid "OK"
+msgstr ""
+
+#: src/frontends/desktop/views/dokumente-view.blp:22
+msgid "Loading receipts …"
+msgstr ""
+
+#: src/frontends/desktop/views/dokumente-view.blp:56
+msgid "Receipts"
+msgstr ""
+
+#: src/frontends/desktop/views/dokumente-view.ts:72
+msgid "Could not load the receipts"
+msgstr ""
+
+#: src/frontends/desktop/views/dokumente-view.ts:88
+msgid "Receipts {year}"
+msgstr ""
+
+#: src/frontends/desktop/views/dokumente-view.ts:91
+msgid "{n} receipt"
+msgid_plural "{n} receipts"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/dokumente-view.ts:92
+msgid "{n} linked to a transaction"
+msgstr ""
+
+#: src/frontends/desktop/views/dokumente-view.ts:102
+msgid "Add receipt"
+msgstr ""
+
+#: src/frontends/desktop/views/dokumente-view.ts:147
+#: src/frontends/desktop/views/transactions-view.ts:255
+msgid "{shown} of {total} shown"
+msgstr ""
+
+#: src/frontends/desktop/views/dokumente-view.ts:148
+#: src/frontends/desktop/views/transactions-view.ts:256
+msgid "{total} total"
+msgstr ""
+
+#: src/frontends/desktop/views/dokumente-view.ts:154
+msgid "No receipts this year"
+msgstr ""
+
+#: src/frontends/desktop/views/dokumente-view.ts:156
+msgid ""
+"Invoices and receipts belong here — they are what input VAT and business "
+"expenses are read from."
+msgstr ""
+
+#: src/frontends/desktop/views/dokumente-view.ts:159
+msgid "Add receipts"
+msgstr ""
+
+#: src/frontends/desktop/views/dokumente-view.ts:175
+msgid "{n} transaction"
+msgid_plural "{n} transactions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/dokumente-view.ts:176
+msgid "no transaction"
+msgstr ""
+
+#: src/frontends/desktop/views/dokumente-view.ts:182
+msgid "via rule {rule}"
+msgstr ""
+
+#: src/frontends/desktop/views/dokumentregel-row.ts:40
+msgid "Paperless assignment …"
+msgstr ""
+
+#: src/frontends/desktop/views/dokumentregel-row.ts:41
+msgid "Checking which Paperless rule applied"
+msgstr ""
+
+#: src/frontends/desktop/views/dokumentregel-row.ts:48
+msgid "Paperless assignment not available"
 msgstr ""
 
 #: src/frontends/desktop/views/entity-dialogs.ts:32
@@ -348,55 +922,49 @@ msgstr ""
 msgid "Calculating derivation …"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.blp:40
-#: src/frontends/desktop/views/home-view.blp:32
-#: src/frontends/desktop/views/rechnung-detail-dialog.blp:41
-#: src/frontends/desktop/views/transactions-view.blp:32
-msgid "Could not load"
-msgstr ""
-
-#: src/frontends/desktop/views/hinweis-handlung.ts:66
+#: src/frontends/desktop/views/hinweis-handlung.ts:68
 msgid "Checked, nothing found: {what}"
 msgstr ""
 
-#: src/frontends/desktop/views/hinweis-handlung.ts:66
+#: src/frontends/desktop/views/hinweis-handlung.ts:69
 msgid "Checked, nothing found"
 msgstr ""
 
-#: src/frontends/desktop/views/hinweis-handlung.ts:67
+#: src/frontends/desktop/views/hinweis-handlung.ts:71
 msgid "Not checkable because {reason}"
 msgstr ""
 
-#: src/frontends/desktop/views/hinweis-handlung.ts:67
+#: src/frontends/desktop/views/hinweis-handlung.ts:71
 msgid "Not checkable"
 msgstr ""
 
-#: src/frontends/desktop/views/hinweis-handlung.ts:75
+#: src/frontends/desktop/views/hinweis-handlung.ts:79
 msgid "The transaction was not found in this year."
 msgstr ""
 
-#: src/frontends/desktop/views/hinweis-handlung.ts:104
-#: src/frontends/desktop/views/home-view.ts:334
+#: src/frontends/desktop/views/hinweis-handlung.ts:108
+#: src/frontends/desktop/views/home-view.ts:338
 msgid "The invoice was not found."
 msgstr ""
 
-#: src/frontends/desktop/views/hinweis-handlung.ts:114
+#: src/frontends/desktop/views/hinweis-handlung.ts:118
 msgid "The receipt was not found in this year."
 msgstr ""
 
-#: src/frontends/desktop/views/hinweis-handlung.ts:137
+#: src/frontends/desktop/views/hinweis-handlung.ts:141
 msgid "Marked as fine"
 msgstr ""
 
-#: src/frontends/desktop/views/hinweis-handlung.ts:228
+#: src/frontends/desktop/views/hinweis-handlung.ts:233
 msgid "Could not open"
 msgstr ""
 
-#: src/frontends/desktop/views/hinweis-handlung.ts:242
+#: src/frontends/desktop/views/hinweis-handlung.ts:248
 msgid "What does this mean?"
 msgstr ""
 
-#: src/frontends/desktop/views/hinweis-handlung.ts:287
+#: src/frontends/desktop/views/hinweis-handlung.ts:293
+#: src/frontends/desktop/views/offene-belege-view.ts:175
 msgid "and {n} more"
 msgid_plural "and {n} more"
 msgstr[0] ""
@@ -419,7 +987,7 @@ msgid "Income − expenses"
 msgstr ""
 
 #: src/frontends/desktop/views/home-view.ts:159
-#: src/frontends/desktop/views/home-view.ts:360
+#: src/frontends/desktop/views/home-view.ts:364
 #: src/frontends/desktop/views/transactions-view.ts:54
 #: src/frontends/desktop/views/transactions-view.ts:176
 msgid "Income"
@@ -428,14 +996,14 @@ msgstr ""
 #: src/frontends/desktop/views/home-view.ts:159
 #: src/frontends/desktop/views/home-view.ts:160
 #: src/frontends/desktop/views/transactions-view.ts:176
-#: src/frontends/desktop/views/transactions-view.ts:177
+#: src/frontends/desktop/views/transactions-view.ts:181
 msgid "net {year}"
 msgstr ""
 
 #: src/frontends/desktop/views/home-view.ts:160
-#: src/frontends/desktop/views/home-view.ts:361
+#: src/frontends/desktop/views/home-view.ts:365
 #: src/frontends/desktop/views/transactions-view.ts:55
-#: src/frontends/desktop/views/transactions-view.ts:177
+#: src/frontends/desktop/views/transactions-view.ts:178
 msgid "Expenses"
 msgstr ""
 
@@ -470,48 +1038,122 @@ msgstr ""
 msgid "ESt + GewSt − prepayments"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:239
+#: src/frontends/desktop/views/home-view.ts:242
 msgid "Derivation: {label}"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:280
+#: src/frontends/desktop/views/home-view.ts:284
 msgid "Up next"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:294
+#: src/frontends/desktop/views/home-view.ts:298
 msgid "Open “To review”"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:299
+#: src/frontends/desktop/views/home-view.ts:303
 msgid "Open receivables"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:304
+#: src/frontends/desktop/views/home-view.ts:308
 msgid "Open recurring costs"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:339
+#: src/frontends/desktop/views/home-view.ts:343
 msgid "Could not load the invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:356
+#: src/frontends/desktop/views/home-view.ts:360
 msgid "Income and expenses"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:380
+#: src/frontends/desktop/views/home-view.ts:384
 msgid "Expenses by category"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:391
+#: src/frontends/desktop/views/home-view.ts:395
 msgid "No expenses recorded"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:399
+#: src/frontends/desktop/views/home-view.ts:403
 msgid "Liquidity"
 msgstr ""
 
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.blp:7
 msgid "Add account"
+msgstr ""
+
+#: src/frontends/desktop/views/offene-belege-view.blp:22
+msgid "Looking for missing receipts …"
+msgstr ""
+
+#: src/frontends/desktop/views/offene-belege-view.ts:53
+#: src/frontends/desktop/views/offene-belege-view.ts:178
+msgid "Match automatically"
+msgstr ""
+
+#: src/frontends/desktop/views/offene-belege-view.ts:64
+msgid "Could not determine the missing receipts"
+msgstr ""
+
+#: src/frontends/desktop/views/offene-belege-view.ts:75
+msgid "{n} transaction with input VAT but no receipt · {amount} affected"
+msgid_plural ""
+"{n} transactions with input VAT but no receipt · {amount} affected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/offene-belege-view.ts:108
+msgid "No missing receipts"
+msgstr ""
+
+#: src/frontends/desktop/views/offene-belege-view.ts:109
+msgid "Every expense with input VAT in {year} is linked to a receipt."
+msgstr ""
+
+#: src/frontends/desktop/views/offene-belege-view.ts:119
+msgid "{n} open · {amount} input VAT"
+msgstr ""
+
+#: src/frontends/desktop/views/offene-belege-view.ts:159
+msgid "Looking for unambiguous matches …"
+msgstr ""
+
+#: src/frontends/desktop/views/offene-belege-view.ts:162
+msgid "No unambiguous matches — please match by hand."
+msgstr ""
+
+#: src/frontends/desktop/views/offene-belege-view.ts:182
+msgid "{n} unambiguous match will be linked:"
+msgid_plural "{n} unambiguous matches will be linked:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/offene-belege-view.ts:192
+msgid "{n} transaction remains for manual review."
+msgid_plural "{n} transactions remain for manual review."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/offene-belege-view.ts:199
+msgid "Link"
+msgstr ""
+
+#: src/frontends/desktop/views/offene-belege-view.ts:204
+msgid "Not every link succeeded"
+msgstr ""
+
+#: src/frontends/desktop/views/offene-belege-view.ts:210
+msgid "{n} receipt linked"
+msgid_plural "{n} receipts linked"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/offene-belege-view.ts:215
+msgid "Undo incomplete"
+msgstr ""
+
+#: src/frontends/desktop/views/offene-belege-view.ts:227
+msgid "Matching failed"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.blp:30
@@ -542,16 +1184,29 @@ msgstr ""
 msgid "All receipts"
 msgstr ""
 
+#: src/frontends/desktop/views/tab-hub.ts:139
+#: src/frontends/desktop/views/transactions-view.ts:53
+msgid "All"
+msgstr ""
+
+#: src/frontends/desktop/views/tab-hub.ts:140
+msgid "To review"
+msgstr ""
+
+#: src/frontends/desktop/views/tab-hub.ts:141
+msgid "Recurring costs"
+msgstr ""
+
+#: src/frontends/desktop/views/tab-hub.ts:147
+msgid "Outstanding invoices"
+msgstr ""
+
 #: src/frontends/desktop/views/transactions-view.blp:22
 msgid "Loading transactions …"
 msgstr ""
 
 #: src/frontends/desktop/views/transactions-view.blp:58
 msgid "Search transactions …"
-msgstr ""
-
-#: src/frontends/desktop/views/transactions-view.ts:53
-msgid "All"
 msgstr ""
 
 #: src/frontends/desktop/views/transactions-view.ts:56
@@ -566,96 +1221,79 @@ msgstr ""
 msgid "Transactions {year}"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:178
+#: src/frontends/desktop/views/transactions-view.ts:183
 msgid "Balance"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:250
-msgid "{shown} of {total} shown"
-msgstr ""
-
-#: src/frontends/desktop/views/transactions-view.ts:251
-msgid "{total} total"
-msgstr ""
-
-#: src/frontends/desktop/views/transactions-view.ts:263
+#: src/frontends/desktop/views/transactions-view.ts:268
 msgid "Nothing found"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:264
+#: src/frontends/desktop/views/transactions-view.ts:269
 msgid "No transaction matches the search and filter."
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:265
+#: src/frontends/desktop/views/transactions-view.ts:270
 msgid "Reset filter"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:269
+#: src/frontends/desktop/views/transactions-view.ts:274
 msgid "No transactions yet"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:271
+#: src/frontends/desktop/views/transactions-view.ts:275
 msgid "Transactions come from a connected account or from an imported file."
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:272
+#: src/frontends/desktop/views/transactions-view.ts:276
 msgid "Connect account"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:289
-#: src/frontends/desktop/views/transactions-view.ts:310
-#: src/frontends/desktop/views/tx-detail-dialog.ts:221
+#: src/frontends/desktop/views/transactions-view.ts:293
+#: src/frontends/desktop/views/transactions-view.ts:312
+#: src/frontends/desktop/views/tx-detail-dialog.ts:225
 msgid "Assign to project"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:290
+#: src/frontends/desktop/views/transactions-view.ts:294
 msgid "Assign the marked expenses to a project"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:295
+#: src/frontends/desktop/views/transactions-view.ts:299
 msgid "Done"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:295
+#: src/frontends/desktop/views/transactions-view.ts:299
 msgid "Select"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:297
+#: src/frontends/desktop/views/transactions-view.ts:300
 msgid "End selection"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:297
+#: src/frontends/desktop/views/transactions-view.ts:300
 msgid "Mark expenses to assign them to a project"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:310
+#: src/frontends/desktop/views/transactions-view.ts:312
 msgid "Assign to project ({n})"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:325
-#: src/frontends/desktop/views/tx-detail-dialog.ts:256
+#: src/frontends/desktop/views/transactions-view.ts:327
+#: src/frontends/desktop/views/tx-detail-dialog.ts:260
 msgid "Assignment taken back"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:339
+#: src/frontends/desktop/views/transactions-view.ts:342
 msgid "Project {names}"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:344
+#: src/frontends/desktop/views/transactions-view.ts:347
 msgid "Select: {title} · {date}"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:358
+#: src/frontends/desktop/views/transactions-view.ts:361
 msgid "no receipt"
-msgstr ""
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:36
-msgid "Receipt"
-msgstr ""
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:37
-#: src/frontends/desktop/views/tx-detail-dialog.ts:180
-msgid "Rule"
 msgstr ""
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:38
@@ -667,7 +1305,7 @@ msgid "unclassified"
 msgstr ""
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:40
-#: src/frontends/desktop/views/tx-detail-dialog.ts:357
+#: src/frontends/desktop/views/tx-detail-dialog.ts:363
 msgid "Transfer"
 msgstr ""
 
@@ -678,10 +1316,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:44
 msgid "Expense"
-msgstr ""
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:62
-msgid "Transaction"
 msgstr ""
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:125
@@ -708,86 +1342,70 @@ msgstr ""
 msgid "Split the transaction into parts with their own category and tax rate"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:149
+#: src/frontends/desktop/views/tx-detail-dialog.ts:150
 msgid "Mark as transfer"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:178
-msgid "Category"
-msgstr ""
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:179
-msgid "Source"
-msgstr ""
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:185
+#: src/frontends/desktop/views/tx-detail-dialog.ts:189
 msgid "Part {n} · remainder"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:185
-#: src/frontends/desktop/views/tx-detail-dialog.ts:234
+#: src/frontends/desktop/views/tx-detail-dialog.ts:189
+#: src/frontends/desktop/views/tx-detail-dialog.ts:238
 msgid "Part {n}"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:186
+#: src/frontends/desktop/views/tx-detail-dialog.ts:190
 msgid "private, no input VAT"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:196
+#: src/frontends/desktop/views/tx-detail-dialog.ts:200
 msgid "Form line (Kz)"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:197
+#: src/frontends/desktop/views/tx-detail-dialog.ts:201
 msgid "Type"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:198
-msgid "Net"
-msgstr ""
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:199
+#: src/frontends/desktop/views/tx-detail-dialog.ts:203
 msgid "VAT (Umsatzsteuer)"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:200
-msgid "Gross"
-msgstr ""
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:220
+#: src/frontends/desktop/views/tx-detail-dialog.ts:224
 msgid "Project"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:222
+#: src/frontends/desktop/views/tx-detail-dialog.ts:226
 msgid "Assign this expense to a project"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:240
+#: src/frontends/desktop/views/tx-detail-dialog.ts:244
 msgid "No project"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:241
+#: src/frontends/desktop/views/tx-detail-dialog.ts:245
 msgid "manual: no project"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:241
+#: src/frontends/desktop/views/tx-detail-dialog.ts:245
 msgid "No assignment and no rule"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:246
+#: src/frontends/desktop/views/tx-detail-dialog.ts:250
 msgid "Take back assignment"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:248
-#: src/frontends/desktop/views/tx-detail-dialog.ts:304
+#: src/frontends/desktop/views/tx-detail-dialog.ts:252
+#: src/frontends/desktop/views/tx-detail-dialog.ts:305
 msgid "Take back"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:251
+#: src/frontends/desktop/views/tx-detail-dialog.ts:255
 msgid "Take back assignment: {what}"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:263
-#: src/frontends/desktop/views/tx-detail-dialog.ts:316
+#: src/frontends/desktop/views/tx-detail-dialog.ts:265
+#: src/frontends/desktop/views/tx-detail-dialog.ts:319
 msgid "Could not take back"
 msgstr ""
 
@@ -808,113 +1426,206 @@ msgstr ""
 msgid "Take back transfer"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:304
+#: src/frontends/desktop/views/tx-detail-dialog.ts:305
 msgctxt "button"
 msgid "Unlink"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:312
+#: src/frontends/desktop/views/tx-detail-dialog.ts:315
 msgid "Unlinked"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:312
+#: src/frontends/desktop/views/tx-detail-dialog.ts:315
 msgid "Transfer taken back"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:325
+#: src/frontends/desktop/views/tx-detail-dialog.ts:328
 msgid "Receipt (Paperless)"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:327
-msgid "Invoice number"
-msgstr ""
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:328
-msgid "Title"
-msgstr ""
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:329
+#: src/frontends/desktop/views/tx-detail-dialog.ts:332
 msgid "Net (receipt)"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:330
+#: src/frontends/desktop/views/tx-detail-dialog.ts:333
 msgid "Gross (receipt)"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:331
+#: src/frontends/desktop/views/tx-detail-dialog.ts:334
 msgid "VAT (receipt)"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:336
+#: src/frontends/desktop/views/tx-detail-dialog.ts:340
 msgid "Open in Paperless"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:336
+#: src/frontends/desktop/views/tx-detail-dialog.ts:341
 msgid "Document #{id}"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:345
+#: src/frontends/desktop/views/tx-detail-dialog.ts:351
 msgid "Document"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:351
+#: src/frontends/desktop/views/tx-detail-dialog.ts:357
 msgid "Links"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:353
+#: src/frontends/desktop/views/tx-detail-dialog.ts:359
 msgid "PayPal merchant"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:354
+#: src/frontends/desktop/views/tx-detail-dialog.ts:360
 msgid "PayPal item"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:358
+#: src/frontends/desktop/views/tx-detail-dialog.ts:364
 msgid "to {partner}"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:358
+#: src/frontends/desktop/views/tx-detail-dialog.ts:364
 msgid "from {partner}"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:367
+#: src/frontends/desktop/views/tx-detail-dialog.ts:373
 msgid "Bank details"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:369
+#: src/frontends/desktop/views/tx-detail-dialog.ts:375
 msgid "Account"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:370
+#: src/frontends/desktop/views/tx-detail-dialog.ts:376
 msgid "Account key"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:371
+#: src/frontends/desktop/views/tx-detail-dialog.ts:377
 msgid "IBAN (own)"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:372
+#: src/frontends/desktop/views/tx-detail-dialog.ts:378
 msgid "IBAN (counterparty)"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:373
+#: src/frontends/desktop/views/tx-detail-dialog.ts:379
 msgid "Currency"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:374
+#: src/frontends/desktop/views/tx-detail-dialog.ts:380
 msgid "Reference"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:375
+#: src/frontends/desktop/views/tx-detail-dialog.ts:381
 msgid "Booking text / type"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:376
+#: src/frontends/desktop/views/tx-detail-dialog.ts:382
 msgid "Source (import)"
 msgstr ""
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:377
+#: src/frontends/desktop/views/tx-detail-dialog.ts:383
 msgid "Transaction ID"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:53
+msgid "{what} saved"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:66
+msgctxt "month abbreviation"
+msgid "Jan"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:67
+msgctxt "month abbreviation"
+msgid "Feb"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:68
+msgctxt "month abbreviation"
+msgid "Mar"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:69
+msgctxt "month abbreviation"
+msgid "Apr"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:70
+msgctxt "month abbreviation"
+msgid "May"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:71
+msgctxt "month abbreviation"
+msgid "Jun"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:72
+msgctxt "month abbreviation"
+msgid "Jul"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:73
+msgctxt "month abbreviation"
+msgid "Aug"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:74
+msgctxt "month abbreviation"
+msgid "Sep"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:75
+msgctxt "month abbreviation"
+msgid "Oct"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:76
+msgctxt "month abbreviation"
+msgid "Nov"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:77
+msgctxt "month abbreviation"
+msgid "Dec"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:347
+msgid "Not set up yet"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:349
+msgid ""
+"There is no configuration yet. The assistant creates it — entity, "
+"Steuernummer (tax number) and where the data should live."
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:352
+msgid "Start setup"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:357
+msgid "{capability} needs Paperless"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:358
+msgid "Receipt management can be switched in the settings."
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:359
+#: src/frontends/desktop/views/util.ts:369
+msgid "Go to settings"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:364
+msgid "Paperless is not set up yet"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:366
+msgid ""
+"Paperless lacks the document types and custom fields the figures are read "
+"from. They can be created in the settings."
 msgstr ""
 
 #: src/frontends/desktop/views/zeiten-view.ts:50
