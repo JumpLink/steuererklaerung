@@ -27,6 +27,7 @@ import testIsolation from './unit/lib/test-isolation.test.ts';
 import renameFallback from './unit/config/rename-fallback.test.ts';
 import entityCountry from './unit/config/entity-country.test.ts';
 import taxOff from './unit/countries/tax-off.test.ts';
+import taxGuards from './unit/countries/tax-guards.test.ts';
 import userSettings from './unit/config/user-settings.test.ts';
 import backup from './unit/actions/backup.test.ts';
 import entitySetup from './unit/actions/entity-setup.test.ts';
@@ -220,6 +221,7 @@ run({
     exampleManifest,
     renameFallback,
     taxOff,
+    taxGuards,
     entityCountry,
     userSettings,
     backup,

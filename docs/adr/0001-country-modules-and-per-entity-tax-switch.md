@@ -43,13 +43,19 @@ adjustments the bookkeeping reports read. So the switch has to be a separate fie
    categorisation, receipts, invoices, projects, contacts, time, the EÜR-based bookkeeping
    reports and accounts keep working, because the `elster` section stays loaded.
 4. **The edges refuse instead of hiding silently.**
-   - CLI: DE-tax-only commands (the `elster` group, `zve`, `bmf-kurse`, `umsatz-aufstellung`)
-     fail with a message naming the entity and how to turn the module back on.
+   - CLI: the `elster` group and `zve` fail with a message naming the entity and how to turn the
+     module back on. `elster euer report`, `explain`, `reclassify` and `setup` stay available:
+     they are the bookkeeping view and categorisation, or touch no entity. `umsatz-aufstellung`
+     (a revenue listing) and `bmf-kurse` (global exchange rates, no entity) are not guarded.
    - MCP: tools stay registered and refuse **per call** when the resolved entity has the module
-     off. One server serves a mixed workspace, so filtering at registration would hide a tool
-     from the German entity next door. Mixed tools (`frei_verfuegbar`, `hinweise_*`) keep
-     working and report the tax parts as not applicable.
-   - Web: the `/api` tax routes answer with an error for such an entity, the same rule as MCP.
+     off — `entity` from the call, else the same default the tool uses (privat for
+     `elster_zve`). One server serves a mixed workspace, so filtering at registration would hide
+     a tool from the German entity next door. The tax-only list is `TAX_ONLY_TOOLS` in
+     `frontends/mcp/tax-guard.ts`; a new German-filing tool goes there. Mixed tools (EÜR report,
+     classification, the filing register, `frei_verfuegbar`, `hinweise_*`) keep working and
+     report the tax parts as not applicable.
+   - Web: the `/api` tax routes (`uste`, `gewst`, `feststellung`, `est`, `wizard`,
+     `steuerkonto` and their PDFs) answer 403 with the same message for such an entity.
 5. **The switch has a UI.** The setup assistant asks for country and the German tax features
    when it creates an entity; Settings offers the same two controls for an existing entity and
    confirms before switching off ("Tax views will be hidden; your data stays").
@@ -59,7 +65,7 @@ adjustments the bookkeeping reports read. So the switch has to be a separate fie
 1. Schema fields and accessors, with tests that an old manifest resolves to DE/`de`. — done
 2. Country registry and `capabilities(entity)` on `EntityModel`; the desktop and web UI follow. —
    done
-3. Guards on CLI, MCP and web routes; the switch in the setup assistant and Settings. — done
+3. Guards on CLI, MCP and web routes; the switch in the setup assistant and Settings.
 4. **Planned, not implemented:** take bookkeeping out of the `elster` section. Classification
    and `klassifizierung`, `adjustments` and the `euer-transactions` engine move to a neutral
    place (classification and ledger) with a read fallback to the old keys; only the EÜR

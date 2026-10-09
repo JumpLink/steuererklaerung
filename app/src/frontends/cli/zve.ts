@@ -27,6 +27,7 @@ import {
     type ZvEWert,
 } from '../../core/actions/zve.ts';
 import { pickArgv, printJson } from './output.ts';
+import { exitWhenTaxOff } from './elster/shared.ts';
 
 const HERKUNFT_LABEL: Record<string, string> = {
     bescheid: 'Bescheid',
@@ -90,6 +91,7 @@ export const zveCommand: CommandModule = {
                 describe: 'Ohne erfassten Bescheidwert die eigene ESt-Schätzung liefern (als Schätzung markiert)',
             })
             .option('json', { type: 'boolean', default: false, describe: 'Rohes JSON' })
+            .middleware((argv) => exitWhenTaxOff(['zve'], argv))
             .command({
                 command: 'record',
                 describe: 'Den zvE-Wert eines Jahres aus dem Einkommensteuerbescheid erfassen (oder ersetzen)',

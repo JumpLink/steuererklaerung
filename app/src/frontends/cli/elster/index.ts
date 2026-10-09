@@ -17,6 +17,7 @@ import { signoffSubcommand } from './signoff.ts';
 import { submitSubcommand } from './submit.ts';
 import { filingSubcommand } from './filing.ts';
 import { ustvaSubcommand } from './ustva.ts';
+import { exitWhenTaxOff } from './shared.ts';
 
 export const elsterCommand: CommandModule = {
     command: 'elster',
@@ -33,6 +34,7 @@ export const elsterCommand: CommandModule = {
                 describe:
                     'Workspace entity id from steuererklaerung.json — scopes the report to that entity’s accounts and selects its inline ELSTER config (e.g. jumplink, gbr). Overridden by explicit --account-key.',
             })
+            .middleware((argv) => exitWhenTaxOff(argv._.slice(1).map(String), argv))
             .command(wizardSubcommand)
             .command(estSubcommand)
             .command(euerSubcommand)
