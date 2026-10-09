@@ -19,7 +19,7 @@ template $BhHomeView: Adw.Bin {
         }
 
         Gtk.Label {
-          label: "Lade Übersicht …";
+          label: _("Loading overview …");
           styles ["dim-label"]
         }
       };
@@ -29,7 +29,7 @@ template $BhHomeView: Adw.Bin {
       name: "error";
       child: Adw.StatusPage error_page {
         icon-name: "dialog-error-symbolic";
-        title: "Konnte nicht laden";
+        title: _("Could not load");
       };
     }
 

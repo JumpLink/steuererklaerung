@@ -41,6 +41,7 @@ import { errorDialog } from './dialogs.ts';
 import { BhGlossaryHelp } from '../widgets/glossary-help.ts';
 import { loadAppSettings } from '../../../core/config/index.ts';
 import { markup } from './util.ts';
+import { _, _n, fmt } from '../i18n.ts';
 
 /** The entity-year a hint belongs to, and what to do once an action changed something. */
 export interface HinweisKontext {
@@ -62,8 +63,12 @@ const ANSICHT: Record<HinweisAnsicht, { view: NavViewId; tab?: string }> = {
 
 /** The line under a hint that says what the check did when it found nothing (or could not run). */
 export function statusZeile(h: { status?: HinweisStatus; geprueft?: string; weil?: string }): string | null {
-    if (h.status === 'ohne_befund') return `Geprüft, ohne Befund${h.geprueft ? `: ${h.geprueft}` : ''}`;
-    if (h.status === 'nicht_pruefbar') return `Nicht prüfbar${h.weil ? `, weil ${h.weil}` : ''}`;
+    if (h.status === 'ohne_befund')
+        return h.geprueft
+            ? fmt(_('Checked, nothing found: {what}'), { what: h.geprueft })
+            : _('Checked, nothing found');
+    if (h.status === 'nicht_pruefbar')
+        return h.weil ? fmt(_('Not checkable because {reason}'), { reason: h.weil }) : _('Not checkable');
     return null;
 }
 
@@ -71,7 +76,7 @@ export function statusZeile(h: { status?: HinweisStatus; geprueft?: string; weil
 async function findTx(ctx: HinweisKontext, id: string): Promise<EnrichedTxRow> {
     const { rows } = await loadEnrichedTransactions(appSession(), ctx.entity, ctx.year);
     const row = rows.find((r) => r.id === id);
-    if (!row) throw new Error('Die Buchung wurde in diesem Jahr nicht gefunden.');
+    if (!row) throw new Error(_('The transaction was not found in this year.'));
     return row;
 }
 
@@ -100,7 +105,7 @@ async function openTx(parent: Gtk.Widget, ctx: HinweisKontext, id: string): Prom
 
 async function openInvoice(parent: Gtk.Widget, ctx: HinweisKontext, id: string): Promise<void> {
     const invoice = (await loadOutgoingInvoices(ctx.entity.id)).find((i) => i.id === id);
-    if (!invoice) throw new Error('Die Rechnung wurde nicht gefunden.');
+    if (!invoice) throw new Error(_('The invoice was not found.'));
     const dialog = new BhRechnungDetailDialog();
     dialog.onChanged = changed(ctx);
     dialog.open(parent, ctx.entity, invoice, loadCapabilities(ctx.entity.id));
@@ -110,7 +115,7 @@ async function openInvoice(parent: Gtk.Widget, ctx: HinweisKontext, id: string):
 async function openBeleg(parent: Gtk.Widget, ctx: HinweisKontext, id: string): Promise<void> {
     const { docs } = await loadDocuments(appSession(), ctx.entity, ctx.year);
     const doc = docs.find((d) => d.id === id);
-    if (!doc) throw new Error('Der Beleg wurde in diesem Jahr nicht gefunden.');
+    if (!doc) throw new Error(_('The receipt was not found in this year.'));
     const done = changed(ctx);
     new BhBelegMetadatenDialog(doc, ctx.entity, docs.map(prefillRecordOf), (message, didChange) => {
         showToast(message);
@@ -133,7 +138,7 @@ async function dispatch(
     }
     if (target.art === 'aktion') {
         await markHinweisInOrdnung(appSession(), ctx.entity, ctx.year, key);
-        showToast('Als in Ordnung markiert');
+        showToast(_('Marked as fine'));
         ctx.onChanged();
         return;
     }
@@ -224,7 +229,9 @@ function openBetroffen(parent: Gtk.Widget, ctx: HinweisKontext, b: HinweisBetrof
             : b.art === 'beleg'
               ? openBeleg(parent, ctx, b.id)
               : openTx(parent, ctx, b.id);
-    run.catch((err: unknown) => errorDialog(parent, 'Nicht ladbar', err instanceof Error ? err.message : String(err)));
+    run.catch((err: unknown) =>
+        errorDialog(parent, _('Could not open'), err instanceof Error ? err.message : String(err)),
+    );
 }
 
 /**
@@ -238,7 +245,7 @@ export function hinweisDetails(parent: Gtk.Widget, ctx: HinweisKontext, h: YearH
     // The term a hint is named after gets its "?" (only shown in Lernmodus, like everywhere else).
     if (h.begriff && lernmodus) {
         const line = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 4, halign: Gtk.Align.START });
-        line.append(new Gtk.Label({ label: 'Was heißt das?', cssClasses: ['caption', 'dim-label'] }));
+        line.append(new Gtk.Label({ label: _('What does this mean?'), cssClasses: ['caption', 'dim-label'] }));
         line.append(new BhGlossaryHelp(h.begriff, lernmodus));
         box.append(line);
     }
@@ -283,7 +290,7 @@ export function hinweisDetails(parent: Gtk.Widget, ctx: HinweisKontext, h: YearH
         if (weitere > 0) {
             box.append(
                 new Gtk.Label({
-                    label: `und ${weitere} weitere`,
+                    label: fmt(_n('and {n} more', 'and {n} more', weitere), { n: weitere }),
                     xalign: 0,
                     cssClasses: ['caption', 'dim-label'],
                 }),

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-09 18:53+0200\n"
+"POT-Creation-Date: 2026-10-09 18:57+0200\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -102,6 +102,7 @@ msgid "Check & match receipts"
 msgstr "Belege prüfen & zuordnen"
 
 #: src/frontends/desktop/nav.ts:55
+#: src/frontends/desktop/views/transactions-view.ts:247
 msgid "Transactions"
 msgstr "Buchungen"
 
@@ -250,19 +251,19 @@ msgstr "Nichts abzugleichen"
 msgid "Sync complete"
 msgstr "Abgleich abgeschlossen"
 
-#: src/frontends/desktop/sync-controller.ts:156
+#: src/frontends/desktop/sync-controller.ts:157
 msgid "Syncing: {source} …"
 msgstr "Gleicht ab: {source} …"
 
-#: src/frontends/desktop/sync-controller.ts:164
+#: src/frontends/desktop/sync-controller.ts:166
 msgid "Last sync {when}"
 msgstr "Letzter Abgleich {when}"
 
-#: src/frontends/desktop/sync-controller.ts:165
+#: src/frontends/desktop/sync-controller.ts:167
 msgid "Not synced yet"
 msgstr "Noch nicht abgeglichen"
 
-#: src/frontends/desktop/sync-controller.ts:167
+#: src/frontends/desktop/sync-controller.ts:170
 msgid "Error: {source} — {message}"
 msgstr "Fehler: {source} — {message}"
 
@@ -343,9 +344,166 @@ msgid "Calculating derivation …"
 msgstr "Berechne Herleitung …"
 
 #: src/frontends/desktop/views/herleitung-dialog.blp:40
+#: src/frontends/desktop/views/home-view.blp:32
 #: src/frontends/desktop/views/rechnung-detail-dialog.blp:41
+#: src/frontends/desktop/views/transactions-view.blp:32
 msgid "Could not load"
 msgstr "Konnte nicht laden"
+
+#: src/frontends/desktop/views/hinweis-handlung.ts:66
+msgid "Checked, nothing found: {what}"
+msgstr "Geprüft, ohne Befund: {what}"
+
+#: src/frontends/desktop/views/hinweis-handlung.ts:66
+msgid "Checked, nothing found"
+msgstr "Geprüft, ohne Befund"
+
+#: src/frontends/desktop/views/hinweis-handlung.ts:67
+msgid "Not checkable because {reason}"
+msgstr "Nicht prüfbar, weil {reason}"
+
+#: src/frontends/desktop/views/hinweis-handlung.ts:67
+msgid "Not checkable"
+msgstr "Nicht prüfbar"
+
+#: src/frontends/desktop/views/hinweis-handlung.ts:75
+msgid "The transaction was not found in this year."
+msgstr "Die Buchung wurde in diesem Jahr nicht gefunden."
+
+#: src/frontends/desktop/views/hinweis-handlung.ts:104
+#: src/frontends/desktop/views/home-view.ts:334
+msgid "The invoice was not found."
+msgstr "Die Rechnung wurde nicht gefunden."
+
+#: src/frontends/desktop/views/hinweis-handlung.ts:114
+msgid "The receipt was not found in this year."
+msgstr "Der Beleg wurde in diesem Jahr nicht gefunden."
+
+#: src/frontends/desktop/views/hinweis-handlung.ts:137
+msgid "Marked as fine"
+msgstr "Als in Ordnung markiert"
+
+#: src/frontends/desktop/views/hinweis-handlung.ts:228
+msgid "Could not open"
+msgstr "Nicht ladbar"
+
+#: src/frontends/desktop/views/hinweis-handlung.ts:242
+msgid "What does this mean?"
+msgstr "Was heißt das?"
+
+#: src/frontends/desktop/views/hinweis-handlung.ts:287
+msgid "and {n} more"
+msgid_plural "and {n} more"
+msgstr[0] "und {n} weitere"
+msgstr[1] "und {n} weitere"
+
+#: src/frontends/desktop/views/home-view.blp:22
+msgid "Loading overview …"
+msgstr "Lade Übersicht …"
+
+#: src/frontends/desktop/views/home-view.ts:67
+msgid "Could not load the overview"
+msgstr "Übersicht konnte nicht geladen werden"
+
+#: src/frontends/desktop/views/home-view.ts:152
+msgid "Profit {year}"
+msgstr "Gewinn {year}"
+
+#: src/frontends/desktop/views/home-view.ts:154
+msgid "Income − expenses"
+msgstr "Einnahmen − Ausgaben"
+
+#: src/frontends/desktop/views/home-view.ts:159
+#: src/frontends/desktop/views/home-view.ts:360
+#: src/frontends/desktop/views/transactions-view.ts:54
+#: src/frontends/desktop/views/transactions-view.ts:176
+msgid "Income"
+msgstr "Einnahmen"
+
+#: src/frontends/desktop/views/home-view.ts:159
+#: src/frontends/desktop/views/home-view.ts:160
+#: src/frontends/desktop/views/transactions-view.ts:176
+#: src/frontends/desktop/views/transactions-view.ts:177
+msgid "net {year}"
+msgstr "netto {year}"
+
+#: src/frontends/desktop/views/home-view.ts:160
+#: src/frontends/desktop/views/home-view.ts:361
+#: src/frontends/desktop/views/transactions-view.ts:55
+#: src/frontends/desktop/views/transactions-view.ts:177
+msgid "Expenses"
+msgstr "Ausgaben"
+
+#: src/frontends/desktop/views/home-view.ts:163
+msgid "Tax forecast {year}"
+msgstr "Steuer-Prognose {year}"
+
+#: src/frontends/desktop/views/home-view.ts:186
+msgid "Free to spend"
+msgstr "Frei verfügbar"
+
+#: src/frontends/desktop/views/home-view.ts:186
+#: src/frontends/desktop/views/home-view.ts:196
+#: src/frontends/desktop/views/home-view.ts:206
+msgid "not computable"
+msgstr "nicht berechenbar"
+
+#: src/frontends/desktop/views/home-view.ts:198
+msgid "As of {date} · a calculation, not advice"
+msgstr "Stand {date} · eine Rechnung, keine Empfehlung"
+
+#: src/frontends/desktop/views/home-view.ts:199
+#: src/frontends/desktop/views/home-view.ts:212
+msgid "incomplete — see derivation"
+msgstr "unvollständig — siehe Herleitung"
+
+#: src/frontends/desktop/views/home-view.ts:209
+msgid "expected refund"
+msgstr "vsl. Erstattung"
+
+#: src/frontends/desktop/views/home-view.ts:211
+msgid "ESt + GewSt − prepayments"
+msgstr "ESt + GewSt − Vorauszahlungen"
+
+#: src/frontends/desktop/views/home-view.ts:239
+msgid "Derivation: {label}"
+msgstr "Herleitung: {label}"
+
+#: src/frontends/desktop/views/home-view.ts:280
+msgid "Up next"
+msgstr "Als Nächstes"
+
+#: src/frontends/desktop/views/home-view.ts:294
+msgid "Open “To review”"
+msgstr "Zu prüfen öffnen"
+
+#: src/frontends/desktop/views/home-view.ts:299
+msgid "Open receivables"
+msgstr "Offene Forderungen öffnen"
+
+#: src/frontends/desktop/views/home-view.ts:304
+msgid "Open recurring costs"
+msgstr "Laufende Kosten öffnen"
+
+#: src/frontends/desktop/views/home-view.ts:339
+msgid "Could not load the invoice"
+msgstr "Rechnung nicht ladbar"
+
+#: src/frontends/desktop/views/home-view.ts:356
+msgid "Income and expenses"
+msgstr "Einnahmen und Ausgaben"
+
+#: src/frontends/desktop/views/home-view.ts:380
+msgid "Expenses by category"
+msgstr "Ausgaben nach Kategorie"
+
+#: src/frontends/desktop/views/home-view.ts:391
+msgid "No expenses recorded"
+msgstr "Keine Ausgaben erfasst"
+
+#: src/frontends/desktop/views/home-view.ts:399
+msgid "Liquidity"
+msgstr "Liquidität"
 
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.blp:7
 msgid "Add account"
@@ -378,6 +536,384 @@ msgstr "Offene Belege"
 #: src/frontends/desktop/views/tab-hub.ts:134
 msgid "All receipts"
 msgstr "Alle Belege"
+
+#: src/frontends/desktop/views/transactions-view.blp:22
+msgid "Loading transactions …"
+msgstr "Lade Transaktionen …"
+
+#: src/frontends/desktop/views/transactions-view.blp:58
+msgid "Search transactions …"
+msgstr "Buchungen durchsuchen …"
+
+#: src/frontends/desktop/views/transactions-view.ts:53
+msgid "All"
+msgstr "Alle"
+
+#: src/frontends/desktop/views/transactions-view.ts:56
+msgid "Without receipt"
+msgstr "Ohne Beleg"
+
+#: src/frontends/desktop/views/transactions-view.ts:132
+msgid "Could not load the transactions"
+msgstr "Buchungen konnten nicht geladen werden"
+
+#: src/frontends/desktop/views/transactions-view.ts:175
+msgid "Transactions {year}"
+msgstr "Buchungen {year}"
+
+#: src/frontends/desktop/views/transactions-view.ts:178
+msgid "Balance"
+msgstr "Saldo"
+
+#: src/frontends/desktop/views/transactions-view.ts:250
+msgid "{shown} of {total} shown"
+msgstr "{shown} von {total} angezeigt"
+
+#: src/frontends/desktop/views/transactions-view.ts:251
+msgid "{total} total"
+msgstr "{total} gesamt"
+
+#: src/frontends/desktop/views/transactions-view.ts:263
+msgid "Nothing found"
+msgstr "Nichts gefunden"
+
+#: src/frontends/desktop/views/transactions-view.ts:264
+msgid "No transaction matches the search and filter."
+msgstr "Keine Buchung passt auf Suche und Filter."
+
+#: src/frontends/desktop/views/transactions-view.ts:265
+msgid "Reset filter"
+msgstr "Filter zurücksetzen"
+
+#: src/frontends/desktop/views/transactions-view.ts:269
+msgid "No transactions yet"
+msgstr "Noch keine Buchungen"
+
+#: src/frontends/desktop/views/transactions-view.ts:271
+msgid "Transactions come from a connected account or from an imported file."
+msgstr ""
+"Buchungen kommen aus einem verbundenen Konto oder aus einer importierten "
+"Datei."
+
+#: src/frontends/desktop/views/transactions-view.ts:272
+msgid "Connect account"
+msgstr "Konto verbinden"
+
+#: src/frontends/desktop/views/transactions-view.ts:289
+#: src/frontends/desktop/views/transactions-view.ts:310
+#: src/frontends/desktop/views/tx-detail-dialog.ts:221
+msgid "Assign to project"
+msgstr "Projekt zuordnen"
+
+#: src/frontends/desktop/views/transactions-view.ts:290
+msgid "Assign the marked expenses to a project"
+msgstr "Die markierten Ausgaben einem Projekt zuordnen"
+
+#: src/frontends/desktop/views/transactions-view.ts:295
+msgid "Done"
+msgstr "Fertig"
+
+#: src/frontends/desktop/views/transactions-view.ts:295
+msgid "Select"
+msgstr "Auswählen"
+
+#: src/frontends/desktop/views/transactions-view.ts:297
+msgid "End selection"
+msgstr "Auswahl beenden"
+
+#: src/frontends/desktop/views/transactions-view.ts:297
+msgid "Mark expenses to assign them to a project"
+msgstr "Ausgaben markieren, um sie einem Projekt zuzuordnen"
+
+#: src/frontends/desktop/views/transactions-view.ts:310
+msgid "Assign to project ({n})"
+msgstr "Projekt zuordnen ({n})"
+
+#: src/frontends/desktop/views/transactions-view.ts:325
+#: src/frontends/desktop/views/tx-detail-dialog.ts:256
+msgid "Assignment taken back"
+msgstr "Zuordnung zurückgenommen"
+
+#: src/frontends/desktop/views/transactions-view.ts:339
+msgid "Project {names}"
+msgstr "Projekt {names}"
+
+#: src/frontends/desktop/views/transactions-view.ts:344
+msgid "Select: {title} · {date}"
+msgstr "Auswählen: {title} · {date}"
+
+#: src/frontends/desktop/views/transactions-view.ts:358
+msgid "no receipt"
+msgstr "ohne Beleg"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:36
+msgid "Receipt"
+msgstr "Beleg"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:37
+#: src/frontends/desktop/views/tx-detail-dialog.ts:180
+msgid "Rule"
+msgstr "Regel"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:38
+msgid "manual"
+msgstr "manuell"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:39
+msgid "unclassified"
+msgstr "unklassifiziert"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:40
+#: src/frontends/desktop/views/tx-detail-dialog.ts:357
+msgid "Transfer"
+msgstr "Umbuchung"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:43
+msgctxt "transaction kind"
+msgid "Income"
+msgstr "Einnahme"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:44
+msgid "Expense"
+msgstr "Ausgabe"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:62
+msgid "Transaction"
+msgstr "Buchung"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:125
+msgid "Value date"
+msgstr "Wertstellung"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:126
+msgid "Purpose"
+msgstr "Verwendungszweck"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:136
+msgid "Classification (EÜR)"
+msgstr "Klassifizierung (EÜR)"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:140
+msgid "Change split"
+msgstr "Aufteilung ändern"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:140
+msgid "Split"
+msgstr "Aufteilen"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:141
+msgid "Split the transaction into parts with their own category and tax rate"
+msgstr ""
+"Die Buchung in Teile mit eigener Kategorie und eigenem Steuersatz zerlegen"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:149
+msgid "Mark as transfer"
+msgstr "Umbuchen"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:178
+msgid "Category"
+msgstr "Kategorie"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:179
+msgid "Source"
+msgstr "Herkunft"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:185
+msgid "Part {n} · remainder"
+msgstr "Teil {n} · Rest"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:185
+#: src/frontends/desktop/views/tx-detail-dialog.ts:234
+msgid "Part {n}"
+msgstr "Teil {n}"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:186
+msgid "private, no input VAT"
+msgstr "privat, keine Vorsteuer"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:196
+msgid "Form line (Kz)"
+msgstr "Kennzahl"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:197
+msgid "Type"
+msgstr "Art"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:198
+msgid "Net"
+msgstr "Netto"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:199
+msgid "VAT (Umsatzsteuer)"
+msgstr "Umsatzsteuer"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:200
+msgid "Gross"
+msgstr "Brutto"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:220
+msgid "Project"
+msgstr "Projekt"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:222
+msgid "Assign this expense to a project"
+msgstr "Diese Ausgabe einem Projekt zuordnen"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:240
+msgid "No project"
+msgstr "Kein Projekt"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:241
+msgid "manual: no project"
+msgstr "manuell: kein Projekt"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:241
+msgid "No assignment and no rule"
+msgstr "Keine Zuordnung und keine Regel"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:246
+msgid "Take back assignment"
+msgstr "Zuordnung zurücknehmen"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:248
+#: src/frontends/desktop/views/tx-detail-dialog.ts:304
+msgid "Take back"
+msgstr "Zurücknehmen"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:251
+msgid "Take back assignment: {what}"
+msgstr "Zuordnung zurücknehmen: {what}"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:263
+#: src/frontends/desktop/views/tx-detail-dialog.ts:316
+msgid "Could not take back"
+msgstr "Konnte nicht zurücknehmen"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:286
+msgid "Remove split"
+msgstr "Aufteilung aufheben"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:288
+msgctxt "split"
+msgid "Remove"
+msgstr "Aufheben"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:301
+msgid "Unlink"
+msgstr "Verknüpfung lösen"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:301
+msgid "Take back transfer"
+msgstr "Umbuchung zurücknehmen"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:304
+msgctxt "button"
+msgid "Unlink"
+msgstr "Lösen"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:312
+msgid "Unlinked"
+msgstr "Verknüpfung gelöst"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:312
+msgid "Transfer taken back"
+msgstr "Umbuchung zurückgenommen"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:325
+msgid "Receipt (Paperless)"
+msgstr "Beleg (Paperless)"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:327
+msgid "Invoice number"
+msgstr "Rechnungsnummer"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:328
+msgid "Title"
+msgstr "Titel"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:329
+msgid "Net (receipt)"
+msgstr "Netto (Beleg)"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:330
+msgid "Gross (receipt)"
+msgstr "Brutto (Beleg)"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:331
+msgid "VAT (receipt)"
+msgstr "USt (Beleg)"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:336
+msgid "Open in Paperless"
+msgstr "In Paperless öffnen"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:336
+msgid "Document #{id}"
+msgstr "Dokument #{id}"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:345
+msgid "Document"
+msgstr "Dokument"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:351
+msgid "Links"
+msgstr "Verknüpfungen"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:353
+msgid "PayPal merchant"
+msgstr "PayPal-Händler"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:354
+msgid "PayPal item"
+msgstr "PayPal-Posten"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:358
+msgid "to {partner}"
+msgstr "an {partner}"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:358
+msgid "from {partner}"
+msgstr "von {partner}"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:367
+msgid "Bank details"
+msgstr "Bank-Details"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:369
+msgid "Account"
+msgstr "Konto"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:370
+msgid "Account key"
+msgstr "Konto-Schlüssel"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:371
+msgid "IBAN (own)"
+msgstr "IBAN (eigen)"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:372
+msgid "IBAN (counterparty)"
+msgstr "IBAN (Gegenseite)"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:373
+msgid "Currency"
+msgstr "Währung"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:374
+msgid "Reference"
+msgstr "Referenz"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:375
+msgid "Booking text / type"
+msgstr "Buchungstext / Typ"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:376
+msgid "Source (import)"
+msgstr "Quelle (Import)"
+
+#: src/frontends/desktop/views/tx-detail-dialog.ts:377
+msgid "Transaction ID"
+msgstr "Transaktions-ID"
 
 #: src/frontends/desktop/views/zeiten-view.ts:50
 msgid "Open"
@@ -459,23 +995,23 @@ msgstr "Native Vorschau"
 msgid "Sync"
 msgstr "Abgleichen"
 
-#: src/frontends/desktop/window.ts:396
+#: src/frontends/desktop/window.ts:397
 msgid "Data could not be loaded completely: {error}"
 msgstr "Daten konnten nicht vollständig geladen werden: {error}"
 
-#: src/frontends/desktop/window.ts:401
+#: src/frontends/desktop/window.ts:403
 msgid "Demo data – fictional examples, no real financial data"
 msgstr "Demodaten – fiktive Beispieldaten, keine echten Finanzdaten"
 
-#: src/frontends/desktop/window.ts:415
+#: src/frontends/desktop/window.ts:417
 msgid "Private"
 msgstr "Privat"
 
-#: src/frontends/desktop/window.ts:415
+#: src/frontends/desktop/window.ts:417
 msgid "Business"
 msgstr "Unternehmen"
 
-#: src/frontends/desktop/window.ts:479
+#: src/frontends/desktop/window.ts:481
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."
