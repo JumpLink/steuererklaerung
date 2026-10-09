@@ -37,7 +37,7 @@ function queryFromArgs(raw: Record<string, unknown>): KontoabfrageQuery {
 export const kontoabfrageSubcommand: YargsCommandModule = {
     command: 'kontoabfrage',
     describe: 'Steuerkonto beim Finanzamt abfragen (offene Posten oder Sollstellungen eines Jahres).',
-    builder: (y: any) =>
+    builder: (y) =>
         y
             .option('entity', {
                 type: 'string',
