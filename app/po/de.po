@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-09 21:03+0200\n"
+"POT-Creation-Date: 2026-10-09 22:04+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -109,7 +109,7 @@ msgstr "Kein Fenster offen, in dem die Bank gefragt werden könnte."
 #: src/frontends/desktop/views/entity-dialogs.ts:42
 #: src/frontends/desktop/views/entity-dialogs.ts:101
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:465
-#: src/frontends/desktop/window.ts:207
+#: src/frontends/desktop/window.ts:209
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -237,6 +237,7 @@ msgid "connections & import"
 msgstr "Anbindungen & Import"
 
 #: src/frontends/desktop/nav.ts:78 src/frontends/desktop/shortcuts.ts:53
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:190
 msgid "Settings"
 msgstr "Einstellungen"
 
@@ -976,6 +977,8 @@ msgid "Loading receipts …"
 msgstr "Lade Belege …"
 
 #: src/frontends/desktop/views/dokumente-view.blp:56
+#: src/frontends/desktop/views/setup-assistant.ts:530
+#: src/frontends/desktop/views/setup-assistant.ts:564
 msgid "Receipts"
 msgstr "Belege"
 
@@ -1057,8 +1060,8 @@ msgstr "Paperless-Zuordnung nicht verfügbar"
 msgid "Data"
 msgstr "Daten"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:29
 #
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:29
 msgid "Demo data — fictional examples"
 msgstr "Demodaten — erfundene Beispiele"
 
@@ -1068,7 +1071,7 @@ msgstr "Eigene Daten"
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:32
 #: src/frontends/desktop/views/welcome.ts:195
-#: src/frontends/desktop/window.ts:492
+#: src/frontends/desktop/window.ts:494
 msgid "Use my own data"
 msgstr "Eigene Daten verwenden"
 
@@ -1081,19 +1084,21 @@ msgstr "Demo ausprobieren"
 msgid "Show welcome again"
 msgstr "Einführung erneut anzeigen"
 
+#
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:46
 #: src/frontends/desktop/views/welcome.ts:283
-#
 msgid "Show the AI assistant"
 msgstr "KI-Assistent anzeigen"
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:47
 msgid ""
 "Questions and the data needed to answer them go to the configured AI provider"
-msgstr "Fragen und die zur Antwort nötigen Daten gehen an den eingerichteten KI-Anbieter"
+msgstr ""
+"Fragen und die zur Antwort nötigen Daten gehen an den eingerichteten KI-"
+"Anbieter"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:61
 #
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:61
 msgid "Last backup"
 msgstr "Letzte Sicherung"
 
@@ -1106,8 +1111,8 @@ msgstr "Sicherungsordner"
 msgid "{time} in {path}"
 msgstr "{time} in {path}"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:76
 #
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:76
 msgid "Never"
 msgstr "Noch nie"
 
@@ -1119,13 +1124,13 @@ msgstr "Jetzt sichern"
 msgid "Backup saved: {path}"
 msgstr "Sicherung gespeichert: {path}"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:88
 #
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:88
 msgid "Backup failed: {error}"
 msgstr "Sicherung fehlgeschlagen: {error}"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:95
 #
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:95
 msgid "Choose folder"
 msgstr "Ordner wählen"
 
@@ -1137,8 +1142,8 @@ msgstr "Sicherungen behalten"
 msgid "Older ones are deleted after each new backup"
 msgstr "Ältere werden nach jeder neuen Sicherung gelöscht"
 
-#: src/frontends/desktop/views/einstellungen-view.blp:30
 #
+#: src/frontends/desktop/views/einstellungen-view.blp:30
 msgid "General"
 msgstr "Allgemein"
 
@@ -1150,7 +1155,9 @@ msgstr "Sicherung"
 msgid ""
 "A copy of your configuration, transactions and receipts. Restoring is done "
 "by hand, see the manual."
-msgstr "Eine Kopie von Konfiguration, Buchungen und Belegen. Wiederhergestellt wird von Hand, siehe Handbuch."
+msgstr ""
+"Eine Kopie von Konfiguration, Buchungen und Belegen. Wiederhergestellt wird "
+"von Hand, siehe Handbuch."
 
 #: src/frontends/desktop/views/einstellungen-view.blp:44
 msgid "Clarity"
@@ -1347,6 +1354,9 @@ msgid "New display name for “{name}”."
 msgstr "Neuer Anzeigename für „{name}“."
 
 #: src/frontends/desktop/views/entity-dialogs.ts:37
+#: src/frontends/desktop/views/setup-assistant.ts:256
+#: src/frontends/desktop/views/setup-assistant.ts:332
+#: src/frontends/desktop/views/setup-assistant.ts:540
 msgid "Name"
 msgstr "Name"
 
@@ -1573,8 +1583,328 @@ msgid "Liquidity"
 msgstr "Liquidität"
 
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.blp:7
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:244
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:517
 msgid "Add account"
 msgstr "Konto hinzufügen"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:55
+msgid "The standard statement of almost every bank"
+msgstr "Der Standard-Kontoauszug fast jeder Bank"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:58
+msgid "PayPal activity report (CSV)"
+msgstr "PayPal-Aktivitätsbericht (CSV)"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:59
+msgid "Enrichment only — not in the profit statement"
+msgstr "Nur zur Anreicherung — nicht in der EÜR"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:61
+msgid "Qonto export (XLS)"
+msgstr "Qonto-Export (XLS)"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:61
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:62
+msgid "Enriches existing transactions"
+msgstr "Reichert vorhandene Buchungen an"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:62
+msgid "Amazon orders (CSV)"
+msgstr "Amazon-Bestellungen (CSV)"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:152
+msgid "Preview only — nothing was saved."
+msgstr "Nur Vorschau — nichts wurde gespeichert."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:212
+msgid "Where do the transactions come from?"
+msgstr "Woher kommen die Buchungen?"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:214
+msgid ""
+"A file is enough to start — the statement your bank offers for download in "
+"online banking. A live connection fetches new transactions by itself later."
+msgstr ""
+"Eine Datei reicht für den Anfang — der Kontoauszug, den deine Bank im Online-"
+"Banking zum Download anbietet. Eine laufende Verbindung holt neue Buchungen "
+"später von selbst."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:220
+msgid "Import a file (CAMT or CSV)"
+msgstr "Datei importieren (CAMT oder CSV)"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:221
+msgid "A statement export from your online banking — no login needed"
+msgstr "Ein Kontoauszug aus dem Online-Banking — ohne Zugangsdaten"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:228
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:372
+msgid "Connect Qonto"
+msgstr "Qonto verbinden"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:229
+msgid "Fetches transactions through the Qonto API — needs login and secret key"
+msgstr "Holt Buchungen über die Qonto-API — braucht Login und Secret Key"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:236
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:429
+msgid "Bank via FinTS/HBCI"
+msgstr "Bank über FinTS/HBCI"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:237
+msgid "Almost every German bank — needs your bank’s access details and PIN"
+msgstr ""
+"Fast jede deutsche Bank — braucht die Zugangsdaten deiner Bank und die PIN"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:243
+msgid "Nothing is saved until you confirm on the last page."
+msgstr "Gespeichert wird erst, wenn du auf der letzten Seite bestätigst."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:256
+msgid "Import a file"
+msgstr "Datei importieren"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:257
+msgid "The format is detected from the file name; for CSV it can be set here."
+msgstr ""
+"Das Format wird am Dateinamen erkannt; bei CSV lässt es sich hier festlegen."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:260
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:301
+msgid "File"
+msgstr "Datei"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:260
+msgid "None chosen yet"
+msgstr "Noch keine gewählt"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:261
+msgid "Choose file …"
+msgstr "Datei wählen …"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:274
+msgid "Format"
+msgstr "Format"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:275
+msgid "Detect automatically"
+msgstr "Automatisch erkennen"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:279
+msgid "From the file extension"
+msgstr "Aus der Dateiendung"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:286
+msgid "Import everything"
+msgstr "Alles importieren"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:288
+msgid ""
+"By default only transactions older than the existing ones are taken — that "
+"avoids duplicates where the files overlap."
+msgstr ""
+"Standard ist, nur Buchungen zu übernehmen, die älter sind als die "
+"vorhandenen — das vermeidet Dubletten im Überlappungsbereich."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:297
+msgid ""
+"A wrong import can be undone: every import is kept as a batch and can be "
+"taken back as a whole."
+msgstr ""
+"Ein Fehlimport lässt sich rückgängig machen: Jeder Import wird als Stapel "
+"geführt und kann als Ganzes zurückgenommen werden."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:302
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:395
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:453
+#: src/frontends/desktop/views/setup-assistant.ts:295
+#: src/frontends/desktop/views/setup-assistant.ts:341
+#: src/frontends/desktop/views/setup-assistant.ts:379
+#: src/frontends/desktop/views/setup-assistant.ts:420
+#: src/frontends/desktop/views/setup-assistant.ts:470
+#: src/frontends/desktop/views/setup-assistant.ts:530
+#: src/frontends/desktop/views/welcome.ts:146
+#: src/frontends/desktop/views/welcome.ts:266
+msgid "Next"
+msgstr "Weiter"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:304
+msgid "Please choose a file first."
+msgstr "Bitte zuerst eine Datei wählen."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:313
+msgid "Cannot tell the format of “{file}” — please choose one above."
+msgstr "Format von „{file}“ nicht erkennbar — bitte oben eins auswählen."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:321
+msgid "Import failed: {error}"
+msgstr "Import fehlgeschlagen: {error}"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:336
+msgid "Choose a statement or export"
+msgstr "Kontoauszug oder Export wählen"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:338
+msgid "All supported"
+msgstr "Alle unterstützten"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:341
+msgid "Qonto export (*.xls, *.xlsx)"
+msgstr "Qonto-Export (*.xls, *.xlsx)"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:355
+msgid "{file}: {count} new transactions imported."
+msgstr "{file}: {count} neue Buchungen importiert."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:356
+msgid "{file}: {count} transactions enriched."
+msgstr "{file}: {count} Buchungen angereichert."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:373
+msgid "Login and secret key are in your Qonto account under Settings → API."
+msgstr "Login und Secret Key stehen im Qonto-Konto unter Einstellungen → API."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:375
+msgid "Login"
+msgstr "Login"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:377
+msgid "Secret key"
+msgstr "Secret Key"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:380
+msgid "Environment"
+msgstr "Umgebung"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:381
+msgid "Production"
+msgstr "Produktiv"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:387
+msgid ""
+"The credentials are stored in the local .env file — they never leave this "
+"computer."
+msgstr ""
+"Die Zugangsdaten landen in der lokalen .env-Datei — sie verlassen diesen "
+"Rechner nicht."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:391
+msgid "How often transactions and invoices are fetched"
+msgstr "Wie oft Buchungen und Rechnungen abgeholt werden"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:399
+msgid "Login and secret key are required."
+msgstr "Login und Secret Key sind erforderlich."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:403
+msgid "Qonto (every account of the connection)"
+msgstr "Qonto (alle Konten der Verbindung)"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:411
+msgid "Qonto connected ({env}). Sync now to fetch transactions."
+msgstr "Qonto verbunden ({env}). Jetzt synchronisieren, um Buchungen zu holen."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:431
+msgid ""
+"Your bank provides the bank code and FinTS URL; the product ID is the "
+"registration number issued for the access."
+msgstr ""
+"BLZ und FinTS-URL nennt deine Bank; die Produkt-ID ist die "
+"Registrierungsnummer, die für den Zugriff vergeben wird."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:436
+msgid "Name (your choice)"
+msgstr "Name (frei wählbar)"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:437
+msgid "FinTS URL"
+msgstr "FinTS-URL"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:438
+msgid "Bank code (BLZ)"
+msgstr "BLZ"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:439
+msgid "User ID"
+msgstr "Benutzerkennung"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:440
+msgid "Product ID"
+msgstr "Produkt-ID"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:446
+msgid ""
+"The PIN is stored in the local .env file — it never leaves this computer."
+msgstr ""
+"Die PIN landet in der lokalen .env-Datei — sie verlässt diesen Rechner nicht."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:449
+msgid "Automatic sync and the connection test"
+msgstr "Automatischer Abgleich und Verbindungstest"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:469
+msgid "Still empty: {fields}"
+msgstr "Noch leer: {fields}"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:478
+msgid "Bank “{name}” connected. Sync now to fetch transactions."
+msgstr "Bank „{name}“ verbunden. Jetzt synchronisieren, um Buchungen zu holen."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:497
+msgid "Which entity does the account belong to?"
+msgstr "Zu welcher Entität gehört das Konto?"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:498
+msgid ""
+"Its transactions count for this entity’s returns. You can move it later."
+msgstr ""
+"Seine Buchungen zählen für die Erklärungen dieser Entität. Umziehen geht "
+"auch später."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:501
+#: src/frontends/desktop/views/tx-detail-dialog.ts:375
+msgid "Account"
+msgstr "Konto"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:504
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:516
+#: src/frontends/desktop/views/setup-assistant.ts:294
+msgid "Entity"
+msgstr "Entität"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:505
+#: src/frontends/desktop/views/setup-assistant.ts:76
+#: src/frontends/desktop/views/setup-assistant.ts:197
+#: src/frontends/desktop/views/setup-assistant.ts:538
+#: src/frontends/desktop/views/welcome.ts:95
+msgid "Later"
+msgstr "Später"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:510
+#: src/frontends/desktop/views/setup-assistant.ts:453
+msgid "Currently: {entity}"
+msgstr "Derzeit: {entity}"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:514
+msgid ""
+"With “Later” the account is added but counts for no entity until you assign "
+"it."
+msgstr ""
+"Mit „Später“ wird das Konto angelegt, zählt aber für keine Entität, bis du "
+"es zuordnest."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:531
+msgid "Adding failed: {error}"
+msgstr "Hinzufügen fehlgeschlagen: {error}"
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:543
+msgid "It also still counts for {entities} through a pattern."
+msgstr "Über ein Muster zählt es außerdem weiter für {entities}."
+
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:547
+msgid "Not assigned: {error}"
+msgstr "Nicht zugeordnet: {error}"
 
 #: src/frontends/desktop/views/mahnung-dialog.ts:34
 msgid "Draft payment reminder"
@@ -2743,6 +3073,298 @@ msgstr "Regel gespeichert: „{pattern}“ → {category}"
 msgid "Rule already existed: “{pattern}” → {category}"
 msgstr "Regel bestand bereits: „{pattern}“ → {category}"
 
+#: src/frontends/desktop/views/setup-assistant.ts:62
+#: src/frontends/desktop/views/setup-assistant.ts:417
+#: src/frontends/desktop/window.ts:508
+msgid "Private"
+msgstr "Privat"
+
+#: src/frontends/desktop/views/setup-assistant.ts:62
+msgid "No business: wages, work expenses, household services"
+msgstr "Kein Betrieb: Lohn, Werbungskosten, haushaltsnahe Dienste"
+
+#: src/frontends/desktop/views/setup-assistant.ts:65
+msgid "Sole proprietorship"
+msgstr "Einzelunternehmen"
+
+#: src/frontends/desktop/views/setup-assistant.ts:66
+msgid "Trade or freelance work in your own name"
+msgstr "Gewerbe oder freiberufliche Arbeit im eigenen Namen"
+
+#: src/frontends/desktop/views/setup-assistant.ts:68
+msgid "Partnership (GbR)"
+msgstr "Personengesellschaft (GbR)"
+
+#: src/frontends/desktop/views/setup-assistant.ts:68
+msgid "Several partners, separate assessment"
+msgstr "Mehrere Gesellschafter, gesonderte Feststellung"
+
+#: src/frontends/desktop/views/setup-assistant.ts:108
+msgid "Setup"
+msgstr "Einrichtung"
+
+#: src/frontends/desktop/views/setup-assistant.ts:108
+msgid "New entity"
+msgstr "Neue Entität"
+
+#
+#. TRANSLATORS: Primary menu item reopening the first-run introduction
+#: src/frontends/desktop/views/setup-assistant.ts:221
+#: src/frontends/desktop/views/setup-assistant.ts:240
+#: src/frontends/desktop/views/welcome.ts:53
+#: src/frontends/desktop/views/welcome.ts:145
+#: src/frontends/desktop/window.blp:13
+msgid "Welcome"
+msgstr "Einführung"
+
+#: src/frontends/desktop/views/setup-assistant.ts:224
+msgid ""
+"This app works out the profit statement, VAT and income tax from your bank "
+"transactions and receipts. A name is all it takes to start."
+msgstr ""
+"Diese App erstellt EÜR, Umsatzsteuer und Einkommensteuer aus deinen "
+"Kontobewegungen und Belegen. Für den Anfang reicht ein Name."
+
+#: src/frontends/desktop/views/setup-assistant.ts:235
+msgid "Where your data will be stored"
+msgstr "Wo die Daten liegen werden"
+
+#: src/frontends/desktop/views/setup-assistant.ts:236
+#: src/frontends/desktop/views/setup-assistant.ts:568
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#: src/frontends/desktop/views/setup-assistant.ts:237
+msgid "Transactions and receipts"
+msgstr "Buchungen und Belege"
+
+#: src/frontends/desktop/views/setup-assistant.ts:241
+msgid "Let’s go"
+msgstr "Los geht’s"
+
+#: src/frontends/desktop/views/setup-assistant.ts:252
+msgid "Who are we filing for?"
+msgstr "Für wen wird erklärt?"
+
+#: src/frontends/desktop/views/setup-assistant.ts:253
+msgid "Name and kind can be changed at any time."
+msgstr "Name und Art lassen sich jederzeit ändern."
+
+#: src/frontends/desktop/views/setup-assistant.ts:261
+#: src/frontends/desktop/views/setup-assistant.ts:340
+#: src/frontends/desktop/views/setup-assistant.ts:541
+msgid "Kind"
+msgstr "Art"
+
+#: src/frontends/desktop/views/setup-assistant.ts:280
+msgid "Tax details"
+msgstr "Steuerdaten"
+
+#: src/frontends/desktop/views/setup-assistant.ts:282
+msgid ""
+"Optional — you can add them later in the settings. The tax office is already "
+"part of the tax number and is not asked for separately."
+msgstr ""
+"Optional — du kannst sie später in den Einstellungen ergänzen. Das Finanzamt "
+"steckt schon in der Steuernummer und wird nicht extra abgefragt."
+
+#: src/frontends/desktop/views/setup-assistant.ts:286
+#: src/frontends/desktop/views/setup-assistant.ts:542
+#: src/frontends/desktop/views/setup-assistant.ts:613
+#: src/frontends/desktop/views/setup-assistant.ts:616
+msgid "Tax number"
+msgstr "Steuernummer"
+
+#: src/frontends/desktop/views/setup-assistant.ts:309
+msgid "Private or business?"
+msgstr "Privat oder Betrieb?"
+
+#: src/frontends/desktop/views/setup-assistant.ts:310
+msgid "This decides which questions follow. Everything can be changed later."
+msgstr "Davon hängt ab, welche Fragen folgen. Alles lässt sich später ändern."
+
+#: src/frontends/desktop/views/setup-assistant.ts:354
+msgid "VAT"
+msgstr "Umsatzsteuer"
+
+#: src/frontends/desktop/views/setup-assistant.ts:355
+msgid "If you are not sure yet, choose “Later” — nothing is assumed for it."
+msgstr ""
+"Wenn du es noch nicht weißt, wähle „Später“ — dann wird nichts angenommen."
+
+#: src/frontends/desktop/views/setup-assistant.ts:358
+msgid "No, I charge VAT"
+msgstr "Nein, ich weise Umsatzsteuer aus"
+
+#: src/frontends/desktop/views/setup-assistant.ts:359
+msgid "Yes, small business (§ 19 UStG)"
+msgstr "Ja, Kleinunternehmer (§ 19 UStG)"
+
+#: src/frontends/desktop/views/setup-assistant.ts:361
+#: src/frontends/desktop/views/setup-assistant.ts:545
+msgid "Small business"
+msgstr "Kleinunternehmer"
+
+#: src/frontends/desktop/views/setup-assistant.ts:364
+#: src/frontends/desktop/views/setup-assistant.ts:547
+msgid "Monthly"
+msgstr "Monatlich"
+
+#: src/frontends/desktop/views/setup-assistant.ts:365
+#: src/frontends/desktop/views/setup-assistant.ts:547
+msgid "Quarterly"
+msgstr "Vierteljährlich"
+
+#: src/frontends/desktop/views/setup-assistant.ts:367
+#: src/frontends/desktop/views/setup-assistant.ts:548
+msgid "VAT return period"
+msgstr "USt-VA-Zeitraum"
+
+#: src/frontends/desktop/views/setup-assistant.ts:368
+msgid "Annual-only filers keep “Later”."
+msgstr "Wer nur jährlich erklärt, lässt „Später“ stehen."
+
+#: src/frontends/desktop/views/setup-assistant.ts:376
+#: src/frontends/desktop/window.ts:508
+msgid "Business"
+msgstr "Unternehmen"
+
+#: src/frontends/desktop/views/setup-assistant.ts:402
+msgid "Income tax"
+msgstr "Einkommensteuer"
+
+#: src/frontends/desktop/views/setup-assistant.ts:403
+msgid ""
+"Joint assessment is for married couples and civil partners filing together."
+msgstr ""
+"Zusammenveranlagung gilt für Ehe- und Lebenspartner, die gemeinsam erklären."
+
+#: src/frontends/desktop/views/setup-assistant.ts:406
+#: src/frontends/desktop/views/setup-assistant.ts:555
+msgid "Individual assessment"
+msgstr "Einzelveranlagung"
+
+#: src/frontends/desktop/views/setup-assistant.ts:407
+#: src/frontends/desktop/views/setup-assistant.ts:553
+msgid "Joint assessment (splitting)"
+msgstr "Zusammenveranlagung (Splitting)"
+
+#: src/frontends/desktop/views/setup-assistant.ts:409
+#: src/frontends/desktop/views/setup-assistant.ts:557
+msgid "Assessment"
+msgstr "Veranlagung"
+
+#: src/frontends/desktop/views/setup-assistant.ts:440
+msgid "Which bank accounts belong to it?"
+msgstr "Welche Bankkonten gehören dazu?"
+
+#: src/frontends/desktop/views/setup-assistant.ts:442
+msgid ""
+"A ticked account moves to the new entity. New accounts are added under "
+"Accounts → Connections & import."
+msgstr ""
+"Ein angehaktes Konto zieht zur neuen Entität um. Neue Konten kommen unter "
+"Konten → Anbindungen & Import dazu."
+
+#: src/frontends/desktop/views/setup-assistant.ts:453
+msgid "Not assigned"
+msgstr "Nicht zugeordnet"
+
+#: src/frontends/desktop/views/setup-assistant.ts:461
+msgid "No bank accounts yet"
+msgstr "Noch keine Bankkonten"
+
+#: src/frontends/desktop/views/setup-assistant.ts:461
+msgid "Add one under Accounts once the entity exists."
+msgstr "Füge eins unter Konten hinzu, sobald die Entität existiert."
+
+#: src/frontends/desktop/views/setup-assistant.ts:467
+#: src/frontends/desktop/views/setup-assistant.ts:560
+msgid "Bank accounts"
+msgstr "Bankkonten"
+
+#: src/frontends/desktop/views/setup-assistant.ts:490
+msgid "Where do the receipts come from?"
+msgstr "Woher kommen die Belege?"
+
+#: src/frontends/desktop/views/setup-assistant.ts:492
+msgid "Same as your other entities. You can still choose differently."
+msgstr "Wie bei deinen anderen Entitäten. Du kannst trotzdem anders wählen."
+
+#: src/frontends/desktop/views/setup-assistant.ts:494
+msgid ""
+"The built-in document management needs nothing else. Use Paperless-ngx if "
+"you already keep your receipts there."
+msgstr ""
+"Die eingebaute Belegverwaltung braucht sonst nichts. Paperless-ngx lohnt "
+"sich, wenn deine Belege schon dort liegen."
+
+#: src/frontends/desktop/views/setup-assistant.ts:500
+msgid "Receipt source"
+msgstr "Belegquelle"
+
+#: src/frontends/desktop/views/setup-assistant.ts:501
+#: src/frontends/desktop/views/setup-assistant.ts:565
+msgid "Built-in document management"
+msgstr "Eingebaute Belegverwaltung"
+
+#: src/frontends/desktop/views/setup-assistant.ts:510
+msgid "Leave the token empty to use the one your other entities use."
+msgstr "Lass das Token leer, um das deiner anderen Entitäten zu verwenden."
+
+#: src/frontends/desktop/views/setup-assistant.ts:511
+msgid ""
+"URL and API token. The token is stored in the configuration file only you "
+"can read."
+msgstr ""
+"URL und API-Token. Das Token steht in der Konfigurationsdatei, die nur du "
+"lesen kannst."
+
+#: src/frontends/desktop/views/setup-assistant.ts:513
+msgid "URL"
+msgstr "URL"
+
+#: src/frontends/desktop/views/setup-assistant.ts:516
+msgid "API token"
+msgstr "API-Token"
+
+#: src/frontends/desktop/views/setup-assistant.ts:539
+msgid "Summary"
+msgstr "Zusammenfassung"
+
+#: src/frontends/desktop/views/setup-assistant.ts:544
+msgid "Yes"
+msgstr "Ja"
+
+#: src/frontends/desktop/views/setup-assistant.ts:544
+msgid "No"
+msgstr "Nein"
+
+#: src/frontends/desktop/views/setup-assistant.ts:574
+#: src/frontends/desktop/views/transactions-view.ts:299
+msgid "Done"
+msgstr "Fertig"
+
+#: src/frontends/desktop/views/setup-assistant.ts:575
+msgid "Finish setup"
+msgstr "Einrichtung abschließen"
+
+#: src/frontends/desktop/views/setup-assistant.ts:575
+msgid "Add entity"
+msgstr "Entität anlegen"
+
+#: src/frontends/desktop/views/setup-assistant.ts:586
+msgid "Setup failed: {error}"
+msgstr "Einrichtung fehlgeschlagen: {error}"
+
+#: src/frontends/desktop/views/setup-assistant.ts:603
+msgid "Please enter a name."
+msgstr "Bitte einen Namen eingeben."
+
+#: src/frontends/desktop/views/setup-assistant.ts:614
+msgid "Optional. The tax office is already part of the tax number."
+msgstr "Optional. Das Finanzamt steckt schon in der Steuernummer."
+
 #: src/frontends/desktop/views/tab-hub.ts:122
 msgid "Tax return"
 msgstr "Erklärung"
@@ -2839,10 +3461,6 @@ msgstr "Projekt zuordnen"
 #: src/frontends/desktop/views/transactions-view.ts:294
 msgid "Assign the marked expenses to a project"
 msgstr "Die markierten Ausgaben einem Projekt zuordnen"
-
-#: src/frontends/desktop/views/transactions-view.ts:299
-msgid "Done"
-msgstr "Fertig"
 
 #: src/frontends/desktop/views/transactions-view.ts:299
 msgid "Select"
@@ -3054,10 +3672,6 @@ msgstr "von {partner}"
 #: src/frontends/desktop/views/tx-detail-dialog.ts:373
 msgid "Bank details"
 msgstr "Bank-Details"
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:375
-msgid "Account"
-msgstr "Konto"
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:376
 msgid "Account key"
@@ -3271,20 +3885,8 @@ msgstr ""
 "In Paperless fehlen die Dokumenttypen und Zusatzfelder, aus denen die Zahlen "
 "gelesen werden. Sie lassen sich in den Einstellungen anlegen."
 
-#. TRANSLATORS: Primary menu item reopening the first-run introduction
-#: src/frontends/desktop/views/welcome.ts:53
-#: src/frontends/desktop/views/welcome.ts:145
-#: src/frontends/desktop/window.blp:13
 #
-msgid "Welcome"
-msgstr "Einführung"
-
-#: src/frontends/desktop/views/welcome.ts:95
-msgid "Later"
-msgstr "Später"
-
 #: src/frontends/desktop/views/welcome.ts:120
-#
 msgid "Welcome to Steuererklärung"
 msgstr "Willkommen bei Steuererklärung"
 
@@ -3292,7 +3894,9 @@ msgstr "Willkommen bei Steuererklärung"
 msgid ""
 "Prepare your profit-and-loss statement, VAT and income tax from your bank "
 "transactions and receipts."
-msgstr "Bereite Einnahmenüberschussrechnung, Umsatzsteuer und Einkommensteuer aus deinen Bankbuchungen und Belegen vor."
+msgstr ""
+"Bereite Einnahmenüberschussrechnung, Umsatzsteuer und Einkommensteuer aus "
+"deinen Bankbuchungen und Belegen vor."
 
 #: src/frontends/desktop/views/welcome.ts:133
 msgid "Your data stays on this computer"
@@ -3302,10 +3906,12 @@ msgstr "Deine Daten bleiben auf diesem Rechner"
 msgid ""
 "Configuration, transactions and receipts are ordinary files in your home "
 "folder."
-msgstr "Konfiguration, Buchungen und Belege sind gewöhnliche Dateien in deinem Persönlichen Ordner."
+msgstr ""
+"Konfiguration, Buchungen und Belege sind gewöhnliche Dateien in deinem "
+"Persönlichen Ordner."
 
-#: src/frontends/desktop/views/welcome.ts:140
 #
+#: src/frontends/desktop/views/welcome.ts:140
 msgid "Connections are optional"
 msgstr "Verbindungen sind freiwillig"
 
@@ -3313,12 +3919,9 @@ msgstr "Verbindungen sind freiwillig"
 msgid ""
 "Qonto, Paperless-ngx, online banking, AI and ELSTER validation only when you "
 "set them up."
-msgstr "Qonto, Paperless-ngx, Onlinebanking, KI und ELSTER-Prüfung nur, wenn du sie einrichtest."
-
-#: src/frontends/desktop/views/welcome.ts:146
-#: src/frontends/desktop/views/welcome.ts:266
-msgid "Next"
-msgstr "Weiter"
+msgstr ""
+"Qonto, Paperless-ngx, Onlinebanking, KI und ELSTER-Prüfung nur, wenn du sie "
+"einrichtest."
 
 #: src/frontends/desktop/views/welcome.ts:158
 msgid "No tax advice"
@@ -3329,10 +3932,13 @@ msgid ""
 "The app helps you prepare. It does not replace a tax adviser, and its "
 "figures are estimates until ELSTER has validated them. Check every return "
 "before you send it."
-msgstr "Die App hilft bei der Vorbereitung. Sie ersetzt keine Steuerberatung, und ihre Zahlen sind Schätzungen, bis ELSTER sie geprüft hat. Prüfe jede Erklärung, bevor du sie abschickst."
+msgstr ""
+"Die App hilft bei der Vorbereitung. Sie ersetzt keine Steuerberatung, und "
+"ihre Zahlen sind Schätzungen, bis ELSTER sie geprüft hat. Prüfe jede "
+"Erklärung, bevor du sie abschickst."
 
-#: src/frontends/desktop/views/welcome.ts:167
 #
+#: src/frontends/desktop/views/welcome.ts:167
 msgid "Please note"
 msgstr "Bitte beachten"
 
@@ -3348,16 +3954,21 @@ msgstr "Wie möchtest du beginnen?"
 msgid ""
 "Demo and own data are kept strictly apart. You can switch later in the "
 "Settings."
-msgstr "Demo und eigene Daten bleiben strikt getrennt. Wechseln kannst du später in den Einstellungen."
+msgstr ""
+"Demo und eigene Daten bleiben strikt getrennt. Wechseln kannst du später in "
+"den Einstellungen."
 
 #: src/frontends/desktop/views/welcome.ts:185
 msgid ""
 "A fictional business with sample transactions — nothing of yours is touched."
-msgstr "Ein erfundener Betrieb mit Beispielbuchungen — nichts von dir wird angefasst."
+msgstr ""
+"Ein erfundener Betrieb mit Beispielbuchungen — nichts von dir wird angefasst."
 
 #: src/frontends/desktop/views/welcome.ts:196
 msgid "Set up your business or private tax return in a few steps."
-msgstr "Richte deinen Betrieb oder deine private Steuererklärung in wenigen Schritten ein."
+msgstr ""
+"Richte deinen Betrieb oder deine private Steuererklärung in wenigen "
+"Schritten ein."
 
 #: src/frontends/desktop/views/welcome.ts:206
 msgid "I already have a steuererklaerung.json"
@@ -3381,25 +3992,28 @@ msgid ""
 "Copy your steuererklaerung.json (or the older buchhaltung.json) to this "
 "place, then restart the app. Your transactions and receipts stay where the "
 "file says they are."
-msgstr "Kopiere deine steuererklaerung.json (oder die ältere buchhaltung.json) an diesen Ort und starte die App neu. Buchungen und Belege bleiben, wo die Datei sie erwartet."
+msgstr ""
+"Kopiere deine steuererklaerung.json (oder die ältere buchhaltung.json) an "
+"diesen Ort und starte die App neu. Buchungen und Belege bleiben, wo die "
+"Datei sie erwartet."
 
-#: src/frontends/desktop/views/welcome.ts:228
 #
+#: src/frontends/desktop/views/welcome.ts:228
 msgid "Expected location"
 msgstr "Erwarteter Ort"
 
-#: src/frontends/desktop/views/welcome.ts:232
 #
+#: src/frontends/desktop/views/welcome.ts:232
 msgid "Open folder"
 msgstr "Ordner öffnen"
 
-#: src/frontends/desktop/views/welcome.ts:241
 #
+#: src/frontends/desktop/views/welcome.ts:241
 msgid "Restart now"
 msgstr "Jetzt neu starten"
 
-#: src/frontends/desktop/views/welcome.ts:254
 #
+#: src/frontends/desktop/views/welcome.ts:254
 msgid "Optional connections"
 msgstr "Optionale Verbindungen"
 
@@ -3407,10 +4021,12 @@ msgstr "Optionale Verbindungen"
 msgid ""
 "None of them is needed to start. Set them up later in the Settings, whenever "
 "you like."
-msgstr "Keine davon ist für den Start nötig. Richte sie später in den Einstellungen ein, wann immer du magst."
+msgstr ""
+"Keine davon ist für den Start nötig. Richte sie später in den Einstellungen "
+"ein, wann immer du magst."
 
-#: src/frontends/desktop/views/welcome.ts:257
 #
+#: src/frontends/desktop/views/welcome.ts:257
 msgid "Fetch business account transactions"
 msgstr "Buchungen vom Geschäftskonto abrufen"
 
@@ -3422,10 +4038,10 @@ msgstr "Belege aus deinem Dokumentenarchiv nutzen"
 msgid "Online banking with German banks"
 msgstr "Onlinebanking mit deutschen Banken"
 
+#
 #: src/frontends/desktop/views/welcome.ts:262
 #: src/frontends/desktop/views/welcome.ts:276
 #: src/frontends/desktop/views/welcome.ts:289
-#
 msgid "AI assistant"
 msgstr "KI-Assistent"
 
@@ -3437,8 +4053,8 @@ msgstr "Beantwortet Fragen und schlägt Buchungen vor"
 msgid "Validate returns with the official ELSTER library"
 msgstr "Erklärungen mit der amtlichen ELSTER-Bibliothek prüfen"
 
-#: src/frontends/desktop/views/welcome.ts:265
 #
+#: src/frontends/desktop/views/welcome.ts:265
 msgid "Connections"
 msgstr "Verbindungen"
 
@@ -3447,7 +4063,10 @@ msgid ""
 "When you use the assistant, your question and the data it needs to answer go "
 "to the AI provider you configure. Nothing is sent unless you ask. Without "
 "it, every feature of the app still works."
-msgstr "Wenn du den Assistenten nutzt, gehen deine Frage und die zur Antwort nötigen Daten an den KI-Anbieter, den du einrichtest. Ohne deine Frage wird nichts gesendet. Ohne Assistent funktioniert die App vollständig."
+msgstr ""
+"Wenn du den Assistenten nutzt, gehen deine Frage und die zur Antwort nötigen "
+"Daten an den KI-Anbieter, den du einrichtest. Ohne deine Frage wird nichts "
+"gesendet. Ohne Assistent funktioniert die App vollständig."
 
 #: src/frontends/desktop/views/welcome.ts:290
 msgid "Start the demo"
@@ -3457,8 +4076,8 @@ msgstr "Demo starten"
 msgid "Set up my data"
 msgstr "Meine Daten einrichten"
 
-#: src/frontends/desktop/views/welcome.ts:318
 #
+#: src/frontends/desktop/views/welcome.ts:318
 msgid "Could not open {dir}"
 msgstr "{dir} konnte nicht geöffnet werden"
 
@@ -3646,48 +4265,43 @@ msgstr "Native Vorschau"
 msgid "Sync"
 msgstr "Abgleichen"
 
-#: src/frontends/desktop/window.ts:201
+#: src/frontends/desktop/window.ts:203
 msgid "Switch to the demo?"
 msgstr "Zur Demo wechseln?"
 
-#: src/frontends/desktop/window.ts:201
+#: src/frontends/desktop/window.ts:203
 msgid "Switch to your own data?"
 msgstr "Zu eigenen Daten wechseln?"
 
-#: src/frontends/desktop/window.ts:204
+#: src/frontends/desktop/window.ts:206
 msgid ""
 "The app restarts with fictional sample data. Your own data is not changed."
-msgstr "Die App startet mit erfundenen Beispieldaten neu. Deine eigenen Daten bleiben unverändert."
+msgstr ""
+"Die App startet mit erfundenen Beispieldaten neu. Deine eigenen Daten "
+"bleiben unverändert."
 
-#: src/frontends/desktop/window.ts:205
+#: src/frontends/desktop/window.ts:207
 msgid "The app restarts with your own data. The demo data stays separate."
-msgstr "Die App startet mit deinen eigenen Daten neu. Die Demodaten bleiben getrennt."
+msgstr ""
+"Die App startet mit deinen eigenen Daten neu. Die Demodaten bleiben getrennt."
 
-#: src/frontends/desktop/window.ts:208
+#: src/frontends/desktop/window.ts:210
 msgid "Restart"
 msgstr "Neu starten"
 
-#: src/frontends/desktop/window.ts:221
+#: src/frontends/desktop/window.ts:223
 msgid "Please restart the app yourself to switch."
 msgstr "Bitte starte die App selbst neu, um zu wechseln."
 
-#: src/frontends/desktop/window.ts:484
+#: src/frontends/desktop/window.ts:486
 msgid "Data could not be loaded completely: {error}"
 msgstr "Daten konnten nicht vollständig geladen werden: {error}"
 
-#: src/frontends/desktop/window.ts:491
+#: src/frontends/desktop/window.ts:493
 msgid "Demo data – fictional examples, no real financial data"
 msgstr "Demodaten – fiktive Beispieldaten, keine echten Finanzdaten"
 
-#: src/frontends/desktop/window.ts:506
-msgid "Private"
-msgstr "Privat"
-
-#: src/frontends/desktop/window.ts:506
-msgid "Business"
-msgstr "Unternehmen"
-
-#: src/frontends/desktop/window.ts:570
+#: src/frontends/desktop/window.ts:572
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."
