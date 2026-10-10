@@ -38,10 +38,15 @@ import { MainWindow } from './window.ts';
 // Pin GTK 4 before libadwaita pulls it in; keep the import referenced.
 void Gtk;
 
+// `steuererklaerung mcp` — the installed app is the one binary a package or Flatpak ships, so it
+// must also be what an external agent starts. No window, no demo seeding: stdout is the protocol.
+const mcpMode = process.argv[2] === 'mcp';
+
 // The environment as launched, for a restart into the other data mode — before anything rewrites it.
 snapshotLaunchEnv();
 // Someone who picked the demo (welcome or Settings) gets it again, unless the launch says otherwise.
 if (
+    !mcpMode &&
     process.env.STEUER_DEMO === undefined &&
     process.env.BH_DEMO === undefined &&
     !process.argv.includes('--demo') &&
@@ -56,29 +61,43 @@ installMigrationBackup();
 // cwd `/` or `$HOME` and finds no manifest at all. Strictly additive — an existing installation
 // (a manifest in cwd, an override, a store beside the module) is left exactly as it was.
 applyPathEnv();
-// The bank asks for a TAN through a dialog here, not through stdin — without this the app can add a
-// FinTS account and never complete one sync, because the terminal prompt has nobody typing into it.
-setFinTSInteraction(dialogFinTSInteraction);
-// Populate the demo workspace (invoices/contacts/Belege) on first run so the app
-// isn't empty out of the box. No-op outside demo mode and when already seeded.
-await ensureDemoSeeded();
+if (mcpMode) {
+    // Awaited, not driven by a nested GLib.MainLoop: this module already sits in a top-level await,
+    // and a nested loop.run() inside it never flushes the promise jobs — the server would hang
+    // before answering `initialize`. GJS spins its own loop until this settles; the server parks
+    // until its client closes stdin and then calls process.exit().
+    const { startMcpServer } = await import('../mcp/server.ts');
+    try {
+        await startMcpServer({ transport: 'stdio' });
+    } catch (err) {
+        console.error(err instanceof Error ? err.message : String(err));
+        process.exit(1);
+    }
+} else {
+    // The bank asks for a TAN through a dialog here, not through stdin — without this the app can add a
+    // FinTS account and never complete one sync, because the terminal prompt has nobody typing into it.
+    setFinTSInteraction(dialogFinTSInteraction);
+    // Populate the demo workspace (invoices/contacts/Belege) on first run so the app
+    // isn't empty out of the box. No-op outside demo mode and when already seeded.
+    await ensureDemoSeeded();
 
-const status = await runAdwaitaApp({
-    applicationId: APP_ID,
-    about: {
-        applicationName: APP_NAME,
-        applicationIcon: APP_ICON,
-        // Keep in sync with the web About dialog (frontends/web/client/components/bh-app.ts):
-        // one project, one vendor line. "Art+Code Studio" was the dissolved GbR.
-        developerName: 'JumpLink',
-        version: APP_VERSION,
-        website: 'https://github.com/JumpLink',
-        copyright: '© 2026 Pascal Garber',
-        comments:
-            'Native Adwaita-Oberfläche für die Steuererklärung — parallel zur Web-Oberfläche, ' +
-            'auf demselben Backend (Store, EÜR/Steuer-Reports, Belege, Kontakte).',
-    },
-    createWindow: (app) => new MainWindow(app),
-});
-relaunchIfRequested();
-process.exit(status);
+    const status = await runAdwaitaApp({
+        applicationId: APP_ID,
+        about: {
+            applicationName: APP_NAME,
+            applicationIcon: APP_ICON,
+            // Keep in sync with the web About dialog (frontends/web/client/components/bh-app.ts):
+            // one project, one vendor line. "Art+Code Studio" was the dissolved GbR.
+            developerName: 'JumpLink',
+            version: APP_VERSION,
+            website: 'https://github.com/JumpLink',
+            copyright: '© 2026 Pascal Garber',
+            comments:
+                'Native Adwaita-Oberfläche für die Steuererklärung — parallel zur Web-Oberfläche, ' +
+                'auf demselben Backend (Store, EÜR/Steuer-Reports, Belege, Kontakte).',
+        },
+        createWindow: (app) => new MainWindow(app),
+    });
+    relaunchIfRequested();
+    process.exit(status);
+}

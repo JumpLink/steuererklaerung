@@ -38,6 +38,7 @@ import { appSession } from '../data/session.ts';
 import type { AppEntity } from '../entities.ts';
 import { applyScrollHook, markup } from './util.ts';
 import { showToast } from '../toast.ts';
+import { openMcpClientsDialog } from './mcp-clients-dialog.ts';
 import type { SettingsHost } from './einstellungen/rows.ts';
 import { buildDmsGroup, buildInvoicingGroup } from './einstellungen/dms-invoicing.ts';
 import { buildBelegeMailGroup } from './einstellungen/belege-mail.ts';
@@ -254,6 +255,9 @@ export class BhEinstellungenView extends Adw.Bin {
                 },
             ),
         );
+        const connect = new Adw.ButtonRow({ title: _('Connect an external agent …') });
+        connect.connect('activated', () => openMcpClientsDialog(this));
+        this._mcp_group.add(connect);
         for (const group of MCP_GROUPS) {
             this._groups_group.add(
                 this.switchRow(GROUP_LABEL[group], null, s.mcp.groups[group], (on) => {

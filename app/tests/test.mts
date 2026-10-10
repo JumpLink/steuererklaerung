@@ -33,6 +33,7 @@ import userSettings from './unit/config/user-settings.test.ts';
 import backup from './unit/actions/backup.test.ts';
 import entitySetup from './unit/actions/entity-setup.test.ts';
 import setupGaps from './unit/actions/setup-gaps.test.ts';
+import mcpClients from './unit/actions/mcp-clients.test.ts';
 import configLifecycle from './unit/config/lifecycle.test.ts';
 import migrateForward from './unit/config/migrate-forward.test.ts';
 import manifestRevisionSuite from './unit/config/manifest-revision.test.ts';
@@ -229,6 +230,7 @@ run({
     backup,
     entitySetup,
     setupGaps,
+    mcpClients,
     configLifecycle,
     migrateForward,
     manifestRevisionSuite,
