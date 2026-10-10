@@ -19,7 +19,7 @@
 
 import { type LedgerDatabase, withTransaction } from "./db.ts";
 
-export const SCHEMA_VERSION = 25;
+export const SCHEMA_VERSION = 26;
 
 /**
  * The `classifications` DDL (schema v6). Defined once so the fresh-database baseline
@@ -87,7 +87,8 @@ const STATEMENTS: readonly string[] = [
      created TEXT, added TEXT, filename TEXT NOT NULL, mime_type TEXT, size_bytes INTEGER NOT NULL DEFAULT 0,
      file_path TEXT NOT NULL, invoice_number TEXT, net REAL, gross REAL, vat REAL,
      tags TEXT, ai_extracted_at TEXT, note TEXT, created_by TEXT,
-     invoice_kind TEXT, invoice_kind_reason TEXT, category TEXT, rule_origin TEXT, origin TEXT)`,
+     invoice_kind TEXT, invoice_kind_reason TEXT, category TEXT, rule_origin TEXT, origin TEXT,
+     payment_status TEXT, due_date TEXT, amount_to_pay REAL)`,
   `CREATE INDEX IF NOT EXISTS idx_doc_entity ON documents(entity_id)`,
   `CREATE INDEX IF NOT EXISTS idx_doc_created ON documents(created)`,
   // doc → store transaction link; tx_id = unified transaction id (Sammelrechnung ⇒ many rows)
@@ -498,6 +499,17 @@ const UPGRADES: ReadonlyArray<{ to: number; statements: readonly string[] }> = [
   },
   // v24 → v25: add the `invoice_projects` and `invoice_time_links` tables (Rechnung ↔ Projekt, Zeiten →
   // Rechnung). Purely additive like v22 → v23 — no UPGRADES entry; the SCHEMA_VERSION bump records it.
+  // v25 → v26: add `payment_status`, `due_date` and `amount_to_pay` to `documents` — the same payment
+  // triage Paperless keeps as custom fields, so the dms_* tools behave alike on both back-ends. Existing
+  // rows get NULL = not triaged yet.
+  {
+    to: 26,
+    statements: [
+      `ALTER TABLE documents ADD COLUMN payment_status TEXT`,
+      `ALTER TABLE documents ADD COLUMN due_date TEXT`,
+      `ALTER TABLE documents ADD COLUMN amount_to_pay REAL`,
+    ],
+  },
 ];
 
 /** True when the database carries no schema yet (fresh file or :memory:). */

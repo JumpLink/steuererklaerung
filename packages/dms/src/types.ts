@@ -82,6 +82,12 @@ export interface DmsDocument {
     ruleOrigin?: DmsRuleOrigin | null;
     /** Where the file came from besides an upload (a mail); built-in DMS only, null/absent = hand-added. */
     origin?: DmsOrigin | null;
+    /** Payment triage: offen | bezahlt | verrechnet | storniert | nicht-zahlungsrelevant. null/absent = not triaged. */
+    paymentStatus?: string | null;
+    /** Payment due date (YYYY-MM-DD). */
+    dueDate?: string | null;
+    /** Amount actually due after offsets (differs from {@link gross} on credits/Verrechnung). */
+    amountToPay?: number | null;
 }
 
 /** The raw bytes of a document file plus its MIME type. */
@@ -116,8 +122,17 @@ export interface DmsProvider {
         created?: string;
         origin?: DmsOrigin;
     }): Promise<DmsDocument>;
-    /** Merge AI-extracted metadata (incl. ocrText) into a document. */
+    /** Merge AI-extracted metadata (incl. ocrText, aiNote and the payment fields) into a document. */
     setMetadata?(id: string, meta: Partial<DmsDocument>): Promise<void>;
+    /**
+     * Documents still waiting for review. "Inbox" is back-end specific: Paperless = documents
+     * bearing the configured inbox tag; built-in = documents never analysed (no metadata write yet).
+     */
+    listInbox?(): Promise<DmsDocument[]>;
+    /** The document's full text (Paperless: its OCR content; built-in: the AI-supplied text), or null. */
+    getText?(id: string): Promise<string | null>;
+    /** Take a document out of the inbox (Paperless: swap the inbox tag for the reviewed tag). */
+    markReviewed?(id: string): Promise<void>;
     /** Link a document to a store transaction. */
     link?(id: string, txId: string): Promise<void>;
     /** Remove one document ⇄ transaction link (the inverse of {@link link}) — powers Undo. */
@@ -142,7 +157,15 @@ export interface PaperlessFieldConfig {
         ai_note: number;
         /** Paperless string field holding the invoice classification ("<kind>|<reason>"); 0/absent = not configured. */
         invoice_kind?: number;
+        /** Payment triage select; 0/absent = not configured. */
+        payment_status?: number;
+        due_date?: number;
+        amount_to_pay?: number;
     };
+    /** Tags the inbox workflow uses; 0/absent = not configured. */
+    tag_ids?: { inbox?: number; ai_reviewed?: number };
+    /** Label → option id maps of select fields (Paperless stores the option id, not the label). */
+    select_field_options?: { payment_status?: Record<string, string> };
     document_type_ids: {
         incoming_invoice: number;
         outgoing_invoice: number;
