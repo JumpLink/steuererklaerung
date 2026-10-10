@@ -232,21 +232,12 @@ export class BhEinstellungenView extends Adw.Bin {
         for (const [title, subtitle, key] of intervals) {
             this._sync_group.add(this.minutesRow(title, subtitle, s.sync[key], (n) => (s.sync[key] = n)));
         }
-        this._assistant_group.add(
-            this.switchRow(
-                _('Built-in assistant'),
-                _('Enable the assistant tab and /api/chat'),
-                s.assistant.enabled,
-                (on) => {
-                    s.assistant.enabled = on;
-                },
-            ),
-        );
+        // The on/off switch of the built-in assistant is per user (General); only the engine is here.
         this._assistant_group.add(this.engineRow());
         this._mcp_group.add(
             this.switchRow(
-                _('Provide MCP tools'),
-                _('Connect external assistants (Claude, ChatGPT …)'),
+                _('MCP server for external agents'),
+                _('Claude, Cursor, VS Code … — the built-in assistant does not need it'),
                 s.mcp.enabled,
                 (on) => {
                     s.mcp.enabled = on;

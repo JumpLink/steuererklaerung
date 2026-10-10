@@ -283,7 +283,7 @@ export class BhWelcome extends Adw.Dialog {
                     'feature of the app still works.',
             ),
         });
-        const toggle = new Adw.SwitchRow({ title: _('Show the AI assistant'), active: this.ai });
+        const toggle = new Adw.SwitchRow({ title: _('Built-in AI assistant'), active: this.ai });
         toggle.connect('notify::active', () => {
             this.ai = toggle.get_active();
         });

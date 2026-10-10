@@ -50,6 +50,7 @@ die belegten Referenzen, gegen die ihre Zahlen geprüft werden.
 | [paperless-konfiguration.md](paperless-konfiguration.md) | Vorgeschlagenes Schema für Tags, Korrespondenten und Dokumenttypen in Paperless-NGX |
 | [app/README.md](app/README.md) | Native GNOME-App — Bildschirm für Bildschirm, wofür jede Ansicht da ist (Screenshots aus der Demo-Entität, in [screenshots/](screenshots/)) |
 | [app/backup.md](app/backup.md) | Sicherung (App, `steuer backup`, automatisch vor Migrationen): was hineinkommt, wo sie liegt, wie man von Hand wiederherstellt |
+| [app/ki-und-mcp.md](app/ki-und-mcp.md) | Eingebauter KI-Assistent (pro Benutzer) und MCP-Server für externe Agenten (Manifest): zwei unabhängige Schalter und warum sie dort liegen |
 | [app/i18n-status.md](app/i18n-status.md) | Übersetzung der Oberfläche (Englisch/Deutsch): übersetzte und offene Ansichten, Terminologie, was Deutsch bleibt |
 | [ideen-nutzerfuehrung.md](ideen-nutzerfuehrung.md) | Ideenliste nach Priorität: einfacher bedienen, früher warnen, ohne KI nutzbar (Konzepte, keine Aufträge) |
 

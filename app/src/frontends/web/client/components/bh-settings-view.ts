@@ -152,17 +152,17 @@ export class BhSettingsView extends HTMLElement {
 
       <div class="bh-subhead">Integrierter Assistent</div>
       <adw-preferences-group>
-        ${this.row('KI-Assistent (Web)', 'Fragen zu deinen Zahlen direkt in der Web-App. Aus = Tab ausgeblendet, /api/chat gesperrt.', s.assistant.enabled, 'assistant.enabled')}
+        ${this.row('Eingebauter KI-Assistent', 'Fragen zu deinen Zahlen, persönliche Einstellung. Aus = Tab ausgeblendet, /api/chat gesperrt. Unabhängig vom MCP-Server.', s.assistant.enabled, 'assistant.enabled')}
       </adw-preferences-group>
 
       ${this.dmsSection()}
 
       ${this.invoicingSection()}
 
-      <div class="bh-subhead">MCP-Tools — extern verfügbar <bh-help term="mcp"></bh-help></div>
-      <p class="bh-muted bh-set-note">Steuert, welche Tools der MCP-Server für externe Assistenten (ChatGPT, Claude Code, eigene Clients) offenlegt — per stdio oder HTTP. Dieselben Gruppen bestimmen auch, welche Live-Tools der eingebaute Web-Assistent (read-only) nutzen darf. Externe Änderungen wirken beim nächsten Start des MCP-Servers.</p>
+      <div class="bh-subhead">MCP-Server für externe Agenten <bh-help term="mcp"></bh-help></div>
+      <p class="bh-muted bh-set-note">Steuert, welche Tools der MCP-Server für externe Assistenten (ChatGPT, Claude Code, eigene Clients) offenlegt — per stdio oder HTTP. Externe Änderungen wirken beim nächsten Start des MCP-Servers.</p>
       <adw-preferences-group>
-        ${this.row('MCP-Server aktiviert', 'Master-Schalter. Aus = keine Tools nach außen.', s.mcp.enabled, 'mcp.enabled')}
+        ${this.row('MCP-Server für externe Agenten', 'Aus = keine Tools nach außen. Der eingebaute Assistent braucht ihn nicht.', s.mcp.enabled, 'mcp.enabled')}
         ${this.row('Schreibzugriff erlauben', 'Mutierende Tools (update · link · push · sync · lock). Standard: aus — read-only.', s.mcp.allowWrite, 'mcp.allowWrite')}
       </adw-preferences-group>
 

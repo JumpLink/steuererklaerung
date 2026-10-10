@@ -15,6 +15,7 @@ import GLib from '@girs/glib-2.0';
 import Gtk from '@girs/gtk-4.0';
 
 import { configuredBackupRoot, runConfiguredBackup } from '../../../../core/actions/backup.ts';
+import { isAssistantEnabled } from '../../../../core/config/assistant-preference.ts';
 import { isDemoMode } from '../../../../core/config/demo.ts';
 import { loadUserSettings, updateUserSettings } from '../../../../core/config/user-settings.ts';
 import { _, fmt } from '../../i18n.ts';
@@ -43,10 +44,13 @@ export function buildGeneralGroup(group: Adw.PreferencesGroup): void {
     group.add(welcome);
 
     const ai = new Adw.SwitchRow({
-        title: _('Show the AI assistant'),
-        subtitle: _('Questions and the data needed to answer them go to the configured AI provider'),
+        title: _('Built-in AI assistant'),
+        subtitle: _(
+            'Questions and the data needed to answer them go to the configured AI provider. ' +
+                'Independent of the MCP server.',
+        ),
     });
-    ai.set_active(loadUserSettings().aiAssistant !== false);
+    ai.set_active(isAssistantEnabled());
     ai.connect('notify::active', () => {
         updateUserSettings((s) => {
             s.aiAssistant = ai.get_active();

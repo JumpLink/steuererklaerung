@@ -20,9 +20,9 @@
 import { z } from 'zod';
 import { buildChatContext, type AssistantEntity, type AssistantAnswer, type ChatTurn } from './chat.ts';
 import { DEFAULT_CLAUDE_MODEL } from '../../clients/llm/claude-agent-provider.ts';
-import { loadAppSettings } from '../../config/index.ts';
+import { isDemoMode } from '../../config/demo.ts';
 import { buildProposal, describeIntakeTopics, type EstIntakeProposal } from '../elster/est-intake-topics.ts';
-import { listDocuments, getDocument, type Document } from '@steuererklaerung/paperless';
+import { config as paperlessConfig, listDocuments, getDocument, type Document } from '@steuererklaerung/paperless';
 import type { YearCache } from '../../presenters/year-snapshot.ts';
 
 const SERVER = 'steuer_review';
@@ -180,12 +180,11 @@ export async function answerAgentic(
         ),
     ];
 
-    // Live MCP read tools, governed by the same settings as external clients (the enabled
-    // groups). In-process + read-only: the agentic job runs OUTSIDE the request handler, so
-    // the outbound libsoup fetch is deadlock-safe. Write tools are never given to the
-    // auto-assistant regardless of allowWrite.
-    const mcp = loadAppSettings().mcp;
-    const hasPaperless = mcp.enabled && mcp.groups.paperless;
+    // Live Paperless read tools, in-process — independent of the MCP server switch, which only
+    // governs what EXTERNAL agents see. Offered when Paperless is configured, never in the demo
+    // (its DMS is the built-in one). The agentic job runs OUTSIDE the request handler, so the
+    // outbound libsoup fetch is deadlock-safe. Write tools are never given to the auto-assistant.
+    const hasPaperless = !isDemoMode() && !paperlessConfig().error;
     const liveTools = hasPaperless
         ? [
               tool(

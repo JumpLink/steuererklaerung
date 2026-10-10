@@ -27,7 +27,7 @@ import { NAV_ITEMS, isTabHost, visibleNavItems, type NavItem } from './nav.ts';
 import { isFirstRun } from '../../core/actions/entities.ts';
 import { belegeAusMailAbrufenFuer } from '../../core/actions/mail-eingang.ts';
 import { gioMailConnector } from '../../core/clients/imap/index.ts';
-import { loadMailEingang, loadManifest } from '../../core/config/index.ts';
+import { isAssistantEnabled, loadMailEingang, loadManifest } from '../../core/config/index.ts';
 import { capabilities } from '../../core/countries/index.ts';
 import { loadAppWorkspace, type AppEntity, type AppWorkspace } from './entities.ts';
 import { showToast } from './toast.ts';
@@ -252,9 +252,9 @@ export class MainWindow extends Adw.ApplicationWindow {
         restartInMode(app, mode);
     }
 
-    /** `aiAssistant: false` hides the panel toggle; unset keeps the toggle, as before the opt-in existed. */
+    /** The built-in assistant switched off hides the panel toggle ({@link isAssistantEnabled}). */
     private applyAssistantPreference(): void {
-        const visible = loadUserSettings().aiAssistant !== false;
+        const visible = isAssistantEnabled();
         this._assistant_toggle.set_visible(visible);
         if (!visible) this._assistant_split.set_show_sidebar(false);
     }

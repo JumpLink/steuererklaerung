@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-10 09:30+0200\n"
+"POT-Creation-Date: 2026-10-10 10:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1042,81 +1042,82 @@ msgstr ""
 msgid "Paperless assignment not available"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:28
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:29
 msgid "Data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:29
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:30
 msgid "Demo data — fictional examples"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:29
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:30
 msgid "Your own data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:32
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:33
 #: src/frontends/desktop/views/welcome.ts:198
 #: src/frontends/desktop/window.ts:570
 msgid "Use my own data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:32
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:33
 #: src/frontends/desktop/views/welcome.ts:187
 msgid "Try the demo"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:41
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:42
 msgid "Show welcome again"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:46
-#: src/frontends/desktop/views/welcome.ts:286
-msgid "Show the AI assistant"
-msgstr ""
-
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:47
-msgid ""
-"Questions and the data needed to answer them go to the configured AI provider"
+#: src/frontends/desktop/views/welcome.ts:286
+msgid "Built-in AI assistant"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:61
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:49
+msgid ""
+"Questions and the data needed to answer them go to the configured AI "
+"provider. Independent of the MCP server."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:65
 msgid "Last backup"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:63
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:100
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:67
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:104
 msgid "Backup folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:71
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:75
 msgid "{time} in {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:76
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:80
 msgid "Never"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:81
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:85
 msgid "Back up now"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:86
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:90
 msgid "Backup saved: {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:88
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:92
 msgid "Backup failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:95
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:99
 msgid "Choose folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:120
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:124
 msgid "Keep backups"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:121
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:125
 msgid "Older ones are deleted after each new backup"
 msgstr ""
 
@@ -1311,56 +1312,48 @@ msgstr ""
 msgid "Receipts (Paperless)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:237
-msgid "Built-in assistant"
+#: src/frontends/desktop/views/einstellungen-view.ts:239
+msgid "MCP server for external agents"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:238
-msgid "Enable the assistant tab and /api/chat"
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen-view.ts:248
-msgid "Provide MCP tools"
+#: src/frontends/desktop/views/einstellungen-view.ts:240
+msgid "Claude, Cursor, VS Code … — the built-in assistant does not need it"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen-view.ts:249
-msgid "Connect external assistants (Claude, ChatGPT …)"
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen-view.ts:258
 msgid "Allow writing tools"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:259
+#: src/frontends/desktop/views/einstellungen-view.ts:250
 msgid "Expose mutating MCP tools (default: read-only)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:312
-#: src/frontends/desktop/views/einstellungen-view.ts:425
+#: src/frontends/desktop/views/einstellungen-view.ts:303
+#: src/frontends/desktop/views/einstellungen-view.ts:416
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:254
 #: src/frontends/desktop/views/umbuchen-dialog.ts:251
 msgid "Could not save: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:338
+#: src/frontends/desktop/views/einstellungen-view.ts:329
 msgid "Could not read connections: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:359
+#: src/frontends/desktop/views/einstellungen-view.ts:350
 msgid "Could not read the ELSTER configuration: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:383
+#: src/frontends/desktop/views/einstellungen-view.ts:374
 msgid "Could not read the ESt (income tax) configuration: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:410
+#: src/frontends/desktop/views/einstellungen-view.ts:401
 msgid ""
 "The configuration was changed from outside in the meantime (CLI, MCP or a "
 "second window). The view is reloaded — please repeat the input."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:423
+#: src/frontends/desktop/views/einstellungen-view.ts:414
 msgid "Saved"
 msgstr ""
 
@@ -3037,7 +3030,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:63
 #: src/frontends/desktop/views/setup-assistant.ts:449
-#: src/frontends/desktop/window.ts:635
+#: src/frontends/desktop/window.ts:637
 msgid "Private"
 msgstr ""
 
@@ -3181,7 +3174,7 @@ msgid "Annual-only filers keep “Later”."
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:408
-#: src/frontends/desktop/window.ts:635
+#: src/frontends/desktop/window.ts:637
 msgid "Business"
 msgstr ""
 
@@ -4217,7 +4210,7 @@ msgstr ""
 msgid "Setup is not finished: “{entity}” has no bank account yet."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:699
+#: src/frontends/desktop/window.ts:701
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."
