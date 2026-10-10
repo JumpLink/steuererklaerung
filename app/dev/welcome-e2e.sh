@@ -12,6 +12,9 @@
 #      assistant takes over — the welcome is not shown twice.
 #   4. An existing installation (a pre-rename buchhaltung.json in cwd, no settings file) never sees the
 #      welcome, and the launch writes no settings file.
+#   5. „Später" is remembered: the relaunch shows neither the welcome nor the setup assistant but the
+#      setup banner; closing it keeps it closed across a relaunch, and a NEW gap (an entity without a
+#      bank account) brings it back.
 # With a shots-dir the welcome pages and the Settings groups are written there, as welcome-*.png in the
 # language of E2E_LANG (default de_DE.UTF-8).
 #
@@ -96,6 +99,13 @@ shot() {
   sleep 1.5
   gjs -m "$HERE/dbus-shot.js" "$ID" "$OBJ" "$SHOTS/welcome-$1$SUFFIX.png" >/dev/null || fail "screenshot $1"
 }
+# shot_as <file name without .png> — for the screenshots under docs/screenshots/.
+shot_as() {
+  [ -z "$SHOTS" ] && return 0
+  mkdir -p "$SHOTS"
+  sleep 1.5
+  gjs -m "$HERE/dbus-shot.js" "$ID" "$OBJ" "$SHOTS/$1$SUFFIX.png" >/dev/null || fail "screenshot $1"
+}
 setting() { python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get(sys.argv[2]))' "$SETTINGS" "$1"; }
 
 if [ "$SUFFIX" = "" ]; then
@@ -103,11 +113,13 @@ if [ "$SUFFIX" = "" ]; then
   L_START="Demo starten"; L_BANNER="Demodaten"; L_OWN="Eigene Daten verwenden"; L_RESTART="Neu starten"
   L_SETUP="Wo die Daten liegen werden"; L_GENERAL="Allgemein"; L_BACKUP="Jetzt sichern"
   L_AGAIN="Einführung erneut anzeigen"; L_LATER="Später"
+  L_GAP="Die Einrichtung ist nicht abgeschlossen"; L_CLOSE="Schließen"
 else
   L_TITLE="Welcome to Steuererklärung"; L_NEXT="Next"; L_OK="Understood"; L_DEMO="Try the demo"
   L_START="Start the demo"; L_BANNER="Demo data"; L_OWN="Use my own data"; L_RESTART="Restart"
   L_SETUP="Where your data will be stored"; L_GENERAL="General"; L_BACKUP="Back up now"
   L_AGAIN="Show welcome again"; L_LATER="Later"
+  L_GAP="Setup is not finished"; L_CLOSE="Close"
 fi
 
 # ── 1. Fresh HOME → welcome → demo → restart in demo ─────────────────────────────────────────────────
@@ -169,5 +181,37 @@ absent "$L_TITLE"
 absent "$L_SETUP"
 [ -e "$SETTINGS" ] && fail "an existing installation got a settings file just by starting"
 step "an existing installation (buchhaltung.json in cwd) never sees the welcome"
+
+# ── 5. „Later" → setup banner → close → a new gap brings it back ─────────────────────────────────────
+stop_app
+rm -rf "$T/cfg"
+mkdir -p "$T/later" "$T/cfg"
+launch "$T/later"
+await "$L_TITLE"
+click "$L_LATER" GtkButton
+absent "$L_TITLE"
+[ "$(setting welcomeDeferred)" = True ] || fail "„$L_LATER“ was not remembered: $(setting welcomeDeferred)"
+[ "$(setting welcomeCompleted)" = False ] || fail "„$L_LATER“ must not complete the welcome"
+launch "$T/later"
+await "$L_GAP"
+absent "$L_TITLE"
+absent "$L_SETUP"
+step "„$L_LATER“ is remembered: the relaunch shows the setup banner, not the welcome or the assistant"
+shot_as setup-banner
+ui click-tip "$L_CLOSE" >/dev/null || fail "cannot close the setup banner"
+sleep 1.5
+absent "$L_GAP"
+[ "$(setting setupBannerDismissed)" = "['no-entity']" ] || fail "dismissal: $(setting setupBannerDismissed)"
+launch "$T/later"
+sleep 3
+absent "$L_GAP"
+step "a closed setup banner stays closed across a relaunch"
+cat > "$T/later/steuererklaerung.json" <<'JSON'
+{ "version": 1, "entities": [{ "id": "eu", "name": "Erika Muster", "kind": "einzelunternehmen", "accounts": [] }] }
+JSON
+launch "$T/later"
+await "$L_GAP"
+await "Erika Muster"
+step "an entity without a bank account is a new gap and brings the banner back"
 
 echo "welcome e2e: all steps passed"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-10 00:06+0200\n"
+"POT-Creation-Date: 2026-10-10 09:30+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -24,6 +24,7 @@ msgstr "Assistent"
 #. TRANSLATORS: Tooltip on the button that hides the assistant panel
 #: src/frontends/desktop/assistent-panel.blp:40
 #: src/frontends/desktop/views/beleg-upload.ts:130
+#: src/frontends/desktop/window.blp:187
 msgid "Close"
 msgstr "Schließen"
 
@@ -110,7 +111,7 @@ msgstr "Kein Fenster offen, in dem die Bank gefragt werden könnte."
 #: src/frontends/desktop/views/entity-dialogs.ts:42
 #: src/frontends/desktop/views/entity-dialogs.ts:101
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:465
-#: src/frontends/desktop/window.ts:211
+#: src/frontends/desktop/window.ts:235
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -1071,13 +1072,13 @@ msgid "Your own data"
 msgstr "Eigene Daten"
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:32
-#: src/frontends/desktop/views/welcome.ts:195
-#: src/frontends/desktop/window.ts:543
+#: src/frontends/desktop/views/welcome.ts:198
+#: src/frontends/desktop/window.ts:570
 msgid "Use my own data"
 msgstr "Eigene Daten verwenden"
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:32
-#: src/frontends/desktop/views/welcome.ts:184
+#: src/frontends/desktop/views/welcome.ts:187
 msgid "Try the demo"
 msgstr "Demo ausprobieren"
 
@@ -1087,7 +1088,7 @@ msgstr "Einführung erneut anzeigen"
 
 #
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:46
-#: src/frontends/desktop/views/welcome.ts:283
+#: src/frontends/desktop/views/welcome.ts:286
 msgid "Show the AI assistant"
 msgstr "KI-Assistent anzeigen"
 
@@ -1152,7 +1153,11 @@ msgid ""
 "Tax views will be hidden; your data stays. Bookings, categories, receipts, "
 "invoices and the bookkeeping reports keep working, and you can turn the "
 "features back on here at any time."
-msgstr "Die Steueransichten werden ausgeblendet; deine Daten bleiben erhalten. Buchungen, Kategorien, Belege, Rechnungen und die Buchhaltungsberichte funktionieren weiter, und du kannst die Funktionen hier jederzeit wieder einschalten."
+msgstr ""
+"Die Steueransichten werden ausgeblendet; deine Daten bleiben erhalten. "
+"Buchungen, Kategorien, Belege, Rechnungen und die Buchhaltungsberichte "
+"funktionieren weiter, und du kannst die Funktionen hier jederzeit wieder "
+"einschalten."
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:37
 msgid "Turn off"
@@ -1167,7 +1172,9 @@ msgstr "Land & Steuern"
 msgid ""
 "Which country the entity is taxed in, and whether the app prepares German "
 "tax returns for it."
-msgstr "In welchem Land die Entität besteuert wird und ob die App deutsche Steuererklärungen für sie vorbereitet."
+msgstr ""
+"In welchem Land die Entität besteuert wird und ob die App deutsche "
+"Steuererklärungen für sie vorbereitet."
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:53
 #: src/frontends/desktop/views/setup-assistant.ts:355
@@ -1195,7 +1202,8 @@ msgstr "Deutsche Steuerfunktionen"
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:59
 #: src/frontends/desktop/views/setup-assistant.ts:361
 msgid "ELSTER returns, tax forecast, tax deadlines and the Tax area"
-msgstr "ELSTER-Erklärungen, Steuerprognose, Steuertermine und der Bereich Steuer"
+msgstr ""
+"ELSTER-Erklärungen, Steuerprognose, Steuertermine und der Bereich Steuer"
 
 #
 #: src/frontends/desktop/views/einstellungen-view.blp:30
@@ -1779,8 +1787,8 @@ msgstr ""
 #: src/frontends/desktop/views/setup-assistant.ts:452
 #: src/frontends/desktop/views/setup-assistant.ts:502
 #: src/frontends/desktop/views/setup-assistant.ts:562
-#: src/frontends/desktop/views/welcome.ts:146
-#: src/frontends/desktop/views/welcome.ts:266
+#: src/frontends/desktop/views/welcome.ts:149
+#: src/frontends/desktop/views/welcome.ts:269
 msgid "Next"
 msgstr "Weiter"
 
@@ -1932,7 +1940,7 @@ msgstr "Entität"
 #: src/frontends/desktop/views/setup-assistant.ts:77
 #: src/frontends/desktop/views/setup-assistant.ts:199
 #: src/frontends/desktop/views/setup-assistant.ts:570
-#: src/frontends/desktop/views/welcome.ts:95
+#: src/frontends/desktop/views/welcome.ts:98
 msgid "Later"
 msgstr "Später"
 
@@ -3130,7 +3138,7 @@ msgstr "Regel bestand bereits: „{pattern}“ → {category}"
 
 #: src/frontends/desktop/views/setup-assistant.ts:63
 #: src/frontends/desktop/views/setup-assistant.ts:449
-#: src/frontends/desktop/window.ts:557
+#: src/frontends/desktop/window.ts:635
 msgid "Private"
 msgstr "Privat"
 
@@ -3166,8 +3174,8 @@ msgstr "Neue Entität"
 #. TRANSLATORS: Primary menu item reopening the first-run introduction
 #: src/frontends/desktop/views/setup-assistant.ts:223
 #: src/frontends/desktop/views/setup-assistant.ts:242
-#: src/frontends/desktop/views/welcome.ts:53
-#: src/frontends/desktop/views/welcome.ts:145
+#: src/frontends/desktop/views/welcome.ts:56
+#: src/frontends/desktop/views/welcome.ts:148
 #: src/frontends/desktop/window.blp:13
 msgid "Welcome"
 msgstr "Einführung"
@@ -3280,7 +3288,7 @@ msgid "Annual-only filers keep “Later”."
 msgstr "Wer nur jährlich erklärt, lässt „Später“ stehen."
 
 #: src/frontends/desktop/views/setup-assistant.ts:408
-#: src/frontends/desktop/window.ts:557
+#: src/frontends/desktop/window.ts:635
 msgid "Business"
 msgstr "Unternehmen"
 
@@ -3409,6 +3417,7 @@ msgid "Done"
 msgstr "Fertig"
 
 #: src/frontends/desktop/views/setup-assistant.ts:610
+#: src/frontends/desktop/window.blp:198
 msgid "Finish setup"
 msgstr "Einrichtung abschließen"
 
@@ -3949,11 +3958,11 @@ msgstr ""
 "gelesen werden. Sie lassen sich in den Einstellungen anlegen."
 
 #
-#: src/frontends/desktop/views/welcome.ts:120
+#: src/frontends/desktop/views/welcome.ts:123
 msgid "Welcome to Steuererklärung"
 msgstr "Willkommen bei Steuererklärung"
 
-#: src/frontends/desktop/views/welcome.ts:123
+#: src/frontends/desktop/views/welcome.ts:126
 msgid ""
 "Prepare your profit-and-loss statement, VAT and income tax from your bank "
 "transactions and receipts."
@@ -3961,11 +3970,11 @@ msgstr ""
 "Bereite Einnahmenüberschussrechnung, Umsatzsteuer und Einkommensteuer aus "
 "deinen Bankbuchungen und Belegen vor."
 
-#: src/frontends/desktop/views/welcome.ts:133
+#: src/frontends/desktop/views/welcome.ts:136
 msgid "Your data stays on this computer"
 msgstr "Deine Daten bleiben auf diesem Rechner"
 
-#: src/frontends/desktop/views/welcome.ts:134
+#: src/frontends/desktop/views/welcome.ts:137
 msgid ""
 "Configuration, transactions and receipts are ordinary files in your home "
 "folder."
@@ -3974,11 +3983,11 @@ msgstr ""
 "Persönlichen Ordner."
 
 #
-#: src/frontends/desktop/views/welcome.ts:140
+#: src/frontends/desktop/views/welcome.ts:143
 msgid "Connections are optional"
 msgstr "Verbindungen sind freiwillig"
 
-#: src/frontends/desktop/views/welcome.ts:141
+#: src/frontends/desktop/views/welcome.ts:144
 msgid ""
 "Qonto, Paperless-ngx, online banking, AI and ELSTER validation only when you "
 "set them up."
@@ -3986,11 +3995,11 @@ msgstr ""
 "Qonto, Paperless-ngx, Onlinebanking, KI und ELSTER-Prüfung nur, wenn du sie "
 "einrichtest."
 
-#: src/frontends/desktop/views/welcome.ts:158
+#: src/frontends/desktop/views/welcome.ts:161
 msgid "No tax advice"
 msgstr "Keine Steuerberatung"
 
-#: src/frontends/desktop/views/welcome.ts:161
+#: src/frontends/desktop/views/welcome.ts:164
 msgid ""
 "The app helps you prepare. It does not replace a tax adviser, and its "
 "figures are estimates until ELSTER has validated them. Check every return "
@@ -4001,19 +4010,19 @@ msgstr ""
 "Erklärung, bevor du sie abschickst."
 
 #
-#: src/frontends/desktop/views/welcome.ts:167
+#: src/frontends/desktop/views/welcome.ts:170
 msgid "Please note"
 msgstr "Bitte beachten"
 
-#: src/frontends/desktop/views/welcome.ts:168
+#: src/frontends/desktop/views/welcome.ts:171
 msgid "Understood"
 msgstr "Verstanden"
 
-#: src/frontends/desktop/views/welcome.ts:178
+#: src/frontends/desktop/views/welcome.ts:181
 msgid "How do you want to start?"
 msgstr "Wie möchtest du beginnen?"
 
-#: src/frontends/desktop/views/welcome.ts:179
+#: src/frontends/desktop/views/welcome.ts:182
 msgid ""
 "Demo and own data are kept strictly apart. You can switch later in the "
 "Settings."
@@ -4021,36 +4030,36 @@ msgstr ""
 "Demo und eigene Daten bleiben strikt getrennt. Wechseln kannst du später in "
 "den Einstellungen."
 
-#: src/frontends/desktop/views/welcome.ts:185
+#: src/frontends/desktop/views/welcome.ts:188
 msgid ""
 "A fictional business with sample transactions — nothing of yours is touched."
 msgstr ""
 "Ein erfundener Betrieb mit Beispielbuchungen — nichts von dir wird angefasst."
 
-#: src/frontends/desktop/views/welcome.ts:196
+#: src/frontends/desktop/views/welcome.ts:199
 msgid "Set up your business or private tax return in a few steps."
 msgstr ""
 "Richte deinen Betrieb oder deine private Steuererklärung in wenigen "
 "Schritten ein."
 
-#: src/frontends/desktop/views/welcome.ts:206
+#: src/frontends/desktop/views/welcome.ts:209
 msgid "I already have a steuererklaerung.json"
 msgstr "Ich habe schon eine steuererklaerung.json"
 
-#: src/frontends/desktop/views/welcome.ts:207
+#: src/frontends/desktop/views/welcome.ts:210
 msgid "Show where the app looks for it."
 msgstr "Zeigt, wo die App sie sucht."
 
-#: src/frontends/desktop/views/welcome.ts:212
+#: src/frontends/desktop/views/welcome.ts:215
 msgid "Your data"
 msgstr "Deine Daten"
 
-#: src/frontends/desktop/views/welcome.ts:222
-#: src/frontends/desktop/views/welcome.ts:240
+#: src/frontends/desktop/views/welcome.ts:225
+#: src/frontends/desktop/views/welcome.ts:243
 msgid "Existing configuration"
 msgstr "Vorhandene Konfiguration"
 
-#: src/frontends/desktop/views/welcome.ts:224
+#: src/frontends/desktop/views/welcome.ts:227
 msgid ""
 "Copy your steuererklaerung.json (or the older buchhaltung.json) to this "
 "place, then restart the app. Your transactions and receipts stay where the "
@@ -4061,26 +4070,26 @@ msgstr ""
 "Datei sie erwartet."
 
 #
-#: src/frontends/desktop/views/welcome.ts:228
+#: src/frontends/desktop/views/welcome.ts:231
 msgid "Expected location"
 msgstr "Erwarteter Ort"
 
 #
-#: src/frontends/desktop/views/welcome.ts:232
+#: src/frontends/desktop/views/welcome.ts:235
 msgid "Open folder"
 msgstr "Ordner öffnen"
 
 #
-#: src/frontends/desktop/views/welcome.ts:241
+#: src/frontends/desktop/views/welcome.ts:244
 msgid "Restart now"
 msgstr "Jetzt neu starten"
 
 #
-#: src/frontends/desktop/views/welcome.ts:254
+#: src/frontends/desktop/views/welcome.ts:257
 msgid "Optional connections"
 msgstr "Optionale Verbindungen"
 
-#: src/frontends/desktop/views/welcome.ts:255
+#: src/frontends/desktop/views/welcome.ts:258
 msgid ""
 "None of them is needed to start. Set them up later in the Settings, whenever "
 "you like."
@@ -4089,39 +4098,39 @@ msgstr ""
 "ein, wann immer du magst."
 
 #
-#: src/frontends/desktop/views/welcome.ts:257
+#: src/frontends/desktop/views/welcome.ts:260
 msgid "Fetch business account transactions"
 msgstr "Buchungen vom Geschäftskonto abrufen"
 
-#: src/frontends/desktop/views/welcome.ts:259
+#: src/frontends/desktop/views/welcome.ts:262
 msgid "Use receipts from your document archive"
 msgstr "Belege aus deinem Dokumentenarchiv nutzen"
 
-#: src/frontends/desktop/views/welcome.ts:261
+#: src/frontends/desktop/views/welcome.ts:264
 msgid "Online banking with German banks"
 msgstr "Onlinebanking mit deutschen Banken"
 
 #
-#: src/frontends/desktop/views/welcome.ts:262
-#: src/frontends/desktop/views/welcome.ts:276
-#: src/frontends/desktop/views/welcome.ts:289
+#: src/frontends/desktop/views/welcome.ts:265
+#: src/frontends/desktop/views/welcome.ts:279
+#: src/frontends/desktop/views/welcome.ts:292
 msgid "AI assistant"
 msgstr "KI-Assistent"
 
-#: src/frontends/desktop/views/welcome.ts:262
+#: src/frontends/desktop/views/welcome.ts:265
 msgid "Answers questions and proposes bookings"
 msgstr "Beantwortet Fragen und schlägt Buchungen vor"
 
-#: src/frontends/desktop/views/welcome.ts:263
+#: src/frontends/desktop/views/welcome.ts:266
 msgid "Validate returns with the official ELSTER library"
 msgstr "Erklärungen mit der amtlichen ELSTER-Bibliothek prüfen"
 
 #
-#: src/frontends/desktop/views/welcome.ts:265
+#: src/frontends/desktop/views/welcome.ts:268
 msgid "Connections"
 msgstr "Verbindungen"
 
-#: src/frontends/desktop/views/welcome.ts:278
+#: src/frontends/desktop/views/welcome.ts:281
 msgid ""
 "When you use the assistant, your question and the data it needs to answer go "
 "to the AI provider you configure. Nothing is sent unless you ask. Without "
@@ -4131,16 +4140,16 @@ msgstr ""
 "Daten an den KI-Anbieter, den du einrichtest. Ohne deine Frage wird nichts "
 "gesendet. Ohne Assistent funktioniert die App vollständig."
 
-#: src/frontends/desktop/views/welcome.ts:290
+#: src/frontends/desktop/views/welcome.ts:293
 msgid "Start the demo"
 msgstr "Demo starten"
 
-#: src/frontends/desktop/views/welcome.ts:290
+#: src/frontends/desktop/views/welcome.ts:293
 msgid "Set up my data"
 msgstr "Meine Daten einrichten"
 
 #
-#: src/frontends/desktop/views/welcome.ts:318
+#: src/frontends/desktop/views/welcome.ts:331
 msgid "Could not open {dir}"
 msgstr "{dir} konnte nicht geöffnet werden"
 
@@ -4328,43 +4337,54 @@ msgstr "Native Vorschau"
 msgid "Sync"
 msgstr "Abgleichen"
 
-#: src/frontends/desktop/window.ts:205
+#: src/frontends/desktop/window.ts:229
 msgid "Switch to the demo?"
 msgstr "Zur Demo wechseln?"
 
-#: src/frontends/desktop/window.ts:205
+#: src/frontends/desktop/window.ts:229
 msgid "Switch to your own data?"
 msgstr "Zu eigenen Daten wechseln?"
 
-#: src/frontends/desktop/window.ts:208
+#: src/frontends/desktop/window.ts:232
 msgid ""
 "The app restarts with fictional sample data. Your own data is not changed."
 msgstr ""
 "Die App startet mit erfundenen Beispieldaten neu. Deine eigenen Daten "
 "bleiben unverändert."
 
-#: src/frontends/desktop/window.ts:209
+#: src/frontends/desktop/window.ts:233
 msgid "The app restarts with your own data. The demo data stays separate."
 msgstr ""
 "Die App startet mit deinen eigenen Daten neu. Die Demodaten bleiben getrennt."
 
-#: src/frontends/desktop/window.ts:212
+#: src/frontends/desktop/window.ts:236
 msgid "Restart"
 msgstr "Neu starten"
 
-#: src/frontends/desktop/window.ts:225
+#: src/frontends/desktop/window.ts:249
 msgid "Please restart the app yourself to switch."
 msgstr "Bitte starte die App selbst neu, um zu wechseln."
 
-#: src/frontends/desktop/window.ts:535
+#: src/frontends/desktop/window.ts:562
 msgid "Data could not be loaded completely: {error}"
 msgstr "Daten konnten nicht vollständig geladen werden: {error}"
 
-#: src/frontends/desktop/window.ts:542
+#: src/frontends/desktop/window.ts:569
 msgid "Demo data – fictional examples, no real financial data"
 msgstr "Demodaten – fiktive Beispieldaten, keine echten Finanzdaten"
 
-#: src/frontends/desktop/window.ts:621
+#: src/frontends/desktop/window.ts:599
+msgid "Setup is not finished: no business or private tax return is set up yet."
+msgstr ""
+"Die Einrichtung ist nicht abgeschlossen: Es ist noch kein Betrieb und keine "
+"private Steuererklärung eingerichtet."
+
+#: src/frontends/desktop/window.ts:600
+msgid "Setup is not finished: “{entity}” has no bank account yet."
+msgstr ""
+"Die Einrichtung ist nicht abgeschlossen: „{entity}“ hat noch kein Bankkonto."
+
+#: src/frontends/desktop/window.ts:699
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."

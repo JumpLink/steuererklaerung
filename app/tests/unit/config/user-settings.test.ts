@@ -165,6 +165,15 @@ export default async () => {
             expect(shouldShowWelcome(loadUserSettings(), getManifestPath(dir))).toBe(false);
         });
 
+        await it('„Later" → not on the next launch either, without completing it', async () => {
+            updateUserSettings((s) => {
+                s.welcomeDeferred = true;
+            });
+            const s = loadUserSettings();
+            expect(s.welcomeCompleted).toBe(false);
+            expect(shouldShowWelcome(s, getManifestPath(dir))).toBe(false);
+        });
+
         await it('deciding about the welcome never touches the manifest location', async () => {
             shouldShowWelcome(loadUserSettings(), getManifestPath(dir));
             expect(existsSync(join(dir, MANIFEST_FILENAME))).toBe(false);
