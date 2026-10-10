@@ -16,7 +16,7 @@
     "src"
   ],
   "dependencies": {
-    "jsonrepair": "^3.14.0",
-    "zod": "^4.3.6"
+    "jsonrepair": "^3.15.0",
+    "zod": "^4.6.5"
   }
 }

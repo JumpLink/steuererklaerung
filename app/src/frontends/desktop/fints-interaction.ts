@@ -62,7 +62,9 @@ function ask(opts: { heading: string; body: string; placeholder: string; secret:
         dialog.set_response_appearance('ok', Adw.ResponseAppearance.SUGGESTED);
 
         // Enter in the field is the same as pressing Senden — a TAN is typed and confirmed in one go.
-        entry.connect('activate', () => dialog.choose(parent, null, null));
+        const send = () => dialog.choose(parent, null, null);
+        if (entry instanceof Gtk.Entry) entry.connect('activate', send);
+        else entry.connect('activate', send);
 
         dialog.connect('response', (_d: Adw.AlertDialog, response: string) => {
             if (response !== 'ok') {
