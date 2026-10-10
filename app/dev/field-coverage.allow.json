@@ -33,7 +33,8 @@
                 "finanzierung.ts:disagio_prozent",
                 "finanzierung.ts:gebuehren",
                 "finanzierung.ts:notiz",
-                "finanzierung.ts:paperless_id"
+                "finanzierung.ts:paperless_id",
+                "finanzierung.ts:stand"
             ]
         },
         "klassifizierung-ueber-needle-list-meta": {
@@ -102,11 +103,43 @@
             ]
         },
         "doppelzahlung-ueber-entscheidung": {
-            "reason": "Erreichbar im Rechnungsdetail (views/rechnung-detail-dialog.ts, „Ist eine Doppelzahlung“, „Rückzahlung verknüpfen“, „Außerhalb zurückgezahlt“), aber nicht unter diesem Namen: die Ansicht ruft entscheideDoppelzahlung() aus core/actions/invoices/doppelzahlung.ts mit txId / refundTxId / datum auf, und erst der Core schreibt daraus transaktion_id, rueckzahlung_transaktion_id und rueckzahlung_am in die Anpassungen. Der Prüfer sieht nur den Text der Desktop-Dateien.",
+            "reason": "Erreichbar im Rechnungsdetail (views/rechnung-detail-dialog.ts, „Ist eine Doppelzahlung“, „Rückzahlung verknüpfen“, „Außerhalb zurückgezahlt“), aber nicht unter diesem Namen: die Ansicht ruft entscheideDoppelzahlung() aus core/actions/invoices/doppelzahlung.ts mit txId / refundTxId / datum auf, und erst der Core schreibt daraus transaktion_id, rueckzahlung_transaktion_id und rueckzahlung_am in die Anpassungen — und für „keine Doppelzahlung“ über markZahlungGeprueft() die entscheidung in zahlungen_geprueft. Der Prüfer sieht nur den Text der Desktop-Dateien.",
             "fields": [
                 "elster.ts:transaktion_id",
                 "elster.ts:rueckzahlung_transaktion_id",
-                "elster.ts:rueckzahlung_am"
+                "elster.ts:rueckzahlung_am",
+                "elster.ts:entscheidung"
+            ]
+        },
+        "rechnungsstellung-unter-anderem-namen": {
+            "reason": "numberPrefix ist die Zeile „Rechnungsnummer-Präfix“ in Einstellungen → Rechnungen (views/einstellungen/dms-invoicing.ts), dort aber unter dem Namen der Lesesicht selfNumberPrefix, den erst core/config/accessors.ts auf invoicing.self.numberPrefix abbildet. logoPath hat dagegen wirklich keine Zeile: der Aussteller-Abschnitt liest nur Textfelder, und ein Pfad zum Eintippen wäre keine Oberfläche — das gehört als Dateiauswahl mit Vorschau gebaut.",
+            "fields": [
+                "entity.ts:numberPrefix",
+                "entity.ts:logoPath"
+            ]
+        },
+        "kinderbetreuung-zeitraeume-und-haushalt": {
+            "reason": "Die Einstellungen pflegen die Kinderbetreuungskosten als Jahresbetrag (views/einstellungen/privat.ts). Die Zeiträume je Anbieter (Vorgabe ganzes Jahr) und die Haushaltsangaben KBK/Ang_HH, die ERiC ab der ersten Kinderbetreuungs-Zeile verlangt, haben noch keine Zeile — sie brauchen einen Kinderbetreuungs-Dialog je Anbieter, keine weiteren Einzelfelder in der Jahresliste. Bis dahin meldet ERiC das fehlende Haushaltsfeld beim Prüfen.",
+            "fields": [
+                "est.ts:gemeinsam_zeitraum",
+                "est.ts:gemeinsam_kind_zeitraum",
+                "est.ts:getrennt_zeitraum",
+                "est.ts:kind_bei_mir_zeitraum",
+                "est.ts:kind_beim_anderen_zeitraum",
+                "est.ts:zeitraum_von",
+                "est.ts:zeitraum_bis"
+            ]
+        },
+        "anlagegut-vorsteuerabzug": {
+            "reason": "Die Anlagegut-Zeile (views/einstellungen/abschluss.ts) zeigt den Vorsteuerabzug nicht; fehlt er, gilt „ja“ — der Normalfall eines betrieblichen Kaufs mit Rechnung. Nur für Anlagen ohne Vorsteuer (privat, vom Kleinunternehmer gekauft) muss er auf „nein“, und das gehört als Schalter an die Zeile. Bis dahin bleibt ein so gesetzter Wert beim Speichern erhalten, weil die Zeile das Feld nicht anfasst.",
+            "fields": ["elster.ts:vorsteuerabzug"]
+        },
+        "rechnungsversand-schreibt-der-core": {
+            "reason": "providerId und messageId vergeben das Backend (Qonto) und der Mailserver beim Anlegen bzw. Versenden einer Rechnung; nextDueDate setzt der Core beim Weiterschalten eines Vertrags (core/invoices/recurring.ts), sonst gilt der Beginn von nextPeriod, den der Vertragsdialog pflegt. Keins davon ist eine Eingabe.",
+            "fields": [
+                "recurring.ts:providerId",
+                "recurring.ts:messageId",
+                "recurring.ts:nextDueDate"
             ]
         },
         "hinweis-in-ordnung": {

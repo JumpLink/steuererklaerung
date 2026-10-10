@@ -17,35 +17,23 @@
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { mentions, schemaLeaves as scanSchemaLeaves, stripNonCode } from './field-coverage-scan.ts';
+
 const ROOT = new URL('..', import.meta.url).pathname;
 const SCHEMA_DIR = join(ROOT, 'src/core/config/schema');
 const SURFACE_DIRS = ['src/frontends/desktop'];
 const ALLOW_FILE = join(ROOT, 'dev/field-coverage.allow.json');
 
 /**
- * Leaf field names declared in a Zod schema file.
- *
- * Read as text rather than by importing the schemas: Zod 4 gives no stable public way to walk a
- * schema's shape, and a parser that guesses at internals breaks on the next minor. The declaration
- * `name: z.…` is unambiguous in these files and does not.
+ * Leaf field names declared in a Zod schema file, with where each one is — which block a gap
+ * belongs to is the first thing anyone reading the report needs. The scanning itself lives in
+ * `field-coverage-scan.ts`, where the unit tests pin it.
  */
 function schemaLeaves(file) {
-    const src = readFileSync(file, 'utf8');
     const leaves = new Map(); // name → { where, block }
-    const lines = src.split('\n');
-    let block = '?';
-    lines.forEach((line, i) => {
-        // The nearest `const XSchema = z.object({` above the field — which block a gap belongs to is
-        // the first thing anyone reading the report needs, and grepping for it by hand is the step
-        // that makes a 90-line report not worth reading.
-        const decl = /^(?:export )?const (\w+)\s*=\s*z$|^(?:export )?const (\w+)\s*=\s*z\./.exec(line);
-        if (decl) block = decl[1] ?? decl[2];
-        const match = /^\s{4,}([a-z][a-z0-9_]*)\s*:\s*z\./.exec(line);
-        if (!match) return;
-        // Containers are not leaves: their children are what a person fills in.
-        if (/z\.(object|array|record)\(/.test(line) && !/z\.array\(z\.(string|number|boolean)/.test(line)) return;
-        leaves.set(match[1], { where: `${file.slice(ROOT.length)}:${i + 1}`, block });
-    });
+    for (const [name, leaf] of scanSchemaLeaves(readFileSync(file, 'utf8'))) {
+        leaves.set(name, { where: `${file.slice(ROOT.length)}:${leaf.line}`, block: leaf.block });
+    }
     return leaves;
 }
 
@@ -73,22 +61,8 @@ function* walk(dir) {
  */
 function surfaceText() {
     return SURFACE_DIRS.flatMap((dir) => [...walk(join(ROOT, dir))])
-        .map((file) => readFileSync(file, 'utf8'))
+        .map((file) => stripNonCode(readFileSync(file, 'utf8')))
         .join('\n');
-}
-
-/**
- * Whether the surface mentions this field the way CODE mentions a field — `x.field`, `field:`,
- * `'field'` — rather than the way PROSE does.
- *
- * A plain substring search sounds equivalent and is not: it counts the word `name` in a comment,
- * and it counts `city` inside `capacity`. Both make an unreachable field read as covered, which is
- * the failure this check cannot afford. It is still only evidence of a mention, never proof of an
- * editable row — see the file header.
- */
-function mentions(text, field) {
-    const escaped = field.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    return new RegExp(`(?:\\.${escaped}\\b|\\b${escaped}\\s*:|['"\`]${escaped}['"\`])`).test(text);
 }
 
 const surface = surfaceText();

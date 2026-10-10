@@ -24,6 +24,7 @@ import workspace from './unit/config/workspace.test.ts';
 import configManifest from './unit/config/config-manifest.test.ts';
 import exampleManifest from './unit/config/example-manifest.test.ts';
 import testIsolation from './unit/lib/test-isolation.test.ts';
+import fieldCoverageScan from './unit/lib/field-coverage-scan.test.ts';
 import renameFallback from './unit/config/rename-fallback.test.ts';
 import entityCountry from './unit/config/entity-country.test.ts';
 import taxOff from './unit/countries/tax-off.test.ts';
@@ -392,4 +393,5 @@ run({
     kredit,
     finanzierung,
     testIsolation,
+    fieldCoverageScan,
 });
