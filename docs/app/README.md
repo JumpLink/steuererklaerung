@@ -325,7 +325,8 @@ Rechnungsstellung (Anbieter, Zahlungsempfänger-IBAN, Zahlungsziel, Nummernpräf
 **Betriebsstammdaten**, die in die Anlage EÜR gehen. Weiter unten der integrierte Assistent und
 der MCP-Server: ob externe Assistenten sich verbinden dürfen, ob **schreibende** Werkzeuge über
 die schreibgeschützte Voreinstellung hinaus geöffnet werden, und welche Werkzeuggruppen sichtbar
-sind. Änderungen greifen beim nächsten Start des MCP-Servers. Die Gruppe **Abgleich** schaltet den
+sind. Änderungen greifen beim nächsten Start des MCP-Servers. **Externen Agenten verbinden …**
+zeigt den passenden Konfigurationsausschnitt je Client, siehe [mcp-clients.md](mcp-clients.md). Die Gruppe **Abgleich** schaltet den
 Hintergrund-Abgleich ein oder aus und setzt die Abstände.
 
 Ganz oben stehen zwei Gruppen, die nicht im Manifest landen, sondern in der Einstellungsdatei des
@@ -334,8 +335,7 @@ Benutzers (`$XDG_CONFIG_HOME/eu.jumplink.Steuererklaerung/settings.json`):
 - **Allgemein:** Wechsel zwischen Demo und eigenen Daten (nach Rückfrage startet die App neu — ein
   laufender Prozess wird nie auf den anderen Bestand umgebogen), „Einführung erneut anzeigen" und
   der Schalter **Eingebauter KI-Assistent** — unabhängig vom MCP-Server, siehe
-  [ki-und-mcp.md](ki-und-mcp.md). **Externen Agenten verbinden …** zeigt den passenden
-  Konfigurationsausschnitt je Client, siehe [mcp-clients.md](mcp-clients.md).
+  [ki-und-mcp.md](ki-und-mcp.md).
 - **Sicherung:** „Jetzt sichern", letzte Sicherung, Ordner und wie viele behalten werden. Was
   gesichert wird und wie man wiederherstellt: [backup.md](backup.md).
 
