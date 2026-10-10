@@ -487,9 +487,10 @@ Ansicht eine Erklärzeile ein; unabhängig davon öffnen kleine **„?"-Symbole*
 Glossar in `src/frontends/web/client/lib/glossary.ts`) Klartext-Popovers zu Fachbegriffen (EÜR,
 USt-Zahllast, §24, Rohertrag, Messbetrag, Kleinunternehmer …) — clean by default, Hilfe auf Abruf.
 
-Der Tab **Einstellungen** (`/api/settings`) steuert zwei Dinge, persistiert in
-`steuererklaerung.json`: (1) den **integrierten Assistenten** an/aus (aus ⇒ Tab ausgeblendet,
-`/api/chat` gesperrt) und (2) welche **MCP-Tool-Gruppen nach außen offen** sind — der
+Der Tab **Einstellungen** (`/api/settings`) steuert zwei unabhängige Dinge
+([docs/app/ki-und-mcp.md](../docs/app/ki-und-mcp.md)): (1) den **eingebauten KI-Assistenten** an/aus,
+eine persönliche Einstellung in der `settings.json` des Benutzers (aus ⇒ Tab ausgeblendet,
+`/api/chat` gesperrt), und (2), in `steuererklaerung.json`, welche **MCP-Tool-Gruppen nach außen offen** sind — der
 MCP-Server (`steuer mcp`, stdio oder HTTP) exponiert nur die aktivierten Gruppen
 (Paperless · Qonto · Transactions · Reconciliation · Dokument-Workflow · Cross-System
 · ELSTER · Rechnungen · Kontakte), und die **mutierenden** Tools nur, wenn `mcp.allowWrite` gesetzt ist
@@ -505,7 +506,7 @@ einen kleinen Satz **read-only Werkzeuge** über den In-Memory-Jahres-Cache (`ov
 `list_transactions`, `get_transaction`, `bwa_by_month`, `list_hinweise`) und sucht sich die
 nötigen Daten selbst zusammen — z. B. „Was sind meine größten Ausgaben?" ruft
 `list_transactions` auf und nennt konkrete Buchungen. Dazu kommen **Live-Tools**, die — wenn
-die jeweilige MCP-Gruppe in den Einstellungen aktiv ist — direkt die echten Systeme abfragen:
+Paperless eingerichtet ist, nie in der Demo, unabhängig vom MCP-Schalter — direkt die echten Systeme abfragen:
 `paperless_search`/`paperless_get` (Belege live in Paperless, nur Metadaten, kein OCR-Body).
 Diese Live-Reads laufen **in-process** im selben `setTimeout(…,0)`-Job (also außerhalb des
 Request-Handlers → der libsoup-Fetch ist deadlock-sicher; verifiziert auf GJS); Schreib-Tools
