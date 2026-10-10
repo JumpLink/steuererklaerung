@@ -3,7 +3,7 @@
 - Status: **Accepted**; built
 - Date: 2026-10-10
 - Deciders: Pascal Garber
-- Related: [ADR 0002](0002-all-ai-through-kurier-and-opencode.md)
+- Related: [ADR 0002](0002-all-ai-through-lotse-and-opencode.md)
 
 ## Context
 
