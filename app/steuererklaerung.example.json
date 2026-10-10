@@ -228,7 +228,8 @@
       "storno": 0,
       "water": 0,
       "wastewater": 0,
-      "ai_conflict": 0
+      "ai_conflict": 0,
+      "inbox": 0
     },
     "own_correspondent_ids": [],
     "exclude_tag_ids": [],

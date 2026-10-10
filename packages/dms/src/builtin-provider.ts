@@ -65,6 +65,10 @@ interface DocRow {
     category: string | null;
     rule_origin: string | null;
     origin: string | null;
+    note: string | null;
+    payment_status: string | null;
+    due_date: string | null;
+    amount_to_pay: number | null;
 }
 
 const RULE_FIELDS: readonly DmsRuleField[] = ['correspondent', 'documentType', 'category', 'direction'];
@@ -123,7 +127,10 @@ function rowToDoc(r: DocRow): DmsDocument {
         pageCount: null,
         ocrText: r.ocr_text,
         ocrSource: r.ocr_source === 'ai' || r.ocr_source === 'paperless' ? r.ocr_source : r.ocr_text ? 'ai' : null,
-        aiNote: null,
+        aiNote: r.note ?? null,
+        paymentStatus: r.payment_status ?? null,
+        dueDate: r.due_date ?? null,
+        amountToPay: r.amount_to_pay ?? null,
         invoiceKind: r.invoice_kind === 'e-rechnung' || r.invoice_kind === 'sonstige-rechnung' ? r.invoice_kind : null,
         invoiceKindReason: r.invoice_kind_reason ?? null,
         category: r.category ?? null,
@@ -174,6 +181,25 @@ export class BuiltinDmsProvider implements DmsProvider {
         });
     }
 
+    /** Built-in inbox = documents no metadata has been written to yet (`ai_extracted_at` unset). */
+    async listInbox(): Promise<DmsDocument[]> {
+        return this.withDb((db) => {
+            const rows = db
+                .prepare(`${SELECT_DOC} WHERE d.entity_id = ? AND d.ai_extracted_at IS NULL ORDER BY d.added, d.id`)
+                .all(this.entityId) as unknown as DocRow[];
+            return rows.map(rowToDoc);
+        });
+    }
+
+    async getText(id: string): Promise<string | null> {
+        return (await this.get(id))?.ocrText ?? null;
+    }
+
+    /** setMetadata stamps `ai_extracted_at`, which is what leaves the inbox — nothing more to do. */
+    async markReviewed(id: string): Promise<void> {
+        if (!(await this.get(id))) throw new Error(`Dokument ${id} nicht gefunden.`);
+    }
+
     async getFile(id: string): Promise<DmsFile | null> {
         const row = this.withDb(
             (db) =>
@@ -182,7 +208,10 @@ export class BuiltinDmsProvider implements DmsProvider {
                     .get(id, this.entityId) as { file_path: string; mime_type: string | null } | undefined,
         );
         if (!row || !existsSync(row.file_path)) return null;
-        return { bytes: readFileSync(row.file_path), mimeType: row.mime_type ?? 'application/octet-stream' };
+        return {
+            bytes: readFileSync(row.file_path),
+            mimeType: row.mime_type ?? 'application/octet-stream',
+        };
     }
 
     /** Card preview: an image is its own thumbnail; a PDF's first page is rasterized (GJS/Poppler). */
@@ -269,8 +298,15 @@ export class BuiltinDmsProvider implements DmsProvider {
             set('invoice_kind', meta.invoiceKind);
             set('invoice_kind_reason', meta.invoiceKindReason);
             set('category', meta.category);
+            set('note', meta.aiNote);
+            set('payment_status', meta.paymentStatus);
+            set('due_date', meta.dueDate);
+            set('amount_to_pay', meta.amountToPay);
             // undefined = leave, null = clear (a manual edit took the last field back), else the origin as JSON
-            set('rule_origin', meta.ruleOrigin === undefined ? undefined : meta.ruleOrigin ? JSON.stringify(meta.ruleOrigin) : null);
+            set(
+                'rule_origin',
+                meta.ruleOrigin === undefined ? undefined : meta.ruleOrigin ? JSON.stringify(meta.ruleOrigin) : null,
+            );
             if (meta.tags !== undefined) set('tags', JSON.stringify(meta.tags));
             if (sets.length) {
                 sets.push('ai_extracted_at = ?');

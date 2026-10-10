@@ -250,7 +250,9 @@ export function getReviewMetadataOwnBlock(lang: PromptLanguage, ownCorrespondent
  * runs internally — read/map/write via the paperless_* tools and record the
  * rationale into the `ai_note` (KI-Hinweis) custom field.
  */
-export const REVIEW_METADATA_MCP_USAGE_NOTE = `So wendest du diese Regeln über den steuererklaerung-MCP an (pro Dokument):
+export const REVIEW_METADATA_MCP_USAGE_NOTE = `Bevorzugt, weil unabhängig vom DMS (Paperless oder eingebautes DMS): dms_list_inbox → dms_get_document → dms_propose_metadata (Trockenlauf, schreibt nichts) → nach Zustimmung dms_apply_metadata (schreibt Metadaten + KI-Hinweis und nimmt das Dokument aus dem Eingang) → dms_match_payment / dms_set_payment_status für den Zahlungsstatus. Die paperless_*-Werkzeuge unten sind Paperless-spezifisch (z. B. Korrespondent/Dokumenttyp per ID schreiben).
+
+So wendest du diese Regeln über den steuererklaerung-MCP an (pro Dokument, Paperless-Weg):
 1. Lesen: paperless_get_document → OCR-Inhalt + aktuelle Metadaten/Custom-Fields.
 2. Namen → IDs auflösen: paperless_list_correspondents / paperless_list_document_types / paperless_list_tags.
 3. Empfehlung nach obigen Regeln bilden (Titel, correspondent_id, document_type_id, created, add_tag_ids).
@@ -276,6 +278,7 @@ export function getReviewDocumentMetadataPromptText(lang: PromptLanguage = 'de')
 export const ENRICH_PAPERLESS_DOCUMENTS_PROMPT = `Arbeite eine Menge Paperless-Dokumente durch und reichere sie an. Paperless ist das gemeinsame Gedächtnis: schreibe dauerhafte Schlüsse als Metadaten zurück, damit der nächste Lauf darauf aufbaut. Generischer Ablauf, keine Einzelfall-Skripte — wende Urteilsvermögen an.
 
 Auswahl der Dokumente:
+- Bevorzugt DMS-unabhängig: dms_list_inbox (Eingang), dms_get_document, dms_propose_metadata → nach Zustimmung dms_apply_metadata, danach dms_match_payment / dms_set_payment_status. Die paperless_*-Werkzeuge unten sind Paperless-spezifisch.
 - tag:Neu (oder ein anderer Tag) → paperless_search_documents nach dem Tag.
 - Korrespondentenname → paperless_list_correspondents auflösen, dann suchen.
 - explizite IDs / ein Bereich (z. B. 2791-2797) → direkt darauf arbeiten.

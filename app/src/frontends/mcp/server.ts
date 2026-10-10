@@ -14,6 +14,7 @@ import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { createAppContext } from '../../core/context.ts';
 import type { AppContext } from '../../core/context.ts';
+import { registerDmsTools } from './tools/dms.ts';
 import { registerPaperlessTools } from './tools/paperless.ts';
 import { registerQontoTools } from './tools/qonto.ts';
 import { registerCrossSystemTools } from './tools/cross-system.ts';
@@ -34,6 +35,7 @@ const SERVER_VERSION = '0.1.0';
 
 /** Group → its tool-registration function. The single source for what each group exposes. */
 const GROUP_REGISTRARS: Record<McpGroup, (server: McpServer, ctx: AppContext) => void> = {
+    dms: registerDmsTools,
     paperless: registerPaperlessTools,
     qonto: registerQontoTools,
     transactions: registerTransactionsTools,

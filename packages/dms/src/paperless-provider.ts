@@ -20,10 +20,14 @@ import {
     resolvePaperlessConfig,
     type PaperlessConfig,
     type PaperlessCreds,
+    type UpdateDocumentPayload,
     getCustomFieldValue,
     getStringField,
     mergeCustomFields,
     parseMonetaryValue,
+    formatMonetaryValue,
+    listDocuments,
+    fetchAllPagesParallel,
 } from '@steuererklaerung/paperless';
 import { fetchInvoiceDocsInPeriod } from './reconcile.ts';
 import type { DmsProvider, DmsDocument, DmsFile } from './types.ts';
@@ -62,6 +66,17 @@ function invoiceKindOf(
     return { invoiceKind: kind, invoiceKindReason: reason.join('|') || null };
 }
 
+/** Paperless stores the select option id; the DMS-agnostic shape carries the label. */
+function paymentStatusOf(doc: Document, config: PaperlessFieldConfig): string | null {
+    const id = config.custom_field_ids.payment_status ?? 0;
+    const raw = id > 0 ? getStringField(doc, id) : '';
+    if (!raw) return null;
+    for (const [label, optionId] of Object.entries(config.select_field_options?.payment_status ?? {})) {
+        if (optionId === raw) return label;
+    }
+    return raw;
+}
+
 /** Map a Paperless document to the DMS-agnostic shape. `corr` resolves the correspondent id → name. */
 function toDmsDocument(doc: Document, config: PaperlessFieldConfig, corr?: Map<number, string>): DmsDocument {
     const cf = config.custom_field_ids;
@@ -95,6 +110,9 @@ function toDmsDocument(doc: Document, config: PaperlessFieldConfig, corr?: Map<n
         ocrSource: null,
         aiNote: getStringField(doc, cf.ai_note) || null,
         ...invoiceKindOf(doc, config),
+        paymentStatus: paymentStatusOf(doc, config),
+        dueDate: getStringField(doc, cf.due_date ?? 0).slice(0, 10) || null,
+        amountToPay: moneyOf(doc, cf.amount_to_pay ?? 0),
     };
 }
 
@@ -170,6 +188,82 @@ export class PaperlessDmsProvider implements DmsProvider {
         } catch {
             return null;
         }
+    }
+
+    /** Documents carrying the configured inbox tag (`tag_ids.inbox`); empty when it is not configured. */
+    async listInbox(): Promise<DmsDocument[]> {
+        const inbox = this.config.tag_ids?.inbox ?? 0;
+        if (inbox <= 0) return [];
+        const [docs, corr] = await Promise.all([
+            fetchAllPagesParallel((page, pageSize) =>
+                listDocuments({ tag_ids: [inbox], page, page_size: pageSize, ordering: 'id' }, this.cfg),
+            ),
+            this.correspondentNames(),
+        ]);
+        return docs.map((d) => toDmsDocument(d, this.config, corr));
+    }
+
+    async getText(id: string): Promise<string | null> {
+        const numId = Number(id);
+        if (!Number.isFinite(numId)) return null;
+        try {
+            return (await getDocument(numId, this.cfg)).content ?? null;
+        } catch {
+            return null;
+        }
+    }
+
+    /** Swap the inbox tag for the reviewed tag (the reviewed tag is skipped when not configured). */
+    async markReviewed(id: string): Promise<void> {
+        const numId = Number(id);
+        if (!Number.isFinite(numId)) throw new Error(`Ungültige Dokument-ID: ${id}`);
+        const { inbox = 0, ai_reviewed: reviewed = 0 } = this.config.tag_ids ?? {};
+        const doc = await getDocument(numId, this.cfg);
+        const tags = doc.tags.filter((t) => t !== inbox);
+        if (reviewed > 0 && !tags.includes(reviewed)) tags.push(reviewed);
+        await updateDocument(numId, { tags }, this.cfg);
+    }
+
+    /**
+     * Write the fields Paperless can take from a {@link DmsDocument} patch: title, document date,
+     * invoice number, the money fields, KI-Hinweis and the payment triage. Fields whose custom
+     * field is not configured are skipped silently; an unknown payment-status label is an error
+     * (writing a raw label into a select field would store garbage).
+     */
+    async setMetadata(id: string, meta: Partial<DmsDocument>): Promise<void> {
+        const numId = Number(id);
+        if (!Number.isFinite(numId)) throw new Error(`Ungültige Dokument-ID: ${id}`);
+        const cf = this.config.custom_field_ids;
+        const updates: Array<{ field: number; value: unknown }> = [];
+        const put = (field: number | undefined, value: unknown) => {
+            if (field && field > 0 && value !== undefined) updates.push({ field, value });
+        };
+        const money = (v: number | null | undefined) =>
+            v === undefined ? undefined : v === null ? null : formatMonetaryValue(v, 'EUR');
+        put(cf.invoice_number, meta.invoiceNumber);
+        put(cf.total_net, money(meta.net));
+        put(cf.total_gross, money(meta.gross));
+        put(cf.tax_amount, money(meta.vat));
+        put(cf.ai_note, meta.aiNote);
+        put(cf.due_date, meta.dueDate);
+        put(cf.amount_to_pay, money(meta.amountToPay));
+        if (meta.paymentStatus !== undefined) {
+            if (meta.paymentStatus === null) put(cf.payment_status, null);
+            else {
+                const optionId = this.config.select_field_options?.payment_status?.[meta.paymentStatus];
+                if (!optionId)
+                    throw new Error(`Zahlungsstatus "${meta.paymentStatus}" ist in Paperless nicht eingerichtet.`);
+                put(cf.payment_status, optionId);
+            }
+        }
+        const payload: UpdateDocumentPayload = {};
+        if (meta.title != null) payload.title = meta.title;
+        if (meta.created != null) payload.created = meta.created;
+        if (updates.length > 0) {
+            const doc = await getDocument(numId, this.cfg);
+            payload.custom_fields = mergeCustomFields(doc.custom_fields ?? [], updates);
+        }
+        if (Object.keys(payload).length > 0) await updateDocument(numId, payload, this.cfg);
     }
 
     /**
