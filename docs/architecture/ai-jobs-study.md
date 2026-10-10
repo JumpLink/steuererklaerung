@@ -1,6 +1,6 @@
-# Study: moving Steuererklärung's AI to the kurier/opencode agent approach (non-chat jobs)
+# Study: moving Steuererklärung's AI to the lotse/opencode agent approach (non-chat jobs)
 
-Read-only study of this repository (main b7948c1) plus kurier docs and the
+Read-only study of this repository (main b7948c1) plus lotse docs and the
 opencode docs. Items marked **UNVERIFIED** were not measured or run. Paths are relative to `app/src/` unless noted.
 
 ## 1. Inventory of AI call sites
@@ -64,15 +64,15 @@ Goal: one provider login, made once in the widget, serves every AI feature.
   and needs a user-installed SDK. No enforced structured output. Subscription use through the Agent SDK is exactly what the bundled opencode would replace.
 
 ### b) Headless ACP session through the bundled opencode
-- Mechanics: kurier starts `opencode acp`, `session/new` with `mcpServers`, one prompt turn, read the agent message. It uses the same isolated
-  HOME/XDG (`<dataDir>/agents/opencode`, `core/agents/isolation.ts` in kurier) as the widget, so the same login. Permission gate: deny-all.
+- Mechanics: lotse starts `opencode acp`, `session/new` with `mcpServers`, one prompt turn, read the agent message. It uses the same isolated
+  HOME/XDG (`<dataDir>/agents/opencode`, `core/agents/isolation.ts` in lotse) as the widget, so the same login. Permission gate: deny-all.
   Chunks arrive through `session/update`.
-- **ACP has no structured-output field** (v1 schema: `PromptRequest` carries content blocks only, `refs/acp/schema.v1.json` in kurier). So structured
+- **ACP has no structured-output field** (v1 schema: `PromptRequest` carries content blocks only, `refs/acp/schema.v1.json` in lotse). So structured
   output is either prompt-and-parse, as today (unreliable, and the agent may add prose or tool calls), or the **sink-tool pattern**:
   the host adds a tiny stdio/http MCP server with one tool `submit_result` whose input schema is the target JSON Schema; the prompt says
   "call submit_result exactly once". Arguments are validated by the host and re-prompted on failure. This is reliable in practice (**UNVERIFIED** on opencode; the
-  same mechanism opencode uses internally for its `StructuredOutput` tool, see c). It depends on opencode honouring `session/new.mcpServers`, which kurier's widget study marks **UNVERIFIED**.
-- Pros: one login, no new dependency in the app (kurier already speaks ACP), reuses permission and sandbox handling, an MCP tool gives the agent
+  same mechanism opencode uses internally for its `StructuredOutput` tool, see c). It depends on opencode honouring `session/new.mcpServers`, which lotse's widget study marks **UNVERIFIED**.
+- Pros: one login, no new dependency in the app (lotse already speaks ACP), reuses permission and sandbox handling, an MCP tool gives the agent
   Paperless/Qonto context (for example fetching the tx itself). Cons: process start per job unless a session or process is reused (cold start **UNVERIFIED**, likely 1-3 s),
   agent system prompt and tool list inflate tokens, a model may deviate, no `temperature`/`maxTokens` knob in ACP (config options are agent-specific), and a streaming
   protocol is heavier than needed for a request/response.
@@ -89,17 +89,17 @@ Goal: one provider login, made once in the widget, serves every AI feature.
   `system` and set `tools` to disable all built-ins. `PUT /auth/:id` and `/provider/auth`, `/provider/{id}/oauth/authorize|callback` exist, so a host could even drive login
   itself. `POST /mcp` adds an MCP server dynamically (so `steuer mcp` is reachable).
 - **Under GJS:** the client is a generated fetch-based client with an injectable `fetch`, so it should run on gjsify's fetch/web stack (**UNVERIFIED**; not tested, and
-  `createOpencode()` uses `child_process` spawn which needs gjsify's `node:child_process`; safer is kurier spawning `opencode serve` and the app using `createOpencodeClient` or plain `fetch`).
+  `createOpencode()` uses `child_process` spawn which needs gjsify's `node:child_process`; safer is lotse spawning `opencode serve` and the app using `createOpencodeClient` or plain `fetch`).
   The wire contract is small enough to hand-roll (`POST /session`, `POST /session/:id/message`) if the SDK does not bundle under GJS.
 - Pros: **schema-validated output with retries done by opencode**, per-call model and no tools, request/response semantics, one long-lived server for batches
   (no per-doc start), same login if the server runs with the widget's isolated HOME, `GET /provider` tells which providers are `connected` (replaces `engine-status`).
-  Cons: a second process mode in kurier (serve next to acp; must share `auth.json` state with the widget's agent without both writing), loopback HTTP port plus password to manage,
+  Cons: a second process mode in lotse (serve next to acp; must share `auth.json` state with the widget's agent without both writing), loopback HTTP port plus password to manage,
   JSON-schema forcing via tool call is weaker on small free models, and a session per document should be deleted afterwards (`DELETE /session/:id`) to avoid history pollution.
   Latency/cost: one extra tool round-trip for structured output (**UNVERIFIED**).
 
 ### d) Reuse opencode's provider auth, call the model directly
-- Read `auth.json` from the bundled agent's isolated HOME and call Anthropic/OpenAI ourselves. **Reject.** kurier's rule is that it never reads credentials back
-  (kurier AGENTS.md, Privacy), a stored OAuth/subscription token is meant for the agent, not for third-party clients, and it welds us to opencode's file format.
+- Read `auth.json` from the bundled agent's isolated HOME and call Anthropic/OpenAI ourselves. **Reject.** lotse's rule is that it never reads credentials back
+  (lotse AGENTS.md, Privacy), a stored OAuth/subscription token is meant for the agent, not for third-party clients, and it welds us to opencode's file format.
   It would also bring back provider plumbing per provider (the very thing the abstraction exists for).
 - Acceptable variant: opencode as the **credential/model router** only, via `opencode serve` (that is option c) or its `/provider` listing to *show* what is connected.
 
@@ -114,8 +114,8 @@ Goal: one provider login, made once in the widget, serves every AI feature.
 | determinism | medium | low | medium | medium |
 | offline/local | Scaleway no, none yet | via opencode's local providers | same | n/a |
 | privacy | free choice of EU provider | follows the provider the user connected | same | n/a |
-| GJS | Scaleway yes, Claude SDK no | needs kurier acp only | SDK **UNVERIFIED**, raw fetch ok | n/a |
-| testability | best (override seam) | stand-in agent exists in kurier | fake HTTP server | ok |
+| GJS | Scaleway yes, Claude SDK no | needs lotse acp only | SDK **UNVERIFIED**, raw fetch ok | n/a |
+| testability | best (override seam) | stand-in agent exists in lotse | fake HTTP server | ok |
 
 Privacy note (workspace rule in werkstatt AGENTS.md): free hosted opencode models (Zen etc.) must never receive receipt data. A job API must therefore take an explicit
 **model allowlist or "user-connected provider only"** and refuse the free default. Scaleway (EU) stays valuable as a documented privacy-first alternative.
@@ -129,13 +129,13 @@ The port already isolates all four one-shot jobs (#1-#4); only the factory chang
 |---|---|---|---|
 | 1 | In steuer: extend the port with a schema-aware call `extract<T>({system,user,schema})` and validate with Zod for #1-#3 (output schemas derived from the types and the country module); make prompts/enums come from `core/countries/` (ADR-0001 step 4+). Works with today's providers (parse + validate + one repair retry). | M | prompt regression; no live data to test, use synthetic fixtures |
 | 2 | Probe (a spike, not production): is `session/new.mcpServers` honoured by opencode, and does `format:{type:"json_schema"}` (or `outputFormat`) work on the installed version; measure cold start and per-job latency with a throwaway HOME. | S | answers the UNVERIFIED items; decides b vs c |
-| 3 | kurier: headless job API in `@kurier/core` (below), first against `opencode serve`. | L | the second process mode; shared auth state |
-| 4 | Steuer: `OpencodeProvider implements LLMProvider` (calls the kurier job API / HTTP), add `LLM_PROVIDER=opencode`, extend `engine-status` with `connected`; add to `check:ai` allow-list as before. | M | GJS fetch behaviour of the SDK; auth error mapping (replace `isAuthError`) |
+| 3 | lotse: headless job API in `@lotse/core` (below), first against `opencode serve`. | L | the second process mode; shared auth state |
+| 4 | Steuer: `OpencodeProvider implements LLMProvider` (calls the lotse job API / HTTP), add `LLM_PROVIDER=opencode`, extend `engine-status` with `connected`; add to `check:ai` allow-list as before. | M | GJS fetch behaviour of the SDK; auth error mapping (replace `isAuthError`) |
 | 5 | Chat: `chat-agent.ts` replaced by the widget plus `steuer mcp` over `session/new`; move the in-process tools (`createSdkMcpServer`) to MCP tools; the intake `proposals` flow needs an MCP tool and a host-side approve UI. | L | biggest behaviour change; tool parity |
 | 6 | Default switch to `opencode` once one login works; drop `ClaudeAgentProvider`/optional SDK; keep `scaleway` and `none`. Doc + `check:ai` entries. | S | users with a working Claude CLI setup need a migration note |
 
-**What must exist in kurier (public, LGPL packages, host-agnostic):**
-1. `@kurier/core` headless job API, no GTK: `runJob({ prompt, system?, schema?, model?, mcpServers?, tools:'none'|'host', timeoutMs, signal }) → { output, structured?, usage }`,
+**What must exist in lotse (public, LGPL packages, host-agnostic):**
+1. `@lotse/core` headless job API, no GTK: `runJob({ prompt, system?, schema?, model?, mcpServers?, tools:'none'|'host', timeoutMs, signal }) → { output, structured?, usage }`,
    permissions fixed to deny-all (guardrail 1: a job is not a session grant). It resolves the agent exactly like the widget (`resolveAgent`) and uses the **same `dataDir` and isolated HOME**,
    so there is one login.
 2. A job runner that owns one warm `opencode serve` (loopback, random port, generated password, 0600 pid/port file under the host's dataDir) or a pooled ACP agent, sessions created and
@@ -143,7 +143,7 @@ The port already isolates all four one-shot jobs (#1-#4); only the factory chang
 3. A provider-state call for hosts: "is a provider connected, which model" (`GET /provider` → `connected`), plus an error taxonomy (`not-logged-in`, `rate-limited`, `schema-failed`) so steuer can keep its
    friendly German messages.
 4. Model policy hook: `allowModel(modelId) => boolean` so the host can refuse free/hosted-for-training models for document data.
-5. A stand-in for tests (kurier already has `scripts/stand-in-agent.mjs`; add a stand-in `serve` that returns canned `structured_output`).
+5. A stand-in for tests (lotse already has `scripts/stand-in-agent.mjs`; add a stand-in `serve` that returns canned `structured_output`).
 6. The widget and the job runner share the agent-state locking (two clients on one `auth.json`/session DB).
 
 **Biggest open risks:** (1) opencode API drift (docs conflict on the structured-output field; v2 announced), (2) `mcpServers` acceptance, (3) GJS support of the SDK client,
@@ -155,4 +155,4 @@ The port already isolates all four one-shot jobs (#1-#4); only the factory chang
 - https://www.npmjs.com/package/@opencode-ai/sdk (package; not fetched, referenced from the SDK docs)
 - Repo: `app/src/core/clients/llm/*`, `core/lib/prompts.ts`, `core/actions/paperless/{extract-invoice,review-metadata,classify-documents}.ts`,
   `core/actions/assistant/{chat,chat-agent,engine-status}.ts`, `app/dev/ai-boundary.allow.json`, `docs/adr/0001-country-modules-and-per-entity-tax-switch.md`
-- kurier: [kurier](https://github.com/JumpLink/kurier) `AGENTS.md` and its embeddable-widget study (`docs/architecture/embeddable-widget-study.md`)
+- lotse: [lotse](https://github.com/JumpLink/lotse) `AGENTS.md` and its embeddable-widget study (`docs/architecture/embeddable-widget-study.md`)
