@@ -14,6 +14,9 @@ import { listBescheidAbweichungen, listOffeneSteuerzahlungen } from '../../core/
 import type { SteuerTermin } from '../../core/elster/steuertermine.ts';
 import type { BescheidAbweichung, OffeneSteuerzahlung } from '../../core/elster/steuerzahlungen.ts';
 import { buildIcs, type IcsEvent } from '../../core/actions/ics.ts';
+import { buildFristenIcsEvents, buildFristenReminder } from '../../core/actions/fristen-reminder.ts';
+import { sendDesktopNotification } from '../../core/notify/desktop.ts';
+import { pickArgv, runAndExit } from './output.ts';
 
 function eur(n: number | null): string {
     return n == null ? '—' : `${n.toFixed(2)} €`;
@@ -140,10 +143,74 @@ export const fristenCommand: CommandModule = {
     command: 'fristen',
     describe: 'Fristen & offene Posten: offene Posten (payment_status=offen) + Regelfrist-Steuertermine',
     builder: (y) =>
-        y.option('json', { type: 'boolean', default: false, describe: 'Rohes JSON ausgeben' }).option('ics', {
-            type: 'string',
-            describe: 'Termine als iCalendar-Datei (.ics) für den Kalender schreiben',
-        }),
+        y
+            .option('json', { type: 'boolean', default: false, describe: 'Rohes JSON ausgeben' })
+            .option('ics', {
+                type: 'string',
+                describe: 'Termine als iCalendar-Datei (.ics) für den Kalender schreiben',
+            })
+            .command({
+                command: 'notify',
+                describe: 'Überfällige und bald fällige offene Posten per Desktop-Benachrichtigung melden',
+                builder: (y2) =>
+                    y2.option('lead', { type: 'number', default: 7, describe: 'Vorlauf in Tagen' }).option('print', {
+                        type: 'boolean',
+                        default: false,
+                        describe: 'Nur ausgeben, was gesendet würde — niemanden benachrichtigen',
+                    }),
+                handler: (argv) => {
+                    const raw = argv as Record<string, unknown>;
+                    const leadDays = pickArgv<number>(raw, 'lead');
+                    const printOnly = raw.print === true;
+                    runAndExit(
+                        async () => {
+                            const items = await listOpenItems();
+                            const reminder = buildFristenReminder(items, { leadDays });
+                            if (!reminder) return { due: 0, notified: false, message: 'Nichts fällig.' };
+                            if (printOnly) {
+                                return {
+                                    due: reminder.items.length,
+                                    notified: false,
+                                    message: `${reminder.title}\n${reminder.body}`,
+                                };
+                            }
+                            const result = sendDesktopNotification({
+                                title: `Steuererklärung: ${reminder.title}`,
+                                body: reminder.body,
+                                urgency: 'critical',
+                                appName: 'Steuererklärung',
+                                icon: 'x-office-calendar',
+                            });
+                            // Same contract as `invoices recurring notify`: an undelivered reminder
+                            // prints its content and fails, so silence is never ambiguous.
+                            if (!result.delivered) {
+                                throw new Error(
+                                    `${reminder.title}\n${reminder.body}\n\n` +
+                                        `Die Benachrichtigung ging nicht raus (${result.reason}): ${result.detail}`,
+                                );
+                            }
+                            return { due: reminder.items.length, notified: true, message: reminder.title };
+                        },
+                        { print: (v) => console.log((v as { message: string }).message) },
+                    );
+                },
+            })
+            .command({
+                command: 'ics',
+                describe: 'Offene Posten mit Fälligkeit als abonnierbaren .ics-Feed (VEVENT + VALARM) schreiben',
+                builder: (y2) => y2.option('out', { type: 'string', demandOption: true, describe: 'Zieldatei (.ics)' }),
+                handler: (argv) => {
+                    const out = String((argv as Record<string, unknown>).out);
+                    runAndExit(
+                        async () => {
+                            const events = buildFristenIcsEvents(await listOpenItems());
+                            writeFileSync(out, buildIcs(events, { dtstamp: icsStamp(), calName: 'Fristen-Wächter' }));
+                            return { written: out, events: events.length };
+                        },
+                        { print: (v) => console.log(`iCalendar geschrieben: ${v.written} (${v.events} Termine)`) },
+                    );
+                },
+            }),
     handler: async (argv) => {
         try {
             const today = new Date().toISOString().slice(0, 10);

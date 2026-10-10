@@ -180,6 +180,7 @@ import paperlessUploadTools from './unit/paperless/upload-tools.test.ts';
 import paperlessApiVersion from './unit/paperless/api-version.test.ts';
 import recurringInvoices from './unit/invoices/recurring.test.ts';
 import recurringReminder from './unit/invoices/recurring-reminder.test.ts';
+import fristenReminder from './unit/actions/fristen-reminder.test.ts';
 import headerTemplate from './unit/invoices/header-template.test.ts';
 import projectAddressing from './unit/invoices/project-addressing.test.ts';
 import projects from './unit/actions/projects.test.ts';
@@ -376,6 +377,7 @@ run({
     paperlessApiVersion,
     recurringInvoices,
     recurringReminder,
+    fristenReminder,
     headerTemplate,
     projectAddressing,
     projects,
