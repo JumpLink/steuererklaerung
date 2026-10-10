@@ -15,7 +15,9 @@
   },
   "gjsify": {
     "prebuilds": "prebuilds",
-    "platforms": ["linux-x64"]
+    "platforms": [
+      "linux-x64"
+    ]
   },
   "scripts": {
     "check": "tsc --noEmit --project tsconfig.json",
@@ -31,6 +33,6 @@
     "prebuilds"
   ],
   "dependencies": {
-    "koffi": "^2.15.2"
+    "koffi": "^3.3.3"
   }
 }
