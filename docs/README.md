@@ -42,6 +42,7 @@ die belegten Referenzen, gegen die ihre Zahlen geprüft werden.
 | [adr/README.md](adr/README.md) | Architekturentscheidungen (ADR): Format, Nummerierung, Status, Liste |
 | [adr/0001-country-modules-and-per-entity-tax-switch.md](adr/0001-country-modules-and-per-entity-tax-switch.md) | Ländermodule und ein Schalter je Entität für die deutschen Steuerfunktionen |
 | [architecture/country-inventory.md](architecture/country-inventory.md) | Jede Stelle im Code, die deutsches Steuerrecht annimmt — Grundlage von ADR 0001 |
+| [architecture/ai-jobs-study.md](architecture/ai-jobs-study.md) | Studie: KI-Aufrufe ohne Chat (Belegauswertung) unter dem kurier/opencode-Ansatz |
 
 ## Oberflächen
 
