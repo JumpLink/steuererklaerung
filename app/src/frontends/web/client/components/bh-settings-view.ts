@@ -17,6 +17,7 @@ import { esc } from '../lib/format.ts';
 import { q } from '../lib/dom.ts';
 
 const GROUP_LABELS: Record<string, string> = {
+    dms: 'Dokumente (DMS)',
     paperless: 'Paperless',
     qonto: 'Qonto',
     transactions: 'Transactions (Store)',

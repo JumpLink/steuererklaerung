@@ -10,6 +10,7 @@ import { z } from 'zod';
 
 /** The MCP tool groups — match the registerXTools(...) functions in mcp/server.ts. */
 export const MCP_GROUPS = [
+    'dms',
     'paperless',
     'qonto',
     'transactions',
@@ -36,6 +37,7 @@ const AssistantSchema = z.object({ enabled: z.boolean().default(true) }).default
 /** Which MCP tool groups are exposed (to external clients + the future internal agent). */
 const McpGroupsSchema = z
     .object({
+        dms: z.boolean().default(true),
         paperless: z.boolean().default(true),
         qonto: z.boolean().default(true),
         transactions: z.boolean().default(true),

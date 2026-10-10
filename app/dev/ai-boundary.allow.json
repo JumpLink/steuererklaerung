@@ -19,6 +19,9 @@
         "src/core/actions/paperless/review-metadata.ts": {
             "ohneKi": "Paperless ordnet Korrespondent, Dokumenttyp und Schlagwörter nach eigenen Regeln selbst zu; die App zeigt nur, welche Regel gegriffen hat (`paperless/zuordnung.ts`). Für das eingebaute DMS füllen die Dokumentregeln (`actions/dokumentregeln.ts`) die Felder beim Hinzufügen vor jeder KI, und der Beleg-Dialog lässt jedes Feld von Hand ändern; die KI ergänzt nur, was keine Regel gesetzt hat."
         },
+        "src/core/actions/dms/inbox.ts": {
+            "ohneKi": "Die Eingangs-Werkzeuge rufen selbst keine KI auf (der Aufrufer liefert die Werte, hier wird nur geprüft und verglichen); sie berühren die KI nur indirekt über den Hinweistext aus `review-metadata.ts`. Von Hand pflegt man dieselben Felder im Beleg-Dialog bzw. in Paperless."
+        },
         "src/core/actions/assistant/chat.ts": {
             "ohneKi": "Die Oberfläche bietet dieselben Antworten als Filter, Hinweise und Auswertungen; der Assistent ist nur eine zweite Tür."
         },

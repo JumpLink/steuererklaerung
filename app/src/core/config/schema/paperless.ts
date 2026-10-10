@@ -103,6 +103,8 @@ const TagIdsSchema = z.object({
     wastewater: nonNegativeInt,
     /** AI found a discrepancy needing human review ("KI-Konflikt"). */
     ai_conflict: nonNegativeInt,
+    /** Inbox: documents waiting for review ("Neu"). Read by the backend-agnostic dms_list_inbox tool. */
+    inbox: nonNegativeInt,
 });
 
 const PreferredLanguageSchema = z.enum(['de', 'en']).default('de');
@@ -179,6 +181,7 @@ const DEFAULT_TAG_IDS = {
     water: 0,
     wastewater: 0,
     ai_conflict: 0,
+    inbox: 0,
 } as const;
 
 const DEFAULT_DOCUMENT_TYPE_IDS = {

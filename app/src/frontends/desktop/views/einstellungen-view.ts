@@ -62,6 +62,7 @@ import {
 import { _, _p, fmt } from '../i18n.ts';
 
 const GROUP_LABEL: Record<McpGroup, string> = {
+    dms: _('Documents (DMS)'),
     paperless: 'Paperless (DMS)',
     qonto: 'Qonto (Bank)',
     transactions: _p('MCP tool group', 'Transactions'),

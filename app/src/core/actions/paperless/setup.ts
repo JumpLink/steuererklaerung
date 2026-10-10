@@ -418,6 +418,11 @@ const RESOURCES: Array<{
                 name: 'KI-Konflikt',
                 create: () => createTag({ name: 'KI-Konflikt' }).then((r) => ({ id: r.id })),
             },
+            {
+                configKey: 'inbox',
+                name: 'Neu',
+                create: () => createTag({ name: 'Neu' }).then((r) => ({ id: r.id })),
+            },
         ],
     },
 ];
