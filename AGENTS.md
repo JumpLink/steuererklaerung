@@ -178,7 +178,15 @@ source and every AI metadata decision records **why** it was made.
   `paperless review-metadata` action writes it automatically (deterministic
   post-step in `src/core/actions/paperless/review-metadata.ts` —
   `buildAiNoteRationale` + `applyAiNoteToPayload`, gated by `--dry-run`); external
-  agents must set the same field via `paperless_update_document`.
+  agents must set the same field via `dms_apply_metadata` (any DMS back-end) or
+  `paperless_update_document` (Paperless only).
+- **Backend-agnostic inbox tools (`dms_*`, ADR 0003).** `dms_list_inbox`,
+  `dms_get_document`, `dms_propose_metadata` (dry run), `dms_apply_metadata`,
+  `dms_set_payment_status`, `dms_match_payment` (`src/frontends/mcp/tools/dms.ts`,
+  logic in `src/core/actions/dms/inbox.ts`). The write tools sit behind
+  `mcp.allowWrite`. Inbox = Paperless documents with the `tag_ids.inbox` tag; built-in
+  DMS documents never reviewed (`ai_extracted_at IS NULL`). `paperless_*` stays and is
+  Paperless-specific.
 - **Two AI-usage modes, both drawing from `prompts.ts`:**
   - **External** — Claude Code (or another MCP client) drives the workflow through
     the `paperless_*` + `document-workflow` MCP tools, guided by the MCP **prompts**
