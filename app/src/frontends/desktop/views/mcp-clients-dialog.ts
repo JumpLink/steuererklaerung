@@ -9,36 +9,13 @@ import Gdk from '@girs/gdk-4.0';
 import GLib from '@girs/glib-2.0';
 import Gtk from '@girs/gtk-4.0';
 import Pango from '@girs/pango-1.0';
-import { existsSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import { mcpClientSnippets, resolveMcpLaunch, type McpClientSnippet } from '../../../core/actions/mcp-clients.ts';
 import { isDemoMode } from '../../../core/config/demo.ts';
 import { getManifestPath } from '../../../core/config/manifest.ts';
+import { bundlePath, checkoutGjsify } from '../self-launch.ts';
 import { showToast } from '../toast.ts';
 import { _, fmt } from '../i18n.ts';
-
-/** The bundle this app runs from — the dev checkout's fallback launch. */
-function bundlePath(): string {
-    const self = fileURLToPath(import.meta.url);
-    if (self.endsWith('.mjs')) return self;
-    // Unbundled (tests, tooling): <app>/src/frontends/desktop/views → <app>/dist/app/steuer-app.gjs.mjs.
-    return join(dirname(self), '..', '..', '..', '..', 'dist', 'app', 'steuer-app.gjs.mjs');
-}
-
-/** The nearest `node_modules/.bin/gjsify` above the bundle — present only in a dev checkout. */
-function checkoutGjsify(bundle: string): string | undefined {
-    let dir = dirname(bundle);
-    for (let up = 0; up < 6; up++) {
-        const candidate = join(dir, 'node_modules', '.bin', 'gjsify');
-        if (existsSync(candidate)) return candidate;
-        const parent = dirname(dir);
-        if (parent === dir) break;
-        dir = parent;
-    }
-    return undefined;
-}
 
 export function currentMcpSnippets(): McpClientSnippet[] {
     return mcpClientSnippets(

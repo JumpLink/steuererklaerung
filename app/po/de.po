@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-10 10:23+0200\n"
+"POT-Creation-Date: 2026-10-10 12:57+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -1058,40 +1058,40 @@ msgstr "Prüfe, welche Paperless-Regel gegriffen hat"
 msgid "Paperless assignment not available"
 msgstr "Paperless-Zuordnung nicht verfügbar"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:29
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:30
 msgid "Data"
 msgstr "Daten"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:30
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:31
 msgid "Demo data — fictional examples"
 msgstr "Demodaten — erfundene Beispiele"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:30
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:31
 msgid "Your own data"
 msgstr "Eigene Daten"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:33
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:34
 #: src/frontends/desktop/views/welcome.ts:198
 #: src/frontends/desktop/window.ts:570
 msgid "Use my own data"
 msgstr "Eigene Daten verwenden"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:33
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:34
 #: src/frontends/desktop/views/welcome.ts:187
 msgid "Try the demo"
 msgstr "Demo ausprobieren"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:42
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:43
 msgid "Show welcome again"
 msgstr "Einführung erneut anzeigen"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:47
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:48
 #: src/frontends/desktop/views/welcome.ts:286
 msgid "Built-in AI assistant"
 msgstr "Eingebauter KI-Assistent"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:49
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:50
 msgid ""
 "Questions and the data needed to answer them go to the configured AI "
 "provider. Independent of the MCP server."
@@ -1100,47 +1100,52 @@ msgstr ""
 "Anbieter. Unabhängig vom MCP-Server."
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:65
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:66
 msgid "Last backup"
 msgstr "Letzte Sicherung"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:67
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:104
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:68
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:119
 msgid "Backup folder"
 msgstr "Sicherungsordner"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:75
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:76
 msgid "{time} in {path}"
 msgstr "{time} in {path}"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:80
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:81
 msgid "Never"
 msgstr "Noch nie"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:85
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:86
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:92
 msgid "Back up now"
 msgstr "Jetzt sichern"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:90
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:92
+msgid "Backing up …"
+msgstr "Wird gesichert …"
+
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:100
 msgid "Backup saved: {path}"
 msgstr "Sicherung gespeichert: {path}"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:92
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:102
 msgid "Backup failed: {error}"
 msgstr "Sicherung fehlgeschlagen: {error}"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:99
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:114
 msgid "Choose folder"
 msgstr "Ordner wählen"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:124
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:139
 msgid "Keep backups"
 msgstr "Sicherungen behalten"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:125
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:140
 msgid "Older ones are deleted after each new backup"
 msgstr "Ältere werden nach jeder neuen Sicherung gelöscht"
 
@@ -1988,7 +1993,7 @@ msgstr ""
 "du die Stufe als versandt."
 
 #: src/frontends/desktop/views/mahnung-dialog.ts:90
-#: src/frontends/desktop/views/mcp-clients-dialog.ts:46
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:38
 msgid "Copy"
 msgstr "Kopieren"
 
@@ -2059,27 +2064,27 @@ msgstr "Stufe {level} zu {number} als versandt vermerkt"
 msgid "Not saved"
 msgstr "Nicht gespeichert"
 
-#: src/frontends/desktop/views/mcp-clients-dialog.ts:44
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:36
 msgid "Run in a terminal"
 msgstr "Im Terminal ausführen"
 
-#: src/frontends/desktop/views/mcp-clients-dialog.ts:44
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:36
 msgid "Add to {file}"
 msgstr "In {file} eintragen"
 
-#: src/frontends/desktop/views/mcp-clients-dialog.ts:50
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:42
 msgid "Copied for {client}"
 msgstr "Für {client} kopiert"
 
-#: src/frontends/desktop/views/mcp-clients-dialog.ts:52
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:44
 msgid "Docs"
 msgstr "Doku"
 
-#: src/frontends/desktop/views/mcp-clients-dialog.ts:77
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:69
 msgid "Connect an external agent"
 msgstr "Externen Agenten verbinden"
 
-#: src/frontends/desktop/views/mcp-clients-dialog.ts:81
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:73
 msgid ""
 "The agent starts the MCP server itself. Turn on “MCP server for external "
 "agents” first; writing tools stay off unless you allow them. Restart the "

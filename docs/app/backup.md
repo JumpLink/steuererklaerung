@@ -12,6 +12,16 @@ kopiert genau das in einen eigenen Ordner. Code: `app/src/core/actions/backup.ts
 - **Automatisch:** bevor eine Migration die Konfiguration umschreibt (`config migrate`, oder ein
   Speichern, das ein älteres Manifest auf die aktuelle Schema-Version hebt). Schlägt diese Sicherung fehl, bricht die Migration ab.
 
+Die App sichert im Hintergrund: „Jetzt sichern" startet einen Kindprozess (`<app> backup manual`,
+`app/src/frontends/desktop/background-backup.ts`), das Fenster bleibt bedienbar, der Knopf ist
+gesperrt und zeigt einen Spinner, bis eine Meldung Erfolg oder Fehler nennt. Die CLI sichert
+weiterhin synchron.
+
+Es läuft immer nur eine Sicherung: CLI, App und die Sicherung vor einer Migration nehmen dieselbe
+Sperre `$XDG_DATA_HOME/steuererklaerung/backup.lock` (Prozess-ID, Startzeit, Anlass). Ein zweiter
+Lauf bricht mit „Es läuft bereits eine Sicherung …" ab. Eine Sperre, deren Prozess nicht mehr
+läuft (abgestürzt, beendet), wird beim nächsten Lauf übernommen.
+
 Standardordner: `$XDG_DATA_HOME/eu.jumplink.Steuererklaerung/backups` (meist
 `~/.local/share/eu.jumplink.Steuererklaerung/backups`). Ein eigener Ordner wird in den
 Einstellungen gewählt; er darf nicht innerhalb von `transactions-data/` oder `invoices/` liegen.

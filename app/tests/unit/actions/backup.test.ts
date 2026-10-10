@@ -10,7 +10,10 @@ import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 
 import {
+    acquireBackupLock,
     BACKUP_META_FILE,
+    BackupBusyError,
+    backupLockPath,
     type BackupSources,
     createBackup,
     listBackups,
@@ -166,6 +169,54 @@ export default async () => {
                 vi.stubEnv('TRANSACTIONS_DATA_DIR', prev.td);
                 vi.stubEnv('LEDGER_DB_PATH', prev.lp);
             }
+        });
+
+        await it('the lock: a second run while one holds it is refused; release frees it', async () => {
+            const lock = join(dir, 'locks', 'backup.lock');
+            const release = acquireBackupLock(lock, 'manual');
+            expect(statSync(lock).mode & 0o777).toBe(0o600);
+            let caught: unknown = null;
+            try {
+                acquireBackupLock(lock, 'before-migration');
+            } catch (err) {
+                caught = err;
+            }
+            expect(caught instanceof BackupBusyError).toBe(true);
+            expect((caught as BackupBusyError).holder?.pid).toBe(process.pid);
+            release();
+            expect(existsSync(lock)).toBe(false);
+            acquireBackupLock(lock, 'manual')();
+        });
+
+        await it('a lock whose process is gone is taken over', async () => {
+            const lock = join(dir, 'backup.lock');
+            writeFileSync(lock, JSON.stringify({ pid: 999999, startedAt: '2026-01-01T00:00:00Z', reason: 'manual' }));
+            const release = acquireBackupLock(lock, 'manual', (pid) => pid !== 999999);
+            expect(JSON.parse(readFileSync(lock, 'utf-8')).pid).toBe(process.pid);
+            release();
+        });
+
+        await it('an unreadable lock counts as busy, never as stale', async () => {
+            const lock = join(dir, 'backup.lock');
+            writeFileSync(lock, '');
+            expect(() => acquireBackupLock(lock, 'manual', () => false)).toThrow();
+            expect(existsSync(lock)).toBe(true);
+        });
+
+        await it('createBackup under a held lock writes nothing; a pre-migration backup is refused too', async () => {
+            const root = join(dir, 'locked');
+            const release = acquireBackupLock(backupLockPath(), 'manual');
+            try {
+                expect(() => createBackup({ root, sources })).toThrow();
+                expect(existsSync(root)).toBe(false);
+                expect(() => runConfiguredBackup({ root, reason: 'before-migration' })).toThrow();
+                expect(loadUserSettings().backup.lastAt).toBeUndefined();
+            } finally {
+                release();
+            }
+            const r = createBackup({ root, sources });
+            expect(existsSync(r.path)).toBe(true);
+            expect(existsSync(backupLockPath())).toBe(false);
         });
 
         await it('config migrate runs the before-migration hook BEFORE writing; a failing hook aborts', async () => {
