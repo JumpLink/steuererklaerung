@@ -25,17 +25,17 @@ import type { ChatTurn } from '../../core/actions/assistant/chat.ts';
 import { appSession } from './data/session.ts';
 import { showToast } from './toast.ts';
 import { applyProposal, buildProposal, type EstIntakeProposal } from '../../core/actions/elster/est-intake-topics.ts';
+import { assistantExampleIds, type AssistantExampleId } from '../../core/actions/assistant/examples.ts';
 
-const EXAMPLES = [
-    _('What were my biggest expenses?'),
-    _('Which transactions have no receipt yet?'),
-    _('How much VAT do I have to pay?'),
-];
-const EST_EXAMPLES = [
-    _('Help me with the Entlastungsbetrag (single-parent allowance).'),
-    _('I had childcare costs for my child.'),
-    _('I paid back Elterngeld (parental allowance).'),
-];
+/** The chips this panel can offer; ids the core picks but the panel has no text for are left out. */
+const EXAMPLE_TEXT: Partial<Record<AssistantExampleId, string>> = {
+    'biggest-expenses': _('What were my biggest expenses?'),
+    'missing-receipts': _('Which transactions have no receipt yet?'),
+    'vat-due': _('How much VAT do I have to pay?'),
+    'est-entlastungsbetrag': _('Help me with the Entlastungsbetrag (single-parent allowance).'),
+    'est-kinderbetreuung': _('I had childcare costs for my child.'),
+    'est-elterngeld': _('I paid back Elterngeld (parental allowance).'),
+};
 
 export class BhAssistentPanel extends Gtk.Box {
     private entity?: AppEntity;
@@ -118,7 +118,10 @@ export class BhAssistentPanel extends Gtk.Box {
             cssClasses: ['dim-label'],
         });
         this._messages.append(intro);
-        for (const ex of hasEst ? [...EXAMPLES.slice(0, 1), ...EST_EXAMPLES] : EXAMPLES) {
+        const ids = this.entity
+            ? assistantExampleIds(this.entity.capabilities, { hasEst, business: this.entity.kind !== 'privat' })
+            : (['biggest-expenses', 'missing-receipts'] as const);
+        for (const ex of ids.flatMap((id) => EXAMPLE_TEXT[id] ?? [])) {
             const chip = new Gtk.Button({ label: ex, cssClasses: ['pill'], halign: Gtk.Align.START });
             chip.connect('clicked', () => {
                 this._entry.set_text(ex);

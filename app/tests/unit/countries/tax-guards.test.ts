@@ -9,7 +9,7 @@ import { afterEach, beforeEach, describe, expect, it } from '@gjsify/unit';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { TaxModuleOffError } from '../../../src/core/countries/index.ts';
+import { TaxModuleOffError, capabilities } from '../../../src/core/countries/index.ts';
 import { refuseWhenTaxOff } from '../../../src/frontends/cli/elster/shared.ts';
 import { refuseTaxOnlyCall } from '../../../src/frontends/mcp/tax-guard.ts';
 import { taxOffError, type EntityMeta } from '../../../src/frontends/web/routes.ts';
@@ -54,6 +54,7 @@ function meta(taxModule: 'de' | 'none'): EntityMeta {
         hasElster: taxModule === 'de',
         hasEst: false,
         taxModule,
+        capabilities: capabilities({ taxModule }),
         years: [2025],
         defaultYear: 2025,
         accountCount: 0,

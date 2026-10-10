@@ -4,23 +4,64 @@
 
 import { api } from '../lib/api.ts';
 import { esc } from '../lib/format.ts';
+import { assistantExampleIds, type AssistantExampleId } from '../../../../core/actions/assistant/examples.ts';
+import type { Capabilities } from '../../../../core/countries/types.ts';
 import type { EstIntakeProposal } from '../../../../core/actions/elster/est-intake-topics.ts';
 
-const EXAMPLES = [
-    'Was sind meine größten Ausgaben 2025?',
-    'Welche Buchungen haben noch keinen Beleg?',
-    'Finde die Hetzner-Rechnungen in Paperless.',
-    'Was muss ich bis wann abgeben?',
-];
+/** The web chat is German-only; the core picks which of these an entity gets. */
+function exampleText(id: AssistantExampleId, year: number): string {
+    switch (id) {
+        case 'biggest-expenses':
+            return `Was sind meine größten Ausgaben ${year}?`;
+        case 'missing-receipts':
+            return 'Welche Buchungen haben noch keinen Beleg?';
+        case 'find-receipts':
+            return 'Finde die Hetzner-Rechnungen in Paperless.';
+        case 'vat-due':
+            return 'Wie viel Umsatzsteuer muss ich zahlen?';
+        case 'deadlines':
+            return 'Was muss ich bis wann abgeben?';
+        case 'est-entlastungsbetrag':
+            return 'Hilf mir beim Entlastungsbetrag für Alleinerziehende.';
+        case 'est-kinderbetreuung':
+            return 'Ich hatte Kinderbetreuungskosten für mein Kind.';
+        case 'est-elterngeld':
+            return 'Ich habe Elterngeld zurückgezahlt.';
+    }
+}
 
 export class BhAssistentView extends HTMLElement {
     private entity = '';
     private year = 2025;
+    private examples: string[] = [];
 
     connectedCallback() {
         this.entity = this.getAttribute('entity') ?? '';
         this.year = Number(this.getAttribute('year')) || 2025;
+        this.examples = this.exampleList();
         this.render();
+    }
+
+    private exampleList(): string[] {
+        let caps: Partial<Capabilities> = {};
+        try {
+            caps = JSON.parse(this.getAttribute('capabilities') ?? '{}') as Partial<Capabilities>;
+        } catch {
+            // No capabilities passed: offer only the bookkeeping questions.
+        }
+        const ids = assistantExampleIds(
+            {
+                vatReturn: caps.vatReturn === true,
+                taxDeadlines: caps.taxDeadlines === true,
+                incomeTax: caps.incomeTax === true,
+            },
+            {
+                hasEst: this.getAttribute('has-est') === 'true',
+                business: this.getAttribute('kind') !== 'privat',
+                receiptSearch: true,
+            },
+        );
+        return ids.map((id) => exampleText(id, this.year));
     }
 
     private render() {
@@ -30,7 +71,7 @@ export class BhAssistentView extends HTMLElement {
       </header>
       <div class="bh-chat">
         <div class="bh-chat-answer" data-el="answer" aria-live="polite"></div>
-        <div class="bh-chat-examples">${EXAMPLES.map((e, i) => `<button class="bh-chip" data-ex="${i}">${esc(e)}</button>`).join('')}</div>
+        <div class="bh-chat-examples">${this.examples.map((e, i) => `<button class="bh-chip" data-ex="${i}">${esc(e)}</button>`).join('')}</div>
         <form class="bh-chat-form" data-el="form">
           <textarea class="bh-chat-input" data-el="input" rows="2" placeholder="Frag etwas zu deinen Zahlen …"></textarea>
           <button class="adw-button suggested-action bh-chat-send" type="submit">Fragen</button>
@@ -45,7 +86,7 @@ export class BhAssistentView extends HTMLElement {
         });
         this.querySelectorAll('[data-ex]').forEach((b) =>
             b.addEventListener('click', () => {
-                input.value = EXAMPLES[Number((b as HTMLElement).dataset.ex)] ?? '';
+                input.value = this.examples[Number((b as HTMLElement).dataset.ex)] ?? '';
                 void this.ask(input.value);
             }),
         );

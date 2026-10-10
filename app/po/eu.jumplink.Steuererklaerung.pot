@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-10 13:07+0200\n"
+"POT-Creation-Date: 2026-10-10 13:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,15 +51,15 @@ msgstr ""
 msgid "Sees aggregated figures only — not tax advice."
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:30
+#: src/frontends/desktop/assistent-panel.ts:32
 msgid "What were my biggest expenses?"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:31
+#: src/frontends/desktop/assistent-panel.ts:33
 msgid "Which transactions have no receipt yet?"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:32
+#: src/frontends/desktop/assistent-panel.ts:34
 msgid "How much VAT do I have to pay?"
 msgstr ""
 
@@ -89,19 +89,19 @@ msgstr ""
 msgid "Ask me something about your figures. For example:"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:164
+#: src/frontends/desktop/assistent-panel.ts:167
 msgid "Suggestion · {title}"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:185
+#: src/frontends/desktop/assistent-panel.ts:188
 msgid "Apply"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:192
+#: src/frontends/desktop/assistent-panel.ts:195
 msgid "Applied ✓"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:218
+#: src/frontends/desktop/assistent-panel.ts:221
 msgid "Assistant is typing …"
 msgstr ""
 

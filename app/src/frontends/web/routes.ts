@@ -10,7 +10,7 @@ import { type AppSettings, isAssistantEnabled, saveAppSettings, parseAppSettings
 import { updateUserSettings } from '../../core/config/user-settings.ts';
 import { applyProposal, type EstIntakeProposal } from '../../core/actions/elster/est-intake-topics.ts';
 import type { McpGroupTools } from '../mcp/server.ts';
-import { TaxModuleOffError, capabilities, type Capability } from '../../core/countries/index.ts';
+import { TaxModuleOffError, capabilities, type Capabilities, type Capability } from '../../core/countries/index.ts';
 export type { McpGroupTools, McpToolInfo } from '../mcp/server.ts';
 
 /** One firm in the workspace (for the UI entity switcher). */
@@ -23,6 +23,8 @@ export interface EntityMeta {
     hasEst: boolean;
     /** The entity's tax module (ADR 0001); `none` = bookkeeping only, every tax view hidden. */
     taxModule: 'de' | 'none';
+    /** What the tax module offers — the client hides tax suggestions the entity cannot answer. */
+    capabilities: Capabilities;
     /** Years that were actually loaded (have data) for this entity. */
     years: number[];
     defaultYear: number;

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-10 13:07+0200\n"
+"POT-Creation-Date: 2026-10-10 13:13+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -45,15 +45,15 @@ msgstr "Senden"
 msgid "Sees aggregated figures only — not tax advice."
 msgstr "Sieht nur aggregierte Kennzahlen — keine Steuerberatung."
 
-#: src/frontends/desktop/assistent-panel.ts:30
+#: src/frontends/desktop/assistent-panel.ts:32
 msgid "What were my biggest expenses?"
 msgstr "Was waren meine größten Ausgaben?"
 
-#: src/frontends/desktop/assistent-panel.ts:31
+#: src/frontends/desktop/assistent-panel.ts:33
 msgid "Which transactions have no receipt yet?"
 msgstr "Welche Buchungen haben noch keinen Beleg?"
 
-#: src/frontends/desktop/assistent-panel.ts:32
+#: src/frontends/desktop/assistent-panel.ts:34
 msgid "How much VAT do I have to pay?"
 msgstr "Wie viel Umsatzsteuer muss ich zahlen?"
 
@@ -85,19 +85,19 @@ msgstr ""
 msgid "Ask me something about your figures. For example:"
 msgstr "Frag mich etwas zu deinen Zahlen. Zum Beispiel:"
 
-#: src/frontends/desktop/assistent-panel.ts:164
+#: src/frontends/desktop/assistent-panel.ts:167
 msgid "Suggestion · {title}"
 msgstr "Vorschlag · {title}"
 
-#: src/frontends/desktop/assistent-panel.ts:185
+#: src/frontends/desktop/assistent-panel.ts:188
 msgid "Apply"
 msgstr "Übernehmen"
 
-#: src/frontends/desktop/assistent-panel.ts:192
+#: src/frontends/desktop/assistent-panel.ts:195
 msgid "Applied ✓"
 msgstr "Übernommen ✓"
 
-#: src/frontends/desktop/assistent-panel.ts:218
+#: src/frontends/desktop/assistent-panel.ts:221
 msgid "Assistant is typing …"
 msgstr "Assistent schreibt …"
 
@@ -1157,7 +1157,9 @@ msgstr "Von Voranmeldungen befreit"
 msgid ""
 "The tax office released you (§ 18 (2) UStG): annual VAT return only, no VAT "
 "return deadlines."
-msgstr "Das Finanzamt hat dich befreit (§ 18 Abs. 2 UStG): nur die Jahreserklärung, keine Voranmeldungs-Fristen."
+msgstr ""
+"Das Finanzamt hat dich befreit (§ 18 Abs. 2 UStG): nur die Jahreserklärung, "
+"keine Voranmeldungs-Fristen."
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:30
 msgid "Turn off German tax features?"
@@ -3334,7 +3336,9 @@ msgstr "USt-VA-Zeitraum"
 #: src/frontends/desktop/views/setup-assistant.ts:401
 msgid ""
 "As set by the tax office. “None” only if it released you from VAT returns."
-msgstr "Wie vom Finanzamt festgelegt. „Keiner“ nur, wenn es dich von den Voranmeldungen befreit hat."
+msgstr ""
+"Wie vom Finanzamt festgelegt. „Keiner“ nur, wenn es dich von den "
+"Voranmeldungen befreit hat."
 
 #: src/frontends/desktop/views/setup-assistant.ts:404
 #: src/frontends/desktop/views/setup-assistant.ts:595

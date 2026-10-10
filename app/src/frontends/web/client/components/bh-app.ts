@@ -347,6 +347,8 @@ export class BhApp extends HTMLElement {
         el.setAttribute('year', String(this.year));
         // The Steuer hub renders different tabs for a privat (ESt) vs. business entity.
         el.setAttribute('kind', this.activeEntity?.kind ?? '');
+        el.setAttribute('has-est', String(this.activeEntity?.hasEst ?? false));
+        el.setAttribute('capabilities', JSON.stringify(this.activeEntity?.capabilities ?? {}));
         host.appendChild(el);
         if (location.hash.slice(1) !== this.view) history.replaceState(null, '', `#${this.view}`);
         this.syncBottomNav();
