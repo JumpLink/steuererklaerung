@@ -9,6 +9,7 @@ import type { Cache, YearCache } from '../../core/presenters/year-snapshot.ts';
 import { type AppSettings, saveAppSettings, parseAppSettings } from '../../core/config/index.ts';
 import { applyProposal, type EstIntakeProposal } from '../../core/actions/elster/est-intake-topics.ts';
 import type { McpGroupTools } from '../mcp/server.ts';
+import { TaxModuleOffError, capabilities, type Capability } from '../../core/countries/index.ts';
 export type { McpGroupTools, McpToolInfo } from '../mcp/server.ts';
 
 /** One firm in the workspace (for the UI entity switcher). */
@@ -19,6 +20,8 @@ export interface EntityMeta {
     hasElster: boolean;
     /** True for a `privat` entity with a loadable ESt config → the Einkommensteuer view. */
     hasEst: boolean;
+    /** The entity's tax module (ADR 0001); `none` = bookkeeping only, every tax view hidden. */
+    taxModule: 'de' | 'none';
     /** Years that were actually loaded (have data) for this entity. */
     years: number[];
     defaultYear: number;
@@ -67,6 +70,23 @@ export function resolveYC(
  * loading. `ready` holds one promise per (entity, year) key that resolves when its cache entry is in;
  * an absent key (unknown/no-data year) resolves immediately to the sync "nicht geladen" error.
  */
+/** API keys that only exist under the German tax module, with the capability each needs (ADR 0001). */
+const TAX_ONLY_KEYS: Partial<Record<keyof YearCache, Capability>> = {
+    uste: 'vatReturn',
+    gewst: 'tradeTax',
+    feststellung: 'taxFiling',
+    wizard: 'incomeTax',
+    est: 'incomeTax',
+    steuerkonto: 'taxAccount',
+};
+
+/** The refusal message when `key` is a tax-only route and the entity has that feature off, else null. */
+export function taxOffError(entity: EntityMeta, key: string): string | null {
+    const capability = TAX_ONLY_KEYS[key as keyof typeof TAX_ONLY_KEYS];
+    if (!capability || capabilities(entity)[capability]) return null;
+    return new TaxModuleOffError(entity.id, capability).message;
+}
+
 export async function resolveYCReady(
     cache: Cache,
     ready: Map<string, Promise<void>> | undefined,
@@ -130,6 +150,8 @@ export function registerApiRoutes(
     const pick = (key: keyof YearCache) => async (c: Context) => {
         const r = await rYC(c.req.query('entity'), c.req.query('year'));
         if ('error' in r) return c.json({ error: r.error }, 404);
+        const off = taxOffError(r.entity, key);
+        if (off) return c.json({ error: off }, 403);
         const v = r.yc[key];
         if (v == null) return c.json({ error: 'Nicht verfügbar — diese Entität hat keine ELSTER-Config.' }, 503);
         return c.json(v);

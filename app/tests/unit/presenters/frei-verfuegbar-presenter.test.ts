@@ -5,6 +5,7 @@ import type { PresenterSession } from '../../../src/core/presenters/session.ts';
 import type { EntityModel } from '../../../src/core/presenters/workspace.ts';
 import type { ElsterConfig } from '../../../src/core/config/index.ts';
 import type { EuerTxAggregate, EuerTxDetailRow } from '../../../src/core/elster/euer-transactions.ts';
+import { capabilities } from '../../../src/core/countries/index.ts';
 
 // Invented data. The store and ledger of the test run are empty temp dirs (isolate-env), so the
 // accounts and the filing register are empty — exactly the "nicht berechenbar" cases.
@@ -73,6 +74,9 @@ const entity = {
     id: 'firma',
     name: 'Muster GmbH',
     kind: 'einzelunternehmen',
+    country: 'DE',
+    taxModule: 'de' as const,
+    capabilities: capabilities({}),
     hasElster: true,
     hasEst: false,
     elster: {

@@ -121,7 +121,7 @@ async function openYear(argv: Record<string, unknown>): Promise<{
     const session = createPresenterSession();
     const wanted = argv.entity as string | undefined;
     const entities = session.workspace.entities;
-    const entity = wanted ? entities.find((e) => e.id === wanted) : (entities.find((e) => e.hasElster) ?? entities[0]);
+    const entity = wanted ? entities.find((e) => e.id === wanted) : (entities.find((e) => !!e.elster) ?? entities[0]);
     if (!entity) {
         throw new Error(
             wanted

@@ -201,6 +201,7 @@ export class BhHomeView extends Adw.Bin {
                 help: { term: 'frei-verfuegbar', lernmodus },
             }),
         );
+        if (!this.entity?.capabilities.taxForecast) return fb;
         const r = frei.steuerruecklage;
         fb.append(
             this.freiCard(r, {

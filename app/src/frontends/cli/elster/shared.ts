@@ -4,6 +4,7 @@ import { defaultEntityFor, requireEntity, resolveEntityAccounts } from '../../..
 import type { ElsterConfig } from '../../../core/config/schema/elster.ts';
 import type { EstConfig } from '../../../core/config/schema/est.ts';
 import { transactionsSummary } from '../../../core/actions/transactions.ts';
+import { requireTaxModule, type Capability } from '../../../core/countries/index.ts';
 import { pickArgv } from '../output.ts';
 
 /** Form types that can be captured as a filing snapshot / signed off / submitted. */
@@ -18,6 +19,41 @@ function resolveEntityId(entityId: string | undefined, kind?: string) {
     const manifest = loadManifest();
     const entity = entityId ? requireEntity(manifest, entityId) : defaultEntityFor(manifest, kind);
     return resolveEntity(manifest, entity.id);
+}
+
+/**
+ * `elster` subcommands that stay available with the tax module off (ADR 0001): the EÜR report is the
+ * bookkeeping view of the year, explain/reclassify edit categorisation, and setup installs ERiC
+ * without touching an entity. Everything else prepares, checks or sends a German return.
+ */
+const BOOKKEEPING_SUBCOMMANDS = ['euer report', 'explain', 'reclassify', 'setup'];
+
+/**
+ * Refuse a German-tax-only command for an entity whose tax module is off. Resolves the same entity
+ * the command would (`--entity`, else the default; `privat` for `est` and `zve`), so the refusal names it. A
+ * manifest that cannot be read is left to the command itself, which reports it in its own words.
+ */
+export function refuseWhenTaxOff(path: string[], argv: Record<string, unknown>, capability?: Capability): void {
+    const sub = path.join(' ');
+    if (BOOKKEEPING_SUBCOMMANDS.some((b) => sub === b || sub.startsWith(`${b} `))) return;
+    const privat = path[0] === 'est' || path[0] === 'zve';
+    let entity;
+    try {
+        entity = resolveEntityId(pickArgv<string>(argv, 'entity'), privat ? 'privat' : undefined);
+    } catch {
+        return;
+    }
+    requireTaxModule(entity, capability ?? (privat ? 'incomeTax' : 'taxFiling'));
+}
+
+/** {@link refuseWhenTaxOff} as yargs middleware: print the refusal and exit non-zero. */
+export function exitWhenTaxOff(path: string[], argv: Record<string, unknown>): void {
+    try {
+        refuseWhenTaxOff(path, argv);
+    } catch (err) {
+        console.error(err instanceof Error ? err.message : err);
+        process.exit(1);
+    }
 }
 
 /**

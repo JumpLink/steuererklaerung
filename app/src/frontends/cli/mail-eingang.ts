@@ -29,7 +29,7 @@ const jsonOption = { type: 'boolean', default: false, describe: 'Rohes JSON ausg
 async function entityId(wanted: unknown): Promise<string> {
     await ensureDemoSeeded();
     const entities = createPresenterSession().workspace.entities;
-    const e = wanted ? entities.find((x) => x.id === wanted) : (entities.find((x) => x.hasElster) ?? entities[0]);
+    const e = wanted ? entities.find((x) => x.id === wanted) : (entities.find((x) => !!x.elster) ?? entities[0]);
     if (!e) throw new Error(wanted ? `Unbekannte Entität '${wanted}'.` : 'Keine Entität in steuererklaerung.json.');
     return e.id;
 }

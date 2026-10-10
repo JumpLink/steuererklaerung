@@ -56,6 +56,7 @@ export {
     loadAppSettings,
     saveAppSettings,
     writeManifestEntity,
+    saveEntityCountry,
     mutateElsterConfig,
     saveDoppelzahlung,
     saveDoppelzahlungRueckzahlung,
@@ -193,7 +194,10 @@ export {
     type HinweisGeprueft,
     type LaufendeKostenEntscheidung,
     type IssuerConfig,
+    TAX_MODULES,
+    type TaxModuleId,
 } from './schema/entity.ts';
+export { countryOf, taxModuleOf, defaultTaxModuleFor, DEFAULT_COUNTRY, type CountryFields } from './country.ts';
 export {
     MCP_GROUPS,
     AppSettingsSchema,

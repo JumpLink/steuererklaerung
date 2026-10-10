@@ -15,6 +15,7 @@ import type { PresenterSession } from '../../../src/core/presenters/session.ts';
 import type { EntityModel } from '../../../src/core/presenters/workspace.ts';
 import { aggregateEuerByTransactions } from '../../../src/core/elster/euer-transactions.ts';
 import type { ElsterConfig } from '../../../src/core/config/index.ts';
+import { capabilities } from '../../../src/core/countries/index.ts';
 
 // Invented bookings, customers and amounts.
 const txs: UnifiedTransaction[] = [
@@ -46,6 +47,9 @@ const entity = {
     id: 'firma',
     name: 'Beispiel GbR',
     kind: 'gbr',
+    country: 'DE',
+    taxModule: 'de' as const,
+    capabilities: capabilities({}),
     hasElster: true,
     hasEst: false,
     years: [2026],

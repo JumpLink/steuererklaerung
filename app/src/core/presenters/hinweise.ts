@@ -34,12 +34,39 @@ export interface LoadHinweiseOptions {
     forderungen?: ForderungenHinweisDaten;
 }
 
+/**
+ * Hints about a German return (USt, GewSt, AfA, Fristen, §13b). With the tax module off they would
+ * ask the owner to prepare a filing the app no longer offers; the money and bookkeeping checks stay.
+ */
+const STEUER_HINWEISE = [
+    'ust-',
+    'kleinunternehmer',
+    'frist',
+    'gewst-',
+    'reverse-charge-kandidat',
+    'afa',
+    'anlagegut-kandidat',
+    'betriebsaufgabe',
+];
+
+const istSteuerHinweis = (key: string) => STEUER_HINWEISE.some((p) => key === p || key.startsWith(p));
+
 /** Load one entity-year's Hinweise (async; may fetch Paperless through the session). */
 export async function loadHinweise(
     session: PresenterSession,
     entity: EntityModel,
     year: number,
     opts: LoadHinweiseOptions = {},
+): Promise<YearHinweis[]> {
+    const hints = await loadAlleHinweise(session, entity, year, opts);
+    return entity.capabilities.taxFiling ? hints : hints.filter((h) => !istSteuerHinweis(h.key));
+}
+
+async function loadAlleHinweise(
+    session: PresenterSession,
+    entity: EntityModel,
+    year: number,
+    opts: LoadHinweiseOptions,
 ): Promise<YearHinweis[]> {
     const elster = session.elster(entity);
     if (!elster) {

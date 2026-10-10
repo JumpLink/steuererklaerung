@@ -18,6 +18,12 @@ import { MailEingangSchema } from './mail-eingang.ts';
 import { ProjectSectionSchema } from './project.ts';
 import { RecurringSectionSchema } from './recurring.ts';
 
+/** Tax modules an entity can switch on; 'none' = bookkeeping only. Austria ('at') is planned. */
+export const TAX_MODULES = ['de', 'none'] as const;
+export type TaxModuleId = (typeof TAX_MODULES)[number];
+
+const isCountryCode = (s: string): boolean => /^[A-Z]{2}$/.test(s);
+
 /**
  * Per-entity document-management config. `builtin` (the default) uses the dependency-free
  * local DMS; `paperless` points at a Paperless-ngx instance. The token is a secret — it
@@ -174,6 +180,18 @@ export const ManifestEntitySchema = z.object({
      * filings. Ships under app/demo/ and is seeded via `steuer demo seed`.
      */
     demo: z.boolean().optional(),
+    /**
+     * Where this entity is taxed (ISO 3166-1 alpha-2). Missing = 'DE', which every manifest
+     * written before the field existed means. Not the issuer's postal `countryCode`. Kept
+     * optional (no `.default()`) so a re-serialised manifest stays byte-identical; read it
+     * through `countryOf()`. See docs/adr/0001-country-modules-and-per-entity-tax-switch.md.
+     */
+    country: z.string().refine(isCountryCode, 'ISO 3166-1 alpha-2, e.g. DE').optional(),
+    /**
+     * Which country module's tax features are on. 'none' = bookkeeping only. Missing = the
+     * country's own module ('de' for DE). Read it through `taxModuleOf()`.
+     */
+    taxModule: z.enum(TAX_MODULES).optional(),
     /** Inline ELSTER config (was the file `elster_config` pointed at); omitted ⇒ no tax reports. */
     elster: ElsterSectionSchema.optional(),
     /** Inline private-ESt config (was the file `est_config` pointed at); omitted ⇒ no ESt estimate. */

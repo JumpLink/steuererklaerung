@@ -63,7 +63,7 @@ export const freiVerfuegbarCommand: CommandModule = {
             const wanted = argv.entity as string | undefined;
             const entity = wanted
                 ? entities.find((e) => e.id === wanted)
-                : (entities.find((e) => e.hasElster) ?? entities[0]);
+                : (entities.find((e) => !!e.elster) ?? entities[0]);
             if (!entity) {
                 throw new Error(
                     wanted

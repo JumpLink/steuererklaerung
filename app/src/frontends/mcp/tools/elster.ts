@@ -261,7 +261,7 @@ export function registerElsterTools(server: McpServer, ctx: AppContext): void {
                 const entities = session.workspace.entities;
                 const entity = params.entity
                     ? entities.find((e) => e.id === params.entity)
-                    : (entities.find((e) => e.hasElster) ?? entities[0]);
+                    : (entities.find((e) => !!e.elster) ?? entities[0]);
                 if (!entity) {
                     throw new Error(
                         `Unknown entity '${params.entity}'. Known: ${entities.map((e) => e.id).join(', ')}`,
@@ -282,7 +282,7 @@ export function registerElsterTools(server: McpServer, ctx: AppContext): void {
         const entities = session.workspace.entities;
         const entity = wanted
             ? entities.find((e) => e.id === wanted)
-            : (entities.find((e) => e.hasElster) ?? entities[0]);
+            : (entities.find((e) => !!e.elster) ?? entities[0]);
         if (!entity) throw new Error(`Unknown entity '${wanted}'. Known: ${entities.map((e) => e.id).join(', ')}`);
         return { session, entity };
     };

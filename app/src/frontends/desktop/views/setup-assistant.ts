@@ -48,6 +48,7 @@ import {
 import { isFirstRun } from '../../../core/actions/entities.ts';
 import { transactionsSummary } from '../../../core/actions/transactions.ts';
 import { getManifestPath, loadManifest, type Manifest } from '../../../core/config/index.ts';
+import { countryOf, OTHER_COUNTRY, taxModuleOf } from '../../../core/countries/index.ts';
 import { _, fmt } from '../i18n.ts';
 import { markup } from './util.ts';
 
@@ -334,6 +335,7 @@ export class BhSetupAssistant extends Adw.Dialog {
         name.set_text(this.draft.name);
         named.add(name);
         box.append(named);
+        box.append(this.countryGroup());
 
         const error = new Adw.Banner({ revealed: false });
         box.append(error);
@@ -344,6 +346,35 @@ export class BhSetupAssistant extends Adw.Dialog {
                 if (this.takeName(name, error)) this.advance('kind');
             },
         });
+    }
+
+    /** Country and the German tax features (ADR 0001); the default — Germany, on — writes nothing. */
+    private countryGroup(): Adw.PreferencesGroup {
+        const group = new Adw.PreferencesGroup({ title: markup(_('Country & taxes')) });
+        const country = new Adw.ComboRow({
+            title: _('Country'),
+            model: Gtk.StringList.new([_('Germany'), _('Other (bookkeeping only)')]),
+        });
+        country.set_selected(countryOf(this.draft) === 'DE' ? 0 : 1);
+        const tax = new Adw.SwitchRow({
+            title: _('German tax features'),
+            subtitle: _('ELSTER returns, tax forecast, tax deadlines and the Tax area'),
+        });
+        tax.set_active(taxModuleOf(this.draft) === 'de');
+        tax.set_sensitive(countryOf(this.draft) === 'DE');
+        country.connect('notify::selected', () => {
+            const germany = country.get_selected() === 0;
+            this.draft.country = germany ? 'DE' : OTHER_COUNTRY;
+            this.draft.taxModule = germany ? 'de' : 'none';
+            tax.set_active(germany);
+            tax.set_sensitive(germany);
+        });
+        tax.connect('notify::active', () => {
+            if (countryOf(this.draft) === 'DE') this.draft.taxModule = tax.get_active() ? 'de' : 'none';
+        });
+        group.add(country);
+        group.add(tax);
+        return group;
     }
 
     // ── New entity · Betrieb ──────────────────────────────────────────────────────────────────
@@ -558,6 +589,9 @@ export class BhSetupAssistant extends Adw.Dialog {
             summary.add(this.readOnlyRow(_('Assessment'), v));
         }
         if (this.mode === 'new-entity') {
+            const country = countryOf(d) === 'DE' ? _('Germany') : _('Other (bookkeeping only)');
+            const tax = taxModuleOf(d) === 'de' ? _('German tax features on') : _('German tax features off');
+            summary.add(this.readOnlyRow(_('Country'), `${country} · ${tax}`));
             summary.add(this.readOnlyRow(_('Bank accounts'), d.accounts.length ? d.accounts.join(', ') : later));
         }
         summary.add(

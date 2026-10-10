@@ -5,6 +5,7 @@
  */
 
 import { loadManifest, resolveEntities, type ElsterConfig } from '../config/index.ts';
+import { capabilities } from '../countries/index.ts';
 import { computeSteuertermine, type SteuerTermin, type SteuerTerminEntity } from '../elster/steuertermine.ts';
 import { formForFilingKind } from './elster/filing-keys.ts';
 import { listFilingSnapshots, type FilingSnapshot } from './elster/snapshots.ts';
@@ -81,6 +82,7 @@ export function listSteuertermine(opts: { today?: string; horizonDays?: number }
     try {
         for (const e of resolveEntities(loadManifest())) {
             if (!e.elster && !e.est) continue;
+            if (!capabilities(e).taxDeadlines) continue;
             // `abgabe_extern` ⇒ this person files their own ESt elsewhere. The
             // computation stays available; only the DEADLINE is not ours to
             // carry, and a standing reminder about someone else's duty is the

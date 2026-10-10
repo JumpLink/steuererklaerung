@@ -6,7 +6,7 @@
  */
 
 import type { Hono } from 'hono';
-import { resolveYCReady, type MetaInfo } from './routes.ts';
+import { resolveYCReady, taxOffError, type MetaInfo } from './routes.ts';
 import type { Cache, YearCache } from '../../core/presenters/year-snapshot.ts';
 import type { ElsterConfig } from '../../core/config/index.ts';
 import { pdfRenderingAvailable, renderSteuerblattPdf, type SteuerblattModel } from '@steuererklaerung/invoice-pdf';
@@ -56,6 +56,8 @@ export function registerReportPdfRoutes(app: Hono, deps: ReportPdfRouteDeps): vo
         app.get(`/api/${kind}/pdf`, async (c) => {
             const r = await resolveYCReady(cache, cacheReady, meta, c.req.query('entity'), c.req.query('year'));
             if ('error' in r) return c.json({ error: r.error }, 404);
+            const off = taxOffError(r.entity, kind);
+            if (off) return c.json({ error: off }, 403);
             const elster = elsterByEntity.get(r.entity.id);
             if (!elster) return c.json({ error: 'Nicht verfügbar — diese Entität hat keine ELSTER-Config.' }, 503);
             if (!pdfRenderingAvailable()) {

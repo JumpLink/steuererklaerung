@@ -24,6 +24,7 @@ import { registerElsterTools } from './tools/elster.ts';
 import { registerInvoicesTools } from './tools/invoices.ts';
 import { registerContactsTools } from './tools/contacts.ts';
 import { registerMcpPrompts } from './prompts.ts';
+import { guardTaxOnlyTools } from './tax-guard.ts';
 import { createHttpMcpServer } from './http-server.ts';
 import { loadAppSettings, MCP_GROUPS, type McpGroup } from '../../core/config/index.ts';
 import { refusingFinTSInteraction, setFinTSInteraction } from '../../core/clients/fints/interaction.ts';
@@ -123,6 +124,7 @@ function createMcpServerWithTools(ctx: AppContext): McpServer {
                 ? undefined
                 : (orig as (...a: unknown[]) => unknown)(name, config, ...rest)) as typeof server.registerTool;
     }
+    guardTaxOnlyTools(server);
 
     for (const group of MCP_GROUPS) if (mcp.groups[group]) GROUP_REGISTRARS[group](server, ctx);
 
