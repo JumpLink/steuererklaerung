@@ -46,21 +46,36 @@ function submittedSnapshotFor(entityId: string, kind: string, period: string): F
  * Map an entity's config to the minimal shape `computeSteuertermine` needs. `elster` drives the
  * business deadlines (USt-VA + annuals); a present `est` config adds the private ESt deadline —
  * an entity may carry either or both.
+ *
+ * A Kleinunternehmer files neither USt-VA nor, since VZ 2024, a USt-Jahreserklärung (§19 Abs. 1
+ * UStG); a business the Finanzamt released from Voranmeldungen (§18 Abs. 2 S. 3 UStG) still files
+ * the annual one. Sources: docs/references/tax-sources.md (§18/§19 UStG).
  */
-function toSteuerTerminEntity(
+export function toSteuerTerminEntity(
     entityId: string,
     entityName: string,
     elster: ElsterConfig | undefined,
     filesEst: boolean,
+    kleinunternehmer = false,
 ): SteuerTerminEntity {
-    const ustCadence: 'quarter' | 'month' | null =
-        elster?.period.quarter != null ? 'quarter' : elster?.period.month != null ? 'month' : null;
+    const filesUstva = elster != null && !kleinunternehmer && !elster.ust_va_befreit;
+    const ustCadence: 'quarter' | 'month' | null = !filesUstva
+        ? null
+        : elster.period.quarter != null
+          ? 'quarter'
+          : elster.period.month != null
+            ? 'month'
+            : null;
     return {
         entityId,
         entityName,
         ustCadence,
         dauerfrist: elster?.ust_dauerfristverlaengerung ?? false,
-        filesUst: elster != null && (ustCadence != null || elster.uste != null),
+        filesUst:
+            elster != null &&
+            !kleinunternehmer &&
+            (ustCadence != null || elster.ust_va_befreit === true || elster.uste != null),
+        business: elster != null,
         isGbr: (elster?.gesellschafter.length ?? 0) > 0,
         hasGewerbe: elster?.gewerbe != null,
         businessStart: elster?.business_start_date,
@@ -87,7 +102,15 @@ export function listSteuertermine(opts: { today?: string; horizonDays?: number }
             // computation stays available; only the DEADLINE is not ours to
             // carry, and a standing reminder about someone else's duty is the
             // one people learn to ignore — together with their own.
-            entities.push(toSteuerTerminEntity(e.id, e.name, e.elster, e.est != null && !e.est.abgabe_extern));
+            entities.push(
+                toSteuerTerminEntity(
+                    e.id,
+                    e.name,
+                    e.elster,
+                    e.est != null && !e.est.abgabe_extern,
+                    e.invoicing.self?.issuer?.kleinunternehmer === true,
+                ),
+            );
         }
     } catch (err) {
         // A missing/invalid manifest must not throw here — it must NOT be swallowed silently either:

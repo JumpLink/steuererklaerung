@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-10 12:57+0200\n"
+"POT-Creation-Date: 2026-10-10 13:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -965,8 +965,8 @@ msgid "Loading receipts …"
 msgstr ""
 
 #: src/frontends/desktop/views/dokumente-view.blp:56
-#: src/frontends/desktop/views/setup-assistant.ts:562
-#: src/frontends/desktop/views/setup-assistant.ts:599
+#: src/frontends/desktop/views/setup-assistant.ts:581
+#: src/frontends/desktop/views/setup-assistant.ts:626
 msgid "Receipts"
 msgstr ""
 
@@ -1085,7 +1085,7 @@ msgid "Last backup"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:68
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:119
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:121
 msgid "Backup folder"
 msgstr ""
 
@@ -1110,20 +1110,30 @@ msgstr ""
 msgid "Backup saved: {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:102
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:103
 msgid "Backup failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:114
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:116
 msgid "Choose folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:139
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:141
 msgid "Keep backups"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:140
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:142
 msgid "Older ones are deleted after each new backup"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:254
+msgid "Released from VAT returns"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:255
+msgid ""
+"The tax office released you (§ 18 (2) UStG): annual VAT return only, no VAT "
+"return deadlines."
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:30
@@ -1154,19 +1164,19 @@ msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:53
 #: src/frontends/desktop/views/setup-assistant.ts:355
-#: src/frontends/desktop/views/setup-assistant.ts:594
+#: src/frontends/desktop/views/setup-assistant.ts:621
 msgid "Country"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:54
 #: src/frontends/desktop/views/setup-assistant.ts:356
-#: src/frontends/desktop/views/setup-assistant.ts:592
+#: src/frontends/desktop/views/setup-assistant.ts:619
 msgid "Germany"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:54
 #: src/frontends/desktop/views/setup-assistant.ts:356
-#: src/frontends/desktop/views/setup-assistant.ts:592
+#: src/frontends/desktop/views/setup-assistant.ts:619
 msgid "Other (bookkeeping only)"
 msgstr ""
 
@@ -1377,7 +1387,7 @@ msgstr ""
 #: src/frontends/desktop/views/entity-dialogs.ts:37
 #: src/frontends/desktop/views/setup-assistant.ts:258
 #: src/frontends/desktop/views/setup-assistant.ts:334
-#: src/frontends/desktop/views/setup-assistant.ts:572
+#: src/frontends/desktop/views/setup-assistant.ts:591
 msgid "Name"
 msgstr ""
 
@@ -1728,10 +1738,10 @@ msgstr ""
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:453
 #: src/frontends/desktop/views/setup-assistant.ts:297
 #: src/frontends/desktop/views/setup-assistant.ts:344
-#: src/frontends/desktop/views/setup-assistant.ts:411
-#: src/frontends/desktop/views/setup-assistant.ts:452
-#: src/frontends/desktop/views/setup-assistant.ts:502
-#: src/frontends/desktop/views/setup-assistant.ts:562
+#: src/frontends/desktop/views/setup-assistant.ts:427
+#: src/frontends/desktop/views/setup-assistant.ts:471
+#: src/frontends/desktop/views/setup-assistant.ts:521
+#: src/frontends/desktop/views/setup-assistant.ts:581
 #: src/frontends/desktop/views/welcome.ts:149
 #: src/frontends/desktop/views/welcome.ts:269
 msgid "Next"
@@ -1877,13 +1887,13 @@ msgstr ""
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:505
 #: src/frontends/desktop/views/setup-assistant.ts:77
 #: src/frontends/desktop/views/setup-assistant.ts:199
-#: src/frontends/desktop/views/setup-assistant.ts:570
+#: src/frontends/desktop/views/setup-assistant.ts:589
 #: src/frontends/desktop/views/welcome.ts:98
 msgid "Later"
 msgstr ""
 
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:510
-#: src/frontends/desktop/views/setup-assistant.ts:485
+#: src/frontends/desktop/views/setup-assistant.ts:504
 msgid "Currently: {entity}"
 msgstr ""
 
@@ -3066,7 +3076,7 @@ msgid "Rule already existed: “{pattern}” → {category}"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:63
-#: src/frontends/desktop/views/setup-assistant.ts:449
+#: src/frontends/desktop/views/setup-assistant.ts:468
 #: src/frontends/desktop/window.ts:637
 msgid "Private"
 msgstr ""
@@ -3119,7 +3129,7 @@ msgid "Where your data will be stored"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:238
-#: src/frontends/desktop/views/setup-assistant.ts:603
+#: src/frontends/desktop/views/setup-assistant.ts:630
 msgid "Configuration"
 msgstr ""
 
@@ -3141,7 +3151,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:263
 #: src/frontends/desktop/views/setup-assistant.ts:343
-#: src/frontends/desktop/views/setup-assistant.ts:573
+#: src/frontends/desktop/views/setup-assistant.ts:592
 msgid "Kind"
 msgstr ""
 
@@ -3156,9 +3166,9 @@ msgid ""
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:288
-#: src/frontends/desktop/views/setup-assistant.ts:574
-#: src/frontends/desktop/views/setup-assistant.ts:648
-#: src/frontends/desktop/views/setup-assistant.ts:651
+#: src/frontends/desktop/views/setup-assistant.ts:593
+#: src/frontends/desktop/views/setup-assistant.ts:675
+#: src/frontends/desktop/views/setup-assistant.ts:678
 msgid "Tax number"
 msgstr ""
 
@@ -3187,169 +3197,191 @@ msgid "Yes, small business (§ 19 UStG)"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:393
-#: src/frontends/desktop/views/setup-assistant.ts:577
+#: src/frontends/desktop/views/setup-assistant.ts:596
 msgid "Small business"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:396
-#: src/frontends/desktop/views/setup-assistant.ts:579
+#: src/frontends/desktop/views/setup-assistant.ts:599
 msgid "Monthly"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:397
-#: src/frontends/desktop/views/setup-assistant.ts:579
+#: src/frontends/desktop/views/setup-assistant.ts:601
 msgid "Quarterly"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:399
-#: src/frontends/desktop/views/setup-assistant.ts:580
-msgid "VAT return period"
+#: src/frontends/desktop/views/setup-assistant.ts:398
+#: src/frontends/desktop/views/setup-assistant.ts:603
+msgid "None, annual return only"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:400
-msgid "Annual-only filers keep “Later”."
+#: src/frontends/desktop/views/setup-assistant.ts:605
+msgid "VAT return period"
+msgstr ""
+
+#: src/frontends/desktop/views/setup-assistant.ts:401
+msgid ""
+"As set by the tax office. “None” only if it released you from VAT returns."
+msgstr ""
+
+#: src/frontends/desktop/views/setup-assistant.ts:404
+#: src/frontends/desktop/views/setup-assistant.ts:595
+#: src/frontends/desktop/views/setup-assistant.ts:606
+msgid "No"
+msgstr ""
+
+#: src/frontends/desktop/views/setup-assistant.ts:405
+msgid "Yes, granted"
+msgstr ""
+
+#: src/frontends/desktop/views/setup-assistant.ts:407
+#: src/frontends/desktop/views/setup-assistant.ts:607
+msgid "Permanent deadline extension"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:408
+msgid "Dauerfristverlängerung: every VAT return is due one month later."
+msgstr ""
+
+#: src/frontends/desktop/views/setup-assistant.ts:424
 #: src/frontends/desktop/window.ts:637
 msgid "Business"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:434
+#: src/frontends/desktop/views/setup-assistant.ts:453
 msgid "Income tax"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:435
+#: src/frontends/desktop/views/setup-assistant.ts:454
 msgid ""
 "Joint assessment is for married couples and civil partners filing together."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:438
-#: src/frontends/desktop/views/setup-assistant.ts:587
+#: src/frontends/desktop/views/setup-assistant.ts:457
+#: src/frontends/desktop/views/setup-assistant.ts:614
 msgid "Individual assessment"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:439
-#: src/frontends/desktop/views/setup-assistant.ts:585
+#: src/frontends/desktop/views/setup-assistant.ts:458
+#: src/frontends/desktop/views/setup-assistant.ts:612
 msgid "Joint assessment (splitting)"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:441
-#: src/frontends/desktop/views/setup-assistant.ts:589
+#: src/frontends/desktop/views/setup-assistant.ts:460
+#: src/frontends/desktop/views/setup-assistant.ts:616
 msgid "Assessment"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:472
+#: src/frontends/desktop/views/setup-assistant.ts:491
 msgid "Which bank accounts belong to it?"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:474
+#: src/frontends/desktop/views/setup-assistant.ts:493
 msgid ""
 "A ticked account moves to the new entity. New accounts are added under "
 "Accounts → Connections & import."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:485
+#: src/frontends/desktop/views/setup-assistant.ts:504
 msgid "Not assigned"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:493
+#: src/frontends/desktop/views/setup-assistant.ts:512
 msgid "No bank accounts yet"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:493
+#: src/frontends/desktop/views/setup-assistant.ts:512
 msgid "Add one under Accounts once the entity exists."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:499
-#: src/frontends/desktop/views/setup-assistant.ts:595
+#: src/frontends/desktop/views/setup-assistant.ts:518
+#: src/frontends/desktop/views/setup-assistant.ts:622
 msgid "Bank accounts"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:522
+#: src/frontends/desktop/views/setup-assistant.ts:541
 msgid "Where do the receipts come from?"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:524
+#: src/frontends/desktop/views/setup-assistant.ts:543
 msgid "Same as your other entities. You can still choose differently."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:526
+#: src/frontends/desktop/views/setup-assistant.ts:545
 msgid ""
 "The built-in document management needs nothing else. Use Paperless-ngx if "
 "you already keep your receipts there."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:532
+#: src/frontends/desktop/views/setup-assistant.ts:551
 msgid "Receipt source"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:533
-#: src/frontends/desktop/views/setup-assistant.ts:600
+#: src/frontends/desktop/views/setup-assistant.ts:552
+#: src/frontends/desktop/views/setup-assistant.ts:627
 msgid "Built-in document management"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:542
+#: src/frontends/desktop/views/setup-assistant.ts:561
 msgid "Leave the token empty to use the one your other entities use."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:543
+#: src/frontends/desktop/views/setup-assistant.ts:562
 msgid ""
 "URL and API token. The token is stored in the configuration file only you "
 "can read."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:545
+#: src/frontends/desktop/views/setup-assistant.ts:564
 msgid "URL"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:548
+#: src/frontends/desktop/views/setup-assistant.ts:567
 msgid "API token"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:571
+#: src/frontends/desktop/views/setup-assistant.ts:590
 msgid "Summary"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:576
+#: src/frontends/desktop/views/setup-assistant.ts:595
+#: src/frontends/desktop/views/setup-assistant.ts:606
 msgid "Yes"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:576
-msgid "No"
-msgstr ""
-
-#: src/frontends/desktop/views/setup-assistant.ts:593
+#: src/frontends/desktop/views/setup-assistant.ts:620
 msgid "German tax features on"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:593
+#: src/frontends/desktop/views/setup-assistant.ts:620
 msgid "German tax features off"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:609
+#: src/frontends/desktop/views/setup-assistant.ts:636
 #: src/frontends/desktop/views/transactions-view.ts:299
 msgid "Done"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:610
+#: src/frontends/desktop/views/setup-assistant.ts:637
 #: src/frontends/desktop/window.blp:198
 msgid "Finish setup"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:610
+#: src/frontends/desktop/views/setup-assistant.ts:637
 msgid "Add entity"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:621
+#: src/frontends/desktop/views/setup-assistant.ts:648
 msgid "Setup failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:638
+#: src/frontends/desktop/views/setup-assistant.ts:665
 msgid "Please enter a name."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:649
+#: src/frontends/desktop/views/setup-assistant.ts:676
 msgid "Optional. The tax office is already part of the tax number."
 msgstr ""
 

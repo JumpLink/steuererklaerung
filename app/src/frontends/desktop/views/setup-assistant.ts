@@ -392,13 +392,29 @@ export class BhSetupAssistant extends Adw.Dialog {
         ];
         const klein = laterCombo(_('Small business'), kleinChoices, this.draft.kleinunternehmer);
         ust.add(klein);
-        const cadenceChoices: Array<['month' | 'quarter', string]> = [
+        const cadenceChoices: Array<['month' | 'quarter' | 'none', string]> = [
             ['month', _('Monthly')],
             ['quarter', _('Quarterly')],
+            ['none', _('None, annual return only')],
         ];
         const cadence = laterCombo(_('VAT return period'), cadenceChoices, this.draft.ustCadence);
-        cadence.set_subtitle(_('Annual-only filers keep “Later”.'));
+        cadence.set_subtitle(_('As set by the tax office. “None” only if it released you from VAT returns.'));
         ust.add(cadence);
+        const dauerChoices: Array<[boolean, string]> = [
+            [false, _('No')],
+            [true, _('Yes, granted')],
+        ];
+        const dauer = laterCombo(_('Permanent deadline extension'), dauerChoices, this.draft.dauerfrist);
+        dauer.set_subtitle(_('Dauerfristverlängerung: every VAT return is due one month later.'));
+        ust.add(dauer);
+        // A small business files no VAT returns, so the period and the extension do not apply.
+        const syncKlein = () => {
+            const isKlein = laterValue(klein, kleinChoices) === true;
+            cadence.set_sensitive(!isKlein);
+            dauer.set_sensitive(!isKlein);
+        };
+        klein.connect('notify::selected', syncKlein);
+        syncKlein();
         box.append(ust);
 
         const steuernummer = this.taxNumberGroup(box);
@@ -411,7 +427,9 @@ export class BhSetupAssistant extends Adw.Dialog {
                 label: _('Next'),
                 run: () => {
                     this.draft.kleinunternehmer = laterValue(klein, kleinChoices);
-                    this.draft.ustCadence = laterValue(cadence, cadenceChoices);
+                    const isKlein = this.draft.kleinunternehmer === true;
+                    this.draft.ustCadence = isKlein ? undefined : laterValue(cadence, cadenceChoices);
+                    this.draft.dauerfrist = isKlein ? undefined : laterValue(dauer, dauerChoices);
                     this.draft.taxNumber = (steuernummer.get_text() ?? '').trim();
                     this.advance('business');
                 },
@@ -419,6 +437,7 @@ export class BhSetupAssistant extends Adw.Dialog {
             () => {
                 this.draft.kleinunternehmer = undefined;
                 this.draft.ustCadence = undefined;
+                this.draft.dauerfrist = undefined;
                 this.draft.taxNumber = '';
                 this.advance('business');
             },
@@ -576,8 +595,16 @@ export class BhSetupAssistant extends Adw.Dialog {
             const klein = d.kleinunternehmer === undefined ? later : d.kleinunternehmer ? _('Yes') : _('No');
             summary.add(this.readOnlyRow(_('Small business'), klein));
             const cadence =
-                d.ustCadence === 'month' ? _('Monthly') : d.ustCadence === 'quarter' ? _('Quarterly') : later;
+                d.ustCadence === 'month'
+                    ? _('Monthly')
+                    : d.ustCadence === 'quarter'
+                      ? _('Quarterly')
+                      : d.ustCadence === 'none'
+                        ? _('None, annual return only')
+                        : later;
             summary.add(this.readOnlyRow(_('VAT return period'), cadence));
+            const dauer = d.dauerfrist === undefined ? later : d.dauerfrist ? _('Yes') : _('No');
+            summary.add(this.readOnlyRow(_('Permanent deadline extension'), dauer));
         }
         if (this.mode === 'new-entity' && d.kind === 'privat') {
             const v =

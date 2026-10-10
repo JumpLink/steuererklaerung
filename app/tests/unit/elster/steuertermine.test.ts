@@ -1,5 +1,7 @@
 import { describe, it, expect } from '@gjsify/unit';
 import { computeSteuertermine, type SteuerTerminEntity } from '../../../src/core/elster/steuertermine.ts';
+import { toSteuerTerminEntity } from '../../../src/core/actions/steuertermine.ts';
+import { ElsterConfigRawSchema, normalizeElsterConfig } from '../../../src/core/config/index.ts';
 
 const TODAY = '2026-07-04';
 
@@ -138,6 +140,54 @@ export default async () => {
             const t = computeSteuertermine({ ...gbr, filesEst: true, businessEnd: '2023-06-30' }, TODAY, 200);
             expect(t.some((x) => x.kind === 'est' && x.period === '2025')).toBe(true);
             expect(t.some((x) => x.kind === 'ust-jahr')).toBe(false); // business over before 2025
+        });
+    });
+    await describe('toSteuerTerminEntity — who files a USt-VA (§18, §19 UStG)', async () => {
+        const elster = (extra: Record<string, unknown> = {}) =>
+            normalizeElsterConfig(
+                ElsterConfigRawSchema.parse({
+                    tax_number: '11/222/33333',
+                    period: { year: 2026, quarter: 1 },
+                    ...extra,
+                }),
+            );
+        const kinds = (e: SteuerTerminEntity) => new Set(computeSteuertermine(e, TODAY, 400).map((t) => t.kind));
+
+        await it('keeps quarterly and monthly filers as they were', async () => {
+            expect(toSteuerTerminEntity('a', 'A', elster(), false).ustCadence).toBe('quarter');
+            const monthly = toSteuerTerminEntity('a', 'A', elster({ period: { year: 2026, month: 1 } }), false);
+            expect(monthly.ustCadence).toBe('month');
+            expect(monthly.filesUst).toBe(true);
+        });
+
+        await it('carries a granted Dauerfristverlängerung to the deadlines', async () => {
+            const e = toSteuerTerminEntity('a', 'A', elster({ ust_dauerfristverlaengerung: true }), false);
+            expect(e.dauerfrist).toBe(true);
+            const q2 = computeSteuertermine(e, TODAY, 200).find((t) => t.key === 'a:ustva:2026-Q2');
+            expect(q2?.dueDate).toBe('2026-08-10');
+        });
+
+        await it('drops the USt-VA but keeps the annual return when the Finanzamt released it', async () => {
+            const e = toSteuerTerminEntity('a', 'A', elster({ ust_va_befreit: true }), false);
+            expect(e.ustCadence).toBe(null);
+            expect(e.filesUst).toBe(true);
+            const k = kinds(e);
+            expect(k.has('ustva')).toBe(false);
+            expect(k.has('ust-jahr')).toBe(true);
+        });
+
+        await it('shows neither USt-VA nor USt-Jahreserklärung for a Kleinunternehmer', async () => {
+            const e = toSteuerTerminEntity('a', 'A', elster(), false, true);
+            expect(e.ustCadence).toBe(null);
+            expect(e.filesUst).toBe(false);
+            const k = kinds(e);
+            expect(k.has('ustva')).toBe(false);
+            expect(k.has('ust-jahr')).toBe(false);
+            expect(k.has('euer')).toBe(true);
+        });
+
+        await it('leaves an existing manifest without the field untouched', async () => {
+            expect('ust_va_befreit' in elster()).toBe(false);
         });
     });
 };

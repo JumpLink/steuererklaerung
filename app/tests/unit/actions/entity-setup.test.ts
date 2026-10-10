@@ -145,6 +145,20 @@ export default async () => {
                 tax_number: '11/222/33333',
             });
             expect(s.invoicing).toStrictEqual({ self: { issuer: { kleinunternehmer: true } } });
+
+            const annual = entitySetupSections(
+                { ...business, kleinunternehmer: false, ustCadence: 'none' as const, dauerfrist: true },
+                'x',
+                manifest,
+                2026,
+            );
+            expect(annual.elster).toStrictEqual({
+                entity_id: 'x',
+                period: { year: 2026, quarter: 1 },
+                tax_number: '11/222/33333',
+                ust_va_befreit: true,
+                ust_dauerfristverlaengerung: true,
+            });
             // The token of the entity the setup was copied from, since none was typed.
             expect(s.dms).toStrictEqual(PAPERLESS);
 

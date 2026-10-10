@@ -158,7 +158,9 @@ export class BhSteuererklaerungView extends Adw.Bin {
         // Absenden chain for. Its rows come from the entity's OWN filing rhythm — a monthly filer
         // gets twelve, not four quarters they do not file.
         const periodic =
-            entity.elster && entity.dmsType === 'paperless' ? ustvaTargetsForYear(year, entity.elster.period) : [];
+            entity.elster && !entity.elster.ust_va_befreit && entity.dmsType === 'paperless'
+                ? ustvaTargetsForYear(year, entity.elster.period)
+                : [];
         const targets = [...periodic, ...annual];
         let submission: SubmissionSection | null = null;
         if (targets.length > 0) {

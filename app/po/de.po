@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-10 12:57+0200\n"
+"POT-Creation-Date: 2026-10-10 13:07+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -979,8 +979,8 @@ msgid "Loading receipts …"
 msgstr "Lade Belege …"
 
 #: src/frontends/desktop/views/dokumente-view.blp:56
-#: src/frontends/desktop/views/setup-assistant.ts:562
-#: src/frontends/desktop/views/setup-assistant.ts:599
+#: src/frontends/desktop/views/setup-assistant.ts:581
+#: src/frontends/desktop/views/setup-assistant.ts:626
 msgid "Receipts"
 msgstr "Belege"
 
@@ -1105,7 +1105,7 @@ msgid "Last backup"
 msgstr "Letzte Sicherung"
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:68
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:119
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:121
 msgid "Backup folder"
 msgstr "Sicherungsordner"
 
@@ -1132,22 +1132,32 @@ msgid "Backup saved: {path}"
 msgstr "Sicherung gespeichert: {path}"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:102
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:103
 msgid "Backup failed: {error}"
 msgstr "Sicherung fehlgeschlagen: {error}"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:114
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:116
 msgid "Choose folder"
 msgstr "Ordner wählen"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:139
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:141
 msgid "Keep backups"
 msgstr "Sicherungen behalten"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:140
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:142
 msgid "Older ones are deleted after each new backup"
 msgstr "Ältere werden nach jeder neuen Sicherung gelöscht"
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:254
+msgid "Released from VAT returns"
+msgstr "Von Voranmeldungen befreit"
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:255
+msgid ""
+"The tax office released you (§ 18 (2) UStG): annual VAT return only, no VAT "
+"return deadlines."
+msgstr "Das Finanzamt hat dich befreit (§ 18 Abs. 2 UStG): nur die Jahreserklärung, keine Voranmeldungs-Fristen."
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:30
 msgid "Turn off German tax features?"
@@ -1183,19 +1193,19 @@ msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:53
 #: src/frontends/desktop/views/setup-assistant.ts:355
-#: src/frontends/desktop/views/setup-assistant.ts:594
+#: src/frontends/desktop/views/setup-assistant.ts:621
 msgid "Country"
 msgstr "Land"
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:54
 #: src/frontends/desktop/views/setup-assistant.ts:356
-#: src/frontends/desktop/views/setup-assistant.ts:592
+#: src/frontends/desktop/views/setup-assistant.ts:619
 msgid "Germany"
 msgstr "Deutschland"
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:54
 #: src/frontends/desktop/views/setup-assistant.ts:356
-#: src/frontends/desktop/views/setup-assistant.ts:592
+#: src/frontends/desktop/views/setup-assistant.ts:619
 msgid "Other (bookkeeping only)"
 msgstr "Anderes (nur Buchhaltung)"
 
@@ -1420,7 +1430,7 @@ msgstr "Neuer Anzeigename für „{name}“."
 #: src/frontends/desktop/views/entity-dialogs.ts:37
 #: src/frontends/desktop/views/setup-assistant.ts:258
 #: src/frontends/desktop/views/setup-assistant.ts:334
-#: src/frontends/desktop/views/setup-assistant.ts:572
+#: src/frontends/desktop/views/setup-assistant.ts:591
 msgid "Name"
 msgstr "Name"
 
@@ -1784,10 +1794,10 @@ msgstr ""
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:453
 #: src/frontends/desktop/views/setup-assistant.ts:297
 #: src/frontends/desktop/views/setup-assistant.ts:344
-#: src/frontends/desktop/views/setup-assistant.ts:411
-#: src/frontends/desktop/views/setup-assistant.ts:452
-#: src/frontends/desktop/views/setup-assistant.ts:502
-#: src/frontends/desktop/views/setup-assistant.ts:562
+#: src/frontends/desktop/views/setup-assistant.ts:427
+#: src/frontends/desktop/views/setup-assistant.ts:471
+#: src/frontends/desktop/views/setup-assistant.ts:521
+#: src/frontends/desktop/views/setup-assistant.ts:581
 #: src/frontends/desktop/views/welcome.ts:149
 #: src/frontends/desktop/views/welcome.ts:269
 msgid "Next"
@@ -1940,13 +1950,13 @@ msgstr "Entität"
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:505
 #: src/frontends/desktop/views/setup-assistant.ts:77
 #: src/frontends/desktop/views/setup-assistant.ts:199
-#: src/frontends/desktop/views/setup-assistant.ts:570
+#: src/frontends/desktop/views/setup-assistant.ts:589
 #: src/frontends/desktop/views/welcome.ts:98
 msgid "Later"
 msgstr "Später"
 
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:510
-#: src/frontends/desktop/views/setup-assistant.ts:485
+#: src/frontends/desktop/views/setup-assistant.ts:504
 msgid "Currently: {entity}"
 msgstr "Derzeit: {entity}"
 
@@ -3170,7 +3180,7 @@ msgid "Rule already existed: “{pattern}” → {category}"
 msgstr "Regel bestand bereits: „{pattern}“ → {category}"
 
 #: src/frontends/desktop/views/setup-assistant.ts:63
-#: src/frontends/desktop/views/setup-assistant.ts:449
+#: src/frontends/desktop/views/setup-assistant.ts:468
 #: src/frontends/desktop/window.ts:637
 msgid "Private"
 msgstr "Privat"
@@ -3226,7 +3236,7 @@ msgid "Where your data will be stored"
 msgstr "Wo die Daten liegen werden"
 
 #: src/frontends/desktop/views/setup-assistant.ts:238
-#: src/frontends/desktop/views/setup-assistant.ts:603
+#: src/frontends/desktop/views/setup-assistant.ts:630
 msgid "Configuration"
 msgstr "Konfiguration"
 
@@ -3248,7 +3258,7 @@ msgstr "Name und Art lassen sich jederzeit ändern."
 
 #: src/frontends/desktop/views/setup-assistant.ts:263
 #: src/frontends/desktop/views/setup-assistant.ts:343
-#: src/frontends/desktop/views/setup-assistant.ts:573
+#: src/frontends/desktop/views/setup-assistant.ts:592
 msgid "Kind"
 msgstr "Art"
 
@@ -3265,9 +3275,9 @@ msgstr ""
 "steckt schon in der Steuernummer und wird nicht extra abgefragt."
 
 #: src/frontends/desktop/views/setup-assistant.ts:288
-#: src/frontends/desktop/views/setup-assistant.ts:574
-#: src/frontends/desktop/views/setup-assistant.ts:648
-#: src/frontends/desktop/views/setup-assistant.ts:651
+#: src/frontends/desktop/views/setup-assistant.ts:593
+#: src/frontends/desktop/views/setup-assistant.ts:675
+#: src/frontends/desktop/views/setup-assistant.ts:678
 msgid "Tax number"
 msgstr "Steuernummer"
 
@@ -3297,64 +3307,89 @@ msgid "Yes, small business (§ 19 UStG)"
 msgstr "Ja, Kleinunternehmer (§ 19 UStG)"
 
 #: src/frontends/desktop/views/setup-assistant.ts:393
-#: src/frontends/desktop/views/setup-assistant.ts:577
+#: src/frontends/desktop/views/setup-assistant.ts:596
 msgid "Small business"
 msgstr "Kleinunternehmer"
 
 #: src/frontends/desktop/views/setup-assistant.ts:396
-#: src/frontends/desktop/views/setup-assistant.ts:579
+#: src/frontends/desktop/views/setup-assistant.ts:599
 msgid "Monthly"
 msgstr "Monatlich"
 
 #: src/frontends/desktop/views/setup-assistant.ts:397
-#: src/frontends/desktop/views/setup-assistant.ts:579
+#: src/frontends/desktop/views/setup-assistant.ts:601
 msgid "Quarterly"
 msgstr "Vierteljährlich"
 
-#: src/frontends/desktop/views/setup-assistant.ts:399
-#: src/frontends/desktop/views/setup-assistant.ts:580
+#: src/frontends/desktop/views/setup-assistant.ts:398
+#: src/frontends/desktop/views/setup-assistant.ts:603
+msgid "None, annual return only"
+msgstr "Keiner, nur Jahreserklärung"
+
+#: src/frontends/desktop/views/setup-assistant.ts:400
+#: src/frontends/desktop/views/setup-assistant.ts:605
 msgid "VAT return period"
 msgstr "USt-VA-Zeitraum"
 
-#: src/frontends/desktop/views/setup-assistant.ts:400
-msgid "Annual-only filers keep “Later”."
-msgstr "Wer nur jährlich erklärt, lässt „Später“ stehen."
+#: src/frontends/desktop/views/setup-assistant.ts:401
+msgid ""
+"As set by the tax office. “None” only if it released you from VAT returns."
+msgstr "Wie vom Finanzamt festgelegt. „Keiner“ nur, wenn es dich von den Voranmeldungen befreit hat."
+
+#: src/frontends/desktop/views/setup-assistant.ts:404
+#: src/frontends/desktop/views/setup-assistant.ts:595
+#: src/frontends/desktop/views/setup-assistant.ts:606
+msgid "No"
+msgstr "Nein"
+
+#: src/frontends/desktop/views/setup-assistant.ts:405
+msgid "Yes, granted"
+msgstr "Ja, bewilligt"
+
+#: src/frontends/desktop/views/setup-assistant.ts:407
+#: src/frontends/desktop/views/setup-assistant.ts:607
+msgid "Permanent deadline extension"
+msgstr "Dauerfristverlängerung"
 
 #: src/frontends/desktop/views/setup-assistant.ts:408
+msgid "Dauerfristverlängerung: every VAT return is due one month later."
+msgstr "Jede Voranmeldung ist einen Monat später fällig."
+
+#: src/frontends/desktop/views/setup-assistant.ts:424
 #: src/frontends/desktop/window.ts:637
 msgid "Business"
 msgstr "Unternehmen"
 
-#: src/frontends/desktop/views/setup-assistant.ts:434
+#: src/frontends/desktop/views/setup-assistant.ts:453
 msgid "Income tax"
 msgstr "Einkommensteuer"
 
-#: src/frontends/desktop/views/setup-assistant.ts:435
+#: src/frontends/desktop/views/setup-assistant.ts:454
 msgid ""
 "Joint assessment is for married couples and civil partners filing together."
 msgstr ""
 "Zusammenveranlagung gilt für Ehe- und Lebenspartner, die gemeinsam erklären."
 
-#: src/frontends/desktop/views/setup-assistant.ts:438
-#: src/frontends/desktop/views/setup-assistant.ts:587
+#: src/frontends/desktop/views/setup-assistant.ts:457
+#: src/frontends/desktop/views/setup-assistant.ts:614
 msgid "Individual assessment"
 msgstr "Einzelveranlagung"
 
-#: src/frontends/desktop/views/setup-assistant.ts:439
-#: src/frontends/desktop/views/setup-assistant.ts:585
+#: src/frontends/desktop/views/setup-assistant.ts:458
+#: src/frontends/desktop/views/setup-assistant.ts:612
 msgid "Joint assessment (splitting)"
 msgstr "Zusammenveranlagung (Splitting)"
 
-#: src/frontends/desktop/views/setup-assistant.ts:441
-#: src/frontends/desktop/views/setup-assistant.ts:589
+#: src/frontends/desktop/views/setup-assistant.ts:460
+#: src/frontends/desktop/views/setup-assistant.ts:616
 msgid "Assessment"
 msgstr "Veranlagung"
 
-#: src/frontends/desktop/views/setup-assistant.ts:472
+#: src/frontends/desktop/views/setup-assistant.ts:491
 msgid "Which bank accounts belong to it?"
 msgstr "Welche Bankkonten gehören dazu?"
 
-#: src/frontends/desktop/views/setup-assistant.ts:474
+#: src/frontends/desktop/views/setup-assistant.ts:493
 msgid ""
 "A ticked account moves to the new entity. New accounts are added under "
 "Accounts → Connections & import."
@@ -3362,32 +3397,32 @@ msgstr ""
 "Ein angehaktes Konto zieht zur neuen Entität um. Neue Konten kommen unter "
 "Konten → Anbindungen & Import dazu."
 
-#: src/frontends/desktop/views/setup-assistant.ts:485
+#: src/frontends/desktop/views/setup-assistant.ts:504
 msgid "Not assigned"
 msgstr "Nicht zugeordnet"
 
-#: src/frontends/desktop/views/setup-assistant.ts:493
+#: src/frontends/desktop/views/setup-assistant.ts:512
 msgid "No bank accounts yet"
 msgstr "Noch keine Bankkonten"
 
-#: src/frontends/desktop/views/setup-assistant.ts:493
+#: src/frontends/desktop/views/setup-assistant.ts:512
 msgid "Add one under Accounts once the entity exists."
 msgstr "Füge eins unter Konten hinzu, sobald die Entität existiert."
 
-#: src/frontends/desktop/views/setup-assistant.ts:499
-#: src/frontends/desktop/views/setup-assistant.ts:595
+#: src/frontends/desktop/views/setup-assistant.ts:518
+#: src/frontends/desktop/views/setup-assistant.ts:622
 msgid "Bank accounts"
 msgstr "Bankkonten"
 
-#: src/frontends/desktop/views/setup-assistant.ts:522
+#: src/frontends/desktop/views/setup-assistant.ts:541
 msgid "Where do the receipts come from?"
 msgstr "Woher kommen die Belege?"
 
-#: src/frontends/desktop/views/setup-assistant.ts:524
+#: src/frontends/desktop/views/setup-assistant.ts:543
 msgid "Same as your other entities. You can still choose differently."
 msgstr "Wie bei deinen anderen Entitäten. Du kannst trotzdem anders wählen."
 
-#: src/frontends/desktop/views/setup-assistant.ts:526
+#: src/frontends/desktop/views/setup-assistant.ts:545
 msgid ""
 "The built-in document management needs nothing else. Use Paperless-ngx if "
 "you already keep your receipts there."
@@ -3395,20 +3430,20 @@ msgstr ""
 "Die eingebaute Belegverwaltung braucht sonst nichts. Paperless-ngx lohnt "
 "sich, wenn deine Belege schon dort liegen."
 
-#: src/frontends/desktop/views/setup-assistant.ts:532
+#: src/frontends/desktop/views/setup-assistant.ts:551
 msgid "Receipt source"
 msgstr "Belegquelle"
 
-#: src/frontends/desktop/views/setup-assistant.ts:533
-#: src/frontends/desktop/views/setup-assistant.ts:600
+#: src/frontends/desktop/views/setup-assistant.ts:552
+#: src/frontends/desktop/views/setup-assistant.ts:627
 msgid "Built-in document management"
 msgstr "Eingebaute Belegverwaltung"
 
-#: src/frontends/desktop/views/setup-assistant.ts:542
+#: src/frontends/desktop/views/setup-assistant.ts:561
 msgid "Leave the token empty to use the one your other entities use."
 msgstr "Lass das Token leer, um das deiner anderen Entitäten zu verwenden."
 
-#: src/frontends/desktop/views/setup-assistant.ts:543
+#: src/frontends/desktop/views/setup-assistant.ts:562
 msgid ""
 "URL and API token. The token is stored in the configuration file only you "
 "can read."
@@ -3416,57 +3451,54 @@ msgstr ""
 "URL und API-Token. Das Token steht in der Konfigurationsdatei, die nur du "
 "lesen kannst."
 
-#: src/frontends/desktop/views/setup-assistant.ts:545
+#: src/frontends/desktop/views/setup-assistant.ts:564
 msgid "URL"
 msgstr "URL"
 
-#: src/frontends/desktop/views/setup-assistant.ts:548
+#: src/frontends/desktop/views/setup-assistant.ts:567
 msgid "API token"
 msgstr "API-Token"
 
-#: src/frontends/desktop/views/setup-assistant.ts:571
+#: src/frontends/desktop/views/setup-assistant.ts:590
 msgid "Summary"
 msgstr "Zusammenfassung"
 
-#: src/frontends/desktop/views/setup-assistant.ts:576
+#: src/frontends/desktop/views/setup-assistant.ts:595
+#: src/frontends/desktop/views/setup-assistant.ts:606
 msgid "Yes"
 msgstr "Ja"
 
-#: src/frontends/desktop/views/setup-assistant.ts:576
-msgid "No"
-msgstr "Nein"
-
-#: src/frontends/desktop/views/setup-assistant.ts:593
+#: src/frontends/desktop/views/setup-assistant.ts:620
 msgid "German tax features on"
 msgstr "Deutsche Steuerfunktionen an"
 
-#: src/frontends/desktop/views/setup-assistant.ts:593
+#: src/frontends/desktop/views/setup-assistant.ts:620
 msgid "German tax features off"
 msgstr "Deutsche Steuerfunktionen aus"
 
-#: src/frontends/desktop/views/setup-assistant.ts:609
+#: src/frontends/desktop/views/setup-assistant.ts:636
 #: src/frontends/desktop/views/transactions-view.ts:299
 msgid "Done"
 msgstr "Fertig"
 
-#: src/frontends/desktop/views/setup-assistant.ts:610
+#: src/frontends/desktop/views/setup-assistant.ts:637
 #: src/frontends/desktop/window.blp:198
 msgid "Finish setup"
 msgstr "Einrichtung abschließen"
 
-#: src/frontends/desktop/views/setup-assistant.ts:610
+#: src/frontends/desktop/views/setup-assistant.ts:637
 msgid "Add entity"
 msgstr "Entität anlegen"
 
-#: src/frontends/desktop/views/setup-assistant.ts:621
+#: src/frontends/desktop/views/setup-assistant.ts:648
 msgid "Setup failed: {error}"
 msgstr "Einrichtung fehlgeschlagen: {error}"
 
-#: src/frontends/desktop/views/setup-assistant.ts:638
+#: src/frontends/desktop/views/setup-assistant.ts:665
 msgid "Please enter a name."
 msgstr "Bitte einen Namen eingeben."
 
-#: src/frontends/desktop/views/setup-assistant.ts:649
+#: src/frontends/desktop/views/setup-assistant.ts:676
 msgid "Optional. The tax office is already part of the tax number."
 msgstr "Optional. Das Finanzamt steckt schon in der Steuernummer."
 
@@ -4424,6 +4456,9 @@ msgid ""
 msgstr ""
 "„{view}“ — diese Ansicht wird Schritt für Schritt auf native Adwaita-Widgets "
 "portiert. In der Web-Oberfläche (steuer web) ist sie bereits verfügbar."
+
+#~ msgid "Annual-only filers keep “Later”."
+#~ msgstr "Wer nur jährlich erklärt, lässt „Später“ stehen."
 
 #
 #~ msgid "Show the AI assistant"

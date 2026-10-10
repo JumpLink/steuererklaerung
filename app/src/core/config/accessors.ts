@@ -540,6 +540,7 @@ export function saveElsterFlags(
         test_mode: boolean;
         taxation_basis: 'ist' | 'soll';
         ust_dauerfristverlaengerung: boolean;
+        ust_va_befreit: boolean;
         deadline_extension_months: number;
     }>,
     path?: string,
@@ -549,6 +550,7 @@ export function saveElsterFlags(
         if (flags.taxation_basis !== undefined) raw.taxation_basis = flags.taxation_basis;
         if (flags.ust_dauerfristverlaengerung !== undefined)
             raw.ust_dauerfristverlaengerung = flags.ust_dauerfristverlaengerung;
+        if (flags.ust_va_befreit !== undefined) raw.ust_va_befreit = flags.ust_va_befreit;
         if (flags.deadline_extension_months !== undefined)
             raw.deadline_extension_months = flags.deadline_extension_months;
     });

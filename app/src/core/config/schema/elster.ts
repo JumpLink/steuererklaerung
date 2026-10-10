@@ -401,6 +401,13 @@ export const ElsterConfigRawSchema = z.object({
      */
     ust_dauerfristverlaengerung: z.boolean().default(false),
     /**
+     * The Finanzamt released this business from USt-Voranmeldungen (§18 Abs. 2 S. 3 UStG, prior-year
+     * tax ≤ 2.000 €): only the annual USt-Erklärung remains, so no USt-VA deadline is shown. Its own
+     * field because `period` must name a quarter or a month. Unset = not released — existing
+     * manifests keep their deadlines. Source: docs/references/tax-sources.md (§18 UStG).
+     */
+    ust_va_befreit: z.boolean().optional(),
+    /**
      * Versteuerungsart: 'ist' (Ist-Versteuerung — USt arises when payment is received) or
      * 'soll' (Soll-Versteuerung — USt arises on the invoice date). The USt-VA pipeline
      * currently aggregates by payment date and therefore implements 'ist' only.
@@ -479,6 +486,8 @@ export interface ElsterConfig {
     deadline_extension_months?: number;
     /** USt-VA Dauerfristverlängerung granted (§§ 46–48 UStDV) → each Voranmeldung deadline +1 month. */
     ust_dauerfristverlaengerung: boolean;
+    /** Released from USt-Voranmeldungen by the Finanzamt (§18 Abs. 2 S. 3 UStG) → annual return only. */
+    ust_va_befreit?: boolean;
     /** Versteuerungsart: 'ist' (cash basis, USt on receipt) or 'soll' (accrual, USt on invoice date). Pipeline implements Ist. */
     taxation_basis: 'ist' | 'soll';
     eric_home?: string;
@@ -538,6 +547,7 @@ export function normalizeElsterConfig(parsed: z.infer<typeof ElsterConfigRawSche
         business_end_date: parsed.business_end_date?.trim() || undefined,
         deadline_extension_months: parsed.deadline_extension_months,
         ust_dauerfristverlaengerung: parsed.ust_dauerfristverlaengerung,
+        ...(parsed.ust_va_befreit !== undefined ? { ust_va_befreit: parsed.ust_va_befreit } : {}),
         taxation_basis: parsed.taxation_basis,
         eric_home: parsed.eric_home?.trim() || undefined,
         keystore_path: parsed.keystore_path?.trim() || undefined,
