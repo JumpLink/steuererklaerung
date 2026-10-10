@@ -66,7 +66,7 @@ for (const file of files) {
 
 // Propagate: whoever imports a site is a site, until nothing changes. Barrels neither carry nor
 // receive the flag (see header).
-for (let changed = true; changed; ) {
+for (let changed = true; changed;) {
     changed = false;
     for (const file of files) {
         if (sites.has(file) || isBarrel(file)) continue;
