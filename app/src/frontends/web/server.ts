@@ -89,6 +89,7 @@ export async function startWebServer(options: StartWebServerOptions = {}): Promi
         hasElster: entity.hasElster,
         hasEst: entity.hasEst,
         taxModule: entity.taxModule,
+        capabilities: entity.capabilities,
         years: entity.years,
         defaultYear: entity.defaultYear,
         // Only the COUNT reaches the browser — never the IBAN-bearing account keys.

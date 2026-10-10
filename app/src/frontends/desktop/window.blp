@@ -161,6 +161,50 @@ template $BhMainWindow: Adw.ApplicationWindow {
                 revealed: false;
               }
 
+              // The setup banner. Not an Adw.Banner: that has one button and no way to close it,
+              // and this one needs both „Finish setup" and a close button.
+              Gtk.ActionBar setup_bar {
+                revealed: false;
+
+                [start]
+                Gtk.Box {
+                  spacing: 12;
+                  margin-start: 6;
+
+                  Gtk.Image {
+                    icon-name: "dialog-information-symbolic";
+                  }
+
+                  Gtk.Label setup_label {
+                    wrap: true;
+                    xalign: 0;
+                  }
+                }
+
+                [end]
+                Gtk.Button setup_close {
+                  icon-name: "window-close-symbolic";
+                  tooltip-text: _("Close");
+                  valign: center;
+
+                  styles [
+                    "flat",
+                    "circular",
+                  ]
+                }
+
+                [end]
+                Gtk.Button setup_finish {
+                  label: _("Finish setup");
+                  valign: center;
+
+                  styles [
+                    "suggested-action",
+                    "pill",
+                  ]
+                }
+              }
+
               Gtk.Stack stack {
                 transition-type: crossfade;
                 vexpand: true;

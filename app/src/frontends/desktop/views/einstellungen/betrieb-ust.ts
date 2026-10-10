@@ -22,6 +22,7 @@ import type { AppEntity } from '../../entities.ts';
 import { comboRow, entryRow, spinRow, toggleRow, type SettingsHost } from './rows.ts';
 import { validateSteuernummer } from '../../../../core/actions/validate-steuernummer.ts';
 import { helpFor } from '../../widgets/glossary-help.ts';
+import { _ } from '../../i18n.ts';
 
 // ── Betrieb (Stammdaten) ────────────────────────────────────────────────────────────────────────
 
@@ -248,6 +249,13 @@ export function buildUstGroup(host: SettingsHost, entity: AppEntity, elster: Els
     const dfv = toggleRow(host, 'USt-Dauerfristverlängerung', null, elster.ust_dauerfristverlaengerung, (on) =>
         host.saveWith(() => saveFlags(entity, { ust_dauerfristverlaengerung: on }), { clearCache: true }),
     );
+    const befreit = toggleRow(
+        host,
+        _('Released from VAT returns'),
+        _('The tax office released you (§ 18 (2) UStG): annual VAT return only, no VAT return deadlines.'),
+        elster.ust_va_befreit ?? false,
+        (on) => host.saveWith(() => saveFlags(entity, { ust_va_befreit: on }), { clearCache: true }),
+    );
     const months = spinRow(
         host,
         'Fristverlängerung (Monate)',
@@ -258,6 +266,6 @@ export function buildUstGroup(host: SettingsHost, entity: AppEntity, elster: Els
                 clearCache: true,
             }),
     );
-    for (const r of [prepaid, basis, testMode, dfv, months]) group.add(r);
+    for (const r of [prepaid, basis, testMode, dfv, befreit, months]) group.add(r);
     return group;
 }

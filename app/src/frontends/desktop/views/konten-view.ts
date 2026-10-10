@@ -614,6 +614,7 @@ export class BhKontenView extends Adw.Bin {
             appSession().invalidate();
             clearYearCache();
             this.reloadConnections();
+            this.activate_action('win.setup-changed', null);
         });
         dialog.present(this);
     }

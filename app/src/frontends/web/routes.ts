@@ -6,10 +6,11 @@
 
 import type { Context, Hono } from 'hono';
 import type { Cache, YearCache } from '../../core/presenters/year-snapshot.ts';
-import { type AppSettings, saveAppSettings, parseAppSettings } from '../../core/config/index.ts';
+import { type AppSettings, isAssistantEnabled, saveAppSettings, parseAppSettings } from '../../core/config/index.ts';
+import { updateUserSettings } from '../../core/config/user-settings.ts';
 import { applyProposal, type EstIntakeProposal } from '../../core/actions/elster/est-intake-topics.ts';
 import type { McpGroupTools } from '../mcp/server.ts';
-import { TaxModuleOffError, capabilities, type Capability } from '../../core/countries/index.ts';
+import { TaxModuleOffError, capabilities, type Capabilities, type Capability } from '../../core/countries/index.ts';
 export type { McpGroupTools, McpToolInfo } from '../mcp/server.ts';
 
 /** One firm in the workspace (for the UI entity switcher). */
@@ -22,6 +23,8 @@ export interface EntityMeta {
     hasEst: boolean;
     /** The entity's tax module (ADR 0001); `none` = bookkeeping only, every tax view hidden. */
     taxModule: 'de' | 'none';
+    /** What the tax module offers — the client hides tax suggestions the entity cannot answer. */
+    capabilities: Capabilities;
     /** Years that were actually loaded (have data) for this entity. */
     years: number[];
     defaultYear: number;
@@ -111,16 +114,17 @@ export function registerApiRoutes(
     cacheReady?: Map<string, Promise<void>>,
 ): void {
     // `assistant` is dynamic (the settings UI can toggle it at runtime).
-    app.get('/api/meta', (c) => c.json({ ...meta, assistant: settings.assistant.enabled }));
+    app.get('/api/meta', (c) => c.json({ ...meta, assistant: isAssistantEnabled() }));
 
     // The full MCP tool catalogue (every group's tools + descriptions) for the settings UI.
     app.get('/api/mcp-tools', (c) => c.json(mcpCatalog));
 
     // Read + write the app settings (assistant on/off, externally-exposed MCP groups,
-    // write access). The POST persists to steuererklaerung.json AND updates the in-memory copy
-    // so the assistant toggle takes effect immediately (MCP changes apply on the MCP
-    // server's next start — it is a separate process).
-    app.get('/api/settings', (c) => c.json(settings));
+    // write access). The assistant switch is per user (settings.json, see isAssistantEnabled) and
+    // takes effect immediately; the MCP part persists to steuererklaerung.json AND updates the
+    // in-memory copy (it applies on the MCP server's next start — it is a separate process).
+    const withAssistant = (): AppSettings => ({ ...settings, assistant: { enabled: isAssistantEnabled() } });
+    app.get('/api/settings', (c) => c.json(withAssistant()));
     app.post('/api/settings', async (c) => {
         let body: unknown;
         try {
@@ -135,13 +139,17 @@ export function registerApiRoutes(
             return c.json({ error: `Ungültige Einstellungen: ${err instanceof Error ? err.message : err}` }, 400);
         }
         try {
-            saveAppSettings(next);
+            // The manifest keeps its own (legacy) assistant flag; the decision goes to the user.
+            saveAppSettings({ ...next, assistant: settings.assistant });
+            if (next.assistant.enabled !== isAssistantEnabled())
+                updateUserSettings((s) => {
+                    s.aiAssistant = next.assistant.enabled;
+                });
         } catch (err) {
             return c.json({ error: err instanceof Error ? err.message : String(err) }, 500);
         }
-        settings.assistant = next.assistant;
         settings.mcp = next.mcp;
-        return c.json(settings);
+        return c.json(withAssistant());
     });
 
     const rYC = (entityId: string | undefined, yearRaw: unknown) =>
@@ -190,7 +198,7 @@ export function registerApiRoutes(
     const now = () => Date.now();
 
     app.post('/api/chat', async (c) => {
-        if (!settings.assistant.enabled) return c.json({ error: 'Der integrierte Assistent ist deaktiviert.' }, 403);
+        if (!isAssistantEnabled()) return c.json({ error: 'Der integrierte Assistent ist deaktiviert.' }, 403);
         let body: { entity?: string; year?: number; question?: string };
         try {
             body = await c.req.json();
@@ -242,7 +250,7 @@ export function registerApiRoutes(
     // needs the setTimeout(0) job pattern (a Paperless fetch in a handler deadlocks libsoup) and is a
     // separate follow-up. The NATIVE app refreshes its est snapshot live (window.refreshEstAfterApply).
     app.post('/api/est-intake/apply', async (c) => {
-        if (!settings.assistant.enabled) return c.json({ error: 'Der integrierte Assistent ist deaktiviert.' }, 403);
+        if (!isAssistantEnabled()) return c.json({ error: 'Der integrierte Assistent ist deaktiviert.' }, 403);
         let body: { entity?: string; year?: number; proposal?: EstIntakeProposal };
         try {
             body = await c.req.json();

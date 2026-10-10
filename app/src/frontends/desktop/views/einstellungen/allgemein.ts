@@ -14,10 +14,12 @@ import type Gio from '@girs/gio-2.0';
 import GLib from '@girs/glib-2.0';
 import Gtk from '@girs/gtk-4.0';
 
-import { configuredBackupRoot, runConfiguredBackup } from '../../../../core/actions/backup.ts';
+import { configuredBackupRoot } from '../../../../core/actions/backup.ts';
+import { isAssistantEnabled } from '../../../../core/config/assistant-preference.ts';
 import { isDemoMode } from '../../../../core/config/demo.ts';
 import { loadUserSettings, updateUserSettings } from '../../../../core/config/user-settings.ts';
 import { _, fmt } from '../../i18n.ts';
+import { isBackupRunning, runBackupInBackground } from '../../background-backup.ts';
 import { showToast } from '../../toast.ts';
 import { markup } from '../util.ts';
 
@@ -43,10 +45,13 @@ export function buildGeneralGroup(group: Adw.PreferencesGroup): void {
     group.add(welcome);
 
     const ai = new Adw.SwitchRow({
-        title: _('Show the AI assistant'),
-        subtitle: _('Questions and the data needed to answer them go to the configured AI provider'),
+        title: _('Built-in AI assistant'),
+        subtitle: _(
+            'Questions and the data needed to answer them go to the configured AI provider. ' +
+                'Independent of the MCP server.',
+        ),
     });
-    ai.set_active(loadUserSettings().aiAssistant !== false);
+    ai.set_active(isAssistantEnabled());
     ai.connect('notify::active', () => {
         updateUserSettings((s) => {
             s.aiAssistant = ai.get_active();
@@ -80,15 +85,31 @@ export function buildBackupGroup(group: Adw.PreferencesGroup): void {
 
     const now = new Adw.ButtonRow({ title: _('Back up now'), startIconName: 'document-save-symbolic' });
     now.add_css_class('suggested-action');
-    now.connect('activated', () => {
-        try {
-            const result = runConfiguredBackup({ reason: 'manual' });
-            showToast(fmt(_('Backup saved: {path}'), { path: result.path }));
-        } catch (err) {
-            showToast(fmt(_('Backup failed: {error}'), { error: err instanceof Error ? err.message : String(err) }));
-        }
-        refresh();
-    });
+    const spinner = new Adw.Spinner({ visible: false, valign: Gtk.Align.CENTER });
+    last.add_suffix(spinner);
+    const setBusy = (busy: boolean) => {
+        now.set_sensitive(!busy);
+        now.set_title(busy ? _('Backing up …') : _('Back up now'));
+        spinner.set_visible(busy);
+    };
+    // The child process does the copying; the window only waits, so it keeps drawing. Reopening
+    // Settings mid-run picks up the same run instead of offering a second one.
+    const start = () => {
+        setBusy(true);
+        runBackupInBackground('manual')
+            .then((result) => showToast(fmt(_('Backup saved: {path}'), { path: result.path })))
+            .catch((err: unknown) =>
+                showToast(
+                    fmt(_('Backup failed: {error}'), { error: err instanceof Error ? err.message : String(err) }),
+                ),
+            )
+            .finally(() => {
+                setBusy(false);
+                refresh();
+            });
+    };
+    now.connect('activated', start);
+    if (isBackupRunning()) start();
 
     const choose = new Gtk.Button({
         iconName: 'folder-open-symbolic',

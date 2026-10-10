@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-10 00:06+0200\n"
+"POT-Creation-Date: 2026-10-10 13:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,6 +30,7 @@ msgstr ""
 #. TRANSLATORS: Tooltip on the button that hides the assistant panel
 #: src/frontends/desktop/assistent-panel.blp:40
 #: src/frontends/desktop/views/beleg-upload.ts:130
+#: src/frontends/desktop/window.blp:187
 msgid "Close"
 msgstr ""
 
@@ -50,15 +51,15 @@ msgstr ""
 msgid "Sees aggregated figures only — not tax advice."
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:30
+#: src/frontends/desktop/assistent-panel.ts:32
 msgid "What were my biggest expenses?"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:31
+#: src/frontends/desktop/assistent-panel.ts:33
 msgid "Which transactions have no receipt yet?"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:32
+#: src/frontends/desktop/assistent-panel.ts:34
 msgid "How much VAT do I have to pay?"
 msgstr ""
 
@@ -88,19 +89,19 @@ msgstr ""
 msgid "Ask me something about your figures. For example:"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:164
+#: src/frontends/desktop/assistent-panel.ts:167
 msgid "Suggestion · {title}"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:185
+#: src/frontends/desktop/assistent-panel.ts:188
 msgid "Apply"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:192
+#: src/frontends/desktop/assistent-panel.ts:195
 msgid "Applied ✓"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:218
+#: src/frontends/desktop/assistent-panel.ts:221
 msgid "Assistant is typing …"
 msgstr ""
 
@@ -114,7 +115,7 @@ msgstr ""
 #: src/frontends/desktop/views/entity-dialogs.ts:42
 #: src/frontends/desktop/views/entity-dialogs.ts:101
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:465
-#: src/frontends/desktop/window.ts:211
+#: src/frontends/desktop/window.ts:235
 msgid "Cancel"
 msgstr ""
 
@@ -192,7 +193,7 @@ msgid "timer & unbilled hours"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:58
-#: src/frontends/desktop/views/einstellungen-view.ts:72
+#: src/frontends/desktop/views/einstellungen-view.ts:73
 msgid "Contacts"
 msgstr ""
 
@@ -964,8 +965,8 @@ msgid "Loading receipts …"
 msgstr ""
 
 #: src/frontends/desktop/views/dokumente-view.blp:56
-#: src/frontends/desktop/views/setup-assistant.ts:562
-#: src/frontends/desktop/views/setup-assistant.ts:599
+#: src/frontends/desktop/views/setup-assistant.ts:581
+#: src/frontends/desktop/views/setup-assistant.ts:626
 msgid "Receipts"
 msgstr ""
 
@@ -1041,82 +1042,98 @@ msgstr ""
 msgid "Paperless assignment not available"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:28
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:30
 msgid "Data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:29
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:31
 msgid "Demo data — fictional examples"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:29
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:31
 msgid "Your own data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:32
-#: src/frontends/desktop/views/welcome.ts:195
-#: src/frontends/desktop/window.ts:543
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:34
+#: src/frontends/desktop/views/welcome.ts:198
+#: src/frontends/desktop/window.ts:570
 msgid "Use my own data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:32
-#: src/frontends/desktop/views/welcome.ts:184
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:34
+#: src/frontends/desktop/views/welcome.ts:187
 msgid "Try the demo"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:41
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:43
 msgid "Show welcome again"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:46
-#: src/frontends/desktop/views/welcome.ts:283
-msgid "Show the AI assistant"
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:48
+#: src/frontends/desktop/views/welcome.ts:286
+msgid "Built-in AI assistant"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:47
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:50
 msgid ""
-"Questions and the data needed to answer them go to the configured AI provider"
+"Questions and the data needed to answer them go to the configured AI "
+"provider. Independent of the MCP server."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:61
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:66
 msgid "Last backup"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:63
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:100
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:68
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:121
 msgid "Backup folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:71
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:76
 msgid "{time} in {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:76
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:81
 msgid "Never"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:81
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:86
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:92
 msgid "Back up now"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:86
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:92
+msgid "Backing up …"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:100
 msgid "Backup saved: {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:88
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:103
 msgid "Backup failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:95
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:116
 msgid "Choose folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:120
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:141
 msgid "Keep backups"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:121
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:142
 msgid "Older ones are deleted after each new backup"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:254
+msgid "Released from VAT returns"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:255
+msgid ""
+"The tax office released you (§ 18 (2) UStG): annual VAT return only, no VAT "
+"return deadlines."
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:30
@@ -1147,19 +1164,19 @@ msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:53
 #: src/frontends/desktop/views/setup-assistant.ts:355
-#: src/frontends/desktop/views/setup-assistant.ts:594
+#: src/frontends/desktop/views/setup-assistant.ts:621
 msgid "Country"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:54
 #: src/frontends/desktop/views/setup-assistant.ts:356
-#: src/frontends/desktop/views/setup-assistant.ts:592
+#: src/frontends/desktop/views/setup-assistant.ts:619
 msgid "Germany"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:54
 #: src/frontends/desktop/views/setup-assistant.ts:356
-#: src/frontends/desktop/views/setup-assistant.ts:592
+#: src/frontends/desktop/views/setup-assistant.ts:619
 msgid "Other (bookkeeping only)"
 msgstr ""
 
@@ -1216,150 +1233,146 @@ msgstr ""
 msgid "Which groups are visible to the outside."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:66
+#: src/frontends/desktop/views/einstellungen-view.ts:67
 msgctxt "MCP tool group"
 msgid "Transactions"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:67
+#: src/frontends/desktop/views/einstellungen-view.ts:68
 msgctxt "auto-matching"
 msgid "Matching"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:68
+#: src/frontends/desktop/views/einstellungen-view.ts:69
 msgid "Document workflow"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:71
+#: src/frontends/desktop/views/einstellungen-view.ts:72
 msgid "Invoices (self)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:164
+#: src/frontends/desktop/views/einstellungen-view.ts:165
 msgid "AI engine"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:168
+#: src/frontends/desktop/views/einstellungen-view.ts:169
 msgid "set via LLM_PROVIDER"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:168
+#: src/frontends/desktop/views/einstellungen-view.ts:169
 msgid "default"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:169
+#: src/frontends/desktop/views/einstellungen-view.ts:170
 msgid "Not configured — check LLM_PROVIDER."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:174
-#: src/frontends/desktop/views/einstellungen-view.ts:187
+#: src/frontends/desktop/views/einstellungen-view.ts:175
+#: src/frontends/desktop/views/einstellungen-view.ts:188
 msgid "Test connection"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:175
+#: src/frontends/desktop/views/einstellungen-view.ts:176
 msgid "Asks the model a tiny question — costs a few tokens."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:178
+#: src/frontends/desktop/views/einstellungen-view.ts:179
 msgid "Testing …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:183
+#: src/frontends/desktop/views/einstellungen-view.ts:184
 msgid "AI engine does not respond: {message}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:202
+#: src/frontends/desktop/views/einstellungen-view.ts:203
 msgid "Settings not available: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:209
+#: src/frontends/desktop/views/einstellungen-view.ts:210
 msgid "Learning mode"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:210
+#: src/frontends/desktop/views/einstellungen-view.ts:211
 msgid ""
 "Shows a “?” next to technical terms — Overview, Reports, USt-VA (VAT return) "
 "and the master data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:219
+#: src/frontends/desktop/views/einstellungen-view.ts:220
 msgid "Sync automatically"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:220
+#: src/frontends/desktop/views/einstellungen-view.ts:221
 msgid "At start-up and then at fixed intervals, without blocking the view"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:228
+#: src/frontends/desktop/views/einstellungen-view.ts:229
 msgid "Invoices (Qonto)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:228
-#: src/frontends/desktop/views/einstellungen-view.ts:230
+#: src/frontends/desktop/views/einstellungen-view.ts:229
+#: src/frontends/desktop/views/einstellungen-view.ts:231
 msgid "Minutes, at least 5; 0 = off"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:229
+#: src/frontends/desktop/views/einstellungen-view.ts:230
 msgid "Transactions (Qonto)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:229
+#: src/frontends/desktop/views/einstellungen-view.ts:230
 msgid "Minutes, at least 15 (rate limit); 0 = off"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:230
+#: src/frontends/desktop/views/einstellungen-view.ts:231
 msgid "Receipts (Paperless)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:237
-msgid "Built-in assistant"
+#: src/frontends/desktop/views/einstellungen-view.ts:240
+msgid "MCP server for external agents"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:238
-msgid "Enable the assistant tab and /api/chat"
+#: src/frontends/desktop/views/einstellungen-view.ts:241
+msgid "Claude, Cursor, VS Code … — the built-in assistant does not need it"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:248
-msgid "Provide MCP tools"
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen-view.ts:249
-msgid "Connect external assistants (Claude, ChatGPT …)"
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen-view.ts:258
+#: src/frontends/desktop/views/einstellungen-view.ts:250
 msgid "Allow writing tools"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:259
+#: src/frontends/desktop/views/einstellungen-view.ts:251
 msgid "Expose mutating MCP tools (default: read-only)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:312
-#: src/frontends/desktop/views/einstellungen-view.ts:425
+#: src/frontends/desktop/views/einstellungen-view.ts:258
+msgid "Connect an external agent …"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen-view.ts:307
+#: src/frontends/desktop/views/einstellungen-view.ts:420
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:254
 #: src/frontends/desktop/views/umbuchen-dialog.ts:251
 msgid "Could not save: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:338
+#: src/frontends/desktop/views/einstellungen-view.ts:333
 msgid "Could not read connections: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:359
+#: src/frontends/desktop/views/einstellungen-view.ts:354
 msgid "Could not read the ELSTER configuration: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:383
+#: src/frontends/desktop/views/einstellungen-view.ts:378
 msgid "Could not read the ESt (income tax) configuration: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:410
+#: src/frontends/desktop/views/einstellungen-view.ts:405
 msgid ""
 "The configuration was changed from outside in the meantime (CLI, MCP or a "
 "second window). The view is reloaded — please repeat the input."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:423
+#: src/frontends/desktop/views/einstellungen-view.ts:418
 msgid "Saved"
 msgstr ""
 
@@ -1374,7 +1387,7 @@ msgstr ""
 #: src/frontends/desktop/views/entity-dialogs.ts:37
 #: src/frontends/desktop/views/setup-assistant.ts:258
 #: src/frontends/desktop/views/setup-assistant.ts:334
-#: src/frontends/desktop/views/setup-assistant.ts:572
+#: src/frontends/desktop/views/setup-assistant.ts:591
 msgid "Name"
 msgstr ""
 
@@ -1725,12 +1738,12 @@ msgstr ""
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:453
 #: src/frontends/desktop/views/setup-assistant.ts:297
 #: src/frontends/desktop/views/setup-assistant.ts:344
-#: src/frontends/desktop/views/setup-assistant.ts:411
-#: src/frontends/desktop/views/setup-assistant.ts:452
-#: src/frontends/desktop/views/setup-assistant.ts:502
-#: src/frontends/desktop/views/setup-assistant.ts:562
-#: src/frontends/desktop/views/welcome.ts:146
-#: src/frontends/desktop/views/welcome.ts:266
+#: src/frontends/desktop/views/setup-assistant.ts:427
+#: src/frontends/desktop/views/setup-assistant.ts:471
+#: src/frontends/desktop/views/setup-assistant.ts:521
+#: src/frontends/desktop/views/setup-assistant.ts:581
+#: src/frontends/desktop/views/welcome.ts:149
+#: src/frontends/desktop/views/welcome.ts:269
 msgid "Next"
 msgstr ""
 
@@ -1874,13 +1887,13 @@ msgstr ""
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:505
 #: src/frontends/desktop/views/setup-assistant.ts:77
 #: src/frontends/desktop/views/setup-assistant.ts:199
-#: src/frontends/desktop/views/setup-assistant.ts:570
-#: src/frontends/desktop/views/welcome.ts:95
+#: src/frontends/desktop/views/setup-assistant.ts:589
+#: src/frontends/desktop/views/welcome.ts:98
 msgid "Later"
 msgstr ""
 
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:510
-#: src/frontends/desktop/views/setup-assistant.ts:485
+#: src/frontends/desktop/views/setup-assistant.ts:504
 msgid "Currently: {entity}"
 msgstr ""
 
@@ -1922,6 +1935,7 @@ msgid ""
 msgstr ""
 
 #: src/frontends/desktop/views/mahnung-dialog.ts:90
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:38
 msgid "Copy"
 msgstr ""
 
@@ -1987,6 +2001,33 @@ msgstr ""
 
 #: src/frontends/desktop/views/mahnung-dialog.ts:214
 msgid "Not saved"
+msgstr ""
+
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:36
+msgid "Run in a terminal"
+msgstr ""
+
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:36
+msgid "Add to {file}"
+msgstr ""
+
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:42
+msgid "Copied for {client}"
+msgstr ""
+
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:44
+msgid "Docs"
+msgstr ""
+
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:69
+msgid "Connect an external agent"
+msgstr ""
+
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:73
+msgid ""
+"The agent starts the MCP server itself. Turn on “MCP server for external "
+"agents” first; writing tools stay off unless you allow them. Restart the "
+"agent after changing its config."
 msgstr ""
 
 #: src/frontends/desktop/views/offene-belege-view.blp:22
@@ -3035,8 +3076,8 @@ msgid "Rule already existed: “{pattern}” → {category}"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:63
-#: src/frontends/desktop/views/setup-assistant.ts:449
-#: src/frontends/desktop/window.ts:557
+#: src/frontends/desktop/views/setup-assistant.ts:468
+#: src/frontends/desktop/window.ts:637
 msgid "Private"
 msgstr ""
 
@@ -3071,8 +3112,8 @@ msgstr ""
 #. TRANSLATORS: Primary menu item reopening the first-run introduction
 #: src/frontends/desktop/views/setup-assistant.ts:223
 #: src/frontends/desktop/views/setup-assistant.ts:242
-#: src/frontends/desktop/views/welcome.ts:53
-#: src/frontends/desktop/views/welcome.ts:145
+#: src/frontends/desktop/views/welcome.ts:56
+#: src/frontends/desktop/views/welcome.ts:148
 #: src/frontends/desktop/window.blp:13
 msgid "Welcome"
 msgstr ""
@@ -3088,7 +3129,7 @@ msgid "Where your data will be stored"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:238
-#: src/frontends/desktop/views/setup-assistant.ts:603
+#: src/frontends/desktop/views/setup-assistant.ts:630
 msgid "Configuration"
 msgstr ""
 
@@ -3110,7 +3151,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:263
 #: src/frontends/desktop/views/setup-assistant.ts:343
-#: src/frontends/desktop/views/setup-assistant.ts:573
+#: src/frontends/desktop/views/setup-assistant.ts:592
 msgid "Kind"
 msgstr ""
 
@@ -3125,9 +3166,9 @@ msgid ""
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:288
-#: src/frontends/desktop/views/setup-assistant.ts:574
-#: src/frontends/desktop/views/setup-assistant.ts:648
-#: src/frontends/desktop/views/setup-assistant.ts:651
+#: src/frontends/desktop/views/setup-assistant.ts:593
+#: src/frontends/desktop/views/setup-assistant.ts:675
+#: src/frontends/desktop/views/setup-assistant.ts:678
 msgid "Tax number"
 msgstr ""
 
@@ -3156,168 +3197,191 @@ msgid "Yes, small business (§ 19 UStG)"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:393
-#: src/frontends/desktop/views/setup-assistant.ts:577
+#: src/frontends/desktop/views/setup-assistant.ts:596
 msgid "Small business"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:396
-#: src/frontends/desktop/views/setup-assistant.ts:579
+#: src/frontends/desktop/views/setup-assistant.ts:599
 msgid "Monthly"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:397
-#: src/frontends/desktop/views/setup-assistant.ts:579
+#: src/frontends/desktop/views/setup-assistant.ts:601
 msgid "Quarterly"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:399
-#: src/frontends/desktop/views/setup-assistant.ts:580
-msgid "VAT return period"
+#: src/frontends/desktop/views/setup-assistant.ts:398
+#: src/frontends/desktop/views/setup-assistant.ts:603
+msgid "None, annual return only"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:400
-msgid "Annual-only filers keep “Later”."
+#: src/frontends/desktop/views/setup-assistant.ts:605
+msgid "VAT return period"
+msgstr ""
+
+#: src/frontends/desktop/views/setup-assistant.ts:401
+msgid ""
+"As set by the tax office. “None” only if it released you from VAT returns."
+msgstr ""
+
+#: src/frontends/desktop/views/setup-assistant.ts:404
+#: src/frontends/desktop/views/setup-assistant.ts:595
+#: src/frontends/desktop/views/setup-assistant.ts:606
+msgid "No"
+msgstr ""
+
+#: src/frontends/desktop/views/setup-assistant.ts:405
+msgid "Yes, granted"
+msgstr ""
+
+#: src/frontends/desktop/views/setup-assistant.ts:407
+#: src/frontends/desktop/views/setup-assistant.ts:607
+msgid "Permanent deadline extension"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:408
-#: src/frontends/desktop/window.ts:557
+msgid "Dauerfristverlängerung: every VAT return is due one month later."
+msgstr ""
+
+#: src/frontends/desktop/views/setup-assistant.ts:424
+#: src/frontends/desktop/window.ts:637
 msgid "Business"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:434
+#: src/frontends/desktop/views/setup-assistant.ts:453
 msgid "Income tax"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:435
+#: src/frontends/desktop/views/setup-assistant.ts:454
 msgid ""
 "Joint assessment is for married couples and civil partners filing together."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:438
-#: src/frontends/desktop/views/setup-assistant.ts:587
+#: src/frontends/desktop/views/setup-assistant.ts:457
+#: src/frontends/desktop/views/setup-assistant.ts:614
 msgid "Individual assessment"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:439
-#: src/frontends/desktop/views/setup-assistant.ts:585
+#: src/frontends/desktop/views/setup-assistant.ts:458
+#: src/frontends/desktop/views/setup-assistant.ts:612
 msgid "Joint assessment (splitting)"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:441
-#: src/frontends/desktop/views/setup-assistant.ts:589
+#: src/frontends/desktop/views/setup-assistant.ts:460
+#: src/frontends/desktop/views/setup-assistant.ts:616
 msgid "Assessment"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:472
+#: src/frontends/desktop/views/setup-assistant.ts:491
 msgid "Which bank accounts belong to it?"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:474
+#: src/frontends/desktop/views/setup-assistant.ts:493
 msgid ""
 "A ticked account moves to the new entity. New accounts are added under "
 "Accounts → Connections & import."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:485
+#: src/frontends/desktop/views/setup-assistant.ts:504
 msgid "Not assigned"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:493
+#: src/frontends/desktop/views/setup-assistant.ts:512
 msgid "No bank accounts yet"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:493
+#: src/frontends/desktop/views/setup-assistant.ts:512
 msgid "Add one under Accounts once the entity exists."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:499
-#: src/frontends/desktop/views/setup-assistant.ts:595
+#: src/frontends/desktop/views/setup-assistant.ts:518
+#: src/frontends/desktop/views/setup-assistant.ts:622
 msgid "Bank accounts"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:522
+#: src/frontends/desktop/views/setup-assistant.ts:541
 msgid "Where do the receipts come from?"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:524
+#: src/frontends/desktop/views/setup-assistant.ts:543
 msgid "Same as your other entities. You can still choose differently."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:526
+#: src/frontends/desktop/views/setup-assistant.ts:545
 msgid ""
 "The built-in document management needs nothing else. Use Paperless-ngx if "
 "you already keep your receipts there."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:532
+#: src/frontends/desktop/views/setup-assistant.ts:551
 msgid "Receipt source"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:533
-#: src/frontends/desktop/views/setup-assistant.ts:600
+#: src/frontends/desktop/views/setup-assistant.ts:552
+#: src/frontends/desktop/views/setup-assistant.ts:627
 msgid "Built-in document management"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:542
+#: src/frontends/desktop/views/setup-assistant.ts:561
 msgid "Leave the token empty to use the one your other entities use."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:543
+#: src/frontends/desktop/views/setup-assistant.ts:562
 msgid ""
 "URL and API token. The token is stored in the configuration file only you "
 "can read."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:545
+#: src/frontends/desktop/views/setup-assistant.ts:564
 msgid "URL"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:548
+#: src/frontends/desktop/views/setup-assistant.ts:567
 msgid "API token"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:571
+#: src/frontends/desktop/views/setup-assistant.ts:590
 msgid "Summary"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:576
+#: src/frontends/desktop/views/setup-assistant.ts:595
+#: src/frontends/desktop/views/setup-assistant.ts:606
 msgid "Yes"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:576
-msgid "No"
-msgstr ""
-
-#: src/frontends/desktop/views/setup-assistant.ts:593
+#: src/frontends/desktop/views/setup-assistant.ts:620
 msgid "German tax features on"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:593
+#: src/frontends/desktop/views/setup-assistant.ts:620
 msgid "German tax features off"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:609
+#: src/frontends/desktop/views/setup-assistant.ts:636
 #: src/frontends/desktop/views/transactions-view.ts:299
 msgid "Done"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:610
+#: src/frontends/desktop/views/setup-assistant.ts:637
+#: src/frontends/desktop/window.blp:198
 msgid "Finish setup"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:610
+#: src/frontends/desktop/views/setup-assistant.ts:637
 msgid "Add entity"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:621
+#: src/frontends/desktop/views/setup-assistant.ts:648
 msgid "Setup failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:638
+#: src/frontends/desktop/views/setup-assistant.ts:665
 msgid "Please enter a name."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:649
+#: src/frontends/desktop/views/setup-assistant.ts:676
 msgid "Optional. The tax office is already part of the tax number."
 msgstr ""
 
@@ -3832,166 +3896,166 @@ msgid ""
 "from. They can be created in the settings."
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:120
+#: src/frontends/desktop/views/welcome.ts:123
 msgid "Welcome to Steuererklärung"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:123
+#: src/frontends/desktop/views/welcome.ts:126
 msgid ""
 "Prepare your profit-and-loss statement, VAT and income tax from your bank "
 "transactions and receipts."
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:133
+#: src/frontends/desktop/views/welcome.ts:136
 msgid "Your data stays on this computer"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:134
+#: src/frontends/desktop/views/welcome.ts:137
 msgid ""
 "Configuration, transactions and receipts are ordinary files in your home "
 "folder."
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:140
+#: src/frontends/desktop/views/welcome.ts:143
 msgid "Connections are optional"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:141
+#: src/frontends/desktop/views/welcome.ts:144
 msgid ""
 "Qonto, Paperless-ngx, online banking, AI and ELSTER validation only when you "
 "set them up."
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:158
+#: src/frontends/desktop/views/welcome.ts:161
 msgid "No tax advice"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:161
+#: src/frontends/desktop/views/welcome.ts:164
 msgid ""
 "The app helps you prepare. It does not replace a tax adviser, and its "
 "figures are estimates until ELSTER has validated them. Check every return "
 "before you send it."
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:167
+#: src/frontends/desktop/views/welcome.ts:170
 msgid "Please note"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:168
+#: src/frontends/desktop/views/welcome.ts:171
 msgid "Understood"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:178
+#: src/frontends/desktop/views/welcome.ts:181
 msgid "How do you want to start?"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:179
+#: src/frontends/desktop/views/welcome.ts:182
 msgid ""
 "Demo and own data are kept strictly apart. You can switch later in the "
 "Settings."
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:185
+#: src/frontends/desktop/views/welcome.ts:188
 msgid ""
 "A fictional business with sample transactions — nothing of yours is touched."
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:196
+#: src/frontends/desktop/views/welcome.ts:199
 msgid "Set up your business or private tax return in a few steps."
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:206
+#: src/frontends/desktop/views/welcome.ts:209
 msgid "I already have a steuererklaerung.json"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:207
+#: src/frontends/desktop/views/welcome.ts:210
 msgid "Show where the app looks for it."
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:212
+#: src/frontends/desktop/views/welcome.ts:215
 msgid "Your data"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:222
-#: src/frontends/desktop/views/welcome.ts:240
+#: src/frontends/desktop/views/welcome.ts:225
+#: src/frontends/desktop/views/welcome.ts:243
 msgid "Existing configuration"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:224
+#: src/frontends/desktop/views/welcome.ts:227
 msgid ""
 "Copy your steuererklaerung.json (or the older buchhaltung.json) to this "
 "place, then restart the app. Your transactions and receipts stay where the "
 "file says they are."
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:228
+#: src/frontends/desktop/views/welcome.ts:231
 msgid "Expected location"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:232
+#: src/frontends/desktop/views/welcome.ts:235
 msgid "Open folder"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:241
+#: src/frontends/desktop/views/welcome.ts:244
 msgid "Restart now"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:254
+#: src/frontends/desktop/views/welcome.ts:257
 msgid "Optional connections"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:255
+#: src/frontends/desktop/views/welcome.ts:258
 msgid ""
 "None of them is needed to start. Set them up later in the Settings, whenever "
 "you like."
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:257
+#: src/frontends/desktop/views/welcome.ts:260
 msgid "Fetch business account transactions"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:259
+#: src/frontends/desktop/views/welcome.ts:262
 msgid "Use receipts from your document archive"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:261
+#: src/frontends/desktop/views/welcome.ts:264
 msgid "Online banking with German banks"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:262
-#: src/frontends/desktop/views/welcome.ts:276
-#: src/frontends/desktop/views/welcome.ts:289
+#: src/frontends/desktop/views/welcome.ts:265
+#: src/frontends/desktop/views/welcome.ts:279
+#: src/frontends/desktop/views/welcome.ts:292
 msgid "AI assistant"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:262
+#: src/frontends/desktop/views/welcome.ts:265
 msgid "Answers questions and proposes bookings"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:263
+#: src/frontends/desktop/views/welcome.ts:266
 msgid "Validate returns with the official ELSTER library"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:265
+#: src/frontends/desktop/views/welcome.ts:268
 msgid "Connections"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:278
+#: src/frontends/desktop/views/welcome.ts:281
 msgid ""
 "When you use the assistant, your question and the data it needs to answer go "
 "to the AI provider you configure. Nothing is sent unless you ask. Without "
 "it, every feature of the app still works."
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:290
+#: src/frontends/desktop/views/welcome.ts:293
 msgid "Start the demo"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:290
+#: src/frontends/desktop/views/welcome.ts:293
 msgid "Set up my data"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:318
+#: src/frontends/desktop/views/welcome.ts:331
 msgid "Could not open {dir}"
 msgstr ""
 
@@ -4174,40 +4238,48 @@ msgstr ""
 msgid "Sync"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:205
+#: src/frontends/desktop/window.ts:229
 msgid "Switch to the demo?"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:205
+#: src/frontends/desktop/window.ts:229
 msgid "Switch to your own data?"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:208
+#: src/frontends/desktop/window.ts:232
 msgid ""
 "The app restarts with fictional sample data. Your own data is not changed."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:209
+#: src/frontends/desktop/window.ts:233
 msgid "The app restarts with your own data. The demo data stays separate."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:212
+#: src/frontends/desktop/window.ts:236
 msgid "Restart"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:225
+#: src/frontends/desktop/window.ts:249
 msgid "Please restart the app yourself to switch."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:535
+#: src/frontends/desktop/window.ts:562
 msgid "Data could not be loaded completely: {error}"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:542
+#: src/frontends/desktop/window.ts:569
 msgid "Demo data – fictional examples, no real financial data"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:621
+#: src/frontends/desktop/window.ts:599
+msgid "Setup is not finished: no business or private tax return is set up yet."
+msgstr ""
+
+#: src/frontends/desktop/window.ts:600
+msgid "Setup is not finished: “{entity}” has no bank account yet."
+msgstr ""
+
+#: src/frontends/desktop/window.ts:701
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."

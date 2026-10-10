@@ -144,6 +144,30 @@ Buchhaltungs-Kern.
 
 ---
 
+## §18 UStG, §19 UStG, §§46–48 UStDV — USt-Voranmeldung: Zeitraum, Befreiung, Dauerfrist
+
+Abrufstand aller Quellen dieses Abschnitts: **2026-10-10**. Gilt für die Besteuerungszeiträume
+2025 und 2026; die Neugründer-Ausnahme läuft nach dem Gesetzestext mit 2026 aus (Zeile „Neugründer").
+
+| Fall | Regel | Norm | Quelle |
+|---|---|---|---|
+| Regelfall | Voranmeldungszeitraum ist das **Kalendervierteljahr**; Abgabe und Zahlung bis zum **10. Tag** nach Ablauf des Zeitraums. | §18 Abs. 1 S. 1 und 4, Abs. 2 S. 1 UStG | [§18 UStG](https://www.gesetze-im-internet.de/ustg_1980/__18.html) |
+| Monatszahler | Steuer des Vorjahres **> 9.000 €** → Kalendermonat. Ein Vorsteuer-Überschuss **> 9.000 €** im Vorjahr erlaubt den Monat auf Wahl (Voranmeldung Januar bis 10. Februar, bindet für das Jahr). | §18 Abs. 2 S. 2, Abs. 2a UStG | wie oben |
+| Befreiung (Jahreszahler) | Steuer des Vorjahres **≤ 2.000 €** → das Finanzamt **kann** von Voranmeldungen und Vorauszahlungen befreien. Es entscheidet, nicht die Person; danach bleibt nur die USt-Jahreserklärung. App-Feld: `elster.ust_va_befreit`. | §18 Abs. 2 S. 3 UStG | wie oben; Spiegel: [Finanzamt NRW, USt-Voranmeldungen](https://www.finanzamt.nrw.de/steuerinfos/unternehmen/umsatzsteuer/umsatzsteuer-voranmeldungen) |
+| Neugründer | Im Gründungsjahr und im Folgejahr grundsätzlich **monatlich**. Für **2021–2026** gilt stattdessen die voraussichtliche (Gründungsjahr) bzw. auf ein Jahr hochgerechnete (Folgejahr) Steuer mit den Grenzen oben — meist also vierteljährlich. Ab **2027** gilt nach dem Gesetzestext wieder die Monatspflicht, falls der Gesetzgeber nicht verlängert: vor jeder Einrichtung für 2027 neu prüfen. Vorratsgesellschaften und Firmenmäntel: immer monatlich. | §18 Abs. 2 S. 4–6 UStG | wie oben; Spiegel: [IHK Düsseldorf](https://www.ihk.de/duesseldorf/existenzgruendung/aktuelles/aussetzung-der-pflicht-zur-monatlichen-uebermittlung-voranmeldungen-in-neugruendungsfaellen-4996474) |
+| Kleinunternehmer | Steuerfrei, wenn der Gesamtumsatz im Vorjahr **≤ 25.000 €** war und im laufenden Jahr **≤ 100.000 €** bleibt (VZ ab 2025; bis 2024: 22.000 € / 50.000 €). §18 Abs. 1–4 gilt nicht: **keine Voranmeldung**, und ab VZ **2024 keine USt-Jahreserklärung** mehr (außer auf Aufforderung, §149 Abs. 1 S. 2 AO). Ausnahme §18 Abs. 4a: Voranmeldung nur für Zeiträume, in denen er z. B. Steuer nach §13b schuldet. App-Feld: `invoicing.self.issuer.kleinunternehmer`. | §19 Abs. 1 UStG | [§19 UStG](https://www.gesetze-im-internet.de/ustg_1980/__19.html); [BMF 18.03.2025, Sonderregelung für Kleinunternehmer](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Steuerarten/Umsatzsteuer/Umsatzsteuer-Anwendungserlass/2025-03-18-sonderregelung-kleinunternehmer.pdf?__blob=publicationFile&v=3); Spiegel: [IHK Köln](https://www.ihk.de/koeln/hauptnavigation/recht-steuern/steuern/kleinunternehmer-im-umsatzsterrecht-5695056) |
+| Dauerfristverlängerung | Auf Antrag verlängert das Finanzamt Abgabe- und Zahlungsfrist um **einen Monat**. Antrag bis zur Frist der ersten betroffenen Voranmeldung, elektronisch. Monatszahler leisten eine **Sondervorauszahlung von 1/11** der Vorauszahlungen des Vorjahres (bis zur Frist der ersten Voranmeldung, jedes Jahr neu); sie wird mit der Dezember-Vorauszahlung verrechnet. App-Feld: `elster.ust_dauerfristverlaengerung`. | §§46, 47, 48 UStDV | [§46](https://www.gesetze-im-internet.de/ustdv_1980/__46.html) · [§47](https://www.gesetze-im-internet.de/ustdv_1980/__47.html) · [§48](https://www.gesetze-im-internet.de/ustdv_1980/__48.html) |
+
+**Umsetzung im Code:** `core/actions/steuertermine.ts` (`toSteuerTerminEntity`) zeigt keine USt-VA-Termine
+für Kleinunternehmer und befreite Jahreszahler und keine USt-Jahreserklärung für Kleinunternehmer. Das
+Kennzeichen gilt für alle angezeigten Jahre; die Liste reicht höchstens zwei Jahre zurück, also nicht vor
+VZ 2024. Wer vorher noch regelbesteuert war, prüft ältere Jahreserklärungen selbst.
+Die Grenzen 9.000 € und 2.000 € rechnet die App nicht nach — welcher Zeitraum gilt, legt das Finanzamt fest,
+und die Person trägt ihn ein (Einrichtung → Betrieb, Einstellungen → Umsatzsteuer). Die
+Kleinunternehmer-Grenzen prüft `core/elster/hinweise.ts` (`kleinunternehmerGrenzen`).
+
+---
+
 ## §14 UStG — E-Rechnung (Empfang, Ausstellung, Übergangsfristen)
 
 Gilt für Umsätze nach dem 31.12.2024 (Wachstumschancengesetz, BGBl. 2024 I Nr. 108). Abrufstand aller

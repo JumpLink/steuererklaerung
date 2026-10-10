@@ -97,6 +97,7 @@ export {
     type EntityDmsView,
     type EntityInvoicingView,
 } from './accessors.ts';
+export { isAssistantEnabled } from './assistant-preference.ts';
 
 // ── Migration (config migrate) ──────────────────────────────────────────────────────────────────────
 export {

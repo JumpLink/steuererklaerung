@@ -8,8 +8,9 @@
  * Every question maps onto a field the manifest already has — nothing here invents one:
  *
  *   · Steuernummer        → `elster.tax_number` (business) · `est.person.steuernummer` (private)
- *   · USt-VA-Zeitraum     → `elster.period` (`month` or `quarter`; the schema requires one of the
- *                           two, so "yearly" and "none" have nowhere to go and are not offered)
+ *   · USt-VA-Zeitraum     → `elster.period` (`month` or `quarter`); "none" — released by the
+ *                           Finanzamt, annual return only — is `elster.ust_va_befreit`
+ *   · Dauerfrist          → `elster.ust_dauerfristverlaengerung`
  *   · Kleinunternehmer    → `invoicing.self.issuer.kleinunternehmer`, the only §19 flag there is
  *   · Zusammenveranlagung → `est.veranlagung` (`einzel` / `splitting`)
  *   · Bankkonten          → `accounts`, as exact account keys
@@ -46,8 +47,10 @@ export interface EntitySetupDraft {
     taxNumber: string;
     /** Business only. */
     kleinunternehmer?: boolean;
-    /** Business only. */
-    ustCadence?: 'month' | 'quarter';
+    /** Business only. `none` = the Finanzamt released it from Voranmeldungen (§18 Abs. 2 S. 3 UStG). */
+    ustCadence?: 'month' | 'quarter' | 'none';
+    /** Business only: a granted Dauerfristverlängerung (§§46–48 UStDV). */
+    dauerfrist?: boolean;
     /** Private only. */
     veranlagung?: 'einzel' | 'splitting';
     /** Exact account keys to route to the new entity. */
@@ -160,7 +163,14 @@ export function entitySetupSections(
     if (isBusinessKind(draft.kind)) {
         // Same shape `ensureElsterSection` creates, so a business entity from either path is alike.
         const period = draft.ustCadence === 'month' ? { year, month: 1 } : { year, quarter: 1 };
-        sections.elster = { entity_id: id, period, ...(taxNumber ? { tax_number: taxNumber } : {}) };
+        sections.elster = {
+            entity_id: id,
+            period,
+            ...(taxNumber ? { tax_number: taxNumber } : {}),
+            // `period` must still name a quarter; the flag is what hides the Voranmeldungen.
+            ...(draft.ustCadence === 'none' ? { ust_va_befreit: true } : {}),
+            ...(draft.dauerfrist !== undefined ? { ust_dauerfristverlaengerung: draft.dauerfrist } : {}),
+        };
         if (draft.kleinunternehmer !== undefined) {
             sections.invoicing = { self: { issuer: { kleinunternehmer: draft.kleinunternehmer } } };
         }

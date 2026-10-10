@@ -82,7 +82,14 @@ async function ust(
     if (!elster) return { status: 'entfaellt', grund: 'hier keine Umsatzsteuer anfällt (keine ELSTER-Angaben).' };
     if (filings.status !== 'ok') return filings;
     const stand: UstVaStand = {
-        cadence: elster.period.quarter != null ? 'quarter' : elster.period.month != null ? 'month' : null,
+        // Released from Voranmeldungen → no period was declared, the whole year is still open.
+        cadence: elster.ust_va_befreit
+            ? null
+            : elster.period.quarter != null
+              ? 'quarter'
+              : elster.period.month != null
+                ? 'month'
+                : null,
         dauerfrist: elster.ust_dauerfristverlaengerung ?? false,
         eingereicht: filings.daten
             .filter((f) => f.kind === 'ustva' && f.filedAt)

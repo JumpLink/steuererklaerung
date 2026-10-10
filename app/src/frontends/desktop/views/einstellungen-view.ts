@@ -38,6 +38,7 @@ import { appSession } from '../data/session.ts';
 import type { AppEntity } from '../entities.ts';
 import { applyScrollHook, markup } from './util.ts';
 import { showToast } from '../toast.ts';
+import { openMcpClientsDialog } from './mcp-clients-dialog.ts';
 import type { SettingsHost } from './einstellungen/rows.ts';
 import { buildDmsGroup, buildInvoicingGroup } from './einstellungen/dms-invoicing.ts';
 import { buildBelegeMailGroup } from './einstellungen/belege-mail.ts';
@@ -232,21 +233,12 @@ export class BhEinstellungenView extends Adw.Bin {
         for (const [title, subtitle, key] of intervals) {
             this._sync_group.add(this.minutesRow(title, subtitle, s.sync[key], (n) => (s.sync[key] = n)));
         }
-        this._assistant_group.add(
-            this.switchRow(
-                _('Built-in assistant'),
-                _('Enable the assistant tab and /api/chat'),
-                s.assistant.enabled,
-                (on) => {
-                    s.assistant.enabled = on;
-                },
-            ),
-        );
+        // The on/off switch of the built-in assistant is per user (General); only the engine is here.
         this._assistant_group.add(this.engineRow());
         this._mcp_group.add(
             this.switchRow(
-                _('Provide MCP tools'),
-                _('Connect external assistants (Claude, ChatGPT …)'),
+                _('MCP server for external agents'),
+                _('Claude, Cursor, VS Code … — the built-in assistant does not need it'),
                 s.mcp.enabled,
                 (on) => {
                     s.mcp.enabled = on;
@@ -263,6 +255,9 @@ export class BhEinstellungenView extends Adw.Bin {
                 },
             ),
         );
+        const connect = new Adw.ButtonRow({ title: _('Connect an external agent …') });
+        connect.connect('activated', () => openMcpClientsDialog(this));
+        this._mcp_group.add(connect);
         for (const group of MCP_GROUPS) {
             this._groups_group.add(
                 this.switchRow(GROUP_LABEL[group], null, s.mcp.groups[group], (on) => {

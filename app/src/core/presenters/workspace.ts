@@ -9,7 +9,7 @@
  * its ELSTER/ESt availability. Synchronous + cheap (a handful of indexed store counts, no outbound I/O).
  */
 
-import { loadAppSettings, resolveWorkspaceEntities, type ElsterConfig, type EstConfig } from '../config/index.ts';
+import { isAssistantEnabled, resolveWorkspaceEntities, type ElsterConfig, type EstConfig } from '../config/index.ts';
 import { searchTransactions, transactionsSummary } from '../actions/transactions.ts';
 import { capabilities, type Capabilities } from '../countries/index.ts';
 import type { TaxModuleId } from '../config/index.ts';
@@ -64,7 +64,7 @@ export interface EntityModel {
 export interface WorkspaceModel {
     entities: EntityModel[];
     defaultEntity: string;
-    /** Whether the built-in assistant is enabled (gates the web Assistent view). */
+    /** Whether the built-in assistant is enabled ({@link isAssistantEnabled}). */
     assistant: boolean;
 }
 
@@ -122,7 +122,7 @@ export function loadWorkspaceModel(opts: { years?: number[] } = {}): WorkspaceMo
 
     // Default to the first entity that actually has data, else the first listed.
     const defaultEntity = (entities.find((e) => e.years.length) ?? entities[0])?.id ?? 'default';
-    const assistant = loadAppSettings().assistant.enabled;
+    const assistant = isAssistantEnabled();
     return { entities, defaultEntity, assistant };
 }
 

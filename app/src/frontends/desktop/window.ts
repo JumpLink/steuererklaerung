@@ -27,7 +27,7 @@ import { NAV_ITEMS, isTabHost, visibleNavItems, type NavItem } from './nav.ts';
 import { isFirstRun } from '../../core/actions/entities.ts';
 import { belegeAusMailAbrufenFuer } from '../../core/actions/mail-eingang.ts';
 import { gioMailConnector } from '../../core/clients/imap/index.ts';
-import { loadMailEingang } from '../../core/config/index.ts';
+import { isAssistantEnabled, loadMailEingang, loadManifest } from '../../core/config/index.ts';
 import { capabilities } from '../../core/countries/index.ts';
 import { loadAppWorkspace, type AppEntity, type AppWorkspace } from './entities.ts';
 import { showToast } from './toast.ts';
@@ -35,7 +35,14 @@ import { presentRemoveEntity, presentRenameEntity } from './views/entity-dialogs
 import { BhSetupAssistant } from './views/setup-assistant.ts';
 import { BhWelcome, type WelcomeChoice } from './views/welcome.ts';
 import { isDemoMode } from '../../core/config/demo.ts';
-import { loadUserSettings, shouldShowWelcome } from '../../core/config/user-settings.ts';
+import { loadUserSettings, shouldShowWelcome, updateUserSettings } from '../../core/config/user-settings.ts';
+import {
+    setupGapFingerprint,
+    setupGaps,
+    shouldShowSetupBanner,
+    type SetupGap,
+    type SetupGapEntity,
+} from '../../core/actions/setup-gaps.ts';
 import { canRestart, restartInMode } from './restart.ts';
 import { loadDocuments } from '../../core/presenters/belege.ts';
 import { appSession } from './data/session.ts';
@@ -93,6 +100,10 @@ export class MainWindow extends Adw.ApplicationWindow {
                     'assistant_toggle',
                     'assistant_panel',
                     'banner',
+                    'setup_bar',
+                    'setup_label',
+                    'setup_close',
+                    'setup_finish',
                     'stack',
                 ],
             },
@@ -123,6 +134,10 @@ export class MainWindow extends Adw.ApplicationWindow {
     declare private _assistant_toggle: Gtk.ToggleButton;
     declare private _assistant_panel: BhAssistentPanel;
     declare private _banner: Adw.Banner;
+    declare private _setup_bar: Gtk.ActionBar;
+    declare private _setup_label: Gtk.Label;
+    declare private _setup_close: Gtk.Button;
+    declare private _setup_finish: Gtk.Button;
     declare private _stack: Gtk.Stack;
 
     // Ported native views by view id (rebuilt per entity); placeholders aren't tracked here.
@@ -153,8 +168,9 @@ export class MainWindow extends Adw.ApplicationWindow {
         // data. Someone who already finished it — or skipped it with a manifest already on disk —
         // still gets the assistant when there is no manifest: the pseudo-entity below fails every
         // save with "Kein Manifest … zum Speichern vorhanden", and its only remedy is a terminal.
+        // Someone who put the welcome off gets the setup banner instead of an assistant on every launch.
         if (!isDemoMode() && shouldShowWelcome()) this.presentWelcome();
-        else if (isFirstRun()) this.presentSetup();
+        else if (isFirstRun() && !loadUserSettings().welcomeDeferred) this.presentSetup();
         // Dev/testing hook: STEUER_APP_SETUP_PAGE also opens the new-entity assistant on a workspace.
         else if (process.env.STEUER_APP_SETUP_PAGE) this.presentSetup();
     }
@@ -175,13 +191,21 @@ export class MainWindow extends Adw.ApplicationWindow {
         });
         this.add_action(switchMode);
 
+        // A view changed what the setup banner reads (an account was assigned): re-ask it.
+        const setupChanged = new Gio.SimpleAction({ name: 'setup-changed' });
+        setupChanged.connect('activate', () => this.refreshSetupBanner());
+        this.add_action(setupChanged);
+
         const assistant = new Gio.SimpleAction({ name: 'assistant-preference' });
         assistant.connect('activate', () => this.applyAssistantPreference());
         this.add_action(assistant);
     }
 
     private presentWelcome(): void {
-        new BhWelcome((choice) => this.onWelcomeFinished(choice)).present(this);
+        new BhWelcome(
+            (choice) => this.onWelcomeFinished(choice),
+            () => this.refreshBanner(),
+        ).present(this);
     }
 
     private onWelcomeFinished(choice: WelcomeChoice): void {
@@ -228,9 +252,9 @@ export class MainWindow extends Adw.ApplicationWindow {
         restartInMode(app, mode);
     }
 
-    /** `aiAssistant: false` hides the panel toggle; unset keeps the toggle, as before the opt-in existed. */
+    /** The built-in assistant switched off hides the panel toggle ({@link isAssistantEnabled}). */
     private applyAssistantPreference(): void {
-        const visible = loadUserSettings().aiAssistant !== false;
+        const visible = isAssistantEnabled();
         this._assistant_toggle.set_visible(visible);
         if (!visible) this._assistant_split.set_show_sidebar(false);
     }
@@ -425,6 +449,8 @@ export class MainWindow extends Adw.ApplicationWindow {
         if (process.env.STEUER_APP_ASSIST_DEMO) this._assistant_split.set_show_sidebar(true);
         this.applyAssistantPreference();
         this._banner.connect('button-clicked', () => this.confirmSwitchMode('own'));
+        this._setup_finish.connect('clicked', () => this.finishSetup());
+        this._setup_close.connect('clicked', () => this.dismissSetupBanner());
     }
 
     /** Load entities/years from the backend, populate the switchers, then render the nav. */
@@ -526,6 +552,7 @@ export class MainWindow extends Adw.ApplicationWindow {
      * takes precedence; otherwise a "Demodaten" notice for the fictional demo entity; else hidden.
      */
     private refreshBanner(): void {
+        this.refreshSetupBanner();
         // On a first run the missing manifest is not an error, it is the state the setup assistant
         // exists for — and it is already on screen saying so. A banner behind it that reads "Kein
         // Manifest gefunden" only tells the user something is broken while they are fixing it.
@@ -545,6 +572,59 @@ export class MainWindow extends Adw.ApplicationWindow {
             return;
         }
         this._banner.set_revealed(false);
+    }
+
+    /** The manifest's entities for {@link setupGaps}; `null` when there is no manifest (or it is unreadable). */
+    private setupGapEntities(): SetupGapEntity[] | null {
+        if (isDemoMode() || isFirstRun()) return isDemoMode() ? [] : null;
+        try {
+            return loadManifest().entities;
+        } catch {
+            return null;
+        }
+    }
+
+    /**
+     * The setup banner: someone who put the welcome off and still misses an entity or an account.
+     * Independent of the Adw.Banner above — a load error and a missing account can both be true.
+     */
+    private refreshSetupBanner(): void {
+        const gaps = setupGaps(this.setupGapEntities());
+        this.setupGapsShown = gaps;
+        const show = !isDemoMode() && shouldShowSetupBanner(loadUserSettings(), gaps);
+        if (show) {
+            const first = gaps[0];
+            this._setup_label.set_label(
+                first.kind === 'no-entity'
+                    ? _('Setup is not finished: no business or private tax return is set up yet.')
+                    : fmt(_('Setup is not finished: “{entity}” has no bank account yet.'), {
+                          entity: first.entityName,
+                      }),
+            );
+        }
+        this._setup_bar.set_revealed(show);
+    }
+
+    private setupGapsShown: SetupGap[] = [];
+
+    /** „Finish setup": the assistant for a missing entity, the accounts view for a missing account. */
+    private finishSetup(): void {
+        const first = this.setupGapsShown[0];
+        if (!first || first.kind === 'no-entity') {
+            this.presentSetup();
+            return;
+        }
+        if (this.currentEntity?.id !== first.entityId) this.onEntityChanged(first.entityId);
+        this.selectNavByView('konten');
+    }
+
+    /** Close: remember today's gaps, so only a new one brings the banner back. */
+    private dismissSetupBanner(): void {
+        const fingerprint = setupGapFingerprint(this.setupGapsShown);
+        updateUserSettings((s) => {
+            s.setupBannerDismissed = fingerprint;
+        });
+        this._setup_bar.set_revealed(false);
     }
 
     /** Fill the sidebar entity card from the workspace and show the active entity. */

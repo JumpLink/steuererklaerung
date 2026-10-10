@@ -29,6 +29,7 @@ import {
     updateUserSettings,
     userSettingsPath,
 } from '../../../src/core/config/user-settings.ts';
+import { isAssistantEnabled } from '../../../src/core/config/assistant-preference.ts';
 
 function v1Manifest(): string {
     return JSON.stringify({
@@ -165,10 +166,69 @@ export default async () => {
             expect(shouldShowWelcome(loadUserSettings(), getManifestPath(dir))).toBe(false);
         });
 
+        await it('„Later" → not on the next launch either, without completing it', async () => {
+            updateUserSettings((s) => {
+                s.welcomeDeferred = true;
+            });
+            const s = loadUserSettings();
+            expect(s.welcomeCompleted).toBe(false);
+            expect(shouldShowWelcome(s, getManifestPath(dir))).toBe(false);
+        });
+
         await it('deciding about the welcome never touches the manifest location', async () => {
             shouldShowWelcome(loadUserSettings(), getManifestPath(dir));
             expect(existsSync(join(dir, MANIFEST_FILENAME))).toBe(false);
             expect(existsSync(join(dir, LEGACY_MANIFEST_FILENAME))).toBe(false);
+        });
+    });
+
+    await describe('built-in assistant — one switch, per user', async () => {
+        let dir = '';
+        const manifest = (assistant?: boolean): string => {
+            const path = join(dir, MANIFEST_FILENAME);
+            const app = assistant === undefined ? {} : { app: { assistant: { enabled: assistant } } };
+            writeFileSync(
+                path,
+                JSON.stringify({ version: 1, entities: [{ id: 'x', name: 'X', kind: 'gbr', accounts: [] }], ...app }),
+            );
+            return path;
+        };
+        beforeEach(() => {
+            dir = mkdtempSync(join(tmpdir(), 'assistant-pref-'));
+            vi.stubEnv('XDG_CONFIG_HOME', join(dir, 'config'));
+        });
+        afterEach(() => {
+            vi.unstubAllEnvs();
+            rmSync(dir, { recursive: true, force: true });
+        });
+
+        await it('never decided, no manifest → available, as before the switch existed', async () => {
+            expect(isAssistantEnabled(loadUserSettings(), join(dir, MANIFEST_FILENAME))).toBe(true);
+        });
+
+        await it('never decided → a legacy manifest `assistant.enabled: false` still counts', async () => {
+            expect(isAssistantEnabled(loadUserSettings(), manifest(false))).toBe(false);
+            expect(isAssistantEnabled(loadUserSettings(), manifest())).toBe(true);
+        });
+
+        await it('the per-user decision wins over the manifest, both ways', async () => {
+            const off = manifest(false);
+            updateUserSettings((s) => {
+                s.aiAssistant = true;
+            });
+            expect(isAssistantEnabled(loadUserSettings(), off)).toBe(true);
+            const on = manifest(true);
+            updateUserSettings((s) => {
+                s.aiAssistant = false;
+            });
+            expect(isAssistantEnabled(loadUserSettings(), on)).toBe(false);
+        });
+
+        await it('reading the switch writes nothing to the manifest', async () => {
+            const path = manifest();
+            const before = readFileSync(path, 'utf-8');
+            isAssistantEnabled(loadUserSettings(), path);
+            expect(readFileSync(path, 'utf-8')).toBe(before);
         });
     });
 };

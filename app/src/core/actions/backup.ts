@@ -26,6 +26,12 @@
  * original. Retention deletes only folders that carry our `backup.json`, never anything else the
  * person keeps in that directory.
  *
+ * One backup at a time, per user: a lock file (`backup.lock` in the app's data directory) is taken
+ * with an exclusive create before anything is written. The app runs its backup in a child process,
+ * the CLI and a pre-migration backup run in theirs — without the lock, a migration started from a
+ * terminal while the window is still copying would snapshot the same ledger twice into folders that
+ * retention then prunes against each other. A lock whose process is gone is stale and taken over.
+ *
  * Restoring is deliberately manual (see `docs/app/backup.md`): copying a backup over live data is
  * the one operation where a wrong click loses the newer state, so the app does not offer it.
  */
@@ -46,6 +52,7 @@ import { basename, dirname, join, relative, resolve, sep } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 
 import { getStoreDir, ledgerDbPath } from '@steuererklaerung/store';
+import { userDataDir } from '../paths.ts';
 import { getManifestPath, LEGACY_MANIFEST_FILENAME, MANIFEST_FILENAME } from '../config/manifest.ts';
 import { setBeforeMigrationWrite } from '../config/migrate-forward.ts';
 import { defaultBackupRoot, loadUserSettings, updateUserSettings, type UserSettings } from '../config/user-settings.ts';
@@ -91,6 +98,8 @@ export interface CreateBackupOptions {
     /** Why — `manual`, `before-migration`, …; recorded in `backup.json`. */
     reason?: string;
     sources?: BackupSources;
+    /** The lock file; defaults to {@link backupLockPath}. */
+    lockPath?: string;
 }
 
 export interface BackupMeta {
@@ -199,8 +208,78 @@ function copyTree(srcDir: string, destDir: string, backupDir: string, out: Colle
     }
 }
 
-/** Write a complete backup into `<root>/<timestamp>/`, then apply retention. */
+/** Another backup holds the lock — nothing was written. */
+export class BackupBusyError extends Error {
+    constructor(readonly holder: { pid: number; startedAt: string; reason: string } | null) {
+        super(
+            holder
+                ? `Es läuft bereits eine Sicherung (Prozess ${holder.pid}, seit ${holder.startedAt}).`
+                : 'Es läuft bereits eine Sicherung.',
+        );
+        this.name = 'BackupBusyError';
+    }
+}
+
+/** The per-user lock every backup takes — the CLI, the app and the pre-migration hook alike. */
+export function backupLockPath(): string {
+    return join(userDataDir(), 'backup.lock');
+}
+
+/** Linux answers from /proc; elsewhere a lock is only stale once its process cannot be signalled. */
+function processAlive(pid: number): boolean {
+    if (existsSync('/proc/self')) return existsSync(`/proc/${pid}`);
+    try {
+        process.kill(pid, 0);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+/**
+ * Take the backup lock or throw {@link BackupBusyError}. Returns the release function. A lock left
+ * behind by a process that no longer runs (killed, crashed) is removed and taken over once.
+ */
+export function acquireBackupLock(
+    lockPath: string,
+    reason: string,
+    isAlive: (pid: number) => boolean = processAlive,
+): () => void {
+    mkdirSync(dirname(lockPath), { recursive: true, mode: 0o700 });
+    const content = `${JSON.stringify({ pid: process.pid, startedAt: new Date().toISOString(), reason })}\n`;
+    for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+            writeFileSync(lockPath, content, { flag: 'wx', mode: 0o600 });
+            return () => rmSync(lockPath, { force: true });
+        } catch (err) {
+            if ((err as NodeJS.ErrnoException).code !== 'EEXIST') throw err;
+        }
+        let holder: { pid: number; startedAt: string; reason: string } | null = null;
+        try {
+            holder = JSON.parse(readFileSync(lockPath, 'utf-8'));
+        } catch {
+            // Unreadable or half-written: the holder may be writing it right now — treat as busy.
+        }
+        if (attempt === 0 && holder && typeof holder.pid === 'number' && !isAlive(holder.pid)) {
+            rmSync(lockPath, { force: true });
+            continue;
+        }
+        throw new BackupBusyError(holder);
+    }
+    throw new BackupBusyError(null);
+}
+
+/** Write a complete backup into `<root>/<timestamp>/`, then apply retention — under the lock. */
 export function createBackup(opts: CreateBackupOptions): BackupResult {
+    const release = acquireBackupLock(opts.lockPath ?? backupLockPath(), opts.reason ?? 'manual');
+    try {
+        return writeBackup(opts);
+    } finally {
+        release();
+    }
+}
+
+function writeBackup(opts: CreateBackupOptions): BackupResult {
     const now = opts.now ?? new Date();
     const sources = opts.sources ?? currentBackupSources();
     const root = resolve(opts.root);

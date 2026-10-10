@@ -51,6 +51,16 @@ export const UserSettingsSchema = z.looseObject({
     version: z.literal(USER_SETTINGS_VERSION).default(USER_SETTINGS_VERSION),
     /** The welcome flow was finished or skipped. */
     welcomeCompleted: z.boolean().default(false),
+    /**
+     * „Later" in the welcome: it does not come back on launch, and the setup banner names what is
+     * still missing instead. Unset on every installation from before the flag existed.
+     */
+    welcomeDeferred: z.boolean().optional(),
+    /**
+     * The setup gaps the person closed the banner for ({@link setupGapFingerprint}). A gap not in
+     * this list brings the banner back; one that was fixed simply drops out.
+     */
+    setupBannerDismissed: z.array(z.string()).optional(),
     /** What the app starts with when no flag or env decides: the sample data or the person's own. */
     preferredMode: z.enum(['demo', 'own']).optional(),
     /**
@@ -121,7 +131,7 @@ export function updateUserSettings(
 /**
  * Whether the app should open the welcome flow on launch.
  *
- * Only for a genuinely NEW person: the welcome was never completed AND no manifest resolves. The
+ * Only for a genuinely NEW person: the welcome was never completed or put off AND no manifest resolves. The
  * second half is what protects existing installations — anyone who already has a
  * `steuererklaerung.json`, or the pre-rename `buchhaltung.json` that {@link getManifestPath} still
  * falls back to, has been using the app since before the welcome existed and has no settings file
@@ -131,6 +141,6 @@ export function shouldShowWelcome(
     settings: UserSettings = loadUserSettings(),
     manifestPath: string = getManifestPath(),
 ): boolean {
-    if (settings.welcomeCompleted) return false;
+    if (settings.welcomeCompleted || settings.welcomeDeferred) return false;
     return !existsSync(manifestPath);
 }

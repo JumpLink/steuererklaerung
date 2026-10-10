@@ -102,6 +102,7 @@ export function saveFlags(
         test_mode: boolean;
         taxation_basis: 'ist' | 'soll';
         ust_dauerfristverlaengerung: boolean;
+        ust_va_befreit: boolean;
         deadline_extension_months: number;
     }>,
 ): ElsterConfig {

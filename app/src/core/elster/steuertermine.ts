@@ -79,6 +79,11 @@ export interface SteuerTerminEntity {
     dauerfrist: boolean;
     /** Files an annual USt-Jahreserklärung (anyone who files USt-VA does). */
     filesUst: boolean;
+    /**
+     * A business whatever its VAT status — a Kleinunternehmer files no USt but still an Anlage EÜR.
+     * Unset: inferred from the USt/Gewerbe/GbR flags, as before.
+     */
+    business?: boolean;
     /** GbR / Personengesellschaft → Feststellung + Anlage EÜR; else a plain Anlage EÜR. */
     isGbr: boolean;
     /** Gewerbebetrieb → Gewerbesteuererklärung. */
@@ -228,7 +233,7 @@ export function computeSteuertermine(e: SteuerTerminEntity, today: string, horiz
     // Business annuals only for genuine business entities — a purely private entity files no
     // Anlage EÜR; the private `est` deadline is independent of any business window (it outlives
     // a ceased Gewerbe and exists without one).
-    const isBusiness = e.filesUst || e.hasGewerbe || e.isGbr || e.ustCadence !== null;
+    const isBusiness = e.business || e.filesUst || e.hasGewerbe || e.isGbr || e.ustCadence !== null;
     const annualNote =
         'Regelabgabefrist §149 AO (ohne Steuerberater = 31.07. des Folgejahres). ' +
         'Eine bewilligte Fristverlängerung verschiebt sie nach hinten.';

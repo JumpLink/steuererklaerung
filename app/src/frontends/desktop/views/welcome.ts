@@ -13,8 +13,9 @@
  * The welcome never writes the manifest. "Own data" ends by handing over to the existing setup
  * assistant ({@link BhSetupAssistant}), which is the one place a configuration is created; a second
  * writer here would be a second truth about how an entity is born. What the welcome DOES write is
- * the per-user settings file — and only when the person finishes, so „Later" leaves the disk as it
- * was and the welcome comes back on the next launch.
+ * the per-user settings file: the choices when the person finishes, and that they put it off when
+ * they press „Later". A put-off welcome does not come back on launch — the setup banner names what
+ * is still missing instead, and the menu reopens the welcome at any time.
  */
 
 import { mkdirSync } from 'node:fs';
@@ -44,10 +45,12 @@ export class BhWelcome extends Adw.Dialog {
     private choice: WelcomeChoice = 'own';
     private ai: boolean;
     private readonly onFinish: (choice: WelcomeChoice) => void;
+    private readonly onLater?: () => void;
 
-    constructor(onFinish: (choice: WelcomeChoice) => void) {
+    constructor(onFinish: (choice: WelcomeChoice) => void, onLater?: () => void) {
         super();
         this.onFinish = onFinish;
+        this.onLater = onLater;
         // Opt-in: an answer given before counts, otherwise the switch starts off.
         this.ai = loadUserSettings().aiAssistant ?? false;
         this.set_title(_('Welcome'));
@@ -91,10 +94,10 @@ export class BhWelcome extends Adw.Dialog {
             marginStart: 12,
             marginEnd: 12,
         });
-        // „Later" on every page: nothing is saved, and the welcome returns on the next launch.
+        // „Later" on every page: no choice is saved, only that the welcome was put off.
         const later = new Gtk.Button({ label: _('Later') });
         later.add_css_class('pill');
-        later.connect('clicked', () => this.close());
+        later.connect('clicked', () => this.later());
         bottom.append(later);
         if (primary) {
             const button = new Gtk.Button({ label: primary.label });
@@ -280,7 +283,7 @@ export class BhWelcome extends Adw.Dialog {
                     'feature of the app still works.',
             ),
         });
-        const toggle = new Adw.SwitchRow({ title: _('Show the AI assistant'), active: this.ai });
+        const toggle = new Adw.SwitchRow({ title: _('Built-in AI assistant'), active: this.ai });
         toggle.connect('notify::active', () => {
             this.ai = toggle.get_active();
         });
@@ -301,6 +304,16 @@ export class BhWelcome extends Adw.Dialog {
         });
         this.close();
         this.onFinish(this.choice);
+    }
+
+    private later(): void {
+        if (!loadUserSettings().welcomeCompleted) {
+            updateUserSettings((settings) => {
+                settings.welcomeDeferred = true;
+            });
+        }
+        this.close();
+        this.onLater?.();
     }
 
     private openFolder(dir: string): void {
