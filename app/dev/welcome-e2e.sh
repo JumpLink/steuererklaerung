@@ -15,6 +15,8 @@
 #   5. „Später" is remembered: the relaunch shows neither the welcome nor the setup assistant but the
 #      setup banner; closing it keeps it closed across a relaunch, and a NEW gap (an entity without a
 #      bank account) brings it back.
+#   6. Settings keep the assistant and the MCP server apart; „Externen Agenten verbinden …" shows the
+#      client config; „Jetzt sichern" runs in a child process while the window shows „Wird gesichert …".
 # With a shots-dir the welcome pages and the Settings groups are written there, as welcome-*.png in the
 # language of E2E_LANG (default de_DE.UTF-8).
 #
@@ -114,12 +116,16 @@ if [ "$SUFFIX" = "" ]; then
   L_SETUP="Wo die Daten liegen werden"; L_GENERAL="Allgemein"; L_BACKUP="Jetzt sichern"
   L_AGAIN="Einführung erneut anzeigen"; L_LATER="Später"
   L_GAP="Die Einrichtung ist nicht abgeschlossen"; L_CLOSE="Schließen"
+  L_MCP="MCP-Server für externe Agenten"; L_ENGINE="KI-Engine"; L_CONNECT="Externen Agenten verbinden …"
+  L_BUSY="Wird gesichert …"
 else
   L_TITLE="Welcome to Steuererklärung"; L_NEXT="Next"; L_OK="Understood"; L_DEMO="Try the demo"
   L_START="Start the demo"; L_BANNER="Demo data"; L_OWN="Use my own data"; L_RESTART="Restart"
   L_SETUP="Where your data will be stored"; L_GENERAL="General"; L_BACKUP="Back up now"
   L_AGAIN="Show welcome again"; L_LATER="Later"
   L_GAP="Setup is not finished"; L_CLOSE="Close"
+  L_MCP="MCP server for external agents"; L_ENGINE="AI engine"; L_CONNECT="Connect an external agent …"
+  L_BUSY="Backing up …"
 fi
 
 # ── 1. Fresh HOME → welcome → demo → restart in demo ─────────────────────────────────────────────────
@@ -213,5 +219,28 @@ launch "$T/later"
 await "$L_GAP"
 await "Erika Muster"
 step "an entity without a bank account is a new gap and brings the banner back"
+
+# ── 6. Settings: AI and MCP apart, the agent config, a backup in the background ──────────────────────
+launch "$T/run" STEUER_DEMO=1 STEUER_APP_VIEW=settings STEUER_APP_SIZE="1100 1500" STEUER_APP_SCROLL=end
+await "$L_ENGINE"
+await "$L_MCP"
+step "Settings show the assistant and the MCP server as separate groups"
+shot_as ai-mcp-settings
+click "$L_CONNECT" AdwButtonRow
+await "Claude Desktop"
+await "STEUER_WORKSPACE"
+step "„$L_CONNECT“ shows a ready-to-copy config per client"
+shot_as mcp-clients
+launch "$T/run" STEUER_DEMO=1 STEUER_APP_VIEW=settings
+await "$L_BACKUP"
+ui click "$L_BACKUP" AdwButtonRow >/dev/null || fail "cannot click „$L_BACKUP“"
+await "$L_BUSY"
+# No shot_as: its pause would outlast the backup.
+if [ -n "$SHOTS" ]; then
+  gjs -m "$HERE/dbus-shot.js" "$ID" "$OBJ" "$SHOTS/backup-running$SUFFIX.png" >/dev/null || fail "screenshot backup-running"
+fi
+await "$L_BACKUP"
+ls "$T/data/eu.jumplink.Steuererklaerung/backups/"* >/dev/null 2>&1 || fail "the background backup wrote nothing"
+step "„$L_BACKUP“ runs in a child process: the window shows „$L_BUSY“, then the backup exists"
 
 echo "welcome e2e: all steps passed"
