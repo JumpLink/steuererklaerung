@@ -72,7 +72,9 @@ Found with a real contract; prior art from the public Aboalarm / Volders feature
   entity. The account only narrows the weak matches (IBAN, name, match text). Candidates carry the
   `accountKey` they were paid from and `contracts_match` returns `accounts` (per account: payments,
   first, last), so a later "mandate moved" is visible; nothing is stored. Bookings are now read from
-  all accounts of the entity, not only the contract's.
+  all accounts of the entity, not only the contract's. The weak matches are also trusted on any
+  account where the contract has a strong match or a linked booking, so older payments with an
+  empty purpose (name or IBAN only) on the previous account are not reported `missing`.
 - **`missing` only within the imported coverage.** An expected date counts only if one of the
   involved accounts (the contract's, plus any a payment came from) has bookings at least the
   tolerance before and after it. A new finding `no_data { since }` replaces the run of monthly
