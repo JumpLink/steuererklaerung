@@ -54,6 +54,9 @@ Die Sperrdatei darf sich durch den Link nicht ändern — sie gehört zur Regist
 
 ## Offen: Flatpak
 
-Der Flatpak-Build baut **offline** aus `gjsify-sources.json`, das nur Registry-Tarballs kennt. Mit
-den veröffentlichten Paketen ist der Grund für die Lücke weggefallen; die Datei muss mit der neuen
-Sperrdatei neu erzeugt werden, bevor das Panel im Flatpak erscheint.
+Heute gibt es **kein Flatpak**: Paketiert wird als deb und rpm (`release.yml`); es gibt weder
+Manifest noch `gjsify-sources.json` noch einen `gjsify.flatpak`-Abschnitt in `app/package.json`.
+Ein Flatpak ist geplant und braucht eigene Paketierung: ein Manifest, Offline-Quellen aus der
+Sperrdatei (Registry-Tarballs der veröffentlichten `@lotse/*`-Pakete), den gebündelten Agenten über
+`flatpakAgentModule()` aus `@lotse/core` und restriktive `finish-args` — kein `--filesystem=host`.
+Ob und wann es kommt, ist offen.
