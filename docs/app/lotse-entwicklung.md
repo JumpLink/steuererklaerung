@@ -64,14 +64,18 @@ gebraucht — `peerDependencies` allein ändert an der Auflösung nichts.
 Umgekehrt heißt das: **ein frischer Checkout ohne Link kann nicht installieren** — die drei Namen
 sind in keiner Registry zu finden. Erst `gjsify link`, dann `gjsify install`.
 
-> Dass ein `install` mit Link überhaupt durchläuft, ist selbst erst eine Korrektur in der
-> gjsify-CLI: vorher wurde die Abhängigkeitskante eines verlinkten Pakets weiterhin gegen npm
-> aufgelöst, und ein 404 brach die gesamte Installation ab
-> ([gjsify/gjsify#2160](https://github.com/gjsify/gjsify/pull/2160)). Diese Korrektur **steckt in
-> der Version, die dieses Repo pinnt** — `@gjsify/cli 0.58.0` aus `app/package.json` —, also
-> braucht weder ein lokaler Checkout noch die CI eine CLI aus einem Zweig. Der Satz steht hier
-> trotzdem, weil er erklärt, warum die Reihenfolge *erst linken, dann installieren* überhaupt
-> funktioniert; wer auf eine ältere CLI zurückgeht, läuft wieder in den 404.
+> Die gepinnte CLI (`@gjsify/cli 0.58.0` aus `app/package.json`) **ersetzt die drei Angaben beim
+> Auflösen durch den Link**, statt sie zu holen — sie meldet im Protokoll „3 package(s) … linked
+> rather than fetched" und zählt sie nicht zu den externen Specs. Gemessen am 2026-10-11:
+> `gjsify install` mit stehendem Link endet mit **Exit 0**, und `gjsify-lock.json` bleibt
+> bytegleich; dasselbe in der CI (Lauf 38112324621).
+>
+> Es gibt einen verwandten Fehlerfall, in dem ein unveröffentlichtes verlinktes Paket als
+> *Abhängigkeitskante* doch gegen npm aufgelöst wird und ein 404 die ganze Installation abbricht
+> (`Package not found in registry: @lotse/core`). Die Korrektur dafür ist
+> [gjsify/gjsify#2160](https://github.com/gjsify/gjsify/pull/2160) und **noch offen** — sie steckt
+> in keiner veröffentlichten Version. Dieser Weg hier läuft daran vorbei; wer den 404 trotzdem
+> sieht, hat diesen Fall erwischt und braucht den Zweig.
 
 ## In der CI
 
