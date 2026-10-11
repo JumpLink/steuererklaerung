@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-11 15:13+0200\n"
+"POT-Creation-Date: 2026-10-11 18:44+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Die Antwort der KI passt nicht zum erwarteten Format und wurde nicht "
 "übernommen."
 
-#: src/core/clients/llm/job-error.ts:47
+#: src/core/clients/llm/job-error.ts:48
 msgid ""
 "The selected model is not allowed for your data (free hosted models are "
 "blocked), so nothing was sent."
@@ -30,39 +30,39 @@ msgstr ""
 "Das gewählte Modell ist für deine Daten nicht erlaubt (kostenlose gehostete "
 "Modelle sind gesperrt), deshalb wurde nichts gesendet."
 
-#: src/core/clients/llm/job-error.ts:49
+#: src/core/clients/llm/job-error.ts:51
 msgid "It is unclear which model the AI agent would use, so nothing was sent."
 msgstr ""
 "Es ist unklar, welches Modell der KI-Agent verwenden würde, deshalb wurde "
 "nichts gesendet."
 
-#: src/core/clients/llm/job-error.ts:51
+#: src/core/clients/llm/job-error.ts:53
 msgid "The AI agent needs a login first: run \"opencode auth login\"."
 msgstr ""
 "Der KI-Agent braucht zuerst eine Anmeldung: führe „opencode auth login“ aus."
 
-#: src/core/clients/llm/job-error.ts:53
+#: src/core/clients/llm/job-error.ts:55
 msgid "The AI did not finish the task."
 msgstr "Die KI hat die Aufgabe nicht abgeschlossen."
 
-#: src/core/clients/llm/job-error.ts:55
+#: src/core/clients/llm/job-error.ts:57
 msgid "The AI did not answer in time."
 msgstr "Die KI hat nicht rechtzeitig geantwortet."
 
-#: src/core/clients/llm/job-error.ts:57
+#: src/core/clients/llm/job-error.ts:59
 msgid "The AI task was cancelled."
 msgstr "Die KI-Aufgabe wurde abgebrochen."
 
-#: src/core/clients/llm/job-error.ts:59
+#: src/core/clients/llm/job-error.ts:61
 msgid "The AI agent could not be started or stopped unexpectedly."
 msgstr ""
 "Der KI-Agent konnte nicht gestartet werden oder wurde unerwartet beendet."
 
-#: src/core/clients/llm/job-error.ts:61
+#: src/core/clients/llm/job-error.ts:63
 msgid "No AI agent is installed. Install opencode or choose another AI engine."
 msgstr ""
-"Es ist kein KI-Agent installiert. Installiere opencode oder wähle eine andere "
-"KI-Engine."
+"Es ist kein KI-Agent installiert. Installiere opencode oder wähle eine "
+"andere KI-Engine."
 
 #. TRANSLATORS: Title of the AI assistant side panel
 #. TRANSLATORS: Title of the side panel holding the external coding agent
@@ -207,103 +207,113 @@ msgstr "de"
 msgid "Documentation"
 msgstr "Dokumentation"
 
-#: src/frontends/desktop/nav.ts:53
+#: src/frontends/desktop/nav.ts:54
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:532
 msgid "Overview"
 msgstr "Übersicht"
 
-#: src/frontends/desktop/nav.ts:53
+#: src/frontends/desktop/nav.ts:54
 msgid "KPIs & trends"
 msgstr "KPIs & Trends"
 
-#: src/frontends/desktop/nav.ts:54
+#: src/frontends/desktop/nav.ts:55
 msgid "Receipt inbox"
 msgstr "Beleg-Eingang"
 
-#: src/frontends/desktop/nav.ts:54
+#: src/frontends/desktop/nav.ts:55
 msgid "Check & match receipts"
 msgstr "Belege prüfen & zuordnen"
 
-#: src/frontends/desktop/nav.ts:55
+#: src/frontends/desktop/nav.ts:56
 #: src/frontends/desktop/views/transactions-view.ts:252
 msgid "Transactions"
 msgstr "Buchungen"
 
-#: src/frontends/desktop/nav.ts:55
+#: src/frontends/desktop/nav.ts:56
 msgid "all accounts"
 msgstr "alle Konten"
 
-#: src/frontends/desktop/nav.ts:56 src/frontends/desktop/views/tab-hub.ts:146
+#: src/frontends/desktop/nav.ts:57 src/frontends/desktop/views/tab-hub.ts:146
 msgid "Invoices"
 msgstr "Rechnungen"
 
-#: src/frontends/desktop/nav.ts:56
+#: src/frontends/desktop/nav.ts:57
 msgid "open items & status"
 msgstr "offene Posten & Status"
 
-#: src/frontends/desktop/nav.ts:57
+#: src/frontends/desktop/nav.ts:58
 msgid "Time"
 msgstr "Zeiten"
 
-#: src/frontends/desktop/nav.ts:57
+#: src/frontends/desktop/nav.ts:58
 msgid "timer & unbilled hours"
 msgstr "Timer & offene Stunden"
 
-#: src/frontends/desktop/nav.ts:58
+#: src/frontends/desktop/nav.ts:59
 #: src/frontends/desktop/views/einstellungen-view.ts:74
 msgid "Contacts"
 msgstr "Kontakte"
 
-#: src/frontends/desktop/nav.ts:58
+#: src/frontends/desktop/nav.ts:59
 msgid "customers & suppliers"
 msgstr "Kunden & Lieferanten"
 
-#: src/frontends/desktop/nav.ts:59
+#: src/frontends/desktop/nav.ts:60
 msgid "Reports"
 msgstr "Auswertungen"
 
-#: src/frontends/desktop/nav.ts:59
+#: src/frontends/desktop/nav.ts:60
 msgid "BWA · insights"
 msgstr "BWA · Einblicke"
 
-#: src/frontends/desktop/nav.ts:63
+#: src/frontends/desktop/nav.ts:64
 msgid "Deadlines"
 msgstr "Fristen"
 
-#: src/frontends/desktop/nav.ts:63
+#: src/frontends/desktop/nav.ts:64
 msgid "dates · payments · open items"
 msgstr "Termine · Zahlungen · offene Posten"
 
-#: src/frontends/desktop/nav.ts:67
+#: src/frontends/desktop/nav.ts:68
 msgid "Tax"
 msgstr "Steuer"
 
-#: src/frontends/desktop/nav.ts:68
+#: src/frontends/desktop/nav.ts:69
 msgid "Return · EÜR · USt-VA · account"
 msgstr "Erklärung · EÜR · USt-VA · Konto"
 
-#: src/frontends/desktop/nav.ts:73
+#: src/frontends/desktop/nav.ts:74
 msgid "Projects"
 msgstr "Projekte"
 
-#: src/frontends/desktop/nav.ts:73
+#: src/frontends/desktop/nav.ts:74
 msgid "customer · costs · result"
 msgstr "Kunde · Kosten · Ergebnis"
 
-#: src/frontends/desktop/nav.ts:74
+#: src/frontends/desktop/nav.ts:79
+#: src/frontends/desktop/views/einstellungen-view.ts:75
+#: src/frontends/desktop/views/vertraege-view.blp:67
+msgid "Contracts"
+msgstr "Verträge"
+
+#: src/frontends/desktop/nav.ts:80
+msgid "term · notice deadlines · debits"
+msgstr "Laufzeit · Kündigungsfristen · Abbuchungen"
+
+#: src/frontends/desktop/nav.ts:82
 msgid "Accounts"
 msgstr "Konten"
 
-#: src/frontends/desktop/nav.ts:74
+#: src/frontends/desktop/nav.ts:82
 msgid "connections & import"
 msgstr "Anbindungen & Import"
 
-#: src/frontends/desktop/nav.ts:78 src/frontends/desktop/shortcuts.ts:53
+#: src/frontends/desktop/nav.ts:86 src/frontends/desktop/shortcuts.ts:53
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:190
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: src/frontends/desktop/nav.ts:79
+#: src/frontends/desktop/nav.ts:87
 msgid "assistant · connections · master data"
 msgstr "Assistent · Anbindungen · Stammdaten"
 
@@ -434,6 +444,8 @@ msgstr "Teile"
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:207
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:466
 #: src/frontends/desktop/views/umbuchen-dialog.ts:204
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:99
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:328
 msgid "Save"
 msgstr "Speichern"
 
@@ -533,6 +545,7 @@ msgstr "Lade Beleg-Eingang …"
 #: src/frontends/desktop/views/transactions-view.blp:32
 #: src/frontends/desktop/views/util.ts:404
 #: src/frontends/desktop/views/util.ts:407
+#: src/frontends/desktop/views/vertraege-view.blp:32
 #: src/frontends/desktop/views/zu-pruefen-view.blp:33
 msgid "Could not load"
 msgstr "Konnte nicht laden"
@@ -659,6 +672,8 @@ msgstr ""
 #: src/frontends/desktop/views/tx-detail-dialog.ts:182
 #: src/frontends/desktop/views/umbuchen-dialog.ts:128
 #: src/frontends/desktop/views/umbuchen-dialog.ts:136
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:135
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:118
 msgid "Category"
 msgstr "Kategorie"
 
@@ -1375,10 +1390,6 @@ msgstr "Dokument-Workflow"
 msgid "Invoices (self)"
 msgstr "Rechnungen (self)"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:75
-msgid "Contracts"
-msgstr "Verträge"
-
 #: src/frontends/desktop/views/einstellungen-view.ts:167
 msgid "AI engine"
 msgstr "KI-Engine"
@@ -1522,6 +1533,7 @@ msgstr "Neuer Anzeigename für „{name}“."
 #: src/frontends/desktop/views/setup-assistant.ts:258
 #: src/frontends/desktop/views/setup-assistant.ts:334
 #: src/frontends/desktop/views/setup-assistant.ts:591
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:111
 msgid "Name"
 msgstr "Name"
 
@@ -2249,8 +2261,9 @@ msgstr[0] "{n} Buchung bleibt zur Handprüfung."
 msgstr[1] "{n} Buchungen bleiben zur Handprüfung."
 
 #: src/frontends/desktop/views/offene-belege-view.ts:199
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:302
 msgid "Link"
-msgstr "Verknüpfen"
+msgstr "Zuordnen"
 
 #: src/frontends/desktop/views/offene-belege-view.ts:204
 msgid "Not every link succeeded"
@@ -2524,6 +2537,7 @@ msgid "Actions"
 msgstr "Aktionen"
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:550
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:62
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -2706,6 +2720,7 @@ msgstr "storniert"
 #: src/frontends/desktop/views/rechnungen-view.ts:72
 #: src/frontends/desktop/views/tab-hub.ts:139
 #: src/frontends/desktop/views/transactions-view.ts:53
+#: src/frontends/desktop/views/vertraege-view.ts:60
 msgid "All"
 msgstr "Alle"
 
@@ -2855,6 +2870,7 @@ msgid "No invoice has this status — another filter shows more."
 msgstr "Keine Rechnung hat diesen Status — ein anderer Filter zeigt mehr."
 
 #: src/frontends/desktop/views/rechnungen-view.ts:475
+#: src/frontends/desktop/views/vertraege-view.ts:244
 msgid "Show all"
 msgstr "Alle zeigen"
 
@@ -3023,6 +3039,7 @@ msgid "Please check"
 msgstr "Bitte prüfen"
 
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:424
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:320
 msgid "Saving …"
 msgstr "Speichere …"
 
@@ -3044,6 +3061,8 @@ msgstr "Vorlage"
 
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:55
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:306
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:138
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:125
 msgid "Note"
 msgstr "Hinweis"
 
@@ -3831,8 +3850,9 @@ msgid "Remove"
 msgstr "Aufheben"
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:301
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:298
 msgid "Unlink"
-msgstr "Verknüpfung lösen"
+msgstr "Zuordnung lösen"
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:301
 msgid "Take back transfer"
@@ -4114,6 +4134,738 @@ msgid ""
 msgstr ""
 "In Paperless fehlen die Dokumenttypen und Zusatzfelder, aus denen die Zahlen "
 "gelesen werden. Sie lassen sich in den Einstellungen anlegen."
+
+#: src/frontends/desktop/views/vertraege-view.blp:22
+msgid "Loading contracts …"
+msgstr "Lade Verträge …"
+
+#: src/frontends/desktop/views/vertraege-view.ts:61
+msgctxt "contract filter"
+msgid "Active"
+msgstr "Aktiv"
+
+#: src/frontends/desktop/views/vertraege-view.ts:62
+msgctxt "contract filter"
+msgid "Deadline near"
+msgstr "Frist nah"
+
+#: src/frontends/desktop/views/vertraege-view.ts:63
+msgctxt "contract filter"
+msgid "Archived"
+msgstr "Archiviert"
+
+#: src/frontends/desktop/views/vertraege-view.ts:106
+msgid "Contracts could not be loaded"
+msgstr "Verträge konnten nicht geladen werden"
+
+#: src/frontends/desktop/views/vertraege-view.ts:129
+msgid "Per month"
+msgstr "Pro Monat"
+
+#: src/frontends/desktop/views/vertraege-view.ts:131
+msgid "{n} active contract"
+msgid_plural "{n} active contracts"
+msgstr[0] "{n} aktiver Vertrag"
+msgstr[1] "{n} aktive Verträge"
+
+#: src/frontends/desktop/views/vertraege-view.ts:134
+msgid "Per year"
+msgstr "Pro Jahr"
+
+#: src/frontends/desktop/views/vertraege-view.ts:136
+msgid "derived from the intervals"
+msgstr "aus den Zahlungsintervallen"
+
+#: src/frontends/desktop/views/vertraege-view.ts:139
+msgid "Deadline near"
+msgstr "Frist nah"
+
+#: src/frontends/desktop/views/vertraege-view.ts:142
+msgid "{n} of them urgent"
+msgid_plural "{n} of them urgent"
+msgstr[0] "{n} davon dringend"
+msgstr[1] "{n} davon dringend"
+
+#: src/frontends/desktop/views/vertraege-view.ts:145
+msgid "Needs a look"
+msgstr "Zu prüfen"
+
+#: src/frontends/desktop/views/vertraege-view.ts:148
+msgid "missing, returned or changed debits"
+msgstr "fehlende, zurückgebuchte oder geänderte Abbuchungen"
+
+#: src/frontends/desktop/views/vertraege-view.ts:160
+msgid "Export deadlines"
+msgstr "Fristen exportieren"
+
+#: src/frontends/desktop/views/vertraege-view.ts:161
+msgid "Save the upcoming notice deadlines as a calendar file (.ics)"
+msgstr "Die nächsten Kündigungsfristen als Kalenderdatei (.ics) speichern"
+
+#: src/frontends/desktop/views/vertraege-view.ts:165
+#: src/frontends/desktop/views/vertraege-view.ts:232
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:90
+msgid "New contract"
+msgstr "Neuer Vertrag"
+
+#: src/frontends/desktop/views/vertraege-view.ts:216
+msgid "{n} contract"
+msgid_plural "{n} contracts"
+msgstr[0] "{n} Vertrag"
+msgstr[1] "{n} Verträge"
+
+#: src/frontends/desktop/views/vertraege-view.ts:227
+msgid "No contracts yet"
+msgstr "Noch keine Verträge"
+
+#: src/frontends/desktop/views/vertraege-view.ts:229
+msgid ""
+"Hosting, insurance, a phone tariff — recorded once with its term and notice "
+"period, the app works out by itself when the last day to cancel is."
+msgstr "Hosting, Versicherung, ein Mobilfunktarif — einmal mit Laufzeit und Kündigungsfrist erfasst, rechnet die App selbst aus, wann der letzte Tag zum Kündigen ist."
+
+#: src/frontends/desktop/views/vertraege-view.ts:239
+msgid "Nothing under this filter"
+msgstr "Nichts unter diesem Filter"
+
+#: src/frontends/desktop/views/vertraege-view.ts:242
+msgid "No contract has been archived yet."
+msgstr "Es ist noch kein Vertrag archiviert."
+
+#: src/frontends/desktop/views/vertraege-view.ts:243
+msgid "No contract is in this state — another filter shows more."
+msgstr "Kein Vertrag ist in diesem Zustand — ein anderer Filter zeigt mehr."
+
+#: src/frontends/desktop/views/vertraege-view.ts:252
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:123
+msgid "{amount} {cycle}"
+msgstr "{amount} {cycle}"
+
+#: src/frontends/desktop/views/vertraege-view.ts:263
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:128
+msgid "{amount} / month"
+msgstr "{amount} / Monat"
+
+#: src/frontends/desktop/views/vertraege-view.ts:265
+msgid "Derived from {amount} {cycle}"
+msgstr "Abgeleitet aus {amount} {cycle}"
+
+#: src/frontends/desktop/views/vertraege-view.ts:278
+msgid "Give notice by {date} at the latest"
+msgstr "Spätestens am {date} kündigen"
+
+#: src/frontends/desktop/views/vertraege-view.ts:279
+msgid "Cancellable at any time"
+msgstr "Jederzeit kündbar"
+
+#: src/frontends/desktop/views/vertraege-view.ts:318
+msgid "Deadlines saved"
+msgstr "Fristen gespeichert"
+
+#: src/frontends/desktop/views/vertraege-view.ts:321
+msgid "Export failed"
+msgstr "Export fehlgeschlagen"
+
+#: src/frontends/desktop/views/vertraege-view.ts:324
+msgid "Deadlines exported"
+msgstr "Fristen exportiert"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:58
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:116
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:110
+msgid "Contract"
+msgstr "Vertrag"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:63
+msgid "Change the contract’s term, amount and notice period"
+msgstr "Laufzeit, Betrag und Kündigungsfrist des Vertrags ändern"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:69
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:406
+msgid "Archive"
+msgstr "Archivieren"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:70
+msgid "Take the contract out of the list — its bookings and documents stay"
+msgstr "Den Vertrag aus der Liste nehmen — Buchungen und Dokumente bleiben"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:91
+msgid "Contract could not be loaded"
+msgstr "Vertrag konnte nicht geladen werden"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:120
+msgid "Costs"
+msgstr "Kosten"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:124
+msgid "no amount recorded"
+msgstr "kein Betrag erfasst"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:133
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:113
+msgid "Provider"
+msgstr "Anbieter"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:134
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:117
+msgid "Contract number"
+msgstr "Vertragsnummer"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:136
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:159
+msgid "Paid from"
+msgstr "Bezahlt von"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:137
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:166
+msgid "Payment method"
+msgstr "Zahlungsweise"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:153
+msgid "{n} payments · {first} to {last}"
+msgstr "{n} Zahlungen · {first} bis {last}"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:169
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:179
+msgid "Term and notice period"
+msgstr "Laufzeit und Kündigungsfrist"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:170
+msgid "Derived from the dates below on every read — never stored."
+msgstr "Wird bei jedem Lesen aus den Angaben unten abgeleitet — nie gespeichert."
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:172
+msgid "Notice deadline"
+msgstr "Kündigungsfrist"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:176
+#: src/frontends/desktop/views/vertrag-labels.ts:108
+msgid "{n} day left"
+msgid_plural "{n} days left"
+msgstr[0] "noch {n} Tag"
+msgstr[1] "noch {n} Tage"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:185
+msgid "{n} month initial term"
+msgid_plural "{n} months initial term"
+msgstr[0] "{n} Monat Erstlaufzeit"
+msgstr[1] "{n} Monate Erstlaufzeit"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:190
+msgid "renews by {n} month"
+msgid_plural "renews by {n} months"
+msgstr[0] "verlängert sich um {n} Monat"
+msgstr[1] "verlängert sich um {n} Monate"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:192
+msgid "runs indefinitely"
+msgstr "läuft unbefristet"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:194
+msgid "does not renew automatically"
+msgstr "verlängert sich nicht automatisch"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:197
+msgid "Start"
+msgstr "Beginn"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:198
+msgid "Term"
+msgstr "Laufzeit"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:200
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:199
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:345
+msgid "Notice period"
+msgstr "Kündigungsfrist"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:202
+msgid "{value} {unit}"
+msgstr "{value} {unit}"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:205
+msgid "End"
+msgstr "Ende"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:217
+msgid "What the account data says"
+msgstr "Was die Kontodaten sagen"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:220
+msgid "Bookings up to {date}."
+msgstr "Buchungen bis {date}."
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:221
+msgid "No bookings imported for this entity yet."
+msgstr "Für diese Entität sind noch keine Buchungen importiert."
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:227
+msgid "Nothing stands out"
+msgstr "Nichts fällt auf"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:228
+msgid "Every expected debit is there and the amount matches."
+msgstr "Jede erwartete Abbuchung ist da und der Betrag stimmt."
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:246
+msgid "Bookings"
+msgstr "Buchungen"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:248
+msgid ""
+"Debits that match this contract. Linking one is a decision — the matching "
+"itself only suggests."
+msgstr "Abbuchungen, die zu diesem Vertrag passen. Zuordnen ist eine Entscheidung — der Abgleich schlägt nur vor."
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:254
+msgid "No matching bookings"
+msgstr "Keine passenden Buchungen"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:256
+msgid ""
+"A creditor ID, mandate reference or the provider’s name is what debits are "
+"found by."
+msgstr "Gefunden wird über Creditor-ID, Mandatsreferenz oder den Namen des Anbieters."
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:267
+msgid "{n} booking marked as not belonging"
+msgid_plural "{n} bookings marked as not belonging"
+msgstr[0] "{n} Buchung als nicht zugehörig markiert"
+msgstr[1] "{n} Buchungen als nicht zugehörig markiert"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:275
+msgid "They are left out of the matching and of the findings."
+msgstr "Sie bleiben beim Abgleich und bei den Befunden außen vor."
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:285
+msgid "via {key}"
+msgstr "über {key}"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:286
+msgid "amount differs"
+msgstr "Betrag abweichend"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:296
+msgid "linked"
+msgstr "zugeordnet"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:298
+msgid "Drop the decision — the booking stays a candidate"
+msgstr "Entscheidung zurücknehmen — die Buchung bleibt ein Kandidat"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:302
+msgid "Record this booking as a payment of the contract"
+msgstr "Diese Buchung als Zahlung des Vertrags festhalten"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:308
+msgid "Not this one"
+msgstr "Gehört nicht dazu"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:309
+msgid "Leave this booking out of the contract for good"
+msgstr "Diese Buchung dauerhaft aus dem Vertrag lassen"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:329
+msgid "Booking linked"
+msgstr "Buchung zugeordnet"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:331
+msgid "Booking left out"
+msgstr "Buchung ausgenommen"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:332
+msgid "Link removed"
+msgstr "Zuordnung gelöst"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:337
+msgid "Could not change the booking"
+msgstr "Buchung konnte nicht geändert werden"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:345
+msgid "Documents"
+msgstr "Dokumente"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:348
+msgid ""
+"The contract itself, invoices, a notice of termination — referenced in the "
+"document store, e.g. paperless:42."
+msgstr "Der Vertrag selbst, Rechnungen, eine Kündigung — als Referenz im Dokumentenspeicher, z. B. paperless:42."
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:356
+msgid "{role} · attached {date}"
+msgstr "{role} · verknüpft am {date}"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:362
+msgid "Detach"
+msgstr "Lösen"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:363
+msgid "Detach document {ref} from the contract"
+msgstr "Dokument {ref} vom Vertrag lösen"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:370
+msgid "Role of the next document"
+msgstr "Rolle des nächsten Dokuments"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:379
+msgid "Attach document (reference)"
+msgstr "Dokument verknüpfen (Referenz)"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:392
+msgid "Document attached"
+msgstr "Dokument verknüpft"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:392
+msgid "Document detached"
+msgstr "Dokument gelöst"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:396
+msgid "Could not change the documents"
+msgstr "Dokumente konnten nicht geändert werden"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:402
+msgid "Archive contract?"
+msgstr "Vertrag archivieren?"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:404
+msgid ""
+"It leaves the list but stays readable under the “Archived” filter, with its "
+"bookings and documents."
+msgstr "Er verschwindet aus der Liste, bleibt aber unter dem Filter „Archiviert“ lesbar — mit Buchungen und Dokumenten."
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:412
+msgid "Contract archived"
+msgstr "Vertrag archiviert"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:416
+msgid "Could not archive"
+msgstr "Konnte nicht archivieren"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:37
+msgid "(not stated)"
+msgstr "(nicht angegeben)"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:90
+msgid "Edit contract"
+msgstr "Vertrag bearbeiten"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:116
+msgid "As it appears on bank statements — that is how debits are matched."
+msgstr "So, wie er auf Kontoauszügen steht — darüber werden Abbuchungen erkannt."
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:120
+msgid "Status"
+msgstr "Status"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:141
+msgid "Payment"
+msgstr "Zahlung"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:142
+msgid ""
+"What it costs and how often. The monthly figure in the list is derived from "
+"these two."
+msgstr "Was er kostet und wie oft. Der Monatsbetrag in der Liste wird aus diesen beiden abgeleitet."
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:144
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:341
+msgid "Amount (€)"
+msgstr "Betrag (€)"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:146
+msgid "Interval"
+msgstr "Intervall"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:152
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:342
+msgid "Tolerance (€)"
+msgstr "Toleranz (€)"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:156
+msgid ""
+"How far a debit may differ from the amount and still count as the expected "
+"payment."
+msgstr "Wie weit eine Abbuchung vom Betrag abweichen darf und trotzdem als die erwartete Zahlung gilt."
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:164
+msgid "No accounts imported yet"
+msgstr "Noch keine Konten importiert"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:181
+msgid ""
+"The notice deadline is derived from these, never stored — a start date and a "
+"notice period are what it takes."
+msgstr "Die Kündigungsfrist wird hieraus abgeleitet, nie gespeichert — es braucht ein Startdatum und eine Kündigungsfrist."
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:184
+msgid "Start (YYYY-MM-DD)"
+msgstr "Beginn (JJJJ-MM-TT)"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:186
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:343
+msgid "Initial term (months)"
+msgstr "Erstlaufzeit (Monate)"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:190
+msgid "Renews automatically"
+msgstr "Verlängert sich automatisch"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:191
+msgid "Off: the contract ends with its term, with no notice needed."
+msgstr "Aus: Der Vertrag endet mit seiner Laufzeit, ohne Kündigung."
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:195
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:344
+msgid "Renewal (months)"
+msgstr "Verlängerung (Monate)"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:198
+msgid "Empty: it runs indefinitely and can be cancelled at any time."
+msgstr "Leer: Er läuft unbefristet und ist jederzeit kündbar."
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:201
+msgid "Notice period unit"
+msgstr "Einheit der Kündigungsfrist"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:206
+msgid "End (YYYY-MM-DD)"
+msgstr "Ende (JJJJ-MM-TT)"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:207
+msgid "Set once the end is known — after giving notice or for a fixed term."
+msgstr "Setzen, sobald das Ende feststeht — nach einer Kündigung oder bei fester Laufzeit."
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:224
+msgid "Recognising the debits"
+msgstr "Abbuchungen erkennen"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:226
+msgid ""
+"Which bookings belong to this contract. A creditor ID or mandate reference "
+"is the strongest match and holds even when the debit moves to another "
+"account."
+msgstr "Welche Buchungen zu diesem Vertrag gehören. Creditor-ID oder Mandatsreferenz sind der stärkste Treffer und gelten auch, wenn die Abbuchung auf ein anderes Konto umzieht."
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:229
+msgid "SEPA creditor ID"
+msgstr "SEPA-Creditor-ID"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:230
+msgid "Mandate reference"
+msgstr "Mandatsreferenz"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:231
+msgid "Provider IBAN"
+msgstr "IBAN des Anbieters"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:232
+msgid "Extra text to match"
+msgstr "Zusätzlicher Suchtext"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:234
+msgid "DMS correspondent"
+msgstr "Korrespondent im DMS"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:238
+msgid "The reference of the sender in the document store, e.g. paperless:42."
+msgstr "Die Referenz des Absenders im Dokumentenspeicher, z. B. paperless:42."
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:268
+msgid "The contract needs a name."
+msgstr "Der Vertrag braucht einen Namen."
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:280
+msgid "“{field}” is not a number."
+msgstr "„{field}“ ist keine Zahl."
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:288
+msgid "A notice period needs both a number and a unit."
+msgstr "Eine Kündigungsfrist braucht eine Zahl und eine Einheit."
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:324
+msgid "Contract updated"
+msgstr "Vertrag aktualisiert"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:324
+msgid "Contract created"
+msgstr "Vertrag angelegt"
+
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:334
+msgid "Could not save"
+msgstr "Konnte nicht speichern"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:28
+msgctxt "payment interval"
+msgid "monthly"
+msgstr "monatlich"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:29
+msgctxt "payment interval"
+msgid "quarterly"
+msgstr "vierteljährlich"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:30
+msgctxt "payment interval"
+msgid "half-yearly"
+msgstr "halbjährlich"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:31
+msgctxt "payment interval"
+msgid "yearly"
+msgstr "jährlich"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:35
+msgctxt "notice period unit"
+msgid "days"
+msgstr "Tage"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:36
+msgctxt "notice period unit"
+msgid "weeks"
+msgstr "Wochen"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:37
+msgctxt "notice period unit"
+msgid "months"
+msgstr "Monate"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:41
+msgctxt "payment method"
+msgid "Direct debit"
+msgstr "Lastschrift"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:42
+msgctxt "payment method"
+msgid "Bank transfer"
+msgstr "Überweisung"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:43
+msgctxt "payment method"
+msgid "Card"
+msgstr "Karte"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:44
+msgctxt "payment method"
+msgid "PayPal"
+msgstr "PayPal"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:45
+msgctxt "payment method"
+msgid "Other"
+msgstr "Sonstiges"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:49
+msgctxt "contract status"
+msgid "Active"
+msgstr "Aktiv"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:50
+msgctxt "contract status"
+msgid "Cancelled"
+msgstr "Gekündigt"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:51
+msgctxt "contract status"
+msgid "Ended"
+msgstr "Beendet"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:52
+msgctxt "contract status"
+msgid "Archived"
+msgstr "Archiviert"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:65
+msgctxt "booking matched by"
+msgid "creditor ID"
+msgstr "Creditor-ID"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:66
+msgctxt "booking matched by"
+msgid "mandate reference"
+msgstr "Mandatsreferenz"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:67
+msgctxt "booking matched by"
+msgid "contract number"
+msgstr "Vertragsnummer"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:68
+msgctxt "booking matched by"
+msgid "IBAN"
+msgstr "IBAN"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:69
+msgctxt "booking matched by"
+msgid "provider name"
+msgstr "Name des Anbieters"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:70
+msgctxt "booking matched by"
+msgid "matching text"
+msgstr "Suchtext"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:74
+msgctxt "document role"
+msgid "Contract"
+msgstr "Vertrag"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:75
+msgctxt "document role"
+msgid "Invoice"
+msgstr "Rechnung"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:76
+msgctxt "document role"
+msgid "Notice of termination"
+msgstr "Kündigung"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:77
+msgctxt "document role"
+msgid "Confirmation"
+msgstr "Bestätigung"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:78
+msgctxt "document role"
+msgid "Other"
+msgstr "Sonstiges"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:92
+msgid "give notice by {date} → ends {end}"
+msgstr "kündigen bis {date} → Ende {end}"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:98
+msgid "cancellable any time, earliest on {date}"
+msgstr "jederzeit kündbar, frühestens zum {date}"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:109
+msgid "any time"
+msgstr "jederzeit"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:117
+msgid "{date}: payment missing"
+msgstr "{date}: Zahlung fehlt"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:118
+msgid "{date}: payment of {amount} € missing"
+msgstr "{date}: Zahlung von {amount} € fehlt"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:124
+msgid "{date}: {amount} € returned"
+msgstr "{date}: {amount} € zurückgebucht"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:127
+msgid "no account data since {date} — refresh the import"
+msgstr "keine Kontodaten seit {date} — Import aktualisieren"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:129
+msgid "{date}: amount changed to {amount} € instead of {expected} €"
+msgstr "{date}: Betrag geändert auf {amount} € statt {expected} €"
+
+#: src/frontends/desktop/views/vertrag-labels.ts:143
+msgid ""
+"A price increase can open a special right to cancel — check the provider’s "
+"notice and its deadline."
+msgstr "Eine Preiserhöhung kann ein Sonderkündigungsrecht auslösen — Mitteilung des Anbieters und deren Frist prüfen."
 
 #
 #: src/frontends/desktop/views/welcome.ts:123

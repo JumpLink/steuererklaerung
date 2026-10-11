@@ -16,6 +16,7 @@ import { BhFristenView } from './fristen-view.ts';
 import { BhKontenView } from './konten-view.ts';
 import { BhEinstellungenView } from './einstellungen-view.ts';
 import { BhAuswertungenView } from './auswertungen-view.ts';
+import { BhVertraegeView } from './vertraege-view.ts';
 import { makeBuchungenHub, makeRechnungenHub, makeReviewHub, makeSteuerHub } from './tab-hub.ts';
 
 export const VIEW_FACTORIES: Record<string, ViewFactory> = {
@@ -29,6 +30,7 @@ export const VIEW_FACTORIES: Record<string, ViewFactory> = {
     fristen: () => new BhFristenView(),
     steuer: makeSteuerHub,
     projekte: () => new BhProjekteView(),
+    vertraege: () => new BhVertraegeView(),
     konten: () => new BhKontenView(),
     settings: () => new BhEinstellungenView(),
 };
