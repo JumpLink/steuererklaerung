@@ -13,7 +13,8 @@
  * and the XML scan uses indexOf and anchored patterns only, so no input can make it backtrack.
  */
 
-import { inflateRawSync } from 'node:zlib';
+import Gio from '@girs/gio-2.0';
+import GLib from '@girs/glib-2.0';
 
 export type CellValue = string | number | boolean | null;
 
@@ -104,10 +105,14 @@ function u32Table(chunks: Uint8Array[]): Uint32Array {
     return out;
 }
 
-function chain(start: number, table: Uint32Array): number[] {
+/**
+ * Follow a FAT or miniFAT chain. `limit` is the number of sectors that exist: every id must lie
+ * below it, so a chain longer than that has a cycle and is cut off before it is read.
+ */
+function chain(start: number, table: Uint32Array, limit: number): number[] {
     const ids: number[] = [];
     for (let id = start; id < END_OF_CHAIN; id = table[id]) {
-        if (id >= table.length || ids.length >= table.length) fail('corrupt OLE2 sector chain');
+        if (id >= table.length || id >= limit || ids.length >= limit) fail('corrupt OLE2 sector chain');
         ids.push(id);
     }
     return ids;
@@ -117,25 +122,30 @@ function readWorkbookStream(buf: Uint8Array): Uint8Array {
     const dv = view(buf);
     const shift = dv.getUint16(0x1e, true);
     if (shift !== 9 && shift !== 12) fail('unsupported OLE2 sector size');
+    if (dv.getUint16(0x20, true) !== 6) fail('unsupported OLE2 sector size');
     const size = 1 << shift;
-    const miniSize = 1 << dv.getUint16(0x20, true);
+    const miniSize = 64;
     const sectorCount = Math.ceil(buf.length / size) - 1;
     const sector = (id: number): Uint8Array => {
         if (id >= sectorCount) fail('OLE2 sector out of range');
         return buf.subarray((id + 1) * size, (id + 2) * size);
     };
 
+    // Every table below is sized from these counts, so none may claim more sectors than the file has.
     const fatCount = dv.getUint32(0x2c, true);
+    if (fatCount > sectorCount) fail('corrupt OLE2 sector chain');
     const fatIds: number[] = [];
     for (let i = 0; i < 109 && fatIds.length < fatCount; i++) fatIds.push(dv.getUint32(0x4c + 4 * i, true));
-    for (let id = dv.getUint32(0x44, true), hops = 0; fatIds.length < fatCount && id < END_OF_CHAIN; hops++) {
-        if (hops > sectorCount) fail('corrupt OLE2 sector chain');
+    const difatSeen = new Set<number>();
+    for (let id = dv.getUint32(0x44, true); fatIds.length < fatCount && id < END_OF_CHAIN;) {
+        if (difatSeen.has(id)) fail('corrupt OLE2 sector chain');
+        difatSeen.add(id);
         const s = view(sector(id));
         for (let o = 0; o < size - 4 && fatIds.length < fatCount; o += 4) fatIds.push(s.getUint32(o, true));
         id = s.getUint32(size - 4, true);
     }
     const fat = u32Table(fatIds.map(sector));
-    const readChain = (start: number) => concat(chain(start, fat).map(sector));
+    const readChain = (start: number) => concat(chain(start, fat, sectorCount).map(sector));
 
     const dir = readChain(dv.getUint32(0x30, true));
     const entries: Array<{ name: string; type: number; start: number; size: number }> = [];
@@ -159,11 +169,15 @@ function readWorkbookStream(buf: Uint8Array): Uint8Array {
         fail('no Workbook stream in the .xls file');
     }
 
+    if (wb.size > buf.length) fail('truncated Workbook stream');
     let data: Uint8Array;
     if (wb.size < dv.getUint32(0x38, true)) {
         const ministream = readChain(entries[0].start);
-        const miniFat = u32Table(chain(dv.getUint32(0x3c, true), fat).map(sector));
-        data = concat(chain(wb.start, miniFat).map((id) => ministream.subarray(id * miniSize, (id + 1) * miniSize)));
+        const miniFat = u32Table(chain(dv.getUint32(0x3c, true), fat, sectorCount).map(sector));
+        const miniCount = Math.ceil(ministream.length / miniSize);
+        data = concat(
+            chain(wb.start, miniFat, miniCount).map((id) => ministream.subarray(id * miniSize, (id + 1) * miniSize)),
+        );
     } else {
         data = readChain(wb.start);
     }
@@ -408,6 +422,36 @@ function isZip(b: Uint8Array): boolean {
     return b.length >= 22 && b[0] === 0x50 && b[1] === 0x4b && b[2] === 3 && b[3] === 4;
 }
 
+/**
+ * Inflate a raw deflate stream chunk by chunk, aborting once it yields more than `limit` bytes — the
+ * size the zip directory declared — so an entry that lies about its size cannot allocate past it.
+ */
+// fixed upstream in gjsify: zlib maxOutputLength — then `inflateRawSync(raw, { maxOutputLength })`
+function inflateAtMost(raw: Uint8Array, limit: number): Uint8Array {
+    const stream = new Gio.ConverterInputStream({
+        base_stream: Gio.MemoryInputStream.new_from_bytes(new GLib.Bytes(raw)),
+        converter: new Gio.ZlibDecompressor({ format: Gio.ZlibCompressorFormat.RAW }),
+    });
+    const parts: Uint8Array[] = [];
+    let total = 0;
+    try {
+        for (;;) {
+            const chunk = stream.read_bytes(65536, null);
+            const n = chunk.get_size();
+            if (n === 0) break;
+            total += n;
+            if (total > limit) fail('.xlsx part too large');
+            parts.push(chunk.toArray());
+        }
+    } catch (e) {
+        if (e instanceof GLib.Error) fail('corrupt .xlsx (zip entry)');
+        throw e;
+    } finally {
+        stream.close(null);
+    }
+    return concat(parts);
+}
+
 function readZip(buf: Uint8Array): Map<string, () => Uint8Array> {
     const dv = view(buf);
     let eocd = -1;
@@ -441,7 +485,7 @@ function readZip(buf: Uint8Array): Map<string, () => Uint8Array> {
             if (method === 0) return raw;
             if (method !== 8) fail('unsupported .xlsx compression');
             if (size > MAX_PART_BYTES) fail('.xlsx part too large');
-            return inflateRawSync(raw);
+            return inflateAtMost(raw, size);
         });
         p += 46 + nameLen + dv.getUint16(p + 30, true) + dv.getUint16(p + 32, true);
     }
@@ -465,6 +509,19 @@ function skipPast(xml: string, marker: string, from: number): number {
     return i < 0 ? xml.length : i + marker.length;
 }
 
+/** The `>` that closes a tag, skipping quoted attribute values; one forward pass, never rescans. */
+function tagEnd(xml: string, from: number): number {
+    for (let i = from; i < xml.length; i++) {
+        const ch = xml[i];
+        if (ch === '>') return i;
+        if (ch === '"' || ch === "'") {
+            i = xml.indexOf(ch, i + 1);
+            if (i < 0) return -1;
+        }
+    }
+    return -1;
+}
+
 function* xmlTags(xml: string): Generator<XmlTag> {
     let i = 0;
     for (;;) {
@@ -474,7 +531,7 @@ function* xmlTags(xml: string): Generator<XmlTag> {
         else if (xml.startsWith('<![CDATA[', lt)) i = skipPast(xml, ']]>', lt);
         else if (xml[lt + 1] === '?' || xml[lt + 1] === '!') i = skipPast(xml, '>', lt);
         else {
-            const gt = xml.indexOf('>', lt);
+            const gt = tagEnd(xml, lt + 1);
             if (gt < 0) return;
             const closing = xml[lt + 1] === '/';
             const selfClosing = xml[gt - 1] === '/';

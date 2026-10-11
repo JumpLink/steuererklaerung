@@ -2,6 +2,7 @@ import { describe, it, expect } from '@gjsify/unit';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { deflateRawSync } from 'node:zlib';
 import { readFirstSheet } from '../../../src/core/clients/qonto-export/spreadsheet.ts';
 import { getTransactionDate, parseQontoExport } from '../../../src/core/clients/qonto-export/parser.ts';
 
@@ -140,6 +141,31 @@ function buildZip(files: Record<string, string>): Uint8Array {
     return Uint8Array.from([...local, ...central, ...eocd, ...u32(central.length), ...u32(local.length), ...u16(0)]);
 }
 
+/** A zip with one deflated entry whose directory declares `size` as its uncompressed size. */
+function buildDeflatedZip(name: string, data: Uint8Array, size: number): Uint8Array {
+    const n = [...new TextEncoder().encode(name)];
+    const raw = [...deflateRawSync(data)];
+    const sizes = [...u32(0), ...u32(raw.length), ...u32(size)];
+    const local = [...u32(0x04034b50), ...u16(20), ...u16(0), ...u16(8), ...u32(0), ...sizes];
+    const head = [...local, ...u16(n.length), ...u16(0), ...n, ...raw];
+    const central = [...u32(0x02014b50), ...u16(20), ...u16(20), ...u16(0), ...u16(8), ...u32(0), ...sizes];
+    central.push(...u16(n.length), ...zeros(8), ...u32(0), ...u32(0), ...n);
+    const eocd = [...u32(0x06054b50), ...zeros(4), ...u16(1), ...u16(1), ...u32(central.length), ...u32(head.length)];
+    return Uint8Array.from([...head, ...central, ...eocd, ...u16(0)]);
+}
+
+/** Overwrite a little-endian u32 (or u16) in a copy of `buf`, appending `pad` zero bytes first. */
+function patched(buf: Uint8Array, writes: Array<[number, number, 2?]>, pad = 0): Uint8Array {
+    const out = new Uint8Array(buf.length + pad);
+    out.set(buf);
+    const dv = new DataView(out.buffer);
+    for (const [at, v, width] of writes) {
+        if (width === 2) dv.setUint16(at, v, true);
+        else dv.setUint32(at, v, true);
+    }
+    return out;
+}
+
 const REL = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
 const XLSX_FILES = {
     '_rels/.rels': `<?xml version="1.0"?><Relationships><Relationship Id="rId1" Type="${REL}/officeDocument" Target="xl/workbook.xml"/></Relationships>`,
@@ -220,6 +246,85 @@ export default async () => {
         await it('rejects a truncated .xls instead of reading past its end', async () => {
             const xls = buildXls(sst(['Status']), [...bof(0x10), ...dimensions(1, 1), ...labelSst(0, 0, 0), ...eof()]);
             expect(() => readFirstSheet(xls.subarray(0, 1024))).toThrow(/^Spreadsheet: /);
+        });
+    });
+
+    // Offsets into buildXls(): header fields at 0x1e.., FAT = sector 0 (file 512), directory =
+    // sector 1 (file 1024, Workbook entry at +128), stream = sectors 2..9 (file 1536..).
+    await describe('Qonto export spreadsheet reader on hostile files', async () => {
+        const xls = () =>
+            buildXls(sst(['Status']), [...bof(0x10), ...dimensions(1, 1), ...labelSst(0, 0, 0), ...eof()]);
+        const WB_SIZE = 1024 + 128 + 0x78;
+
+        await it('still reads the unpatched fixture', async () => {
+            expect(readFirstSheet(xls())[0][0]).toBe('Status');
+        });
+
+        await it('rejects a cyclic FAT chain', async () => {
+            expect(() => readFirstSheet(patched(xls(), [[512 + 2 * 4, 2]]))).toThrow(/corrupt OLE2 sector chain/);
+        });
+
+        await it('rejects a FAT count larger than the file', async () => {
+            expect(() => readFirstSheet(patched(xls(), [[0x2c, 0xffffffff]]))).toThrow(/corrupt OLE2 sector chain/);
+        });
+
+        await it('rejects a DIFAT chain that revisits a sector', async () => {
+            // 300 FAT sectors need the DIFAT chain past the header's 109; sector 20 links to itself.
+            const pad = 300 * 512;
+            const file = patched(
+                xls(),
+                [
+                    [0x2c, 300],
+                    [0x44, 20],
+                    [21 * 512 + 508, 20],
+                ],
+                pad,
+            );
+            expect(() => readFirstSheet(file)).toThrow(/corrupt OLE2 sector chain/);
+        });
+
+        await it('rejects a Workbook stream declared larger than the file', async () => {
+            expect(() => readFirstSheet(patched(xls(), [[WB_SIZE, 0xffffff00]]))).toThrow(/truncated Workbook stream/);
+        });
+
+        await it('rejects a miniFAT chain that points past the mini stream', async () => {
+            expect(() => readFirstSheet(patched(xls(), [[WB_SIZE, 100]]))).toThrow(/corrupt OLE2 sector chain/);
+        });
+
+        await it('rejects a cyclic miniFAT chain', async () => {
+            // Root entry's mini stream = sectors 2..9; miniFAT = sector 9, where mini sector 2 links to itself.
+            const file = patched(xls(), [
+                [WB_SIZE, 100],
+                [1024 + 0x74, 2],
+                [0x3c, 9],
+                [10 * 512 + 2 * 4, 2],
+            ]);
+            expect(() => readFirstSheet(file)).toThrow(/corrupt OLE2 sector chain/);
+        });
+
+        await it('rejects a mini sector size other than 64 bytes', async () => {
+            expect(() => readFirstSheet(patched(xls(), [[0x20, 7, 2]]))).toThrow(/unsupported OLE2 sector size/);
+        });
+
+        await it('stops inflating a zip entry that lies about its size', async () => {
+            // 16 MiB of zeros deflate to a few KiB; the directory claims one byte.
+            const zip = buildDeflatedZip('xl/workbook.xml', new Uint8Array(16 * 1024 * 1024), 1);
+            expect(() => readFirstSheet(zip)).toThrow(/\.xlsx part too large/);
+        });
+
+        await it('reads a deflated entry whose size is declared truthfully', async () => {
+            const data = new TextEncoder().encode(XLSX_FILES['xl/workbook.xml']);
+            const zip = buildDeflatedZip('xl/workbook.xml', data, data.length);
+            // The workbook inflates; only the missing sheet part fails.
+            expect(() => readFirstSheet(zip)).toThrow(/the workbook has no sheet|sheet part missing/);
+        });
+
+        await it('does not end a tag at a ">" inside a quoted attribute', async () => {
+            const files = {
+                ...XLSX_FILES,
+                'xl/workbook.xml': `<workbook xmlns:r="${REL}"><sheets><sheet name="a>b" sheetId="1" r:id="rId1"/></sheets></workbook>`,
+            };
+            expect(readFirstSheet(buildZip(files))[0][0]).toBe('Status');
         });
     });
 
