@@ -20,7 +20,7 @@ Rundgang zeigt jeden Bildschirm und erklärt, wofür er da ist.
 ## Der Rahmen — auf jedem Bildschirm gleich
 
 - **Sidebar (links):** oben die Identität — **Entitäts-Karte** (Firma bzw. `Privat`) und
-  **Jahres-Segmente** —, darunter die zwölf Navigationseinträge mit Titel, Untertitel und
+  **Jahres-Segmente** —, darunter die dreizehn Navigationseinträge mit Titel, Untertitel und
   Adwaita-Symbol. Ein Wechsel von Entität oder Jahr lädt die aktive Ansicht neu.
 - **Kopfzeile:** Titel und Untertitel der Ansicht, rechts der **Abgleich-Knopf** (Pfeile) und der
   Stern für den KI-Assistenten. Siehe „Abgleich im Hintergrund“ unten.
@@ -307,18 +307,44 @@ Betrag, die Wirkung auf die Steuer und die Regel dahinter in einem Satz — inkl
 die *keine* Wirkung haben (hier: Gesundheitskosten unter der zumutbaren Belastung). Der Reiter
 **Assistent** führt durch die Erfassung fehlender Angaben.
 
-## 14. Konten — Anbindungen und Import
+## 14. Verträge — Laufzeit, Kündigungsfristen, Abbuchungen
 
-![Konten](../screenshots/14-konten.png)
+![Verträge](../screenshots/14-vertraege.png)
+
+Jeder laufende Vertrag mit Vertragspartner, Betrag samt Zahlungsintervall und — als Kennzeichen
+rechts — der **nächsten Kündigungsfrist**: „noch 9 Tage" rot, sobald sie in zwei Wochen oder eher
+abläuft, sonst gedämpft; „jederzeit" für Verträge ohne Mindestlaufzeit, „Gekündigt" bzw.
+„Beendet" für die, bei denen nichts mehr zu tun ist. Die vier Kennzahlen oben nennen die
+monatliche und die jährliche Belastung, wie viele Fristen nah sind und wie viele Verträge einen
+Befund haben. Die Chips filtern auf **Aktiv**, **Frist nah** oder **Archiviert**.
+
+Die zweite Zeile jedes Eintrags ist der **jüngste Befund** aus dem Abgleich mit den Buchungen:
+eine fehlende Abbuchung, eine zurückgebuchte, ein geänderter Betrag (mit dem Hinweis auf eine
+Preiserhöhung) — oder, wenn es nichts Vertragsspezifisches gibt, dass für das Konto seit einem
+Datum keine Kontodaten mehr vorliegen. Alle Fristen zusammen lassen sich über **Fristen
+exportieren** als `.ics` in den Kalender legen.
+
+Ein Klick öffnet die Detailansicht: Stammdaten, die Herleitung der Frist, sämtliche Befunde, die
+**Abbuchungs-Kandidaten** (zuordnen, ablehnen, wieder lösen) und die verknüpften Belege.
+**Bearbeiten** öffnet dasselbe Formular wie **Neuer Vertrag** — jedes schreibbare Feld, von der
+Mindestlaufzeit über die Kündigungsfrist und Verlängerung bis zur Gläubiger-Id, an der eine
+SEPA-Lastschrift erkannt wird. **Archivieren** nimmt den Vertrag aus der Liste, ohne ihn zu löschen.
+
+Als Kommandos: `steuer contracts liste|zeige|abgleich|fristen` — siehe
+[`app/README.md`](../../app/README.md).
+
+## 15. Konten — Anbindungen und Import
+
+![Konten](../screenshots/15-konten.png)
 
 Alle verbundenen Konten über **alle** Entitäten (diese Ansicht ist global): Qonto, FinTS/Bank,
 CAMT-Dateien, PayPal. Je Zeile Quelle, zugehörige Entität, abgedeckter Zeitraum, Saldo und ob es
 eine **live**-Verbindung oder eine importierte **Datei** ist. Darunter die Systembibliotheken:
 hier wird ERiC gesucht — leer bedeutet `ERIC_HOME` bzw. der Standardpfad.
 
-## 15. Einstellungen — Stammdaten, Anbindungen, Assistent
+## 16. Einstellungen — Stammdaten, Anbindungen, Assistent
 
-![Einstellungen](../screenshots/15-einstellungen.png)
+![Einstellungen](../screenshots/16-einstellungen.png)
 
 Die Ansicht, die tatsächlich schreibt: Beleg-Verwaltung (eingebautes DMS oder Paperless),
 Rechnungsstellung (Anbieter, Zahlungsempfänger-IBAN, Zahlungsziel, Nummernpräfix) und die
@@ -391,7 +417,8 @@ Die Aufnahmen entstehen ohne Fenstermanager-Werkzeuge: die App bringt über
    ```
 
    `STEUER_APP_VIEW` sind die Nav-Ids (`home`, `review`, `transactions`, `rechnungen`, `zeiten`,
-   `kontakte`, `auswertungen`, `steuer`, `konten`, `settings`), `STEUER_APP_TAB` die Reiter der
+   `kontakte`, `auswertungen`, `fristen`, `steuer`, `projekte`, `vertraege`, `konten`, `settings`),
+   `STEUER_APP_TAB` die Reiter der
    Hubs (`eingang`/`offen`/`alle` bzw. `erklaerung`/`assistent`/`euer`/`anlagen`/`ustva`/`steuerkonto`).
    Eine eigene `STEUER_APP_ID` erlaubt es, parallel zur normalen Instanz zu laufen.
 3. Warten, bis die Steuerebene antwortet — **nie eine feste Wartezeit**, sondern `GetStatus`
