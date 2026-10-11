@@ -46,10 +46,10 @@ export async function getDocumentType(id: number): Promise<DocumentType> {
  * Create a document type (e.g. "Incoming Invoice", "Outgoing Invoice").
  * Returns the created document type including its ID.
  */
-export async function createDocumentType(options: CreateDocumentTypeOptions): Promise<DocumentType> {
+export async function createDocumentType(options: CreateDocumentTypeOptions, cfg?: PaperlessConfig): Promise<DocumentType> {
     const body: Record<string, unknown> = { name: options.name };
     if (options.match != null) body.match = options.match;
     if (options.matching_algorithm != null) body.matching_algorithm = options.matching_algorithm;
     if (options.is_insensitive != null) body.is_insensitive = options.is_insensitive;
-    return post<DocumentType>(DOCUMENT_TYPES_PATH, body);
+    return post<DocumentType>(DOCUMENT_TYPES_PATH, body, {}, cfg);
 }

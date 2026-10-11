@@ -265,8 +265,9 @@ export async function post<T>(
     path: string,
     body: Record<string, unknown> = {},
     extraHeaders: Record<string, string> = {},
+    cfg?: PaperlessConfig,
 ): Promise<T> {
-    const { baseUrl, headers } = getConfig();
+    const { baseUrl, headers } = cfg ?? getConfig();
     const url = fullUrl(path, baseUrl);
     const res = await fetchWithTimeout(url, {
         method: 'POST',
