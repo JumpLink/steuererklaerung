@@ -62,7 +62,7 @@ jobs:
       # rewritable, and a force-push under this pin changes what CI built without changing a line
       # here. It also carries `fix/peer-girs` (the @girs peer deps the host's single-copy type
       # resolution needs), which is why that pin is gone rather than lost.
-      LOTSE_COMMIT: bfeacde53d37b431f83bece1894a0d343cbad9b2
+      LOTSE_COMMIT: 7d7c3952f61cfae9a280c1eb85d25df9ed29f5fa
     steps:
       - name: Install system prerequisites (gjs + runtime typelibs + prebuild deps)
         run: >
