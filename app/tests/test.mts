@@ -9,6 +9,7 @@ import kredit from './unit/finanzierung/kredit.test.ts';
 import finanzierung from './unit/finanzierung/finanzierung.test.ts';
 
 import paypalParser from './unit/clients/paypal-parser.test.ts';
+import qontoExportParser from './unit/clients/qonto-export-parser.test.ts';
 import llmFactory from './unit/clients/llm-factory.test.ts';
 import qontoRequest from './unit/clients/qonto-request.test.ts';
 import requestTimeouts from './unit/clients/request-timeouts.test.ts';
@@ -214,6 +215,7 @@ run({
     timeImport,
     timeInvoice,
     paypalParser,
+    qontoExportParser,
     llmFactory,
     qontoRequest,
     requestTimeouts,

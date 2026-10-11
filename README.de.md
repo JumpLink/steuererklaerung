@@ -227,6 +227,5 @@ betreibt, hat dadurch keine zusätzliche Pflicht.
 
 Der Wrapper in `packages/eric` ist eigener Code; **ERiC selbst wird nicht ausgeliefert**
 (siehe oben). Abhängigkeiten mit abweichender Lizenz, die beim Bauen mit hineingezogen
-werden: `lib-fints` (LGPL-2.1-or-later, FinTS-Anbindung), `xlsx` (Apache-2.0), die
-Adwaita-Symbole (LGPL-3.0-or-later / CC-BY-SA-3.0) und Adwaita Sans (OFL-1.1) in der
+werden: `lib-fints` (LGPL-2.1-or-later, FinTS-Anbindung), die Adwaita-Symbole (LGPL-3.0-or-later / CC-BY-SA-3.0) und Adwaita Sans (OFL-1.1) in der
 Web-Oberfläche. Wer ein gebündeltes Artefakt weitergibt, muss deren Bedingungen erfüllen.

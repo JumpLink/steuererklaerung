@@ -213,6 +213,5 @@ offer this program **as a network service**, you must give that service's users 
 of your version. Running it locally for yourself adds no obligation.
 
 The wrapper in `packages/eric` is our own code; **ERiC itself is not shipped**. Dependencies
-with other licences that get pulled into a build: `lib-fints` (LGPL-2.1-or-later), `xlsx`
-(Apache-2.0), the Adwaita icons (LGPL-3.0-or-later / CC-BY-SA-3.0) and Adwaita Sans
-(OFL-1.1) in the web UI. Whoever distributes a bundled artefact must meet their terms.
+with other licences that get pulled into a build: `lib-fints` (LGPL-2.1-or-later), the
+Adwaita icons (LGPL-3.0-or-later / CC-BY-SA-3.0) and Adwaita Sans (OFL-1.1) in the web UI. Whoever distributes a bundled artefact must meet their terms.

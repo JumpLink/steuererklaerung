@@ -114,7 +114,7 @@ the same gjsify/GJS stack and registers as its own MCP server. Nothing in this p
 | `transactions` store (NDJSON) | ✅ |
 | Multi-chunk gzip `fetch` body-read | ✅ via gjsify#515 (`Gio.IOErrorEnum`); shipped in `@gjsify/*` 0.5.0, verified end-to-end on gjs |
 | `generate_sepa_qr` PNG data-URL | ✅ via gjsify#508 — `node:zlib` streaming classes; shipped in 0.5.0, renders a real PNG data-URL on gjs (re-verified overlay-free) |
-| `qonto-export` (`xlsx`) | ✅ SheetJS `XLSX.read`/`write` round-trips on gjs (verified) |
+| `qonto-export` (own `.xls`/`.xlsx` reader) | ✅ dependency-free; `.xlsx` inflates via `node:zlib` `inflateRawSync` |
 | Interactive prompts (`@inquirer`) | ✅ works; best with `@gjsify/terminal-native` for full TTY |
 | Exit codes for *error* cases | ✅ unknown commands + nested parse errors reject cleanly (rc=1, no hang/crash) via `.strictCommands()` + sync-throw normalization |
 

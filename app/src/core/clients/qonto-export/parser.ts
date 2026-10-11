@@ -3,7 +3,7 @@
  */
 
 import { readFileSync } from 'node:fs';
-import * as XLSX from 'xlsx';
+import { readFirstSheet } from './spreadsheet.ts';
 import type { QontoExportTransaction } from './types.ts';
 
 /** Column indices in the Qonto export XLS (0-based). */
@@ -98,10 +98,7 @@ function toIsoDate(dateStr: string): string {
 }
 
 export function parseQontoExport(filePath: string): QontoExportTransaction[] {
-    const buf = readFileSync(filePath);
-    const wb = XLSX.read(buf, { type: 'buffer' });
-    const ws = wb.Sheets[wb.SheetNames[0]];
-    const rows = XLSX.utils.sheet_to_json<unknown[]>(ws, { header: 1 });
+    const rows = readFirstSheet(readFileSync(filePath));
 
     // Skip header row
     return rows
