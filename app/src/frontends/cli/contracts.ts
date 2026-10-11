@@ -33,7 +33,7 @@ import {
     matchContract,
     saveContractRecord,
 } from '../../core/actions/contracts.ts';
-import type { ContractFinding, NoticeDeadline } from '../../core/contracts/contracts.ts';
+import { type ContractFinding, type NoticeDeadline, parseReminderOffsets } from '../../core/contracts/contracts.ts';
 import { fmtDe } from '../../core/lib/money.ts';
 import { runAndExit } from './output.ts';
 
@@ -63,7 +63,9 @@ function findingText(f: ContractFinding): string {
     if (f.kind === 'missing')
         return `${f.expectedDate}  fehlt${f.expectedAmount != null ? ` (${fmtDe(f.expectedAmount)} €)` : ''}`;
     if (f.kind === 'returned') return `${f.date}  zurückgebucht ${fmtDe(f.amount)} € (Lastschrift ${f.originalTxId})`;
-    return `${f.date}  Betrag geändert: ${fmtDe(Math.abs(f.amount))} € statt ${fmtDe(f.expectedAmount)} € (${f.txId})`;
+    if (f.kind === 'no_data') return `${f.since}  keine Kontodaten seit diesem Tag — Import aktualisieren`;
+    const geaendert = `Betrag geändert: ${fmtDe(Math.abs(f.amount))} € statt ${fmtDe(f.expectedAmount)} € (${f.txId})`;
+    return `${f.date}  ${geaendert}${f.hint ? `\n              ${f.hint}` : ''}`;
 }
 
 function printMatch(m: ContractMatch): void {
@@ -80,6 +82,10 @@ function printMatch(m: ContractMatch): void {
         console.log(
             `  ${c.bookingDate}  ${fmtDe(c.amount).padStart(10)} €  ${(c.counterparty ?? '').slice(0, 28).padEnd(28)}  ${flags}  [${c.txId}]`,
         );
+    }
+    if (m.accounts.length > 1) {
+        console.log(`\nZahlungen von ${m.accounts.length} Konten — Lastschrift ggf. umgezogen`);
+        for (const a of m.accounts) console.log(`  ${a.accountKey}: ${a.payments}× ${a.first} … ${a.last}`);
     }
     console.log(`\nBefunde (${m.findings.length})`);
     for (const f of m.findings) console.log(`  ${findingText(f)}`);
@@ -234,9 +240,16 @@ export const contractsCommand: CommandModule = {
                     yy
                         .positional('id', { type: 'string', demandOption: true })
                         .positional('ref', { type: 'string', demandOption: true })
-                        .option('rolle', { choices: [...CONTRACT_DOCUMENT_ROLES, 'none'], demandOption: true }),
+                        .option('rolle', {
+                            choices: [...CONTRACT_DOCUMENT_ROLES, 'none'],
+                            describe: `Rolle des Dokuments (${CONTRACT_DOCUMENT_ROLES.join(' | ')}); none löst die Zuordnung`,
+                        }),
                 handler: (argv) =>
                     runAndExit(async () => {
+                        if (!argv.rolle)
+                            throw new Error(
+                                `--rolle fehlt. Erlaubt: ${[...CONTRACT_DOCUMENT_ROLES, 'none'].join(', ')} (none löst die Zuordnung)`,
+                            );
                         const role = argv.rolle === 'none' ? null : (argv.rolle as ContractDocumentRole);
                         linkContractDocument(String(argv.id), String(argv.ref), role);
                         return { id: String(argv.id), documentRef: String(argv.ref), role };
@@ -250,11 +263,21 @@ export const contractsCommand: CommandModule = {
                         .option('entity', { type: 'string' })
                         .option('tage', { type: 'number', default: 90 })
                         .option('ics', { type: 'string', describe: 'Pfad der .ics-Datei' })
+                        .option('erinnerung', {
+                            type: 'string',
+                            default: '3m,2m,14d',
+                            describe:
+                                'Gestaffelte Erinnerungen vor der letzten Kündigungsfrist (Monate m, Tage d), nur mit --ics',
+                        })
                         .options(jsonOption),
                 handler: (argv) =>
                     runAndExit(
                         async () => {
-                            const opts = { entityId: argv.entity as string | undefined, days: Number(argv.tage) };
+                            const opts = {
+                                entityId: argv.entity as string | undefined,
+                                days: Number(argv.tage),
+                                reminders: parseReminderOffsets(String(argv.erinnerung)),
+                            };
                             if (argv.ics) {
                                 writeFileSync(String(argv.ics), contractDeadlinesIcs(opts));
                                 return { ics: String(argv.ics), count: contractDeadlines(opts).length };

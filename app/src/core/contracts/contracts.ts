@@ -15,8 +15,18 @@ import { dayDiff } from '../lib/transactions/reconcile.ts';
 /** How long after a debit a credit of the same amount still counts as its return (SEPA: 8 weeks). */
 export const RUECKLASTSCHRIFT_FENSTER_TAGE = 60;
 
-/** Days before the latest notice date at which the calendar alarm fires. */
-export const KUENDIGUNG_ALARM_TAGE = 14;
+/** An import older than this many days (against today) is reported as "no data since" once. */
+export const DATEN_VERALTET_TAGE = 35;
+
+/** A reminder this long before the latest notice date: calendar months or plain days. */
+export type ReminderOffset = { months: number } | { days: number };
+
+/** Staggered notice reminders: 3 months, 2 months and 14 days before the latest notice date. */
+export const DEFAULT_NOTICE_REMINDERS: readonly ReminderOffset[] = [{ months: 3 }, { months: 2 }, { days: 14 }];
+
+/** A price increase may open a special right to cancel; the owner checks the notice and its deadline. */
+export const PRICE_INCREASE_HINT =
+    'Preiserhöhung: kann ein Sonderkündigungsrecht auslösen — Mitteilung des Anbieters und Frist prüfen.';
 
 /** A cent: the window when a contract names an amount but no tolerance. */
 const CENT = 0.005;
@@ -142,10 +152,46 @@ export function upcomingDeadlines(
 }
 
 /**
- * Calendar entries for the deadlines, as `buildFristenIcsEvents` does for tax deadlines. The uid holds
- * the contract and the date, so a re-export updates the entry and the next term gets a new one.
+ * Parses `3m,2m,14d` (months / days before the latest notice date) into reminder offsets. Throws on
+ * anything else so a typo does not silently drop a reminder.
  */
-export function buildContractIcsEvents(items: ReturnType<typeof upcomingDeadlines>): IcsEvent[] {
+export function parseReminderOffsets(spec: string): ReminderOffset[] {
+    return spec
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .map((s) => {
+            const m = /^(\d+)([md])$/.exec(s);
+            if (!m || Number(m[1]) <= 0)
+                throw new Error(`Ungültige Erinnerung '${s}' — erlaubt: 3m (Monate), 14d (Tage)`);
+            return m[2] === 'm' ? { months: Number(m[1]) } : { days: Number(m[1]) };
+        });
+}
+
+/**
+ * Days before `latestNotice` for each reminder, largest first, without duplicates. Reminders that
+ * already lie in the past (more than `daysLeft` days out) are dropped.
+ */
+export function noticeAlarmDays(
+    latestNotice: string,
+    daysLeft: number,
+    reminders: readonly ReminderOffset[] = DEFAULT_NOTICE_REMINDERS,
+): number[] {
+    const days = reminders.map((r) =>
+        'months' in r ? (dayDiff(latestNotice, minusMonths(latestNotice, r.months)) ?? 0) : r.days,
+    );
+    return [...new Set(days)].filter((d) => d > 0 && d <= Math.max(daysLeft, 0)).sort((a, b) => b - a);
+}
+
+/**
+ * Calendar entries for the deadlines, as `buildFristenIcsEvents` does for tax deadlines. The uid holds
+ * the contract and the date, so a re-export updates the entry and the next term gets a new one. One
+ * entry carries one alarm per staggered reminder.
+ */
+export function buildContractIcsEvents(
+    items: ReturnType<typeof upcomingDeadlines>,
+    reminders: readonly ReminderOffset[] = DEFAULT_NOTICE_REMINDERS,
+): IcsEvent[] {
     return items.map(({ contract, deadline }) => ({
         uid: `contract-${contract.id}-${deadline.latestNotice}`,
         date: deadline.latestNotice,
@@ -157,19 +203,30 @@ export function buildContractIcsEvents(items: ReturnType<typeof upcomingDeadline
         ]
             .filter(Boolean)
             .join('\n'),
-        alarmDaysBefore: KUENDIGUNG_ALARM_TAGE,
+        alarmsDaysBefore: noticeAlarmDays(deadline.latestNotice, deadline.daysLeft, reminders),
     }));
 }
 
 // ── matching ───────────────────────────────────────────────────────────
 
-/** Strongest first: a creditor ID or mandate reference names the mandate, an IBAN the payee. */
-export type MatchVia = 'creditor_id' | 'mandate_reference' | 'iban' | 'name' | 'text';
+/**
+ * Strongest first: a creditor ID, mandate reference or contract number names the contract itself, an
+ * IBAN the payee.
+ */
+export type MatchVia = 'creditor_id' | 'mandate_reference' | 'contract_number' | 'iban' | 'name' | 'text';
+
+/** These name the contract, so the booking belongs to it whichever account it was paid from. */
+const STRONG_VIA: ReadonlySet<MatchVia> = new Set(['creditor_id', 'mandate_reference', 'contract_number']);
+
+/** A contract number shorter than this is too likely to occur in an unrelated purpose text. */
+const MIN_CONTRACT_NUMBER_LENGTH = 5;
 
 export interface ContractCandidate {
     txId: string;
     bookingDate: string;
     amount: number;
+    /** The account the booking was paid from — more than one means the mandate moved. */
+    accountKey?: string;
     counterparty?: string;
     via: MatchVia;
     /** Within amount ± tolerance (always true when the contract names no amount). */
@@ -190,6 +247,8 @@ export function matchVia(c: ContractRecord, t: ContractBooking): MatchVia | unde
     const text = compact(`${t.purpose ?? ''}${t.reference ?? ''}`);
     if (c.creditorId && text.includes(compact(c.creditorId))) return 'creditor_id';
     if (c.mandateReference && text.includes(compact(c.mandateReference))) return 'mandate_reference';
+    const number = compact(c.contractNumber);
+    if (number.length >= MIN_CONTRACT_NUMBER_LENGTH && text.includes(number)) return 'contract_number';
     if (c.counterpartyIban && compact(t.counterpartyIban) === compact(c.counterpartyIban)) return 'iban';
     if (c.counterparty && gleichePartei(c.counterparty, t.counterparty)) return 'name';
     if (c.matchText) {
@@ -204,9 +263,40 @@ function onAccount(c: ContractRecord, t: ContractBooking): boolean {
 }
 
 /**
- * The debits that may belong to the contract: on its account, not rejected, matched by a key. A match
- * by text alone must also hit the amount window; a strong key or the name also proposes a booking
- * with a changed amount. Linked bookings are always included. Linking stays the owner's decision.
+ * How a booking belongs to the contract: a strong key (creditor ID, mandate reference, contract
+ * number) holds on any account, so a debit that moved to another account stays with its contract; the
+ * weak ones (IBAN, name, text) only count on the contract's own account.
+ */
+export function contractMatch(c: ContractRecord, t: ContractBooking): MatchVia | undefined {
+    const via = matchVia(c, t);
+    if (!via) return undefined;
+    return STRONG_VIA.has(via) || onAccount(c, t) ? via : undefined;
+}
+
+/** The accounts the candidates were paid from, oldest first — more than one means the mandate moved. */
+export function paymentAccounts(
+    candidates: readonly ContractCandidate[],
+): { accountKey: string; payments: number; first: string; last: string }[] {
+    const by = new Map<string, { accountKey: string; payments: number; first: string; last: string }>();
+    for (const p of candidates) {
+        if (!p.accountKey) continue;
+        const a = by.get(p.accountKey);
+        if (!a)
+            by.set(p.accountKey, { accountKey: p.accountKey, payments: 1, first: p.bookingDate, last: p.bookingDate });
+        else {
+            a.payments++;
+            if (p.bookingDate < a.first) a.first = p.bookingDate;
+            if (p.bookingDate > a.last) a.last = p.bookingDate;
+        }
+    }
+    return [...by.values()].sort((a, b) => a.first.localeCompare(b.first));
+}
+
+/**
+ * The debits that may belong to the contract: not rejected, matched by a key — a strong key on any
+ * account, the weaker ones on the contract's account only. A match by text alone must also hit the
+ * amount window; a strong key or the name also proposes a booking with a changed amount. Linked
+ * bookings are always included. Linking stays the owner's decision.
  */
 export function contractCandidates(
     c: ContractRecord,
@@ -216,16 +306,17 @@ export function contractCandidates(
     const status = new Map(decisions.filter((d) => d.contractId === c.id).map((d) => [d.txId, d.status]));
     const out: ContractCandidate[] = [];
     for (const t of bookings) {
-        if (t.amount >= 0 || !onAccount(c, t)) continue;
+        if (t.amount >= 0) continue;
         const s = status.get(t.id);
         if (s === 'rejected') continue;
-        const via = matchVia(c, t);
+        const via = contractMatch(c, t);
         const win = inWindow(c, t.amount);
         if (s !== 'linked' && (!via || (via === 'text' && !win))) continue;
         out.push({
             txId: t.id,
             bookingDate: t.bookingDate,
             amount: t.amount,
+            accountKey: t.accountKey,
             counterparty: t.counterparty,
             via: via ?? 'name',
             inAmountWindow: win,
@@ -240,7 +331,36 @@ export function contractCandidates(
 export type ContractFinding =
     | { kind: 'missing'; expectedDate: string; expectedAmount: number | null }
     | { kind: 'returned'; txId: string; date: string; amount: number; originalTxId: string }
-    | { kind: 'changed'; txId: string; date: string; amount: number; expectedAmount: number };
+    | {
+          kind: 'changed';
+          txId: string;
+          date: string;
+          amount: number;
+          expectedAmount: number;
+          direction: 'increase' | 'decrease';
+          /** Set on an increase: it may open a special right to cancel. */
+          hint?: string;
+      }
+    | {
+          /** The newest import of the accounts involved is stale: reported once, not as missing months. */
+          kind: 'no_data';
+          since: string;
+      };
+
+/** First and last booking date per account: the span the bank data actually covers. */
+function coverage(bookings: readonly ContractBooking[]): Map<string, { first: string; last: string }> {
+    const by = new Map<string, { first: string; last: string }>();
+    for (const t of bookings) {
+        const key = t.accountKey ?? '';
+        const s = by.get(key);
+        if (!s) by.set(key, { first: t.bookingDate, last: t.bookingDate });
+        else {
+            if (t.bookingDate < s.first) s.first = t.bookingDate;
+            if (t.bookingDate > s.last) s.last = t.bookingDate;
+        }
+    }
+    return by;
+}
 
 /** The payment dates the contract expects up to `asOf`: start stepped by the cycle, until its end. */
 export function expectedDates(c: ContractRecord, asOf: string): string[] {
@@ -259,10 +379,14 @@ export function expectedDates(c: ContractRecord, asOf: string): string[] {
 /**
  * What is wrong with the contract's payments, measured against `asOf` — the newest booking of the
  * account, not today, so a lagging import does not report every recent date as missing:
- * - `missing`: an expected date more than the tolerance before `asOf` without a payment near it;
+ * - `missing`: an expected date without a payment near it, only within the span the imported bookings
+ *   of the contract's account (and of any account its payments came from) cover — never before the
+ *   first or after the last booking;
+ * - `no_data`: with `today` given, the newest of those bookings is older than
+ *   {@link DATEN_VERALTET_TAGE} days — reported once, instead of a finding per month;
  * - `returned`: a credit matching the contract with the amount of one of its debits, within
  *   {@link RUECKLASTSCHRIFT_FENSTER_TAGE} days after it (a Rücklastschrift);
- * - `changed`: a payment outside the amount window.
+ * - `changed`: a payment outside the amount window; an increase carries {@link PRICE_INCREASE_HINT}.
  * Payments are the linked bookings plus the open candidates. Computed, never stored.
  */
 export function contractFindings(
@@ -270,16 +394,31 @@ export function contractFindings(
     bookings: readonly ContractBooking[],
     decisions: readonly ContractTransactionRecord[],
     asOf: string,
+    today?: string,
 ): ContractFinding[] {
     const payments = contractCandidates(c, bookings, decisions);
     const out: ContractFinding[] = [];
+
+    const spans = coverage(bookings);
+    const involved = new Set(payments.map((p) => p.accountKey ?? ''));
+    if (c.accountKey) involved.add(c.accountKey);
+    else for (const key of spans.keys()) involved.add(key);
+    const covering = [...involved].flatMap((key) => spans.get(key) ?? []);
+    const covered = (d: string) =>
+        covering.some(
+            (s) =>
+                (dayDiff(d, s.first) ?? -1) >= SERIE_TOLERANZ_TAGE && (dayDiff(s.last, d) ?? -1) > SERIE_TOLERANZ_TAGE,
+        );
+    const newest = covering.reduce<string | null>((max, s) => (max == null || s.last > max ? s.last : max), null);
+    if (today && newest && (dayDiff(today, newest) ?? 0) > DATEN_VERALTET_TAGE)
+        out.push({ kind: 'no_data', since: newest });
 
     const returnedOriginals = new Set<string>();
     const rejected = new Set(
         decisions.filter((d) => d.contractId === c.id && d.status === 'rejected').map((d) => d.txId),
     );
     for (const t of bookings) {
-        if (t.amount <= 0 || !onAccount(c, t) || rejected.has(t.id) || !matchVia(c, t)) continue;
+        if (t.amount <= 0 || rejected.has(t.id) || !contractMatch(c, t)) continue;
         // The nearest earlier debit of the same amount: a return follows its debit within days.
         const original = payments
             .filter((p) => {
@@ -300,7 +439,7 @@ export function contractFindings(
 
     const used = new Set<string>();
     for (const d of expectedDates(c, asOf)) {
-        if ((dayDiff(asOf, d) ?? 0) <= SERIE_TOLERANZ_TAGE) continue;
+        if ((dayDiff(asOf, d) ?? 0) <= SERIE_TOLERANZ_TAGE || !covered(d)) continue;
         const hit = payments.find(
             (p) => !used.has(p.txId) && Math.abs(dayDiff(p.bookingDate, d) ?? Infinity) <= SERIE_TOLERANZ_TAGE,
         );
@@ -311,17 +450,21 @@ export function contractFindings(
     if (c.amount != null) {
         for (const p of payments) {
             if (p.inAmountWindow) continue;
+            const increase = Math.abs(p.amount) > c.amount;
             out.push({
                 kind: 'changed',
                 txId: p.txId,
                 date: p.bookingDate,
                 amount: p.amount,
                 expectedAmount: c.amount,
+                direction: increase ? 'increase' : 'decrease',
+                ...(increase ? { hint: PRICE_INCREASE_HINT } : {}),
             });
         }
     }
 
-    const dateOf = (f: ContractFinding) => (f.kind === 'missing' ? f.expectedDate : f.date);
+    const dateOf = (f: ContractFinding) =>
+        f.kind === 'missing' ? f.expectedDate : f.kind === 'no_data' ? f.since : f.date;
     return out.sort((a, b) => dateOf(a).localeCompare(dateOf(b)));
 }
 
