@@ -8,7 +8,8 @@
     "skipLibCheck": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,
-    // A `gjsify link`ed package is a symlink, and TS resolves a symlinked file's imports from its
+    // Only matters for the optional `gjsify link ../lotse` dev path (registry installs need no
+    // symlink handling). A `gjsify link`ed package is a symlink, and TS resolves a symlinked file's imports from its
     // REALPATH — so the linked checkout's own `@girs/*` join the program beside ours, and two copies
     // of one ambient `gi://` declaration are a duplicate-identifier conflict (measured: 120 errors
     // with the link vs 75 without, all of them inside @girs .d.ts files). Resolving from the symlink

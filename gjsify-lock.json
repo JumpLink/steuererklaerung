@@ -1,9 +1,9 @@
 {
   "lockfileVersion": 4,
   "requested": [
-    "@lotse/core@*",
-    "@lotse/session@*",
-    "@lotse/widget@*",
+    "@lotse/core@^0.2.0",
+    "@lotse/session@^0.2.0",
+    "@lotse/widget@^0.2.0",
     "@curlew/smtp@0.1.0",
     "@hono/node-server@^2.1.4",
     "@inquirer/prompts@^8.7.3",
@@ -4225,6 +4225,46 @@
       "integrity": "sha512-pbCDiVMnne1lYUIaYNN5wrwQXDtHaYtg7YEFPeW+hws6U47WeFvISGUWekPGKWOP1ygrs0ef0o1VJMk1exos5A==",
       "dependencies": {
         "@lit-labs/ssr-dom-shim": "^1.5.0"
+      }
+    },
+    "node_modules/@lotse/acp": {
+      "version": "0.2.0",
+      "resolved": "https://registry.npmjs.org/@lotse/acp/-/acp-0.2.0.tgz",
+      "integrity": "sha512-TMZaKbzDcoFyuA+k76abV40ZlylVOIVCbRehaQNfOikSHvdoVK79nyRBk97Jj//fK/lEpIrXi4cdKA7UUUJIqw=="
+    },
+    "node_modules/@lotse/core": {
+      "version": "0.2.0",
+      "resolved": "https://registry.npmjs.org/@lotse/core/-/core-0.2.0.tgz",
+      "integrity": "sha512-B/SlwWwrEdf/FuUkvzUAw/Y6OfRy0BDX3MKtOVDIkFpfxqvgGSqjShvYwpoxS2emb2fSUWVjmDcWXBPnbMrFbw==",
+      "dependencies": {
+        "@lotse/acp": "^0.2.0",
+        "@lotse/session": "^0.2.0"
+      }
+    },
+    "node_modules/@lotse/session": {
+      "version": "0.2.0",
+      "resolved": "https://registry.npmjs.org/@lotse/session/-/session-0.2.0.tgz",
+      "integrity": "sha512-/uL6HNIJdBmxVRe6YuG+Ed4fVG/RUEOm559ysV1PHA8MtmorSJf0VV+REl5/RMvu89bho3EVZkqg0tWZpfarSQ==",
+      "dependencies": {
+        "@lotse/acp": "^0.2.0"
+      }
+    },
+    "node_modules/@lotse/widget": {
+      "version": "0.2.0",
+      "resolved": "https://registry.npmjs.org/@lotse/widget/-/widget-0.2.0.tgz",
+      "integrity": "sha512-ee/r9XHuMWOEEyLIygyz4+u9HjPo8RN//3WeUvtssyf0XFgWCNDiNP4WAGjmMYZqUyPZ6hO/08OYLEICBBVSjg==",
+      "dependencies": {
+        "@lotse/acp": "^0.2.0",
+        "@lotse/core": "^0.2.0",
+        "@lotse/session": "^0.2.0"
+      },
+      "peerDependencies": {
+        "@girs/adw-1": "^5.4.0",
+        "@girs/gdk-4.0": "^5.4.0",
+        "@girs/gtk-4.0": "^5.4.0",
+        "@girs/glib-2.0": "^5.4.0",
+        "@girs/pango-1.0": "^5.4.0",
+        "@girs/gobject-2.0": "^5.4.0"
       }
     },
     "node_modules/@marcj/ts-clone-node": {
