@@ -74,11 +74,23 @@ nichts auszuwählen.
   andere wird **gefragt**. Es gibt keine Antwort, die etwas zusätzlich erlaubt.
   `fetch` ist bewusst nicht abgelehnt: so sieht der Agent einen Gesetzestext oder eine
   BMF-Seite nach. Die URL steht in der Rückfrage.
-- **Keine kostenlosen Fremdmodelle.** Die App bietet die Anbieter-Einrichtung im Panel **nicht**
-  an (`providerOnboarding` aus). Welches Modell der Agent benutzt, entscheidet dessen eigene
-  Anmeldung — die Rückfrage-Logik sieht Werkzeugaufrufe und kann ein Modell weder erkennen noch
-  verhindern. Wer Belegdaten von kostenlosen Modellen fernhalten will, entscheidet das also beim
-  Agenten, nicht hier.
+- **Keine kostenlosen Fremdmodelle — und zwar durchgesetzt, nicht nur nicht angeboten.** Das Panel
+  übergibt lotse eine **Modellregel** (`denyFreeHostedModels`): kostenlose Fremdmodelle stehen in
+  der Modellauswahl nicht zur Verfügung, und solange eines ausgewählt ist, geht **keine Eingabe
+  raus** — das Senden ist gesperrt und der Grund steht darunter. Umgeschaltet wird dabei nie: die
+  Modellwahl bleibt die der Person, sie wird nur eingeschränkt. Die Regel ist **fail-closed**: ein
+  Fehler in der Prüfung und ein Modell, das lotse nicht zuordnen kann, gelten beide als Ablehnung.
+  Zusätzlich bietet die App die Anbieter-Einrichtung im Panel **nicht** an (`providerOnboarding`
+  aus) — das Paar ist Absicht: das eine betrifft, wohin die App jemanden führt, das andere, was sie
+  annimmt. Die Rückfrage-Logik hat damit nichts zu tun; sie sieht Werkzeugaufrufe und kann ein
+  Modell gar nicht erkennen.
+
+  Eine **bekannte Lücke**, offen benannt: erkannt werden die Einträge aus lotses Liste
+  (`free-models.json`) und alles mit der Endung `-free`. Eine *unbekannte* Modell-ID gilt als
+  erlaubt, denn die Liste führt die kostenlosen Modelle und nicht die bezahlten — würde Unbekanntes
+  abgelehnt, wären fast alle Modelle gesperrt, auch bezahlte. Wer es genauer braucht, pflegt eine
+  eigene Positivliste; das wäre dann eine Liste, die veraltet und jemanden von einem Modell
+  aussperrt, für das er zahlt.
 
 Technisch: die Pakete `@lotse/*` sind **noch nicht veröffentlicht**, werden aus dem Quellcode
 verlinkt, und im Flatpak ist das Panel deshalb noch nicht enthalten —

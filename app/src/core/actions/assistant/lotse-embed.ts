@@ -4,8 +4,8 @@
  * lotse is an ACP client: it starts a coding agent (opencode) as a SUBPROCESS and talks to it over
  * stdio. That is a different animal from the built-in assistant, which calls an LLM provider
  * in-process, and the difference is exactly why the choice is explicit and why this file exists
- * apart from the widget. Four things have to be true before a single process is spawned, and all
- * four are decided here so a test can check them without a display:
+ * apart from the widget. Five things have to be true before a single process is spawned, and all
+ * five are decided here so a test can check them without a display:
  *
  *   1. **AI is on.** `isAssistantEnabled()` is the person's consent, unchanged. With it off,
  *      {@link lotseEmbedPlan} returns `null`, the pane is never built, and nothing is started —
@@ -19,14 +19,18 @@
  *   4. **The tools it gets are read-only.** The agent reaches this app through this app's own MCP
  *      server, started with {@link MCP_READONLY_ENV} — see `core/config/mcp-readonly.ts` for why
  *      the manifest's `allowWrite` is the wrong switch for an agent the app spawned itself.
+ *   5. **No free hosted model may answer.** {@link LOTSE_MODEL_POLICY} is handed to `LotseChat` as
+ *      its `modelPolicy`, which hides those models and refuses a prompt while one is selected.
+ *      Everything this pane can read — receipts, Buchungen, Steuernummern — arrives through the MCP
+ *      server above and ends up in the model's context, so the destination is as much a decision as
+ *      the tools are.
  *
  * **What the gate can and cannot do.** {@link assistantGateAnswer} answers the agent's
  * `session/request_permission`: it declines the destructive kinds outright and asks the person
  * about everything else. It is a RESTRICTION — `HostGateAnswer` has no value that approves, so no
  * answer from here can widen what lotse would otherwise allow. It sees tool calls and nothing
- * else: it cannot see, and therefore cannot police, which MODEL the agent uses. Keeping receipt
- * data away from free hosted models is a separate mechanism — `providerOnboarding: false` in the
- * panel, so the app never offers them — and must not be claimed of the gate.
+ * else: it cannot see, and therefore cannot police, which MODEL the agent uses. That is point 5's
+ * job, and it must not be claimed of the gate.
  *
  * Pure: no GTK, no spawning, and the only disk it touches is the one `mkdir` in
  * {@link ensureLotseDataRoot}. The panel builds the widget from a plan; everything above is here.
@@ -35,7 +39,7 @@
 import { chmodSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { lotsePathsUnder, type LotsePaths, type McpServer } from '@lotse/core';
+import { denyFreeHostedModels, lotsePathsUnder, type LotsePaths, type McpServer, type ModelPolicy } from '@lotse/core';
 
 import { isAssistantEnabled } from '../../config/assistant-preference.ts';
 import { MCP_READONLY_ENV } from '../../config/mcp-readonly.ts';
@@ -112,6 +116,30 @@ export function assistantGateAnswer(view: { tool: string; kind: string }): 'ask'
     return DECLINED_TOOL_KINDS.has(view.kind.trim().toLowerCase()) ? 'decline' : 'ask';
 }
 
+/**
+ * Which models this pane's prompts may reach — lotse's ready-made rule, unmodified.
+ *
+ * `denyFreeHostedModels` is `isFreeModel`'s answer turned into a policy: the ids in lotse's
+ * `free-models.json`, anything whose id ends in `-free`, and an empty id. The widget hides those
+ * models from the dropdown and REFUSES a prompt while one is selected; it never switches the model
+ * for the person, so the choice stays theirs and is only narrowed. Fail-closed on both edges lotse
+ * documents: a policy that throws is a deny, and so is a model lotse cannot identify.
+ *
+ * **It is the model side of `providerOnboarding: false`, not a duplicate of it.** Not offering to
+ * connect a provider keeps the app from *walking* anybody into a free hosted model; it does nothing
+ * about a person who already has one connected, or about an agent whose own config names one. This
+ * refuses the prompt either way.
+ *
+ * **Its one known gap, deliberately not papered over here:** an id the list does not recognise is
+ * ALLOWED, because the list names free models rather than paid ones and denying the unrecognised
+ * would deny nearly every model including the paid ones. An allowlist would close that gap and
+ * would also need this app to maintain a list of every model it considers acceptable — a list that
+ * rots silently and locks the person out of a model they pay for. The suffix rule is what catches
+ * the one concrete case measured so far: `opencode/fledge-alpha-free`, what an opencode with no
+ * provider connected answers with by default.
+ */
+export const LOTSE_MODEL_POLICY: ModelPolicy = denyFreeHostedModels;
+
 /** Everything the panel needs to build a chat — and proof that it is allowed to. */
 export interface LotseEmbedPlan {
     /** lotse's data root, under the app's own. Created by {@link ensureLotseDataRoot}. */
@@ -121,6 +149,8 @@ export interface LotseEmbedPlan {
     mcpServers: McpServer[];
     /** The directory a new conversation runs in — the data root, never a source checkout. */
     cwd: string;
+    /** Where a prompt from this pane may go: {@link LOTSE_MODEL_POLICY}, part of the plan so a test sees it. */
+    modelPolicy: ModelPolicy;
 }
 
 export interface LotseEmbedOptions {
@@ -150,6 +180,7 @@ export function lotseEmbedPlan(options: LotseEmbedOptions): LotseEmbedPlan | nul
         paths: lotsePathsUnder(dataRoot),
         mcpServers: lotseMcpServers(lotseMcpLaunch(options.installation)),
         cwd: dataRoot,
+        modelPolicy: LOTSE_MODEL_POLICY,
     };
 }
 

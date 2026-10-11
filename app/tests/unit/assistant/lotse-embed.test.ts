@@ -1,5 +1,5 @@
 /**
- * The four promises `lotse-embed.ts` makes, each as a test that would fail without it.
+ * The five promises `lotse-embed.ts` makes, each as a test that would fail without it.
  *
  * The interesting one is the first: "no AI" has to mean no process, and the only way to check that
  * without a display is to check that the caller is handed NOTHING to build from. A test that
@@ -7,11 +7,11 @@
  */
 
 import { describe, expect, it } from '@gjsify/unit';
-import { mkdtempSync, rmSync, statSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import type { McpServer } from '@lotse/core';
+import { denyFreeHostedModels, FREE_MODELS, type McpServer } from '@lotse/core';
 
 import {
     AI_ENGINE_ENV,
@@ -22,6 +22,7 @@ import {
     lotseEmbedPlan,
     lotseMcpLaunch,
     LOTSE_DATA_DIR_NAME,
+    LOTSE_MODEL_POLICY,
     resolveAiEngine,
     type LotseEmbedOptions,
 } from '../../../src/core/actions/assistant/lotse-embed.ts';
@@ -159,6 +160,52 @@ export default async () => {
             const external = resolveMcpLaunch(installation);
             expect(MCP_READONLY_ENV in external.env).toBe(false);
             expect(launchIsReadOnly(external)).toBe(false);
+        });
+    });
+
+    await describe('lotseEmbedPlan — no free hosted model answers a prompt from this pane', async () => {
+        await it('carries the policy in the plan, so the panel has one to pass', async () => {
+            const built = plan();
+            if (!built) return;
+            expect(built.modelPolicy).toBe(LOTSE_MODEL_POLICY);
+            // lotse's rule, unmodified — not a copy of it that could drift from the list.
+            expect(LOTSE_MODEL_POLICY).toBe(denyFreeHostedModels);
+        });
+
+        await it('denies every id on lotse’s free list', async () => {
+            const built = plan();
+            if (!built) return;
+            expect(FREE_MODELS.ids.length > 0).toBe(true);
+            for (const id of FREE_MODELS.ids) {
+                expect(built.modelPolicy(id)).toBe('deny');
+            }
+        });
+
+        await it('denies the -free suffix and an empty id, allows a paid id', async () => {
+            const built = plan();
+            if (!built) return;
+            // The measured case: what an opencode with no provider connected answers with.
+            expect(built.modelPolicy('opencode/fledge-alpha-free')).toBe('deny');
+            expect(built.modelPolicy('')).toBe('deny');
+            expect(built.modelPolicy('   ')).toBe('deny');
+            // The documented gap, asserted rather than left implied: an unrecognised id is allowed.
+            expect(built.modelPolicy('anthropic/claude-opus-5')).toBe('allow');
+        });
+
+        /**
+         * **The panel is the one place this can still be dropped, and it needs GTK to run.**
+         * `BhLotsePanel.build` cannot be instantiated headless (Sandbox Exit 144), so the plan
+         * above proves the policy EXISTS and this proves it is handed over. Same shape as the
+         * identifier-literal guard in `euer-transactions.test.ts`: a privacy invariant that only
+         * the source can answer is checked against the source.
+         *
+         * It is deliberately not a regex over a formatted line — `modelPolicy` must be passed
+         * `plan.modelPolicy` and nothing else, because a literal here would be a second policy
+         * beside the one the plan decided.
+         */
+        await it('the panel hands the plan’s policy to LotseChat', async () => {
+            const source = readFileSync(join(process.cwd(), 'src/frontends/desktop/lotse-panel.ts'), 'utf-8');
+            expect(source.includes('modelPolicy: plan.modelPolicy,')).toBe(true);
         });
     });
 

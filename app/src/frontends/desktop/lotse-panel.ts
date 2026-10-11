@@ -13,15 +13,18 @@
  * without a display. This file is the surface: it builds the chat, fills the host's own no-agent
  * page from lotse's sentences, and hands `shutdown()` to the window.
  *
- * Two things here are policy rather than chrome, and both are restrictions:
- *   - `providerOnboarding: false` — the offer to connect a provider is never shown, so the app
- *     never walks anybody into the free hosted models that offer comes with. Receipts, bookings and
- *     Steuernummern are reachable through the MCP server in this pane; they do not belong in a free
- *     hosted model's context. The agent's own existing login is untouched — lotse stores no
- *     credential and this panel reads none.
+ * Three things here are policy rather than chrome, and all three are restrictions:
+ *   - `modelPolicy` — `plan.modelPolicy` (`LOTSE_MODEL_POLICY`), so no free hosted model can answer
+ *     a prompt from this pane. Receipts, bookings and Steuernummern are reachable through the MCP
+ *     server here, and they do not belong in a free hosted model's context. The widget hides those
+ *     models and refuses the prompt while one is selected; it never switches models for the person.
+ *   - `providerOnboarding: false` — the offer to connect a provider is never shown, so the app does
+ *     not walk anybody into those models in the first place. The pair is deliberate: this one is
+ *     about what the app offers, the policy above about what it accepts. The agent's own existing
+ *     login is untouched — lotse stores no credential and this panel reads none.
  *   - `gate` — `assistantGateAnswer` declines the destructive tool kinds and asks about the rest.
- *     It sees tool calls only; it cannot see which model answers, which is why the line above is a
- *     separate mechanism and not a claim about the gate.
+ *     It sees tool calls only; it cannot see which model answers, which is why the model policy is
+ *     a separate mechanism and not a claim about the gate.
  *
  * GJS-GUI → headless not verifiable (Sandbox Exit 144); build-verified. The wiring underneath is
  * covered by `tests/unit/assistant/lotse-embed.test.ts` on both runtimes.
@@ -107,6 +110,7 @@ export class BhLotsePanel extends Gtk.Box {
             resolveAgent: async (id, source) =>
                 resolveRecorded(id, source, gatherResolveContext(plan.paths, false, false)),
             mcpServers: plan.mcpServers,
+            modelPolicy: plan.modelPolicy,
             ...(empty.kind === 'no-agent' ? { noAgent: empty } : {}),
             noAgentPage: this._no_agent_page,
             providerOnboarding: false,

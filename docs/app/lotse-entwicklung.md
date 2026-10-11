@@ -67,9 +67,11 @@ sind in keiner Registry zu finden. Erst `gjsify link`, dann `gjsify install`.
 > Dass ein `install` mit Link überhaupt durchläuft, ist selbst erst eine Korrektur in der
 > gjsify-CLI: vorher wurde die Abhängigkeitskante eines verlinkten Pakets weiterhin gegen npm
 > aufgelöst, und ein 404 brach die gesamte Installation ab
-> ([gjsify/gjsify#2160](https://github.com/gjsify/gjsify/pull/2160)). Bis diese Korrektur in einer
-> Version steckt, die dieses Repo pinnt, braucht ein `gjsify install` mit aktivem Link eine CLI aus
-> diesem Zweig.
+> ([gjsify/gjsify#2160](https://github.com/gjsify/gjsify/pull/2160)). Diese Korrektur **steckt in
+> der Version, die dieses Repo pinnt** — `@gjsify/cli 0.58.0` aus `app/package.json` —, also
+> braucht weder ein lokaler Checkout noch die CI eine CLI aus einem Zweig. Der Satz steht hier
+> trotzdem, weil er erklärt, warum die Reihenfolge *erst linken, dann installieren* überhaupt
+> funktioniert; wer auf eine ältere CLI zurückgeht, läuft wieder in den 404.
 
 ## In der CI
 
@@ -93,7 +95,10 @@ von selbst.
 Weil lotse eine **andere** gjsify-Version pinnt als dieses Repo (gjsify erscheint als ein
 Release-Zug, eine Mischung erzeugt still kaputte Bundles), installiert die CI lotses Abhängigkeiten
 mit lotses eigener CLI über `npx` — ein globales Install würde die hier gebootstrappte Version
-überschreiben.
+überschreiben. Beide Versionen liest die CI aus der jeweiligen `app/package.json` und beide kommen
+aus der Registry: dieses Repo `@gjsify/cli 0.58.0` global, lotse `0.54.0` über `npx`. **Keine
+unveröffentlichte CLI, kein Zweig-Build** — die vier Schritte laufen mit veröffentlichten Versionen
+durch.
 
 ## Offen: Flatpak
 
