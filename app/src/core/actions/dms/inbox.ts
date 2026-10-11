@@ -70,10 +70,34 @@ export function summarizeDmsDocument(doc: DmsDocument) {
 /** Paperless cannot resolve names to ids through the DMS interface; these stay with paperless_update_document. */
 const PAPERLESS_NOT_WRITABLE: readonly ProposalField[] = ['correspondent', 'documentType', 'direction'];
 
-export async function listInbox(provider: DmsProvider) {
+export interface InboxFilter {
+    /** Only documents added on/after this date or timestamp (ISO, compared as text). */
+    addedSince?: string;
+    /** Only documents added strictly before this date or timestamp. */
+    addedBefore?: string;
+    /** Keep at most this many, newest first. */
+    limit?: number;
+}
+
+/** Newest first. `total` counts what matched the date filter, `count` what is returned after `limit`. */
+export async function listInbox(provider: DmsProvider, filter: InboxFilter = {}) {
     if (!provider.listInbox) throw new Error('Dieses DMS kennt keinen Eingang.');
-    const docs = await provider.listInbox();
-    return { dms: provider.kind, count: docs.length, documents: docs.map(summarizeDmsDocument) };
+    const all = await provider.listInbox();
+    const addedOf = (d: { added: string | null }) => d.added ?? '';
+    const matched = all
+        .filter(
+            (d) =>
+                (filter.addedSince === undefined || addedOf(d) >= filter.addedSince) &&
+                (filter.addedBefore === undefined || addedOf(d) < filter.addedBefore),
+        )
+        .sort((a, b) => (addedOf(a) < addedOf(b) ? 1 : addedOf(a) > addedOf(b) ? -1 : 0));
+    const docs = filter.limit === undefined ? matched : matched.slice(0, filter.limit);
+    return {
+        dms: provider.kind,
+        count: docs.length,
+        total: matched.length,
+        documents: docs.map(summarizeDmsDocument),
+    };
 }
 
 export async function getDocumentWithText(provider: DmsProvider, id: string) {

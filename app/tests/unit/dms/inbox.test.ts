@@ -128,6 +128,24 @@ export default async () => {
                 expect(res.documents[0].id).toBe('1');
             });
 
+            await it('lists newest first and honours limit and the added window', async () => {
+                const { provider } = fakeProvider('builtin', doc());
+                provider.listInbox = async () => [
+                    doc({ id: 'a', added: '2026-01-01' }),
+                    doc({ id: 'c', added: '2026-03-01' }),
+                    doc({ id: 'b', added: '2026-02-01' }),
+                ];
+                const all = await listInbox(provider);
+                expect(all.documents.map((d) => d.id).join(',')).toBe('c,b,a');
+                const top = await listInbox(provider, { limit: 2 });
+                expect(top.count).toBe(2);
+                expect(top.total).toBe(3);
+                const recent = await listInbox(provider, { addedSince: '2026-02-01' });
+                expect(recent.documents.map((d) => d.id).join(',')).toBe('c,b');
+                const older = await listInbox(provider, { addedBefore: '2026-02-01' });
+                expect(older.documents.map((d) => d.id).join(',')).toBe('a');
+            });
+
             await it('refuses a provider without an inbox', async () => {
                 const { provider } = fakeProvider('builtin', doc());
                 delete provider.listInbox;
