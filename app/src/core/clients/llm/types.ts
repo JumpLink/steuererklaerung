@@ -40,6 +40,8 @@ export interface LLMCompleteOptions {
     maxTokens?: number;
     /** Per-call model override (falls back to the provider's default model). */
     model?: string;
+    /** Aborts the call when the person cancels; the call then fails as an `AiJobError` of kind `'cancelled'`. */
+    signal?: AbortSignal;
 }
 
 export interface LLMResult {

@@ -31,6 +31,7 @@ export class ScalewayProvider implements LLMProvider {
             ],
             {
                 max_tokens: opts.maxTokens,
+                ...(opts.signal ? { signal: opts.signal } : {}),
                 ...(opts.json ? { response_format: { type: 'json_object' as const } } : {}),
             },
         );

@@ -7,6 +7,7 @@
  * exponential backoff + jitter. Pattern ported from faktenforum/crawler.
  */
 
+import { AiJobError } from './job-error.ts';
 import { emptyTelemetry } from './types.ts';
 import type { LLMProvider, LLMCompleteOptions, LLMResult, LLMTelemetry } from './types.ts';
 import { DEFAULT_CLAUDE_MODEL } from '@steuererklaerung/shared';
@@ -108,6 +109,11 @@ export class ClaudeAgentProvider implements LLMProvider {
         const query = await loadQuery();
         const systemPrompt = opts.json ? `${opts.system}\n\n${JSON_INSTRUCTION}` : opts.system;
         const model = opts.model || this.model;
+        const abortController = opts.signal ? new AbortController() : undefined;
+        if (opts.signal) {
+            if (opts.signal.aborted) abortController?.abort();
+            else opts.signal.addEventListener('abort', () => abortController?.abort(), { once: true });
+        }
 
         let lastError: unknown;
         for (let attempt = 0; attempt <= TRANSPORT_RETRY_ATTEMPTS; attempt++) {
@@ -122,7 +128,13 @@ export class ClaudeAgentProvider implements LLMProvider {
                 // The SDK's message shape varies by version; read fields defensively.
                 for await (const message of query({
                     prompt: opts.user,
-                    options: { model, systemPrompt, allowedTools: [], maxTurns: 1 },
+                    options: {
+                        model,
+                        systemPrompt,
+                        allowedTools: [],
+                        maxTurns: 1,
+                        ...(abortController ? { abortController } : {}),
+                    },
                 }) as AsyncIterable<Record<string, unknown>>) {
                     if (message.type !== 'result') continue;
                     accumulate(telemetry, message);
@@ -142,6 +154,7 @@ export class ClaudeAgentProvider implements LLMProvider {
                             `Anmeldung prüfen (claude login) oder ANTHROPIC_API_KEY setzen. [${errMsg(error)}]`,
                     );
                 }
+                if (opts.signal?.aborted) throw new AiJobError('cancelled');
                 if (!isRetriableError(error) || attempt === TRANSPORT_RETRY_ATTEMPTS) throw error;
             }
         }

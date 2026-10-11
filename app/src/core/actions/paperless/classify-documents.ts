@@ -39,6 +39,8 @@ export interface ClassifyDocumentsOptions {
     onlyWrong?: boolean;
     dryRun?: boolean;
     limit?: number;
+    /** Cancels the run: the AI call in flight fails as cancelled and no further document is started. */
+    signal?: AbortSignal;
     /** Called after each processed document. */
     onDocumentProcessed?: (info: ClassifyDocumentProcessedInfo) => Promise<void>;
 }
@@ -93,7 +95,7 @@ export async function classifyDocuments(options: ClassifyDocumentsOptions = {}):
     let count = 0;
 
     for (const doc of docs) {
-        if (count >= limit) break;
+        if (count >= limit || options.signal?.aborted) break;
 
         const content = doc.content?.trim();
         if (!content) {
@@ -122,6 +124,7 @@ export async function classifyDocuments(options: ClassifyDocumentsOptions = {}):
                     user: userPrompt,
                     maxTokens: 256,
                     schema: ClassificationResultSchema,
+                    ...(options.signal ? { signal: options.signal } : {}),
                 })
             ).value;
         } catch (e) {
