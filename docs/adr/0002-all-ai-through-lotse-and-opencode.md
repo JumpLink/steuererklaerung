@@ -1,6 +1,6 @@
 # 2. All AI features go through lotse and the bundled opencode
 
-- Status: **Accepted**; all steps planned, not implemented
+- Status: **Accepted**; steps 1 and 4 implemented (step 4 without the connected check), the rest planned
 - Date: 2026-10-10
 - Deciders: Pascal Garber
 - Related: [AI jobs study](../architecture/ai-jobs-study.md),
@@ -52,16 +52,18 @@ subprocesses. It stays a standalone app that keeps growing, and it will also shi
 
 ## Order of work
 
-1. **Planned, not implemented:** Zod-validated output for the three one-shot jobs; prompts and
-   enums from the German country module. Useful on its own, independent of lotse.
+1. **Implemented (2026-10-11):** Zod-validated output for the three one-shot jobs, for every
+   provider (`completeJson` in `clients/llm/index.ts`). Not done: prompts and enums from the
+   German country module; the invoice schema deliberately leaves its enums unenforced.
 2. **Planned, not implemented:** probe how often the final-text JSON of the three jobs comes back
    malformed (lotse ADR 0004, its step 2) and
    whether opencode can connect Scaleway; scratch HOME, demo text only, a user-connected model.
 3. **Planned, not implemented (in lotse):** injectable paths and settings, `@lotse/core`,
    `mcpServers` plumbing, the headless job API with deny-all permissions, a connected check and
    the model allow-list.
-4. **Planned, not implemented:** `OpencodeProvider` and `LLM_PROVIDER=opencode`; engine status
-   reports whether a provider is connected.
+4. **Implemented (2026-10-11), except the connected check:** `OpencodeProvider` and
+   `LLM_PROVIDER=opencode` run the three jobs through `runJob`. Planned: engine status reports
+   whether a provider is connected.
 5. **Planned, not implemented (in lotse):** the widget design, then `@lotse/widget` with inline
    provider onboarding; the lotse app moves onto it.
 6. **Planned, not implemented:** the chat moves to the widget plus `steuer mcp`; the intake
@@ -97,5 +99,7 @@ decides the transport of the headless job API, and it is not the one named above
   before the prompt; the jobs pass the same policy as the chat. Permissions default to deny-all.
 - **The result-sink tool stays the fallback.** If the probe in step 2 shows final-text JSON is not
   rarely malformed, lotse adds it behind the same `parse`; this app's code does not change.
-- **Not built yet.** `runJob` is accepted in lotse but not yet implemented or released; step 4 here
-  waits for it.
+- **Built.** `runJob` shipped in `@lotse/core` 0.3.0; `OpencodeProvider` calls it with the
+  assistant pane's agent, data directory, login and `LOTSE_MODEL_POLICY`. A failure becomes an
+  `AiJobError` built from `JobError.kind` alone, so the answer and the parser's complaint are
+  never logged.
