@@ -6,28 +6,18 @@
 
 import Adw from '@girs/adw-1';
 import Gdk from '@girs/gdk-4.0';
-import GLib from '@girs/glib-2.0';
 import Gtk from '@girs/gtk-4.0';
 import Pango from '@girs/pango-1.0';
 
 import { mcpClientSnippets, resolveMcpLaunch, type McpClientSnippet } from '../../../core/actions/mcp-clients.ts';
-import { isDemoMode } from '../../../core/config/demo.ts';
-import { getManifestPath } from '../../../core/config/manifest.ts';
-import { bundlePath, checkoutGjsify } from '../self-launch.ts';
+import { currentMcpInstallation } from '../self-launch.ts';
 import { showToast } from '../toast.ts';
 import { _, fmt } from '../i18n.ts';
 
 export function currentMcpSnippets(): McpClientSnippet[] {
-    return mcpClientSnippets(
-        resolveMcpLaunch({
-            flatpakId: process.env.FLATPAK_ID || undefined,
-            installedBinary: GLib.find_program_in_path('steuererklaerung') ?? undefined,
-            bundlePath: bundlePath(),
-            gjsifyBin: checkoutGjsify(bundlePath()),
-            manifestPath: getManifestPath(),
-            demo: isDemoMode(),
-        }),
-    );
+    // Deliberately WITHOUT `readOnly`: the person registered this client themselves, so
+    // `mcp.allowWrite` is their decision about it (core/config/mcp-readonly.ts).
+    return mcpClientSnippets(resolveMcpLaunch(currentMcpInstallation()));
 }
 
 function snippetGroup(s: McpClientSnippet): Adw.PreferencesGroup {

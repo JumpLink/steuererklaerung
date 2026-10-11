@@ -27,6 +27,9 @@
         },
         "src/core/actions/assistant/chat-agent.ts": {
             "ohneKi": "Die Oberfläche bietet dieselben Antworten als Filter, Hinweise und Auswertungen; der Assistent ist nur eine zweite Tür."
+        },
+        "src/core/actions/assistant/lotse-embed.ts": {
+            "ohneKi": "Steht der KI-Schalter aus, liefert `lotseEmbedPlan()` null: kein Bereich in der Oberfläche, kein gestarteter Prozess — die ganze App bleibt über Oberfläche und CLI benutzbar. Auch mit KI ist lotse nur die Wahl zwischen zwei Assistenten (Einstellungen → Assistent), und beide sind dieselbe zweite Tür wie `chat.ts`."
         }
     }
 }

@@ -54,6 +54,7 @@ die belegten Referenzen, gegen die ihre Zahlen geprüft werden.
 | [app/backup.md](app/backup.md) | Sicherung (App, `steuer backup`, automatisch vor Migrationen): was hineinkommt, wo sie liegt, wie man von Hand wiederherstellt |
 | [app/ki-und-mcp.md](app/ki-und-mcp.md) | Eingebauter KI-Assistent (pro Benutzer) und MCP-Server für externe Agenten (Manifest): zwei unabhängige Schalter und warum sie dort liegen |
 | [app/mcp-clients.md](app/mcp-clients.md) | Externe Agenten verbinden: Startbefehl je Installation (Flatpak, Paket, Checkout) und das Konfigurationsformat von Claude Desktop/Code, opencode, Cursor, VS Code |
+| [app/lotse-entwicklung.md](app/lotse-entwicklung.md) | Das lotse-Panel aus dem Quellcode einbinden: `gjsify link`, der feste lotse-Commit in der CI, die drei Stolpersteine (`@lotse/acp`, `preserveSymlinks`, `--immutable`) und der offene Flatpak-Weg |
 | [app/i18n-status.md](app/i18n-status.md) | Übersetzung der Oberfläche (Englisch/Deutsch): übersetzte und offene Ansichten, Terminologie, was Deutsch bleibt |
 | [ideen-nutzerfuehrung.md](ideen-nutzerfuehrung.md) | Ideenliste nach Priorität: einfacher bedienen, früher warnen, ohne KI nutzbar (Konzepte, keine Aufträge) |
 

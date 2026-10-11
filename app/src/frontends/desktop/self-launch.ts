@@ -7,6 +7,12 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import GLib from '@girs/glib-2.0';
+
+import type { McpInstallation } from '../../core/actions/mcp-clients.ts';
+import { isDemoMode } from '../../core/config/demo.ts';
+import { getManifestPath } from '../../core/config/manifest.ts';
+
 /** The bundle this app runs from. */
 export function bundlePath(): string {
     const self = fileURLToPath(import.meta.url);
@@ -46,4 +52,20 @@ function interpreter(): string {
 /** argv that runs this app's bundle with `args` instead of opening a window. */
 export function selfCommand(args: string[]): string[] {
     return [interpreter(), '-m', bundlePath(), ...args];
+}
+
+/**
+ * How THIS installation's MCP server is started — the facts `resolveMcpLaunch` turns into a
+ * command. One answer for both callers: the snippets an external client is handed, and the
+ * read-only server the assistant pane starts for its own agent.
+ */
+export function currentMcpInstallation(): McpInstallation {
+    return {
+        flatpakId: process.env.FLATPAK_ID || undefined,
+        installedBinary: GLib.find_program_in_path('steuererklaerung') ?? undefined,
+        bundlePath: bundlePath(),
+        gjsifyBin: checkoutGjsify(bundlePath()),
+        manifestPath: getManifestPath(),
+        demo: isDemoMode(),
+    };
 }

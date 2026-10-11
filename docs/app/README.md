@@ -335,7 +335,10 @@ Benutzers (`$XDG_CONFIG_HOME/eu.jumplink.Steuererklaerung/settings.json`):
 - **Allgemein:** Wechsel zwischen Demo und eigenen Daten (nach Rückfrage startet die App neu — ein
   laufender Prozess wird nie auf den anderen Bestand umgebogen), „Einführung erneut anzeigen" und
   der Schalter **Eingebauter KI-Assistent** — unabhängig vom MCP-Server, siehe
-  [ki-und-mcp.md](ki-und-mcp.md).
+  [ki-und-mcp.md](ki-und-mcp.md). Ist er an, wählt die Zeile **Modus** darunter, welcher Assistent
+  im Panel sitzt: der eingebaute oder der Agent **lotse**
+  ([ki-und-mcp.md](ki-und-mcp.md#der-zweite-assistent--lotse)); der Wechsel gilt beim nächsten
+  Start.
 - **Sicherung:** „Jetzt sichern", letzte Sicherung, Ordner und wie viele behalten werden. Was
   gesichert wird und wie man wiederherstellt: [backup.md](backup.md).
 

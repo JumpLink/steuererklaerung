@@ -45,6 +45,20 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: quay.io/fedora/fedora:44
+    env:
+      # The lotse commit this repo is developed against. `@lotse/*` is NOT published yet, so
+      # there is no version to pin in app/package.json — the pin is a commit, and it lives here
+      # because a lockfile cannot hold one (the three deps are declared `*` and resolve to the
+      # linked checkout, so they appear in gjsify-lock.json's `requested` and nowhere else).
+      #
+      # To bump it: `git -C <your lotse checkout> rev-parse <ref>`, paste the full 40-char sha
+      # here, re-run the local link (docs/app/lotse-entwicklung.md) and run `gjsify run check`
+      # before pushing. Pinned rather than a branch name on purpose: a moving ref turns an
+      # unrelated lotse commit into a red build on THIS repo's PR.
+      #
+      # Currently JumpLink/lotse `fix/peer-girs` — the commit that declares the @girs peer deps
+      # the host's single-copy type resolution needs. Move to the merge commit once it lands.
+      LOTSE_COMMIT: 1cbfcfe1d85619f0ab74fe2f16f38b9158af223e
     steps:
       - name: Install system prerequisites (gjs + runtime typelibs + prebuild deps)
         run: >
@@ -66,14 +80,19 @@ jobs:
         with:
           node-version: "24"
 
-      # Content-addressed tarball store: a warm cache lets `gjsify install --immutable`
-      # skip the download phase. Keyed on the lockfile.
+      # Content-addressed tarball store: a warm cache lets the install steps below skip the
+      # download phase. Keyed on the lockfile plus the pinned lotse commit.
       - name: Cache gjsify tarball store
         uses: actions/cache@v4
         with:
           path: ~/.cache/gjsify/tarballs
-          key: gjsify-tarballs-${{ hashFiles('gjsify-lock.json') }}
-          restore-keys: gjsify-tarballs-
+          # The lotse commit is part of the key: its checkout gets its own `gjsify install`
+          # below, into the same tarball store, and its lockfile is not visible to hashFiles
+          # here (the checkout happens later).
+          key: gjsify-tarballs-${{ hashFiles('gjsify-lock.json') }}-${{ env.LOTSE_COMMIT }}
+          restore-keys: |
+            gjsify-tarballs-${{ hashFiles('gjsify-lock.json') }}-
+            gjsify-tarballs-
 
       # Bootstrap the gjsify CLI so `gjsify install` is runnable before node_modules exists
       # (the chicken-and-egg). After install, package scripts resolve node_modules/.bin/gjsify.
@@ -85,8 +104,46 @@ jobs:
           VERSION=$(node -p "require('./app/package.json').devDependencies['@gjsify/cli']")
           npm install -g "@gjsify/cli@$VERSION"
 
-      - name: Install dependencies (gjsify install --immutable, from gjsify-lock.json)
-        run: gjsify install --immutable
+      # --- lotse, linked from source ---------------------------------------------------
+      # The desktop app embeds `LotseChat` from `@lotse/{core,session,widget}`, and none of the
+      # three is published to npm. Rather than block this repo's CI on a lotse release, CI does
+      # what a developer does locally: clone lotse at a pinned commit and `gjsify link` it.
+      - name: Check out lotse at the pinned commit
+        uses: actions/checkout@v4
+        with:
+          repository: JumpLink/lotse
+          ref: ${{ env.LOTSE_COMMIT }}
+          path: lotse
+
+      # lotse's OWN deps, inside its checkout — not optional, and the reason is subtle.
+      # The three linked packages each depend on `@lotse/acp`, a FOURTH package this repo does
+      # not declare and `gjsify link` therefore does not link. With `preserveSymlinks: true`
+      # (app/tsconfig.json) TypeScript resolves the linked sources from the symlink path, so it
+      # finds `@lotse/acp` at node_modules/@lotse/core/node_modules/@lotse/acp — i.e. through the
+      # symlink, in lotse's own per-package node_modules. Skip this step and `gjsify run check`
+      # fails with TS2307 on `@lotse/acp`, pointing at a file in a repo that is not this one.
+      #
+      # lotse's own pinned CLI via npx, read from its package.json: a global install would
+      # clobber the host's bootstrap above, and gjsify ships as one release train (the two repos
+      # pin different versions on purpose).
+      - name: Install lotse's dependencies (its own pinned CLI)
+        working-directory: lotse
+        run: |
+          VERSION=$(node -p "require('./app/package.json').devDependencies['@gjsify/cli']")
+          echo "lotse pins @gjsify/cli@$VERSION"
+          npx -y "@gjsify/cli@$VERSION" install --immutable
+
+      # Writes .gjsify-link.json (gitignored) and symlinks the three declared @lotse/* packages
+      # into node_modules. Only packages this repo DECLARES are linked, so the set is exactly
+      # the three in app/package.json.
+      - name: Link the lotse checkout
+        run: gjsify link ./lotse
+
+      # Plain install, NOT --immutable: `gjsify install --immutable` refuses outright while
+      # .gjsify-link.json exists. The lockfile still does not move -- the three `@lotse/*` specs
+      # live in `requested` and resolve to the symlinks, so there is nothing to add to `packages`.
+      - name: Install dependencies (gjsify install, with the lotse link active)
+        run: gjsify install
 
       # EVERY workspace, not a hand-picked two. This step used to name `app` and
       # `packages/eric` explicitly, so the other six packages were type-checked only

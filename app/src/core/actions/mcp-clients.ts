@@ -10,6 +10,8 @@
  * Pure: no disk, no GTK. The caller resolves the installation; this module only formats.
  */
 
+import { MCP_READONLY_ENV } from '../config/mcp-readonly.ts';
+
 /** Name the server is registered under in every client. */
 export const MCP_SERVER_NAME = 'steuererklaerung';
 
@@ -37,11 +39,18 @@ export interface McpInstallation {
     /** The manifest the app currently uses. */
     manifestPath: string;
     demo: boolean;
+    /**
+     * Force the server read-only, whatever `mcp.allowWrite` says. For a server the APP starts for
+     * an agent of its own — never for the snippets, where the person configured the client by hand
+     * and their write decision is theirs. Default false, so those stay byte-identical.
+     */
+    readOnly?: boolean;
 }
 
 export function resolveMcpLaunch(inst: McpInstallation): McpLaunch {
     const env: Record<string, string> = { STEUER_WORKSPACE: inst.manifestPath };
     if (inst.demo) env.STEUER_DEMO = '1';
+    if (inst.readOnly) env[MCP_READONLY_ENV] = '1';
     if (inst.flatpakId) {
         // `--env=` instead of the client's env block: flatpak run filters the caller's environment,
         // the flag is the documented way into the sandbox.

@@ -8,6 +8,10 @@ genau einen Schalter.
 | **Eingebauter KI-Assistent** | Einführung (Seite „KI-Assistent"), Einstellungen → Allgemein, Web: Einstellungen | Einstellungsdatei des Benutzers (`settings.json` → `aiAssistant`) | Stern/Panel in der App, Assistent-Tab und `/api/chat` im Web |
 | **MCP-Server für externe Agenten** | Einstellungen → MCP, Web: Einstellungen | Manifest (`steuererklaerung.json` → `app.mcp`) | Welche Werkzeuge `steuer mcp` nach außen anbietet (Gruppen, Schreibzugriff) |
 
+Ist der Assistent **eingeschaltet**, gibt es zusätzlich eine Wahl, *welcher* Assistent im Panel
+sitzt — der eingebaute oder „lotse". Das ist keine dritte Einwilligung, sondern eine Auswahl
+innerhalb der ersten: [siehe unten](#der-zweite-assistent--lotse).
+
 ## Warum der Assistent pro Benutzer gilt
 
 Der Schalter ist eine **persönliche Einwilligung**: Wer ihn einschaltet, schickt Fragen und die zur
@@ -34,3 +38,48 @@ Der eingebaute Assistent braucht den MCP-Server nicht. Seine Werkzeuge laufen im
 die Zahlen des gewählten Jahres und, wenn Paperless eingerichtet ist, eine **lesende**
 Belegsuche. Schreibwerkzeuge bekommt er nie; Vorschläge übernimmt nur ein Klick der Person. Wer den
 MCP-Server abschaltet, nimmt dem eingebauten Assistenten also nichts weg — und umgekehrt.
+
+## Der zweite Assistent — lotse
+
+**Einstellungen → Allgemein → KI-Assistent → Modus.** Die Auswahl hat zwei Werte; voreingestellt
+ist **Eingebaut**, eine bestehende Installation ändert sich also nicht von selbst.
+
+| Modus | Was im Panel läuft |
+|---|---|
+| **Eingebaut** (Voreinstellung) | wie bisher: die App ruft einen KI-Anbieter **im eigenen Prozess** auf |
+| **lotse** | die App startet einen **Coding-Agenten als eigenen Prozess** ([opencode](https://opencode.ai)) und spricht mit ihm über das [Agent Client Protocol](https://agentclientprotocol.com) |
+
+Der Unterschied ist nicht das Modell, sondern **wer** arbeitet: ein Agent führt Werkzeuge aus,
+fragt nach, arbeitet mehrschrittig. Darum ist die Wahl ausdrücklich und nicht automatisch.
+
+**Ein Wechsel gilt beim nächsten Start.** Das Panel wird beim Öffnen des Fensters gebaut; die Zeile
+sagt das selbst dazu. Solange der KI-Assistent aus ist, ist sie nicht bedienbar — es gibt dann
+nichts auszuwählen.
+
+### Was lotse hier bekommt — und was nicht
+
+- **Kein Agent installiert, kein Panel.** Findet die App keinen opencode, zeigt sie eine
+  Hinweisseite mit dem fehlenden Schritt, statt einen Chat vorzutäuschen.
+- **Nur lesende Werkzeuge.** Der Agent erreicht die App über **ihren eigenen MCP-Server**, und den
+  startet sie für diesen Zweck **lesend** — unabhängig davon, was im Manifest unter `app.mcp`
+  steht. Ein extern eingerichteter Client (Claude, Cursor …) bekommt davon nichts ab; dessen
+  Konfiguration bleibt unverändert.
+- **Eigenes Datenverzeichnis.** lotse schreibt seine Sitzungen **nicht** nach
+  `$XDG_DATA_HOME/lotse`, sondern in ein Unterverzeichnis des Datenverzeichnisses *dieser* App
+  (`assistant-agent`, Modus `0700`). Ein Sitzungsprotokoll enthält den Text von Gesprächen über
+  Steuerdaten; es gehört zu diesen Daten und nicht in die Historie eines anderen Programms.
+- **Rückfragen: ablehnen oder fragen, nie von selbst erlauben.** Will der Agent löschen,
+  verschieben, bearbeiten, schreiben oder einen Befehl ausführen, wird **abgelehnt** — der lesende
+  MCP-Server könnte es ohnehin nicht, und eine Ablehnung ist die ehrliche Antwort darauf. Alles
+  andere wird **gefragt**. Es gibt keine Antwort, die etwas zusätzlich erlaubt.
+  `fetch` ist bewusst nicht abgelehnt: so sieht der Agent einen Gesetzestext oder eine
+  BMF-Seite nach. Die URL steht in der Rückfrage.
+- **Keine kostenlosen Fremdmodelle.** Die App bietet die Anbieter-Einrichtung im Panel **nicht**
+  an (`providerOnboarding` aus). Welches Modell der Agent benutzt, entscheidet dessen eigene
+  Anmeldung — die Rückfrage-Logik sieht Werkzeugaufrufe und kann ein Modell weder erkennen noch
+  verhindern. Wer Belegdaten von kostenlosen Modellen fernhalten will, entscheidet das also beim
+  Agenten, nicht hier.
+
+Technisch: die Pakete `@lotse/*` sind **noch nicht veröffentlicht**, werden aus dem Quellcode
+verlinkt, und im Flatpak ist das Panel deshalb noch nicht enthalten —
+[lotse aus dem Quellcode einbinden](lotse-entwicklung.md).

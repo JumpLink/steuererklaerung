@@ -14,6 +14,7 @@ import type Gio from '@girs/gio-2.0';
 import GLib from '@girs/glib-2.0';
 import Gtk from '@girs/gtk-4.0';
 
+import { type AiEngine, resolveAiEngine } from '../../../../core/actions/assistant/lotse-embed.ts';
 import { configuredBackupRoot } from '../../../../core/actions/backup.ts';
 import { isAssistantEnabled } from '../../../../core/config/assistant-preference.ts';
 import { isDemoMode } from '../../../../core/config/demo.ts';
@@ -45,20 +46,54 @@ export function buildGeneralGroup(group: Adw.PreferencesGroup): void {
     group.add(welcome);
 
     const ai = new Adw.SwitchRow({
-        title: _('Built-in AI assistant'),
+        title: _('AI assistant'),
         subtitle: _(
             'Questions and the data needed to answer them go to the configured AI provider. ' +
                 'Independent of the MCP server.',
         ),
     });
     ai.set_active(isAssistantEnabled());
+    const engine = buildEngineRow();
+    engine.set_sensitive(ai.get_active());
     ai.connect('notify::active', () => {
         updateUserSettings((s) => {
             s.aiAssistant = ai.get_active();
         });
+        engine.set_sensitive(ai.get_active());
         ai.activate_action('win.assistant-preference', null);
     });
     group.add(ai);
+    group.add(engine);
+}
+
+/**
+ * Which assistant the switch above turns on. Insensitive while AI is off, because the choice is
+ * meaningless then — neither pane is built and no agent is started either way.
+ *
+ * A restart, not a live swap: the coding agent is a subprocess with a session file of its own, and
+ * rebuilding the pane under a running turn would be a second way for it to end.
+ */
+function buildEngineRow(): Adw.ComboRow {
+    const engines: AiEngine[] = ['builtin', 'lotse'];
+    const row = new Adw.ComboRow({
+        title: _('Assistant engine'),
+        subtitle: _('Takes effect the next time the app starts.'),
+        model: Gtk.StringList.new([
+            // TRANSLATORS: The assistant that is part of the app and answers in-process
+            _('Built in'),
+            // TRANSLATORS: lotse is a program name — it starts a coding agent as a separate process
+            _('Coding agent (lotse)'),
+        ]),
+    });
+    row.set_selected(Math.max(0, engines.indexOf(resolveAiEngine())));
+    row.connect('notify::selected', () => {
+        const chosen = engines[row.get_selected()];
+        if (!chosen) return;
+        updateUserSettings((s) => {
+            s.aiEngine = chosen;
+        });
+    });
+    return row;
 }
 
 /** „Back up now", the last backup, the folder and how many to keep. Restore is manual (docs/app/backup.md). */

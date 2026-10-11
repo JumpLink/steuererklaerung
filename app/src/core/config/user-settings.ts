@@ -69,6 +69,13 @@ export const UserSettingsSchema = z.looseObject({
      * hides it. Existing installations therefore change nothing until the person decides.
      */
     aiAssistant: z.boolean().optional(),
+    /**
+     * WHICH assistant the desktop shows once {@link aiAssistant} says yes: the in-process one that
+     * has always been there (`builtin`) or a coding agent lotse starts as a subprocess (`lotse`).
+     * UNSET is `builtin`, so no existing installation changes. Never a replacement for the opt-in:
+     * with AI off neither pane is built and no agent is ever spawned.
+     */
+    aiEngine: z.enum(['builtin', 'lotse']).optional(),
     backup: BackupSettingsSchema,
 });
 
