@@ -17,6 +17,9 @@ import {
     listTimeEntries,
     upsertFiling,
     upsertTimeEntry,
+    saveContract,
+    setContractDocument,
+    setContractTransaction,
 } from '@steuererklaerung/store';
 import { BuiltinDmsProvider } from '@steuererklaerung/dms';
 import type { StoredInvoice } from '@steuererklaerung/store';
@@ -28,6 +31,7 @@ import {
     buildDemoTransactions,
     buildDemoStatements,
     buildDemoContacts,
+    buildDemoContracts,
     buildDemoInvoices,
     buildDemoTimeEntries,
     buildDemoSegelschuleTimeEntries,
@@ -252,6 +256,11 @@ async function seedDemo(): Promise<DemoSeedResult> {
         }
         // Filings upsert on (entity, kind, period), so re-seeding is idempotent.
         for (const f of buildDemoFilings()) upsertFiling(db, f, SEED_AT);
+        // Verträge (ADR 0004): fixed ids, so re-seeding updates the same rows instead of adding more.
+        // One Hetzner debit is pre-linked, so the Abgleich shows a decided booking beside the open ones.
+        for (const c of buildDemoContracts(new Date().toISOString().slice(0, 10))) saveContract(db, c, SEED_AT);
+        const linkedTx = findTxId(data, 'Hetzner Online GmbH', '2026-06-03');
+        if (linkedTx) setContractTransaction(db, 'demo-v-hetzner', linkedTx, 'linked', SEED_AT, 'demo');
     } finally {
         db.close();
     }
@@ -259,6 +268,8 @@ async function seedDemo(): Promise<DemoSeedResult> {
     // ── documents / Belege (built-in DMS: PDF bytes under transactions-data/documents, metadata in the ledger) ──
     const provider = new BuiltinDmsProvider(DEMO_ENTITY);
     let documents = 0;
+    /** Invoice number → DMS id, so a Beleg can be attached to the contract it belongs to below. */
+    const docRefs = new Map<string, string>();
     for (const b of buildDemoDocuments()) {
         const net = Math.round((b.gross / 1.19) * 100) / 100;
         const bytes = b.eInvoice
@@ -290,7 +301,24 @@ async function seedDemo(): Promise<DemoSeedResult> {
         );
         const txId = b.link === false ? undefined : findTxId(data, b.correspondent, b.date);
         if (txId) await provider.link(doc.id, txId);
+        docRefs.set(b.invoiceNumber, doc.id);
         documents++;
+    }
+
+    // The Belege that belong to a contract (ADR 0004) — only now do their DMS ids exist, and the
+    // ledger above is closed, so this takes its own connection.
+    const ledger = openLedger(ledgerPath);
+    try {
+        migrate(ledger);
+        for (const [contractId, invoiceNumber] of [
+            ['demo-v-hetzner', 'HR-2026-0001'],
+            ['demo-v-telekom', 'TK-2026-01'],
+        ] as const) {
+            const ref = docRefs.get(invoiceNumber);
+            if (ref) setContractDocument(ledger, contractId, ref, 'invoice', SEED_AT);
+        }
+    } finally {
+        ledger.close();
     }
 
     return { storeDir, ledgerPath, accounts, transactions, contacts, invoices, documents };
