@@ -1,0 +1,74 @@
+using Gtk 4.0;
+using Adw 1;
+
+// Verträge view body (ADR 0004). Static chrome in Blueprint; the KPI cards, the filter chips and
+// the contract rows are filled programmatically (see vertraege-view.ts).
+template $BhVertraegeView: Adw.Bin {
+  Gtk.Stack stack {
+    Gtk.StackPage {
+      name: "loading";
+      child: Gtk.Box {
+        orientation: vertical;
+        valign: center;
+        halign: center;
+        spacing: 12;
+
+        Adw.Spinner {
+          width-request: 32;
+          height-request: 32;
+        }
+
+        Gtk.Label {
+          label: _("Loading contracts …");
+          styles ["dim-label"]
+        }
+      };
+    }
+
+    Gtk.StackPage {
+      name: "error";
+      child: Adw.StatusPage error_page {
+        icon-name: "dialog-error-symbolic";
+        title: _("Could not load");
+      };
+    }
+
+    Gtk.StackPage {
+      name: "content";
+      child: Gtk.ScrolledWindow scroller {
+        hscrollbar-policy: never;
+        vexpand: true;
+
+        child: Adw.Clamp {
+          maximum-size: 900;
+          margin-top: 18;
+          margin-bottom: 18;
+          margin-start: 12;
+          margin-end: 12;
+
+          child: Gtk.Box {
+            orientation: vertical;
+            spacing: 18;
+
+            Gtk.Box kpi_box {
+              orientation: vertical;
+            }
+
+            // The filter chips + the actions sit ABOVE the group, not in its header_suffix: at
+            // 1280 px GTK takes the width they ask for out of the group's title and description
+            // (see the same note in rechnungen-view.blp).
+            Gtk.Box list_toolbar {
+              orientation: horizontal;
+              spacing: 8;
+              margin-bottom: 6;
+            }
+
+            Adw.PreferencesGroup list_group {
+              title: _("Contracts");
+            }
+          };
+        };
+      };
+    }
+  }
+}

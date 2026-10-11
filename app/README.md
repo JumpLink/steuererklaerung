@@ -380,6 +380,8 @@ linked|rejected|none`, `contracts dokument <id> <ref> --rolle …`, `contracts a
 `contracts fristen [--tage 90] [--ics datei.ics] [--erinnerung 3m,2m,14d]` für Erinnerung und Kalender (gestaffelte Alarme 3 Monate, 2 Monate und 14 Tage vorher, frei wählbar). MCP:
 `contracts_list`, `contracts_get`, `contracts_match`, `contracts_deadlines` (read-only), `contracts_save`,
 `contracts_archive`, `contracts_link_transaction`, `contracts_link_document` (schreibend).
+Oberfläche: die Ansicht **Verträge** in der nativen App (Liste, Detail, Formular, `.ics`-Export) —
+[docs/app/README.md](../docs/app/README.md#14-verträge--laufzeit-kündigungsfristen-abbuchungen).
 
 ### zve — zu versteuerndes Einkommen je Veranlagungsjahr
 

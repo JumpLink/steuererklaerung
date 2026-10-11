@@ -96,7 +96,9 @@ Found with a real contract; prior art from the public Aboalarm / Volders feature
 2. CLI `contracts`. Done.
 3. MCP group `contracts`. Done.
 4. A GTK page (list with amount, cycle, next date and a deadline badge, after the Wallos notes in
-   the research). Planned, not implemented.
+   the research). Done — nav entry `vertraege`, list + detail + create/edit over every writable
+   field, candidate and document linking, `.ics` export. Reads and derivations go through
+   `src/core/presenters/contracts.ts`; no rule lives in the view.
 5. Agent proposals: create a contract from a confirmed Laufende-Kosten series or from a contract
    document in the DMS. Planned, not implemented.
 6. Cancellation letters with sent / proof / confirmation states. Planned, not implemented.
@@ -110,3 +112,11 @@ Found with a real contract; prior art from the public Aboalarm / Volders feature
   separate change.
 - Deadlines are only as good as the term data the owner enters; a contract without a term or
   notice period has no deadline and says so.
+- `no_data` is a property of the ACCOUNT, not of the contract: it is identical on every contract
+  paid from that account. The desktop list therefore ranks it behind every contract-specific
+  finding (`latestFinding` in the presenter) and shows it only when it is the single finding —
+  otherwise one stale import makes every row read the same.
+- **Known gap:** `NoticeDeadline.reason` (kind `none`) is a German sentence built in the core
+  (`src/core/contracts/contracts.ts`), so the desktop renders it verbatim and it stays German in an
+  English UI. Every other string on the page goes through gettext. Fixing it means turning `reason`
+  into a tagged union the frontends translate — a small change, not made here.

@@ -35,6 +35,7 @@ export type NavViewId =
     | 'fristen'
     | 'steuer'
     | 'projekte'
+    | 'vertraege'
     | 'konten'
     | 'settings';
 
@@ -71,6 +72,13 @@ export const NAV_ITEMS: NavItem[] = [
     // Ctrl+1…9 (shortcuts.ts), and a seat in the middle would silently move Auswertungen, Fristen and
     // Steuer to other numbers under people's fingers.
     { view: 'projekte', icon: 'folder-symbolic', label: _('Projects'), sub: _('customer · costs · result') },
+    // Behind Projekte for the same reason, one entry further out: Ctrl+1…9 stops above it.
+    {
+        view: 'vertraege',
+        icon: 'text-x-generic-symbolic',
+        label: _('Contracts'),
+        sub: _('term · notice deadlines · debits'),
+    },
     { view: 'konten', icon: 'network-transmit-receive-symbolic', label: _('Accounts'), sub: _('connections & import') },
     {
         view: 'settings',

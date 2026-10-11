@@ -24,12 +24,13 @@ German entry, or placeholders that differ between msgid and msgstr.
   so they stay German in the English UI for now: the "Up next" task titles and their subtitles on
   the Overview, Hinweise subtitles, the reasons and origin texts of review items (`GRUND_TEXT`,
   `herkunft`), the formula and hints of "Free to spend", payment-reminder levels and letter text,
-  form validation messages and the refund-group descriptions.
+  form validation messages, the refund-group descriptions, and the reason a contract has no
+  notice deadline (`NoticeDeadline.reason`, see [ADR 0004](../adr/0004-contracts.md)).
 - **Official tax terms**, also in the English UI (see the table below).
 
 ## Done
 
-34 TypeScript files and 11 Blueprint files, 742 msgids (16 with plurals, 35 with a context).
+47 TypeScript files and 15 Blueprint files, 1123 msgids (23 with plurals, 65 with a context).
 
 | Area | Views |
 |---|---|
@@ -38,6 +39,7 @@ German entry, or placeholders that differ between msgid and msgstr.
 | Transactions | transactions list, transaction detail, review queue ("To review"), mark as transfer, split, rule from selection |
 | Receipts | receipt inbox, open receipts, documents, receipt upload, link receipt, receipt metadata, document rules |
 | Invoices | invoice list, invoice detail, invoice form, send invoice, payment reminder |
+| Contracts | contract list, contract detail, contract form, shared contract wording |
 | Settings | settings top level |
 | Common | shared dialogs, entity dialogs, tab hub, view utilities |
 

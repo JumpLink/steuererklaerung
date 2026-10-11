@@ -74,6 +74,7 @@ import presentersFreiVerfuegbar from './unit/presenters/frei-verfuegbar-presente
 import presentersBuchungen from './unit/presenters/buchungen.test.ts';
 import presentersBelege from './unit/presenters/belege.test.ts';
 import presentersRechnungen from './unit/presenters/rechnungen.test.ts';
+import presentersContracts from './unit/presenters/contracts.test.ts';
 import presentersKonten from './unit/presenters/konten.test.ts';
 import presentersZeiten from './unit/presenters/zeiten.test.ts';
 
@@ -277,6 +278,7 @@ run({
     presentersBuchungen,
     presentersBelege,
     presentersRechnungen,
+    presentersContracts,
     presentersKonten,
     presentersZeiten,
     afa,
