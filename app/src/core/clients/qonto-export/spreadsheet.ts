@@ -51,8 +51,18 @@ function fail(msg: string): never {
 function toRows({ range, cells }: ParsedSheet): CellValue[][] {
     if (!range) return [];
     const rows: CellValue[][] = [];
-    const lastRow = Math.min(range.e.r, MAX_ROW);
-    const lastCol = Math.min(range.e.c, MAX_COL);
+    // The declared range is untrusted: a tiny file may claim the whole grid, so allocate only up to
+    // the last row and column that really hold a cell.
+    let lastRow = -1;
+    let lastCol = -1;
+    for (const [r, src] of cells) {
+        for (const c of src.keys()) {
+            if (r > lastRow) lastRow = r;
+            if (c > lastCol) lastCol = c;
+        }
+    }
+    lastRow = Math.min(range.e.r, lastRow, MAX_ROW);
+    lastCol = Math.min(range.e.c, lastCol, MAX_COL);
     for (let r = range.s.r; r <= lastRow; r++) {
         const row: CellValue[] = [];
         const src = cells.get(r);
@@ -415,8 +425,8 @@ function readBiffSheet(stream: Uint8Array, at: number, sst: string[]): ParsedShe
 
 // ── .xlsx: zip container ────────────────────────────────────────────────────────────────────
 
-/** Refuse to inflate a part that claims to be bigger than any real export. */
-const MAX_PART_BYTES = 256 * 1024 * 1024;
+/** Refuse to inflate a part that claims to be bigger than any real export (~1200 rows are well under 1 MiB of XML). */
+const MAX_PART_BYTES = 64 * 1024 * 1024;
 
 function isZip(b: Uint8Array): boolean {
     return b.length >= 22 && b[0] === 0x50 && b[1] === 0x4b && b[2] === 3 && b[3] === 4;
