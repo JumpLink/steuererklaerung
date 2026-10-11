@@ -14,7 +14,7 @@
 import { getLLMProvider } from '../../clients/llm/index.ts';
 
 export interface EngineStatus {
-    /** Provider id as configured (`claude` | `scaleway`). */
+    /** Provider id as configured (`claude` | `scaleway` | `opencode`). */
     provider: string;
     /** The model that would be used. */
     model: string;

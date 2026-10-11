@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-11 09:28+0200\n"
+"POT-Creation-Date: 2026-10-11 15:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,48 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: src/core/clients/llm/job-error.ts:43
+msgid "The AI answered, but not with data the app can read."
+msgstr ""
+
+#: src/core/clients/llm/job-error.ts:45
+msgid "The AI answer does not match the expected format and was not used."
+msgstr ""
+
+#: src/core/clients/llm/job-error.ts:47
+msgid ""
+"The selected model is not allowed for your data (free hosted models are "
+"blocked), so nothing was sent."
+msgstr ""
+
+#: src/core/clients/llm/job-error.ts:49
+msgid "It is unclear which model the AI agent would use, so nothing was sent."
+msgstr ""
+
+#: src/core/clients/llm/job-error.ts:51
+msgid "The AI agent needs a login first: run \"opencode auth login\"."
+msgstr ""
+
+#: src/core/clients/llm/job-error.ts:53
+msgid "The AI did not finish the task."
+msgstr ""
+
+#: src/core/clients/llm/job-error.ts:55
+msgid "The AI did not answer in time."
+msgstr ""
+
+#: src/core/clients/llm/job-error.ts:57
+msgid "The AI task was cancelled."
+msgstr ""
+
+#: src/core/clients/llm/job-error.ts:59
+msgid "The AI agent could not be started or stopped unexpectedly."
+msgstr ""
+
+#: src/core/clients/llm/job-error.ts:61
+msgid "No AI agent is installed. Install opencode or choose another AI engine."
+msgstr ""
 
 #. TRANSLATORS: Title of the AI assistant side panel
 #. TRANSLATORS: Title of the side panel holding the external coding agent

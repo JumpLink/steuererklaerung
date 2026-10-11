@@ -22,8 +22,10 @@ import {
     getCustomFieldValue,
     isEmptyValue,
 } from '@steuererklaerung/paperless';
-import { getLLMProvider, type LLMProvider } from '../../clients/llm/index.ts';
-import { extractJsonCandidate, parseJsonLeniently, isDateInRange, toDateOnly } from '@steuererklaerung/shared';
+import { z } from 'zod';
+import { completeJson, getLLMProvider, type LLMProvider } from '../../clients/llm/index.ts';
+import { optionalNumber, optionalNumbers, optionalText } from '../../lib/ai-schema.ts';
+import { isDateInRange, toDateOnly } from '@steuererklaerung/shared';
 import { DEFAULTS } from '../../constants.ts';
 import type { Logger } from '../../lib/logger.ts';
 import { getLogger } from '../../lib/logger.ts';
@@ -77,15 +79,15 @@ export interface ReviewMetadataResult {
 // Internal types
 // ---------------------------------------------------------------------------
 
-interface MetadataReviewResponse {
-    title?: string | null;
-    correspondent_id?: number | null;
-    correspondent_create_name?: string | null;
-    document_type_id?: number | null;
-    document_type_create_name?: string | null;
-    created?: string | null;
-    add_tag_ids?: number[] | null;
-}
+const MetadataReviewResponseSchema = z.object({
+    title: optionalText(),
+    correspondent_id: optionalNumber(),
+    correspondent_create_name: optionalText(),
+    document_type_id: optionalNumber(),
+    document_type_create_name: optionalText(),
+    created: optionalText(),
+    add_tag_ids: optionalNumbers(),
+});
 
 interface ReviewResources {
     correspondentsList: Array<{ id: number; name: string }>;
@@ -420,20 +422,21 @@ async function reviewSingleDocument(
         contentForLlm,
     );
 
-    let raw: string;
+    let resp: z.output<typeof MetadataReviewResponseSchema>;
+    let model: string;
     try {
-        raw = (await provider.complete({ system, user, json: true, maxTokens: 1024 })).text;
+        const result = await completeJson(provider, {
+            system,
+            user,
+            maxTokens: 1024,
+            schema: MetadataReviewResponseSchema,
+        });
+        resp = result.value;
+        model = result.model ?? provider.model;
     } catch (e) {
         log.error(`LLM failed for document ${id}: ${e instanceof Error ? e.message : e}`);
         return { outcome: 'error', changes: [] };
     }
-
-    const parsed = parseJsonLeniently(extractJsonCandidate(raw) ?? raw);
-    if (parsed == null || typeof parsed !== 'object') {
-        log.error(`Invalid JSON from LLM for document ${id}, skipping.`);
-        return { outcome: 'error', changes: [] };
-    }
-    const resp = parsed as MetadataReviewResponse;
 
     // Resolve correspondent
     let correspondentId: number | null = current.correspondent;
@@ -567,7 +570,7 @@ async function reviewSingleDocument(
         }
         const rationale = buildAiNoteRationale({
             date: new Date().toISOString().slice(0, 10),
-            model: provider.model,
+            model,
             correspondentName: correspondentId != null ? findName(correspondentId, resources.correspondentsList) : null,
             documentTypeName: documentTypeId != null ? findName(documentTypeId, resources.documentTypesList) : null,
             typeEnrichmentApplied: typeHandlerPayload != null,

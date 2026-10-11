@@ -10,8 +10,8 @@ import {
     type Document,
     type DocumentType,
 } from '@steuererklaerung/paperless';
-import { getLLMProvider } from '../../clients/llm/index.ts';
-import { extractJsonCandidate, parseJsonLeniently } from '@steuererklaerung/shared';
+import { z } from 'zod';
+import { completeJson, getLLMProvider } from '../../clients/llm/index.ts';
 import { DEFAULTS } from '../../constants.ts';
 import { getLogger } from '../../lib/logger.ts';
 import { fetchAllPages } from '@steuererklaerung/paperless';
@@ -22,11 +22,13 @@ const log = getLogger('paperless-classify-documents');
 const MAX_CONTENT_LENGTH = DEFAULTS.LLM_MAX_CONTENT_LENGTH;
 const THROTTLE_MS = DEFAULTS.API_THROTTLE_MS;
 
-export interface ClassificationResult {
-    document_type_id: number | null;
-    confidence: 'high' | 'medium' | 'low';
-    reason: string;
-}
+const ClassificationResultSchema = z.object({
+    document_type_id: z.number().int().nullable(),
+    confidence: z.enum(['high', 'medium', 'low']),
+    reason: z.string(),
+});
+
+export type ClassificationResult = z.output<typeof ClassificationResultSchema>;
 
 export interface ClassifyDocumentsOptions {
     /** Only process documents of this type (e.g. to re-classify all incoming invoices). */
@@ -114,17 +116,14 @@ export async function classifyDocuments(options: ClassifyDocumentsOptions = {}):
                 allTypes.map((t) => ({ id: t.id, name: t.name })),
                 currentType ? { id: currentType.id, name: currentType.name } : null,
             );
-            const raw = (
-                await provider.complete({
+            classification = (
+                await completeJson(provider, {
                     system: DOCUMENT_CLASSIFICATION_SYSTEM_PROMPT,
                     user: userPrompt,
-                    json: true,
                     maxTokens: 256,
+                    schema: ClassificationResultSchema,
                 })
-            ).text;
-            const parsed = parseJsonLeniently(extractJsonCandidate(raw) ?? raw);
-            if (parsed == null || typeof parsed !== 'object') throw new Error('LLM returned no JSON object');
-            classification = parsed as ClassificationResult;
+            ).value;
         } catch (e) {
             log.error(`LLM failed for document ${doc.id}: ${e instanceof Error ? e.message : e}`);
             result.errors += 1;

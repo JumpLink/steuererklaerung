@@ -11,6 +11,7 @@ import finanzierung from './unit/finanzierung/finanzierung.test.ts';
 import paypalParser from './unit/clients/paypal-parser.test.ts';
 import qontoExportParser from './unit/clients/qonto-export-parser.test.ts';
 import llmFactory from './unit/clients/llm-factory.test.ts';
+import opencodeProvider from './unit/clients/opencode-provider.test.ts';
 import qontoRequest from './unit/clients/qonto-request.test.ts';
 import requestTimeouts from './unit/clients/request-timeouts.test.ts';
 import fintsInteraction from './unit/clients/fints-interaction.test.ts';
@@ -217,6 +218,7 @@ run({
     paypalParser,
     qontoExportParser,
     llmFactory,
+    opencodeProvider,
     qontoRequest,
     requestTimeouts,
     fintsInteraction,

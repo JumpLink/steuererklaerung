@@ -27,14 +27,10 @@ import {
     type EInvoiceClassification,
     type EInvoiceReading,
 } from '../../invoices/e-rechnung/index.ts';
-import { getLLMProvider } from '../../clients/llm/index.ts';
-import {
-    extractJsonCandidate,
-    parseJsonLeniently,
-    isDateInRangeStrict,
-    normalizeDateValue,
-    toDateOnly,
-} from '@steuererklaerung/shared';
+import { z } from 'zod';
+import { completeJson, getLLMProvider } from '../../clients/llm/index.ts';
+import { optionalBoolean, optionalNumber, optionalText } from '../../lib/ai-schema.ts';
+import { isDateInRangeStrict, normalizeDateValue, toDateOnly } from '@steuererklaerung/shared';
 import { DEFAULTS } from '../../constants.ts';
 import { getLogger } from '../../lib/logger.ts';
 import { fetchAllPages } from '@steuererklaerung/paperless';
@@ -54,34 +50,42 @@ const THROTTLE_MS = DEFAULTS.API_THROTTLE_MS;
 /** Max characters sent to the LLM to avoid context overflow and API max_tokens errors. */
 export const MAX_CONTENT_LENGTH = DEFAULTS.LLM_MAX_CONTENT_LENGTH;
 
-/** Extracted fields from LLM (all optional; leave empty if not found). */
-export interface ExtractedInvoiceFields {
-    invoice_number?: string;
-    invoice_date?: string;
-    due_date?: string;
+/**
+ * The answer of the extraction job (all optional; empty, null or omitted means "not found").
+ * Enums are deliberately NOT enforced here: `buildInvoiceCustomFieldsPayload` normalises tax rate,
+ * country, sale type and category itself, and an unknown label there is stored as-is rather than
+ * failing a whole invoice.
+ */
+export const ExtractedInvoiceFieldsSchema = z.object({
+    invoice_number: optionalText(),
+    invoice_date: optionalText(),
+    due_date: optionalText(),
     /** ISO 4217 currency code (e.g. EUR, USD) from the invoice. */
-    currency?: string;
-    total_net?: number;
-    total_gross?: number;
-    tax_amount?: number;
+    currency: optionalText(),
+    total_net: optionalNumber(),
+    total_gross: optionalNumber(),
+    tax_amount: optionalNumber(),
     /** Tax rate as shown on invoice (e.g. "19%" or "7%"). */
-    tax_rate?: string;
-    customer_number?: string;
+    tax_rate: optionalText(),
+    customer_number: optionalText(),
     /** First day of service period (YYYY-MM-DD). */
-    service_period_start?: string;
+    service_period_start: optionalText(),
     /** Last day of service period (YYYY-MM-DD). */
-    service_period_end?: string;
+    service_period_end: optionalText(),
     /** ISO 3166-1 alpha-2 country code of the supplier/seller (e.g. "DE", "US", "NL"). */
-    supplier_country?: string;
+    supplier_country: optionalText(),
     /** Supplier's VAT ID (USt-IdNr.), e.g. "DE123456789" or "FR12345678901". */
-    supplier_vat_id?: string;
+    supplier_vat_id: optionalText(),
     /** Whether the invoice uses Reverse Charge (Steuerschuldnerschaft des Leistungsempfängers). */
-    reverse_charge?: boolean;
+    reverse_charge: optionalBoolean(),
     /** Type of supply: "GOODS" or "SERVICES". */
-    sale_type?: string;
+    sale_type: optionalText(),
     /** SKR03-nahe Buchungskategorie (e.g. "4964 Software/Lizenzen"). */
-    accounting_category?: string;
-}
+    accounting_category: optionalText(),
+});
+
+/** Extracted fields from LLM (all optional; leave empty if not found). */
+export type ExtractedInvoiceFields = z.output<typeof ExtractedInvoiceFieldsSchema>;
 
 /** Where the fields of one extraction came from. */
 /** `nur-einstufung`: no field was filled, only the classification was recorded. */
@@ -139,7 +143,7 @@ export interface QontoExtractionContext {
 /**
  * Extract invoice fields from OCR content via LLM.
  * Optionally pass Qonto transaction context for cross-checking.
- * @throws on LLM transport error or unparseable JSON
+ * @throws on LLM transport error; `AiJobError` when the answer holds no JSON or the wrong shape
  */
 export async function extractInvoiceFieldsFromContent(
     content: string,
@@ -149,19 +153,13 @@ export async function extractInvoiceFieldsFromContent(
     const provider = getLLMProvider();
     const contentForLlm = content.length > MAX_CONTENT_LENGTH ? content.slice(0, MAX_CONTENT_LENGTH) : content;
     const userPrompt = buildInvoiceExtractionUserPrompt(contentForLlm, qontoContext);
-    const raw = (
-        await provider.complete({
-            system: INVOICE_EXTRACTION_SYSTEM_PROMPT,
-            user: userPrompt,
-            json: true,
-            maxTokens: 1024,
-        })
-    ).text;
-    const parsed = parseJsonLeniently(extractJsonCandidate(raw) ?? raw);
-    if (parsed == null || typeof parsed !== 'object') {
-        throw new Error('LLM returned no parseable JSON for invoice extraction');
-    }
-    return parsed as ExtractedInvoiceFields;
+    const { value } = await completeJson(provider, {
+        system: INVOICE_EXTRACTION_SYSTEM_PROMPT,
+        user: userPrompt,
+        maxTokens: 1024,
+        schema: ExtractedInvoiceFieldsSchema,
+    });
+    return value;
 }
 
 /**

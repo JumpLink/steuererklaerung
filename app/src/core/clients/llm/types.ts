@@ -6,6 +6,8 @@
  * call sites. See ./index.ts for the factory and the structured-output helper.
  */
 
+import type { ZodType } from 'zod';
+
 /** Token/cost telemetry for one completion (best-effort; providers may omit). */
 export interface LLMTelemetry {
     costUsd: number;
@@ -46,7 +48,19 @@ export interface LLMResult {
     telemetry: LLMTelemetry;
 }
 
-/** A reasoning engine. Implementations: ClaudeAgentProvider, ScalewayProvider, … */
+export interface LLMJsonOptions<T> extends Omit<LLMCompleteOptions, 'json'> {
+    /** Validates the answer; a mismatch is an `AiJobError` of kind `'invalid'`, never a cast. */
+    schema: ZodType<T>;
+}
+
+export interface LLMJsonResult<T> {
+    value: T;
+    telemetry: LLMTelemetry;
+    /** The model that answered, when the provider knows it (opencode reports the agent's current one). */
+    model?: string;
+}
+
+/** A reasoning engine. Implementations: ClaudeAgentProvider, ScalewayProvider, OpencodeProvider. */
 export interface LLMProvider {
     /** Stable identifier, e.g. "claude-agent" or "scaleway". */
     readonly name: string;
@@ -54,4 +68,9 @@ export interface LLMProvider {
     readonly model: string;
     /** Run one completion and return the raw text. */
     complete(opts: LLMCompleteOptions): Promise<LLMResult>;
+    /**
+     * Run one completion whose answer is a validated JSON value. Optional: `completeJson()` in
+     * ./index.ts falls back to `complete` plus the same schema for providers without it.
+     */
+    completeJson?<T>(opts: LLMJsonOptions<T>): Promise<LLMJsonResult<T>>;
 }

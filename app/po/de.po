@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-11 09:28+0200\n"
+"POT-Creation-Date: 2026-10-11 15:13+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -11,6 +11,58 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/core/clients/llm/job-error.ts:43
+msgid "The AI answered, but not with data the app can read."
+msgstr "Die KI hat geantwortet, aber nicht mit Daten, die die App lesen kann."
+
+#: src/core/clients/llm/job-error.ts:45
+msgid "The AI answer does not match the expected format and was not used."
+msgstr ""
+"Die Antwort der KI passt nicht zum erwarteten Format und wurde nicht "
+"übernommen."
+
+#: src/core/clients/llm/job-error.ts:47
+msgid ""
+"The selected model is not allowed for your data (free hosted models are "
+"blocked), so nothing was sent."
+msgstr ""
+"Das gewählte Modell ist für deine Daten nicht erlaubt (kostenlose gehostete "
+"Modelle sind gesperrt), deshalb wurde nichts gesendet."
+
+#: src/core/clients/llm/job-error.ts:49
+msgid "It is unclear which model the AI agent would use, so nothing was sent."
+msgstr ""
+"Es ist unklar, welches Modell der KI-Agent verwenden würde, deshalb wurde "
+"nichts gesendet."
+
+#: src/core/clients/llm/job-error.ts:51
+msgid "The AI agent needs a login first: run \"opencode auth login\"."
+msgstr ""
+"Der KI-Agent braucht zuerst eine Anmeldung: führe „opencode auth login“ aus."
+
+#: src/core/clients/llm/job-error.ts:53
+msgid "The AI did not finish the task."
+msgstr "Die KI hat die Aufgabe nicht abgeschlossen."
+
+#: src/core/clients/llm/job-error.ts:55
+msgid "The AI did not answer in time."
+msgstr "Die KI hat nicht rechtzeitig geantwortet."
+
+#: src/core/clients/llm/job-error.ts:57
+msgid "The AI task was cancelled."
+msgstr "Die KI-Aufgabe wurde abgebrochen."
+
+#: src/core/clients/llm/job-error.ts:59
+msgid "The AI agent could not be started or stopped unexpectedly."
+msgstr ""
+"Der KI-Agent konnte nicht gestartet werden oder wurde unerwartet beendet."
+
+#: src/core/clients/llm/job-error.ts:61
+msgid "No AI agent is installed. Install opencode or choose another AI engine."
+msgstr ""
+"Es ist kein KI-Agent installiert. Installiere opencode oder wähle eine andere "
+"KI-Engine."
 
 #. TRANSLATORS: Title of the AI assistant side panel
 #. TRANSLATORS: Title of the side panel holding the external coding agent
