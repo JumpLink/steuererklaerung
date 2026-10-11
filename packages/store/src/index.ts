@@ -27,6 +27,10 @@ export * from "./classifications/repo.ts";
 export * from "./refunds/types.ts";
 export * from "./refunds/repo.ts";
 
+// Verträge: contracts, their linked bookings and documents (ADR 0004)
+export * from "./contracts/types.ts";
+export * from "./contracts/repo.ts";
+
 // Splitbuchungen: one booking split into parts (overlay over the unchanged transaction)
 export * from "./splits/types.ts";
 export * from "./splits/repo.ts";
