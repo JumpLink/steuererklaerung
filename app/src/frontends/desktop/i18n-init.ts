@@ -8,6 +8,8 @@
  * half-translated sidebar with no error anywhere.
  */
 
-import { initI18n } from './i18n.ts';
+import { setCoreTranslator } from '../../core/lib/i18n.ts';
+import { _, initI18n } from './i18n.ts';
 
 initI18n();
+setCoreTranslator(_);

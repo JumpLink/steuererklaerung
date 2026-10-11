@@ -2,7 +2,7 @@
  * Pluggable LLM engine — provider factory.
  *
  * Select the engine via env:
- *   LLM_PROVIDER = claude (default) | scaleway
+ *   LLM_PROVIDER = claude (default) | scaleway | opencode (lotse's runJob, ADR 0002)
  *   LLM_MODEL    = model id override (provider-specific)
  *
  * Existing call sites keep using their concrete clients; new code (e.g. the
@@ -10,13 +10,26 @@
  * engine can move from Claude → OSS/local later without code changes.
  */
 
-import { ClaudeAgentProvider } from './claude-agent-provider.ts';
-import { ScalewayProvider } from './scaleway-provider.ts';
-import type { LLMProvider } from './types.ts';
+import { extractJsonCandidate, parseJsonLeniently } from '@steuererklaerung/shared';
 
-export type { LLMProvider, LLMCompleteOptions, LLMResult, LLMTelemetry } from './types.ts';
+import { ClaudeAgentProvider } from './claude-agent-provider.ts';
+import { AiJobError } from './job-error.ts';
+import { OpencodeProvider } from './opencode-provider.ts';
+import { ScalewayProvider } from './scaleway-provider.ts';
+import type { LLMJsonOptions, LLMJsonResult, LLMProvider } from './types.ts';
+
+export type {
+    LLMProvider,
+    LLMCompleteOptions,
+    LLMJsonOptions,
+    LLMJsonResult,
+    LLMResult,
+    LLMTelemetry,
+} from './types.ts';
 export { ClaudeAgentProvider } from './claude-agent-provider.ts';
 export { ScalewayProvider } from './scaleway-provider.ts';
+export { OpencodeProvider } from './opencode-provider.ts';
+export { AiJobError, aiJobErrorMessage, type AiJobErrorKind } from './job-error.ts';
 
 export interface GetLLMProviderOptions {
     /** Force a provider, ignoring LLM_PROVIDER. */
@@ -31,7 +44,7 @@ const AI_OFF_NAMES = new Set(['none', 'off', 'aus']);
 /** The message for a function that needs an AI when none is set up — German, ready to show. */
 export const AI_NOT_CONFIGURED_MESSAGE =
     'Dafür ist eine KI nötig, und es ist keine eingerichtet. Richte unter Einstellungen → KI-Engine eine ein ' +
-    '(LLM_PROVIDER=claude oder scaleway) oder trage die Angaben von Hand ein.';
+    '(LLM_PROVIDER=claude, scaleway oder opencode) oder trage die Angaben von Hand ein.';
 
 let providerOverride: LLMProvider | null = null;
 
@@ -56,7 +69,28 @@ export function getLLMProvider(opts: GetLLMProviderOptions = {}): LLMProvider {
             return new ClaudeAgentProvider(opts.model);
         case 'scaleway':
             return new ScalewayProvider(opts.model);
+        case 'opencode':
+            return new OpencodeProvider({ model: opts.model });
         default:
-            throw new Error(`Unknown LLM_PROVIDER "${name}". Use "claude" or "scaleway".`);
+            throw new Error(`Unknown LLM_PROVIDER "${name}". Use "claude", "scaleway" or "opencode".`);
     }
+}
+
+/**
+ * One completion whose answer is a value of `opts.schema`, or an {@link AiJobError}.
+ *
+ * The opencode provider validates inside lotse's `runJob`. The others answer with text, which is
+ * read the way it always was (fences, prose, `jsonrepair`) and then held to the same schema — so
+ * every provider fails the same way: `'malformed'` for no JSON, `'invalid'` for the wrong shape.
+ * Neither error keeps the answer or the schema's complaint; both are about a private document.
+ */
+export async function completeJson<T>(provider: LLMProvider, opts: LLMJsonOptions<T>): Promise<LLMJsonResult<T>> {
+    if (provider.completeJson) return provider.completeJson(opts);
+    const { schema, ...rest } = opts;
+    const { text, telemetry } = await provider.complete({ ...rest, json: true });
+    const parsed = parseJsonLeniently(extractJsonCandidate(text) ?? text);
+    if (parsed == null || typeof parsed !== 'object') throw new AiJobError('malformed');
+    const checked = schema.safeParse(parsed);
+    if (!checked.success) throw new AiJobError('invalid');
+    return { value: checked.data, telemetry };
 }
