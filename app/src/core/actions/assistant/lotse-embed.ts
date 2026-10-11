@@ -39,7 +39,16 @@
 import { chmodSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { denyFreeHostedModels, lotsePathsUnder, type LotsePaths, type McpServer, type ModelPolicy } from '@lotse/core';
+import {
+    denyFreeHostedModels,
+    gatherResolveContext,
+    lotsePathsUnder,
+    resolveDefaultWithNote,
+    type DefaultResolution,
+    type LotsePaths,
+    type McpServer,
+    type ModelPolicy,
+} from '@lotse/core';
 
 import { isAssistantEnabled } from '../../config/assistant-preference.ts';
 import { MCP_READONLY_ENV } from '../../config/mcp-readonly.ts';
@@ -193,6 +202,17 @@ export function ensureLotseDataRoot(root: string): string {
     mkdirSync(root, { recursive: true, mode: 0o700 });
     chmodSync(root, 0o700);
     return root;
+}
+
+/**
+ * The agent the pane AND the one-shot jobs start: no setting, so host first, else bundled. One
+ * resolver for both, so a job never runs on a different agent than the conversation beside it.
+ * (A recorded session is resumed by `resolveRecorded` in the pane; a job has no session to resume.)
+ *
+ * `gatherResolveContext(paths, false)` — no `--version` spawn, nothing waits on a child process.
+ */
+export function resolveLotseAgent(paths: LotsePaths): DefaultResolution {
+    return resolveDefaultWithNote(gatherResolveContext(paths, false), null);
 }
 
 /** Whether a launch really carries the read-only marker — what the test asserts on. */

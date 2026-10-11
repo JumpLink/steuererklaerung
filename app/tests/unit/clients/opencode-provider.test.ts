@@ -8,6 +8,7 @@ import {
     OpencodeProvider,
     type LLMProvider,
 } from '../../../src/core/clients/llm/index.ts';
+import { ExtractedInvoiceFieldsSchema } from '../../../src/core/actions/paperless/extract-invoice.ts';
 import { emptyTelemetry } from '../../../src/core/clients/llm/types.ts';
 
 // Synthetic only: a fake agent stands in for `opencode acp`, nothing is spawned and no document is read.
@@ -19,6 +20,8 @@ interface FakeAgentOptions {
     current?: string;
     stopReason?: string;
     failNewSession?: Error;
+    /** The turn never ends: only a timeout or an abort stops the job. */
+    hang?: boolean;
 }
 
 function fakeAgent(fake: FakeAgentOptions): (options: OpenAgentOptions) => Promise<AgentHandle> {
@@ -52,6 +55,7 @@ function fakeAgent(fake: FakeAgentOptions): (options: OpenAgentOptions) => Promi
                 };
             },
             prompt: async () => {
+                if (fake.hang) return new Promise<never>(() => {});
                 listener?.({
                     sessionId: 's1',
                     update: { sessionUpdate: 'agent_message_chunk', content: { type: 'text', text: fake.answer } },
@@ -64,13 +68,13 @@ function fakeAgent(fake: FakeAgentOptions): (options: OpenAgentOptions) => Promi
     };
 }
 
-function provider(fake: FakeAgentOptions, model?: string): OpencodeProvider {
+function provider(fake: FakeAgentOptions, model?: string, timeoutMs = 5_000): OpencodeProvider {
     return new OpencodeProvider({
         model,
         command: { command: 'fake-agent', args: [] } as never,
         cwd: '/tmp',
         open: fakeAgent(fake),
-        timeoutMs: 5_000,
+        timeoutMs,
     });
 }
 
@@ -173,6 +177,66 @@ export default async () => {
             );
             expect(error.kind).toBe('agent');
             expect(error.message.includes('pipe closed')).toBe(false);
+        });
+
+        await it('maps an already-aborted signal to cancelled without starting anything', async () => {
+            let opened = false;
+            const inner = fakeAgent({ answer: '{}' });
+            const p = new OpencodeProvider({
+                command: { command: 'fake-agent', args: [] } as never,
+                cwd: '/tmp',
+                open: (options) => {
+                    opened = true;
+                    return inner(options);
+                },
+                timeoutMs: 5_000,
+            });
+            const controller = new AbortController();
+            controller.abort();
+            const error = await failure(() =>
+                p.completeJson({ system: 's', user: 'u', schema: Answer, signal: controller.signal }),
+            );
+            expect(error.kind).toBe('cancelled');
+            expect(opened).toBe(false);
+        });
+
+        await it('maps an agent that never answers to timeout', async () => {
+            const error = await failure(() =>
+                provider({ answer: '{}', hang: true }, undefined, 50).completeJson({
+                    system: 's',
+                    user: 'u',
+                    schema: Answer,
+                }),
+            );
+            expect(error.kind).toBe('timeout');
+        });
+
+        await it('maps an abort during the turn to cancelled', async () => {
+            const controller = new AbortController();
+            const run = provider({ answer: '{}', hang: true }).completeJson({
+                system: 's',
+                user: 'u',
+                schema: Answer,
+                signal: controller.signal,
+            });
+            setTimeout(() => controller.abort(), 20);
+            const error = await failure(() => run);
+            expect(error.kind).toBe('cancelled');
+        });
+    });
+
+    await describe('invoice extraction schema', async () => {
+        await it('drops a wrong-typed amount instead of failing the answer', async () => {
+            const parsed = ExtractedInvoiceFieldsSchema.parse({
+                invoice_number: 'R-1',
+                total_net: '12,50',
+                tax_amount: '19%',
+                total_gross: 119,
+            });
+            expect(parsed.invoice_number).toBe('R-1');
+            expect(parsed.total_net).toBe(undefined);
+            expect(parsed.tax_amount).toBe(undefined);
+            expect(parsed.total_gross).toBe(119);
         });
     });
 

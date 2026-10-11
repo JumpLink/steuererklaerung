@@ -35,20 +35,14 @@ import GLib from '@girs/glib-2.0';
 import GObject from '@girs/gobject-2.0';
 import Gtk from '@girs/gtk-4.0';
 
-import {
-    DEFAULT_AGENT,
-    emptyStateView,
-    gatherResolveContext,
-    requireLauncher,
-    resolveDefaultWithNote,
-    resolveRecorded,
-} from '@lotse/core';
+import { DEFAULT_AGENT, emptyStateView, gatherResolveContext, requireLauncher, resolveRecorded } from '@lotse/core';
 import { createSessionStore } from '@lotse/session';
 import { LotseChat } from '@lotse/widget';
 
 import {
     assistantGateAnswer,
     ensureLotseDataRoot,
+    resolveLotseAgent,
     type LotseEmbedPlan,
 } from '../../core/actions/assistant/lotse-embed.ts';
 import Template from './lotse-panel.blp';
@@ -90,7 +84,7 @@ export class BhLotsePanel extends Gtk.Box {
     build(plan: LotseEmbedPlan): void {
         ensureLotseDataRoot(plan.dataRoot);
         const store = createSessionStore(plan.paths.sessionsFile);
-        const { agent, note } = resolveDefaultWithNote(gatherResolveContext(plan.paths, false), null);
+        const { agent, note } = resolveLotseAgent(plan.paths);
         const empty = emptyStateView({ agent });
         if (empty.kind === 'no-agent') {
             this._no_agent_page.set_title(empty.title);

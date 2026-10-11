@@ -29,7 +29,7 @@ import {
 } from '../../invoices/e-rechnung/index.ts';
 import { z } from 'zod';
 import { completeJson, getLLMProvider } from '../../clients/llm/index.ts';
-import { optionalBoolean, optionalNumber, optionalText } from '../../lib/ai-schema.ts';
+import { lenientNumber, optionalBoolean, optionalText } from '../../lib/ai-schema.ts';
 import { isDateInRangeStrict, normalizeDateValue, toDateOnly } from '@steuererklaerung/shared';
 import { DEFAULTS } from '../../constants.ts';
 import { getLogger } from '../../lib/logger.ts';
@@ -62,9 +62,9 @@ export const ExtractedInvoiceFieldsSchema = z.object({
     due_date: optionalText(),
     /** ISO 4217 currency code (e.g. EUR, USD) from the invoice. */
     currency: optionalText(),
-    total_net: optionalNumber(),
-    total_gross: optionalNumber(),
-    tax_amount: optionalNumber(),
+    total_net: lenientNumber(),
+    total_gross: lenientNumber(),
+    tax_amount: lenientNumber(),
     /** Tax rate as shown on invoice (e.g. "19%" or "7%"). */
     tax_rate: optionalText(),
     customer_number: optionalText(),
@@ -99,6 +99,8 @@ export interface InvoiceExtractionOptions {
     fetchOriginal?: (documentId: number) => Promise<Uint8Array>;
     /** False = never call the AI; only an e-invoice data set may fill the fields. Default true. */
     aiAllowed?: boolean;
+    /** Cancels the AI call. */
+    signal?: AbortSignal;
 }
 
 export interface ExtractInvoiceFieldsProcessedInfo {
@@ -112,6 +114,8 @@ export interface ExtractInvoiceFieldsProcessedInfo {
 export interface ExtractInvoiceFieldsOptions {
     /** When true, skip documents that already have Rechnungsnummer set. */
     onlyMissing?: boolean;
+    /** Cancels the run: the AI call in flight fails as cancelled and no further document is started. */
+    signal?: AbortSignal;
     dryRun?: boolean;
     /** When set, only process documents whose relevant date (invoice_date or qonto_settled_at) falls in [from, to] (YYYY-MM-DD). */
     from?: string;
@@ -149,6 +153,7 @@ export async function extractInvoiceFieldsFromContent(
     content: string,
     _direction: InvoiceDocumentTypeKey,
     qontoContext?: QontoExtractionContext,
+    signal?: AbortSignal,
 ): Promise<ExtractedInvoiceFields> {
     const provider = getLLMProvider();
     const contentForLlm = content.length > MAX_CONTENT_LENGTH ? content.slice(0, MAX_CONTENT_LENGTH) : content;
@@ -158,6 +163,7 @@ export async function extractInvoiceFieldsFromContent(
         user: userPrompt,
         maxTokens: 1024,
         schema: ExtractedInvoiceFieldsSchema,
+        ...(signal ? { signal } : {}),
     });
     return value;
 }
@@ -387,7 +393,7 @@ export async function runInvoiceExtractionForDocument(
     if (!content) return null;
 
     const qontoContext = buildQontoContextFromDoc(doc, config);
-    const extracted = await extractInvoiceFieldsFromContent(content, direction, qontoContext);
+    const extracted = await extractInvoiceFieldsFromContent(content, direction, qontoContext, opts.signal);
     const customFields = [...buildInvoiceCustomFieldsPayload(config, extracted), ...kindField()];
     if (customFields.length === 0) return null;
     return { payload: buildPayload(doc, config, customFields, true), extracted, source: 'ai', classification };
@@ -492,6 +498,7 @@ export async function extractInvoiceFields(
     }
 
     for (const id of ids) {
+        if (options.signal?.aborted) break;
         let doc: Document;
         try {
             doc = await getDocument(id);
@@ -521,7 +528,7 @@ export async function extractInvoiceFields(
 
         let runResult: Awaited<ReturnType<typeof runInvoiceExtractionForDocument>>;
         try {
-            runResult = await runInvoiceExtractionForDocument(doc, config, direction);
+            runResult = await runInvoiceExtractionForDocument(doc, config, direction, { signal: options.signal });
         } catch (e) {
             log.error(`Extraction failed for document ${id}: ${e instanceof Error ? e.message : e}`);
             result.errors += 1;

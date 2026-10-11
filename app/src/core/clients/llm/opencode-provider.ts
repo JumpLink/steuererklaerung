@@ -61,7 +61,7 @@ export class OpencodeProvider implements LLMProvider {
         let command = this.options.command;
         if (!command) {
             const paths = lotse.lotsePathsUnder(embed.lotseDataRoot());
-            const { agent } = lotse.resolveDefaultWithNote(lotse.gatherResolveContext(paths, false), null);
+            const { agent } = embed.resolveLotseAgent(paths);
             if (!agent) throw new AiJobError('no-agent');
             command = agent.command;
         }
@@ -76,6 +76,7 @@ export class OpencodeProvider implements LLMProvider {
                 schema: z.toJSONSchema(schema, { io: 'input' }),
                 modelPolicy: embed.LOTSE_MODEL_POLICY,
                 ...(model ? { model } : {}),
+                ...(opts.signal ? { signal: opts.signal } : {}),
                 ...(this.options.open ? { open: this.options.open } : {}),
                 ...(this.options.timeoutMs ? { timeoutMs: this.options.timeoutMs } : {}),
             });

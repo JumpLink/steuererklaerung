@@ -55,6 +55,8 @@ export interface ChatCompletionOptions {
     max_tokens?: number;
     /** Request JSON object in response (OpenAI response_format). */
     response_format?: { type: 'json_object' };
+    /** Aborts the request; an aborted call is not retried. */
+    signal?: AbortSignal;
 }
 
 /**
@@ -91,6 +93,7 @@ export async function chatCompletion(
                     Authorization: `Bearer ${config.apiKey}`,
                 },
                 body: JSON.stringify(body),
+                ...(options.signal ? { signal: options.signal } : {}),
             });
             const text = await res.text();
 
@@ -117,7 +120,7 @@ export async function chatCompletion(
             const content = data.choices?.[0]?.message?.content;
             return typeof content === 'string' ? content : '';
         } catch (e) {
-            if (e instanceof Error && attempt < maxAttempts) {
+            if (e instanceof Error && attempt < maxAttempts && !options.signal?.aborted) {
                 lastError = e;
                 await new Promise((r) => setTimeout(r, 1500 * attempt));
                 continue;

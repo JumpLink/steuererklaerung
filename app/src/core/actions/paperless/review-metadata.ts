@@ -59,6 +59,8 @@ export interface ReviewMetadataOptions {
     documentTypeIds?: number[];
     limit?: number;
     query?: string;
+    /** Cancels the run: the AI call in flight fails as cancelled and no further document is started. */
+    signal?: AbortSignal;
     onDocumentProcessed?: (info: ReviewMetadataProcessedInfo) => Promise<void>;
 }
 
@@ -430,6 +432,7 @@ async function reviewSingleDocument(
             user,
             maxTokens: 1024,
             schema: MetadataReviewResponseSchema,
+            ...(options.signal ? { signal: options.signal } : {}),
         });
         resp = result.value;
         model = result.model ?? provider.model;
@@ -612,6 +615,7 @@ export async function reviewMetadata(
     const result: ReviewMetadataResult = { processed: 0, updated: 0, skipped: 0, errors: 0 };
 
     for (const id of documentIds) {
+        if (options.signal?.aborted) break;
         let doc: Document;
         try {
             doc = await getDocument(id);

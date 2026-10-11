@@ -13,4 +13,6 @@ const absent = (value: unknown): unknown => (value === '' || value === null ? un
 export const optionalText = () => z.preprocess(absent, z.string().optional());
 export const optionalNumber = () => z.preprocess(absent, z.number().optional());
 export const optionalBoolean = () => z.preprocess(absent, z.boolean().optional());
+/** An amount: a wrong-typed value ("12,50", "19%") is dropped for that field, so it never fails the whole answer. */
+export const lenientNumber = () => z.preprocess(absent, z.number().optional().catch(undefined));
 export const optionalNumbers = () => z.preprocess(absent, z.array(z.number()).optional());
