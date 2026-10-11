@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-11 00:12+0200\n"
+"POT-Creation-Date: 2026-10-11 09:28+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -1323,48 +1323,52 @@ msgstr "Dokument-Workflow"
 msgid "Invoices (self)"
 msgstr "Rechnungen (self)"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:166
+#: src/frontends/desktop/views/einstellungen-view.ts:75
+msgid "Contracts"
+msgstr "Verträge"
+
+#: src/frontends/desktop/views/einstellungen-view.ts:167
 msgid "AI engine"
 msgstr "KI-Engine"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:170
+#: src/frontends/desktop/views/einstellungen-view.ts:171
 msgid "set via LLM_PROVIDER"
 msgstr "über LLM_PROVIDER gesetzt"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:170
+#: src/frontends/desktop/views/einstellungen-view.ts:171
 msgid "default"
 msgstr "Standard"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:171
+#: src/frontends/desktop/views/einstellungen-view.ts:172
 msgid "Not configured — check LLM_PROVIDER."
 msgstr "Nicht konfiguriert — LLM_PROVIDER prüfen."
 
-#: src/frontends/desktop/views/einstellungen-view.ts:176
-#: src/frontends/desktop/views/einstellungen-view.ts:189
+#: src/frontends/desktop/views/einstellungen-view.ts:177
+#: src/frontends/desktop/views/einstellungen-view.ts:190
 msgid "Test connection"
 msgstr "Verbindung testen"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:177
+#: src/frontends/desktop/views/einstellungen-view.ts:178
 msgid "Asks the model a tiny question — costs a few tokens."
 msgstr "Stellt eine winzige Frage an das Modell — kostet ein paar Token."
 
-#: src/frontends/desktop/views/einstellungen-view.ts:180
+#: src/frontends/desktop/views/einstellungen-view.ts:181
 msgid "Testing …"
 msgstr "Teste …"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:185
+#: src/frontends/desktop/views/einstellungen-view.ts:186
 msgid "AI engine does not respond: {message}"
 msgstr "KI-Engine antwortet nicht: {message}"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:204
+#: src/frontends/desktop/views/einstellungen-view.ts:205
 msgid "Settings not available: {error}"
 msgstr "Einstellungen nicht verfügbar: {error}"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:211
+#: src/frontends/desktop/views/einstellungen-view.ts:212
 msgid "Learning mode"
 msgstr "Lernmodus"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:212
+#: src/frontends/desktop/views/einstellungen-view.ts:213
 msgid ""
 "Shows a “?” next to technical terms — Overview, Reports, USt-VA (VAT return) "
 "and the master data"
@@ -1372,76 +1376,76 @@ msgstr ""
 "Blendet neben Fachbegriffen ein „?\" ein — Übersicht, Auswertungen, USt-VA "
 "und die Stammdaten"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:221
+#: src/frontends/desktop/views/einstellungen-view.ts:222
 msgid "Sync automatically"
 msgstr "Automatisch abgleichen"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:222
+#: src/frontends/desktop/views/einstellungen-view.ts:223
 msgid "At start-up and then at fixed intervals, without blocking the view"
 msgstr ""
 "Beim Start und danach in festen Abständen, ohne die Ansicht zu blockieren"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:230
+#: src/frontends/desktop/views/einstellungen-view.ts:231
 msgid "Invoices (Qonto)"
 msgstr "Rechnungen (Qonto)"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:230
-#: src/frontends/desktop/views/einstellungen-view.ts:232
+#: src/frontends/desktop/views/einstellungen-view.ts:231
+#: src/frontends/desktop/views/einstellungen-view.ts:233
 msgid "Minutes, at least 5; 0 = off"
 msgstr "Minuten, mindestens 5; 0 = aus"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:231
+#: src/frontends/desktop/views/einstellungen-view.ts:232
 msgid "Transactions (Qonto)"
 msgstr "Buchungen (Qonto)"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:231
+#: src/frontends/desktop/views/einstellungen-view.ts:232
 msgid "Minutes, at least 15 (rate limit); 0 = off"
 msgstr "Minuten, mindestens 15 (Ratenlimit); 0 = aus"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:232
+#: src/frontends/desktop/views/einstellungen-view.ts:233
 msgid "Receipts (Paperless)"
 msgstr "Belege (Paperless)"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:241
+#: src/frontends/desktop/views/einstellungen-view.ts:242
 msgid "MCP server for external agents"
 msgstr "MCP-Server für externe Agenten"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:242
+#: src/frontends/desktop/views/einstellungen-view.ts:243
 msgid "Claude, Cursor, VS Code … — the built-in assistant does not need it"
 msgstr "Claude, Cursor, VS Code … — der eingebaute Assistent braucht ihn nicht"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:251
+#: src/frontends/desktop/views/einstellungen-view.ts:252
 msgid "Allow writing tools"
 msgstr "Schreibende Tools erlauben"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:252
+#: src/frontends/desktop/views/einstellungen-view.ts:253
 msgid "Expose mutating MCP tools (default: read-only)"
 msgstr "Mutierende MCP-Tools nach außen öffnen (Standard: nur lesen)"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:259
+#: src/frontends/desktop/views/einstellungen-view.ts:260
 msgid "Connect an external agent …"
 msgstr "Externen Agenten verbinden …"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:308
-#: src/frontends/desktop/views/einstellungen-view.ts:421
+#: src/frontends/desktop/views/einstellungen-view.ts:309
+#: src/frontends/desktop/views/einstellungen-view.ts:422
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:254
 #: src/frontends/desktop/views/umbuchen-dialog.ts:251
 msgid "Could not save: {error}"
 msgstr "Konnte nicht speichern: {error}"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:334
+#: src/frontends/desktop/views/einstellungen-view.ts:335
 msgid "Could not read connections: {error}"
 msgstr "Anbindungen nicht lesbar: {error}"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:355
+#: src/frontends/desktop/views/einstellungen-view.ts:356
 msgid "Could not read the ELSTER configuration: {error}"
 msgstr "ELSTER-Konfiguration nicht lesbar: {error}"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:379
+#: src/frontends/desktop/views/einstellungen-view.ts:380
 msgid "Could not read the ESt (income tax) configuration: {error}"
 msgstr "ESt-Konfiguration nicht lesbar: {error}"
 
-#: src/frontends/desktop/views/einstellungen-view.ts:406
+#: src/frontends/desktop/views/einstellungen-view.ts:407
 msgid ""
 "The configuration was changed from outside in the meantime (CLI, MCP or a "
 "second window). The view is reloaded — please repeat the input."
@@ -1450,7 +1454,7 @@ msgstr ""
 "ein zweites Fenster). Die Ansicht wird neu geladen — bitte die Eingabe "
 "wiederholen."
 
-#: src/frontends/desktop/views/einstellungen-view.ts:419
+#: src/frontends/desktop/views/einstellungen-view.ts:420
 msgid "Saved"
 msgstr "Gespeichert"
 

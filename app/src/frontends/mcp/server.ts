@@ -24,6 +24,7 @@ import { registerTransactionsTools } from './tools/transactions.ts';
 import { registerElsterTools } from './tools/elster.ts';
 import { registerInvoicesTools } from './tools/invoices.ts';
 import { registerContactsTools } from './tools/contacts.ts';
+import { registerContractsTools } from './tools/contracts.ts';
 import { registerMcpPrompts } from './prompts.ts';
 import { guardTaxOnlyTools } from './tax-guard.ts';
 import { createHttpMcpServer } from './http-server.ts';
@@ -45,6 +46,7 @@ const GROUP_REGISTRARS: Record<McpGroup, (server: McpServer, ctx: AppContext) =>
     elster: registerElsterTools,
     invoices: registerInvoicesTools,
     contacts: registerContactsTools,
+    contracts: registerContractsTools,
 };
 
 export interface McpToolInfo {

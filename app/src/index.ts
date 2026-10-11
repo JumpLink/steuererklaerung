@@ -25,6 +25,7 @@ import {
     buchungenCommand,
     belegeCommand,
     laufendeKostenCommand,
+    contractsCommand,
     finanzierungCommand,
     filingCommand,
     umsatzAufstellungCommand,
@@ -83,6 +84,7 @@ const parseArgs = () =>
         .command(buchungenCommand)
         .command(belegeCommand)
         .command(laufendeKostenCommand)
+        .command(contractsCommand)
         .command(finanzierungCommand)
         .command(filingCommand)
         .command(contactsCommand)

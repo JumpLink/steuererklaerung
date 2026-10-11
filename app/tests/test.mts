@@ -111,6 +111,7 @@ import kontoauszug from './unit/elster/kontoauszug.test.ts';
 import hinweiseHandlung from './unit/elster/hinweise-handlung.test.ts';
 import geldPruefungen from './unit/elster/geld-pruefungen.test.ts';
 import laufendeKosten from './unit/elster/laufende-kosten.test.ts';
+import contracts from './unit/contracts/contracts.test.ts';
 import zuPruefen from './unit/elster/zu-pruefen.test.ts';
 import erstattung from './unit/elster/erstattung.test.ts';
 import splitbuchung from './unit/elster/splitbuchung.test.ts';
@@ -312,6 +313,7 @@ run({
     hinweiseHandlung,
     geldPruefungen,
     laufendeKosten,
+    contracts,
     zuPruefen,
     erstattung,
     splitbuchung,

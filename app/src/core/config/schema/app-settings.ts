@@ -20,6 +20,7 @@ export const MCP_GROUPS = [
     'elster',
     'invoices',
     'contacts',
+    'contracts',
 ] as const;
 export type McpGroup = (typeof MCP_GROUPS)[number];
 
@@ -47,6 +48,7 @@ const McpGroupsSchema = z
         elster: z.boolean().default(true),
         invoices: z.boolean().default(true),
         contacts: z.boolean().default(true),
+        contracts: z.boolean().default(true),
     })
     .default(ALL_GROUPS_ON);
 
