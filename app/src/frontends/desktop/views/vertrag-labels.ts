@@ -16,6 +16,7 @@ import {
     type NoticeUnit,
 } from '@steuererklaerung/store';
 
+import type { ContractProposalField, ContractProposalValue } from '../../../core/actions/contracts-extract.ts';
 import type { MatchVia } from '../../../core/contracts/contracts.ts';
 
 import type { ContractFinding, NoticeDeadline } from '../../../core/presenters/contracts.ts';
@@ -146,4 +147,37 @@ export function findingHint(f: ContractFinding): string | null {
 /** GTK css class per finding kind: a missing or returned payment costs money, the rest informs. */
 export function findingCss(f: ContractFinding): string {
     return f.kind === 'missing' || f.kind === 'returned' ? 'error' : 'warning';
+}
+
+/**
+ * The fields a document can fill, named as the form names them — the same msgids on purpose, so the
+ * row someone is about to accept is the row they will later find in the edit dialog.
+ */
+export function PROPOSAL_FIELD_LABEL(): Record<ContractProposalField, string> {
+    return {
+        counterparty: _('Provider'),
+        contractNumber: _('Contract number'),
+        amount: _('Amount (€)'),
+        cycle: _('Interval'),
+        startDate: _('Start (YYYY-MM-DD)'),
+        initialTermMonths: _('Initial term (months)'),
+        renewalMonths: _('Renewal (months)'),
+        noticeValue: _('Notice period'),
+        noticeUnit: _('Notice period unit'),
+        autoRenewal: _('Renews automatically'),
+    };
+}
+
+/** One proposed or current value as a person reads it; `null`/`undefined` is "not stated". */
+export function proposalValueText(field: ContractProposalField, value: ContractProposalValue | null): string {
+    if (value == null) return _('not stated');
+    if (field === 'cycle' && typeof value === 'string') return CYCLE_LABEL[value as ContractCycle] ?? value;
+    if (field === 'noticeUnit' && typeof value === 'string') return NOTICE_UNIT_LABEL[value as NoticeUnit] ?? value;
+    if (typeof value === 'boolean') return value ? _('yes') : _('no');
+    if (field === 'amount' && typeof value === 'number') return `${fmtDe(value)} €`;
+    if (field === 'startDate' && typeof value === 'string') return deDate(value);
+    if (field === 'initialTermMonths' || field === 'renewalMonths') {
+        return fmt(_n('{n} month', '{n} months', Number(value)), { n: value });
+    }
+    return String(value);
 }
