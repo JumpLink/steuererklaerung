@@ -154,6 +154,26 @@ function buildDeflatedZip(name: string, data: Uint8Array, size: number): Uint8Ar
     return Uint8Array.from([...head, ...central, ...eocd, ...u16(0)]);
 }
 
+/** A zip whose entries are all deflated, with truthful sizes. */
+function buildDeflatedZipOf(files: Record<string, string>): Uint8Array {
+    const enc = new TextEncoder();
+    const local: number[] = [];
+    const central: number[] = [];
+    const names = Object.keys(files);
+    for (const name of names) {
+        const n = [...enc.encode(name)];
+        const data = enc.encode(files[name]);
+        const raw = [...deflateRawSync(data)];
+        const sizes = [...u32(0), ...u32(raw.length), ...u32(data.length)];
+        central.push(...u32(0x02014b50), ...u16(20), ...u16(20), ...u16(0), ...u16(8), ...u32(0), ...sizes);
+        central.push(...u16(n.length), ...zeros(8), ...u32(0), ...u32(local.length), ...n);
+        local.push(...u32(0x04034b50), ...u16(20), ...u16(0), ...u16(8), ...u32(0), ...sizes);
+        local.push(...u16(n.length), ...u16(0), ...n, ...raw);
+    }
+    const eocd = [...u32(0x06054b50), ...zeros(4), ...u16(names.length), ...u16(names.length)];
+    return Uint8Array.from([...local, ...central, ...eocd, ...u32(central.length), ...u32(local.length), ...u16(0)]);
+}
+
 /** Overwrite a little-endian u32 (or u16) in a copy of `buf`, appending `pad` zero bytes first. */
 function patched(buf: Uint8Array, writes: Array<[number, number, 2?]>, pad = 0): Uint8Array {
     const out = new Uint8Array(buf.length + pad);
@@ -261,7 +281,10 @@ export default async () => {
         });
 
         await it('rejects a cyclic FAT chain', async () => {
-            expect(() => readFirstSheet(patched(xls(), [[512 + 2 * 4, 2]]))).toThrow(/corrupt OLE2 sector chain/);
+            const file = patched(xls(), [[512 + 2 * 4, 2]]);
+            const start = Date.now();
+            expect(() => readFirstSheet(file)).toThrow(/corrupt OLE2 sector chain/);
+            expect(Date.now() - start < 1000).toBe(true);
         });
 
         await it('rejects a FAT count larger than the file', async () => {
@@ -309,14 +332,39 @@ export default async () => {
         await it('stops inflating a zip entry that lies about its size', async () => {
             // 16 MiB of zeros deflate to a few KiB; the directory claims one byte.
             const zip = buildDeflatedZip('xl/workbook.xml', new Uint8Array(16 * 1024 * 1024), 1);
+            const start = Date.now();
             expect(() => readFirstSheet(zip)).toThrow(/\.xlsx part too large/);
+            expect(Date.now() - start < 1000).toBe(true);
         });
 
-        await it('reads a deflated entry whose size is declared truthfully', async () => {
-            const data = new TextEncoder().encode(XLSX_FILES['xl/workbook.xml']);
-            const zip = buildDeflatedZip('xl/workbook.xml', data, data.length);
-            // The workbook inflates; only the missing sheet part fails.
-            expect(() => readFirstSheet(zip)).toThrow(/the workbook has no sheet|sheet part missing/);
+        await it('reads a fully deflated .xlsx whose sizes are declared truthfully', async () => {
+            const rows = readFirstSheet(buildDeflatedZipOf(XLSX_FILES));
+            expect(rows).toHaveLength(3);
+            expect(rows[0][0]).toBe('Status');
+            expect(rows[0][1]).toBe('Gebühr & Co');
+        });
+
+        await it('allocates only the cells present when an .xls declares the whole grid', async () => {
+            const start = Date.now();
+            const sheet = [...bof(0x10), ...dimensions(1048576, 256), ...labelSst(0, 0, 0), ...eof()];
+            const rows = readFirstSheet(buildXls(sst(['Status']), sheet));
+            expect(rows).toHaveLength(1);
+            expect(rows[0][0]).toBe('Status');
+            expect(Date.now() - start < 1000).toBe(true);
+        });
+
+        await it('allocates only the cells present when an .xlsx declares the whole grid', async () => {
+            const start = Date.now();
+            const files = {
+                ...XLSX_FILES,
+                'xl/worksheets/sheet1.xml':
+                    '<worksheet><dimension ref="A1:XFD1048576"/><sheetData>' +
+                    '<row r="1"><c r="A1" t="s"><v>0</v></c></row></sheetData></worksheet>',
+            };
+            const rows = readFirstSheet(buildZip(files));
+            expect(rows).toHaveLength(1);
+            expect(rows[0][0]).toBe('Status');
+            expect(Date.now() - start < 1000).toBe(true);
         });
 
         await it('does not end a tag at a ">" inside a quoted attribute', async () => {
