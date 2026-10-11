@@ -7,7 +7,8 @@
 // and require each one to name its way without AI in `ai-boundary.allow.json`.
 //
 // "Reaches" means, by import specifier (never by comment text):
-//   - it imports `clients/llm/…` or `@anthropic-ai/claude-agent-sdk` (a DIRECT site), or
+//   - it imports `clients/llm/…`, `@anthropic-ai/claude-agent-sdk` or `@lotse/…` (a DIRECT site —
+//     lotse starts a coding agent as a subprocess, which is an AI the same way a provider is), or
 //   - it imports a file that is itself a site (an INDIRECT site — `invoices/import.ts` never names
 //     the provider but calls the extraction that does).
 // The walk follows imports through `src/core` only and does not pass through `index.ts` barrels:
@@ -30,7 +31,7 @@ const ALLOW_FILE = join(ROOT, 'dev/ai-boundary.allow.json');
 
 const AI_LAYER_DIR = join(CORE, 'clients/llm') + '/';
 const AI_LAYER_FILES = new Set([join(CORE, 'actions/assistant/engine-status.ts')]);
-const AI_SPECIFIER = /(?:^|\/)clients\/llm(?:\/|$)|^@anthropic-ai\/claude-agent-sdk$/;
+const AI_SPECIFIER = /(?:^|\/)clients\/llm(?:\/|$)|^@anthropic-ai\/claude-agent-sdk$|^@lotse\//;
 
 function* walk(dir) {
     for (const entry of readdirSync(dir)) {

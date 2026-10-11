@@ -27,7 +27,7 @@ import { registerContactsTools } from './tools/contacts.ts';
 import { registerMcpPrompts } from './prompts.ts';
 import { guardTaxOnlyTools } from './tax-guard.ts';
 import { createHttpMcpServer } from './http-server.ts';
-import { loadAppSettings, MCP_GROUPS, type McpGroup } from '../../core/config/index.ts';
+import { loadAppSettings, MCP_GROUPS, restrictMcpToReadOnly, type McpGroup } from '../../core/config/index.ts';
 import { refusingFinTSInteraction, setFinTSInteraction } from '../../core/clients/fints/interaction.ts';
 
 const SERVER_NAME = 'steuererklaerung';
@@ -99,6 +99,9 @@ export function describeMcpTools(ctx: AppContext): McpGroupTools[] {
  * Create a configured McpServer, exposing only the tool groups enabled in the workspace
  * config (`mcp.groups`) and — unless `mcp.allowWrite` is set — omitting the mutating
  * tools. This governs what external clients (ChatGPT, Claude Code, …) can use.
+ *
+ * `restrictMcpToReadOnly` can only take `allowWrite` away: an agent the app spawned itself passes
+ * `STEUER_MCP_READONLY` and gets the read-only catalogue regardless of the manifest.
  */
 function createMcpServerWithTools(ctx: AppContext): McpServer {
     const server = new McpServer({
@@ -106,7 +109,7 @@ function createMcpServerWithTools(ctx: AppContext): McpServer {
         version: SERVER_VERSION,
     });
 
-    const mcp = loadAppSettings().mcp;
+    const mcp = restrictMcpToReadOnly(loadAppSettings().mcp);
     if (!mcp.enabled) return server; // expose nothing
 
     // Read-only enrichment-workflow prompts — always exposed (no allowWrite gate).

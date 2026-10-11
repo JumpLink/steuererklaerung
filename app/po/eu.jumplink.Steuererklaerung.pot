@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-10 21:54+0200\n"
+"POT-Creation-Date: 2026-10-11 00:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,8 +19,10 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #. TRANSLATORS: Title of the AI assistant side panel
+#. TRANSLATORS: Title of the side panel holding the external coding agent
 #. TRANSLATORS: Tooltip on the button revealing the AI assistant side panel
 #: src/frontends/desktop/assistent-panel.blp:30
+#: src/frontends/desktop/lotse-panel.blp:26
 #: src/frontends/desktop/views/einstellungen-view.blp:53
 #: src/frontends/desktop/views/tab-hub.ts:123
 #: src/frontends/desktop/window.blp:140
@@ -29,6 +31,7 @@ msgstr ""
 
 #. TRANSLATORS: Tooltip on the button that hides the assistant panel
 #: src/frontends/desktop/assistent-panel.blp:40
+#: src/frontends/desktop/lotse-panel.blp:36
 #: src/frontends/desktop/views/beleg-upload.ts:130
 #: src/frontends/desktop/window.blp:187
 msgid "Close"
@@ -115,7 +118,7 @@ msgstr ""
 #: src/frontends/desktop/views/entity-dialogs.ts:42
 #: src/frontends/desktop/views/entity-dialogs.ts:101
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:465
-#: src/frontends/desktop/window.ts:235
+#: src/frontends/desktop/window.ts:242
 msgid "Cancel"
 msgstr ""
 
@@ -148,6 +151,11 @@ msgstr ""
 #: src/frontends/desktop/i18n.ts:111
 msgctxt "language code"
 msgid "en"
+msgstr ""
+
+#. TRANSLATORS: Link to the coding agent's own documentation
+#: src/frontends/desktop/lotse-panel.blp:84
+msgid "Documentation"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:53
@@ -1042,87 +1050,107 @@ msgstr ""
 msgid "Paperless assignment not available"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:30
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:31
 msgid "Data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:31
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:32
 msgid "Demo data — fictional examples"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:31
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:32
 msgid "Your own data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:34
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:35
 #: src/frontends/desktop/views/welcome.ts:198
-#: src/frontends/desktop/window.ts:570
+#: src/frontends/desktop/window.ts:614
 msgid "Use my own data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:34
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:35
 #: src/frontends/desktop/views/welcome.ts:187
 msgid "Try the demo"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:43
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:44
 msgid "Show welcome again"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:48
-#: src/frontends/desktop/views/welcome.ts:286
-msgid "Built-in AI assistant"
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:49
+#: src/frontends/desktop/views/welcome.ts:265
+#: src/frontends/desktop/views/welcome.ts:279
+#: src/frontends/desktop/views/welcome.ts:292
+msgid "AI assistant"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:50
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:51
 msgid ""
 "Questions and the data needed to answer them go to the configured AI "
 "provider. Independent of the MCP server."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:66
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:79
+msgid "Assistant engine"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:80
+msgid "Takes effect the next time the app starts."
+msgstr ""
+
+#. TRANSLATORS: The assistant that is part of the app and answers in-process
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:83
+msgid "Built in"
+msgstr ""
+
+#. TRANSLATORS: lotse is a program name — it starts a coding agent as a separate process
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:85
+msgid "Coding agent (lotse)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:101
 msgid "Last backup"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:68
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:121
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:103
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:156
 msgid "Backup folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:76
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:111
 msgid "{time} in {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:81
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:116
 msgid "Never"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:86
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:92
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:121
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:127
 msgid "Back up now"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:92
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:127
 msgid "Backing up …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:100
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:135
 msgid "Backup saved: {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:103
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:138
 msgid "Backup failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:116
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:151
 msgid "Choose folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:141
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:176
 msgid "Keep backups"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:142
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:177
 msgid "Older ones are deleted after each new backup"
 msgstr ""
 
@@ -1939,7 +1967,7 @@ msgid ""
 msgstr ""
 
 #: src/frontends/desktop/views/mahnung-dialog.ts:90
-#: src/frontends/desktop/views/mcp-clients-dialog.ts:38
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:28
 msgid "Copy"
 msgstr ""
 
@@ -2007,27 +2035,27 @@ msgstr ""
 msgid "Not saved"
 msgstr ""
 
-#: src/frontends/desktop/views/mcp-clients-dialog.ts:36
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:26
 msgid "Run in a terminal"
 msgstr ""
 
-#: src/frontends/desktop/views/mcp-clients-dialog.ts:36
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:26
 msgid "Add to {file}"
 msgstr ""
 
-#: src/frontends/desktop/views/mcp-clients-dialog.ts:42
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:32
 msgid "Copied for {client}"
 msgstr ""
 
-#: src/frontends/desktop/views/mcp-clients-dialog.ts:44
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:34
 msgid "Docs"
 msgstr ""
 
-#: src/frontends/desktop/views/mcp-clients-dialog.ts:69
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:59
 msgid "Connect an external agent"
 msgstr ""
 
-#: src/frontends/desktop/views/mcp-clients-dialog.ts:73
+#: src/frontends/desktop/views/mcp-clients-dialog.ts:63
 msgid ""
 "The agent starts the MCP server itself. Turn on “MCP server for external "
 "agents” first; writing tools stay off unless you allow them. Restart the "
@@ -3081,7 +3109,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:63
 #: src/frontends/desktop/views/setup-assistant.ts:468
-#: src/frontends/desktop/window.ts:637
+#: src/frontends/desktop/window.ts:681
 msgid "Private"
 msgstr ""
 
@@ -3250,7 +3278,7 @@ msgid "Dauerfristverlängerung: every VAT return is due one month later."
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:424
-#: src/frontends/desktop/window.ts:637
+#: src/frontends/desktop/window.ts:681
 msgid "Business"
 msgstr ""
 
@@ -4027,12 +4055,6 @@ msgid "Online banking with German banks"
 msgstr ""
 
 #: src/frontends/desktop/views/welcome.ts:265
-#: src/frontends/desktop/views/welcome.ts:279
-#: src/frontends/desktop/views/welcome.ts:292
-msgid "AI assistant"
-msgstr ""
-
-#: src/frontends/desktop/views/welcome.ts:265
 msgid "Answers questions and proposes bookings"
 msgstr ""
 
@@ -4049,6 +4071,10 @@ msgid ""
 "When you use the assistant, your question and the data it needs to answer go "
 "to the AI provider you configure. Nothing is sent unless you ask. Without "
 "it, every feature of the app still works."
+msgstr ""
+
+#: src/frontends/desktop/views/welcome.ts:286
+msgid "Built-in AI assistant"
 msgstr ""
 
 #: src/frontends/desktop/views/welcome.ts:293
@@ -4242,48 +4268,48 @@ msgstr ""
 msgid "Sync"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:229
+#: src/frontends/desktop/window.ts:236
 msgid "Switch to the demo?"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:229
+#: src/frontends/desktop/window.ts:236
 msgid "Switch to your own data?"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:232
+#: src/frontends/desktop/window.ts:239
 msgid ""
 "The app restarts with fictional sample data. Your own data is not changed."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:233
+#: src/frontends/desktop/window.ts:240
 msgid "The app restarts with your own data. The demo data stays separate."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:236
+#: src/frontends/desktop/window.ts:243
 msgid "Restart"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:249
+#: src/frontends/desktop/window.ts:256
 msgid "Please restart the app yourself to switch."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:562
+#: src/frontends/desktop/window.ts:606
 msgid "Data could not be loaded completely: {error}"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:569
+#: src/frontends/desktop/window.ts:613
 msgid "Demo data – fictional examples, no real financial data"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:599
+#: src/frontends/desktop/window.ts:643
 msgid "Setup is not finished: no business or private tax return is set up yet."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:600
+#: src/frontends/desktop/window.ts:644
 msgid "Setup is not finished: “{entity}” has no bank account yet."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:701
+#: src/frontends/desktop/window.ts:745
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."

@@ -20,6 +20,12 @@ three frontends: the CLI, an **MCP server** (`app/src/index.ts mcp`), and a read
   wrapper). They are plain DIRECTORIES of this repo — NOT nested submodules. The only
   submodules are `refs/*` (vendored reference sources). Install with `gjsify install`
   (never `npm install` — it prunes the gjsify-managed deps).
+- **`@lotse/*` is linked from source, not installed.** The desktop assistant pane embeds
+  `LotseChat`, and the three packages are unpublished → `gjsify link <lotse checkout>`, then
+  plain `gjsify install` (`--immutable` refuses while `.gjsify-link.json` exists). lotse's OWN
+  `gjsify install` is required too — `@lotse/acp` resolves through the symlink — and CI pins the
+  lotse commit in `LOTSE_COMMIT`. All three traps + how to bump the pin:
+  [`docs/app/lotse-entwicklung.md`](docs/app/lotse-entwicklung.md).
 - This repo is itself a **submodule of werkstatt** → commit here on `main`, then bump
   the pointer in the werkstatt parent (`chore: bump steuererklaerung (…)`). Never stage
   across that boundary in one commit.

@@ -52,6 +52,9 @@ import { markup } from './views/util.ts';
 import { BhEntitySwitcher } from './widgets/entity-switcher.ts';
 import { BhYearSwitcher } from './widgets/year-switcher.ts';
 import { BhAssistentPanel } from './assistent-panel.ts';
+import { BhLotsePanel } from './lotse-panel.ts';
+import { lotseEmbedPlan } from '../../core/actions/assistant/lotse-embed.ts';
+import { currentMcpInstallation } from './self-launch.ts';
 
 import Template from './window.blp';
 import type { PortedView } from './view.ts';
@@ -98,6 +101,7 @@ export class MainWindow extends Adw.ApplicationWindow {
                     'toast_overlay',
                     'sync_button',
                     'assistant_toggle',
+                    'assistant_stack',
                     'assistant_panel',
                     'banner',
                     'setup_bar',
@@ -116,6 +120,8 @@ export class MainWindow extends Adw.ApplicationWindow {
     private currentEntity: AppEntity | null = null;
     private sync: SyncController | null = null;
     private currentYear = 0;
+    /** The lotse pane, once {@link buildLotsePane} built one. `null` = no agent pane, no subprocess. */
+    private lotse: BhLotsePanel | null = null;
 
     // Every widget below comes from window.blp — the whole tree is declared there, including both
     // breakpoints (which needed four lines of boxed GObject.Value each in TypeScript) and the
@@ -132,6 +138,7 @@ export class MainWindow extends Adw.ApplicationWindow {
     declare private _toast_overlay: Adw.ToastOverlay;
     declare private _sync_button: Gtk.Button;
     declare private _assistant_toggle: Gtk.ToggleButton;
+    declare private _assistant_stack: Gtk.Stack;
     declare private _assistant_panel: BhAssistentPanel;
     declare private _banner: Adw.Banner;
     declare private _setup_bar: Gtk.ActionBar;
@@ -252,11 +259,39 @@ export class MainWindow extends Adw.ApplicationWindow {
         restartInMode(app, mode);
     }
 
-    /** The built-in assistant switched off hides the panel toggle ({@link isAssistantEnabled}). */
+    /** The assistant switched off hides the panel toggle ({@link isAssistantEnabled}). */
     private applyAssistantPreference(): void {
         const visible = isAssistantEnabled();
         this._assistant_toggle.set_visible(visible);
         if (!visible) this._assistant_split.set_show_sidebar(false);
+    }
+
+    /**
+     * Build the lotse pane — but only if {@link lotseEmbedPlan} hands over a plan, which it does
+     * only when AI is on AND `aiEngine` is `lotse`.
+     *
+     * The pane is added to the stack HERE rather than declared in window.blp, because a declared
+     * pane exists whether or not it may: lotse starts a coding agent as a subprocess, and the
+     * honest way to say "no AI" is for the object that could start one never to be constructed. A
+     * `null` plan therefore leaves the stack with the one page the template declares.
+     */
+    private buildLotsePane(): void {
+        const plan = lotseEmbedPlan({ installation: currentMcpInstallation() });
+        if (!plan) return;
+        const panel = new BhLotsePanel();
+        panel.onClose = () => this._assistant_split.set_show_sidebar(false);
+        this._assistant_stack.add_named(panel, 'lotse');
+        try {
+            panel.build(plan);
+        } catch (err) {
+            // A pane that cannot be built must not take the window with it: the app's actual job
+            // is the tax return. Fall back to the built-in page and say why on stderr.
+            console.error(`[app] Der Assistent (lotse) ließ sich nicht aufbauen: ${err}`);
+            this._assistant_stack.remove(panel);
+            return;
+        }
+        this._assistant_stack.set_visible_child_name('lotse');
+        this.lotse = panel;
     }
 
     /**
@@ -432,7 +467,15 @@ export class MainWindow extends Adw.ApplicationWindow {
         registerToastOverlay(this._toast_overlay);
         this.connect('close-request', () => {
             this.sync?.dispose();
-            return false;
+            if (!this.lotse) return false;
+            // lotse's agent is a SUBPROCESS, so the close waits for it: a window that just vanishes
+            // leaves a child behind that still holds an MCP server onto this person's bookkeeping.
+            // Clearing the field first makes the destroy-triggered second pass take the line above
+            // rather than starting another shutdown.
+            const panel = this.lotse;
+            this.lotse = null;
+            void panel.shutdown().finally(() => this.destroy());
+            return true;
         });
         this.sync = new SyncController(this._sync_button, {
             entity: () => this.currentEntity,
@@ -448,6 +491,7 @@ export class MainWindow extends Adw.ApplicationWindow {
         // Dev/testing hook: open the panel on launch (pairs with STEUER_APP_ASSIST_DEMO's seeded chat).
         if (process.env.STEUER_APP_ASSIST_DEMO) this._assistant_split.set_show_sidebar(true);
         this.applyAssistantPreference();
+        this.buildLotsePane();
         this._banner.connect('button-clicked', () => this.confirmSwitchMode('own'));
         this._setup_finish.connect('clicked', () => this.finishSetup());
         this._setup_close.connect('clicked', () => this.dismissSetupBanner());

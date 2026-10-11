@@ -98,6 +98,7 @@ export {
     type EntityInvoicingView,
 } from './accessors.ts';
 export { isAssistantEnabled } from './assistant-preference.ts';
+export { MCP_READONLY_ENV, readOnlyRequested, restrictMcpToReadOnly } from './mcp-readonly.ts';
 
 // ── Migration (config migrate) ──────────────────────────────────────────────────────────────────────
 export {
