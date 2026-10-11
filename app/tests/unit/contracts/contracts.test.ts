@@ -197,13 +197,31 @@ export default async () => {
                 mandateReference: null,
                 contractNumber: 'VN-123456',
             });
-            const weak = tx('2025-02-15', -80, { accountKey: 'acc1', purpose: 'Abschlag' });
+            const weak = tx('2025-02-15', -80, { accountKey: 'acc3', purpose: 'Abschlag' });
             const strong = tx('2025-03-15', -80, { accountKey: 'acc1', purpose: 'Abschlag VN-123456' });
             const own = tx('2025-04-15', -80, { accountKey: 'acc2', purpose: 'Abschlag' });
             const cands = contractCandidates(c, [weak, strong, own], []);
             expect(cands.map((x) => `${x.txId}:${x.via}`).join(',')).toBe(
                 `${strong.id}:contract_number,${own.id}:name`,
             );
+        });
+
+        await it('trusts weak keys on an account with a strong match: empty-purpose payments, older and dearer', async () => {
+            const c = contract({ accountKey: 'acc2', startDate: '2025-01-15' });
+            // Oldest payments on acc1 carry only name and IBAN, at a higher instalment.
+            const bare = ['2025-01-15', '2025-02-15', '2025-03-15'].map((d) =>
+                tx(d, -95, { accountKey: 'acc1', purpose: '' }),
+            );
+            const strong = ['2025-04-15', '2025-05-15'].map((d) => tx(d, -80, { accountKey: 'acc1' }));
+            const now = ['2025-06-15', '2025-07-15'].map((d) => tx(d, -80, { accountKey: 'acc2' }));
+            const all = [...bare, ...strong, ...now];
+            expect(contractCandidates(c, all, []).length).toBe(7);
+            const findings = contractFindings(c, all, [], '2025-07-15');
+            expect(findings.filter((f) => f.kind === 'missing').length).toBe(0);
+            expect(findings.filter((f) => f.kind === 'changed').length).toBe(3);
+            // Without any evidence on acc1 the same bare payments stay off the contract.
+            const unproven = [...bare, ...now];
+            expect(contractCandidates(c, unproven, []).length).toBe(2);
         });
 
         await it('reports missing only within the imported coverage of the accounts', async () => {

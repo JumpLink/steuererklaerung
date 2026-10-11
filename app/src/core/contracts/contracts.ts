@@ -258,19 +258,42 @@ export function matchVia(c: ContractRecord, t: ContractBooking): MatchVia | unde
     return undefined;
 }
 
-function onAccount(c: ContractRecord, t: ContractBooking): boolean {
-    return !c.accountKey || t.accountKey === c.accountKey;
+function onAccount(c: ContractRecord, t: ContractBooking, proven?: ReadonlySet<string>): boolean {
+    return !c.accountKey || t.accountKey === c.accountKey || (t.accountKey != null && !!proven?.has(t.accountKey));
+}
+
+/**
+ * The accounts on which the contract has proof of its own: a booking with a strong key or one the
+ * owner linked. Older payments there may carry no purpose, so the weak keys are trusted on them too.
+ */
+export function provenAccounts(
+    c: ContractRecord,
+    bookings: readonly ContractBooking[],
+    decisions: readonly ContractTransactionRecord[],
+): Set<string> {
+    const linked = new Set(decisions.filter((d) => d.contractId === c.id && d.status === 'linked').map((d) => d.txId));
+    const out = new Set<string>();
+    for (const t of bookings) {
+        if (t.accountKey == null || t.amount >= 0) continue;
+        const via = matchVia(c, t);
+        if (linked.has(t.id) || (via && STRONG_VIA.has(via))) out.add(t.accountKey);
+    }
+    return out;
 }
 
 /**
  * How a booking belongs to the contract: a strong key (creditor ID, mandate reference, contract
  * number) holds on any account, so a debit that moved to another account stays with its contract; the
- * weak ones (IBAN, name, text) only count on the contract's own account.
+ * weak ones (IBAN, name, text) count on the contract's own account and on any `proven` account.
  */
-export function contractMatch(c: ContractRecord, t: ContractBooking): MatchVia | undefined {
+export function contractMatch(
+    c: ContractRecord,
+    t: ContractBooking,
+    proven?: ReadonlySet<string>,
+): MatchVia | undefined {
     const via = matchVia(c, t);
     if (!via) return undefined;
-    return STRONG_VIA.has(via) || onAccount(c, t) ? via : undefined;
+    return STRONG_VIA.has(via) || onAccount(c, t, proven) ? via : undefined;
 }
 
 /** The accounts the candidates were paid from, oldest first — more than one means the mandate moved. */
@@ -294,7 +317,8 @@ export function paymentAccounts(
 
 /**
  * The debits that may belong to the contract: not rejected, matched by a key — a strong key on any
- * account, the weaker ones on the contract's account only. A match by text alone must also hit the
+ * account, the weaker ones on the contract's account and on accounts with proof (see
+ * {@link provenAccounts}). A match by text alone must also hit the
  * amount window; a strong key or the name also proposes a booking with a changed amount. Linked
  * bookings are always included. Linking stays the owner's decision.
  */
@@ -304,12 +328,13 @@ export function contractCandidates(
     decisions: readonly ContractTransactionRecord[],
 ): ContractCandidate[] {
     const status = new Map(decisions.filter((d) => d.contractId === c.id).map((d) => [d.txId, d.status]));
+    const proven = provenAccounts(c, bookings, decisions);
     const out: ContractCandidate[] = [];
     for (const t of bookings) {
         if (t.amount >= 0) continue;
         const s = status.get(t.id);
         if (s === 'rejected') continue;
-        const via = contractMatch(c, t);
+        const via = contractMatch(c, t, proven);
         const win = inWindow(c, t.amount);
         if (s !== 'linked' && (!via || (via === 'text' && !win))) continue;
         out.push({
@@ -397,6 +422,7 @@ export function contractFindings(
     today?: string,
 ): ContractFinding[] {
     const payments = contractCandidates(c, bookings, decisions);
+    const proven = provenAccounts(c, bookings, decisions);
     const out: ContractFinding[] = [];
 
     const spans = coverage(bookings);
@@ -418,7 +444,7 @@ export function contractFindings(
         decisions.filter((d) => d.contractId === c.id && d.status === 'rejected').map((d) => d.txId),
     );
     for (const t of bookings) {
-        if (t.amount <= 0 || rejected.has(t.id) || !contractMatch(c, t)) continue;
+        if (t.amount <= 0 || rejected.has(t.id) || !contractMatch(c, t, proven)) continue;
         // The nearest earlier debit of the same amount: a return follows its debit within days.
         const original = payments
             .filter((p) => {
