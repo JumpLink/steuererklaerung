@@ -20,7 +20,7 @@ three frontends: the CLI, an **MCP server** (`app/src/index.ts mcp`), and a read
   wrapper). They are plain DIRECTORIES of this repo — NOT nested submodules. The only
   submodules are `refs/*` (vendored reference sources). Install with `gjsify install`
   (never `npm install` — it prunes the gjsify-managed deps).
-- **`@lotse/*` comes from npm** (`^0.2.0`, recorded in `gjsify-lock.json`); plain
+- **`@lotse/*` comes from npm** (`^0.3.0`, recorded in `gjsify-lock.json`); plain
   `gjsify install --immutable` works, in CI too. For UNRELEASED lotse changes only:
   `gjsify link ../lotse` (+ `gjsify install` in lotse first), and `gjsify unlink` +
   `gjsify install --immutable` before committing — `--immutable` refuses while
