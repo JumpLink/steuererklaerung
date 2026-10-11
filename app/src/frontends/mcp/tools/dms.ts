@@ -63,13 +63,24 @@ export function registerDmsTools(server: McpServer, ctx: AppContext): void {
         {
             title: 'List DMS Inbox',
             description:
-                'Documents still waiting for review. Paperless: documents carrying the configured inbox tag. Built-in DMS: documents never reviewed (no metadata stamp yet).',
-            inputSchema: { entity_id: entityField },
+                'Documents still waiting for review, newest first. Paperless: documents carrying the configured inbox tag. Built-in DMS: documents never reviewed (no metadata stamp yet). The inbox can hold hundreds: narrow it with limit / added_since / added_before; total is the match count before limit.',
+            inputSchema: {
+                entity_id: entityField,
+                limit: z.number().int().positive().optional().describe('Return at most this many (newest first)'),
+                added_since: z.string().optional().describe('Only documents added on/after this ISO date or timestamp'),
+                added_before: z.string().optional().describe('Only documents added before this ISO date or timestamp'),
+            },
             annotations: { readOnlyHint: true, openWorldHint: false },
         },
-        async ({ entity_id }) => {
+        async ({ entity_id, limit, added_since, added_before }) => {
             try {
-                return mcpSuccess(await listInbox(providerOf(entity_id)));
+                return mcpSuccess(
+                    await listInbox(providerOf(entity_id), {
+                        limit,
+                        addedSince: added_since,
+                        addedBefore: added_before,
+                    }),
+                );
             } catch (err) {
                 return mcpErrorFrom(err);
             }
