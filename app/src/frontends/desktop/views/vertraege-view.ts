@@ -287,10 +287,12 @@ export class BhVertraegeView extends Adw.Bin {
     }
 
     private openDetail(c: ContractSummary): void {
+        const entity = this.entity;
+        if (!entity) return;
         const dialog = new BhVertragDetailDialog();
-        dialog.open(this, c.id, {
+        dialog.open(this, entity, c.id, {
             onEdit: () => this.edit(c),
-            onChanged: () => this.entity && this.reload(this.entity, this.year),
+            onChanged: () => this.reload(entity, this.year),
         });
     }
 

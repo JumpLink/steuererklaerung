@@ -22,6 +22,9 @@
         "src/core/actions/dms/inbox.ts": {
             "ohneKi": "Die Eingangs-Werkzeuge rufen selbst keine KI auf (der Aufrufer liefert die Werte, hier wird nur geprüft und verglichen); sie berühren die KI nur indirekt über den Hinweistext aus `review-metadata.ts`. Von Hand pflegt man dieselben Felder im Beleg-Dialog bzw. in Paperless."
         },
+        "src/core/actions/contracts-extract.ts": {
+            "ohneKi": "Jedes Feld, das hier ausgelesen wird, lässt sich im Vertrags-Dialog (Desktop) bzw. mit `vertraege speichern` von Hand eintragen — das ist der normale Weg, das Auslesen nur eine Vorbelegung. Steht der KI-Schalter aus, liefert `contractExtractionAvailable()` false: die Aktion „Aus Dokument übernehmen“ erscheint nicht, und geschrieben wird ohnehin nie hier, sondern erst nach Bestätigung durch `saveContractRecord`."
+        },
         "src/core/actions/assistant/chat.ts": {
             "ohneKi": "Die Oberfläche bietet dieselben Antworten als Filter, Hinweise und Auswertungen; der Assistent ist nur eine zweite Tür."
         },

@@ -1,6 +1,6 @@
 # 4. Contracts (Verträge)
 
-- Status: **Accepted** (steps 1–3); steps 4–6 planned
+- Status: **Accepted** (steps 1–4, step 5 in part); the rest of step 5 and step 6 planned
 - Date: 2026-10-11
 - Deciders: Pascal Garber
 - Related: [research/contracts-prior-art.md](../research/contracts-prior-art.md),
@@ -100,7 +100,14 @@ Found with a real contract; prior art from the public Aboalarm / Volders feature
    field, candidate and document linking, `.ics` export. Reads and derivations go through
    `src/core/presenters/contracts.ts`; no rule lives in the view.
 5. Agent proposals: create a contract from a confirmed Laufende-Kosten series or from a contract
-   document in the DMS. Planned, not implemented.
+   document in the DMS. **Half done** — reading a contract document is implemented
+   (`src/core/actions/contracts-extract.ts`: term, notice period, price and counterparty off one
+   linked document, each value with a confidence and the passage it was read from). It is a
+   PROPOSAL: the action writes nothing, the person accepts field by field and the write stays
+   `saveContractRecord`. Surfaces: "Auslesen" per document in the detail dialog, a document
+   reference in the create dialog, `contracts vorschlag <ref>` on the CLI and
+   `contracts_suggest_from_document` in MCP (read-only, independent of `mcp.allowWrite`). The
+   Laufende-Kosten half — turning a confirmed series into a contract — is still planned.
 6. Cancellation letters with sent / proof / confirmation states. Planned, not implemented.
 
 ## Consequences
@@ -116,6 +123,15 @@ Found with a real contract; prior art from the public Aboalarm / Volders feature
   paid from that account. The desktop list therefore ranks it behind every contract-specific
   finding (`latestFinding` in the presenter) and shows it only when it is the single finding —
   otherwise one stale import makes every row read the same.
+- Reading a document (step 5) sends contract text to a model, so it goes through the one AI path of
+  ADR 0002 and inherits its model policy: `OpencodeProvider` hands lotse's `denyFreeHostedModels`
+  to `runJob`, which checks it BEFORE the prompt leaves the machine — a free hosted model fails as
+  `denied`, an agent that reports no model at all as `unknown-model`. A contract names the
+  counterparty, the account it is paid from and often an IBAN; none of that may become somebody's
+  free tier. The known limit is lotse's own and deliberate: a free model that is neither on its
+  maintained list nor suffixed `-free` is not recognised as free (denying every unknown id would
+  deny every paid one too), so the model choice stays the person's. Run in
+  `tests/unit/actions/contracts-extract.test.ts`.
 - **Known gap:** `NoticeDeadline.reason` (kind `none`) is a German sentence built in the core
   (`src/core/contracts/contracts.ts`), so the desktop renders it verbatim and it stays German in an
   English UI. Every other string on the page goes through gettext. Fixing it means turning `reason`

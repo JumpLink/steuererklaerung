@@ -30,6 +30,7 @@ import {
     matchContract,
     saveContractRecord,
 } from '../../../core/actions/contracts.ts';
+import { contractExtractionAvailable, suggestContractFromDocument } from '../../../core/actions/contracts-extract.ts';
 import { parseReminderOffsets } from '../../../core/contracts/contracts.ts';
 import { mcpErrorFrom, mcpSuccess } from '../types.ts';
 
@@ -242,6 +243,37 @@ export function registerContractsTools(server: McpServer, _ctx: AppContext): voi
                 const m = matchContract(params.id);
                 if (!m) throw new Error(`Unknown contract ${params.id}`);
                 return mcpSuccess(m);
+            } catch (err) {
+                return mcpErrorFrom(err);
+            }
+        },
+    );
+
+    server.registerTool(
+        'contracts_suggest_from_document',
+        {
+            title: 'Vertragsdaten aus Dokument lesen',
+            description:
+                "Read a contract's term and payment data off one of its documents and return it as a PROPOSAL — this tool writes nothing. Give document_ref (e.g. \"paperless:123\", normally one from contracts_get's documents) plus either id (the contract whose fields are compared) or entity (when the proposal is meant for a contract that does not exist yet). The result has one entry per field the document states (counterparty, contractNumber, amount, cycle, startDate, initialTermMonths, renewalMonths, noticeValue, noticeUnit, autoRenewal) with 'value', 'confidence' 0…1, 'snippet' (the verbatim passage it was read from — check the value against it), the contract's 'current' value and 'differs'. Fields the document does not state are absent, never guessed. Writing is contracts_save, and only on the user's say-so, field by field: a notice period wrong by a month renews a contract for another year. Runs the app's own AI engine; it is unavailable when the owner switched the assistant off.",
+            inputSchema: {
+                document_ref: z.string().describe('DMS document, e.g. "paperless:123"'),
+                id: z.string().optional().describe('Contract id, for the comparison with its current values'),
+                entity: z.string().optional().describe('Workspace entity id; required without id'),
+            },
+            annotations: { readOnlyHint: true, openWorldHint: false },
+        },
+        async (params) => {
+            try {
+                if (!contractExtractionAvailable()) {
+                    throw new Error('The AI engine is switched off or not configured — nothing was read.');
+                }
+                return mcpSuccess(
+                    await suggestContractFromDocument({
+                        documentRef: params.document_ref,
+                        contractId: params.id,
+                        entityId: params.entity,
+                    }),
+                );
             } catch (err) {
                 return mcpErrorFrom(err);
             }

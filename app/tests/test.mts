@@ -211,11 +211,13 @@ import ohneKi from './unit/ai/ohne-ki.test.ts';
 import timeStoreRepo from './unit/time/store-repo.test.ts';
 import timeImport from './unit/actions/time-import.test.ts';
 import timeInvoice from './unit/actions/time-invoice.test.ts';
+import contractsExtract from './unit/actions/contracts-extract.test.ts';
 
 run({
     timeStoreRepo,
     timeImport,
     timeInvoice,
+    contractsExtract,
     paypalParser,
     qontoExportParser,
     llmFactory,

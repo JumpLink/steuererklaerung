@@ -33,6 +33,11 @@ import {
     matchContract,
     saveContractRecord,
 } from '../../core/actions/contracts.ts';
+import {
+    type ContractProposal,
+    contractExtractionAvailable,
+    suggestContractFromDocument,
+} from '../../core/actions/contracts-extract.ts';
 import { type ContractFinding, type NoticeDeadline, parseReminderOffsets } from '../../core/contracts/contracts.ts';
 import { fmtDe } from '../../core/lib/money.ts';
 import { runAndExit } from './output.ts';
@@ -90,6 +95,29 @@ function printMatch(m: ContractMatch): void {
     console.log(`\nBefunde (${m.findings.length})`);
     for (const f of m.findings) console.log(`  ${findingText(f)}`);
     console.log('\n→ zuordnen: contracts buchung <id> <txId> --als linked|rejected|none');
+}
+
+const vorschlagWert = (v: unknown) => (typeof v === 'boolean' ? (v ? 'ja' : 'nein') : v == null ? '—' : String(v));
+
+/** The proposal as a diff: what the document says, what the contract says today, where it was read. */
+function printProposal(p: ContractProposal): void {
+    console.log(`Dokument ${p.documentRef}${p.model ? `  (${p.model})` : ''}`);
+    for (const h of p.hints) console.log(`  Hinweis: ${h}`);
+    if (!p.fields.length) return;
+    console.log('');
+    for (const f of p.fields) {
+        const pfeil = f.differs ? `${vorschlagWert(f.current)} → ${vorschlagWert(f.value)}` : vorschlagWert(f.value);
+        console.log(
+            `  ${f.field.padEnd(18)} ${pfeil.padEnd(32)} ${Math.round(f.confidence * 100)}%${f.differs ? '' : '  (unverändert)'}`,
+        );
+        console.log(`      „${f.snippet}“`);
+    }
+    const geaendert = p.fields.filter((f) => f.differs).map((f) => f.field);
+    console.log(
+        geaendert.length
+            ? `\nNichts gespeichert. → übernehmen: contracts speichern${p.contractId ? ` --id ${p.contractId}` : ''} …`
+            : '\nNichts gespeichert; der Vertrag steht schon so da.',
+    );
 }
 
 const num = (v: unknown) => (v === undefined ? undefined : v === 'null' ? null : Number(v));
@@ -254,6 +282,32 @@ export const contractsCommand: CommandModule = {
                         linkContractDocument(String(argv.id), String(argv.ref), role);
                         return { id: String(argv.id), documentRef: String(argv.ref), role };
                     }),
+            })
+            .command({
+                command: 'vorschlag <ref>',
+                describe: 'Laufzeit und Preis aus einem zugeordneten Dokument lesen (nur Vorschlag, speichert nichts)',
+                builder: (yy) =>
+                    yy
+                        .positional('ref', { type: 'string', demandOption: true, describe: 'z. B. paperless:123' })
+                        .option('id', { type: 'string', describe: 'Vertrag, dessen Felder verglichen werden' })
+                        .option('entity', { type: 'string', describe: 'Entität (ohne --id nötig)' })
+                        .options(jsonOption),
+                handler: (argv) =>
+                    runAndExit(
+                        async () => {
+                            if (!contractExtractionAvailable()) {
+                                throw new Error(
+                                    'Die KI ist aus oder nicht eingerichtet — die Felder trägt man mit "contracts speichern" ein.',
+                                );
+                            }
+                            return suggestContractFromDocument({
+                                documentRef: String(argv.ref),
+                                contractId: argv.id as string | undefined,
+                                entityId: argv.entity as string | undefined,
+                            });
+                        },
+                        { print: argv.json ? (v) => console.log(JSON.stringify(v, null, 2)) : printProposal },
+                    ),
             })
             .command({
                 command: 'fristen',

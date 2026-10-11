@@ -8,7 +8,8 @@
 
 import { z } from 'zod';
 
-const absent = (value: unknown): unknown => (value === '' || value === null ? undefined : value);
+/** Empty string, `null` and an omitted key all mean the same: the document does not state it. */
+export const absent = (value: unknown): unknown => (value === '' || value === null ? undefined : value);
 
 export const optionalText = () => z.preprocess(absent, z.string().optional());
 export const optionalNumber = () => z.preprocess(absent, z.number().optional());

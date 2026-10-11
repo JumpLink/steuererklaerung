@@ -24,11 +24,13 @@ import {
 
 import { parseGermanInput } from '../../../core/lib/parsing.ts';
 import { contractAccountKeys, type ContractSummary, saveContractRecord } from '../../../core/presenters/contracts.ts';
+import { contractExtractionAvailable } from '../data/contract-extract.ts';
 import type { AppEntity } from '../entities.ts';
 import { _, fmt } from '../i18n.ts';
 import { showToast } from '../toast.ts';
 import { errorDialog } from './dialogs.ts';
 import { CYCLE_LABEL, NOTICE_UNIT_LABEL, PAYMENT_METHOD_LABEL, STATUS_LABEL } from './vertrag-labels.ts';
+import { BhVertragVorschlagDialog } from './vertrag-vorschlag-dialog.ts';
 
 /** `undefined` = the field could not be read; `null` = it was left empty, which clears the value. */
 type Parsed<T> = T | null | undefined;
@@ -90,6 +92,7 @@ export class BhVertragFormDialog {
         this.dialog.set_title(c ? _('Edit contract') : _('New contract'));
         const page = new Adw.PreferencesPage();
 
+        if (contractExtractionAvailable()) page.add(this.buildExtractGroup());
         page.add(this.buildContractGroup(c));
         page.add(this.buildPaymentGroup(c));
         page.add(this.buildTermGroup(c));
@@ -104,6 +107,58 @@ export class BhVertragFormDialog {
 
         this.dialog.add(page);
         this.dialog.present(parent);
+    }
+
+    /**
+     * Fill the form from a document instead of typing it. The reading only pre-fills these rows —
+     * nothing is written until Save, which is also why a contract that does not exist yet can be
+     * started this way.
+     */
+    private buildExtractGroup(): Adw.PreferencesGroup {
+        const group = new Adw.PreferencesGroup({
+            title: _('Take the data from a document'),
+            description: _(
+                'Reads term, notice period and price off a document in the document store and offers them field by field. Only Save writes anything.',
+            ),
+        });
+        const row = new Adw.EntryRow({ title: _('Document (reference)'), showApplyButton: true });
+        row.set_tooltip_text(_('The reference in the document store, e.g. paperless:42.'));
+        row.connect('apply', () => {
+            const ref = row.get_text()?.trim() ?? '';
+            if (!ref) return;
+            new BhVertragVorschlagDialog().open(this.dialog, {
+                entity: this.entity,
+                documentRef: ref,
+                ...(this.existing ? { contractId: this.existing.id } : {}),
+                onApply: (input) => this.applyToRows(input),
+            });
+        });
+        group.add(row);
+        return group;
+    }
+
+    /** The accepted fields into the form rows — the one place the proposal touches this dialog. */
+    private applyToRows(input: ContractInput): void {
+        const setText = (row: Adw.EntryRow, value: string | null | undefined) => {
+            if (value != null) row.set_text(value);
+        };
+        const setNumber = (row: Adw.EntryRow, value: number | null | undefined) => {
+            if (value != null) row.set_text(String(value));
+        };
+        setText(this.counterpartyRow, input.counterparty);
+        setText(this.contractNumberRow, input.contractNumber);
+        setText(this.startDateRow, input.startDate);
+        setNumber(this.amountRow, input.amount);
+        setNumber(this.initialTermRow, input.initialTermMonths);
+        setNumber(this.renewalRow, input.renewalMonths);
+        setNumber(this.noticeValueRow, input.noticeValue);
+        if (input.cycle != null) this.cycleRow.set_selected(indexOfOptional(CONTRACT_CYCLES, input.cycle));
+        if (input.noticeUnit != null) this.noticeUnitRow.set_selected(indexOfOptional(NOTICE_UNITS, input.noticeUnit));
+        if (input.autoRenewal != null) this.autoRenewalRow.set_active(input.autoRenewal);
+        // The name is the one required field and not something a contract document states reliably —
+        // offer the provider for it rather than leaving the form unsavable.
+        if (!(this.nameRow.get_text()?.trim() ?? '') && input.counterparty) this.nameRow.set_text(input.counterparty);
+        showToast(_('Fields filled in — check them and save'));
     }
 
     private buildContractGroup(c: ContractSummary | null): Adw.PreferencesGroup {

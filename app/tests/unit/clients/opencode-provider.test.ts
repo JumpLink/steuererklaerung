@@ -1,6 +1,5 @@
 import { describe, it, expect } from '@gjsify/unit';
 import { z } from 'zod';
-import type { AgentHandle, OpenAgentOptions } from '@lotse/core';
 import {
     AiJobError,
     completeJson,
@@ -10,73 +9,10 @@ import {
 } from '../../../src/core/clients/llm/index.ts';
 import { ExtractedInvoiceFieldsSchema } from '../../../src/core/actions/paperless/extract-invoice.ts';
 import { emptyTelemetry } from '../../../src/core/clients/llm/types.ts';
+import { fakeAgent, fakeAgentProvider as provider } from '../../helpers/fake-opencode-agent.ts';
 
-// Synthetic only: a fake agent stands in for `opencode acp`, nothing is spawned and no document is read.
+// Synthetic only: the fake agent stands in for `opencode acp`, nothing is spawned and no document is read.
 const SECRET = 'Musterfirma GmbH, Rechnung 4711';
-
-interface FakeAgentOptions {
-    answer: string;
-    models?: string[];
-    current?: string;
-    stopReason?: string;
-    failNewSession?: Error;
-    /** The turn never ends: only a timeout or an abort stops the job. */
-    hang?: boolean;
-}
-
-function fakeAgent(fake: FakeAgentOptions): (options: OpenAgentOptions) => Promise<AgentHandle> {
-    const models = fake.models ?? ['anthropic/claude-sonnet-5-5'];
-    let current = fake.current ?? models[0];
-    const configOptions = () => [
-        {
-            id: 'model',
-            name: 'Model',
-            category: 'model',
-            type: 'select',
-            currentValue: current,
-            options: models.map((value) => ({ value, name: value })),
-        },
-    ];
-    return async () => {
-        let listener: ((notification: unknown) => void) | null = null;
-        const client = {
-            newSession: async () => {
-                if (fake.failNewSession) throw fake.failNewSession;
-                return { sessionId: 's1', configOptions: configOptions() };
-            },
-            setConfigOption: async ({ value }: { value: string }) => {
-                current = value;
-                return { configOptions: configOptions() };
-            },
-            onSessionUpdate: (callback: (notification: unknown) => void) => {
-                listener = callback;
-                return () => {
-                    listener = null;
-                };
-            },
-            prompt: async () => {
-                if (fake.hang) return new Promise<never>(() => {});
-                listener?.({
-                    sessionId: 's1',
-                    update: { sessionUpdate: 'agent_message_chunk', content: { type: 'text', text: fake.answer } },
-                });
-                return { stopReason: fake.stopReason ?? 'end_turn' };
-            },
-            cancel: () => {},
-        };
-        return { client, logLines: [], agentInfo: 'fake 0.0.0', close: () => {} } as unknown as AgentHandle;
-    };
-}
-
-function provider(fake: FakeAgentOptions, model?: string, timeoutMs = 5_000): OpencodeProvider {
-    return new OpencodeProvider({
-        model,
-        command: { command: 'fake-agent', args: [] } as never,
-        cwd: '/tmp',
-        open: fakeAgent(fake),
-        timeoutMs,
-    });
-}
 
 const Answer = z.object({ document_type_id: z.number().int().nullable(), reason: z.string() });
 

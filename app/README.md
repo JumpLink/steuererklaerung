@@ -377,8 +377,14 @@ nie gespeichert); `contracts speichern [--id …] --entity … --name … [--bet
 Mandatsreferenz, IBAN, Name oder Suchtext) und Befunde: fehlende, zurückgebuchte (Rücklastschrift binnen 60
 Tagen) und geänderte Zahlungen, gemessen an der neuesten Buchung. `contracts buchung <id> <txId> --als
 linked|rejected|none`, `contracts dokument <id> <ref> --rolle …`, `contracts archivieren <id>`;
-`contracts fristen [--tage 90] [--ics datei.ics] [--erinnerung 3m,2m,14d]` für Erinnerung und Kalender (gestaffelte Alarme 3 Monate, 2 Monate und 14 Tage vorher, frei wählbar). MCP:
-`contracts_list`, `contracts_get`, `contracts_match`, `contracts_deadlines` (read-only), `contracts_save`,
+`contracts fristen [--tage 90] [--ics datei.ics] [--erinnerung 3m,2m,14d]` für Erinnerung und Kalender (gestaffelte Alarme 3 Monate, 2 Monate und 14 Tage vorher, frei wählbar).
+`contracts vorschlag <ref> [--id <vertrag>] [--entity …] [--json]` liest Laufzeit, Kündigungsfrist, Preis und
+Vertragspartner aus einem Dokument (`paperless:42` oder eine eingebaute Id) und **gibt sie nur aus** — je Feld
+mit Sicherheit, Textstelle und dem bisher eingetragenen Wert; geschrieben wird nichts, dafür ist
+`contracts speichern` da. Braucht den eingeschalteten Assistenten und eine eingerichtete KI; gratis gehostete
+Modelle sind gesperrt, bevor der Text das Gerät verlässt. MCP:
+`contracts_list`, `contracts_get`, `contracts_match`, `contracts_deadlines`,
+`contracts_suggest_from_document` (read-only), `contracts_save`,
 `contracts_archive`, `contracts_link_transaction`, `contracts_link_document` (schreibend).
 Oberfläche: die Ansicht **Verträge** in der nativen App (Liste, Detail, Formular, `.ics`-Export) —
 [docs/app/README.md](../docs/app/README.md#14-verträge--laufzeit-kündigungsfristen-abbuchungen).

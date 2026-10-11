@@ -23,7 +23,10 @@ import {
     decideContractTransaction,
     linkContractDocument,
     loadContractDetail,
+    saveContractRecord,
 } from '../../../core/presenters/contracts.ts';
+import { contractExtractionAvailable } from '../data/contract-extract.ts';
+import type { AppEntity } from '../entities.ts';
 import { _, _n, fmt } from '../i18n.ts';
 import { showToast } from '../toast.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
@@ -42,9 +45,11 @@ import {
     STATUS_LABEL,
     URGENCY_CSS,
 } from './vertrag-labels.ts';
+import { BhVertragVorschlagDialog } from './vertrag-vorschlag-dialog.ts';
 
 export class BhVertragDetailDialog {
     private dialog!: Adw.Dialog;
+    private entity!: AppEntity;
     private contractId = '';
     private onChanged: () => void = () => {};
     private page: Adw.PreferencesPage | null = null;
@@ -52,7 +57,13 @@ export class BhVertragDetailDialog {
     /** The role a newly attached document gets; remembered across a rebuild of the groups. */
     private documentRole: ContractDocumentRole = 'contract';
 
-    open(parent: Gtk.Widget, contractId: string, hooks: { onEdit: () => void; onChanged: () => void }): void {
+    open(
+        parent: Gtk.Widget,
+        entity: AppEntity,
+        contractId: string,
+        hooks: { onEdit: () => void; onChanged: () => void },
+    ): void {
+        this.entity = entity;
         this.contractId = contractId;
         this.onChanged = hooks.onChanged;
         this.dialog = new Adw.Dialog({ title: _('Contract'), contentWidth: 600, contentHeight: 720 });
@@ -359,6 +370,22 @@ export class BhVertragDetailDialog {
                     }),
                 ),
             });
+            // Only with the AI on: the action exists or it does not, rather than explaining itself
+            // after being pressed. Without it the same fields are typed in the edit dialog.
+            if (contractExtractionAvailable()) {
+                const read = new Gtk.Button({
+                    label: _('Read out'),
+                    valign: Gtk.Align.CENTER,
+                    cssClasses: ['flat'],
+                });
+                read.set_tooltip_text(
+                    fmt(_('Read term and price from {ref} — you confirm each field afterwards'), {
+                        ref: doc.documentRef,
+                    }),
+                );
+                read.connect('clicked', () => this.readFromDocument(doc.documentRef));
+                row.add_suffix(read);
+            }
             const detach = new Gtk.Button({ label: _('Detach'), valign: Gtk.Align.CENTER, cssClasses: ['flat'] });
             detach.set_tooltip_text(fmt(_('Detach document {ref} from the contract'), { ref: doc.documentRef }));
             detach.connect('clicked', () => this.linkDocument(doc.documentRef, null));
@@ -384,6 +411,28 @@ export class BhVertragDetailDialog {
         });
         group.add(refRow);
         return group;
+    }
+
+    /**
+     * Read the contract data off one of its documents. The proposal dialog decides nothing; what
+     * comes back are the fields the person ticked, saved through the same action as the edit form.
+     */
+    private readFromDocument(ref: string): void {
+        new BhVertragVorschlagDialog().open(this.dialog, {
+            entity: this.entity,
+            documentRef: ref,
+            contractId: this.contractId,
+            onApply: (input) => {
+                try {
+                    saveContractRecord(input);
+                    showToast(_('Contract updated from the document'));
+                    this.onChanged();
+                    this.refresh();
+                } catch (err) {
+                    void errorDialog(this.dialog, _('Could not save'), message(err));
+                }
+            },
+        });
     }
 
     private linkDocument(ref: string, role: ContractDocumentRole | null): void {

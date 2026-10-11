@@ -330,7 +330,18 @@ Ein Klick öffnet die Detailansicht: Stammdaten, die Herleitung der Frist, sämt
 Mindestlaufzeit über die Kündigungsfrist und Verlängerung bis zur Gläubiger-Id, an der eine
 SEPA-Lastschrift erkannt wird. **Archivieren** nimmt den Vertrag aus der Liste, ohne ihn zu löschen.
 
-Als Kommandos: `steuer contracts liste|zeige|abgleich|fristen` — siehe
+**Aus dem Dokument auslesen** (nur wenn der Assistent eingeschaltet und eine KI eingerichtet ist):
+hinter jedem verknüpften Beleg steht **Auslesen**, im Formular für einen neuen Vertrag gibt es
+dafür ganz oben die Gruppe **Die Daten aus einem Dokument übernehmen**. Gelesen werden
+Vertragspartner, Vertragsnummer, Beginn, Mindestlaufzeit, Verlängerung, Kündigungsfrist,
+automatische Verlängerung, Betrag und Intervall. Das Ergebnis ist ein **Vorschlag**: je Feld der
+gelesene Wert, der bisher eingetragene daneben, die Sicherheit und die Textstelle, aus der er
+stammt. Übernommen wird nur, was eingeschaltet ist, und erst beim Speichern — eine KI liest einen
+Vertrag, sie unterschreibt ihn nicht. Eine um einen Monat falsche Kündigungsfrist verlängert
+sonst still um ein Jahr. Gratis gehostete Modelle sind für diesen Weg gesperrt (ein Vertrag nennt
+Anbieter, Konto und oft die IBAN); die Sperre greift, bevor der Text das Gerät verlässt.
+
+Als Kommandos: `steuer contracts liste|zeige|abgleich|fristen|vorschlag` — siehe
 [`app/README.md`](../../app/README.md).
 
 ## 15. Konten — Anbindungen und Import
