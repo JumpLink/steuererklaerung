@@ -92,6 +92,5 @@ nichts auszuwählen.
   eigene Positivliste; das wäre dann eine Liste, die veraltet und jemanden von einem Modell
   aussperrt, für das er zahlt.
 
-Technisch: die Pakete `@lotse/*` sind **noch nicht veröffentlicht**, werden aus dem Quellcode
-verlinkt, und im Flatpak ist das Panel deshalb noch nicht enthalten —
-[lotse aus dem Quellcode einbinden](lotse-entwicklung.md).
+Technisch: die Pakete `@lotse/*` kommen von npm; ein Entwicklungs-Link auf einen lokalen Checkout
+ist optional — [lotse einbinden](lotse-entwicklung.md).
