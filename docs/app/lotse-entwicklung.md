@@ -3,11 +3,11 @@
 Das Assistenten-Panel „lotse" (siehe [KI-Assistent und MCP-Server](ki-und-mcp.md#der-zweite-assistent--lotse))
 nutzt die Pakete `@lotse/core`, `@lotse/session` und `@lotse/widget` aus
 [JumpLink/lotse](https://github.com/JumpLink/lotse). Sie sind auf npm veröffentlicht
-(`@lotse/{acp,session,core,widget}` ab 0.2.0).
+(`@lotse/{acp,session,core,widget}` ab 0.2.0, aktuell 0.3.0).
 
 ## Standard: aus der Registry
 
-`app/package.json` führt die drei Pakete als `^0.2.0`, `gjsify-lock.json` hält die Registry-Einträge
+`app/package.json` führt die drei Pakete als `^0.3.0`, `gjsify-lock.json` hält die Registry-Einträge
 (einschließlich des transitiven `@lotse/acp`). Es braucht nichts Besonderes:
 
 ```bash
