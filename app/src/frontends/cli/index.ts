@@ -6,6 +6,7 @@ export * from './hinweise.ts';
 export * from './buchungen.ts';
 export * from './belege.ts';
 export * from './laufende-kosten.ts';
+export * from './contracts.ts';
 export * from './filing.ts';
 export * from './umsatz-aufstellung.ts';
 export * from './qonto.ts';

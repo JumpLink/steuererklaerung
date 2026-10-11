@@ -37,3 +37,4 @@ status line and marks each planned step as **planned, not implemented**.
 | [0001](0001-country-modules-and-per-entity-tax-switch.md) | Country modules and a per-entity switch for German tax features | Accepted (steps 1–3) |
 | [0002](0002-all-ai-through-lotse-and-opencode.md) | All AI features go through lotse and the bundled opencode | Accepted (all steps planned) |
 | [0003](0003-backend-agnostic-dms-inbox-tools.md) | Backend-agnostic `dms_*` tools for the inbox workflow | Accepted (CLI step planned) |
+| [0004](0004-contracts.md) | Contracts (Verträge) | Accepted (steps 1–3; GUI, proposals, letters planned) |

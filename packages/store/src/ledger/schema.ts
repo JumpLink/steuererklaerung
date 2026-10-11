@@ -19,7 +19,7 @@
 
 import { type LedgerDatabase, withTransaction } from "./db.ts";
 
-export const SCHEMA_VERSION = 26;
+export const SCHEMA_VERSION = 27;
 
 /**
  * The `classifications` DDL (schema v6). Defined once so the fresh-database baseline
@@ -372,6 +372,34 @@ const STATEMENTS: readonly string[] = [
      entity_id TEXT NOT NULL, invoice_id TEXT NOT NULL, entry_id TEXT NOT NULL,
      PRIMARY KEY (entity_id, invoice_id, entry_id))`,
   `CREATE INDEX IF NOT EXISTS idx_invoice_time_links_entry ON invoice_time_links(entry_id)`,
+
+  // --- Verträge (schema v27, ADR 0004) ---
+  // A contract with its term and payment data. entity_id is the WORKSPACE entity id (no FK), like
+  // tax_assessments. counterparty_ref is DMS-agnostic like filing_documents.document_ref. Money in REAL
+  // euros; amount is positive. Notice deadlines and findings are derived on read, never stored.
+  `CREATE TABLE IF NOT EXISTS contracts (
+     id TEXT PRIMARY KEY, entity_id TEXT NOT NULL, name TEXT NOT NULL,
+     counterparty TEXT, counterparty_ref TEXT, contract_number TEXT, account_key TEXT, category TEXT,
+     amount REAL, cycle TEXT, amount_tolerance REAL,
+     start_date TEXT, initial_term_months INTEGER, renewal_months INTEGER,
+     notice_value INTEGER, notice_unit TEXT, auto_renewal INTEGER NOT NULL DEFAULT 1, end_date TEXT,
+     payment_method TEXT, creditor_id TEXT, mandate_reference TEXT, counterparty_iban TEXT, match_text TEXT,
+     status TEXT NOT NULL DEFAULT 'active', notes TEXT,
+     created_at TEXT NOT NULL, updated_at TEXT NOT NULL)`,
+  `CREATE INDEX IF NOT EXISTS idx_contracts_entity ON contracts(entity_id)`,
+  // A booking linked to a contract, or a candidate the owner said no to (keeps the matcher quiet).
+  // tx_id is a UNIFIED transaction id, FK-free like refund_links.
+  `CREATE TABLE IF NOT EXISTS contract_transactions (
+     contract_id TEXT NOT NULL, tx_id TEXT NOT NULL, status TEXT NOT NULL,
+     decided_at TEXT NOT NULL, decided_by TEXT,
+     PRIMARY KEY (contract_id, tx_id))`,
+  `CREATE INDEX IF NOT EXISTS idx_contract_transactions_tx ON contract_transactions(tx_id)`,
+  // Documents of a contract: document_ref as in filing_documents; role contract|invoice|notice|confirmation|other.
+  `CREATE TABLE IF NOT EXISTS contract_documents (
+     contract_id TEXT NOT NULL, document_ref TEXT NOT NULL, role TEXT NOT NULL,
+     linked_at TEXT NOT NULL,
+     PRIMARY KEY (contract_id, document_ref))`,
+  `CREATE INDEX IF NOT EXISTS idx_contract_documents_doc ON contract_documents(document_ref)`,
 ];
 
 // Versioned upgrade steps on top of the idempotent baseline. STATEMENTS always describe
@@ -510,6 +538,8 @@ const UPGRADES: ReadonlyArray<{ to: number; statements: readonly string[] }> = [
       `ALTER TABLE documents ADD COLUMN amount_to_pay REAL`,
     ],
   },
+  // v26 → v27: add the `contracts`, `contract_transactions` and `contract_documents` tables (Verträge,
+  // ADR 0004). Purely additive like v24 → v25 — no UPGRADES entry; the SCHEMA_VERSION bump records it.
 ];
 
 /** True when the database carries no schema yet (fresh file or :memory:). */

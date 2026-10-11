@@ -72,6 +72,7 @@ const GROUP_LABEL: Record<McpGroup, string> = {
     elster: 'ELSTER',
     invoices: _('Invoices (self)'),
     contacts: _('Contacts'),
+    contracts: _('Contracts'),
 };
 
 export class BhEinstellungenView extends Adw.Bin {

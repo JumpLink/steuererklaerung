@@ -369,6 +369,18 @@ fallen aus den Geld-Prüfungen. Optionen: `--entity`, `--json`. MCP: `laufende_k
 `laufende_kosten_entscheiden` (schreibend). In der App: Tab „Laufende Kosten" im Buchungen-Hub.
 Oberflächen-Test: `app/dev/laufende-kosten-e2e.sh [shots-dir]`.
 
+**`contracts`** — Verträge (ADR 0004) im Ledger: Anbieter, Vertragsnummer, Konto, Kategorie, Betrag + Zyklus +
+Toleranz, Beginn, Erstlaufzeit, Verlängerung (leer = unbefristet), Kündigungsfrist, Zahlart samt Gläubiger-ID
+und Mandatsreferenz, Status. `contracts` listet sie mit Monatsbetrag und nächster Kündigungsfrist (berechnet,
+nie gespeichert); `contracts speichern [--id …] --entity … --name … [--betrag …] [--zyklus …] …` legt an oder
+ändert (`null` leert ein Feld); `contracts abgleich <id>` zeigt passende Abbuchungen (über Gläubiger-ID,
+Mandatsreferenz, IBAN, Name oder Suchtext) und Befunde: fehlende, zurückgebuchte (Rücklastschrift binnen 60
+Tagen) und geänderte Zahlungen, gemessen an der neuesten Buchung. `contracts buchung <id> <txId> --als
+linked|rejected|none`, `contracts dokument <id> <ref> --rolle …`, `contracts archivieren <id>`;
+`contracts fristen [--tage 90] [--ics datei.ics]` für Erinnerung und Kalender (Alarm 14 Tage vorher). MCP:
+`contracts_list`, `contracts_get`, `contracts_match`, `contracts_deadlines` (read-only), `contracts_save`,
+`contracts_archive`, `contracts_link_transaction`, `contracts_link_document` (schreibend).
+
 ### zve — zu versteuerndes Einkommen je Veranlagungsjahr
 
 Das **zvE** (§2 Abs. 5 EStG) eines Jahres als abfragbarer Wert **mit Herkunft**. Einkommensabhängige

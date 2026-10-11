@@ -196,6 +196,13 @@ source and every AI metadata decision records **why** it was made.
   `mcp.allowWrite`. Inbox = Paperless documents with the `tag_ids.inbox` tag; built-in
   DMS documents never reviewed (`ai_extracted_at IS NULL`). `paperless_*` stays and is
   Paperless-specific.
+- **Contract tools (`contracts_*`, ADR 0004).** Reads: `contracts_list`, `contracts_get`,
+  `contracts_match` (candidate bookings + findings missing/returned/changed),
+  `contracts_deadlines` (upcoming notice deadlines, optionally as .ics). Writes behind
+  `mcp.allowWrite`: `contracts_save`, `contracts_archive`, `contracts_link_transaction`,
+  `contracts_link_document` (`src/frontends/mcp/tools/contracts.ts`, logic in
+  `src/core/actions/contracts.ts` + the pure rules in `src/core/contracts/`; ledger tables
+  since schema v27). Deadlines and findings are derived on every read, never stored.
 - **Two AI-usage modes, both drawing from `prompts.ts`:**
   - **External** — Claude Code (or another MCP client) drives the workflow through
     the `paperless_*` + `document-workflow` MCP tools, guided by the MCP **prompts**
