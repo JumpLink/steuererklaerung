@@ -56,12 +56,10 @@ jobs:
       # before pushing. Pinned rather than a branch name on purpose: a moving ref turns an
       # unrelated lotse commit into a red build on THIS repo's PR.
       #
-      # Currently JumpLink/lotse `feat/model-policy` (PR #38) — the commit that adds the
-      # `modelPolicy` option the pane passes, so no free hosted model can answer a prompt that
-      # carries this person's receipts. RE-PIN TO THE MERGE COMMIT once #38 lands: a branch head is
-      # rewritable, and a force-push under this pin changes what CI built without changing a line
-      # here. It also carries `fix/peer-girs` (the @girs peer deps the host's single-copy type
-      # resolution needs), which is why that pin is gone rather than lost.
+      # Currently JumpLink/lotse `main` at the merge of PR #38, which adds the `modelPolicy`
+      # option the pane passes, so no free hosted model can answer a prompt that carries this
+      # person's receipts. It also carries `fix/peer-girs` (#36, the @girs peer deps the host's
+      # single-copy type resolution needs). Pin merge commits only: a branch head is rewritable.
       LOTSE_COMMIT: 7d7c3952f61cfae9a280c1eb85d25df9ed29f5fa
     steps:
       - name: Install system prerequisites (gjs + runtime typelibs + prebuild deps)
