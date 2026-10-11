@@ -4,3 +4,11 @@
 [submodule "refs/lib-fints"]
 	path = refs/lib-fints
 	url = https://github.com/robocode13/lib-fints.git
+[submodule "refs/firefly-iii"]
+	path = refs/firefly-iii
+	url = https://github.com/firefly-iii/firefly-iii
+	shallow = true
+[submodule "refs/wallos"]
+	path = refs/wallos
+	url = https://github.com/ellite/Wallos
+	shallow = true
