@@ -69,8 +69,9 @@ subprocesses. It stays a standalone app that keeps growing, and it will also shi
 
 ## Consequences
 
-- The app depends on lotse's packages and bundles opencode in its Flatpak; opencode's version is
-  pinned through lotse's agent catalog. opencode announces a v2 API, so the job API in lotse is
+- The app depends on lotse's packages and is meant to bundle opencode in a future Flatpak
+  (planned, not built yet; packaging today is deb/rpm); opencode's version is pinned through
+  lotse's agent catalog. opencode announces a v2 API, so the job API in lotse is
   the one place that absorbs its changes.
 - Every AI path runs under GJS; the Node-only Claude path disappears.
 - Until step 7 the existing providers keep working unchanged.
