@@ -39,7 +39,15 @@ function doc(over: Partial<DmsDocument> = {}): DmsDocument {
 
 /** In-memory provider: records every write so tests can assert on it. */
 function fakeProvider(kind: 'builtin' | 'paperless', initial: DmsDocument) {
-    const state = { doc: initial, inbox: true, writes: [] as Array<Partial<DmsDocument>> };
+    const state = {
+        doc: initial,
+        inbox: true,
+        writes: [] as Array<Partial<DmsDocument>>,
+        vocab: { correspondent: ['ACME'], documentType: ['Rechnung'], tag: ['finance', 'school'] } as Record<
+            string,
+            string[]
+        >,
+    };
     const provider: DmsProvider = {
         kind,
         list: async () => [state.doc],
@@ -53,6 +61,11 @@ function fakeProvider(kind: 'builtin' | 'paperless', initial: DmsDocument) {
         setMetadata: async (_id, meta) => {
             state.writes.push(meta);
             state.doc = { ...state.doc, ...meta };
+        },
+        listVocabulary: async (k) => state.vocab[k].map((n) => ({ id: n, name: n })),
+        createVocabularyEntry: async (k, name) => {
+            state.vocab[k].push(name);
+            return { id: name, name };
         },
     };
     return { provider, state };
@@ -102,7 +115,22 @@ function stubPaperless(): Call[] {
             const method = init?.method ?? 'GET';
             calls.push({ method, url, body: init?.body ? JSON.parse(init.body) : undefined });
             let payload: unknown = {};
-            if (url.includes('/api/correspondents/')) payload = { count: 0, next: null, results: [] };
+            const page = (results: unknown[]) => ({ count: results.length, next: null, results });
+            if (method === 'POST') payload = { id: 99, name: JSON.parse(init?.body ?? '{}').name };
+            else if (url.includes('/api/correspondents/')) payload = page([{ id: 20, name: 'ACME' }]);
+            else if (url.includes('/api/document_types/'))
+                payload = page([
+                    { id: 1, name: 'Eingangsrechnung' },
+                    { id: 2, name: 'Ausgangsrechnung' },
+                    { id: 3, name: 'Vertrag' },
+                ]);
+            else if (url.includes('/api/tags/'))
+                payload = page([
+                    { id: 70, name: 'inbox' },
+                    { id: 71, name: 'ai_reviewed' },
+                    { id: 3, name: 'finance' },
+                    { id: 4, name: 'school' },
+                ]);
             else if (url.includes('tags__id__in')) payload = { count: 1, next: null, results: [plDoc] };
             else if (url.includes('/api/documents/5/')) payload = plDoc;
             return {
@@ -202,12 +230,57 @@ export default async () => {
                 expect((await listInbox(provider)).count).toBe(0);
             });
 
-            await it('reports paperless-unwritable fields instead of writing them', async () => {
+            await it('reports fields a provider without lists cannot write and keeps the inbox', async () => {
                 const { provider, state } = fakeProvider('paperless', doc({ dms: 'paperless' }));
+                delete provider.listVocabulary;
                 const res = await applyMetadata(provider, '1', { correspondent: 'ACME', gross: 5 }, { model: 'm' });
                 expect(res.notWritable.join(',')).toBe('correspondent');
                 expect(res.applied.join(',')).toBe('gross');
+                expect(res.markedReviewed).toBe(false);
                 expect(state.writes[0].correspondent).toBe(undefined);
+            });
+
+            await it('refuses an unknown correspondent, type or tag without create', async () => {
+                const { provider, state } = fakeProvider('builtin', doc());
+                for (const bad of [{ correspondent: 'Nope' }, { documentType: 'Nope' }, { tags: { add: ['Nope'] } }]) {
+                    let threw = false;
+                    try {
+                        await applyMetadata(provider, '1', bad, { model: 'm' });
+                    } catch {
+                        threw = true;
+                    }
+                    expect(threw).toBe(true);
+                }
+                expect(state.writes.length).toBe(0);
+            });
+
+            await it('create: true previews the new entries and creates them on apply', async () => {
+                const { provider, state } = fakeProvider('builtin', doc());
+                const prev = await proposeMetadata(
+                    provider,
+                    '1',
+                    { correspondent: 'Neu', create: true },
+                    { model: 'm' },
+                );
+                expect(prev.creates.length).toBe(1);
+                expect(state.vocab.correspondent.includes('Neu')).toBe(false);
+                const res = await applyMetadata(provider, '1', { correspondent: 'Neu', create: true }, { model: 'm' });
+                expect(res.created.length).toBe(1);
+                expect(state.vocab.correspondent.includes('Neu')).toBe(true);
+                expect(state.doc.correspondent).toBe('Neu');
+            });
+
+            await it('computes the tag diff and drops the document from the inbox when complete', async () => {
+                const { provider, state } = fakeProvider('builtin', doc({ tags: ['finance'] }));
+                const res = await applyMetadata(
+                    provider,
+                    '1',
+                    { tags: { add: ['school'], remove: ['finance'] }, documentType: 'Rechnung' },
+                    { model: 'm' },
+                );
+                expect(state.doc.tags.join(',')).toBe('school');
+                expect(state.doc.documentType).toBe('Rechnung');
+                expect(res.markedReviewed).toBe(true);
             });
 
             await it('sets the payment status and rejects unknown values', async () => {
@@ -270,6 +343,33 @@ export default async () => {
                 expect(typeof got?.aiNote).toBe('string');
             });
 
+            await it('lists used values as vocabulary and writes classification fields', async () => {
+                const p = new BuiltinDmsProvider('jumplink');
+                const a = await p.store({ bytes: Buffer.from('v-1'), filename: 'a.pdf', mimeType: 'application/pdf' });
+                const b = await p.store({ bytes: Buffer.from('v-2'), filename: 'b.pdf', mimeType: 'application/pdf' });
+                await applyMetadata(
+                    p,
+                    a.id,
+                    {
+                        correspondent: 'ACME',
+                        documentType: 'Vertrag',
+                        direction: 'incoming',
+                        tags: { add: ['x', 'y'] },
+                        create: true,
+                    },
+                    { model: 'm' },
+                );
+                expect((await p.listVocabulary('correspondent')).map((e) => e.name).join(',')).toBe('ACME');
+                expect((await p.listVocabulary('tag')).map((e) => e.name).join(',')).toBe('x,y');
+                await applyMetadata(p, b.id, { tags: { add: ['x'] }, correspondent: 'ACME' }, { model: 'm' });
+                await applyMetadata(p, a.id, { tags: { remove: ['x'] } }, { model: 'm' });
+                const got = await p.get(a.id);
+                expect(got?.tags.join(',')).toBe('y');
+                expect(got?.documentType).toBe('Vertrag');
+                expect(got?.direction).toBe('incoming');
+                expect((await p.get(b.id))?.tags.join(',')).toBe('x');
+            });
+
             await it('persists payment status, due date and amount to pay', async () => {
                 const p = new BuiltinDmsProvider('jumplink');
                 const stored = await p.store({
@@ -323,6 +423,78 @@ export default async () => {
                 };
                 expect(body.custom_fields.find((f) => f.field === 9)?.value).toBe('opt-bezahlt');
                 expect(body.custom_fields.find((f) => f.field === 10)?.value).toBe('2026-11-01');
+            });
+
+            await it('lists the server vocabulary and maps ids to names on documents', async () => {
+                stubPaperless();
+                const p = new PaperlessDmsProvider(PL_CONFIG, creds);
+                expect((await p.listVocabulary('documentType')).map((e) => e.name).join(',')).toBe(
+                    'Eingangsrechnung,Ausgangsrechnung,Vertrag',
+                );
+                const d = await p.get('5');
+                expect(d?.tags.join(',')).toBe('inbox,finance');
+                expect((await p.directionTypes()).incoming).toBe('Eingangsrechnung');
+            });
+
+            await it('writes correspondent, type and tags by name or id', async () => {
+                const calls = stubPaperless();
+                const p = new PaperlessDmsProvider(PL_CONFIG, creds);
+                await p.setMetadata('5', { correspondent: 'ACME', documentType: '3', tags: ['finance', 'school'] });
+                const body = calls.find((c) => c.method === 'PATCH')?.body as Record<string, unknown>;
+                expect(body.correspondent).toBe(20);
+                expect(body.document_type).toBe(3);
+                expect((body.tags as number[]).join(',')).toBe('3,4');
+            });
+
+            await it('writes direction as the invoice document type and rejects a contradiction', async () => {
+                const calls = stubPaperless();
+                const p = new PaperlessDmsProvider(PL_CONFIG, creds);
+                await p.setMetadata('5', { direction: 'outgoing' });
+                const body = calls.find((c) => c.method === 'PATCH')?.body as Record<string, unknown>;
+                expect(body.document_type).toBe(2);
+                let threw = false;
+                try {
+                    await p.setMetadata('5', { direction: 'incoming', documentType: 'Vertrag' });
+                } catch {
+                    threw = true;
+                }
+                expect(threw).toBe(true);
+            });
+
+            await it('an unknown name is an error and creates nothing', async () => {
+                const calls = stubPaperless();
+                const p = new PaperlessDmsProvider(PL_CONFIG, creds);
+                let threw = false;
+                try {
+                    await p.setMetadata('5', { correspondent: 'Nope' });
+                } catch {
+                    threw = true;
+                }
+                expect(threw).toBe(true);
+                expect(calls.some((c) => c.method === 'POST' || c.method === 'PATCH')).toBe(false);
+            });
+
+            await it('create happens only through createVocabularyEntry, then the name resolves', async () => {
+                const calls = stubPaperless();
+                const p = new PaperlessDmsProvider(PL_CONFIG, creds);
+                const made = await p.createVocabularyEntry('tag', 'neu');
+                expect(made.name).toBe('neu');
+                expect(calls.filter((c) => c.method === 'POST').length).toBe(1);
+            });
+
+            await it('the action layer blocks an unknown tag on Paperless unless create is set', async () => {
+                const calls = stubPaperless();
+                const p = new PaperlessDmsProvider(PL_CONFIG, creds);
+                let threw = false;
+                try {
+                    await proposeMetadata(p, '5', { tags: { add: ['neu'] } }, { model: 'm' });
+                } catch {
+                    threw = true;
+                }
+                expect(threw).toBe(true);
+                const prev = await proposeMetadata(p, '5', { tags: { add: ['neu'] }, create: true }, { model: 'm' });
+                expect(prev.creates.length).toBe(1);
+                expect(calls.some((c) => c.method === 'POST')).toBe(false);
             });
 
             await it('refuses a payment status Paperless has no option for', async () => {

@@ -17,6 +17,12 @@ import {
     downloadThumbnail,
     type Document,
     listCorrespondents,
+    listDocumentTypes,
+    listTags,
+    createCorrespondent,
+    createDocumentType,
+    createTag,
+    fetchAllPages,
     resolvePaperlessConfig,
     type PaperlessConfig,
     type PaperlessCreds,
@@ -30,7 +36,14 @@ import {
     fetchAllPagesParallel,
 } from '@steuererklaerung/paperless';
 import { fetchInvoiceDocsInPeriod } from './reconcile.ts';
-import type { DmsProvider, DmsDocument, DmsFile } from './types.ts';
+import type { DmsProvider, DmsDocument, DmsFile, DmsVocabularyEntry, DmsVocabularyKind } from './types.ts';
+import { findVocabularyEntry } from './vocabulary.ts';
+
+interface VocabMaps {
+    correspondent: Map<number, string>;
+    documentType: Map<number, string>;
+    tag: Map<number, string>;
+}
 
 /** Document date used by the period filter: payment date, else invoice date, else created. */
 function docDate(doc: Document, config: PaperlessFieldConfig): string | null {
@@ -77,8 +90,8 @@ function paymentStatusOf(doc: Document, config: PaperlessFieldConfig): string | 
     return raw;
 }
 
-/** Map a Paperless document to the DMS-agnostic shape. `corr` resolves the correspondent id → name. */
-function toDmsDocument(doc: Document, config: PaperlessFieldConfig, corr?: Map<number, string>): DmsDocument {
+/** Map a Paperless document to the DMS-agnostic shape. `names` resolves correspondent/type/tag ids → names. */
+function toDmsDocument(doc: Document, config: PaperlessFieldConfig, names?: VocabMaps): DmsDocument {
     const cf = config.custom_field_ids;
     const invNo = getCustomFieldValue(doc, cf.invoice_number);
     const linkedRaw = getCustomFieldValue(doc, cf.qonto_transaction_id);
@@ -93,12 +106,12 @@ function toDmsDocument(doc: Document, config: PaperlessFieldConfig, corr?: Map<n
         id: String(doc.id),
         dms: 'paperless',
         title: doc.title,
-        correspondent: doc.correspondent != null ? (corr?.get(doc.correspondent) ?? null) : null,
-        documentType: null,
+        correspondent: doc.correspondent != null ? (names?.correspondent.get(doc.correspondent) ?? null) : null,
+        documentType: doc.document_type != null ? (names?.documentType.get(doc.document_type) ?? null) : null,
         direction: directionOf(doc, config),
         created: docDate(doc, config),
         added: doc.added?.slice(0, 10) ?? null,
-        tags: [],
+        tags: (doc.tags ?? []).map((t) => names?.tag.get(t)).filter((t): t is string => t != null),
         invoiceNumber: invNo != null ? String(invNo) : null,
         net: moneyOf(doc, cf.total_net),
         gross: moneyOf(doc, cf.total_gross),
@@ -120,8 +133,8 @@ export class PaperlessDmsProvider implements DmsProvider {
     readonly kind = 'paperless' as const;
     /** Resolved per-entity config, or undefined to use the global env credentials. */
     private readonly cfg: PaperlessConfig | undefined;
-    /** Lazily-fetched correspondent id → name map (Paperless documents only carry the id). */
-    private corrCache: Map<number, string> | null = null;
+    /** Lazily-fetched id → name maps (documents only carry ids). Dropped when an entry is created. */
+    private vocabCache: Partial<Record<DmsVocabularyKind, Map<number, string>>> = {};
 
     constructor(
         private readonly config: PaperlessFieldConfig,
@@ -130,37 +143,79 @@ export class PaperlessDmsProvider implements DmsProvider {
         this.cfg = creds && (creds.url || creds.token) ? resolvePaperlessConfig(creds).config : undefined;
     }
 
-    /** Fetch + cache the correspondent id → name map (best-effort: failure leaves names unresolved). */
-    private async correspondentNames(): Promise<Map<number, string>> {
-        if (this.corrCache) return this.corrCache;
-        const map = new Map<number, string>();
-        try {
-            for (let page = 1; page <= 100; page++) {
-                const resp = await listCorrespondents({ page, page_size: 100 }, this.cfg);
-                for (const c of resp.results) map.set(c.id, c.name);
-                if (!resp.next || resp.results.length === 0) break;
-            }
-        } catch {
-            // leave names unresolved — the card just shows no correspondent
-        }
-        this.corrCache = map;
+    /** The server's own list for one kind, cached per provider instance. */
+    private async vocabMap(kind: DmsVocabularyKind): Promise<Map<number, string>> {
+        const hit = this.vocabCache[kind];
+        if (hit) return hit;
+        const lister = {
+            correspondent: listCorrespondents,
+            documentType: listDocumentTypes,
+            tag: listTags,
+        }[kind];
+        const items = await fetchAllPages((page, pageSize) => lister({ page, page_size: pageSize }, this.cfg));
+        const map = new Map(items.map((i) => [i.id, i.name] as [number, string]));
+        this.vocabCache[kind] = map;
         return map;
     }
 
-    async list(range: { from: string; to: string }): Promise<DmsDocument[]> {
-        const [docs, corr] = await Promise.all([
-            fetchInvoiceDocsInPeriod(this.config, range, this.cfg),
-            this.correspondentNames(),
+    /** Best-effort names for mapping documents: a failed lookup leaves names unresolved. */
+    private async names(): Promise<VocabMaps> {
+        const safe = async (k: DmsVocabularyKind) => {
+            try {
+                return await this.vocabMap(k);
+            } catch {
+                return new Map<number, string>();
+            }
+        };
+        const [correspondent, documentType, tag] = await Promise.all([
+            safe('correspondent'),
+            safe('documentType'),
+            safe('tag'),
         ]);
-        return docs.map((d) => toDmsDocument(d, this.config, corr));
+        return { correspondent, documentType, tag };
+    }
+
+    async listVocabulary(kind: DmsVocabularyKind): Promise<DmsVocabularyEntry[]> {
+        return [...(await this.vocabMap(kind))].map(([id, name]) => ({ id: String(id), name }));
+    }
+
+    async createVocabularyEntry(kind: DmsVocabularyKind, name: string): Promise<DmsVocabularyEntry> {
+        const create = { correspondent: createCorrespondent, documentType: createDocumentType, tag: createTag }[kind];
+        const made = await create({ name }, this.cfg);
+        delete this.vocabCache[kind];
+        return { id: String(made.id), name: made.name };
+    }
+
+    async directionTypes(): Promise<{ incoming: string | null; outgoing: string | null }> {
+        const types = await this.vocabMap('documentType');
+        const ids = this.config.document_type_ids;
+        return {
+            incoming: ids.incoming_invoice > 0 ? (types.get(ids.incoming_invoice) ?? null) : null,
+            outgoing: ids.outgoing_invoice > 0 ? (types.get(ids.outgoing_invoice) ?? null) : null,
+        };
+    }
+
+    /** Name or id → Paperless id; an unknown reference is an error (never auto-created here). */
+    private async idOf(kind: DmsVocabularyKind, ref: string): Promise<number> {
+        const entry = findVocabularyEntry(await this.listVocabulary(kind), ref);
+        if (!entry) throw new Error(`"${ref}" ist in Paperless nicht vorhanden (${kind}).`);
+        return Number(entry.id);
+    }
+
+    async list(range: { from: string; to: string }): Promise<DmsDocument[]> {
+        const [docs, names] = await Promise.all([
+            fetchInvoiceDocsInPeriod(this.config, range, this.cfg),
+            this.names(),
+        ]);
+        return docs.map((d) => toDmsDocument(d, this.config, names));
     }
 
     async get(id: string): Promise<DmsDocument | null> {
         const numId = Number(id);
         if (!Number.isFinite(numId)) return null;
         try {
-            const [doc, corr] = await Promise.all([getDocument(numId, this.cfg), this.correspondentNames()]);
-            return toDmsDocument(doc, this.config, corr);
+            const [doc, names] = await Promise.all([getDocument(numId, this.cfg), this.names()]);
+            return toDmsDocument(doc, this.config, names);
         } catch {
             return null;
         }
@@ -194,13 +249,13 @@ export class PaperlessDmsProvider implements DmsProvider {
     async listInbox(): Promise<DmsDocument[]> {
         const inbox = this.config.tag_ids?.inbox ?? 0;
         if (inbox <= 0) return [];
-        const [docs, corr] = await Promise.all([
+        const [docs, names] = await Promise.all([
             fetchAllPagesParallel((page, pageSize) =>
                 listDocuments({ tag_ids: [inbox], page, page_size: pageSize, ordering: 'id' }, this.cfg),
             ),
-            this.correspondentNames(),
+            this.names(),
         ]);
-        return docs.map((d) => toDmsDocument(d, this.config, corr));
+        return docs.map((d) => toDmsDocument(d, this.config, names));
     }
 
     async getText(id: string): Promise<string | null> {
@@ -226,6 +281,7 @@ export class PaperlessDmsProvider implements DmsProvider {
 
     /**
      * Write the fields Paperless can take from a {@link DmsDocument} patch: title, document date,
+     * correspondent, document type, direction (= the invoice type), tags (full replacement, by name or id),
      * invoice number, the money fields, KI-Hinweis and the payment triage. Fields whose custom
      * field is not configured are skipped silently; an unknown payment-status label is an error
      * (writing a raw label into a select field would store garbage).
@@ -259,6 +315,25 @@ export class PaperlessDmsProvider implements DmsProvider {
         const payload: UpdateDocumentPayload = {};
         if (meta.title != null) payload.title = meta.title;
         if (meta.created != null) payload.created = meta.created;
+        if (meta.correspondent != null) payload.correspondent = await this.idOf('correspondent', meta.correspondent);
+        // Direction is modelled as the invoice document type (document_type_ids), as everywhere else.
+        if (meta.direction != null) {
+            const typeId =
+                meta.direction === 'incoming'
+                    ? this.config.document_type_ids.incoming_invoice
+                    : this.config.document_type_ids.outgoing_invoice;
+            if (!typeId || typeId <= 0)
+                throw new Error(`Richtung "${meta.direction}": document_type_ids ist in Paperless nicht eingerichtet.`);
+            payload.document_type = typeId;
+        }
+        if (meta.documentType != null) {
+            const typeId = await this.idOf('documentType', meta.documentType);
+            if (payload.document_type != null && payload.document_type !== typeId)
+                throw new Error('Dokumenttyp und Richtung widersprechen sich (die Richtung ist der Rechnungstyp).');
+            payload.document_type = typeId;
+        }
+        if (meta.tags !== undefined)
+            payload.tags = await Promise.all(meta.tags.map((t) => this.idOf('tag', t)));
         if (updates.length > 0) {
             const doc = await getDocument(numId, this.cfg);
             payload.custom_fields = mergeCustomFields(doc.custom_fields ?? [], updates);

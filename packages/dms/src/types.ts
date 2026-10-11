@@ -90,6 +90,15 @@ export interface DmsDocument {
     amountToPay?: number | null;
 }
 
+/** The lists a DMS owns and a document points into. */
+export type DmsVocabularyKind = 'documentType' | 'correspondent' | 'tag';
+
+/** One entry of a DMS list. `id` is provider-scoped (Paperless: the numeric id; built-in: the name itself). */
+export interface DmsVocabularyEntry {
+    id: string;
+    name: string;
+}
+
 /** The raw bytes of a document file plus its MIME type. */
 export interface DmsFile {
     bytes: Uint8Array;
@@ -133,6 +142,19 @@ export interface DmsProvider {
     getText?(id: string): Promise<string | null>;
     /** Take a document out of the inbox (Paperless: swap the inbox tag for the reviewed tag). */
     markReviewed?(id: string): Promise<void>;
+    /**
+     * The back-end's own list of document types, correspondents or tags. Paperless: what the server
+     * holds. Built-in: the values already used by a document (the DMS has no separate tables).
+     * `setMetadata` takes `correspondent`, `documentType` and `tags` as an entry's name or id.
+     */
+    listVocabulary?(kind: DmsVocabularyKind): Promise<DmsVocabularyEntry[]>;
+    /** Create a list entry. Callers gate this behind an explicit opt-in; never call it implicitly. */
+    createVocabularyEntry?(kind: DmsVocabularyKind, name: string): Promise<DmsVocabularyEntry>;
+    /**
+     * Back-ends that model direction as a document type (Paperless): the type name standing for
+     * each direction, null when none is configured. Absent = `direction` is a field of its own.
+     */
+    directionTypes?(): Promise<{ incoming: string | null; outgoing: string | null }>;
     /** Link a document to a store transaction. */
     link?(id: string, txId: string): Promise<void>;
     /** Remove one document ⇄ transaction link (the inverse of {@link link}) — powers Undo. */

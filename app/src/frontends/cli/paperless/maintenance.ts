@@ -42,7 +42,7 @@ export const importAmazonSubcommand: CommandModule = {
 export const reviewMetadataSubcommand: CommandModule = {
     command: 'review-metadata',
     describe:
-        'Review document metadata (title, correspondent, document type, created date) via LLM; optionally run type-specific enrichment (e.g. invoice fields for invoice types). Use filters to limit scope. Default: only documents without tag ai_reviewed.',
+        'Review document metadata (title, correspondent, document type, created date) via LLM; optionally run type-specific enrichment (e.g. invoice fields for invoice types). Use filters to limit scope. Default: only documents without tag ai_reviewed. Not deprecated: it calls the LLM itself and runs type handlers; agent-driven classification goes through the dms_* tools.',
     builder: (y) =>
         y
             .option('force', {

@@ -182,7 +182,10 @@ source and every AI metadata decision records **why** it was made.
   `paperless_update_document` (Paperless only).
 - **Backend-agnostic inbox tools (`dms_*`, ADR 0003).** `dms_list_inbox`,
   `dms_get_document`, `dms_propose_metadata` (dry run), `dms_apply_metadata`,
-  `dms_set_payment_status`, `dms_match_payment` (`src/frontends/mcp/tools/dms.ts`,
+  `dms_set_payment_status`, `dms_match_payment`, and the vocabulary reads
+  `dms_list_document_types` / `dms_list_correspondents` / `dms_list_tags`; apply writes
+  correspondent, type, tags (`tags_add`/`tags_remove`) and direction by id or exact name,
+  creating unknown ones only with `create: true` (`src/frontends/mcp/tools/dms.ts`,
   logic in `src/core/actions/dms/inbox.ts`). The write tools sit behind
   `mcp.allowWrite`. Inbox = Paperless documents with the `tag_ids.inbox` tag; built-in
   DMS documents never reviewed (`ai_extracted_at IS NULL`). `paperless_*` stays and is

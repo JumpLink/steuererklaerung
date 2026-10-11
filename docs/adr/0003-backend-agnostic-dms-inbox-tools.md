@@ -29,8 +29,13 @@ inbox, no payment fields and no KI-Hinweis column.
   KI-Hinweis maps to the existing `documents.note` column.
 - Propose never calls a model. The agent is the caller; the tool validates and diffs.
 - Write tools carry `readOnlyHint: false`, so the existing `mcp.allowWrite` gate drops them.
-- Paperless cannot write correspondent, document type or direction through the DMS interface
-  (names need ids). They are reported as `notWritable`; `paperless_update_document` stays.
+- Correspondent, document type, tags (add/remove) and direction are writable on both back-ends.
+  The vocabulary comes from the DMS itself (`dms_list_document_types`, `dms_list_correspondents`,
+  `dms_list_tags`); values are referenced by id or exact name. An unknown name is an error, and
+  nothing is created unless the call sets `create: true` (behind the write gate). On Paperless,
+  direction is the invoice document type (`document_type_ids`), as everywhere else; a
+  contradicting explicit type is an error. A provider without lists reports those fields as
+  `notWritable` and the document stays in the inbox. `paperless_update_document` stays.
 - `paperless_*` tools are unchanged and documented as Paperless-specific.
 
 ## Order of work
