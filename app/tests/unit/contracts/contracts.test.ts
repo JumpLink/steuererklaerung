@@ -20,8 +20,12 @@ import {
     minusMonths,
     monthlyAmount,
     noticeDeadline,
+    parseReminderOffsets,
+    paymentAccounts,
+    PRICE_INCREASE_HINT,
     upcomingDeadlines,
 } from '../../../src/core/contracts/contracts.ts';
+import { buildIcs } from '../../../src/core/actions/ics.ts';
 import {
     decideContractTransaction,
     loadContracts,
@@ -117,7 +121,22 @@ export default async () => {
             expect(items.map((i) => i.contract.id).join(',')).toBe('ct_b,ct_a');
             const events = buildContractIcsEvents(items);
             expect(events[0].date).toBe(items[0].deadline.latestNotice);
-            expect(events[0].alarmDaysBefore).toBe(14);
+            // Notice by 2025-12-31, 30 days out: only the 14-day reminder is still ahead.
+            expect(events[0].alarmsDaysBefore?.join(',')).toBe('14');
+        });
+
+        await it('staggers the alarms, drops those in the past and takes custom offsets', async () => {
+            const c = contract({ startDate: '2025-02-01' });
+            const near = upcomingDeadlines([c], '2025-12-10', 90);
+            expect(buildContractIcsEvents(near)[0].alarmsDaysBefore?.join(',')).toBe('14');
+            const custom = buildContractIcsEvents(near, parseReminderOffsets('1m, 7d, 7d'));
+            expect(custom[0].alarmsDaysBefore?.join(',')).toBe('7');
+            // Latest notice 2025-12-31: 3 months back = 30 Sep (92 days), 2 months = 31 Oct (61 days).
+            const full = buildContractIcsEvents(upcomingDeadlines([c], '2025-06-01', 365));
+            expect(full[0].alarmsDaysBefore?.join(',')).toBe('92,61,14');
+            const text = buildIcs(full, { dtstamp: '20260101T000000Z' });
+            expect(text.split('BEGIN:VALARM').length - 1).toBe(3);
+            expect(() => parseReminderOffsets('3x')).toThrow();
         });
     });
 
@@ -156,6 +175,82 @@ export default async () => {
         await it('does not report a date within the tolerance of asOf as missing', async () => {
             const c = contract({ startDate: '2025-01-15' });
             expect(contractFindings(c, [tx('2025-01-15', -80)], [], '2025-02-17').length).toBe(0);
+        });
+
+        await it('keeps payments of a moved mandate and shows both accounts', async () => {
+            const c = contract({ accountKey: 'acc2', startDate: '2025-01-15' });
+            const old = ['2025-01-15', '2025-02-15', '2025-03-15'].map((d) => tx(d, -80, { accountKey: 'acc1' }));
+            const now = ['2025-04-15', '2025-05-15', '2025-06-15'].map((d) => tx(d, -80, { accountKey: 'acc2' }));
+            const filler = tx('2025-06-30', -9, { accountKey: 'acc2', counterparty: 'Bäckerei', purpose: 'Brot' });
+            const all = [...old, ...now, filler];
+            const cands = contractCandidates(c, all, []);
+            expect(cands.length).toBe(6);
+            const accounts = paymentAccounts(cands);
+            expect(accounts.map((a) => `${a.accountKey}:${a.payments}`).join(',')).toBe('acc1:3,acc2:3');
+            expect(contractFindings(c, all, [], '2025-06-30').length).toBe(0);
+        });
+
+        await it('lets only strong keys cross accounts: name and text stay on the contract account', async () => {
+            const c = contract({
+                accountKey: 'acc2',
+                creditorId: null,
+                mandateReference: null,
+                contractNumber: 'VN-123456',
+            });
+            const weak = tx('2025-02-15', -80, { accountKey: 'acc1', purpose: 'Abschlag' });
+            const strong = tx('2025-03-15', -80, { accountKey: 'acc1', purpose: 'Abschlag VN-123456' });
+            const own = tx('2025-04-15', -80, { accountKey: 'acc2', purpose: 'Abschlag' });
+            const cands = contractCandidates(c, [weak, strong, own], []);
+            expect(cands.map((x) => `${x.txId}:${x.via}`).join(',')).toBe(
+                `${strong.id}:contract_number,${own.id}:name`,
+            );
+        });
+
+        await it('reports missing only within the imported coverage of the accounts', async () => {
+            const c = contract({ startDate: '2025-01-15' });
+            // Data starts in March and ends in April: January, February and May are not missing.
+            const bookings = [
+                tx('2025-03-15', -80),
+                tx('2025-04-15', -80),
+                tx('2025-04-30', -5, { counterparty: 'Bäckerei', purpose: 'Brot' }),
+            ];
+            expect(contractFindings(c, bookings, [], '2025-06-30').length).toBe(0);
+            // A gap inside the span is still missing.
+            const gap = [tx('2025-02-01', -5, { purpose: 'Brot', counterparty: 'Bäckerei' }), ...bookings.slice(1)];
+            const findings = contractFindings(c, gap, [], '2025-04-30');
+            expect(findings.map((f) => f.kind === 'missing' && f.expectedDate).join(',')).toBe('2025-02-15,2025-03-15');
+        });
+
+        await it('reports stale data once instead of a missing payment per month', async () => {
+            const c = contract({ startDate: '2025-01-15' });
+            const bookings = [
+                tx('2025-01-15', -80),
+                tx('2025-02-15', -80),
+                tx('2025-02-28', -5, { purpose: 'x', counterparty: 'y' }),
+            ];
+            const stale = contractFindings(c, bookings, [], '2025-02-28', '2025-09-01');
+            expect(stale.length).toBe(1);
+            expect(stale[0].kind === 'no_data' && stale[0].since).toBe('2025-02-28');
+            expect(contractFindings(c, bookings, [], '2025-02-28', '2025-03-20').length).toBe(0);
+        });
+
+        await it('flags a price increase with a hint, a decrease without', async () => {
+            const c = contract({ startDate: '2025-01-15' });
+            const findings = contractFindings(
+                c,
+                [
+                    tx('2025-01-15', -80),
+                    tx('2025-02-15', -95),
+                    tx('2025-03-15', -60),
+                    tx('2025-04-20', -1, { purpose: 'x', counterparty: 'y' }),
+                ],
+                [],
+                '2025-04-20',
+            );
+            const changed = findings.filter((f) => f.kind === 'changed');
+            expect(changed.map((f) => f.kind === 'changed' && f.direction).join(',')).toBe('increase,decrease');
+            expect(changed[0].kind === 'changed' && changed[0].hint).toBe(PRICE_INCREASE_HINT);
+            expect(changed[1].kind === 'changed' && changed[1].hint).toBe(undefined);
         });
 
         await it('steps expected dates by the cycle and sums to a monthly amount', async () => {

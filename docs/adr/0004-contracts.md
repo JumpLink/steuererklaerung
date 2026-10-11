@@ -63,6 +63,31 @@ findings are expected-but-missing payments plus, on a SEPA account, returned and
 - **Relation to Laufende Kosten.** Series detection stays as it is. A confirmed series is the
   natural seed for a contract; turning one into the other is a later step.
 
+## Amendment 2026-10-11: matching across accounts, coverage, reminders
+
+Found with a real contract; prior art from the public Aboalarm / Volders feature lists.
+
+- **A moved debit stays with its contract.** Creditor ID, mandate reference and contract number
+  (in purpose/reference, at least 5 characters) are strong keys: they match on any account of the
+  entity. The account only narrows the weak matches (IBAN, name, match text). Candidates carry the
+  `accountKey` they were paid from and `contracts_match` returns `accounts` (per account: payments,
+  first, last), so a later "mandate moved" is visible; nothing is stored. Bookings are now read from
+  all accounts of the entity, not only the contract's.
+- **`missing` only within the imported coverage.** An expected date counts only if one of the
+  involved accounts (the contract's, plus any a payment came from) has bookings at least the
+  tolerance before and after it. A new finding `no_data { since }` replaces the run of monthly
+  `missing` findings when the newest such booking is older than 35 days against today.
+- **Notice reminders are staggered.** `contracts fristen --ics` and `contracts_deadlines` write one
+  event per deadline with one alarm per offset: 3 months, 2 months and 14 days before the latest
+  notice date by default (`--erinnerung 3m,2m,14d` / `reminders`); months are counted back like the
+  notice itself, alarms already in the past are dropped. The offsets are a global option; a
+  per-contract setting would need a schema bump and is not built.
+- **A price increase surfaces a hint.** A `changed` finding carries `direction` and, for an
+  increase, a note that it may open a special right to cancel. The app does not compute that
+  right's deadline; the owner reads the provider's notice.
+- **Already covered, unchanged:** initial term vs. renewal term (`initial_term_months`,
+  `renewal_months`) and the notice unit (days, weeks, months).
+
 ## Order of work
 
 1. Schema v27, store repo, action layer with matching, findings and deadlines. Done.

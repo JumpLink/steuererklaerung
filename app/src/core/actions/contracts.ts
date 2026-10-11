@@ -39,6 +39,8 @@ import {
     monthlyAmount,
     noticeDeadline,
     type NoticeDeadline,
+    paymentAccounts,
+    type ReminderOffset,
     upcomingDeadlines,
 } from '../contracts/contracts.ts';
 import { buildIcs } from './ics.ts';
@@ -145,20 +147,27 @@ export interface ContractMatch {
     /** Newest booking on the searched accounts — the date findings are measured against. */
     asOf: string | null;
     candidates: ContractCandidate[];
+    /** Where the payments came from; more than one account = the mandate moved. */
+    accounts: ReturnType<typeof paymentAccounts>;
     findings: ContractFinding[];
 }
 
+/** The entity's accounts, not only the contract's: a debit may have moved to another account. */
 function bookingsFor(c: ContractRecord): ContractBooking[] {
-    const keys = c.accountKey ? [c.accountKey] : entityAccountKeys(c.entityId);
+    const keys = [...new Set([...(c.accountKey ? [c.accountKey] : []), ...entityAccountKeys(c.entityId)])];
     return keys.length ? searchAccountKeys(keys) : [];
 }
 
 /**
  * Candidate bookings and findings (missing / returned / changed) of one contract. Read-only: linking
  * a candidate stays the owner's call ({@link decideContractTransaction}). `bookings` overrides the
- * store lookup (tests, a caller that already holds them).
+ * store lookup (tests, a caller that already holds them); `today` dates the "no data since" finding.
  */
-export function matchContract(id: string, bookings?: readonly ContractBooking[]): ContractMatch | undefined {
+export function matchContract(
+    id: string,
+    bookings?: readonly ContractBooking[],
+    today = todayIso(),
+): ContractMatch | undefined {
     const loaded = readLedger(undefined, (db) => {
         const contract = getContract(db, id);
         return contract ? { contract, decisions: getContractTransactions(db, id) } : undefined;
@@ -170,11 +179,13 @@ export function matchContract(id: string, bookings?: readonly ContractBooking[])
         (max, t) => (max == null || t.bookingDate > max ? t.bookingDate : max),
         null,
     );
+    const candidates = contractCandidates(contract, txs, decisions);
     return {
         contract,
         asOf,
-        candidates: contractCandidates(contract, txs, decisions),
-        findings: asOf ? contractFindings(contract, txs, decisions, asOf) : [],
+        candidates,
+        accounts: paymentAccounts(candidates),
+        findings: asOf ? contractFindings(contract, txs, decisions, asOf, today) : [],
     };
 }
 
@@ -185,10 +196,15 @@ export function contractDeadlines(opts: { entityId?: string; days?: number; toda
     return upcomingDeadlines(contracts, today, opts.days ?? 90);
 }
 
-/** The deadlines as an iCalendar file (one all-day event with an alarm per contract). */
-export function contractDeadlinesIcs(opts: { entityId?: string; days?: number; today?: string } = {}): string {
+/**
+ * The deadlines as an iCalendar file: one all-day event per contract with a staggered alarm per
+ * reminder (default 3 months, 2 months and 14 days before the latest notice date).
+ */
+export function contractDeadlinesIcs(
+    opts: { entityId?: string; days?: number; today?: string; reminders?: readonly ReminderOffset[] } = {},
+): string {
     const dtstamp = `${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z`;
-    return buildIcs(buildContractIcsEvents(contractDeadlines(opts)), {
+    return buildIcs(buildContractIcsEvents(contractDeadlines(opts), opts.reminders), {
         dtstamp,
         calName: 'Verträge — Kündigungsfristen',
     });

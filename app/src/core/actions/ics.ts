@@ -13,6 +13,8 @@ export interface IcsEvent {
     description?: string;
     /** Reminder N days before the date (VALARM). Omitted → no alarm. */
     alarmDaysBefore?: number;
+    /** Several reminders (one VALARM each), e.g. a staggered notice reminder. */
+    alarmsDaysBefore?: number[];
 }
 
 /** Escape a TEXT value per RFC 5545 §3.3.11 (backslash, semicolon, comma, newline). */
@@ -69,11 +71,12 @@ export function buildIcs(events: IcsEvent[], opts: { dtstamp: string; prodId?: s
         lines.push(`DTEND;VALUE=DATE:${nextDayValue(e.date)}`);
         lines.push(`SUMMARY:${esc(e.summary)}`);
         if (e.description) lines.push(`DESCRIPTION:${esc(e.description)}`);
-        if (e.alarmDaysBefore != null && e.alarmDaysBefore > 0) {
+        const alarms = [...(e.alarmDaysBefore != null ? [e.alarmDaysBefore] : []), ...(e.alarmsDaysBefore ?? [])];
+        for (const days of alarms.filter((d) => d > 0)) {
             lines.push('BEGIN:VALARM');
             lines.push('ACTION:DISPLAY');
             lines.push(`DESCRIPTION:${esc(e.summary)}`);
-            lines.push(`TRIGGER:-P${e.alarmDaysBefore}D`);
+            lines.push(`TRIGGER:-P${days}D`);
             lines.push('END:VALARM');
         }
         lines.push('END:VEVENT');
