@@ -37,10 +37,10 @@ export async function getCorrespondent(id: number): Promise<Correspondent> {
 /**
  * Create a correspondent. Returns the created correspondent including its ID.
  */
-export async function createCorrespondent(options: CreateCorrespondentOptions): Promise<Correspondent> {
+export async function createCorrespondent(options: CreateCorrespondentOptions, cfg?: PaperlessConfig): Promise<Correspondent> {
     const body: Record<string, unknown> = { name: options.name };
     if (options.match != null) body.match = options.match;
     if (options.matching_algorithm != null) body.matching_algorithm = options.matching_algorithm;
     if (options.is_insensitive != null) body.is_insensitive = options.is_insensitive;
-    return post<Correspondent>(CORRESPONDENTS_PATH, body);
+    return post<Correspondent>(CORRESPONDENTS_PATH, body, {}, cfg);
 }

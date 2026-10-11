@@ -5,6 +5,7 @@
  */
 
 export * from './types.ts';
+export * from './vocabulary.ts';
 export * from './builtin-provider.ts';
 export * from './paperless-provider.ts';
 export * from './extract.ts';

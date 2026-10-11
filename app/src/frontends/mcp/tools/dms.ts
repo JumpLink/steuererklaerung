@@ -14,6 +14,7 @@ import {
     applyMetadata,
     getDocumentWithText,
     listInbox,
+    listVocabulary,
     proposeMetadata,
     setPaymentStatus,
     type MetadataProposal,
@@ -26,9 +27,18 @@ const model = z.string().min(1).describe('Name of the model making the call; sta
 
 const proposalFields = {
     title: z.string().optional(),
-    correspondent: z.string().optional(),
-    document_type: z.string().optional(),
-    direction: z.enum(['incoming', 'outgoing']).optional(),
+    correspondent: z.string().optional().describe('Exact name or id from dms_list_correspondents'),
+    document_type: z.string().optional().describe('Exact name or id from dms_list_document_types'),
+    direction: z
+        .enum(['incoming', 'outgoing'])
+        .optional()
+        .describe('Paperless: written as the configured incoming/outgoing invoice document type'),
+    tags_add: z.array(z.string()).optional().describe('Tags to add, exact name or id (dms_list_tags)'),
+    tags_remove: z.array(z.string()).optional().describe('Tags to remove, exact name or id'),
+    create: z
+        .boolean()
+        .optional()
+        .describe('Create correspondent / type / tag names the DMS does not know yet. Default off: unknown = error'),
     created: z.string().optional().describe('Document date, YYYY-MM-DD'),
     invoice_number: z.string().optional(),
     net: z.number().optional(),
@@ -46,6 +56,8 @@ function toProposal(p: ProposalParams): MetadataProposal {
         correspondent: p.correspondent,
         documentType: p.document_type,
         direction: p.direction,
+        tags: p.tags_add || p.tags_remove ? { add: p.tags_add, remove: p.tags_remove } : undefined,
+        create: p.create,
         created: p.created,
         invoiceNumber: p.invoice_number,
         net: p.net,
@@ -86,6 +98,30 @@ export function registerDmsTools(server: McpServer, ctx: AppContext): void {
             }
         },
     );
+
+    const vocabularyTools = [
+        ['dms_list_document_types', 'documentType', 'document types'],
+        ['dms_list_correspondents', 'correspondent', 'correspondents'],
+        ['dms_list_tags', 'tag', 'tags'],
+    ] as const;
+    for (const [name, kind, label] of vocabularyTools) {
+        server.registerTool(
+            name,
+            {
+                title: `List DMS ${label}`,
+                description: `The DMS's own list of ${label}. Use an entry's exact name or id in dms_propose_metadata / dms_apply_metadata.`,
+                inputSchema: { entity_id: entityField },
+                annotations: { readOnlyHint: true, openWorldHint: false },
+            },
+            async ({ entity_id }) => {
+                try {
+                    return mcpSuccess(await listVocabulary(providerOf(entity_id), kind));
+                } catch (err) {
+                    return mcpErrorFrom(err);
+                }
+            },
+        );
+    }
 
     server.registerTool(
         'dms_get_document',
@@ -129,7 +165,7 @@ export function registerDmsTools(server: McpServer, ctx: AppContext): void {
         {
             title: 'Apply DMS Metadata',
             description:
-                'Write a metadata proposal and the KI-Hinweis, then take the document out of the inbox. Call only after the person approved the proposal from dms_propose_metadata.',
+                'Write a metadata proposal (incl. correspondent, document type, direction, tags) and the KI-Hinweis, then take the document out of the inbox only when every proposed field was written. Unknown names are an error unless create is true. Call only after the person approved the proposal from dms_propose_metadata.',
             inputSchema: {
                 entity_id: entityField,
                 document_id: documentId,

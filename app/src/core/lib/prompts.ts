@@ -250,7 +250,7 @@ export function getReviewMetadataOwnBlock(lang: PromptLanguage, ownCorrespondent
  * runs internally — read/map/write via the paperless_* tools and record the
  * rationale into the `ai_note` (KI-Hinweis) custom field.
  */
-export const REVIEW_METADATA_MCP_USAGE_NOTE = `Bevorzugt, weil unabhängig vom DMS (Paperless oder eingebautes DMS): dms_list_inbox → dms_get_document → dms_propose_metadata (Trockenlauf, schreibt nichts) → nach Zustimmung dms_apply_metadata (schreibt Metadaten + KI-Hinweis und nimmt das Dokument aus dem Eingang) → dms_match_payment / dms_set_payment_status für den Zahlungsstatus. Die paperless_*-Werkzeuge unten sind Paperless-spezifisch (z. B. Korrespondent/Dokumenttyp per ID schreiben).
+export const REVIEW_METADATA_MCP_USAGE_NOTE = `Bevorzugt, weil unabhängig vom DMS (Paperless oder eingebautes DMS): dms_list_inbox → dms_get_document → dms_list_document_types / dms_list_correspondents / dms_list_tags (die Werte des DMS; Namen oder IDs, unbekannte nur mit create: true) → dms_propose_metadata (Trockenlauf, schreibt nichts) → nach Zustimmung dms_apply_metadata (schreibt Metadaten + KI-Hinweis und nimmt das Dokument aus dem Eingang) → dms_match_payment / dms_set_payment_status für den Zahlungsstatus. Die paperless_*-Werkzeuge unten sind Paperless-spezifisch.
 
 So wendest du diese Regeln über den steuererklaerung-MCP an (pro Dokument, Paperless-Weg):
 1. Lesen: paperless_get_document → OCR-Inhalt + aktuelle Metadaten/Custom-Fields.

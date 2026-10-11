@@ -23,7 +23,16 @@ import {
     searchTransactions,
     type LedgerDatabase,
 } from '@steuererklaerung/store';
-import type { DmsProvider, DmsDocument, DmsFile, DmsOrigin, DmsRuleOrigin, DmsRuleField } from './types.ts';
+import type {
+    DmsProvider,
+    DmsDocument,
+    DmsFile,
+    DmsOrigin,
+    DmsRuleOrigin,
+    DmsRuleField,
+    DmsVocabularyEntry,
+    DmsVocabularyKind,
+} from './types.ts';
 import { renderPdfThumbnail } from './pdf-thumb.ts';
 
 /** Directory holding every built-in DMS file (per entity), under the gitignored store. */
@@ -193,6 +202,32 @@ export class BuiltinDmsProvider implements DmsProvider {
 
     async getText(id: string): Promise<string | null> {
         return (await this.get(id))?.ocrText ?? null;
+    }
+
+    /** The built-in DMS keeps no separate lists: the vocabulary is what documents already use (id = name). */
+    async listVocabulary(kind: DmsVocabularyKind): Promise<DmsVocabularyEntry[]> {
+        const rows = this.withDb(
+            (db) =>
+                db
+                    .prepare(
+                        'SELECT correspondent, document_type, tags FROM documents WHERE entity_id = ?',
+                    )
+                    .all(this.entityId) as unknown as Pick<DocRow, 'correspondent' | 'document_type' | 'tags'>[],
+        );
+        const names = new Set<string>();
+        for (const r of rows) {
+            if (kind === 'tag') parseTags(r.tags).forEach((t) => names.add(t));
+            else {
+                const v = kind === 'correspondent' ? r.correspondent : r.document_type;
+                if (v) names.add(v);
+            }
+        }
+        return [...names].sort().map((n) => ({ id: n, name: n }));
+    }
+
+    /** An entry exists once a document uses it, so creating one is just accepting the name. */
+    async createVocabularyEntry(_kind: DmsVocabularyKind, name: string): Promise<DmsVocabularyEntry> {
+        return { id: name, name };
     }
 
     /** setMetadata stamps `ai_extracted_at`, which is what leaves the inbox — nothing more to do. */
