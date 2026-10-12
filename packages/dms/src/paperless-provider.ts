@@ -315,7 +315,9 @@ export class PaperlessDmsProvider implements DmsProvider {
         const payload: UpdateDocumentPayload = {};
         if (meta.title != null) payload.title = meta.title;
         if (meta.created != null) payload.created = meta.created;
-        if (meta.correspondent != null) payload.correspondent = await this.idOf('correspondent', meta.correspondent);
+        // undefined = unchanged, null = clear
+        if (meta.correspondent !== undefined)
+            payload.correspondent = meta.correspondent === null ? null : await this.idOf('correspondent', meta.correspondent);
         // Direction is modelled as the invoice document type (document_type_ids), as everywhere else.
         if (meta.direction != null) {
             const typeId =

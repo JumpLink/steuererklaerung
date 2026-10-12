@@ -4,6 +4,7 @@ export {
     paperlessDocumentTypes,
     paperlessDocumentType,
     paperlessCorrespondents,
+    paperlessCorrespondentsAll,
     paperlessCorrespondent,
     paperlessTagsAll,
     paperlessTags,

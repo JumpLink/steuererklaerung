@@ -26,8 +26,8 @@ export interface TagsProposal {
 /** What an agent may change about a document. Absent = leave as is. */
 export interface MetadataProposal {
     title?: string;
-    /** Exact name or id from the DMS's own list (dms_list_correspondents). */
-    correspondent?: string;
+    /** Exact name or id from the DMS's own list (dms_list_correspondents). `null` clears it. */
+    correspondent?: string | null;
     /** Exact name or id from the DMS's own list (dms_list_document_types). */
     documentType?: string;
     direction?: 'incoming' | 'outgoing';
@@ -195,7 +195,12 @@ async function plan(provider: DmsProvider, id: string, p: MetadataProposal): Pro
         change('title', doc.title, p.title);
         patch.title = p.title;
     }
-    if (p.correspondent !== undefined) {
+    if (p.correspondent === null) {
+        if (doc.correspondent !== null) {
+            change('correspondent', doc.correspondent, null);
+            patch.correspondent = null;
+        }
+    } else if (p.correspondent !== undefined) {
         if (!canList) notWritable.push('correspondent');
         else {
             const name = await resolve('correspondent', p.correspondent);

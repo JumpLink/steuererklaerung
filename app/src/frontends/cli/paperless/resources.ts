@@ -4,6 +4,7 @@ import {
     paperlessDocumentTypes,
     paperlessDocumentType,
     paperlessCorrespondents,
+    paperlessCorrespondentsAll,
     paperlessCorrespondent,
     paperlessTags,
     paperlessTagsAll,
@@ -40,7 +41,7 @@ export const documentTypeSubcommand: CommandModule = {
 
 export const correspondentsSubcommand: CommandModule = {
     command: 'correspondents',
-    describe: 'List correspondents (paginated)',
+    describe: 'List correspondents (all pages unless --page/--page-size is given)',
     builder: (y) =>
         y
             .option('page-size', { type: 'number', describe: 'Page size' })
@@ -50,7 +51,9 @@ export const correspondentsSubcommand: CommandModule = {
         const pageSize = pickArgv<number>(raw, 'pageSize', 'page-size');
         const page = pickArgv<number>(raw, 'page');
         runAndExit(() =>
-            paperlessCorrespondents(pageSize != null || page != null ? { page_size: pageSize, page } : {}),
+            pageSize != null || page != null
+                ? paperlessCorrespondents({ page_size: pageSize, page })
+                : paperlessCorrespondentsAll(),
         );
     },
 };
