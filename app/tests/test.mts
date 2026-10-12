@@ -56,6 +56,7 @@ import qontoGate from './unit/invoices/qonto-gate.test.ts';
 import invoiceMail from './unit/mail/invoice-mail.test.ts';
 import invoiceMailE2e from './unit/mail/invoice-mail-e2e.test.ts';
 import desktopMailSender from './unit/mail/desktop-mail-sender.test.ts';
+import notifyHints from './unit/notify/hints.test.ts';
 import estKinder from './unit/actions/est-kinder.test.ts';
 import validateSteuernummer from './unit/actions/validate-steuernummer.test.ts';
 import storeReceipt from './unit/actions/store-receipt.test.ts';
@@ -265,6 +266,7 @@ run({
     invoiceMail,
     invoiceMailE2e,
     desktopMailSender,
+    notifyHints,
     estKinder,
     validateSteuernummer,
     storeReceipt,

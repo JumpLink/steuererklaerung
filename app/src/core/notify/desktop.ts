@@ -13,7 +13,9 @@
 import Gio from '@girs/gio-2.0';
 import GLib from '@girs/glib-2.0';
 
-export type NotificationUrgency = 'low' | 'normal' | 'critical';
+import { DEFAULT_APP_NAME, notificationHintValues, type NotificationUrgency } from './hints.ts';
+
+export type { NotificationUrgency };
 
 export interface DesktopNotification {
     title: string;
@@ -34,14 +36,12 @@ export type NotificationResult =
     | { delivered: true; id: number }
     | { delivered: false; reason: 'no-session-bus' | 'no-notification-service'; detail: string };
 
-const URGENCY_BYTE: Record<NotificationUrgency, number> = { low: 0, normal: 1, critical: 2 };
-
 /**
  * Show a desktop notification. Never throws for the ordinary "there is no desktop here" case —
  * that is an answer, not an error, and the caller usually wants to fall back to stdout.
  */
 export function sendDesktopNotification(notification: DesktopNotification): NotificationResult {
-    const urgency = notification.urgency ?? 'normal';
+    const values = notificationHintValues(notification.urgency);
 
     let bus: Gio.DBusConnection | null = null;
     try {
@@ -57,11 +57,12 @@ export function sendDesktopNotification(notification: DesktopNotification): Noti
     // the tuple takes the plain dictionary — wrapping it in a Variant first would nest it one
     // level too deep and the daemon would read no urgency at all.
     const hints: Record<string, GLib.Variant> = {
-        urgency: GLib.Variant.new_byte(URGENCY_BYTE[urgency]),
+        urgency: GLib.Variant.new_byte(values.urgency),
+        'desktop-entry': GLib.Variant.new_string(values.desktopEntry),
     };
 
     const params = new GLib.Variant('(susssasa{sv}i)', [
-        notification.appName ?? 'steuererklaerung',
+        notification.appName ?? DEFAULT_APP_NAME,
         0, // replaces_id: 0 = new notification rather than replacing an earlier one
         notification.icon ?? '',
         notification.title,
