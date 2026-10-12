@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-11 19:19+0200\n"
+"POT-Creation-Date: 2026-10-12 11:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,21 +32,21 @@ msgstr ""
 msgid "No document given."
 msgstr ""
 
-#: src/core/actions/contracts-extract.ts:317
+#: src/core/actions/contracts-extract.ts:316
 msgid ""
 "This document belongs to a different document store than the contract — "
 "nothing was read."
 msgstr ""
 
-#: src/core/actions/contracts-extract.ts:351
+#: src/core/actions/contracts-extract.ts:349
 msgid "Without a contract the workspace entity is needed to find the document."
 msgstr ""
 
-#: src/core/actions/contracts-extract.ts:361
+#: src/core/actions/contracts-extract.ts:359
 msgid "The document has no readable text — enter the contract data by hand."
 msgstr ""
 
-#: src/core/actions/contracts-extract.ts:384
+#: src/core/actions/contracts-extract.ts:382
 msgid ""
 "Only the beginning of the document was read — check the fields against the "
 "original."
@@ -1183,67 +1183,85 @@ msgid ""
 "provider. Independent of the MCP server."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:79
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:80
+msgid "Coding agent"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:82
+msgid ""
+"Your own opencode uses your login and models from its global configuration. "
+"Takes effect the next time the app starts."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:85
+msgid "Bundled opencode (recommended)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:85
+msgid "Own opencode (global configuration)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:108
 msgid "Assistant engine"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:80
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:109
 msgid "Takes effect the next time the app starts."
 msgstr ""
 
 #. TRANSLATORS: The assistant that is part of the app and answers in-process
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:83
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:112
 msgid "Built in"
 msgstr ""
 
 #. TRANSLATORS: lotse is a program name — it starts a coding agent as a separate process
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:85
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:114
 msgid "Coding agent (lotse)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:101
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:130
 msgid "Last backup"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:103
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:156
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:132
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:185
 msgid "Backup folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:111
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:140
 msgid "{time} in {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:116
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:145
 msgid "Never"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:121
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:127
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:150
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:156
 msgid "Back up now"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:127
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:156
 msgid "Backing up …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:135
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:164
 msgid "Backup saved: {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:138
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:167
 msgid "Backup failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:151
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:180
 msgid "Choose folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:176
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:205
 msgid "Keep backups"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:177
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:206
 msgid "Older ones are deleted after each new backup"
 msgstr ""
 
@@ -3797,7 +3815,7 @@ msgid "Document #{id}"
 msgstr ""
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:351
-#: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:149
+#: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:151
 msgid "Document"
 msgstr ""
 
@@ -4846,30 +4864,30 @@ msgstr ""
 msgid "Could not read the contract data from the document"
 msgstr ""
 
-#: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:146
+#: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:147
 msgid ""
 "Check every value against the passage it was read from — an AI reads a "
 "contract, it does not sign it."
 msgstr ""
 
-#: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:164
+#: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:166
 msgid "What the document says"
 msgstr ""
 
-#: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:165
+#: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:167
 msgid ""
 "Only the fields switched on are taken over; the others stay as they are."
 msgstr ""
 
-#: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:184
+#: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:186
 msgid "Take over the selected fields"
 msgstr ""
 
-#: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:202
+#: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:204
 msgid "{old} → {new}"
 msgstr ""
 
-#: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:203
+#: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:205
 msgid "{value} — already recorded that way"
 msgstr ""
 
