@@ -20,6 +20,7 @@ import {
     type MetadataProposal,
 } from '../../../core/actions/dms/inbox.ts';
 import { reconcileOpenItems, RECONCILE_MIN_SCORE } from '../../../core/actions/dms/reconcile-open-items.ts';
+import { fintsStatementGaps, fintsStatements } from '../../../core/actions/fints-statements.ts';
 import { mcpErrorFrom, mcpSuccess } from '../types.ts';
 
 const entityField = z.string().optional().describe('Workspace entity id (default: the first business entity)');
@@ -320,6 +321,70 @@ export function registerDmsTools(server: McpServer, ctx: AppContext): void {
                     await reconcileOpenItems(entityOf(entity_id), {
                         apply: true,
                         minScore: min_score,
+                    }),
+                );
+            } catch (err) {
+                return mcpErrorFrom(err);
+            }
+        },
+    );
+
+    const statementsInput = {
+        entity_id: entityField,
+        account: z.string().optional().describe('FinTS account name from the manifest (default: the only one)'),
+        account_number: z.string().optional().describe('Only this bank account number'),
+        from: z.string().optional().describe('Skip statements ending before this day, YYYY-MM-DD'),
+    };
+
+    server.registerTool(
+        'dms_plan_fints_statements',
+        {
+            title: 'Plan FinTS Statement Import (dry run)',
+            description:
+                "Ask the bank (FinTS HKEKA) for its PDF account statements and show which ones the DMS lacks (dedupe by account + year + statement number). Writes nothing, but the bank asks for a TAN approval on the owner's phone: call only when the person is ready. With gaps=true it lists missing statement numbers from the DMS alone and does not call the bank.",
+            inputSchema: {
+                ...statementsInput,
+                gaps: z
+                    .boolean()
+                    .default(false)
+                    .describe('Only list missing statement numbers per account (no bank call)'),
+            },
+            annotations: { readOnlyHint: true, openWorldHint: true },
+        },
+        async ({ entity_id, account, account_number, from, gaps }) => {
+            try {
+                const entityId = entityOf(entity_id);
+                if (gaps) return mcpSuccess(await fintsStatementGaps(entityId));
+                return mcpSuccess(await fintsStatements({ entityId, account, accountNumber: account_number, from }));
+            } catch (err) {
+                return mcpErrorFrom(err);
+            }
+        },
+    );
+
+    server.registerTool(
+        'dms_apply_fints_statements',
+        {
+            title: 'Apply FinTS Statement Import',
+            description:
+                "Upload the PDF statements the DMS lacks (type Kontoauszug, tag Neu, correspondent = the bank when it exists). Run dms_plan_fints_statements first and call this only after the person approved the plan. Triggers a TAN approval on the owner's phone. Never acknowledges receipt at the bank.",
+            inputSchema: statementsInput,
+            annotations: {
+                readOnlyHint: false,
+                destructiveHint: false,
+                idempotentHint: true,
+                openWorldHint: true,
+            },
+        },
+        async ({ entity_id, account, account_number, from }) => {
+            try {
+                return mcpSuccess(
+                    await fintsStatements({
+                        entityId: entityOf(entity_id),
+                        account,
+                        accountNumber: account_number,
+                        from,
+                        apply: true,
                     }),
                 );
             } catch (err) {

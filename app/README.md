@@ -630,6 +630,8 @@ syncs never re-fetch everything. Store dir: `transactions-data/` (gitignored; ov
 | `transactions summary` | Per-account counts, date ranges, totals (in/out/net). |
 | `transactions import <path>` | Import CAMT.052/053 XML exports (file, account folder, or a parent folder with per-account subfolders) into the store. **Matched IBAN** → backfills an existing account's history beyond the FinTS ~90-day window (by default only transactions older than the account already has; `--full` imports everything). **Unmatched IBAN** → imports a standalone/closed account (e.g. a dissolved company's Qonto, no longer API-reachable) under its own `camt:<iban>` key with full history (idempotent). Several distinct accounts in one flat folder: import each file individually. |
 
+**FinTS statements:** `fints statements [--entity <id>] [--account <name>] [--from YYYY-MM-DD] [--apply] [--gaps]` fetches PDF account statements into the DMS (dry run by default; triggers a TAN) — see [docs/app/fints-kontoauszuege.md](../docs/app/fints-kontoauszuege.md).
+
 Amounts are **signed EUR** (expense negative). Prerequisites: Qonto creds (see Credentials) for the
 Qonto source; a synced FinTS account (`fints sync`) for the FinTS source.
 
