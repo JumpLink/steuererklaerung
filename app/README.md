@@ -649,10 +649,10 @@ read-only (keine Bank-Calls, keine TAN) — so kann der Agent alle Konten in *ei
 
 **Logging:** The CLI can append log lines to files for debugging. Use `getLogger(name?)` from `src/core/lib/logger.ts`: with a name (e.g. `getLogger('sync-import')`) it writes to `<name>.log` in the current directory; without a name, to `app.log`. Override path: `LOG_FILE` for the default logger, or `LOG_FILE_<NAME>` for a named one (e.g. `LOG_FILE_SYNC_IMPORT` for sync-import.log).
 
-### Mail, contacts and calendar → postbote
+### Mail, contacts and calendar → Curlew
 
 GNOME Online Accounts, contacts, calendar and mail (IMAP) are no longer part of this project.
-They moved to **[postbote](https://github.com/JumpLink/postbote)**, which does the same job
+They moved to **[Curlew](https://github.com/JumpLink/curlew)**, which does the same job
 properly: structured search, folders, real attachment downloads and a local full-text index.
 It registers as its own MCP server alongside this one, so an assistant can search mail there
 and file the result here — `mail_save_attachment` then `paperless_upload_document`.

@@ -67,10 +67,10 @@ gjsify run -w @steuererklaerung/eric build:meson         # build the typelib (ne
 LD_LIBRARY_PATH="$ERIC_HOME/lib:$ERIC_HOME/lib/plugins" gjsify run start elster ustva validate-eric --xml out.xml
 ```
 
-### Mail, contacts and calendar → postbote
+### Mail, contacts and calendar → Curlew
 
 The GOA/EDS binding and the IMAP client are no longer here. They moved to
-[postbote](https://github.com/JumpLink/postbote) (`projects/mail` in werkstatt), which runs on
+[Curlew](https://github.com/JumpLink/curlew) (`projects/curlew` in werkstatt), which runs on
 the same gjsify/GJS stack and registers as its own MCP server. Nothing in this project imports
 `gi://Goa` any more, so the GOA and EDS system typelibs are no longer needed to run it.
 
@@ -106,7 +106,7 @@ the same gjsify/GJS stack and registers as its own MCP server. Nothing in this p
 |------|-----------|
 | `build:gjs` / `build:test:node` | ✅ |
 | **MCP stdio server** (all 29 tools, incl. a real `tools/call`) | ✅ |
-| GNOME mail / contacts / calendar | ➡️ moved to [postbote](https://github.com/JumpLink/postbote) |
+| GNOME mail / contacts / calendar | ➡️ moved to [Curlew](https://github.com/JumpLink/curlew) |
 | Read commands — Qonto, Paperless (fetch via libsoup) | ✅ |
 | INWX invoices (`domrobot-client`) | ✅ |
 | FinTS (`lib-fints`) | ✅ |

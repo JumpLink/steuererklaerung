@@ -47,12 +47,12 @@ assert.equal(info?.name, 'steuererklaerung', `unexpected server name: ${info?.na
 
 const { tools } = await client.listTools();
 // MEASURED, not guessed: 64 with every group enabled, after mail/contacts/calendar moved out
-// to postbote. The floor is a little below that so a config-gated group does not fail the run,
+// to curlew. The floor is a little below that so a config-gated group does not fail the run,
 // but a whole group disappearing still does.
 assert(tools.length >= 60, `expected >= 60 tools, got ${tools.length}`);
 
 // A representative tool from each remaining group must be registered, independent of whether
-// its backend is reachable here. Mail, contacts and calendar moved out to postbote, which has
+// its backend is reachable here. Mail, contacts and calendar moved out to curlew, which has
 // its own smoke test.
 const toolNames = new Set(tools.map((t) => t.name));
 for (const name of [

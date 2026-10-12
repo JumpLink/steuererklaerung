@@ -11,7 +11,7 @@ on:
 # bin is Node; its work targets gjs). Runs in a Fedora container that ships `gjs` (which the
 # gjsify toolchain spawns) plus the system typelibs the bundles import at load: libgda +
 # libgda-sqlite for the store. The GOA/EDS typelibs moved out with the mail code, which now
-# lives in its own project (postbote). The 0.12-era all-Node workaround
+# lives in its own project (curlew). The 0.12-era all-Node workaround
 # (bundler crash + test segfault, node-tsc fallback) is fixed upstream in gjsify 0.13.
 #
 # EVERY system library is named explicitly — nothing may arrive transitively. `fedora:44` is a
