@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-12 14:46+0200\n"
+"POT-Creation-Date: 2026-10-12 23:26+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -54,6 +54,51 @@ msgid ""
 msgstr ""
 "Es wurde nur der Anfang des Dokuments gelesen — bitte die Felder gegen das "
 "Original prüfen."
+
+#: src/core/actions/fints-statements.ts:150
+msgid "This DMS cannot list documents by type."
+msgstr "Dieses DMS kann Dokumente nicht nach Typ auflisten."
+
+#: src/core/actions/fints-statements.ts:170
+msgid "Acknowledging receipt is not supported by the FinTS library yet."
+msgstr ""
+"Der Empfang von Kontoauszügen kann mit der FinTS-Bibliothek noch nicht "
+"quittiert werden."
+
+#: src/core/actions/fints-statements.ts:190
+msgid "The document type \"Kontoauszug\" does not exist in the DMS."
+msgstr "Der Dokumenttyp \"Kontoauszug\" existiert im DMS nicht."
+
+#: src/core/actions/fints-statements.ts:192
+msgid ""
+"No correspondent with the bank name exists in the DMS; uploaded without one."
+msgstr ""
+"Im DMS existiert kein Korrespondent mit dem Banknamen; ohne Korrespondent "
+"hochgeladen."
+
+#: src/core/actions/fints-statements.ts:194
+msgid "The tag \"Neu\" does not exist in the DMS; uploaded without it."
+msgstr "Der Tag \"Neu\" existiert im DMS nicht; ohne ihn hochgeladen."
+
+#: src/core/actions/fints-statements.ts:233
+msgid "This DMS cannot ingest documents."
+msgstr "Dieses DMS kann keine Dokumente aufnehmen."
+
+#: src/core/clients/fints/client.ts:290
+msgid ""
+"The bank does not offer electronic account statements (no HIEKAS in its bank "
+"parameters) for this account."
+msgstr ""
+"Die Bank bietet für dieses Konto keine elektronischen Kontoauszüge an (kein "
+"HIEKAS in den Bankparametern)."
+
+#: src/core/clients/fints/client.ts:296
+#, javascript-format
+msgid ""
+"The bank offers electronic account statements, but not as PDF (formats: %s)."
+msgstr ""
+"Die Bank bietet elektronische Kontoauszüge an, aber nicht als PDF (Formate: "
+"%s)."
 
 #: src/core/clients/llm/job-error.ts:43
 msgid "The AI answered, but not with data the app can read."
@@ -5519,20 +5564,41 @@ msgid "Tax return and bookkeeping for small businesses"
 msgstr "Steuererklärung und Buchhaltung für Kleinbetriebe"
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:10
-msgid "Receipts, transactions and invoices in one place. From them the app computes the income-surplus statement (EÜR), the VAT returns, trade tax and the separate assessment for partnerships, and files them through ELSTER."
-msgstr "Belege, Buchungen und Rechnungen an einem Ort. Daraus berechnet die App die Einnahmenüberschussrechnung (EÜR), die Umsatzsteuererklärungen, die Gewerbesteuer und die gesonderte Feststellung für Personengesellschaften und übermittelt sie über ELSTER."
+msgid ""
+"Receipts, transactions and invoices in one place. From them the app computes "
+"the income-surplus statement (EÜR), the VAT returns, trade tax and the "
+"separate assessment for partnerships, and files them through ELSTER."
+msgstr ""
+"Belege, Buchungen und Rechnungen an einem Ort. Daraus berechnet die App die "
+"Einnahmenüberschussrechnung (EÜR), die Umsatzsteuererklärungen, die "
+"Gewerbesteuer und die gesonderte Feststellung für Personengesellschaften und "
+"übermittelt sie über ELSTER."
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:11
-msgid "It runs on your machine: your bank data and documents stay in a local store. Every figure can be traced back to the transaction it came from."
-msgstr "Sie läuft auf deinem Rechner: Bankdaten und Belege bleiben in einem lokalen Speicher. Jede Zahl lässt sich bis zur Buchung zurückverfolgen."
+msgid ""
+"It runs on your machine: your bank data and documents stay in a local store. "
+"Every figure can be traced back to the transaction it came from."
+msgstr ""
+"Sie läuft auf deinem Rechner: Bankdaten und Belege bleiben in einem lokalen "
+"Speicher. Jede Zahl lässt sich bis zur Buchung zurückverfolgen."
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:12
-msgid "It works fully without AI: you write your own classification rules instead of letting a model guess. An assistant is optional and off by default."
-msgstr "Sie ist ohne KI vollständig bedienbar: Du schreibst eigene Klassifizierungsregeln, statt ein Modell raten zu lassen. Ein Assistent ist optional und standardmäßig aus."
+msgid ""
+"It works fully without AI: you write your own classification rules instead "
+"of letting a model guess. An assistant is optional and off by default."
+msgstr ""
+"Sie ist ohne KI vollständig bedienbar: Du schreibst eigene "
+"Klassifizierungsregeln, statt ein Modell raten zu lassen. Ein Assistent ist "
+"optional und standardmäßig aus."
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:13
-msgid "The tax logic follows German law, so the interface keeps the official German terms. The app is a preparation aid, not tax advice."
-msgstr "Die Steuerlogik folgt deutschem Recht, deshalb behält die Oberfläche die amtlichen deutschen Begriffe. Die App ist eine Vorbereitungshilfe, keine Steuerberatung."
+msgid ""
+"The tax logic follows German law, so the interface keeps the official German "
+"terms. The app is a preparation aid, not tax advice."
+msgstr ""
+"Die Steuerlogik folgt deutschem Recht, deshalb behält die Oberfläche die "
+"amtlichen deutschen Begriffe. Die App ist eine Vorbereitungshilfe, keine "
+"Steuerberatung."
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:22
 msgid "Overview with key figures and what to do next"

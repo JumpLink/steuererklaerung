@@ -1,5 +1,13 @@
-export { synchronize, getAccounts, getTanMethods, getBalance, getStatements } from './client.ts';
-export type { SyncResult } from './client.ts';
+export {
+    synchronize,
+    getAccounts,
+    getTanMethods,
+    getBalance,
+    getStatements,
+    getElectronicStatements,
+    assertStatementSupport,
+} from './client.ts';
+export type { SyncResult, ElectronicStatementBatch, StatementParameters } from './client.ts';
 export type { BankingInformation, BankAccount, AccountBalance, Statement, Transaction, TanMethod } from './types.ts';
 
 import { loadFinTSConfig } from '../../config/index.ts';

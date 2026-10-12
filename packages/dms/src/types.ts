@@ -99,6 +99,20 @@ export interface DmsVocabularyEntry {
     name: string;
 }
 
+/** A file plus the metadata it should land with; unknown names are an error, never auto-created. */
+export interface DmsIngestInput {
+    bytes: Uint8Array;
+    filename: string;
+    mimeType?: string;
+    title: string;
+    /** Document date, YYYY-MM-DD. */
+    created?: string;
+    /** Exact name or id from the DMS's own list. */
+    documentType?: string;
+    correspondent?: string;
+    tags?: string[];
+}
+
 /** The raw bytes of a document file plus its MIME type. */
 export interface DmsFile {
     bytes: Uint8Array;
@@ -131,6 +145,14 @@ export interface DmsProvider {
         created?: string;
         origin?: DmsOrigin;
     }): Promise<DmsDocument>;
+    /**
+     * Store a file WITH its metadata in one step. `created: false` means the DMS already held
+     * identical bytes (Paperless rejects a repeated checksum): the returned document is the
+     * existing one, and nothing was added.
+     */
+    ingest?(input: DmsIngestInput): Promise<{ document: DmsDocument; created: boolean }>;
+    /** Every document of one document type (name or id), regardless of date. */
+    listByDocumentType?(documentType: string): Promise<DmsDocument[]>;
     /** Merge AI-extracted metadata (incl. ocrText, aiNote and the payment fields) into a document. */
     setMetadata?(id: string, meta: Partial<DmsDocument>): Promise<void>;
     /**

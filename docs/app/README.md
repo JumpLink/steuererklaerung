@@ -450,3 +450,5 @@ Zwei Fallen, beide gemessen: Das Assistenten-Panel öffnet sich, sobald das Fens
 Breakpoint bei 1180 px überschreitet — also **erst** die Größe setzen, dann den Stern in der
 Kopfzeile per `ActivateWidget` schließen, dann auslösen. Und `pkill -f steuer-app` trifft die
 eigene Shell mit; zum Beenden `ActivateAction 'app' 'quit'` verwenden.
+
+- [PDF-Kontoauszüge per FinTS ins DMS](fints-kontoauszuege.md)

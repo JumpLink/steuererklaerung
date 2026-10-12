@@ -56,6 +56,7 @@ import qontoGate from './unit/invoices/qonto-gate.test.ts';
 import invoiceMail from './unit/mail/invoice-mail.test.ts';
 import invoiceMailE2e from './unit/mail/invoice-mail-e2e.test.ts';
 import desktopMailSender from './unit/mail/desktop-mail-sender.test.ts';
+import notifyHints from './unit/notify/hints.test.ts';
 import estKinder from './unit/actions/est-kinder.test.ts';
 import validateSteuernummer from './unit/actions/validate-steuernummer.test.ts';
 import storeReceipt from './unit/actions/store-receipt.test.ts';
@@ -182,6 +183,7 @@ import accountsWeb from './unit/web/accounts.test.ts';
 import dms from './unit/dms/dms.test.ts';
 import dmsInbox from './unit/dms/inbox.test.ts';
 import dmsReconcileOpenItems from './unit/dms/reconcile-open-items.test.ts';
+import dmsFintsStatements from './unit/dms/fints-statements.test.ts';
 import reviewMetadataNote from './unit/paperless/review-metadata-note.test.ts';
 import paperlessUploadTools from './unit/paperless/upload-tools.test.ts';
 import paperlessApiVersion from './unit/paperless/api-version.test.ts';
@@ -264,6 +266,7 @@ run({
     invoiceMail,
     invoiceMailE2e,
     desktopMailSender,
+    notifyHints,
     estKinder,
     validateSteuernummer,
     storeReceipt,
@@ -388,6 +391,7 @@ run({
     dms,
     dmsInbox,
     dmsReconcileOpenItems,
+    dmsFintsStatements,
     reviewMetadataNote,
     paperlessUploadTools,
     paperlessApiVersion,

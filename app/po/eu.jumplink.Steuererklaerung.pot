@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-12 14:46+0200\n"
+"POT-Creation-Date: 2026-10-12 23:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,6 +50,43 @@ msgstr ""
 msgid ""
 "Only the beginning of the document was read — check the fields against the "
 "original."
+msgstr ""
+
+#: src/core/actions/fints-statements.ts:150
+msgid "This DMS cannot list documents by type."
+msgstr ""
+
+#: src/core/actions/fints-statements.ts:170
+msgid "Acknowledging receipt is not supported by the FinTS library yet."
+msgstr ""
+
+#: src/core/actions/fints-statements.ts:190
+msgid "The document type \"Kontoauszug\" does not exist in the DMS."
+msgstr ""
+
+#: src/core/actions/fints-statements.ts:192
+msgid ""
+"No correspondent with the bank name exists in the DMS; uploaded without one."
+msgstr ""
+
+#: src/core/actions/fints-statements.ts:194
+msgid "The tag \"Neu\" does not exist in the DMS; uploaded without it."
+msgstr ""
+
+#: src/core/actions/fints-statements.ts:233
+msgid "This DMS cannot ingest documents."
+msgstr ""
+
+#: src/core/clients/fints/client.ts:290
+msgid ""
+"The bank does not offer electronic account statements (no HIEKAS in its bank "
+"parameters) for this account."
+msgstr ""
+
+#: src/core/clients/fints/client.ts:296
+#, javascript-format
+msgid ""
+"The bank offers electronic account statements, but not as PDF (formats: %s)."
 msgstr ""
 
 #: src/core/clients/llm/job-error.ts:43
