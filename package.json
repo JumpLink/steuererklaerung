@@ -10,6 +10,70 @@
   "app",
   "packages/*"
  ],
+ "gjsify": {
+  "site": {
+   "metainfo": "app/data/eu.jumplink.Steuererklaerung.metainfo.xml",
+   "base": "/steuererklaerung/",
+   "url": "https://jumplink.eu/steuererklaerung/",
+   "languages": [
+    "de",
+    "en"
+   ],
+   "defaultLanguage": "de",
+   "repository": "JumpLink/steuererklaerung",
+   "translations": "app/po",
+   "icon": "app/data/icons/hicolor/scalable/apps/eu.jumplink.Steuererklaerung.svg",
+   "releaseAssets": false,
+   "downloads": [
+    {
+     "platform": "linux",
+     "format": "source",
+     "url": "https://github.com/JumpLink/steuererklaerung#install-and-build"
+    }
+   ],
+   "screenshots": {
+    "source": "merge",
+    "items": [
+     {
+      "from": 0,
+      "variants": {
+       "desktop-dark": "docs/screenshots/01-uebersicht.png"
+      }
+     },
+     {
+      "from": 1,
+      "variants": {
+       "desktop-dark": "docs/screenshots/04-belege.png"
+      }
+     },
+     {
+      "from": 2,
+      "variants": {
+       "desktop-dark": "docs/screenshots/05-buchungen.png"
+      }
+     },
+     {
+      "from": 3,
+      "variants": {
+       "desktop-dark": "docs/screenshots/06-rechnungen.png"
+      }
+     },
+     {
+      "from": 4,
+      "variants": {
+       "desktop-dark": "docs/screenshots/10-euer.png"
+      }
+     },
+     {
+      "from": 5,
+      "variants": {
+       "desktop-dark": "docs/screenshots/09-steuererklaerung.png"
+      }
+     }
+    ]
+   }
+  }
+ },
  "scripts": {
   "build": "gjsify workspace steuererklaerung-cli build",
   "build:cli": "gjsify workspace steuererklaerung-cli build:gjs",
