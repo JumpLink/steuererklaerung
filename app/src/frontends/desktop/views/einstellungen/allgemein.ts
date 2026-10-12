@@ -14,7 +14,12 @@ import type Gio from '@girs/gio-2.0';
 import GLib from '@girs/glib-2.0';
 import Gtk from '@girs/gtk-4.0';
 
-import { type AiEngine, resolveAiEngine } from '../../../../core/actions/assistant/lotse-embed.ts';
+import {
+    type AgentSource,
+    type AiEngine,
+    resolveAgentSource,
+    resolveAiEngine,
+} from '../../../../core/actions/assistant/lotse-embed.ts';
 import { configuredBackupRoot } from '../../../../core/actions/backup.ts';
 import { isAssistantEnabled } from '../../../../core/config/assistant-preference.ts';
 import { isDemoMode } from '../../../../core/config/demo.ts';
@@ -54,16 +59,45 @@ export function buildGeneralGroup(group: Adw.PreferencesGroup): void {
     });
     ai.set_active(isAssistantEnabled());
     const engine = buildEngineRow();
+    const source = buildAgentSourceRow();
     engine.set_sensitive(ai.get_active());
+    source.set_sensitive(ai.get_active());
     ai.connect('notify::active', () => {
         updateUserSettings((s) => {
             s.aiAssistant = ai.get_active();
         });
         engine.set_sensitive(ai.get_active());
+        source.set_sensitive(ai.get_active());
         ai.activate_action('win.assistant-preference', null);
     });
     group.add(ai);
     group.add(engine);
+    group.add(source);
+}
+
+/**
+ * Which opencode the coding agent runs: the one shipped with the app (own isolated config) or the
+ * person's own. The model policy that blocks free hosted models applies to both.
+ */
+function buildAgentSourceRow(): Adw.ComboRow {
+    const sources: AgentSource[] = ['bundled', 'host'];
+    const row = new Adw.ComboRow({
+        title: _('Coding agent'),
+        subtitle: _(
+            'Your own opencode uses your login and models from its global configuration. ' +
+                'Takes effect the next time the app starts.',
+        ),
+        model: Gtk.StringList.new([_('Bundled opencode (recommended)'), _('Own opencode (global configuration)')]),
+    });
+    row.set_selected(Math.max(0, sources.indexOf(resolveAgentSource())));
+    row.connect('notify::selected', () => {
+        const chosen = sources[row.get_selected()];
+        if (!chosen) return;
+        updateUserSettings((s) => {
+            s.aiAgentSource = chosen;
+        });
+    });
+    return row;
 }
 
 /**
@@ -118,7 +152,10 @@ export function buildBackupGroup(group: Adw.PreferencesGroup): void {
         folder.set_subtitle(markup(configuredBackupRoot(s)));
     };
 
-    const now = new Adw.ButtonRow({ title: _('Back up now'), startIconName: 'document-save-symbolic' });
+    const now = new Adw.ButtonRow({
+        title: _('Back up now'),
+        startIconName: 'document-save-symbolic',
+    });
     now.add_css_class('suggested-action');
     const spinner = new Adw.Spinner({ visible: false, valign: Gtk.Align.CENTER });
     last.add_suffix(spinner);
@@ -135,7 +172,9 @@ export function buildBackupGroup(group: Adw.PreferencesGroup): void {
             .then((result) => showToast(fmt(_('Backup saved: {path}'), { path: result.path })))
             .catch((err: unknown) =>
                 showToast(
-                    fmt(_('Backup failed: {error}'), { error: err instanceof Error ? err.message : String(err) }),
+                    fmt(_('Backup failed: {error}'), {
+                        error: err instanceof Error ? err.message : String(err),
+                    }),
                 ),
             )
             .finally(() => {
@@ -153,7 +192,10 @@ export function buildBackupGroup(group: Adw.PreferencesGroup): void {
     });
     choose.add_css_class('flat');
     choose.connect('clicked', () => {
-        const dialog = new Gtk.FileDialog({ title: _('Backup folder'), modal: true });
+        const dialog = new Gtk.FileDialog({
+            title: _('Backup folder'),
+            modal: true,
+        });
         const root = choose.get_root();
         dialog.select_folder(root instanceof Gtk.Window ? root : null, null, (_source, res) => {
             let file: Gio.File | null = null;
