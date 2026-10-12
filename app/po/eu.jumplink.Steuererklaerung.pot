@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-12 11:43+0200\n"
+"POT-Creation-Date: 2026-10-12 14:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -303,6 +303,7 @@ msgid "dates · payments · open items"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:68
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:57
 msgid "Tax"
 msgstr ""
 
@@ -1143,125 +1144,125 @@ msgstr ""
 msgid "Paperless assignment not available"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:31
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:36
 msgid "Data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:32
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:37
 msgid "Demo data — fictional examples"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:32
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:37
 msgid "Your own data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:35
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:40
 #: src/frontends/desktop/views/welcome.ts:198
 #: src/frontends/desktop/window.ts:614
 msgid "Use my own data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:35
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:40
 #: src/frontends/desktop/views/welcome.ts:187
 msgid "Try the demo"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:44
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:49
 msgid "Show welcome again"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:49
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:54
 #: src/frontends/desktop/views/welcome.ts:265
 #: src/frontends/desktop/views/welcome.ts:279
 #: src/frontends/desktop/views/welcome.ts:292
 msgid "AI assistant"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:51
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:56
 msgid ""
 "Questions and the data needed to answer them go to the configured AI "
 "provider. Independent of the MCP server."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:80
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:85
 msgid "Coding agent"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:82
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:87
 msgid ""
 "Your own opencode uses your login and models from its global configuration. "
 "Takes effect the next time the app starts."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:85
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:90
 msgid "Bundled opencode (recommended)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:85
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:90
 msgid "Own opencode (global configuration)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:108
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:113
 msgid "Assistant engine"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:109
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:114
 msgid "Takes effect the next time the app starts."
 msgstr ""
 
 #. TRANSLATORS: The assistant that is part of the app and answers in-process
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:112
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:117
 msgid "Built in"
 msgstr ""
 
 #. TRANSLATORS: lotse is a program name — it starts a coding agent as a separate process
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:114
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:119
 msgid "Coding agent (lotse)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:130
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:135
 msgid "Last backup"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:132
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:185
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:137
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:196
 msgid "Backup folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:140
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:145
 msgid "{time} in {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:145
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:150
 msgid "Never"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:150
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:156
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:164
 msgid "Back up now"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:156
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:164
 msgid "Backing up …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:164
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:172
 msgid "Backup saved: {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:167
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:175
 msgid "Backup failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:180
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:190
 msgid "Choose folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:205
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:218
 msgid "Keep backups"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:206
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:219
 msgid "Older ones are deleted after each new backup"
 msgstr ""
 
@@ -2255,6 +2256,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:150
 #: src/frontends/desktop/views/rechnungen-view.ts:523
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:62
 msgid "Invoice"
 msgstr ""
 
@@ -3332,6 +3334,7 @@ msgid "This decides which questions follow. Everything can be changed later."
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:386
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:61
 msgid "VAT"
 msgstr ""
 
@@ -5276,4 +5279,73 @@ msgstr ""
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:7
+msgid "Steuererklärung"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:8
+msgid "Tax return and bookkeeping for small businesses"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:10
+msgid ""
+"Receipts, transactions and invoices in one place. From them the app computes "
+"the income-surplus statement (EÜR), the VAT returns, trade tax and the "
+"separate assessment for partnerships, and files them through ELSTER."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:11
+msgid ""
+"It runs on your machine: your bank data and documents stay in a local store. "
+"Every figure can be traced back to the transaction it came from."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:12
+msgid ""
+"It works fully without AI: you write your own classification rules instead "
+"of letting a model guess. An assistant is optional and off by default."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:13
+msgid ""
+"The tax logic follows German law, so the interface keeps the official German "
+"terms. The app is a preparation aid, not tax advice."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:22
+msgid "Overview with key figures and what to do next"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:26
+msgid "Receipts, linked to transactions"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:30
+msgid "All transactions of all accounts, searchable"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:34
+msgid "Outgoing invoices with status and recurring billing"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:38
+msgid "Anlage EÜR, every line down to its transactions"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:42
+msgid "Tax return with checks before filing"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:58
+msgid "Accounting"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:59
+msgid "ELSTER"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:60
+msgid "EÜR"
 msgstr ""

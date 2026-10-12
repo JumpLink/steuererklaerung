@@ -32,6 +32,16 @@ extract)
         --add-comments=TRANSLATORS \
         --package-name="$DOMAIN" \
         --msgid-bugs-address='https://github.com/JumpLink/steuererklaerung/issues'
+    # The store text lives in the committed metainfo (`dev/metainfo.sh`); xgettext has an AppStream
+    # reader, so it joins the same catalogue and the site and `gjsify ship` find German in one place.
+    xgettext \
+        --join-existing \
+        --output="$POT" \
+        --from-code=UTF-8 \
+        --language=appdata \
+        --package-name="$DOMAIN" \
+        --msgid-bugs-address='https://github.com/JumpLink/steuererklaerung/issues' \
+        "data/$DOMAIN.metainfo.xml"
     while read -r lang; do
         [ -n "$lang" ] || continue
         # `--previous` keeps the old msgid next to a fuzzy match, which is the only thing that makes
