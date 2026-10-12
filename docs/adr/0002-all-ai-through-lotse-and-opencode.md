@@ -103,3 +103,14 @@ decides the transport of the headless job API, and it is not the one named above
   assistant pane's agent, data directory, login and `LOTSE_MODEL_POLICY`. A failure becomes an
   `AiJobError` built from `JobError.kind` alone, so the answer and the parser's complaint are
   never logged.
+
+## Amendment 2026-10-12: which opencode — a setting, bundled by default
+
+The pane and the one-shot jobs share one resolver (`resolveLotseAgent`), and it now passes lotse an
+explicit choice `{ id: 'opencode', source }` instead of none, because without one lotse prefers the
+person's own install. `source` is the user setting `aiAgentSource` (`settings.json`): `bundled`
+(default; the copy shipped with the app, own isolated config) or `host` (the person's own opencode
+with their login and models). The model policy against free hosted models applies to both. If the
+chosen copy is missing, lotse falls back and the app logs its note; with nothing available the pane
+shows its no-agent page and a job fails with `no-agent`.
+

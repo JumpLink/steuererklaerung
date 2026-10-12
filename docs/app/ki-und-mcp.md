@@ -56,6 +56,13 @@ fragt nach, arbeitet mehrschrittig. Darum ist die Wahl ausdrücklich und nicht a
 sagt das selbst dazu. Solange der KI-Assistent aus ist, ist sie nicht bedienbar — es gibt dann
 nichts auszuwählen.
 
+**Welches opencode?** Zeile **Coding-Agent** direkt darunter (gilt ab dem nächsten Start, für das
+Panel *und* die Einmal-Aufträge). Voreinstellung: **Mitgeliefertes opencode** mit eigener, isolierter
+Konfiguration. Wer **Eigenes opencode (globale Konfiguration)** wählt, nutzt sein installiertes
+opencode samt eigener Anmeldung und Modellen. Die Modellregel gegen kostenlose Fremdmodelle gilt für
+beide. Fehlt die gewählte Variante, nimmt lotse die andere und die App schreibt einen Hinweis;
+gibt es gar keine, erscheint die Hinweisseite.
+
 ### Was lotse hier bekommt — und was nicht
 
 - **Kein Agent installiert, kein Panel.** Findet die App keinen opencode, zeigt sie eine
