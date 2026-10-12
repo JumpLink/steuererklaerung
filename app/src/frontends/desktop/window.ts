@@ -164,6 +164,19 @@ export class MainWindow extends Adw.ApplicationWindow {
         });
         // Before anything resolves an icon by name: put the shipped icon theme on the search path.
         registerAppIcons(this);
+        if (process.env.STEUER_DEBUG_MEASURE) {
+            // Late on purpose, and later than it looks like it needs to be: every list in this app
+            // fills from an async load, so a sweep at 1.5 s measures the empty placeholders and
+            // reports a view "clean" that renders clipped a second later. Keep this at or above
+            // screenshot.sh's STEUER_SHOT_SETTLE.
+            const delay = Number.parseInt(process.env.STEUER_DEBUG_MEASURE_DELAY ?? '', 10) || 4000;
+            this.connect('map', () => {
+                GLib.timeout_add(GLib.PRIORITY_LOW, delay, () => {
+                    this.debugMeasure();
+                    return GLib.SOURCE_REMOVE;
+                });
+            });
+        }
         this.buildUi();
         this.installNavAction();
         this.installSetupAction();
@@ -722,6 +735,10 @@ export class MainWindow extends Adw.ApplicationWindow {
         const index = wanted ? items.findIndex((i) => i.view === wanted) : -1;
         const row = this._nav_list.get_row_at_index(index >= 0 ? index : 0);
         if (row) this._nav_list.select_row(row); // fires row-selected → sets the active view
+        // `collapsed` is still false while the constructor runs (breakpoints only apply after the
+        // first allocation), so row-selected cannot decide this yet. A view asked for by name is an
+        // explicit request for THAT view, not for the sidebar — show it on a phone too.
+        if (index >= 0) this._split_view.set_show_content(true);
     }
 
     /** One sidebar row: icon + title + subtitle, carrying its view id as the widget name. */
@@ -749,6 +766,36 @@ export class MainWindow extends Adw.ApplicationWindow {
                 ),
             ),
         });
+    }
+
+    private debugText(w: Gtk.Widget): string {
+        if (w instanceof Gtk.Label) return w.get_label();
+        for (let c = w.get_first_child(); c; c = c.get_next_sibling()) {
+            const t = this.debugText(c);
+            if (t) return t;
+        }
+        return '';
+    }
+
+    private debugMeasure(): void {
+        const limit = Number.parseInt(process.env.STEUER_DEBUG_MEASURE ?? '', 10) || 360;
+        const walk = (w: Gtk.Widget, path: string): boolean => {
+            const [min] = w.measure(Gtk.Orientation.HORIZONTAL, -1);
+            const here = `${path}/${(w as object).constructor.name}${w.get_name() ? `#${w.get_name()}` : ''}`;
+            let childOver = false;
+            for (let c = w.get_first_child(); c; c = c.get_next_sibling()) {
+                if (walk(c, here)) childOver = true;
+            }
+            if (min > limit && !childOver) {
+                const css = w.get_css_classes().join('.');
+                const text = w instanceof Gtk.Label ? w.get_label() : this.debugText(w);
+                // The allocation too: min > width is the widget that is actually drawn clipped,
+                // as opposed to one that merely has no room to spare.
+                console.error(`[measure] min=${min} alloc=${w.get_width()} [${css}] «${text}» ${here}`);
+            }
+            return min > limit;
+        };
+        walk(this, '');
     }
 
     private onNavRowSelected(row: Gtk.ListBoxRow): void {
