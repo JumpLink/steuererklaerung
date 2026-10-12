@@ -5,7 +5,7 @@
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { dirname } from 'node:path';
-import { FinTSClient, FinTSConfig as LibFinTSConfig } from 'lib-fints';
+import { FinTSClient, FinTSConfig as LibFinTSConfig, StatementFormat } from 'lib-fints';
 import type {
     BankingInformation,
     BankAccount,
@@ -15,11 +15,14 @@ import type {
     SynchronizeResponse,
     StatementResponse,
     AccountBalanceResponse,
+    ElectronicStatement,
+    ElectronicStatementResponse,
 } from 'lib-fints';
 import type { TanMethod } from './types.ts';
 import type { FinTSAccountConfig } from '../../config/index.ts';
 import { getPin, getDataFilePath } from '../../config/index.ts';
 import { finTSInteraction } from './interaction.ts';
+import { _ } from '../../lib/i18n.ts';
 
 // ── Persistence ──────────────────────────────────────────────────────
 
@@ -262,4 +265,83 @@ export async function getStatements(
     saveBankingInfo(account.name, client.config.bankingInformation);
 
     return response.statements ?? [];
+}
+
+// ── Electronic account statements (HKEKA / HIEKA) ────────────────────
+
+/** The HIEKAS bank parameters this module reads (lib-fints does not export the type). */
+export interface StatementParameters {
+    indexAllowed: boolean;
+    receiptRequired: boolean;
+    supportedFormats: string[];
+}
+
+/**
+ * Decide from the bank parameter data whether PDF statements can be fetched, and say WHY not in
+ * words a person can act on. Pure, so the three failure modes are testable without a bank.
+ */
+export function assertStatementSupport(
+    supported: boolean,
+    params: StatementParameters | undefined,
+): StatementParameters {
+    if (!supported || !params) {
+        throw new Error(
+            _(
+                'The bank does not offer electronic account statements (no HIEKAS in its bank parameters) for this account.',
+            ),
+        );
+    }
+    if (!params.supportedFormats.includes(StatementFormat.PDF)) {
+        throw new Error(
+            _('The bank offers electronic account statements, but not as PDF (formats: %s).').replace(
+                '%s',
+                params.supportedFormats.join(', ') || '-',
+            ),
+        );
+    }
+    return params;
+}
+
+export interface ElectronicStatementBatch {
+    bankName: string | undefined;
+    parameters: StatementParameters;
+    statements: ElectronicStatement[];
+}
+
+/** A bank that keeps announcing successors would otherwise loop forever. */
+const MAX_STATEMENTS_PER_FETCH = 200;
+
+/**
+ * Fetch every PDF statement the bank currently hands out for one account. The bank returns one
+ * document per call and announces a waiting successor; the loop follows that offset.
+ */
+export async function getElectronicStatements(
+    account: FinTSAccountConfig,
+    accountNumber: string,
+): Promise<ElectronicStatementBatch> {
+    const client = await createClient(account);
+    const parameters = assertStatementSupport(
+        client.canGetElectronicStatements(accountNumber),
+        client.config.getTransactionParameters<StatementParameters>('HKEKA'),
+    );
+
+    const statements: ElectronicStatement[] = [];
+    let offset: string | undefined;
+    for (let i = 0; i < MAX_STATEMENTS_PER_FETCH; i++) {
+        let response: ElectronicStatementResponse = await client.getElectronicStatements(accountNumber, {
+            format: StatementFormat.PDF,
+            offset,
+        });
+        if (response.requiresTan) {
+            response = await handleTanChallenge(client, account.name, response, (ref, tan) =>
+                client.getElectronicStatementsWithTan(ref, tan),
+            );
+        }
+        statements.push(...(response.statements ?? []));
+        offset = response.nextOffset;
+        if (!offset) break;
+    }
+
+    saveBankingInfo(account.name, client.config.bankingInformation);
+    return { bankName: client.config.bankingInformation.bpd?.bankName, parameters, statements };
 }

@@ -26,6 +26,7 @@ import {
 import type {
     DmsProvider,
     DmsDocument,
+    DmsIngestInput,
     DmsFile,
     DmsOrigin,
     DmsRuleOrigin,
@@ -307,6 +308,32 @@ export class BuiltinDmsProvider implements DmsProvider {
         const doc = await this.get(sha);
         if (!doc) throw new Error('Dokument konnte nach dem Speichern nicht gelesen werden.');
         return doc;
+    }
+
+    async ingest(input: DmsIngestInput): Promise<{ document: DmsDocument; created: boolean }> {
+        const bytes = input.bytes instanceof Buffer ? input.bytes : Buffer.from(input.bytes);
+        const known = await this.get(createHash('sha256').update(bytes).digest('hex'));
+        if (known) return { document: known, created: false };
+        const stored = await this.store({
+            bytes,
+            filename: input.filename,
+            mimeType: input.mimeType,
+            created: input.created,
+        });
+        await this.setMetadata(stored.id, {
+            title: input.title,
+            documentType: input.documentType,
+            correspondent: input.correspondent,
+            tags: input.tags,
+        });
+        const document = await this.get(stored.id);
+        if (!document) throw new Error('Dokument konnte nach dem Speichern nicht gelesen werden.');
+        return { document, created: true };
+    }
+
+    async listByDocumentType(documentType: string): Promise<DmsDocument[]> {
+        const all = await this.list({ from: '1970-01-01', to: '9999-12-31' });
+        return all.filter((d) => d.documentType === documentType);
     }
 
     async setMetadata(id: string, meta: Partial<DmsDocument>): Promise<void> {

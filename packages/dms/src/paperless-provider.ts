@@ -34,9 +34,11 @@ import {
     formatMonetaryValue,
     listDocuments,
     fetchAllPagesParallel,
+    postDocument,
+    waitForTaskResult,
 } from '@steuererklaerung/paperless';
 import { fetchInvoiceDocsInPeriod } from './reconcile.ts';
-import type { DmsProvider, DmsDocument, DmsFile, DmsVocabularyEntry, DmsVocabularyKind } from './types.ts';
+import type { DmsProvider, DmsDocument, DmsFile, DmsIngestInput, DmsVocabularyEntry, DmsVocabularyKind } from './types.ts';
 import { findVocabularyEntry } from './vocabulary.ts';
 
 interface VocabMaps {
@@ -200,6 +202,33 @@ export class PaperlessDmsProvider implements DmsProvider {
         const entry = findVocabularyEntry(await this.listVocabulary(kind), ref);
         if (!entry) throw new Error(`"${ref}" ist in Paperless nicht vorhanden (${kind}).`);
         return Number(entry.id);
+    }
+
+    async ingest(input: DmsIngestInput): Promise<{ document: DmsDocument; created: boolean }> {
+        const tags = input.tags ? await Promise.all(input.tags.map((t) => this.idOf('tag', t))) : undefined;
+        const taskId = await postDocument(input.bytes, input.filename, {
+            title: input.title,
+            created: input.created,
+            document_type: input.documentType ? await this.idOf('documentType', input.documentType) : undefined,
+            correspondent: input.correspondent ? await this.idOf('correspondent', input.correspondent) : undefined,
+            tags,
+        }, input.mimeType);
+        // A repeated checksum fails the task with "duplicate of …": that is "already there", not an error.
+        const outcome = await waitForTaskResult(taskId);
+        const document = await this.get(String(outcome.documentId));
+        if (!document) throw new Error(`Dokument ${outcome.documentId} konnte nach dem Hochladen nicht gelesen werden.`);
+        return { document, created: outcome.created };
+    }
+
+    async listByDocumentType(documentType: string): Promise<DmsDocument[]> {
+        const typeId = await this.idOf('documentType', documentType);
+        const [docs, names] = await Promise.all([
+            fetchAllPagesParallel((page, pageSize) =>
+                listDocuments({ document_type_id: typeId, page, page_size: pageSize, ordering: 'id' }, this.cfg),
+            ),
+            this.names(),
+        ]);
+        return docs.map((d) => toDmsDocument(d, this.config, names));
     }
 
     async list(range: { from: string; to: string }): Promise<DmsDocument[]> {

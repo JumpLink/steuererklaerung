@@ -182,6 +182,7 @@ import accountsWeb from './unit/web/accounts.test.ts';
 import dms from './unit/dms/dms.test.ts';
 import dmsInbox from './unit/dms/inbox.test.ts';
 import dmsReconcileOpenItems from './unit/dms/reconcile-open-items.test.ts';
+import dmsFintsStatements from './unit/dms/fints-statements.test.ts';
 import reviewMetadataNote from './unit/paperless/review-metadata-note.test.ts';
 import paperlessUploadTools from './unit/paperless/upload-tools.test.ts';
 import paperlessApiVersion from './unit/paperless/api-version.test.ts';
@@ -388,6 +389,7 @@ run({
     dms,
     dmsInbox,
     dmsReconcileOpenItems,
+    dmsFintsStatements,
     reviewMetadataNote,
     paperlessUploadTools,
     paperlessApiVersion,
