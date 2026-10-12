@@ -1,9 +1,5 @@
 import { describe, it, expect } from '@gjsify/unit';
-import {
-    DEFAULT_APP_NAME,
-    DESKTOP_ENTRY,
-    notificationHintValues,
-} from '../../../src/core/notify/hints.ts';
+import { DEFAULT_APP_NAME, DESKTOP_ENTRY, notificationHintValues } from '../../../src/core/notify/hints.ts';
 
 export default async () => {
     await describe('notificationHintValues', async () => {
