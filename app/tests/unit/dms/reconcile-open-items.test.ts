@@ -46,7 +46,10 @@ function cand(txId: string, rawScore: number): LinkCandidate {
 
 /** Fake DMS + candidate source; records every write. */
 function setup(docs: DmsDocument[], candidates: Record<string, LinkCandidate[]>) {
-    const state = { docs: new Map(docs.map((d) => [d.id, d])), links: [] as string[] };
+    const state = {
+        docs: new Map(docs.map((d) => [d.id, d])),
+        links: [] as string[],
+    };
     const provider = {
         kind: 'paperless',
         list: async () => [...state.docs.values()],
@@ -81,7 +84,9 @@ export default async () => {
         });
 
         await it('skips an ambiguous document (two strong candidates)', async () => {
-            const { state, deps } = setup([doc('1')], { '1': [cand('tx-a', 120), cand('tx-b', 90)] });
+            const { state, deps } = setup([doc('1')], {
+                '1': [cand('tx-a', 120), cand('tx-b', 90)],
+            });
             const res = await reconcileOpenItems('firma', { apply: true }, deps);
             expect(res.entries[0].decision).toBe('ambiguous');
             expect(state.links.length).toBe(0);
@@ -89,17 +94,64 @@ export default async () => {
         });
 
         await it('skips a best candidate below the threshold', async () => {
-            const { state, deps } = setup([doc('1')], { '1': [cand('tx-a', RECONCILE_MIN_SCORE - 1)] });
+            const { state, deps } = setup([doc('1')], {
+                '1': [cand('tx-a', RECONCILE_MIN_SCORE - 1)],
+            });
             const res = await reconcileOpenItems('firma', { apply: true }, deps);
             expect(res.entries[0].decision).toBe('below-threshold');
             expect(state.links.length).toBe(0);
         });
 
         await it('skips a document that is already paid', async () => {
-            const { state, deps } = setup([doc('1', { paymentStatus: 'bezahlt' })], { '1': [cand('tx-a', 150)] });
+            const { state, deps } = setup([doc('1', { paymentStatus: 'bezahlt' })], {
+                '1': [cand('tx-a', 150)],
+            });
             const res = await reconcileOpenItems('firma', { apply: true }, deps);
             expect(res.entries[0].decision).toBe('already-paid');
             expect(state.links.length).toBe(0);
+        });
+
+        await it('marks documents sharing their only candidate as ambiguous and applies nothing', async () => {
+            const { state, deps } = setup([doc('1'), doc('2'), doc('3')], {
+                '1': [cand('tx-a', 120)],
+                '2': [cand('tx-a', 100)],
+                '3': [cand('tx-b', 100)],
+            });
+            const res = await reconcileOpenItems('firma', { apply: true }, deps);
+            expect(res.entries[0].decision).toBe('ambiguous');
+            expect(res.entries[0].reason).toBe('shared-transaction');
+            expect(res.entries[0].competingDocumentIds!.join(',')).toBe('2');
+            expect(res.entries[1].decision).toBe('ambiguous');
+            expect(res.entries[2].decision).toBe('link');
+            expect(res.toLink).toBe(1);
+            expect(state.links.join(',')).toBe('3:tx-b');
+            expect(state.docs.get('1')!.paymentStatus).toBe('offen');
+            expect(state.docs.get('2')!.paymentStatus).toBe('offen');
+        });
+
+        await it('skips a transaction already linked to another document', async () => {
+            const { state, deps } = setup([doc('1')], { '1': [cand('tx-a', 120)] });
+            deps.linkedTransactions = async () => new Map([['tx-a', ['9']]]);
+            const res = await reconcileOpenItems('firma', { apply: true }, deps);
+            expect(res.entries[0].decision).toBe('ambiguous');
+            expect(res.entries[0].reason).toBe('transaction-linked');
+            expect(state.links.length).toBe(0);
+        });
+
+        await it('warns when the entity has no store accounts', async () => {
+            const { deps } = setup([doc('1')], {});
+            deps.accountCount = () => 0;
+            const res = await reconcileOpenItems('firma', {}, deps);
+            expect(res.warning !== undefined).toBe(true);
+            expect(res.entries[0].decision).toBe('no-candidate');
+        });
+
+        await it('honours a minScore override', async () => {
+            const { deps } = setup([doc('1')], { '1': [cand('tx-a', 40)] });
+            expect((await reconcileOpenItems('firma', {}, deps)).entries[0].decision).toBe('below-threshold');
+            const res = await reconcileOpenItems('firma', { minScore: 30 }, deps);
+            expect(res.minScore).toBe(30);
+            expect(res.entries[0].decision).toBe('link');
         });
 
         await it('writes nothing in a dry run but returns the plan', async () => {

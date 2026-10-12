@@ -72,14 +72,20 @@ Zu jedem offenen Posten (`payment_status = offen`) sucht der Abgleich die Zahlun
 wenn **genau eine** Buchung die Mindestpunktzahl von 60 (Rohwert des Abgleichs) erreicht, wird sie mit
 dem Beleg verknüpft und der Beleg auf „bezahlt" gesetzt. Zwei oder mehr starke Treffer gelten als
 mehrdeutig, ein bester Treffer unter 60 als zu schwach, ein schon bezahlter Beleg wird übersprungen —
-diese Fälle bleiben für dich zur Prüfung. Alles läuft über das DMS des Mandanten.
+diese Fälle bleiben für dich zur Prüfung. Die Regel gilt auch je **Buchung**: Ist eine Buchung der einzige
+starke Treffer mehrerer Belege (Entscheidung `ambiguous`, Grund `shared-transaction`, mit den
+konkurrierenden Beleg-IDs) oder hängt sie schon an einem anderen Beleg (Grund `transaction-linked`),
+wird keiner dieser Belege verknüpft — eine Zahlung macht nie mehrere Rechnungen bezahlt. Hat der
+Mandant keine Konten im Buchungsspeicher, steht im Plan ein `warning` (auf der Konsole eine
+Warnzeile), statt dass still alles „ohne Treffer" ist. Alles läuft über das DMS des Mandanten.
 
 ```sh
-steuer reconcile open-items [--entity <id>]           # zeigt nur den Plan
-steuer reconcile open-items [--entity <id>] --apply   # schreibt Verknüpfung und Status
+steuer reconcile open-items [--entity <id>] [--min-score <n>]           # zeigt nur den Plan
+steuer reconcile open-items [--entity <id>] [--min-score <n>] --apply   # schreibt Verknüpfung und Status
 ```
 
 Für externe Agenten gibt es zwei MCP-Werkzeuge: `dms_plan_reconcile_open_items` (lesend, Plan) und
-`dms_apply_reconcile_open_items` (schreibend, nur mit „Schreibende Werkzeuge erlauben").
+`dms_apply_reconcile_open_items` (schreibend, nur mit „Schreibende Werkzeuge erlauben"); beide nehmen
+optional `min_score` (Standard 60).
 Je Beleg steht im Ergebnis die Entscheidung: `link`, `ambiguous`, `below-threshold`, `no-candidate`,
 `already-paid` oder `not-found`.

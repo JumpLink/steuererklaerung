@@ -23,6 +23,11 @@ import { reconcileOpenItems, RECONCILE_MIN_SCORE } from '../../../core/actions/d
 import { mcpErrorFrom, mcpSuccess } from '../types.ts';
 
 const entityField = z.string().optional().describe('Workspace entity id (default: the first business entity)');
+const minScoreField = z
+    .number()
+    .positive()
+    .optional()
+    .describe(`Minimum raw candidate score (default ${RECONCILE_MIN_SCORE})`);
 const documentId = z.string().min(1).describe('Document id as returned by dms_list_inbox');
 const model = z.string().min(1).describe('Name of the model making the call; stamped into the KI-Hinweis');
 
@@ -151,7 +156,12 @@ export function registerDmsTools(server: McpServer, ctx: AppContext): void {
             title: 'Propose DMS Metadata (dry run)',
             description:
                 'Validate a metadata proposal and show what dms_apply_metadata would change plus the KI-Hinweis it would write. Writes nothing. You decide the values; this tool diffs them.',
-            inputSchema: { entity_id: entityField, document_id: documentId, model, ...proposalFields },
+            inputSchema: {
+                entity_id: entityField,
+                document_id: documentId,
+                model,
+                ...proposalFields,
+            },
             annotations: { readOnlyHint: true, openWorldHint: false },
         },
         async ({ entity_id, document_id, model, ...fields }) => {
@@ -178,7 +188,12 @@ export function registerDmsTools(server: McpServer, ctx: AppContext): void {
                 mark_reviewed: z.boolean().default(true).describe('Take the document out of the inbox'),
                 ...proposalFields,
             },
-            annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+            annotations: {
+                readOnlyHint: false,
+                destructiveHint: false,
+                idempotentHint: true,
+                openWorldHint: false,
+            },
         },
         async ({ entity_id, document_id, model, mark_reviewed, ...fields }) => {
             try {
@@ -207,7 +222,12 @@ export function registerDmsTools(server: McpServer, ctx: AppContext): void {
                 amount_to_pay: z.number().optional(),
                 ai_note: z.string().optional().describe('Replacement KI-Hinweis, one line under 200 characters'),
             },
-            annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+            annotations: {
+                readOnlyHint: false,
+                destructiveHint: false,
+                idempotentHint: true,
+                openWorldHint: false,
+            },
         },
         async ({ entity_id, document_id, status, due_date, amount_to_pay, ai_note }) => {
             try {
@@ -254,7 +274,7 @@ export function registerDmsTools(server: McpServer, ctx: AppContext): void {
     );
 
     const reconcileDescription = (lead: string) =>
-        `${lead} For every open invoice (payment_status=offen) it looks for the bank payment; a document is acted on only when EXACTLY ONE transaction candidate has a raw score >= ${RECONCILE_MIN_SCORE} (several strong candidates = ambiguous, skipped; none strong enough = skipped; already paid = skipped).`;
+        `${lead} For every open invoice (payment_status=offen) it looks for the bank payment; a document is acted on only when EXACTLY ONE transaction candidate has a raw score >= ${RECONCILE_MIN_SCORE} (several strong candidates = ambiguous, skipped; a transaction wanted by several documents or already linked to another = ambiguous for all of them, reason shared-transaction / transaction-linked; none strong enough = skipped; already paid = skipped).`;
 
     server.registerTool(
         'dms_plan_reconcile_open_items',
@@ -263,12 +283,16 @@ export function registerDmsTools(server: McpServer, ctx: AppContext): void {
             description: reconcileDescription(
                 'Show which open invoices would be linked to a bank transaction and marked bezahlt. Writes nothing.',
             ),
-            inputSchema: { entity_id: entityField },
+            inputSchema: { entity_id: entityField, min_score: minScoreField },
             annotations: { readOnlyHint: true, openWorldHint: false },
         },
-        async ({ entity_id }) => {
+        async ({ entity_id, min_score }) => {
             try {
-                return mcpSuccess(await reconcileOpenItems(entityOf(entity_id)));
+                return mcpSuccess(
+                    await reconcileOpenItems(entityOf(entity_id), {
+                        minScore: min_score,
+                    }),
+                );
             } catch (err) {
                 return mcpErrorFrom(err);
             }
@@ -282,12 +306,22 @@ export function registerDmsTools(server: McpServer, ctx: AppContext): void {
             description: reconcileDescription(
                 'Link each unambiguous open invoice to its bank transaction and set it to bezahlt. Run dms_plan_reconcile_open_items first and call this only after the person approved the plan.',
             ),
-            inputSchema: { entity_id: entityField },
-            annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+            inputSchema: { entity_id: entityField, min_score: minScoreField },
+            annotations: {
+                readOnlyHint: false,
+                destructiveHint: false,
+                idempotentHint: true,
+                openWorldHint: false,
+            },
         },
-        async ({ entity_id }) => {
+        async ({ entity_id, min_score }) => {
             try {
-                return mcpSuccess(await reconcileOpenItems(entityOf(entity_id), { apply: true }));
+                return mcpSuccess(
+                    await reconcileOpenItems(entityOf(entity_id), {
+                        apply: true,
+                        minScore: min_score,
+                    }),
+                );
             } catch (err) {
                 return mcpErrorFrom(err);
             }

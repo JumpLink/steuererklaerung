@@ -21,7 +21,10 @@ function periodRange(year: number, month?: number): { from: string; to: string }
     if (month) {
         const mm = String(month).padStart(2, '0');
         const lastDay = new Date(year, month, 0).getDate();
-        return { from: `${year}-${mm}-01`, to: `${year}-${mm}-${String(lastDay).padStart(2, '0')}` };
+        return {
+            from: `${year}-${mm}-01`,
+            to: `${year}-${mm}-${String(lastDay).padStart(2, '0')}`,
+        };
     }
     return fiscalYearRange(year);
 }
@@ -40,8 +43,15 @@ export const reconcileCommand: CommandModule = {
                     'Batch: auto-link every unmatched invoice document in a period to its store transaction (confident matches only).',
                 builder: (y) =>
                     y
-                        .option('year', { type: 'number', demandOption: true, describe: 'Tax year, e.g. 2025' })
-                        .option('month', { type: 'number', describe: 'Optional month 1–12' })
+                        .option('year', {
+                            type: 'number',
+                            demandOption: true,
+                            describe: 'Tax year, e.g. 2025',
+                        })
+                        .option('month', {
+                            type: 'number',
+                            describe: 'Optional month 1–12',
+                        })
                         .option('account-key', {
                             type: 'string',
                             describe: 'Restrict to one accountKey (see "transactions summary")',
@@ -54,7 +64,10 @@ export const reconcileCommand: CommandModule = {
                             type: 'number',
                             describe: 'Max absolute amount difference in EUR (default 0.01)',
                         })
-                        .option('limit', { type: 'number', describe: 'Max documents to process' })
+                        .option('limit', {
+                            type: 'number',
+                            describe: 'Max documents to process',
+                        })
                         .option('force', {
                             type: 'boolean',
                             default: false,
@@ -85,7 +98,11 @@ export const reconcileCommand: CommandModule = {
                 describe: 'Reconcile a single document: auto-match, or link an explicit --store-transaction-id.',
                 builder: (y) =>
                     y
-                        .positional('id', { type: 'number', demandOption: true, describe: 'Paperless document ID' })
+                        .positional('id', {
+                            type: 'number',
+                            demandOption: true,
+                            describe: 'Paperless document ID',
+                        })
                         .option('store-transaction-id', {
                             type: 'string',
                             describe: 'Exact store transaction id to link (skips auto-match)',
@@ -129,12 +146,16 @@ export const reconcileCommand: CommandModule = {
             })
             .command({
                 command: 'open-items',
-                describe: `Open invoices (payment_status=offen): link each to its bank payment and mark it bezahlt, but only when exactly one transaction scores >= ${RECONCILE_MIN_SCORE}. Prints the plan; writes only with --apply.`,
+                describe: `Open invoices (payment_status=offen): link each to its bank payment and mark it bezahlt, but only when exactly one transaction scores >= ${RECONCILE_MIN_SCORE} AND that transaction is wanted by no other document and not yet linked to one (shared payments are ambiguous). Prints the plan; writes only with --apply.`,
                 builder: (y) =>
                     y
                         .option('entity', {
                             type: 'string',
                             describe: 'Workspace entity id (default: first business entity)',
+                        })
+                        .option('min-score', {
+                            type: 'number',
+                            describe: `Minimum raw candidate score (default ${RECONCILE_MIN_SCORE})`,
                         })
                         .option('apply', {
                             type: 'boolean',
@@ -146,9 +167,14 @@ export const reconcileCommand: CommandModule = {
                     const manifest = loadManifest();
                     const entityArg = pickArgv<string>(raw, 'entity');
                     const entity = entityArg ? requireEntity(manifest, entityArg) : defaultEntityFor(manifest);
-                    runAndExit(() =>
-                        reconcileOpenItems(entity.id, { apply: pickArgv<boolean>(raw, 'apply') === true }),
-                    );
+                    runAndExit(async () => {
+                        const result = await reconcileOpenItems(entity.id, {
+                            apply: pickArgv<boolean>(raw, 'apply') === true,
+                            minScore: pickArgv<number>(raw, 'minScore', 'min-score'),
+                        });
+                        if (result.warning) console.error(`Warning: ${result.warning}`);
+                        return result;
+                    });
                 },
             })
             .command({
@@ -156,9 +182,19 @@ export const reconcileCommand: CommandModule = {
                 describe: 'Gap report for a period: matched/unmatched store transactions and invoice documents.',
                 builder: (y) =>
                     y
-                        .option('year', { type: 'number', demandOption: true, describe: 'Tax year, e.g. 2025' })
-                        .option('month', { type: 'number', describe: 'Optional month 1–12' })
-                        .option('account-key', { type: 'string', describe: 'Restrict to one accountKey' }),
+                        .option('year', {
+                            type: 'number',
+                            demandOption: true,
+                            describe: 'Tax year, e.g. 2025',
+                        })
+                        .option('month', {
+                            type: 'number',
+                            describe: 'Optional month 1–12',
+                        })
+                        .option('account-key', {
+                            type: 'string',
+                            describe: 'Restrict to one accountKey',
+                        }),
                 handler: (argv) => {
                     const raw = argv as Record<string, unknown>;
                     const year = pickArgv<number>(raw, 'year') as number;
@@ -192,7 +228,10 @@ export const reconcileCommand: CommandModule = {
                             type: 'string',
                             describe: 'Document id → suggest matching payment transactions',
                         })
-                        .option('limit', { type: 'number', describe: 'Max candidates (default 8)' })
+                        .option('limit', {
+                            type: 'number',
+                            describe: 'Max candidates (default 8)',
+                        })
                         .check((a) => {
                             if (!a['transaction-id'] && !a['document-id'])
                                 throw new Error('Pass --transaction-id or --document-id.');
@@ -207,7 +246,9 @@ export const reconcileCommand: CommandModule = {
                     runAndExit(() =>
                         txId
                             ? suggestDocumentLinksForTransaction(entity, txId, { limit })
-                            : suggestTransactionLinksForDocument(entity, docId as string, { limit }),
+                            : suggestTransactionLinksForDocument(entity, docId as string, {
+                                  limit,
+                              }),
                     );
                 },
             }),
