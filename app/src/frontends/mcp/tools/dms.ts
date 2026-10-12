@@ -19,6 +19,7 @@ import {
     setPaymentStatus,
     type MetadataProposal,
 } from '../../../core/actions/dms/inbox.ts';
+import { reconcileOpenItems, RECONCILE_MIN_SCORE } from '../../../core/actions/dms/reconcile-open-items.ts';
 import { mcpErrorFrom, mcpSuccess } from '../types.ts';
 
 const entityField = z.string().optional().describe('Workspace entity id (default: the first business entity)');
@@ -27,7 +28,11 @@ const model = z.string().min(1).describe('Name of the model making the call; sta
 
 const proposalFields = {
     title: z.string().optional(),
-    correspondent: z.string().optional().describe('Exact name or id from dms_list_correspondents'),
+    correspondent: z
+        .string()
+        .nullable()
+        .optional()
+        .describe('Exact name or id from dms_list_correspondents; null clears the correspondent, absent leaves it'),
     document_type: z.string().optional().describe('Exact name or id from dms_list_document_types'),
     direction: z
         .enum(['incoming', 'outgoing'])
@@ -242,6 +247,47 @@ export function registerDmsTools(server: McpServer, ctx: AppContext): void {
                     linkedTxIds: doc.linkedTxIds,
                     candidates,
                 });
+            } catch (err) {
+                return mcpErrorFrom(err);
+            }
+        },
+    );
+
+    const reconcileDescription = (lead: string) =>
+        `${lead} For every open invoice (payment_status=offen) it looks for the bank payment; a document is acted on only when EXACTLY ONE transaction candidate has a raw score >= ${RECONCILE_MIN_SCORE} (several strong candidates = ambiguous, skipped; none strong enough = skipped; already paid = skipped).`;
+
+    server.registerTool(
+        'dms_plan_reconcile_open_items',
+        {
+            title: 'Plan Open-Item Reconciliation (dry run)',
+            description: reconcileDescription(
+                'Show which open invoices would be linked to a bank transaction and marked bezahlt. Writes nothing.',
+            ),
+            inputSchema: { entity_id: entityField },
+            annotations: { readOnlyHint: true, openWorldHint: false },
+        },
+        async ({ entity_id }) => {
+            try {
+                return mcpSuccess(await reconcileOpenItems(entityOf(entity_id)));
+            } catch (err) {
+                return mcpErrorFrom(err);
+            }
+        },
+    );
+
+    server.registerTool(
+        'dms_apply_reconcile_open_items',
+        {
+            title: 'Apply Open-Item Reconciliation',
+            description: reconcileDescription(
+                'Link each unambiguous open invoice to its bank transaction and set it to bezahlt. Run dms_plan_reconcile_open_items first and call this only after the person approved the plan.',
+            ),
+            inputSchema: { entity_id: entityField },
+            annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+        },
+        async ({ entity_id }) => {
+            try {
+                return mcpSuccess(await reconcileOpenItems(entityOf(entity_id), { apply: true }));
             } catch (err) {
                 return mcpErrorFrom(err);
             }

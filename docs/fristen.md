@@ -65,3 +65,21 @@ steuer fristen ics --out ~/.local/share/steuer/fristen.ics
 
 Zum regelmäßigen Ausführen taugt ein Timer des Systems (z. B. ein systemd-User-Timer, der erst `ics`,
 dann `notify` aufruft).
+
+## Offene Posten mit Buchungen abgleichen
+
+Zu jedem offenen Posten (`payment_status = offen`) sucht der Abgleich die Zahlung auf dem Konto. Nur
+wenn **genau eine** Buchung die Mindestpunktzahl von 60 (Rohwert des Abgleichs) erreicht, wird sie mit
+dem Beleg verknüpft und der Beleg auf „bezahlt" gesetzt. Zwei oder mehr starke Treffer gelten als
+mehrdeutig, ein bester Treffer unter 60 als zu schwach, ein schon bezahlter Beleg wird übersprungen —
+diese Fälle bleiben für dich zur Prüfung. Alles läuft über das DMS des Mandanten.
+
+```sh
+steuer reconcile open-items [--entity <id>]           # zeigt nur den Plan
+steuer reconcile open-items [--entity <id>] --apply   # schreibt Verknüpfung und Status
+```
+
+Für externe Agenten gibt es zwei MCP-Werkzeuge: `dms_plan_reconcile_open_items` (lesend, Plan) und
+`dms_apply_reconcile_open_items` (schreibend, nur mit „Schreibende Werkzeuge erlauben").
+Je Beleg steht im Ergebnis die Entscheidung: `link`, `ambiguous`, `below-threshold`, `no-candidate`,
+`already-paid` oder `not-found`.

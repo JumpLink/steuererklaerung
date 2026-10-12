@@ -10,6 +10,9 @@ import {
     suggestDocumentLinksForTransaction,
     suggestTransactionLinksForDocument,
 } from '../../core/actions/link-candidates.ts';
+import { reconcileOpenItems, RECONCILE_MIN_SCORE } from '../../core/actions/dms/reconcile-open-items.ts';
+import { defaultEntityFor, requireEntity } from '../../core/config/entities.ts';
+import { loadManifest } from '../../core/config/index.ts';
 import { pickArgv, runAndExit } from './output.ts';
 import { fiscalYearRange } from '@steuererklaerung/shared';
 
@@ -30,7 +33,7 @@ export const reconcileCommand: CommandModule = {
     handler: () => {},
     builder: (yargs) =>
         yargs
-            .demandCommand(1, 'Choose a subcommand: store, document, status')
+            .demandCommand(1, 'Choose a subcommand: store, document, status, open-items')
             .command({
                 command: 'store',
                 describe:
@@ -121,6 +124,30 @@ export const reconcileCommand: CommandModule = {
                             force: pickArgv<boolean>(raw, 'force') === true,
                             dryRun: pickArgv<boolean>(raw, 'dryRun', 'dry-run') === true,
                         }),
+                    );
+                },
+            })
+            .command({
+                command: 'open-items',
+                describe: `Open invoices (payment_status=offen): link each to its bank payment and mark it bezahlt, but only when exactly one transaction scores >= ${RECONCILE_MIN_SCORE}. Prints the plan; writes only with --apply.`,
+                builder: (y) =>
+                    y
+                        .option('entity', {
+                            type: 'string',
+                            describe: 'Workspace entity id (default: first business entity)',
+                        })
+                        .option('apply', {
+                            type: 'boolean',
+                            default: false,
+                            describe: 'Write the links and payment status (default: dry run)',
+                        }),
+                handler: (argv) => {
+                    const raw = argv as Record<string, unknown>;
+                    const manifest = loadManifest();
+                    const entityArg = pickArgv<string>(raw, 'entity');
+                    const entity = entityArg ? requireEntity(manifest, entityArg) : defaultEntityFor(manifest);
+                    runAndExit(() =>
+                        reconcileOpenItems(entity.id, { apply: pickArgv<boolean>(raw, 'apply') === true }),
                     );
                 },
             })
