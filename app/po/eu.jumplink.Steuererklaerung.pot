@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-12 14:55+0200\n"
+"POT-Creation-Date: 2026-10-12 17:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,13 +77,13 @@ msgstr ""
 msgid "This DMS cannot ingest documents."
 msgstr ""
 
-#: src/core/clients/fints/client.ts:286
+#: src/core/clients/fints/client.ts:290
 msgid ""
 "The bank does not offer electronic account statements (no HIEKAS in its bank "
 "parameters) for this account."
 msgstr ""
 
-#: src/core/clients/fints/client.ts:291
+#: src/core/clients/fints/client.ts:296
 #, javascript-format
 msgid ""
 "The bank offers electronic account statements, but not as PDF (formats: %s)."
@@ -137,7 +137,7 @@ msgstr ""
 #: src/frontends/desktop/assistent-panel.blp:30
 #: src/frontends/desktop/lotse-panel.blp:26
 #: src/frontends/desktop/views/einstellungen-view.blp:53
-#: src/frontends/desktop/views/tab-hub.ts:123
+#: src/frontends/desktop/views/tab-hub.ts:182
 #: src/frontends/desktop/window.blp:140
 msgid "Assistant"
 msgstr ""
@@ -205,19 +205,19 @@ msgstr ""
 msgid "Ask me something about your figures. For example:"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:167
+#: src/frontends/desktop/assistent-panel.ts:170
 msgid "Suggestion · {title}"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:188
+#: src/frontends/desktop/assistent-panel.ts:191
 msgid "Apply"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:195
+#: src/frontends/desktop/assistent-panel.ts:198
 msgid "Applied ✓"
 msgstr ""
 
-#: src/frontends/desktop/assistent-panel.ts:221
+#: src/frontends/desktop/assistent-panel.ts:224
 msgid "Assistant is typing …"
 msgstr ""
 
@@ -232,7 +232,7 @@ msgstr ""
 #: src/frontends/desktop/views/entity-dialogs.ts:101
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:465
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:76
-#: src/frontends/desktop/window.ts:242
+#: src/frontends/desktop/window.ts:255
 msgid "Cancel"
 msgstr ""
 
@@ -298,7 +298,7 @@ msgstr ""
 msgid "all accounts"
 msgstr ""
 
-#: src/frontends/desktop/nav.ts:57 src/frontends/desktop/views/tab-hub.ts:146
+#: src/frontends/desktop/nav.ts:57 src/frontends/desktop/views/tab-hub.ts:205
 msgid "Invoices"
 msgstr ""
 
@@ -524,7 +524,7 @@ msgid "Split"
 msgstr ""
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:146
-#: src/frontends/desktop/views/beleg-eingang-view.ts:451
+#: src/frontends/desktop/views/beleg-eingang-view.ts:452
 #: src/frontends/desktop/views/tx-detail-dialog.ts:62
 #: src/frontends/desktop/views/umbuchen-dialog.ts:118
 msgid "Transaction"
@@ -604,128 +604,133 @@ msgstr ""
 #: src/frontends/desktop/views/rechnung-detail-dialog.blp:41
 #: src/frontends/desktop/views/rechnungen-view.blp:32
 #: src/frontends/desktop/views/transactions-view.blp:32
-#: src/frontends/desktop/views/util.ts:404
-#: src/frontends/desktop/views/util.ts:407
+#: src/frontends/desktop/views/util.ts:409
+#: src/frontends/desktop/views/util.ts:412
 #: src/frontends/desktop/views/vertraege-view.blp:32
 #: src/frontends/desktop/views/zu-pruefen-view.blp:33
 msgid "Could not load"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:48
+#: src/frontends/desktop/views/beleg-eingang-view.blp:106
+#: src/frontends/desktop/views/zu-pruefen-view.blp:118
+msgid "Show the queue"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:49
 #: src/frontends/desktop/views/dokumente-view.ts:31
 msgid "built-in DMS"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:51
+#: src/frontends/desktop/views/beleg-eingang-view.ts:52
 msgid "— unchanged (accept AI suggestion) —"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:128
+#: src/frontends/desktop/views/beleg-eingang-view.ts:129
 msgid "Could not load the receipt inbox"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:192
-#: src/frontends/desktop/views/beleg-eingang-view.ts:347
+#: src/frontends/desktop/views/beleg-eingang-view.ts:193
+#: src/frontends/desktop/views/beleg-eingang-view.ts:348
 #: src/frontends/desktop/views/dokumente-view.ts:186
 msgid "(untitled)"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:196
+#: src/frontends/desktop/views/beleg-eingang-view.ts:197
 #: src/frontends/desktop/views/beleg-link-dialog.ts:225
 #: src/frontends/desktop/views/dokumente-view.ts:180
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:422
-#: src/frontends/desktop/views/rechnungen-view.ts:525
+#: src/frontends/desktop/views/rechnungen-view.ts:527
 msgid "No. {number}"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:307
-#: src/frontends/desktop/views/beleg-eingang-view.ts:393
-#: src/frontends/desktop/views/beleg-eingang-view.ts:430
+#: src/frontends/desktop/views/beleg-eingang-view.ts:308
+#: src/frontends/desktop/views/beleg-eingang-view.ts:394
+#: src/frontends/desktop/views/beleg-eingang-view.ts:431
 msgid "Match transaction"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:309
+#: src/frontends/desktop/views/beleg-eingang-view.ts:310
 msgid "Could not determine candidate transactions"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:314
-#: src/frontends/desktop/views/util.ts:422
+#: src/frontends/desktop/views/beleg-eingang-view.ts:315
+#: src/frontends/desktop/views/util.ts:427
 msgid "Try again"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:330
+#: src/frontends/desktop/views/beleg-eingang-view.ts:331
 msgid "Not matched to a transaction yet"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:331
+#: src/frontends/desktop/views/beleg-eingang-view.ts:332
 msgid "Choose the matching transaction, then confirm."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:343
-#: src/frontends/desktop/views/beleg-eingang-view.ts:621
+#: src/frontends/desktop/views/beleg-eingang-view.ts:344
+#: src/frontends/desktop/views/beleg-eingang-view.ts:622
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:153
 #: src/frontends/desktop/views/tx-detail-dialog.ts:36
 msgid "Receipt"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:360
+#: src/frontends/desktop/views/beleg-eingang-view.ts:361
 msgid "Date"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:361
+#: src/frontends/desktop/views/beleg-eingang-view.ts:362
 msgid "Invoice no."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:363
+#: src/frontends/desktop/views/beleg-eingang-view.ts:364
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:99
 #: src/frontends/desktop/views/tx-detail-dialog.ts:202
 msgid "Net"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:378
+#: src/frontends/desktop/views/beleg-eingang-view.ts:379
 #: src/frontends/desktop/views/tx-detail-dialog.ts:183
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:144
 msgid "Source"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:383
+#: src/frontends/desktop/views/beleg-eingang-view.ts:384
 msgid "Open original"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:383
+#: src/frontends/desktop/views/beleg-eingang-view.ts:384
 msgid "Show the receipt file"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:394
+#: src/frontends/desktop/views/beleg-eingang-view.ts:395
 msgid "Looking for matching transactions …"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:413
+#: src/frontends/desktop/views/beleg-eingang-view.ts:414
 msgid "Unknown error"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:431
+#: src/frontends/desktop/views/beleg-eingang-view.ts:432
 msgid "The receipt is linked to the chosen transaction."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:436
+#: src/frontends/desktop/views/beleg-eingang-view.ts:437
 msgid "No matching transaction found"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:437
+#: src/frontends/desktop/views/beleg-eingang-view.ts:438
 msgid "No unlinked transaction matches amount, date and counterparty — skip."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:473
+#: src/frontends/desktop/views/beleg-eingang-view.ts:474
 msgid "Check & confirm"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:474
+#: src/frontends/desktop/views/beleg-eingang-view.ts:475
 msgid "Leave the category unchanged (accept the AI suggestion) or correct it."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:481
+#: src/frontends/desktop/views/beleg-eingang-view.ts:482
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:119
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:124
 #: src/frontends/desktop/views/tx-detail-dialog.ts:182
@@ -736,100 +741,100 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:488
+#: src/frontends/desktop/views/beleg-eingang-view.ts:489
 msgid "derived VAT rate: {rate} %"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:490
+#: src/frontends/desktop/views/beleg-eingang-view.ts:491
 msgid "The VAT rate is derived from the category"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:502
+#: src/frontends/desktop/views/beleg-eingang-view.ts:503
 msgid "Reason (optional)"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:517
+#: src/frontends/desktop/views/beleg-eingang-view.ts:518
 msgid "Skip"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:521
+#: src/frontends/desktop/views/beleg-eingang-view.ts:522
 #: src/frontends/desktop/views/zu-pruefen-view.ts:360
 msgid "Confirm and continue"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:528
+#: src/frontends/desktop/views/beleg-eingang-view.ts:529
 #: src/frontends/desktop/views/zu-pruefen-view.ts:370
 msgid "Tip: ←/→ to browse · Enter confirms"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:546
+#: src/frontends/desktop/views/beleg-eingang-view.ts:547
 msgid "Confirmed"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:547
+#: src/frontends/desktop/views/beleg-eingang-view.ts:548
 msgid "This receipt was confirmed and booked in this session."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:554
+#: src/frontends/desktop/views/beleg-eingang-view.ts:555
 msgctxt "confirmed receipt"
 msgid "Undo"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:567
+#: src/frontends/desktop/views/beleg-eingang-view.ts:568
 msgid "All matched"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:567
+#: src/frontends/desktop/views/beleg-eingang-view.ts:568
 msgid "All checked"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:569
+#: src/frontends/desktop/views/beleg-eingang-view.ts:570
 msgid ""
 "Every receipt in {year} is matched to a transaction. New receipts appear "
 "here."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:573
+#: src/frontends/desktop/views/beleg-eingang-view.ts:574
 msgid ""
 "Every receipt in the inbox is confirmed and booked. New receipts from "
 "Paperless and the mail import appear here automatically."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:580
+#: src/frontends/desktop/views/beleg-eingang-view.ts:581
 msgid "Go to transactions"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:624
+#: src/frontends/desktop/views/beleg-eingang-view.ts:625
 msgid "Receipt “{vendor}” booked — marking it in Paperless failed"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:628
+#: src/frontends/desktop/views/beleg-eingang-view.ts:629
 msgid "Receipt “{vendor}” booked"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:641
+#: src/frontends/desktop/views/beleg-eingang-view.ts:642
 #: src/frontends/desktop/views/zu-pruefen-view.ts:432
 msgid "Confirming failed"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:657
+#: src/frontends/desktop/views/beleg-eingang-view.ts:658
 msgid "Undo is no longer possible"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:662
+#: src/frontends/desktop/views/beleg-eingang-view.ts:663
 #: src/frontends/desktop/views/offene-belege-view.ts:217
 msgid "Undone"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:675
+#: src/frontends/desktop/views/beleg-eingang-view.ts:676
 msgid "Undo failed"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:690
+#: src/frontends/desktop/views/beleg-eingang-view.ts:691
 msgid "The receipt file is not available."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:705
+#: src/frontends/desktop/views/beleg-eingang-view.ts:706
 msgid "Could not open the original"
 msgstr ""
 
@@ -1194,7 +1199,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:40
 #: src/frontends/desktop/views/welcome.ts:198
-#: src/frontends/desktop/window.ts:614
+#: src/frontends/desktop/window.ts:627
 msgid "Use my own data"
 msgstr ""
 
@@ -1689,7 +1694,7 @@ msgid "Income − expenses"
 msgstr ""
 
 #: src/frontends/desktop/views/home-view.ts:159
-#: src/frontends/desktop/views/home-view.ts:373
+#: src/frontends/desktop/views/home-view.ts:375
 #: src/frontends/desktop/views/transactions-view.ts:54
 #: src/frontends/desktop/views/transactions-view.ts:176
 msgid "Income"
@@ -1703,7 +1708,7 @@ msgid "net {year}"
 msgstr ""
 
 #: src/frontends/desktop/views/home-view.ts:160
-#: src/frontends/desktop/views/home-view.ts:374
+#: src/frontends/desktop/views/home-view.ts:376
 #: src/frontends/desktop/views/transactions-view.ts:55
 #: src/frontends/desktop/views/transactions-view.ts:178
 msgid "Expenses"
@@ -1774,19 +1779,19 @@ msgstr ""
 msgid "Could not load the invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:369
+#: src/frontends/desktop/views/home-view.ts:371
 msgid "Income and expenses"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:393
+#: src/frontends/desktop/views/home-view.ts:395
 msgid "Expenses by category"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:404
+#: src/frontends/desktop/views/home-view.ts:406
 msgid "No expenses recorded"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:412
+#: src/frontends/desktop/views/home-view.ts:414
 msgid "Liquidity"
 msgstr ""
 
@@ -2291,7 +2296,7 @@ msgid "Loading details …"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:150
-#: src/frontends/desktop/views/rechnungen-view.ts:523
+#: src/frontends/desktop/views/rechnungen-view.ts:525
 msgid "Invoice"
 msgstr ""
 
@@ -2512,7 +2517,7 @@ msgid "Not sent by email yet."
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:516
-#: src/frontends/desktop/views/rechnungen-view.ts:533
+#: src/frontends/desktop/views/rechnungen-view.ts:535
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:206
 msgid "sent"
 msgstr ""
@@ -2687,213 +2692,213 @@ msgstr ""
 msgid "All invoices"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:54
+#: src/frontends/desktop/views/rechnungen-view.ts:55
 msgctxt "recurring status"
 msgid "overdue"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:55
+#: src/frontends/desktop/views/rechnungen-view.ts:56
 msgctxt "recurring status"
 msgid "due soon"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:56
+#: src/frontends/desktop/views/rechnungen-view.ts:57
 msgctxt "recurring status"
 msgid "planned"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:57
+#: src/frontends/desktop/views/rechnungen-view.ts:58
 msgctxt "recurring status"
 msgid "paused"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:58
+#: src/frontends/desktop/views/rechnungen-view.ts:59
 msgctxt "recurring status"
 msgid "cancelled"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:72
-#: src/frontends/desktop/views/tab-hub.ts:139
+#: src/frontends/desktop/views/rechnungen-view.ts:73
+#: src/frontends/desktop/views/tab-hub.ts:198
 #: src/frontends/desktop/views/transactions-view.ts:53
-#: src/frontends/desktop/views/vertraege-view.ts:60
+#: src/frontends/desktop/views/vertraege-view.ts:61
 msgid "All"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:73
+#: src/frontends/desktop/views/rechnungen-view.ts:74
 msgid "Drafts"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:74
-#: src/frontends/desktop/views/rechnungen-view.ts:408
+#: src/frontends/desktop/views/rechnungen-view.ts:75
+#: src/frontends/desktop/views/rechnungen-view.ts:410
 #: src/frontends/desktop/views/util.ts:68
 msgctxt "invoice status"
 msgid "Open"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:75
-#: src/frontends/desktop/views/rechnungen-view.ts:413
+#: src/frontends/desktop/views/rechnungen-view.ts:76
+#: src/frontends/desktop/views/rechnungen-view.ts:415
 #: src/frontends/desktop/views/util.ts:69
 msgctxt "invoice status"
 msgid "Overdue"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:76
-#: src/frontends/desktop/views/rechnungen-view.ts:419
+#: src/frontends/desktop/views/rechnungen-view.ts:77
+#: src/frontends/desktop/views/rechnungen-view.ts:421
 #: src/frontends/desktop/views/util.ts:70
 msgctxt "invoice status"
 msgid "Paid"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:77
+#: src/frontends/desktop/views/rechnungen-view.ts:78
 #: src/frontends/desktop/views/util.ts:71
 msgctxt "invoice status"
 msgid "Cancelled"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:157
+#: src/frontends/desktop/views/rechnungen-view.ts:158
 msgid "Invoices could not be loaded"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:178
+#: src/frontends/desktop/views/rechnungen-view.ts:179
 msgid "{overdue} overdue · {soon} due soon · {total} total"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:183
+#: src/frontends/desktop/views/rechnungen-view.ts:184
 msgid "none recorded"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:189
+#: src/frontends/desktop/views/rechnungen-view.ts:190
 msgid "No recurring invoices"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:191
+#: src/frontends/desktop/views/rechnungen-view.ts:192
 msgid ""
 "What is billed the same every year or month — hosting, maintenance, rent — "
 "is set up here once and then reminds you by itself."
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:194
+#: src/frontends/desktop/views/rechnungen-view.ts:195
 msgid "Add recurring invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:215
+#: src/frontends/desktop/views/rechnungen-view.ts:216
 msgid "Recurring item “{id}” not found."
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:230
+#: src/frontends/desktop/views/rechnungen-view.ts:231
 msgid "{n} day overdue"
 msgid_plural "{n} days overdue"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:234
+#: src/frontends/desktop/views/rechnungen-view.ts:235
 msgid "today"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:235
+#: src/frontends/desktop/views/rechnungen-view.ts:236
 msgid "in {n} day"
 msgid_plural "in {n} days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:239
+#: src/frontends/desktop/views/rechnungen-view.ts:240
 msgid "due {date} ({when})"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:240
+#: src/frontends/desktop/views/rechnungen-view.ts:241
 msgid "last {number}"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:251
-#: src/frontends/desktop/views/rechnungen-view.ts:290
+#: src/frontends/desktop/views/rechnungen-view.ts:253
+#: src/frontends/desktop/views/rechnungen-view.ts:292
 msgid "Create draft"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:262
+#: src/frontends/desktop/views/rechnungen-view.ts:264
 msgid "Edit recurring item"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:277
+#: src/frontends/desktop/views/rechnungen-view.ts:279
 msgid "Creating draft …"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:282
+#: src/frontends/desktop/views/rechnungen-view.ts:284
 msgid "Draft {number} created"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:283
+#: src/frontends/desktop/views/rechnungen-view.ts:285
 msgid "Draft created"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:291
+#: src/frontends/desktop/views/rechnungen-view.ts:293
 msgid "Draft failed"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:297
+#: src/frontends/desktop/views/rechnungen-view.ts:299
 msgid "Loading invoices from the back end …"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:328
+#: src/frontends/desktop/views/rechnungen-view.ts:330
 msgid "Invoices not available"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:410
-#: src/frontends/desktop/views/rechnungen-view.ts:416
-#: src/frontends/desktop/views/rechnungen-view.ts:422
+#: src/frontends/desktop/views/rechnungen-view.ts:412
+#: src/frontends/desktop/views/rechnungen-view.ts:418
+#: src/frontends/desktop/views/rechnungen-view.ts:424
 msgid "{n} invoice"
 msgid_plural "{n} invoices"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:434
+#: src/frontends/desktop/views/rechnungen-view.ts:436
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:116
 msgid "New invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:466
+#: src/frontends/desktop/views/rechnungen-view.ts:468
 msgid "{n} total"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:473
+#: src/frontends/desktop/views/rechnungen-view.ts:475
 msgid "Nothing in this status"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:474
+#: src/frontends/desktop/views/rechnungen-view.ts:476
 msgid "No invoice has this status — another filter shows more."
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:475
-#: src/frontends/desktop/views/vertraege-view.ts:244
+#: src/frontends/desktop/views/rechnungen-view.ts:477
+#: src/frontends/desktop/views/vertraege-view.ts:245
 msgid "Show all"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:479
+#: src/frontends/desktop/views/rechnungen-view.ts:481
 msgid "No invoices yet"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:480
+#: src/frontends/desktop/views/rechnungen-view.ts:482
 msgid ""
 "Outgoing invoices are created here — as PDF and as e-invoice (XRechnung)."
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:481
+#: src/frontends/desktop/views/rechnungen-view.ts:483
 msgid "Create invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:526
+#: src/frontends/desktop/views/rechnungen-view.ts:528
 msgid "issued {date}"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:527
+#: src/frontends/desktop/views/rechnungen-view.ts:529
 msgid "due {date}"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:534
+#: src/frontends/desktop/views/rechnungen-view.ts:536
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:384
 msgid "Sending failed"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:535
+#: src/frontends/desktop/views/rechnungen-view.ts:537
 msgid "not sent"
 msgstr ""
 
@@ -3180,7 +3185,7 @@ msgid "— Choose category —"
 msgstr ""
 
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:49
-#: src/frontends/desktop/views/zu-pruefen-view.blp:75
+#: src/frontends/desktop/views/zu-pruefen-view.blp:93
 #: src/frontends/desktop/views/zu-pruefen-view.ts:228
 msgid "Rule from selection"
 msgstr ""
@@ -3265,7 +3270,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:63
 #: src/frontends/desktop/views/setup-assistant.ts:468
-#: src/frontends/desktop/window.ts:681
+#: src/frontends/desktop/window.ts:694
 msgid "Private"
 msgstr ""
 
@@ -3434,7 +3439,7 @@ msgid "Dauerfristverlängerung: every VAT return is due one month later."
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:424
-#: src/frontends/desktop/window.ts:681
+#: src/frontends/desktop/window.ts:694
 msgid "Business"
 msgstr ""
 
@@ -3573,40 +3578,40 @@ msgstr ""
 msgid "Optional. The tax office is already part of the tax number."
 msgstr ""
 
-#: src/frontends/desktop/views/tab-hub.ts:122
+#: src/frontends/desktop/views/tab-hub.ts:181
 msgid "Tax return"
 msgstr ""
 
-#: src/frontends/desktop/views/tab-hub.ts:125
+#: src/frontends/desktop/views/tab-hub.ts:184
 msgid "Annexes"
 msgstr ""
 
-#: src/frontends/desktop/views/tab-hub.ts:127
+#: src/frontends/desktop/views/tab-hub.ts:186
 msgid "Tax account"
 msgstr ""
 
-#: src/frontends/desktop/views/tab-hub.ts:132
+#: src/frontends/desktop/views/tab-hub.ts:191
 msgid "Inbox"
 msgstr ""
 
-#: src/frontends/desktop/views/tab-hub.ts:133
+#: src/frontends/desktop/views/tab-hub.ts:192
 msgid "Open receipts"
 msgstr ""
 
-#: src/frontends/desktop/views/tab-hub.ts:134
+#: src/frontends/desktop/views/tab-hub.ts:193
 msgid "All receipts"
 msgstr ""
 
-#: src/frontends/desktop/views/tab-hub.ts:140
+#: src/frontends/desktop/views/tab-hub.ts:199
 #: src/frontends/desktop/views/zu-pruefen-view.ts:320
 msgid "To review"
 msgstr ""
 
-#: src/frontends/desktop/views/tab-hub.ts:141
+#: src/frontends/desktop/views/tab-hub.ts:200
 msgid "Recurring costs"
 msgstr ""
 
-#: src/frontends/desktop/views/tab-hub.ts:147
+#: src/frontends/desktop/views/tab-hub.ts:206
 msgid "Outstanding invoices"
 msgstr ""
 
@@ -4049,38 +4054,38 @@ msgctxt "month abbreviation"
 msgid "Dec"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:357
+#: src/frontends/desktop/views/util.ts:362
 msgid "Not set up yet"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:359
+#: src/frontends/desktop/views/util.ts:364
 msgid ""
 "There is no configuration yet. The assistant creates it — entity, "
 "Steuernummer (tax number) and where the data should live."
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:362
+#: src/frontends/desktop/views/util.ts:367
 msgid "Start setup"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:367
+#: src/frontends/desktop/views/util.ts:372
 msgid "{capability} needs Paperless"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:368
+#: src/frontends/desktop/views/util.ts:373
 msgid "Receipt management can be switched in the settings."
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:369
-#: src/frontends/desktop/views/util.ts:379
+#: src/frontends/desktop/views/util.ts:374
+#: src/frontends/desktop/views/util.ts:384
 msgid "Go to settings"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:374
+#: src/frontends/desktop/views/util.ts:379
 msgid "Paperless is not set up yet"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:376
+#: src/frontends/desktop/views/util.ts:381
 msgid ""
 "Paperless lacks the document types and custom fields the figures are read "
 "from. They can be created in the settings."
@@ -4090,134 +4095,134 @@ msgstr ""
 msgid "Loading contracts …"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:61
+#: src/frontends/desktop/views/vertraege-view.ts:62
 msgctxt "contract filter"
 msgid "Active"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:62
+#: src/frontends/desktop/views/vertraege-view.ts:63
 msgctxt "contract filter"
 msgid "Deadline near"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:63
+#: src/frontends/desktop/views/vertraege-view.ts:64
 msgctxt "contract filter"
 msgid "Archived"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:106
+#: src/frontends/desktop/views/vertraege-view.ts:107
 msgid "Contracts could not be loaded"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:129
+#: src/frontends/desktop/views/vertraege-view.ts:130
 msgid "Per month"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:131
+#: src/frontends/desktop/views/vertraege-view.ts:132
 msgid "{n} active contract"
 msgid_plural "{n} active contracts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:134
+#: src/frontends/desktop/views/vertraege-view.ts:135
 msgid "Per year"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:136
+#: src/frontends/desktop/views/vertraege-view.ts:137
 msgid "derived from the intervals"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:139
+#: src/frontends/desktop/views/vertraege-view.ts:140
 msgid "Deadline near"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:142
+#: src/frontends/desktop/views/vertraege-view.ts:143
 msgid "{n} of them urgent"
 msgid_plural "{n} of them urgent"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:145
+#: src/frontends/desktop/views/vertraege-view.ts:146
 msgid "Needs a look"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:148
+#: src/frontends/desktop/views/vertraege-view.ts:149
 msgid "missing, returned or changed debits"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:160
+#: src/frontends/desktop/views/vertraege-view.ts:161
 msgid "Export deadlines"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:161
+#: src/frontends/desktop/views/vertraege-view.ts:162
 msgid "Save the upcoming notice deadlines as a calendar file (.ics)"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:165
-#: src/frontends/desktop/views/vertraege-view.ts:232
+#: src/frontends/desktop/views/vertraege-view.ts:166
+#: src/frontends/desktop/views/vertraege-view.ts:233
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:92
 msgid "New contract"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:216
+#: src/frontends/desktop/views/vertraege-view.ts:217
 msgid "{n} contract"
 msgid_plural "{n} contracts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:227
+#: src/frontends/desktop/views/vertraege-view.ts:228
 msgid "No contracts yet"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:229
+#: src/frontends/desktop/views/vertraege-view.ts:230
 msgid ""
 "Hosting, insurance, a phone tariff — recorded once with its term and notice "
 "period, the app works out by itself when the last day to cancel is."
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:239
+#: src/frontends/desktop/views/vertraege-view.ts:240
 msgid "Nothing under this filter"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:242
+#: src/frontends/desktop/views/vertraege-view.ts:243
 msgid "No contract has been archived yet."
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:243
+#: src/frontends/desktop/views/vertraege-view.ts:244
 msgid "No contract is in this state — another filter shows more."
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:252
+#: src/frontends/desktop/views/vertraege-view.ts:253
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:134
 msgid "{amount} {cycle}"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:263
+#: src/frontends/desktop/views/vertraege-view.ts:264
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:139
 msgid "{amount} / month"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:265
+#: src/frontends/desktop/views/vertraege-view.ts:266
 msgid "Derived from {amount} {cycle}"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:278
+#: src/frontends/desktop/views/vertraege-view.ts:279
 msgid "Give notice by {date} at the latest"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:279
+#: src/frontends/desktop/views/vertraege-view.ts:280
 msgid "Cancellable at any time"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:320
+#: src/frontends/desktop/views/vertraege-view.ts:321
 msgid "Deadlines saved"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:323
+#: src/frontends/desktop/views/vertraege-view.ts:324
 msgid "Export failed"
 msgstr ""
 
-#: src/frontends/desktop/views/vertraege-view.ts:326
+#: src/frontends/desktop/views/vertraege-view.ts:327
 msgid "Deadlines exported"
 msgstr ""
 
@@ -5089,44 +5094,44 @@ msgstr ""
 msgid "Could not open {dir}"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:50
+#: src/frontends/desktop/views/zeiten-view.ts:51
 msgid "Open"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:51
+#: src/frontends/desktop/views/zeiten-view.ts:52
 msgid "Invoiced"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:52
+#: src/frontends/desktop/views/zeiten-view.ts:53
 msgid "Internal"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:346
+#: src/frontends/desktop/views/zeiten-view.ts:347
 msgid "Nothing tracked yet."
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:361
+#: src/frontends/desktop/views/zeiten-view.ts:362
 msgid "Today"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:363
+#: src/frontends/desktop/views/zeiten-view.ts:364
 msgid "Yesterday"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:381
+#: src/frontends/desktop/views/zeiten-view.ts:382
 msgid "estimated"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:411
+#: src/frontends/desktop/views/zeiten-view.ts:414
 msgid "Assign project"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:411
-#: src/frontends/desktop/views/zeiten-view.ts:420
+#: src/frontends/desktop/views/zeiten-view.ts:414
+#: src/frontends/desktop/views/zeiten-view.ts:423
 msgid "Already invoiced"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:420
+#: src/frontends/desktop/views/zeiten-view.ts:423
 msgid "Delete entry"
 msgstr ""
 
@@ -5134,7 +5139,7 @@ msgstr ""
 msgid "Loading transactions to review …"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.blp:81
+#: src/frontends/desktop/views/zu-pruefen-view.blp:99
 msgid "Suggest the common pattern of the marked transactions as a rule"
 msgstr ""
 
@@ -5268,48 +5273,48 @@ msgstr ""
 msgid "Sync"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:236
+#: src/frontends/desktop/window.ts:249
 msgid "Switch to the demo?"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:236
+#: src/frontends/desktop/window.ts:249
 msgid "Switch to your own data?"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:239
+#: src/frontends/desktop/window.ts:252
 msgid ""
 "The app restarts with fictional sample data. Your own data is not changed."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:240
+#: src/frontends/desktop/window.ts:253
 msgid "The app restarts with your own data. The demo data stays separate."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:243
+#: src/frontends/desktop/window.ts:256
 msgid "Restart"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:256
+#: src/frontends/desktop/window.ts:269
 msgid "Please restart the app yourself to switch."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:606
+#: src/frontends/desktop/window.ts:619
 msgid "Data could not be loaded completely: {error}"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:613
+#: src/frontends/desktop/window.ts:626
 msgid "Demo data – fictional examples, no real financial data"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:643
+#: src/frontends/desktop/window.ts:656
 msgid "Setup is not finished: no business or private tax return is set up yet."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:644
+#: src/frontends/desktop/window.ts:657
 msgid "Setup is not finished: “{entity}” has no bank account yet."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:745
+#: src/frontends/desktop/window.ts:762
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."
