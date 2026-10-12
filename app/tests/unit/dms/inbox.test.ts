@@ -283,6 +283,14 @@ export default async () => {
                 expect(res.markedReviewed).toBe(true);
             });
 
+            await it('clears the correspondent with null and leaves it alone when absent', async () => {
+                const { provider, state } = fakeProvider('builtin', doc({ correspondent: 'ACME' }));
+                const kept = await proposeMetadata(provider, '1', { title: 'x' }, { model: 'm' });
+                expect(kept.changes.some((c) => c.field === 'correspondent')).toBe(false);
+                await applyMetadata(provider, '1', { correspondent: null }, { model: 'm' });
+                expect(state.doc.correspondent).toBe(null);
+            });
+
             await it('sets the payment status and rejects unknown values', async () => {
                 const { provider, state } = fakeProvider('builtin', doc());
                 await setPaymentStatus(provider, '1', { status: 'bezahlt', dueDate: '2026-11-01', amountToPay: 12 });

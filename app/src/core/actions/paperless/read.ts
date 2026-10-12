@@ -52,6 +52,12 @@ export async function paperlessCorrespondents(params: ListCorrespondentsParams =
     return listCorrespondents(params);
 }
 
+/** Every correspondent across all pages, in the paginated shape (a single page hid most of them). */
+export async function paperlessCorrespondentsAll() {
+    const results = await fetchAllPages((page, pageSize) => listCorrespondents({ page_size: pageSize, page }));
+    return { count: results.length, next: null, previous: null, results };
+}
+
 export async function paperlessCorrespondent(id: number) {
     return getCorrespondent(id);
 }
