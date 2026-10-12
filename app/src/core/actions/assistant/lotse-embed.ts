@@ -44,7 +44,9 @@ import {
     gatherResolveContext,
     lotsePathsUnder,
     resolveDefaultWithNote,
+    type AgentChoice,
     type DefaultResolution,
+    type ResolveContext,
     type LotsePaths,
     type McpServer,
     type ModelPolicy,
@@ -102,7 +104,10 @@ export function lotseMcpServers(launch: McpLaunch, name: string = MCP_SERVER_NAM
             name,
             command: launch.command,
             args: launch.args,
-            env: Object.entries(launch.env).map(([key, value]) => ({ name: key, value })),
+            env: Object.entries(launch.env).map(([key, value]) => ({
+                name: key,
+                value,
+            })),
         },
     ];
 }
@@ -204,15 +209,35 @@ export function ensureLotseDataRoot(root: string): string {
     return root;
 }
 
+export type AgentSource = 'bundled' | 'host';
+
+/** The opencode other people configure: the one shipped with the app, in its own isolated config. */
+export const DEFAULT_AGENT_SOURCE: AgentSource = 'bundled';
+
+/** Which opencode the person chose; unset is {@link DEFAULT_AGENT_SOURCE}. */
+export function resolveAgentSource(settings: UserSettings = loadUserSettings()): AgentSource {
+    return settings.aiAgentSource ?? DEFAULT_AGENT_SOURCE;
+}
+
 /**
- * The agent the pane AND the one-shot jobs start: no setting, so host first, else bundled. One
- * resolver for both, so a job never runs on a different agent than the conversation beside it.
+ * The agent the pane AND the one-shot jobs start. The choice is always passed to lotse explicitly —
+ * without one lotse prefers a host install, which would put the person's own login behind an app
+ * default. A choice that cannot be honoured falls back per lotse and comes back as `note` (and
+ * `agent: null` when nothing runs, which is the pane's no-agent page / a job's `no-agent`).
+ */
+export function resolveLotseAgentIn(context: ResolveContext, source: AgentSource): DefaultResolution {
+    const setting: AgentChoice = { id: 'opencode', source };
+    return resolveDefaultWithNote(context, setting);
+}
+
+/**
+ * One resolver for both, so a job never runs on a different agent than the conversation beside it.
  * (A recorded session is resumed by `resolveRecorded` in the pane; a job has no session to resume.)
  *
  * `gatherResolveContext(paths, false)` — no `--version` spawn, nothing waits on a child process.
  */
-export function resolveLotseAgent(paths: LotsePaths): DefaultResolution {
-    return resolveDefaultWithNote(gatherResolveContext(paths, false), null);
+export function resolveLotseAgent(paths: LotsePaths, source: AgentSource = resolveAgentSource()): DefaultResolution {
+    return resolveLotseAgentIn(gatherResolveContext(paths, false), source);
 }
 
 /** Whether a launch really carries the read-only marker — what the test asserts on. */

@@ -11,7 +11,13 @@ import { mkdtempSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { denyFreeHostedModels, FREE_MODELS, type McpServer } from '@lotse/core';
+import {
+    denyFreeHostedModels,
+    FREE_MODELS,
+    type AgentDetection,
+    type McpServer,
+    type ResolveContext,
+} from '@lotse/core';
 
 import {
     AI_ENGINE_ENV,
@@ -23,7 +29,10 @@ import {
     lotseMcpLaunch,
     LOTSE_DATA_DIR_NAME,
     LOTSE_MODEL_POLICY,
+    resolveAgentSource,
     resolveAiEngine,
+    resolveLotseAgentIn,
+    DEFAULT_AGENT_SOURCE,
     type LotseEmbedOptions,
 } from '../../../src/core/actions/assistant/lotse-embed.ts';
 import { MCP_SERVER_NAME, resolveMcpLaunch, type McpInstallation } from '../../../src/core/actions/mcp-clients.ts';
@@ -150,7 +159,10 @@ export default async () => {
         });
 
         await it('carries it as an --env flag in a Flatpak, where the env block is filtered', async () => {
-            const launch = lotseMcpLaunch({ ...installation, flatpakId: 'eu.jumplink.Steuererklaerung' });
+            const launch = lotseMcpLaunch({
+                ...installation,
+                flatpakId: 'eu.jumplink.Steuererklaerung',
+            });
             expect(launch.command).toBe('flatpak');
             expect(launch.args.includes(`--env=${MCP_READONLY_ENV}=1`)).toBe(true);
             expect(launchIsReadOnly(launch)).toBe(true);
@@ -255,8 +267,74 @@ export default async () => {
         });
 
         await it('lets the env hook win over the setting, in either direction', async () => {
-            expect(resolveAiEngine(settings({ aiEngine: 'builtin' }), { [AI_ENGINE_ENV]: 'LOTSE' })).toBe('lotse');
-            expect(resolveAiEngine(settings({ aiEngine: 'lotse' }), { [AI_ENGINE_ENV]: 'builtin' })).toBe('builtin');
+            expect(
+                resolveAiEngine(settings({ aiEngine: 'builtin' }), {
+                    [AI_ENGINE_ENV]: 'LOTSE',
+                }),
+            ).toBe('lotse');
+            expect(
+                resolveAiEngine(settings({ aiEngine: 'lotse' }), {
+                    [AI_ENGINE_ENV]: 'builtin',
+                }),
+            ).toBe('builtin');
+        });
+    });
+
+    await describe('agent source — which opencode the pane and the jobs start', async () => {
+        const hostDetection: AgentDetection = {
+            id: 'opencode',
+            source: 'host',
+            path: '/usr/bin/opencode',
+            version: '1.0.0',
+        };
+        const context = (opts: { host: boolean; bundled: boolean }): ResolveContext => ({
+            detections: opts.host ? [hostDetection] : [],
+            isolationFor: (id) => ({
+                home: `/tmp/x/${id}/home`,
+                config: `/tmp/x/${id}/config`,
+                data: `/tmp/x/${id}/data`,
+                state: `/tmp/x/${id}/state`,
+                cache: `/tmp/x/${id}/cache`,
+            }),
+            bundledAvailable: () => opts.bundled,
+        });
+
+        await it('is bundled unless the person chose otherwise', async () => {
+            expect(DEFAULT_AGENT_SOURCE).toBe('bundled');
+            expect(resolveAgentSource(settings())).toBe('bundled');
+            expect(resolveAgentSource(settings({ aiAgentSource: 'host' }))).toBe('host');
+        });
+
+        await it('rejects a value that names no source', async () => {
+            expect(UserSettingsSchema.safeParse({ aiAgentSource: 'cloud' }).success).toBe(false);
+            expect(UserSettingsSchema.safeParse({ aiAgentSource: 'host' }).success).toBe(true);
+        });
+
+        await it('keeps a host install out of the way while bundled is chosen', async () => {
+            const r = resolveLotseAgentIn(context({ host: true, bundled: true }), 'bundled');
+            expect(r.agent?.source).toBe('bundled');
+            expect(r.note).toBe(null);
+        });
+
+        await it('starts the host install only when asked for it', async () => {
+            const r = resolveLotseAgentIn(context({ host: true, bundled: true }), 'host');
+            expect(r.agent?.source).toBe('host');
+        });
+
+        await it('says so when the choice is unavailable, and has no agent when nothing is', async () => {
+            const fallback = resolveLotseAgentIn(context({ host: true, bundled: false }), 'bundled');
+            expect(fallback.note === null).toBe(false);
+            const none = resolveLotseAgentIn(context({ host: false, bundled: false }), 'host');
+            expect(none.agent).toBe(null);
+            expect(none.note === null).toBe(false);
+        });
+
+        await it('is the one resolver both the pane and the jobs call', async () => {
+            for (const file of ['frontends/desktop/lotse-panel.ts', 'core/clients/llm/opencode-provider.ts']) {
+                const text = readFileSync(join(process.cwd(), 'src', file), 'utf-8');
+                expect(text.includes('resolveLotseAgent(')).toBe(true);
+                expect(text.includes('resolveDefaultWithNote')).toBe(false);
+            }
         });
     });
 };

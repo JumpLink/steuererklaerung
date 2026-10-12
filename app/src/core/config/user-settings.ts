@@ -76,6 +76,12 @@ export const UserSettingsSchema = z.looseObject({
      * with AI off neither pane is built and no agent is ever spawned.
      */
     aiEngine: z.enum(['builtin', 'lotse']).optional(),
+    /**
+     * WHICH opencode the coding-agent assistant (pane and one-shot jobs) starts: the copy shipped with
+     * the app in its own isolated config (`bundled`) or the person's own installed one with their
+     * login and models (`host`). UNSET is `bundled`.
+     */
+    aiAgentSource: z.enum(['bundled', 'host']).optional(),
     backup: BackupSettingsSchema,
 });
 
