@@ -71,7 +71,26 @@
       }
      }
     ]
-   }
+   },
+   "support": [
+    {
+     "kind": "GitHub Sponsors",
+     "url": "https://github.com/sponsors/JumpLink"
+    },
+    {
+     "kind": "Liberapay",
+     "url": "https://liberapay.com/JumpLink"
+    },
+    {
+     "kind": "PayPal",
+     "url": "https://paypal.me/JumpLink"
+    },
+    {
+     "kind": "sepa",
+     "name": "JumpLink - Pascal Garber",
+     "iban": "DE94100101232090324020"
+    }
+   ]
   }
  },
  "scripts": {
