@@ -118,26 +118,79 @@
             "bundle": "dist/app/steuer-app.gjs.mjs",
             "binaryName": "steuererklaerung",
             "appId": "eu.jumplink.Steuererklaerung",
-            "summary": "Steuererklärung und Buchhaltung für Kleinbetriebe",
-            "description": "Belege, Buchungen und Rechnungen an einem Ort — daraus EÜR, Umsatzsteuer-Voranmeldung, Gewerbesteuer und Feststellung, als ELSTER-XML oder direkt übermittelt.\n\nOhne KI vollständig bedienbar: eigene Klassifizierungsregeln statt Ratens, jede Zahl bis zur Buchung nachvollziehbar.",
+            "name": "Steuererklärung",
+            "summary": "Tax return and bookkeeping for small businesses",
+            "description": [
+                {
+                    "p": "Receipts, transactions and invoices in one place. From them the app computes the income-surplus statement (EÜR), the VAT returns, trade tax and the separate assessment for partnerships, and files them through ELSTER."
+                },
+                {
+                    "p": "It runs on your machine: your bank data and documents stay in a local store. Every figure can be traced back to the transaction it came from."
+                },
+                {
+                    "p": "It works fully without AI: you write your own classification rules instead of letting a model guess. An assistant is optional and off by default."
+                },
+                {
+                    "p": "The tax logic follows German law, so the interface keeps the official German terms. The app is a preparation aid, not tax advice."
+                }
+            ],
             "icon": "data/icons/hicolor/scalable/apps/eu.jumplink.Steuererklaerung.svg",
             "categories": [
                 "Office",
                 "Finance"
             ],
             "keywords": [
-                "Steuer",
-                "Buchhaltung",
+                "Tax",
+                "Accounting",
                 "ELSTER",
                 "EÜR",
-                "Umsatzsteuer",
-                "Rechnung"
+                "VAT",
+                "Invoice"
             ],
             "developer": {
                 "id": "eu.jumplink",
                 "name": "Pascal Garber"
             },
-            "homepageUrl": "https://github.com/JumpLink/steuererklaerung",
+            "branding": {
+                "accentLight": "#62a0ea",
+                "accentDark": "#1a5fb4"
+            },
+            "contentRating": "oars-1.1",
+            "releases": [
+                {
+                    "version": "0.1.0",
+                    "date": "2026-10-12"
+                }
+            ],
+            "screenshots": [
+                {
+                    "url": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/01-uebersicht.png",
+                    "caption": "Overview with key figures and what to do next"
+                },
+                {
+                    "url": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/04-belege.png",
+                    "caption": "Receipts, linked to transactions"
+                },
+                {
+                    "url": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/05-buchungen.png",
+                    "caption": "All transactions of all accounts, searchable"
+                },
+                {
+                    "url": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/06-rechnungen.png",
+                    "caption": "Outgoing invoices with status and recurring billing"
+                },
+                {
+                    "url": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/10-euer.png",
+                    "caption": "Anlage EÜR, every line down to its transactions"
+                },
+                {
+                    "url": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/09-steuererklaerung.png",
+                    "caption": "Tax return with checks before filing"
+                }
+            ],
+            "homepageUrl": "https://jumplink.eu/steuererklaerung/",
+            "bugtrackerUrl": "https://github.com/JumpLink/steuererklaerung/issues",
+            "vcsBrowserUrl": "https://github.com/JumpLink/steuererklaerung",
             "license": {
                 "project": "AGPL-3.0-or-later",
                 "file": "../LICENSE"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-12 14:55+0200\n"
+"POT-Creation-Date: 2026-10-12 23:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,13 +77,13 @@ msgstr ""
 msgid "This DMS cannot ingest documents."
 msgstr ""
 
-#: src/core/clients/fints/client.ts:286
+#: src/core/clients/fints/client.ts:290
 msgid ""
 "The bank does not offer electronic account statements (no HIEKAS in its bank "
 "parameters) for this account."
 msgstr ""
 
-#: src/core/clients/fints/client.ts:291
+#: src/core/clients/fints/client.ts:296
 #, javascript-format
 msgid ""
 "The bank offers electronic account statements, but not as PDF (formats: %s)."
@@ -340,6 +340,7 @@ msgid "dates · payments · open items"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:68
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:57
 msgid "Tax"
 msgstr ""
 
@@ -2292,6 +2293,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:150
 #: src/frontends/desktop/views/rechnungen-view.ts:523
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:62
 msgid "Invoice"
 msgstr ""
 
@@ -3369,6 +3371,7 @@ msgid "This decides which questions follow. Everything can be changed later."
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:386
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:61
 msgid "VAT"
 msgstr ""
 
@@ -5313,4 +5316,73 @@ msgstr ""
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:7
+msgid "Steuererklärung"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:8
+msgid "Tax return and bookkeeping for small businesses"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:10
+msgid ""
+"Receipts, transactions and invoices in one place. From them the app computes "
+"the income-surplus statement (EÜR), the VAT returns, trade tax and the "
+"separate assessment for partnerships, and files them through ELSTER."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:11
+msgid ""
+"It runs on your machine: your bank data and documents stay in a local store. "
+"Every figure can be traced back to the transaction it came from."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:12
+msgid ""
+"It works fully without AI: you write your own classification rules instead "
+"of letting a model guess. An assistant is optional and off by default."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:13
+msgid ""
+"The tax logic follows German law, so the interface keeps the official German "
+"terms. The app is a preparation aid, not tax advice."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:22
+msgid "Overview with key figures and what to do next"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:26
+msgid "Receipts, linked to transactions"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:30
+msgid "All transactions of all accounts, searchable"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:34
+msgid "Outgoing invoices with status and recurring billing"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:38
+msgid "Anlage EÜR, every line down to its transactions"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:42
+msgid "Tax return with checks before filing"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:58
+msgid "Accounting"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:59
+msgid "ELSTER"
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:60
+msgid "EÜR"
 msgstr ""
