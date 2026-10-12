@@ -72,6 +72,8 @@ already run the same `resolveWorkspace` + year-probe the server runs at startup.
 - `STEUER_APP_YEAR=<year>` — start on that year (if the entity has data for it), else its default year.
 - `STEUER_APP_DEBUG=1` — log a one-line summary when a view finishes loading.
 - `STEUER_APP_ASK="…"` — (Assistent) auto-send a question on open.
+- `STEUER_DEBUG_MEASURE=<px>` — print every widget whose minimum width exceeds `<px>`, see below.
+- `STEUER_DEBUG_MEASURE_DELAY=<ms>` — when that walk runs (default 4000).
 
 ## Adwaita-Fallen, aus Screenshots gelernt
 
@@ -94,6 +96,79 @@ aus dem PNG-Header: die einzige Zahl über einen Screenshot, die sich nicht fäl
 
 **Popover werden nicht aufgenommen.** Die Devtools rendern die Fenster-Oberfläche; ein Popover ist
 eine eigene. Was auf einem Screenshot zu sehen sein muss, gehört in einen `Adw.Dialog` oder inline.
+
+## Schmale Fenster (Telefon, 360 px)
+
+**Die Mindestbreite des Fensters ist das Maximum über ALLE Seiten des Stacks**, nicht über die
+sichtbare. Ein `Gtk.Stack` misst auch die Seiten, die niemand ansieht — eine einzige Filterleiste,
+die nicht unter 605 px konnte, machte das ganze Fenster 605 px breit, auf jeder Ansicht. Ein
+360-px-Fenster zeichnete den Inhalt dann abgeschnitten: der Kopfleiste fehlten die Knöpfe, dem
+Banner der Text, jede Liste lief rechts aus dem Bild. Deshalb repariert man hier **nie die Ansicht,
+auf der es auffällt**, sondern die Seite, die den Boden setzt.
+
+Das Prinzip aller Korrekturen: aus „besteht auf" ein „hätte gern" machen. Die NATÜRLICHE Größe
+bleibt gleich, der Desktop liegt also Pixel für Pixel wie vorher — GTK bekommt nur einen Weg nach
+unten. Die Werkzeuge dafür stehen in `widgets/responsive.ts` (`chipScroller`, `rowActions`,
+`wrappingLabel`, `wrapButtonLabel`, `pinNaturalWidth`), die Dokumentation steht jeweils an der
+Funktion.
+
+**`wrap: true` allein ändert BEIDE Enden.** Ein umbrechendes `Gtk.Label` meldet mit der Vorgabe
+`natural-wrap-mode: inherit` die umgebrochene Breite auch als seine natürliche — die Beschriftung
+hört also nicht nur auf zu bestehen, sie hört auf zu fragen. Sichtbar wurde das auf dem Desktop: die
+Assistenz-Spalte fiel von 424 px auf 320 px, weil ihre Vorschlags-Pillen keine Zeile mehr für sich
+verlangten. Deshalb immer `natural-wrap-mode: none` dazu (in TS: `wrappingLabel`), und **nie
+`max-width-chars` als Umbruch-Hilfe** — das deckelt genau die natürliche Breite, die gleich bleiben
+soll. Bei `Gtk.Entry` ist es umgekehrt herum richtig: `width-chars` ist das Minimum,
+`max-width-chars` hält die natürliche Desktop-Breite.
+
+**`STEUER_DEBUG_MEASURE=<px>`** läuft den Widget-Baum ab und meldet jedes Widget, dessen Minimum
+über `<px>` liegt, mit Pfad und zugeteilter Breite (`window.ts`). Drei Fallen, jede hat einmal
+„alles sauber" gemeldet, während die Screenshots sichtbar abgeschnitten waren:
+
+1. **Die Ausgabe geht nach `/tmp/steuer-shot.log`**, nicht auf die stdout des Screenshot-Rigs — das
+   Rig startet die App als eigene Sitzung und leitet sie dorthin um.
+2. **Zu früh gemessen ist nichts gemessen.** Die Listen laden asynchron; vor dem Laden ist jede
+   Ansicht leer und damit schmal. Darum `STEUER_DEBUG_MEASURE_DELAY` (Vorgabe 4000 ms).
+3. **Das Rig beendet die App nach `STEUER_SHOT_SETTLE`.** Ist die Wartezeit kürzer als der Delay,
+   kommt der Lauf nie dazu, etwas zu schreiben — und ein leeres Protokoll liest sich wie „sauber".
+   Settle MUSS den Delay überdauern.
+
+Gelesen wird eine `[measure]`-Zeile so: `alloc > 360` oder `min > alloc` heißt wirklich
+abgeschnitten. Ein großes `min` INNERHALB eines `chipScroller` ist dagegen in Ordnung — das scrollt.
+
+**Ein Viewport gibt dem Kind sein MINIMUM, nicht seine natürliche Breite.** Darum scrollt eine Reihe
+schlichter Knöpfe von allein (ohne `ellipsize` ist Minimum = natürlich), ein
+`Adw.InlineViewSwitcher` aber nicht: der ellipsiert, sein Minimum ist winzig, und die sechs
+Steuer-Reiter wurden zu „Erkl… EÜR Anl… USt… Ste…" gequetscht statt scrollbar. `pinNaturalWidth`
+misst einmal und fixiert — aus der Quetschung wird wieder ein Scroll.
+
+**Der `Adw.InlineViewSwitcher` hat zwischen den Reitern je einen `Gtk.Separator`.** Das n-te KIND
+ist also nicht der n-te Reiter; wer mitzählt, scrollt zu einem 1 px breiten Trennstrich und hält das
+Ergebnis für einen Fehlschlag der Scroll-Logik. Nach `Gtk.ToggleButton` filtern.
+
+**Eine `Adw.ActionRow` legt Titel und ALLE Suffixe in eine waagerechte Box.** Drei beschriftete
+Knöpfe setzen damit einen harten Boden für die ganze Zeile — und was übrig bleibt, bekommt der
+Titel, der dann ein Zeichen pro Zeile umbricht. Dafür gibt es `rowActions` (eine `Adw.WrapBox` als
+EIN Suffix).
+
+**Eine `Adw.Clamp` ohne `tightening-threshold` wird schmaler, sobald ihr Kind nachgeben kann.** Die
+Clamp teilt bis `MAX(Kind-Minimum, tightening-threshold)` die volle Breite zu und lässt sie erst
+darüber hinter dem Platz zurückbleiben — Vorgabe ist 400 px. Bis zu diesem Zweig war das
+Kind-Minimum der Ansichten (die starre Filterleiste, ~605 px) selbst diese Grenze, die Inhaltsspalte
+bekam also immer alles. Mit beweglichen Kindern übernahm die Vorgabe, und jede Ansicht verlor rund
+26 px, ohne dass sich an ihr etwas geändert hätte: bei Verträge fiel „Archiviert" aus den
+Filter-Chips. Deshalb steht in jeder Clamp `tightening-threshold` gleich `maximum-size` — damit ist
+sie wieder das reine Breiten-Limit, als das sie überall gemeint war. Unter 400 px ändert sich
+nichts, das Telefon bleibt unberührt.
+
+**Ein `Adw.Breakpoint` INNERHALB einer Ansicht misst die Inhaltsspalte, nicht das Fenster.** Auf dem
+Desktop ist die viel schmaler, als die Fensterbreite vermuten lässt: bei 1280 px bleiben zwischen
+Navigation und Assistenz-Spalte **537 px** übrig (am Screenshot gemessen, der Inhalt läuft von
+x=320 bis x=856). Vier Haltepunkte standen auf `max-width: 560px` — gedacht für das Telefon,
+ausgelöst auf dem Desktop: Kontakte verlor seinen Gruppentitel, der Beleg-Eingang klappte seine
+Warteschlange zu. Darum liegt jeder Haltepunkt in einer Ansicht bei **450 px**, unter den 537. Nur
+die zwei in `window.blp` (720 / 1180) messen wirklich das Fenster. Wer einen neuen setzt, misst
+erst die Spaltenbreite — rechnen reicht nicht, die 390 aus `min-sidebar-width` sind nur der Boden.
 
 ## Status / roadmap
 
