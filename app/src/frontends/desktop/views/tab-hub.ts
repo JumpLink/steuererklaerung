@@ -9,7 +9,9 @@
  * abstract base and hand the tab list in instead.
  */
 
+import GLib from '@girs/glib-2.0';
 import GObject from '@girs/gobject-2.0';
+import Gtk from '@girs/gtk-4.0';
 import Adw from '@girs/adw-1';
 
 import type { PortedView } from '../view.ts';
@@ -29,6 +31,7 @@ import { BhLaufendeKostenView } from './laufende-kosten-view.ts';
 import { BhRechnungenView } from './rechnungen-view.ts';
 import { BhForderungenView } from './forderungen-view.ts';
 import { isSearchable } from '../shortcuts.ts';
+import { pinNaturalWidth } from '../widgets/responsive.ts';
 import { _ } from '../i18n.ts';
 
 import Template from './tab-hub.blp';
@@ -45,6 +48,9 @@ interface HubTab {
 
 export class BhTabHub extends Adw.Bin {
     declare private _stack: Adw.ViewStack;
+    declare private _switcher: Adw.InlineViewSwitcher;
+    /** Re-pin the switcher to its natural width — the tab list is per entity, so it changes. */
+    private repinSwitcher?: () => void;
     private readonly views = new Map<string, PortedView>();
     private readonly pages = new Map<string, Adw.ViewStackPage>();
     private readonly businessOnlyIds = new Set<string>();
@@ -55,7 +61,7 @@ export class BhTabHub extends Adw.Bin {
     private readonly loaded = new Set<string>();
 
     static {
-        GObject.registerClass({ GTypeName: 'BhTabHub', Template, InternalChildren: ['stack'] }, this);
+        GObject.registerClass({ GTypeName: 'BhTabHub', Template, InternalChildren: ['stack', 'switcher'] }, this);
     }
 
     /** Add the tabs. Returns `this` so the registry can `new BhTabHub().configure([...])`. */
@@ -67,7 +73,12 @@ export class BhTabHub extends Adw.Bin {
             if (t.businessOnly) this.businessOnlyIds.add(t.id);
             if (t.estOnly) this.estOnlyIds.add(t.id);
         }
-        this._stack.connect('notify::visible-child-name', () => this.reloadActive());
+        this._stack.connect('notify::visible-child-name', () => {
+            this.reloadActive();
+            this.revealActiveTab();
+        });
+        this.repinSwitcher = pinNaturalWidth(this._switcher);
+        this._switcher.connect('map', () => this.revealActiveTab());
         // Dev/testing hook: land on a specific sub-tab (mirrors STEUER_APP_VIEW for the nav), e.g.
         // STEUER_APP_TAB=euer to open the EÜR tab of the Steuer hub.
         const wantedTab = process.env.STEUER_APP_TAB;
@@ -87,6 +98,8 @@ export class BhTabHub extends Adw.Bin {
             if (privat) for (const id of this.businessOnlyIds) hidden.add(id);
             if (!entity.hasEst) for (const id of this.estOnlyIds) hidden.add(id);
             for (const [id, page] of this.pages) page.visible = !hidden.has(id);
+            this.repinSwitcher?.(); // fewer tabs → a narrower switcher, so the old pin is too wide
+            this.revealActiveTab();
             const active = this._stack.get_visible_child_name();
             if (active != null && hidden.has(active)) {
                 const firstVisible = [...this.views.keys()].find((id) => !hidden.has(id));
@@ -106,6 +119,52 @@ export class BhTabHub extends Adw.Bin {
         const id = this._stack.get_visible_child_name();
         const view = id ? this.views.get(id) : undefined;
         if (isSearchable(view)) view.focusSearch();
+    }
+
+    /**
+     * Scroll the tab row so the active tab is on screen.
+     *
+     * Only matters on a narrow window, where the switcher is wider than the viewport. Tapping a tab
+     * scrolls it in by itself (the viewport follows the focus), but a tab selected from code —
+     * `showTab()`, the STEUER_APP_TAB hook, or the fallback when the active tab is hidden for a
+     * `privat` entity — takes no focus, and the user then saw a tab row scrolled somewhere else.
+     *
+     * Reaching into the switcher for the n-th toggle is deliberate: the tab's own x position is the
+     * only honest answer, and the lookup degrades to "do nothing" if Adwaita ever restructures it.
+     */
+    private revealActiveTab(): void {
+        // On idle, because a tab can be selected before the switcher has been allocated — at that
+        // point every toggle still sits at x=0 and the scroll would be a no-op.
+        GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+            this.scrollToActiveTab();
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
+    private scrollToActiveTab(): void {
+        const scroller = this._switcher.get_parent()?.get_parent();
+        if (!(scroller instanceof Gtk.ScrolledWindow)) return;
+        const active = this._stack.get_visible_child_name();
+        if (active == null) return;
+        const index = [...this.pages].filter(([, p]) => p.visible).findIndex(([id]) => id === active);
+        if (index < 0) return;
+
+        // The switcher's box interleaves a Gtk.Separator between the toggles, so the n-th CHILD is
+        // not the n-th tab — counting children scrolled to a 1 px separator and looked like a
+        // no-op. Collect the toggles themselves instead.
+        const toggles: Gtk.Widget[] = [];
+        for (let c = this._switcher.get_first_child()?.get_first_child(); c; c = c.get_next_sibling()) {
+            if (c instanceof Gtk.ToggleButton) toggles.push(c);
+        }
+        const [ok, rect] = toggles[index]?.compute_bounds(this._switcher) ?? [false, null];
+        if (!ok || !rect) return;
+
+        const adj = scroller.get_hadjustment();
+        // Include the margin on the outer tabs, so the first/last one is not flush against the edge.
+        const left = Math.max(0, rect.get_x() - 3);
+        const right = Math.min(adj.get_upper(), rect.get_x() + rect.get_width() + 3);
+        if (left < adj.get_value()) adj.set_value(left);
+        else if (right > adj.get_value() + adj.get_page_size()) adj.set_value(right - adj.get_page_size());
     }
 
     private reloadActive(): void {

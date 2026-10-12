@@ -5,54 +5,70 @@ using Adw 1;
 // their next expected payment, and the decided ones. The groups are filled programmatically (see
 // laufende-kosten-view.ts).
 template $BhLaufendeKostenView: Adw.Bin {
-  Gtk.Stack stack {
-    Gtk.StackPage {
-      name: "loading";
-      child: Gtk.Box {
-        orientation: vertical;
-        valign: center;
-        halign: center;
-        spacing: 12;
+  // A breakpoint with no setters, because what it switches is not a property: the rows carry a
+  // wrapping action cluster (see rowActions()), and a cluster that CAN shrink is where GTK takes a
+  // short allocation from. The old unshrinkable suffix box left the row no choice but to squeeze
+  // the title instead, so a desktop row that used to fit on one line now dropped its amount under
+  // the buttons. Above 450 px the view pins every cluster to its natural width — same rigidity as
+  // before, same layout; below it the pin comes off and the cluster wraps, which is what a phone
+  // needs. laufende-kosten-view.ts listens on `current-breakpoint`.
+  Adw.BreakpointBin breakpoint_bin {
+    width-request: 300;
+    height-request: 200;
 
-        Adw.Spinner {
-          width-request: 32;
-          height-request: 32;
-        }
-
-        Gtk.Label {
-          label: "Lade laufende Kosten …";
-          styles ["dim-label"]
-        }
-      };
+    Adw.Breakpoint {
+      condition ("max-width: 450px")
     }
 
-    Gtk.StackPage {
-      name: "error";
-      child: Adw.StatusPage error_page {
-        icon-name: "dialog-error-symbolic";
-        title: "Konnte nicht laden";
-      };
-    }
+    child: Gtk.Stack stack {
+      Gtk.StackPage {
+        name: "loading";
+        child: Gtk.Box {
+          orientation: vertical;
+          valign: center;
+          halign: center;
+          spacing: 12;
 
-    Gtk.StackPage {
-      name: "content";
-      child: Gtk.ScrolledWindow scroller {
-        hscrollbar-policy: never;
-        vexpand: true;
+          Adw.Spinner {
+            width-request: 32;
+            height-request: 32;
+          }
 
-        child: Adw.Clamp {
-          maximum-size: 860;
-          margin-top: 18;
-          margin-bottom: 24;
-          margin-start: 16;
-          margin-end: 16;
+          Gtk.Label {
+            label: "Lade laufende Kosten …";
+            styles ["dim-label"]
+          }
+        };
+      }
 
-          child: Gtk.Box content_box {
-            orientation: vertical;
-            spacing: 24;
+      Gtk.StackPage {
+        name: "error";
+        child: Adw.StatusPage error_page {
+          icon-name: "dialog-error-symbolic";
+          title: "Konnte nicht laden";
+        };
+      }
+
+      Gtk.StackPage {
+        name: "content";
+        child: Gtk.ScrolledWindow scroller {
+          hscrollbar-policy: never;
+          vexpand: true;
+
+          child: Adw.Clamp {
+            maximum-size: 860;
+            margin-top: 18;
+            margin-bottom: 24;
+            margin-start: 16;
+            margin-end: 16;
+
+            child: Gtk.Box content_box {
+              orientation: vertical;
+              spacing: 24;
+            };
           };
         };
-      };
-    }
+      }
+    };
   }
 }

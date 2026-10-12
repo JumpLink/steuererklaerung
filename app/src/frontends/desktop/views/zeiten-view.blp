@@ -4,116 +4,140 @@ using Adw 1;
 // Zeiten view body. Static chrome in Blueprint; the timer card, the day sections and the
 // unbilled summary are filled programmatically (see zeiten-view.ts).
 template $BhZeitenView: Adw.Bin {
-  Gtk.Stack stack {
-    Gtk.StackPage {
-      name: "loading";
-      child: Gtk.Box {
-        orientation: vertical;
-        valign: center;
-        halign: center;
-        spacing: 12;
+  // A breakpoint with no setters, because what it switches is not a property of anything declared
+  // here: the entry rows are built in TypeScript, and what they need at 390 px is the opposite of
+  // what they need at 1280 px. Wide, the title ellipsizes on one line and the duration/status
+  // cluster stays rigid — the layout this view has always had. Narrow, the title wraps instead (an
+  // ellipsizing label reports a minimum width of almost nothing, so the row handed its whole width
+  // to the suffixes and left "Ko…") and the cluster drops under itself. zeiten-view.ts listens on
+  // `current-breakpoint`; see entryRow() and pinnableCluster().
+  Adw.BreakpointBin breakpoint_bin {
+    width-request: 300;
+    height-request: 200;
 
-        Adw.Spinner {
-          width-request: 32;
-          height-request: 32;
-        }
-
-        Gtk.Label {
-          label: "Lade Zeiten …";
-          styles ["dim-label"]
-        }
-      };
+    Adw.Breakpoint {
+      condition ("max-width: 450px")
     }
 
-    Gtk.StackPage {
-      name: "error";
-      child: Adw.StatusPage error_page {
-        icon-name: "dialog-error-symbolic";
-        title: "Konnte nicht laden";
-      };
-    }
+    child: Gtk.Stack stack {
+      Gtk.StackPage {
+        name: "loading";
+        child: Gtk.Box {
+          orientation: vertical;
+          valign: center;
+          halign: center;
+          spacing: 12;
 
-    Gtk.StackPage {
-      name: "content";
-      child: Gtk.ScrolledWindow {
-        hscrollbar-policy: never;
-        vexpand: true;
+          Adw.Spinner {
+            width-request: 32;
+            height-request: 32;
+          }
 
-        child: Adw.Clamp {
-          maximum-size: 900;
-          margin-top: 18;
-          margin-bottom: 18;
-          margin-start: 12;
-          margin-end: 12;
+          Gtk.Label {
+            label: "Lade Zeiten …";
+            styles ["dim-label"]
+          }
+        };
+      }
 
-          child: Gtk.Box {
-            orientation: vertical;
-            spacing: 18;
+      Gtk.StackPage {
+        name: "error";
+        child: Adw.StatusPage error_page {
+          icon-name: "dialog-error-symbolic";
+          title: "Konnte nicht laden";
+        };
+      }
 
-            // The timer: big elapsed time, then either the start form or the stop button.
-            Adw.PreferencesGroup timer_group {
-              Gtk.Box {
-                orientation: vertical;
-                spacing: 12;
+      Gtk.StackPage {
+        name: "content";
+        child: Gtk.ScrolledWindow {
+          hscrollbar-policy: never;
+          vexpand: true;
 
-                Gtk.Label elapsed_label {
-                  label: "00:00:00";
-                  styles ["title-1", "numeric"]
-                }
+          child: Adw.Clamp {
+            maximum-size: 900;
+            margin-top: 18;
+            margin-bottom: 18;
+            margin-start: 12;
+            margin-end: 12;
 
-                Gtk.Label running_label {
-                  label: "Kein Timer aktiv";
-                  wrap: true;
-                  justify: center;
-                  styles ["dim-label"]
-                }
+            child: Gtk.Box {
+              orientation: vertical;
+              spacing: 18;
 
-                Gtk.Box form_box {
-                  spacing: 6;
-                  halign: center;
+              // The timer: big elapsed time, then either the start form or the stop button.
+              Adw.PreferencesGroup timer_group {
+                Gtk.Box {
+                  orientation: vertical;
+                  spacing: 12;
 
-                  Gtk.DropDown project_dropdown {
-                    tooltip-text: "Projekt aus der Projektliste wählen";
-                    valign: center;
+                  Gtk.Label elapsed_label {
+                    label: "00:00:00";
+                    styles ["title-1", "numeric"]
                   }
 
-                  Gtk.Entry project_entry {
-                    placeholder-text: "Projekt / Label";
-                    width-chars: 14;
+                  Gtk.Label running_label {
+                    label: "Kein Timer aktiv";
+                    wrap: true;
+                    justify: center;
+                    styles ["dim-label"]
                   }
 
-                  Gtk.Entry description_entry {
-                    placeholder-text: "Woran arbeitest du?";
-                    width-chars: 28;
-                    hexpand: true;
+                  // A WrapBox, not a Box: the four controls want ~560 px side by side, which on a
+                  // phone would set the minimum width of the whole window (a Gtk.Stack measures
+                  // every page it holds). Wrapped, they fall onto as many lines as fit.
+                  Adw.WrapBox form_box {
+                    child-spacing: 6;
+                    line-spacing: 6;
+                    halign: center;
+                    justify: fill;
+
+                    Gtk.DropDown project_dropdown {
+                      tooltip-text: "Projekt aus der Projektliste wählen";
+                      valign: center;
+                    }
+
+                    // width-chars is the MINIMUM width; max-width-chars keeps the roomy desktop size.
+                    Gtk.Entry project_entry {
+                      placeholder-text: "Projekt / Label";
+                      width-chars: 8;
+                      max-width-chars: 14;
+                    }
+
+                    Gtk.Entry description_entry {
+                      placeholder-text: "Woran arbeitest du?";
+                      width-chars: 10;
+                      max-width-chars: 28;
+                      hexpand: true;
+                    }
+
+                    Gtk.Button start_button {
+                      tooltip-text: "Timer starten";
+                      icon-name: "media-playback-start-symbolic";
+                      styles ["suggested-action", "circular"]
+                    }
                   }
 
-                  Gtk.Button start_button {
-                    tooltip-text: "Timer starten";
-                    icon-name: "media-playback-start-symbolic";
-                    styles ["suggested-action", "circular"]
+                  Gtk.Button stop_button {
+                    label: "Timer beenden";
+                    halign: center;
+                    visible: false;
+                    styles ["destructive-action", "pill"]
                   }
-                }
-
-                Gtk.Button stop_button {
-                  label: "Timer beenden";
-                  halign: center;
-                  visible: false;
-                  styles ["destructive-action", "pill"]
                 }
               }
-            }
 
-            Adw.PreferencesGroup unbilled_group {
-              title: "Noch nicht abgerechnet";
-            }
+              Adw.PreferencesGroup unbilled_group {
+                title: "Noch nicht abgerechnet";
+              }
 
-            Adw.PreferencesGroup entries_group {
-              title: "Erfasste Zeiten";
-            }
+              Adw.PreferencesGroup entries_group {
+                title: "Erfasste Zeiten";
+              }
+            };
           };
         };
-      };
-    }
+      }
+    };
   }
 }

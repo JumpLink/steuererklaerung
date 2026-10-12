@@ -4,71 +4,94 @@ using Adw 1;
 // Verträge view body (ADR 0004). Static chrome in Blueprint; the KPI cards, the filter chips and
 // the contract rows are filled programmatically (see vertraege-view.ts).
 template $BhVertraegeView: Adw.Bin {
-  Gtk.Stack stack {
-    Gtk.StackPage {
-      name: "loading";
-      child: Gtk.Box {
-        orientation: vertical;
-        valign: center;
-        halign: center;
-        spacing: 12;
+  Adw.BreakpointBin breakpoint_bin {
+    width-request: 300;
+    height-request: 200;
 
-        Adw.Spinner {
-          width-request: 32;
-          height-request: 32;
-        }
+    // Four filter chips and two labelled buttons do not fit on one 390 px line, and the spacer
+    // between them gives the buttons the width: the chips were left as "Alle | Ak…". Stacked, the
+    // chips get a full line (and scroll inside it if even that is short) and each button gets one
+    // — which is also the bigger tap target. Above 450 px nothing changes.
+    //
+    // 450 px, not 560: an in-view breakpoint measures the CONTENT PANE, not the window, and at a
+    // 1280 px desktop window that pane is only 537 px wide (see kontakte-view.blp).
+    Adw.Breakpoint {
+      condition ("max-width: 450px")
 
-        Gtk.Label {
-          label: _("Loading contracts …");
-          styles ["dim-label"]
-        }
-      };
+      setters {
+        list_toolbar.orientation: vertical;
+      }
     }
 
-    Gtk.StackPage {
-      name: "error";
-      child: Adw.StatusPage error_page {
-        icon-name: "dialog-error-symbolic";
-        title: _("Could not load");
-      };
-    }
+    // The same breakpoint also switches the contract rows, which no setter can reach because they
+    // are built in TypeScript — vertraege-view.ts listens on `current-breakpoint`, see contractRow().
 
-    Gtk.StackPage {
-      name: "content";
-      child: Gtk.ScrolledWindow scroller {
-        hscrollbar-policy: never;
-        vexpand: true;
+    child: Gtk.Stack stack {
+      Gtk.StackPage {
+        name: "loading";
+        child: Gtk.Box {
+          orientation: vertical;
+          valign: center;
+          halign: center;
+          spacing: 12;
 
-        child: Adw.Clamp {
-          maximum-size: 900;
-          margin-top: 18;
-          margin-bottom: 18;
-          margin-start: 12;
-          margin-end: 12;
+          Adw.Spinner {
+            width-request: 32;
+            height-request: 32;
+          }
 
-          child: Gtk.Box {
-            orientation: vertical;
-            spacing: 18;
+          Gtk.Label {
+            label: _("Loading contracts …");
+            styles ["dim-label"]
+          }
+        };
+      }
 
-            Gtk.Box kpi_box {
+      Gtk.StackPage {
+        name: "error";
+        child: Adw.StatusPage error_page {
+          icon-name: "dialog-error-symbolic";
+          title: _("Could not load");
+        };
+      }
+
+      Gtk.StackPage {
+        name: "content";
+        child: Gtk.ScrolledWindow scroller {
+          hscrollbar-policy: never;
+          vexpand: true;
+
+          child: Adw.Clamp {
+            maximum-size: 900;
+            margin-top: 18;
+            margin-bottom: 18;
+            margin-start: 12;
+            margin-end: 12;
+
+            child: Gtk.Box {
               orientation: vertical;
-            }
+              spacing: 18;
 
-            // The filter chips + the actions sit ABOVE the group, not in its header_suffix: at
-            // 1280 px GTK takes the width they ask for out of the group's title and description
-            // (see the same note in rechnungen-view.blp).
-            Gtk.Box list_toolbar {
-              orientation: horizontal;
-              spacing: 8;
-              margin-bottom: 6;
-            }
+              Gtk.Box kpi_box {
+                orientation: vertical;
+              }
 
-            Adw.PreferencesGroup list_group {
-              title: _("Contracts");
-            }
+              // The filter chips + the actions sit ABOVE the group, not in its header_suffix: at
+              // 1280 px GTK takes the width they ask for out of the group's title and description
+              // (see the same note in rechnungen-view.blp).
+              Gtk.Box list_toolbar {
+                orientation: horizontal;
+                spacing: 8;
+                margin-bottom: 6;
+              }
+
+              Adw.PreferencesGroup list_group {
+                title: _("Contracts");
+              }
+            };
           };
         };
-      };
-    }
+      }
+    };
   }
 }

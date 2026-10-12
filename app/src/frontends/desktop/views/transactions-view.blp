@@ -60,9 +60,18 @@ template $BhTransactionsView: Adw.Bin {
             }
 
             // Filter chips (Alle · Einnahmen · Ausgaben · Ohne Beleg) — a linked toggle group, filled in TS.
-            Gtk.Box filter_box {
-              halign: start;
-              styles ["linked"]
+            // Sideways scroller: four chips want ~400 px, which on a phone would be the minimum
+            // width of the whole window (a Gtk.Stack measures every view it holds, not just the
+            // visible one). The overlay scrollbar reserves no space, so the desktop is unchanged.
+            Gtk.ScrolledWindow {
+              hscrollbar-policy: automatic;
+              vscrollbar-policy: never;
+              propagate-natural-width: true;
+
+              child: Gtk.Box filter_box {
+                halign: start;
+                styles ["linked"]
+              };
             }
 
             Adw.PreferencesGroup list_group {}

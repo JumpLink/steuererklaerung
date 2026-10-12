@@ -4,66 +4,96 @@ using Adw 1;
 // Kontakte view body. Static chrome in Blueprint; the summary + contact rows are filled
 // programmatically (see kontakte-view.ts).
 template $BhKontakteView: Adw.Bin {
-  Gtk.Stack stack {
-    Gtk.StackPage {
-      name: "loading";
-      child: Gtk.Box {
-        orientation: vertical;
-        valign: center;
-        halign: center;
-        spacing: 12;
+  Adw.BreakpointBin {
+    width-request: 300;
+    height-request: 200;
 
-        Adw.Spinner {
-          width-request: 32;
-          height-request: 32;
-        }
+    // "Alle Kontakte" and the two header actions share one line, and the actions win: on a phone
+    // the title was allocated its ellipsis and nothing else, so the section read "…". The actions
+    // are self-explanatory and the window header already says Kontakte, so the narrow layout drops
+    // the section title and gives the row to the buttons.
+    //
+    // 450 px, not 560: an in-view breakpoint measures the CONTENT PANE, not the window. At a
+    // 1280 px desktop window that pane is 537 px — measured off a screenshot, the content runs
+    // x=320…856 between the navigation and the assistant panel — so a 560 px condition fires on
+    // the desktop. Every in-view breakpoint here stays below 537.
+    Adw.Breakpoint {
+      condition ("max-width: 450px")
 
-        Gtk.Label {
-          label: "Lade Kontakte …";
-          styles ["dim-label"]
-        }
-      };
+      setters {
+        list_group.title: "";
+      }
     }
 
-    Gtk.StackPage {
-      name: "error";
-      child: Adw.StatusPage error_page {
-        icon-name: "dialog-error-symbolic";
-        title: "Konnte nicht laden";
-      };
-    }
+    child: Gtk.Stack stack {
+      Gtk.StackPage {
+        name: "loading";
+        child: Gtk.Box {
+          orientation: vertical;
+          valign: center;
+          halign: center;
+          spacing: 12;
 
-    Gtk.StackPage {
-      name: "content";
-      child: Gtk.ScrolledWindow {
-        hscrollbar-policy: never;
-        vexpand: true;
+          Adw.Spinner {
+            width-request: 32;
+            height-request: 32;
+          }
 
-        child: Adw.Clamp {
-          maximum-size: 900;
-          margin-top: 18;
-          margin-bottom: 18;
-          margin-start: 12;
-          margin-end: 12;
+          Gtk.Label {
+            label: "Lade Kontakte …";
+            styles ["dim-label"]
+          }
+        };
+      }
 
-          child: Gtk.Box {
-            orientation: vertical;
-            spacing: 18;
+      Gtk.StackPage {
+        name: "error";
+        child: Adw.StatusPage error_page {
+          icon-name: "dialog-error-symbolic";
+          title: "Konnte nicht laden";
+        };
+      }
 
-            Adw.PreferencesGroup summary_group {}
+      Gtk.StackPage {
+        name: "content";
+        child: Gtk.ScrolledWindow {
+          hscrollbar-policy: never;
+          vexpand: true;
 
-            // Filter chips (Alle · Kunden · Lieferanten) — a linked toggle group, filled in TS.
-            Gtk.Box filter_box {
-              halign: start;
-              styles ["linked"]
-            }
+          child: Adw.Clamp {
+            maximum-size: 900;
+            margin-top: 18;
+            margin-bottom: 18;
+            margin-start: 12;
+            margin-end: 12;
 
-            Adw.PreferencesGroup list_group {
-              title: "Alle Kontakte";
-            }
+            child: Gtk.Box {
+              orientation: vertical;
+              spacing: 18;
+
+              Adw.PreferencesGroup summary_group {}
+
+              // Filter chips (Alle · Kunden · Lieferanten) — a linked toggle group, filled in TS.
+              // In a sideways scroller so the group never sets the window's minimum width; the
+              // overlay scrollbar reserves no space, so the desktop looks the same.
+              Gtk.ScrolledWindow {
+                hscrollbar-policy: automatic;
+                vscrollbar-policy: never;
+                propagate-natural-width: true;
+
+                child: Gtk.Box filter_box {
+                  halign: start;
+                  styles ["linked"]
+                };
+              }
+
+              Adw.PreferencesGroup list_group {
+                title: "Alle Kontakte";
+              }
+            };
           };
         };
-      };
-    }
+      }
+    };
   }
 }

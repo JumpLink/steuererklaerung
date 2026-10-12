@@ -42,6 +42,7 @@ import { _ } from '../i18n.ts';
 import { showToast } from '../toast.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { amountLabel, GroupRows, LoadToken, loadIntoStack, markup } from './util.ts';
+import { pinnableCluster, rowActions } from '../widgets/responsive.ts';
 import { BhZeitProjektDialog } from './zeit-projekt-dialog.ts';
 import { BhZeitRechnungDialog } from './zeit-rechnung-dialog.ts';
 
@@ -53,12 +54,13 @@ const STATUS_META: Record<TimeRowStatus, { label: () => string; css: string }> =
 };
 
 export class BhZeitenView extends Adw.Bin {
+    declare private _breakpoint_bin: Adw.BreakpointBin;
     declare private _stack: Gtk.Stack;
     declare private _error_page: Adw.StatusPage;
     declare private _timer_group: Adw.PreferencesGroup;
     declare private _elapsed_label: Gtk.Label;
     declare private _running_label: Gtk.Label;
-    declare private _form_box: Gtk.Box;
+    declare private _form_box: Adw.WrapBox;
     declare private _project_dropdown: Gtk.DropDown;
     declare private _project_entry: Gtk.Entry;
     declare private _description_entry: Gtk.Entry;
@@ -73,6 +75,7 @@ export class BhZeitenView extends Adw.Bin {
                 GTypeName: 'BhZeitenView',
                 Template,
                 InternalChildren: [
+                    'breakpoint_bin',
                     'stack',
                     'error_page',
                     'timer_group',
@@ -100,10 +103,19 @@ export class BhZeitenView extends Adw.Bin {
     /** GLib source id of the 1 s tick, or 0 when no timer runs. */
     private tickId = 0;
 
+    /** One per visible entry row — the breakpoint flips them all, see entryRow(). */
+    private readonly rowWidthHooks: ((narrow: boolean) => void)[] = [];
+
     constructor() {
         super();
         this.unbilled = new GroupRows(this._unbilled_group);
         this.entries = new GroupRows(this._entries_group);
+        // The rows are rebuilt on every reload, so the switch has to be re-applied rather than
+        // connected once per row: `current-breakpoint` fires only when the width crosses 450 px,
+        // and a row built afterwards would never hear it.
+        this._breakpoint_bin.connect('notify::current-breakpoint', () => {
+            for (const hook of this.rowWidthHooks) hook(this.narrow);
+        });
         this._start_button.connect('clicked', () => this.onStart());
         this._stop_button.connect('clicked', () => this.onStop());
         // Enter in either field starts the timer — the whole point is that it costs one gesture.
@@ -115,6 +127,10 @@ export class BhZeitenView extends Adw.Bin {
         });
         this._description_entry.connect('activate', () => this.onStart());
         this.connect('destroy', () => this.stopTick());
+    }
+
+    private get narrow(): boolean {
+        return this._breakpoint_bin.get_current_breakpoint() !== null;
     }
 
     reload(entity: AppEntity, _year: number): void {
@@ -341,6 +357,8 @@ export class BhZeitenView extends Adw.Bin {
 
     private fillEntries(model: TimeViewModel): void {
         this.entries.clear();
+        // The rows are gone, so are their hooks — entryRow() registers the new ones.
+        this.rowWidthHooks.length = 0;
         const days = buildTimeDays(model.recent, model.projectList, model.names);
         if (days.length === 0) {
             this._entries_group.set_description(_('Nothing tracked yet.'));
@@ -382,8 +400,6 @@ export class BhZeitenView extends Adw.Bin {
         const row = new Adw.ActionRow({
             title: markup(item.title),
             subtitle: markup(subtitle.join(' · ')),
-            titleLines: 1,
-            subtitleLines: 1,
             tooltipText: item.title,
         });
         row.add_prefix(
@@ -394,8 +410,9 @@ export class BhZeitenView extends Adw.Bin {
                 valign: Gtk.Align.CENTER,
             }),
         );
-        row.add_suffix(amountLabel(item.duration));
-        row.add_suffix(
+        // Duration, status and the two buttons as one wrapping cluster — see rowActions().
+        const actions = rowActions([
+            amountLabel(item.duration),
             new Gtk.Label({
                 label: STATUS_META[item.status].label(),
                 cssClasses: ['caption', STATUS_META[item.status].css],
@@ -403,7 +420,22 @@ export class BhZeitenView extends Adw.Bin {
                 xalign: 0.5,
                 valign: Gtk.Align.CENTER,
             }),
-        );
+        ]);
+        row.add_suffix(actions);
+        // …but only wrap when the view really is narrow, see pinnableCluster().
+        const pin = pinnableCluster(actions);
+        // One line each, ellipsized, is the layout this row has always had on a desktop. It is also
+        // what made a 390 px row read "Ko…" / "Bu…": an ellipsizing label reports a minimum width of
+        // almost nothing, so the row gave everything to the suffixes. Letting both wrap below the
+        // breakpoint gives the text column a real floor — its longest word — which is what pushes
+        // the cluster onto its own line instead of the title into an ellipsis.
+        const applyWidth = (narrow: boolean): void => {
+            row.set_title_lines(narrow ? 0 : 1);
+            row.set_subtitle_lines(narrow ? 0 : 1);
+            pin(narrow);
+        };
+        applyWidth(this.narrow);
+        this.rowWidthHooks.push(applyWidth);
 
         const edit = new Gtk.Button({
             iconName: 'document-edit-symbolic',
@@ -413,7 +445,7 @@ export class BhZeitenView extends Adw.Bin {
             cssClasses: ['flat'],
         });
         edit.connect('clicked', () => this.onEditProject(entry, this.model as TimeViewModel));
-        row.add_suffix(edit);
+        actions.append(edit);
         const del = new Gtk.Button({
             iconName: 'user-trash-symbolic',
             valign: Gtk.Align.CENTER,
@@ -422,7 +454,7 @@ export class BhZeitenView extends Adw.Bin {
             cssClasses: ['flat'],
         });
         del.connect('clicked', () => void this.onDelete(entry));
-        row.add_suffix(del);
+        actions.append(del);
         return row;
     }
 

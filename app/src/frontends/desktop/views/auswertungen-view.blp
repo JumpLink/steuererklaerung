@@ -94,6 +94,9 @@ template $BhAuswertungenView: Adw.Bin {
             Gtk.Label {
               label: "Hinweise aus deinen eigenen Zahlen — keine Steuerberatung";
               xalign: 0;
+              // May wrap on a phone, still asks for one line — see wrappingLabel() in responsive.ts.
+              wrap: true;
+              natural-wrap-mode: none;
               styles ["dim-label", "caption"]
             }
           }

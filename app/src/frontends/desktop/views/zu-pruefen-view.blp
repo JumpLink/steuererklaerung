@@ -36,69 +36,112 @@ template $BhZuPruefenView: Adw.Bin {
 
     Gtk.StackPage {
       name: "content";
-      child: Adw.OverlaySplitView split_view {
-        min-sidebar-width: 260;
-        max-sidebar-width: 340;
-        sidebar-width-fraction: 0.32;
 
-        sidebar: Gtk.Box {
-          orientation: vertical;
+      // The bin reports its own width-request as the minimum, so the queue's 260 px sidebar no
+      // longer sets a floor for the whole window — a Gtk.Stack measures every page, visible or
+      // not, and this view shares one with all the others.
+      child: Adw.BreakpointBin {
+        width-request: 300;
+        height-request: 300;
 
-          Gtk.Box {
+        // 450 px, not 560: this condition measures the CONTENT PANE, not the window. At a 1280 px
+        // desktop window that pane is only 537 px wide (see kontakte-view.blp), so a 560 px
+        // condition collapsed the queue on the desktop too.
+        Adw.Breakpoint {
+          condition ("max-width: 450px")
+
+          setters {
+            split_view.collapsed: true;
+            split_view.show-sidebar: false;
+            queue_bar.visible: true;
+          }
+        }
+
+        child: Adw.OverlaySplitView split_view {
+          min-sidebar-width: 260;
+          max-sidebar-width: 340;
+          sidebar-width-fraction: 0.32;
+
+          sidebar: Gtk.Box {
             orientation: vertical;
-            spacing: 8;
-            margin-top: 12;
-            margin-bottom: 10;
-            margin-start: 12;
-            margin-end: 12;
 
-            Gtk.Label progress_label {
-              xalign: 0;
-              styles ["dim-label", "caption"]
+            Gtk.Box {
+              orientation: vertical;
+              spacing: 8;
+              margin-top: 12;
+              margin-bottom: 10;
+              margin-start: 12;
+              margin-end: 12;
+
+              Gtk.Label progress_label {
+                xalign: 0;
+                styles ["dim-label", "caption"]
+              }
+
+              Gtk.ProgressBar progress_bar {}
             }
 
-            Gtk.ProgressBar progress_bar {}
-          }
+            Gtk.ScrolledWindow {
+              hscrollbar-policy: never;
+              vexpand: true;
 
-          Gtk.ScrolledWindow {
-            hscrollbar-policy: never;
-            vexpand: true;
+              child: Gtk.ListBox list_box {
+                selection-mode: single;
+                styles ["navigation-sidebar"]
+              };
+            }
 
-            child: Gtk.ListBox list_box {
-              selection-mode: single;
-              styles ["navigation-sidebar"]
-            };
-          }
+            // Mehrfachauswahl: the check boxes in the rows feed this one action.
+            Gtk.Button regel_button {
+              label: _("Rule from selection");
+              sensitive: false;
+              margin-top: 8;
+              margin-bottom: 12;
+              margin-start: 12;
+              margin-end: 12;
+              tooltip-text: _("Suggest the common pattern of the marked transactions as a rule");
 
-          // Mehrfachauswahl: the check boxes in the rows feed this one action.
-          Gtk.Button regel_button {
-            label: _("Rule from selection");
-            sensitive: false;
-            margin-top: 8;
-            margin-bottom: 12;
-            margin-start: 12;
-            margin-end: 12;
-            tooltip-text: _("Suggest the common pattern of the marked transactions as a rule");
+              styles ["pill"]
+            }
+          };
 
-            styles ["pill"]
-          }
-        };
+          content: Gtk.Box {
+            orientation: vertical;
 
-        content: Gtk.ScrolledWindow {
-          hscrollbar-policy: never;
-          vexpand: true;
+            // Only shown once the split view collapses: the queue is an overlay then and needs
+            // a way back.
+            Gtk.Box queue_bar {
+              visible: false;
+              margin-top: 6;
+              margin-start: 12;
+              margin-end: 12;
 
-          child: Adw.Clamp {
-            maximum-size: 760;
-            margin-top: 18;
-            margin-bottom: 24;
-            margin-start: 16;
-            margin-end: 16;
+              Gtk.ToggleButton queue_toggle {
+                icon-name: "sidebar-show-symbolic";
+                tooltip-text: _("Show the queue");
+                active: bind split_view.show-sidebar bidirectional;
 
-            child: Gtk.Box detail_box {
-              orientation: vertical;
-              spacing: 18;
-            };
+                styles ["flat"]
+              }
+            }
+
+            Gtk.ScrolledWindow {
+              hscrollbar-policy: never;
+              vexpand: true;
+
+              child: Adw.Clamp {
+                maximum-size: 760;
+                margin-top: 18;
+                margin-bottom: 24;
+                margin-start: 16;
+                margin-end: 16;
+
+                child: Gtk.Box detail_box {
+                  orientation: vertical;
+                  spacing: 18;
+                };
+              };
+            }
           };
         };
       };
