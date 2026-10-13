@@ -28,6 +28,7 @@ import { eur } from '../../../core/lib/format.ts';
 import type { AppEntity } from '../entities.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
+import { rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
 import { BhKontaktFormDialog } from './kontakt-form-dialog.ts';
 import { GroupRows, LoadToken, emptyState, loadIntoStack, markup } from './util.ts';
 
@@ -212,8 +213,10 @@ export class BhKontakteView extends Adw.Bin {
         const importBtn = new Gtk.Button({ label: 'Importieren', valign: Gtk.Align.CENTER });
         importBtn.set_tooltip_text('Kunden aus Qonto und Korrespondenten aus Paperless importieren und verknüpfen');
         importBtn.connect('clicked', () => void this.runImport(importBtn));
-        box.append(add);
-        box.append(importBtn);
+        // A header suffix takes its width from the group's TITLE (see the README's "header_suffix
+        // width theft"): unwrapped, these two captions squeezed "Alle Kontakte" down to "A…".
+        box.append(wrapButtonLabel(add));
+        box.append(wrapButtonLabel(importBtn));
         return box;
     }
 
@@ -234,10 +237,16 @@ export class BhKontakteView extends Adw.Bin {
         // the web's initials()/avatarColor(); GTK has no inline seed-colour mechanism).
         row.add_prefix(new Adw.Avatar({ size: 32, text: name, showInitials: true, valign: Gtk.Align.CENTER }));
 
+        // Amount, badges and Löschen as one wrapping cluster — see rowActions(). A contact can
+        // carry four badges, and as separate suffixes they left the name a single column of
+        // letters on a phone.
+        const actions = rowActions([]);
+        row.add_suffix(actions);
+
         // Open receivables (filled in the background) — the amber "N € offen" pill from the design.
         const open = this.openByContact.get(c.id);
         if (open && open > 0.005) {
-            row.add_suffix(
+            actions.append(
                 new Gtk.Label({
                     label: `${eur(open)} offen`,
                     cssClasses: ['caption', 'warning'],
@@ -245,13 +254,13 @@ export class BhKontakteView extends Adw.Bin {
                 }),
             );
         }
-        if (c.isCustomer) row.add_suffix(this.badge('Kunde', 'accent'));
-        if (c.isSupplier) row.add_suffix(this.badge('Lieferant', 'accent'));
-        for (const l of c.links) row.add_suffix(this.badge(SYSTEM_LABEL[l.system] ?? l.system, 'dim-label'));
+        if (c.isCustomer) actions.append(this.badge('Kunde', 'accent'));
+        if (c.isSupplier) actions.append(this.badge('Lieferant', 'accent'));
+        for (const l of c.links) actions.append(this.badge(SYSTEM_LABEL[l.system] ?? l.system, 'dim-label'));
 
         const del = new Gtk.Button({ label: 'Löschen', cssClasses: ['flat'], valign: Gtk.Align.CENTER });
         del.connect('clicked', () => void this.askDelete(c)); // the button consumes the click → no row activation
-        row.add_suffix(del);
+        actions.append(del);
 
         row.connect('activated', () => this.openForm(c));
         return row;

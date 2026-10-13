@@ -30,6 +30,7 @@ import {
 import type { AppEntity } from '../entities.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
 import { showToast } from '../toast.ts';
+import { chipScroller, pinnableCluster, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
 import Template from './vertraege-view.blp';
 import { errorDialog } from './dialogs.ts';
 import {
@@ -64,6 +65,7 @@ const FILTERS: { key: ContractFilter; label: string }[] = [
 ];
 
 export class BhVertraegeView extends Adw.Bin {
+    declare private _breakpoint_bin: Adw.BreakpointBin;
     declare private _stack: Gtk.Stack;
     declare private _error_page: Adw.StatusPage;
     declare private _scroller: Gtk.ScrolledWindow;
@@ -76,7 +78,15 @@ export class BhVertraegeView extends Adw.Bin {
             {
                 GTypeName: 'BhVertraegeView',
                 Template,
-                InternalChildren: ['stack', 'error_page', 'scroller', 'kpi_box', 'list_toolbar', 'list_group'],
+                InternalChildren: [
+                    'breakpoint_bin',
+                    'stack',
+                    'error_page',
+                    'scroller',
+                    'kpi_box',
+                    'list_toolbar',
+                    'list_group',
+                ],
             },
             this,
         );
@@ -90,10 +100,22 @@ export class BhVertraegeView extends Adw.Bin {
     private filter: ContractFilter = 'all';
     /** The chips, so an empty state can put the list back to "All". */
     private filterButtons: Gtk.ToggleButton[] = [];
+    /** One per visible contract row — the breakpoint flips them all, see contractRow(). */
+    private readonly rowWidthHooks: ((narrow: boolean) => void)[] = [];
 
     constructor() {
         super();
         this.rows = new GroupRows(this._list_group);
+        // The rows are rebuilt on every filter change, so the switch has to be re-applied rather
+        // than connected once per row: `current-breakpoint` fires only when the width crosses the
+        // breakpoint, and a row built afterwards would never hear it.
+        this._breakpoint_bin.connect('notify::current-breakpoint', () => {
+            for (const hook of this.rowWidthHooks) hook(this.narrow);
+        });
+    }
+
+    private get narrow(): boolean {
+        return this._breakpoint_bin.get_current_breakpoint() !== null;
     }
 
     reload(entity: AppEntity, year: number): void {
@@ -154,20 +176,20 @@ export class BhVertraegeView extends Adw.Bin {
     /** The filter chips plus "New contract" and the calendar export, above the group (see the .blp). */
     private fillToolbar(): void {
         clearBox(this._list_toolbar);
-        this._list_toolbar.append(this.buildFilterToggle());
+        this._list_toolbar.append(chipScroller(this.buildFilterToggle()));
         const spacer = new Gtk.Box({ hexpand: true });
         this._list_toolbar.append(spacer);
         const ics = new Gtk.Button({ label: _('Export deadlines'), valign: Gtk.Align.CENTER });
         ics.set_tooltip_text(_('Save the upcoming notice deadlines as a calendar file (.ics)'));
         ics.connect('clicked', () => this.exportDeadlines());
-        this._list_toolbar.append(ics);
+        this._list_toolbar.append(wrapButtonLabel(ics));
         const add = new Gtk.Button({
             label: _('New contract'),
             cssClasses: ['suggested-action'],
             valign: Gtk.Align.CENTER,
         });
         add.connect('clicked', () => this.edit(null));
-        this._list_toolbar.append(add);
+        this._list_toolbar.append(wrapButtonLabel(add));
     }
 
     private buildFilterToggle(): Gtk.Box {
@@ -209,6 +231,8 @@ export class BhVertraegeView extends Adw.Bin {
 
     private render(): void {
         this.rows.clear();
+        // The rows are gone, so are their hooks — contractRow() registers the new ones.
+        this.rowWidthHooks.length = 0;
         const overview = this.overview;
         if (!overview) return;
         const shown = filterContracts(overview.contracts, this.filter).sort(byDeadlineThenName);
@@ -257,8 +281,9 @@ export class BhVertraegeView extends Adw.Bin {
             subtitle: markup(sub.join(' · ')),
             activatable: true,
         });
-        row.set_title_lines(1);
         row.set_subtitle_lines(2);
+        // Amount, dot and the two badges as one wrapping cluster — see rowActions().
+        const actions = rowActions([]);
         if (c.monthlyAmount != null) {
             const label = amountLabel(fmt(_('{amount} / month'), { amount: eur(c.monthlyAmount) }));
             label.set_tooltip_text(
@@ -267,9 +292,9 @@ export class BhVertraegeView extends Adw.Bin {
                     cycle: c.cycle ? CYCLE_LABEL[c.cycle] : '',
                 }),
             );
-            row.add_suffix(label);
+            actions.append(label);
         }
-        if (finding) row.add_suffix(dot(findingCss(finding), findingText(finding)));
+        if (finding) actions.append(dot(findingCss(finding), findingText(finding)));
         const deadline = deadlineBadge(c.deadline);
         if (deadline) {
             const badge = this.badge(deadline, URGENCY_CSS[deadlineUrgency(c.deadline)]);
@@ -278,10 +303,21 @@ export class BhVertraegeView extends Adw.Bin {
                     ? fmt(_('Give notice by {date} at the latest'), { date: deDate(c.deadline.latestNotice) })
                     : _('Cancellable at any time'),
             );
-            row.add_suffix(badge);
+            actions.append(badge);
         }
-        if (c.status !== 'active') row.add_suffix(this.badge(STATUS_LABEL[c.status], STATUS_CSS[c.status]));
+        if (c.status !== 'active') actions.append(this.badge(STATUS_LABEL[c.status], STATUS_CSS[c.status]));
+        row.add_suffix(actions);
         row.add_suffix(new Gtk.Image({ iconName: 'go-next-symbolic', cssClasses: ['dim-label'] }));
+        // …but only wrap when the view really is narrow, see pinnableCluster(). A contract name is
+        // the one thing worth reading, so a narrow row gives the title a second line rather than
+        // ellipsizing it to "Projekt-Tool…"; a wide row keeps the single line it always had.
+        const pin = pinnableCluster(actions);
+        const applyWidth = (narrow: boolean): void => {
+            row.set_title_lines(narrow ? 2 : 1);
+            pin(narrow);
+        };
+        applyWidth(this.narrow);
+        this.rowWidthHooks.push(applyWidth);
         row.connect('activated', () => this.openDetail(c));
         return row;
     }

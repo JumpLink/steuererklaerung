@@ -14,6 +14,7 @@ import { showToast } from '../toast.ts';
 import { isDmsUnsupported, isManifestMissing, isPaperlessSetupRequired } from '../../../core/lib/errors.ts';
 import { navigateTo } from '../nav.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
+import { wrappingLabel } from '../widgets/responsive.ts';
 import { _, _p, fmt } from '../i18n.ts';
 import type { DisplayInvoiceStatus } from '../../../core/invoices/status.ts';
 
@@ -120,7 +121,11 @@ export function kpiCard(k: Kpi): Gtk.Widget {
         marginStart: 16,
         marginEnd: 16,
     });
-    const label = new Gtk.Label({ label: k.label, xalign: 0, cssClasses: ['dim-label', 'caption'] });
+    // Both captions wrap: a KPI card is as wide as its longest caption, and "fehlende,
+    // zurückgebuchte oder geänderte Abbuchungen" on one line made the Verträge card 356 px — wider
+    // than a phone screen, which cut the whole view off at the right edge. A desktop card has the
+    // room for one line and looks exactly as before.
+    const label = wrappingLabel({ label: k.label, xalign: 0, cssClasses: ['dim-label', 'caption'] });
     if (k.help) {
         const row = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 4 });
         row.append(label);
@@ -137,7 +142,7 @@ export function kpiCard(k: Kpi): Gtk.Widget {
             cssClasses: ['title-2', 'numeric', ...(k.accent ? [k.accent] : [])],
         }),
     );
-    if (k.sub) content.append(new Gtk.Label({ label: k.sub, xalign: 0, cssClasses: ['dim-label', 'caption'] }));
+    if (k.sub) content.append(wrappingLabel({ label: k.sub, xalign: 0, cssClasses: ['dim-label', 'caption'] }));
     const card = new Gtk.Box({ cssClasses: ['card'] });
     card.append(content);
     return card;

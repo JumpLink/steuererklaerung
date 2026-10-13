@@ -26,6 +26,7 @@ import { appSession } from './data/session.ts';
 import { showToast } from './toast.ts';
 import { applyProposal, buildProposal, type EstIntakeProposal } from '../../core/actions/elster/est-intake-topics.ts';
 import { assistantExampleIds, type AssistantExampleId } from '../../core/actions/assistant/examples.ts';
+import { wrappingLabel } from './widgets/responsive.ts';
 
 /** The chips this panel can offer; ids the core picks but the panel has no text for are left out. */
 const EXAMPLE_TEXT: Partial<Record<AssistantExampleId, string>> = {
@@ -122,7 +123,10 @@ export class BhAssistentPanel extends Gtk.Box {
             ? assistantExampleIds(this.entity.capabilities, { hasEst, business: this.entity.kind !== 'privat' })
             : (['biggest-expenses', 'missing-receipts'] as const);
         for (const ex of ids.flatMap((id) => EXAMPLE_TEXT[id] ?? [])) {
-            const chip = new Gtk.Button({ label: ex, cssClasses: ['pill'], halign: Gtk.Align.START });
+            // A Gtk.Button's own label never wraps, so a long example question would be the
+            // minimum width of the panel — and of the window behind it. Wrap it by hand.
+            const chip = new Gtk.Button({ cssClasses: ['pill'], halign: Gtk.Align.START });
+            chip.set_child(wrappingLabel({ label: ex, xalign: 0 }));
             chip.connect('clicked', () => {
                 this._entry.set_text(ex);
                 void this.onSend();

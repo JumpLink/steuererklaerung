@@ -51,18 +51,38 @@ template $BhMainWindow: Adw.ApplicationWindow {
   }
 
   // The assistant panel docks side-by-side at >=1180px and overlays below that.
+  //
+  // Docked, it is 390 px wide — the width its example questions used to IMPOSE, back when they
+  // were plain button labels that could not wrap: an AdwOverlaySplitView never gives its sidebar
+  // less than the sidebar's own minimum, so the pills decided the panel width. Now that the pills
+  // wrap (the whole point — they were also the window's floor on a phone), the width has to be
+  // stated rather than inherited from a label, or the docked panel falls to the 0.32 fraction
+  // (≈307 px) and wraps every question onto two lines. Only in this breakpoint: below it the panel
+  // overlays, where 300 px is right and 390 would not fit a 360 px screen.
+  //
+  // 390 and not a round 420: every pixel here comes out of the content pane, which is what the
+  // view toolbars have to fit into (1280 − 320 nav − 390 = 570). 424 looked harmless and clipped
+  // the Verträge filter chips to "Alle | Aktiv | Frist na…" at the default desktop size.
   [breakpoint]
   Adw.Breakpoint {
     condition ("min-width: 1180px")
 
     setters {
       assistant_split.collapsed: false;
+      assistant_split.min-sidebar-width: 390;
     }
   }
 
   content: Adw.NavigationSplitView split_view {
     min-sidebar-width: 260;
     max-sidebar-width: 340;
+    // 0.2, not the default 0.25: the fraction asks for 320 px at a 1280 px window, and until this
+    // branch it never got them — the content pane could not shrink, so it pushed the sidebar back
+    // down to its 260 px minimum. Now that every view can give, the sidebar takes the 60 px it
+    // always wanted and the content pane pays: the Verträge filter chips lost "Archiviert". So the
+    // width that was an accident of the squeeze is now stated. Above ~1700 px the clamp at 340
+    // takes over, exactly as before.
+    sidebar-width-fraction: 0.2;
 
     sidebar: Adw.NavigationPage sidebar_page {
       tag: "sidebar";

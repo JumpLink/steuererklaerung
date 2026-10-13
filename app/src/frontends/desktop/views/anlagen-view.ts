@@ -35,6 +35,7 @@ import {
 import type { AnlagegutVorbelegung } from '../../../core/elster/hinweise.ts';
 import { deDate, eur } from '../../../core/lib/format.ts';
 import { amountLabel, markup } from './util.ts';
+import { wrapButtonLabel } from '../widgets/responsive.ts';
 import { errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
 
@@ -208,7 +209,10 @@ export class BhAnlagenView extends Adw.Bin {
             tooltipText: 'Ein abschreibbares Wirtschaftsgut ins Anlageverzeichnis aufnehmen',
         });
         btn.connect('clicked', () => this.openErfassen());
-        return btn;
+        // As a group header suffix the caption sits beside the title and the description: on one
+        // line it claimed 200 of 360 px, which cut the title to "Anlageverzeic…" and squeezed the
+        // description into a column one word wide. Wrapped, it gives that space back when crowded.
+        return wrapButtonLabel(btn);
     }
 
     private openErfassen(): void {

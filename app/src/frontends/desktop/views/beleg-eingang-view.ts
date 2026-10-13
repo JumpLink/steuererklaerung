@@ -43,6 +43,7 @@ import { errorDialog } from './dialogs.ts';
 import { scoreBadge } from './beleg-link-dialog.ts';
 import { neueBelegeAusMailZaehlen } from '../../../core/actions/mail-eingang.ts';
 import { herkunftSatz as mailHerkunftSatz, neueBelegeSatz } from '../../../core/mail-eingang/herkunft.ts';
+import { wrapButtonLabel } from '../widgets/responsive.ts';
 import { _, _p, fmt } from '../i18n.ts';
 
 const DMS_LABEL: Record<string, string> = { builtin: _('built-in DMS'), paperless: 'Paperless' };
@@ -516,11 +517,11 @@ export class BhBelegEingangView extends Adw.Bin {
         const buttons = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 10 });
         const skip = new Gtk.Button({ label: _('Skip'), cssClasses: ['flat'] });
         skip.connect('clicked', () => this.step(1));
-        buttons.append(skip);
+        buttons.append(wrapButtonLabel(skip));
         buttons.append(new Gtk.Box({ hexpand: true }));
         const confirm = new Gtk.Button({ label: _('Confirm and continue'), cssClasses: ['suggested-action', 'pill'] });
         confirm.connect('clicked', () => void this.confirm());
-        buttons.append(confirm);
+        buttons.append(wrapButtonLabel(confirm));
         this.confirmButton = confirm;
         box.append(buttons);
         box.append(

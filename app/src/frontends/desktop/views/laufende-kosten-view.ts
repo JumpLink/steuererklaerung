@@ -34,6 +34,7 @@ import { showToast } from '../toast.ts';
 import { errorDialog } from './dialogs.ts';
 import { BhTxDetailDialog } from './tx-detail-dialog.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
+import { pinnableCluster, rowActions } from '../widgets/responsive.ts';
 
 const ABSTAENDE: SerienAbstand[] = ['monatlich', 'vierteljaehrlich', 'halbjaehrlich', 'jaehrlich'];
 
@@ -45,6 +46,7 @@ const GESPEICHERT: Record<LkEntscheidungInput['status'], string> = {
 };
 
 export class BhLaufendeKostenView extends Adw.Bin {
+    declare private _breakpoint_bin: Adw.BreakpointBin;
     declare private _stack: Gtk.Stack;
     declare private _error_page: Adw.StatusPage;
     declare private _scroller: Gtk.ScrolledWindow;
@@ -55,7 +57,7 @@ export class BhLaufendeKostenView extends Adw.Bin {
             {
                 GTypeName: 'BhLaufendeKostenView',
                 Template,
-                InternalChildren: ['stack', 'error_page', 'scroller', 'content_box'],
+                InternalChildren: ['breakpoint_bin', 'stack', 'error_page', 'scroller', 'content_box'],
             },
             this,
         );
@@ -64,6 +66,23 @@ export class BhLaufendeKostenView extends Adw.Bin {
     private readonly token = new LoadToken();
     private entity?: AppEntity;
     private year = 0;
+
+    /** One per visible row — the breakpoint flips them all, see pinnableCluster(). */
+    private readonly clusterPins: ((narrow: boolean) => void)[] = [];
+
+    constructor(params?: Partial<Adw.Bin.ConstructorProps>) {
+        super(params);
+        // The rows are rebuilt on every reload, so the switch has to be re-applied rather than
+        // connected once per cluster: `current-breakpoint` fires only when the width crosses 450 px,
+        // and a row built afterwards would never hear it.
+        this._breakpoint_bin.connect('notify::current-breakpoint', () => {
+            for (const pin of this.clusterPins) pin(this.narrow);
+        });
+    }
+
+    private get narrow(): boolean {
+        return this._breakpoint_bin.get_current_breakpoint() !== null;
+    }
 
     reload(entity: AppEntity, year: number): void {
         this.entity = entity;
@@ -90,6 +109,8 @@ export class BhLaufendeKostenView extends Adw.Bin {
         for (let c = this._content_box.get_first_child(); c; c = this._content_box.get_first_child()) {
             this._content_box.remove(c);
         }
+        // The rows are gone, so are their pins — serieRow() registers the new ones.
+        this.clusterPins.length = 0;
         const lernmodus = lernmodusOn();
 
         const offen = new Adw.PreferencesGroup({
@@ -151,7 +172,11 @@ export class BhLaufendeKostenView extends Adw.Bin {
     private serieRow(k: LaufendeKosten, art: LaufendeKosten['status']): Adw.ExpanderRow {
         const row = new Adw.ExpanderRow({ title: markup(k.empfaenger), subtitle: markup(this.untertitel(k, art)) });
         row.set_subtitle_lines(0);
-        row.add_suffix(amountLabel(eur(k.betrag), { heading: art === 'bestaetigt' }));
+        // One wrapping cluster instead of four separate suffixes — see rowActions().
+        const actions = rowActions([amountLabel(eur(k.betrag), { heading: art === 'bestaetigt' })]);
+        row.add_suffix(actions);
+        // …but only wrap when the view really is narrow, see pinnableCluster().
+        this.clusterPins.push(pinnableCluster(actions));
         const knopf = (label: string, tip: string, run: () => void, css?: string) => {
             // An icon label keeps the row's title readable next to three buttons and the amount.
             const icon = label.endsWith('-symbolic');
@@ -160,7 +185,11 @@ export class BhLaufendeKostenView extends Adw.Bin {
             else b.set_label(label);
             if (css) b.add_css_class(css);
             b.connect('clicked', run);
-            row.add_suffix(b);
+            // PREPEND, because an Adw.ExpanderRow packs its suffixes from the end: each
+            // `add_suffix` landed to the LEFT of the one before it, so the row read
+            // „Keine · ✏ · Bestätigen · 12,44 €". Appending into the cluster would silently turn
+            // that around and put the amount first — same widgets, mirrored row.
+            actions.prepend(b);
         };
         if (art === 'vorschlag') {
             knopf(

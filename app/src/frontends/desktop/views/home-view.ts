@@ -365,7 +365,9 @@ export class BhHomeView extends Adw.Bin {
     // ── income vs expense bar chart ──
     private barsCard(m: HomeModel): Gtk.Widget {
         const content = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 10 });
-        const head = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 12 });
+        // Heading and legend side by side want ~364 px; wrapped, the legend drops under the
+        // heading instead of widening the card past a phone screen.
+        const head = new Adw.WrapBox({ childSpacing: 12, lineSpacing: 4, justify: Adw.JustifyMode.FILL });
         const heading = this.heading(_('Income and expenses'));
         heading.set_hexpand(true);
         head.append(heading);
