@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Steuererklärung — concept A symbolic: binder with its spine strip and label. Fill only. -->
+<svg width="16" height="16" viewBox="0 0 16 16" version="1.1"
+     xmlns="http://www.w3.org/2000/svg">
+  <g fill="#241f31">
+    <path fill-rule="evenodd"
+          d="M3 1 h10 a1.5 1.5 0 0 1 1.5 1.5 v11 a1.5 1.5 0 0 1 -1.5 1.5 h-10 a1.5 1.5 0 0 1 -1.5 -1.5 v-11 a1.5 1.5 0 0 1 1.5 -1.5 z
+             M5.5 2.5 h7.5 v11 h-7.5 z"/>
+    <rect x="6.5" y="4" width="5.5" height="4" rx="0.5"/>
+    <rect x="7.5" y="10.5" width="3.5" height="1.5" rx="0.75"/>
+  </g>
+</svg>

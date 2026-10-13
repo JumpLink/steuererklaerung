@@ -1,10 +1,11 @@
 # `app/data` — Icon und Desktop-Eintrag
 
-Zwei Dateien, die nichts bauen und nichts bündeln:
+Drei Dateien, die nichts bauen und nichts bündeln:
 
 | Datei | Wofür |
 |---|---|
 | `icons/hicolor/scalable/apps/eu.jumplink.Steuererklaerung.svg` | das App-Icon (SVG, eigenes Werk, MIT wie der Rest) |
+| `icons/hicolor/symbolic/apps/eu.jumplink.Steuererklaerung-symbolic.svg` | die einfarbige Variante für Kopfzeilen und Listen (nur `fill`, 16×16) |
 | `eu.jumplink.Steuererklaerung.desktop` | der Desktop-Eintrag für eine echte Installation |
 
 **Aus dem Repository heraus** braucht es keine Installation: die App legt `icons/` beim Start
