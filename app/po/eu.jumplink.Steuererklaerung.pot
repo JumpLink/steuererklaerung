@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-13 07:52+0200\n"
+"POT-Creation-Date: 2026-10-13 08:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1186,125 +1186,131 @@ msgstr ""
 msgid "Paperless assignment not available"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:36
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:37
 msgid "Data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:37
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:38
 msgid "Demo data — fictional examples"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:37
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:38
 msgid "Your own data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:40
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:41
 #: src/frontends/desktop/views/welcome.ts:198
 #: src/frontends/desktop/window.ts:627
 msgid "Use my own data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:40
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:41
 #: src/frontends/desktop/views/welcome.ts:187
 msgid "Try the demo"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:49
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:50
 msgid "Show welcome again"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:54
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:55
 #: src/frontends/desktop/views/welcome.ts:265
 #: src/frontends/desktop/views/welcome.ts:279
 #: src/frontends/desktop/views/welcome.ts:292
 msgid "AI assistant"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:56
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:57
 msgid ""
 "Questions and the data needed to answer them go to the configured AI "
 "provider. Independent of the MCP server."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:85
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:86
 msgid "Coding agent"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:87
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:88
 msgid ""
 "Your own opencode uses your login and models from its global configuration. "
 "Takes effect the next time the app starts."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:90
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:91
 msgid "Bundled opencode (recommended)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:90
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:91
 msgid "Own opencode (global configuration)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:113
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:95
+msgid ""
+"The Flatpak sandbox cannot reach your own opencode, so the bundled one is "
+"always used."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:118
 msgid "Assistant engine"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:114
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:119
 msgid "Takes effect the next time the app starts."
 msgstr ""
 
 #. TRANSLATORS: The assistant that is part of the app and answers in-process
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:117
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:122
 msgid "Built in"
 msgstr ""
 
 #. TRANSLATORS: lotse is a program name — it starts a coding agent as a separate process
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:119
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:124
 msgid "Coding agent (lotse)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:135
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:140
 msgid "Last backup"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:137
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:196
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:142
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:201
 msgid "Backup folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:145
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:150
 msgid "{time} in {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:150
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:155
 msgid "Never"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:156
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:164
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:161
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:169
 msgid "Back up now"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:164
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:169
 msgid "Backing up …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:172
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:177
 msgid "Backup saved: {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:175
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:180
 msgid "Backup failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:190
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:195
 msgid "Choose folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:218
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:223
 msgid "Keep backups"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:219
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:224
 msgid "Older ones are deleted after each new backup"
 msgstr ""
 

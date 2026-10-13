@@ -214,8 +214,17 @@ export type AgentSource = 'bundled' | 'host';
 /** The opencode other people configure: the one shipped with the app, in its own isolated config. */
 export const DEFAULT_AGENT_SOURCE: AgentSource = 'bundled';
 
-/** Which opencode the person chose; unset is {@link DEFAULT_AGENT_SOURCE}. */
+/**
+ * The Flatpak has no way to reach the person's own opencode: that needs `org.freedesktop.Flatpak`
+ * (host spawn), which the sandbox deliberately lacks.
+ */
+export function agentSourceLockedToBundled(): boolean {
+    return !!process.env.FLATPAK_ID;
+}
+
+/** Which opencode the person chose; unset is {@link DEFAULT_AGENT_SOURCE}. Always bundled in a Flatpak. */
 export function resolveAgentSource(settings: UserSettings = loadUserSettings()): AgentSource {
+    if (agentSourceLockedToBundled()) return 'bundled';
     return settings.aiAgentSource ?? DEFAULT_AGENT_SOURCE;
 }
 
