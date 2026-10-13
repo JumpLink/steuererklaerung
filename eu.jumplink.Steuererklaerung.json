@@ -82,7 +82,8 @@
         {
           "type": "git",
           "path": ".",
-          "branch": "HEAD"
+          "branch": "HEAD",
+          "disable-submodules": true
         },
         {
           "type": "file",
