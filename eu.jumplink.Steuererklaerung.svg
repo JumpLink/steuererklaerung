@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#62a0ea"/>
+      <stop offset="1" stop-color="#1a5fb4"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#eceff4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Base plate -->
+  <rect x="8" y="12" width="112" height="104" rx="26" fill="url(#base)"/>
+
+  <!-- Receipt: rounded top, torn zigzag bottom -->
+  <path fill="url(#paper)" d="
+    M40 30
+    h48 a6 6 0 0 1 6 6
+    v58
+    l-6.75 7 -6.75 -7 -6.75 7 -6.75 -7 -6.75 7 -6.75 -7 -6.75 7 -6.75 -7
+    V36 a6 6 0 0 1 6 -6 z"/>
+
+  <!-- Ruled lines -->
+  <rect x="46" y="44" width="30" height="6" rx="3" fill="#9a9996"/>
+  <rect x="46" y="58" width="36" height="6" rx="3" fill="#c0bfbc"/>
+  <rect x="46" y="72" width="22" height="6" rx="3" fill="#c0bfbc"/>
+
+  <!-- Amount marks, right aligned -->
+  <rect x="72" y="58" width="10" height="6" rx="3" fill="#c0bfbc"/>
+
+  <!-- "Filed" badge -->
+  <circle cx="92" cy="90" r="21" fill="#2ec27e" stroke="#ffffff" stroke-width="5"/>
+  <path d="M83 90.5 l6.5 6.5 L102 84" fill="none" stroke="#ffffff" stroke-width="7"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
