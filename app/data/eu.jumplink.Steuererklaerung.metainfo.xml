@@ -62,8 +62,8 @@
     <keyword>Invoice</keyword>
   </keywords>
   <branding>
-    <color type="primary" scheme_preference="light">#62a0ea</color>
-    <color type="primary" scheme_preference="dark">#1a5fb4</color>
+    <color type="primary" scheme_preference="light">#ffbe6f</color>
+    <color type="primary" scheme_preference="dark">#c64600</color>
   </branding>
   <provides>
     <binary>steuererklaerung</binary>
