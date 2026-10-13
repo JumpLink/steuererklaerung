@@ -1,36 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Steuererklärung — concept A, "Ordner".
+  A German lever-arch file seen from the front: the object every Freelancer's bookkeeping
+  physically lives in. Portrait guide (x 20–108, y 10–120), 2px grid, 8px front profile (as Learn6502),
+  gradient only on the rounded spine.
+-->
+<svg width="128" height="128" viewBox="0 0 128 128" version="1.1"
+     xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#62a0ea"/>
+    <linearGradient id="spine" x1="20" y1="0" x2="38" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1a5fb4"/>
+      <stop offset="0.6" stop-color="#1c71d8"/>
       <stop offset="1" stop-color="#1a5fb4"/>
     </linearGradient>
-    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="label" x1="0" y1="28" x2="0" y2="80" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="1" stop-color="#eceff4"/>
+      <stop offset="1" stop-color="#f6f5f4"/>
     </linearGradient>
   </defs>
 
-  <!-- Base plate -->
-  <rect x="8" y="12" width="112" height="104" rx="26" fill="url(#base)"/>
+  <!-- front profile -->
+  <rect id="profile" x="20" y="10" width="88" height="110" rx="8" fill="#1a5fb4"/>
+  <!-- top surface -->
+  <rect id="body" x="20" y="10" width="88" height="102" rx="8" fill="#3584e4"/>
+  <!-- rounded spine: a curved surface, so it carries the gradient -->
+  <path id="spine-face" d="M38 10 H28 A8 8 0 0 0 20 18 V104 A8 8 0 0 0 28 112 H38 Z"
+        fill="url(#spine)"/>
+  <!-- the two spine rings of a Leitz binder -->
+  <rect id="ring-top" x="24" y="34" width="10" height="6" rx="3" fill="#99c1f1"/>
+  <rect id="ring-bottom" x="24" y="82" width="10" height="6" rx="3" fill="#99c1f1"/>
 
-  <!-- Receipt: rounded top, torn zigzag bottom -->
-  <path fill="url(#paper)" d="
-    M40 30
-    h48 a6 6 0 0 1 6 6
-    v58
-    l-6.75 7 -6.75 -7 -6.75 7 -6.75 -7 -6.75 7 -6.75 -7 -6.75 7 -6.75 -7
-    V36 a6 6 0 0 1 6 -6 z"/>
-
-  <!-- Ruled lines -->
-  <rect x="46" y="44" width="30" height="6" rx="3" fill="#9a9996"/>
-  <rect x="46" y="58" width="36" height="6" rx="3" fill="#c0bfbc"/>
-  <rect x="46" y="72" width="22" height="6" rx="3" fill="#c0bfbc"/>
-
-  <!-- Amount marks, right aligned -->
-  <rect x="72" y="58" width="10" height="6" rx="3" fill="#c0bfbc"/>
-
-  <!-- "Filed" badge -->
-  <circle cx="92" cy="90" r="21" fill="#2ec27e" stroke="#ffffff" stroke-width="5"/>
-  <path d="M83 90.5 l6.5 6.5 L102 84" fill="none" stroke="#ffffff" stroke-width="7"
+  <!-- paper label -->
+  <rect id="label-field" x="48" y="28" width="50" height="52" rx="4" fill="url(#label)"/>
+  <rect id="label-line" x="56" y="36" width="34" height="6" rx="3" fill="#c0bfbc"/>
+  <path id="check" d="M60 60 l8 8 l16 -20" fill="none" stroke="#26a269" stroke-width="8"
         stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- finger hole of the lever-arch mechanism -->
+  <rect id="finger-hole" x="60" y="90" width="26" height="10" rx="5" fill="#1a5fb4"/>
 </svg>

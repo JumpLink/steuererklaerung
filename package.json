@@ -298,7 +298,8 @@
       "cp -r app/dist/locale/. /app/share/locale/",
       "install -Dm644 app/data/eu.jumplink.Steuererklaerung.desktop /app/share/applications/eu.jumplink.Steuererklaerung.desktop",
       "install -Dm644 app/data/eu.jumplink.Steuererklaerung.metainfo.xml /app/share/metainfo/eu.jumplink.Steuererklaerung.metainfo.xml",
-      "install -Dm644 app/data/icons/hicolor/scalable/apps/eu.jumplink.Steuererklaerung.svg /app/share/icons/hicolor/scalable/apps/eu.jumplink.Steuererklaerung.svg"
+      "install -Dm644 app/data/icons/hicolor/scalable/apps/eu.jumplink.Steuererklaerung.svg /app/share/icons/hicolor/scalable/apps/eu.jumplink.Steuererklaerung.svg",
+      "install -Dm644 app/data/icons/hicolor/symbolic/apps/eu.jumplink.Steuererklaerung-symbolic.svg /app/share/icons/hicolor/symbolic/apps/eu.jumplink.Steuererklaerung-symbolic.svg"
      ],
      "sources": [
       {
