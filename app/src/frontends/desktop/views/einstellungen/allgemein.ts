@@ -17,6 +17,7 @@ import Gtk from '@girs/gtk-4.0';
 import {
     type AgentSource,
     type AiEngine,
+    agentSourceLockedToBundled,
     resolveAgentSource,
     resolveAiEngine,
 } from '../../../../core/actions/assistant/lotse-embed.ts';
@@ -90,6 +91,10 @@ function buildAgentSourceRow(): Adw.ComboRow {
         model: Gtk.StringList.new([_('Bundled opencode (recommended)'), _('Own opencode (global configuration)')]),
     });
     row.set_selected(Math.max(0, sources.indexOf(resolveAgentSource())));
+    if (agentSourceLockedToBundled()) {
+        row.set_subtitle(_('The Flatpak sandbox cannot reach your own opencode, so the bundled one is always used.'));
+        row.set_sensitive(false);
+    }
     row.connect('notify::selected', () => {
         const chosen = sources[row.get_selected()];
         if (!chosen) return;

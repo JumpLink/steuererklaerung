@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-12 14:55+0200\n"
+"POT-Creation-Date: 2026-10-13 07:55+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -61,7 +61,9 @@ msgstr "Dieses DMS kann Dokumente nicht nach Typ auflisten."
 
 #: src/core/actions/fints-statements.ts:170
 msgid "Acknowledging receipt is not supported by the FinTS library yet."
-msgstr "Der Empfang von Kontoauszügen kann mit der FinTS-Bibliothek noch nicht quittiert werden."
+msgstr ""
+"Der Empfang von Kontoauszügen kann mit der FinTS-Bibliothek noch nicht "
+"quittiert werden."
 
 #: src/core/actions/fints-statements.ts:190
 msgid "The document type \"Kontoauszug\" does not exist in the DMS."
@@ -70,7 +72,9 @@ msgstr "Der Dokumenttyp \"Kontoauszug\" existiert im DMS nicht."
 #: src/core/actions/fints-statements.ts:192
 msgid ""
 "No correspondent with the bank name exists in the DMS; uploaded without one."
-msgstr "Im DMS existiert kein Korrespondent mit dem Banknamen; ohne Korrespondent hochgeladen."
+msgstr ""
+"Im DMS existiert kein Korrespondent mit dem Banknamen; ohne Korrespondent "
+"hochgeladen."
 
 #: src/core/actions/fints-statements.ts:194
 msgid "The tag \"Neu\" does not exist in the DMS; uploaded without it."
@@ -80,17 +84,21 @@ msgstr "Der Tag \"Neu\" existiert im DMS nicht; ohne ihn hochgeladen."
 msgid "This DMS cannot ingest documents."
 msgstr "Dieses DMS kann keine Dokumente aufnehmen."
 
-#: src/core/clients/fints/client.ts:286
+#: src/core/clients/fints/client.ts:290
 msgid ""
 "The bank does not offer electronic account statements (no HIEKAS in its bank "
 "parameters) for this account."
-msgstr "Die Bank bietet für dieses Konto keine elektronischen Kontoauszüge an (kein HIEKAS in den Bankparametern)."
+msgstr ""
+"Die Bank bietet für dieses Konto keine elektronischen Kontoauszüge an (kein "
+"HIEKAS in den Bankparametern)."
 
-#: src/core/clients/fints/client.ts:291
+#: src/core/clients/fints/client.ts:296
 #, javascript-format
 msgid ""
 "The bank offers electronic account statements, but not as PDF (formats: %s)."
-msgstr "Die Bank bietet elektronische Kontoauszüge an, aber nicht als PDF (Formate: %s)."
+msgstr ""
+"Die Bank bietet elektronische Kontoauszüge an, aber nicht als PDF (Formate: "
+"%s)."
 
 #: src/core/clients/llm/job-error.ts:43
 msgid "The AI answered, but not with data the app can read."
@@ -1215,43 +1223,43 @@ msgstr "Prüfe, welche Paperless-Regel gegriffen hat"
 msgid "Paperless assignment not available"
 msgstr "Paperless-Zuordnung nicht verfügbar"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:36
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:37
 msgid "Data"
 msgstr "Daten"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:37
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:38
 msgid "Demo data — fictional examples"
 msgstr "Demodaten — erfundene Beispiele"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:37
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:38
 msgid "Your own data"
 msgstr "Eigene Daten"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:40
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:41
 #: src/frontends/desktop/views/welcome.ts:198
 #: src/frontends/desktop/window.ts:614
 msgid "Use my own data"
 msgstr "Eigene Daten verwenden"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:40
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:41
 #: src/frontends/desktop/views/welcome.ts:187
 msgid "Try the demo"
 msgstr "Demo ausprobieren"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:49
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:50
 msgid "Show welcome again"
 msgstr "Einführung erneut anzeigen"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:54
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:55
 #: src/frontends/desktop/views/welcome.ts:265
 #: src/frontends/desktop/views/welcome.ts:279
 #: src/frontends/desktop/views/welcome.ts:292
 msgid "AI assistant"
 msgstr "KI-Assistent"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:56
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:57
 msgid ""
 "Questions and the data needed to answer them go to the configured AI "
 "provider. Independent of the MCP server."
@@ -1259,11 +1267,11 @@ msgstr ""
 "Fragen und die zur Antwort nötigen Daten gehen an den eingerichteten KI-"
 "Anbieter. Unabhängig vom MCP-Server."
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:85
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:86
 msgid "Coding agent"
 msgstr "Coding-Agent"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:87
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:88
 msgid ""
 "Your own opencode uses your login and models from its global configuration. "
 "Takes effect the next time the app starts."
@@ -1271,79 +1279,87 @@ msgstr ""
 "Dein eigenes opencode nutzt deine Anmeldung und die Modelle aus seiner "
 "globalen Konfiguration. Gilt ab dem nächsten Start der App."
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:90
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:91
 msgid "Bundled opencode (recommended)"
 msgstr "Mitgeliefertes opencode (empfohlen)"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:90
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:91
 msgid "Own opencode (global configuration)"
 msgstr "Eigenes opencode (globale Konfiguration)"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:113
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:95
+msgid ""
+"The Flatpak sandbox cannot reach your own opencode, so the bundled one is "
+"always used."
+msgstr ""
+"Die Flatpak-Sandbox erreicht dein eigenes opencode nicht, deshalb wird "
+"immer das mitgelieferte verwendet."
+
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:118
 msgid "Assistant engine"
 msgstr "Modus"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:114
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:119
 msgid "Takes effect the next time the app starts."
 msgstr "Gilt beim nächsten Start der App."
 
 #. TRANSLATORS: The assistant that is part of the app and answers in-process
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:117
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:122
 msgid "Built in"
 msgstr "Eingebaut"
 
 #. TRANSLATORS: lotse is a program name — it starts a coding agent as a separate process
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:119
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:124
 msgid "Coding agent (lotse)"
 msgstr "Coding-Agent (lotse)"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:135
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:140
 msgid "Last backup"
 msgstr "Letzte Sicherung"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:137
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:196
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:142
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:201
 msgid "Backup folder"
 msgstr "Sicherungsordner"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:145
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:150
 msgid "{time} in {path}"
 msgstr "{time} in {path}"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:150
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:155
 msgid "Never"
 msgstr "Noch nie"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:156
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:164
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:161
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:169
 msgid "Back up now"
 msgstr "Jetzt sichern"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:164
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:169
 msgid "Backing up …"
 msgstr "Wird gesichert …"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:172
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:177
 msgid "Backup saved: {path}"
 msgstr "Sicherung gespeichert: {path}"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:175
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:180
 msgid "Backup failed: {error}"
 msgstr "Sicherung fehlgeschlagen: {error}"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:190
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:195
 msgid "Choose folder"
 msgstr "Ordner wählen"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:218
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:223
 msgid "Keep backups"
 msgstr "Sicherungen behalten"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:219
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:224
 msgid "Older ones are deleted after each new backup"
 msgstr "Ältere werden nach jeder neuen Sicherung gelöscht"
 

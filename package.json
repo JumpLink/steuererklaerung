@@ -172,6 +172,49 @@
      ]
     },
     {
+     "name": "intltool",
+     "cleanup": [
+      "*"
+     ],
+     "sources": [
+      {
+       "type": "archive",
+       "url": "https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz",
+       "sha256": "67c74d94196b153b774ab9f89b2fa6c6ba79352407037c8c14d5aeb334e959cd"
+      }
+     ]
+    },
+    {
+     "name": "libgda",
+     "buildsystem": "meson",
+     "config-opts": [
+      "-Dui=false",
+      "-Dhelp=false",
+      "-Djson=true",
+      "-Dsqlcipher=false",
+      "-Dlibsoup=false",
+      "-Dlibsecret=false",
+      "-Dexamples=false",
+      "-Dtools=false",
+      "-Ddoc=false",
+      "-Dldap=false",
+      "-Dweb=false"
+     ],
+     "cleanup": [
+      "/include",
+      "/lib/pkgconfig",
+      "/share/gtk-doc",
+      "/bin"
+     ],
+     "sources": [
+      {
+       "type": "archive",
+       "url": "https://download.gnome.org/sources/libgda/6.0/libgda-6.0.0.tar.xz",
+       "sha256": "995f4b420e666da5c8bac9faf55e7aedbe3789c525d634720a53be3ccf27a670"
+      }
+     ]
+    },
+    {
      "name": "steuererklaerung",
      "buildsystem": "simple",
      "build-commands": [
