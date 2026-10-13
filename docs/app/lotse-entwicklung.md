@@ -52,11 +52,34 @@ Die Sperrdatei darf sich durch den Link nicht ändern — sie gehört zur Regist
    `@girs/*`-`peerDependencies` von `@lotse/widget` auf die Kopie des Hosts auflösen.
 3. **Der Link ersetzt die Registry-Auflösung**, die Sperrdatei bleibt dabei unverändert.
 
-## Offen: Flatpak
+## Flatpak
 
-Heute gibt es **kein Flatpak**: Paketiert wird als deb und rpm (`release.yml`); es gibt weder
-Manifest noch `gjsify-sources.json` noch einen `gjsify.flatpak`-Abschnitt in `app/package.json`.
-Ein Flatpak ist geplant und braucht eigene Paketierung: ein Manifest, Offline-Quellen aus der
-Sperrdatei (Registry-Tarballs der veröffentlichten `@lotse/*`-Pakete), den gebündelten Agenten über
-`flatpakAgentModule()` aus `@lotse/core` und restriktive `finish-args` — kein `--filesystem=host`.
-Ob und wann es kommt, ist offen.
+Das Flatpak `eu.jumplink.Steuererklaerung` (Manifest `eu.jumplink.Steuererklaerung.json`, erzeugt aus
+dem `gjsify.flatpak`-Abschnitt der Wurzel-`package.json`; Offline-Quellen in `gjsify-sources.json`)
+bündelt opencode **im** Sandkasten über `flatpakAgentModule()` aus `@lotse/core`. Die Standardquelle
+`aiAgentSource: bundled` funktioniert dort unverändert.
+
+`finish-args`, je mit Grund:
+
+| Argument | Grund |
+|---|---|
+| `--share=network` | Qonto, Paperless, Mail, KI-Anbieter |
+| `--share=ipc` | X11-Shared-Memory (GTK) |
+| `--socket=wayland`, `--socket=fallback-x11` | Fenster |
+| `--device=dri` | GPU-Rendering |
+| `--talk-name=org.freedesktop.secrets` | libsecret: ELSTER-PIN und Mail-Passwort |
+| `--env=GJSIFY_LOCALE_DIR=/app/share/locale` | Übersetzungen |
+
+Bewusst **nicht** gesetzt: `--filesystem=*` und `--talk-name=org.freedesktop.Flatpak`. Dateien
+laufen über den FileChooser-Portal (`Gtk.FileDialog`/`FileLauncher`), Benachrichtigungen über den
+Portal.
+
+Grenzen im Flatpak:
+
+- `aiAgentSource: host` ist nicht verfügbar (bräuchte Host-Spawn); die Einstellung ist gesperrt und
+  zeigt das an, aufgelöst wird immer `bundled`.
+- Pfade außerhalb der eigenen XDG-Ordner (`.env` über `DOTENV_CONFIG_PATH`, cwd-relative
+  `steuererklaerung.json`, Belegordner, `~/Downloads`) sind unsichtbar; Dateien kommen nur über den
+  Dateiauswahl-Portal herein.
+- ERiC (`ERIC_HOME`) wird nie gebündelt; die ELSTER-Übermittlung ist im Flatpak eine bekannte Grenze.
+- Der MCP-Server läuft als `flatpak run … mcp` im selben Sandkasten.
