@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-12 17:56+0200\n"
+"POT-Creation-Date: 2026-10-13 07:52+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -157,9 +157,9 @@ msgstr ""
 #. TRANSLATORS: Tooltip on the button revealing the AI assistant side panel
 #: src/frontends/desktop/assistent-panel.blp:30
 #: src/frontends/desktop/lotse-panel.blp:26
-#: src/frontends/desktop/views/einstellungen-view.blp:53
+#: src/frontends/desktop/views/einstellungen-view.blp:54
 #: src/frontends/desktop/views/tab-hub.ts:182
-#: src/frontends/desktop/window.blp:140
+#: src/frontends/desktop/window.blp:160
 msgid "Assistant"
 msgstr "Assistent"
 
@@ -167,7 +167,7 @@ msgstr "Assistent"
 #: src/frontends/desktop/assistent-panel.blp:40
 #: src/frontends/desktop/lotse-panel.blp:36
 #: src/frontends/desktop/views/beleg-upload.ts:130
-#: src/frontends/desktop/window.blp:187
+#: src/frontends/desktop/window.blp:207
 msgid "Close"
 msgstr "Schließen"
 
@@ -188,59 +188,59 @@ msgstr "Senden"
 msgid "Sees aggregated figures only — not tax advice."
 msgstr "Sieht nur aggregierte Kennzahlen — keine Steuerberatung."
 
-#: src/frontends/desktop/assistent-panel.ts:32
+#: src/frontends/desktop/assistent-panel.ts:33
 msgid "What were my biggest expenses?"
 msgstr "Was waren meine größten Ausgaben?"
 
-#: src/frontends/desktop/assistent-panel.ts:33
+#: src/frontends/desktop/assistent-panel.ts:34
 msgid "Which transactions have no receipt yet?"
 msgstr "Welche Buchungen haben noch keinen Beleg?"
 
-#: src/frontends/desktop/assistent-panel.ts:34
+#: src/frontends/desktop/assistent-panel.ts:35
 msgid "How much VAT do I have to pay?"
 msgstr "Wie viel Umsatzsteuer muss ich zahlen?"
 
-#: src/frontends/desktop/assistent-panel.ts:35
+#: src/frontends/desktop/assistent-panel.ts:36
 msgid "Help me with the Entlastungsbetrag (single-parent allowance)."
 msgstr "Hilf mir beim Entlastungsbetrag für Alleinerziehende."
 
-#: src/frontends/desktop/assistent-panel.ts:36
+#: src/frontends/desktop/assistent-panel.ts:37
 msgid "I had childcare costs for my child."
 msgstr "Ich hatte Kinderbetreuungskosten für mein Kind."
 
-#: src/frontends/desktop/assistent-panel.ts:37
+#: src/frontends/desktop/assistent-panel.ts:38
 msgid "I paid back Elterngeld (parental allowance)."
 msgstr "Ich habe Elterngeld zurückgezahlt."
 
-#: src/frontends/desktop/assistent-panel.ts:91
+#: src/frontends/desktop/assistent-panel.ts:92
 #, javascript-format
 msgid "Context: %s"
 msgstr "Kontext: %s"
 
-#: src/frontends/desktop/assistent-panel.ts:114
+#: src/frontends/desktop/assistent-panel.ts:115
 msgid ""
 "Ask me about your figures — or get help entering tax matters. For example:"
 msgstr ""
 "Frag mich zu deinen Zahlen — oder lass dich beim Eintragen von Steuer-"
 "Sachverhalten helfen. Zum Beispiel:"
 
-#: src/frontends/desktop/assistent-panel.ts:115
+#: src/frontends/desktop/assistent-panel.ts:116
 msgid "Ask me something about your figures. For example:"
 msgstr "Frag mich etwas zu deinen Zahlen. Zum Beispiel:"
 
-#: src/frontends/desktop/assistent-panel.ts:170
+#: src/frontends/desktop/assistent-panel.ts:171
 msgid "Suggestion · {title}"
 msgstr "Vorschlag · {title}"
 
-#: src/frontends/desktop/assistent-panel.ts:191
+#: src/frontends/desktop/assistent-panel.ts:192
 msgid "Apply"
 msgstr "Übernehmen"
 
-#: src/frontends/desktop/assistent-panel.ts:198
+#: src/frontends/desktop/assistent-panel.ts:199
 msgid "Applied ✓"
 msgstr "Übernommen ✓"
 
-#: src/frontends/desktop/assistent-panel.ts:224
+#: src/frontends/desktop/assistent-panel.ts:225
 msgid "Assistant is typing …"
 msgstr "Assistent schreibt …"
 
@@ -364,6 +364,7 @@ msgid "dates · payments · open items"
 msgstr "Termine · Zahlungen · offene Posten"
 
 #: src/frontends/desktop/nav.ts:68
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:57
 msgid "Tax"
 msgstr "Steuer"
 
@@ -381,7 +382,7 @@ msgstr "Kunde · Kosten · Ergebnis"
 
 #: src/frontends/desktop/nav.ts:79
 #: src/frontends/desktop/views/einstellungen-view.ts:75
-#: src/frontends/desktop/views/vertraege-view.blp:67
+#: src/frontends/desktop/views/vertraege-view.blp:90
 msgid "Contracts"
 msgstr "Verträge"
 
@@ -634,13 +635,13 @@ msgstr "Lade Beleg-Eingang …"
 #: src/frontends/desktop/views/transactions-view.blp:32
 #: src/frontends/desktop/views/util.ts:409
 #: src/frontends/desktop/views/util.ts:412
-#: src/frontends/desktop/views/vertraege-view.blp:32
+#: src/frontends/desktop/views/vertraege-view.blp:54
 #: src/frontends/desktop/views/zu-pruefen-view.blp:33
 msgid "Could not load"
 msgstr "Konnte nicht laden"
 
-#: src/frontends/desktop/views/beleg-eingang-view.blp:106
-#: src/frontends/desktop/views/zu-pruefen-view.blp:118
+#: src/frontends/desktop/views/beleg-eingang-view.blp:109
+#: src/frontends/desktop/views/zu-pruefen-view.blp:121
 msgid "Show the queue"
 msgstr "Liste anzeigen"
 
@@ -1148,7 +1149,7 @@ msgstr "OK"
 msgid "Loading receipts …"
 msgstr "Lade Belege …"
 
-#: src/frontends/desktop/views/dokumente-view.blp:56
+#: src/frontends/desktop/views/dokumente-view.blp:57
 #: src/frontends/desktop/views/setup-assistant.ts:581
 #: src/frontends/desktop/views/setup-assistant.ts:626
 msgid "Receipts"
@@ -1434,15 +1435,15 @@ msgstr ""
 "ELSTER-Erklärungen, Steuerprognose, Steuertermine und der Bereich Steuer"
 
 #
-#: src/frontends/desktop/views/einstellungen-view.blp:30
+#: src/frontends/desktop/views/einstellungen-view.blp:31
 msgid "General"
 msgstr "Allgemein"
 
-#: src/frontends/desktop/views/einstellungen-view.blp:34
+#: src/frontends/desktop/views/einstellungen-view.blp:35
 msgid "Backup"
 msgstr "Sicherung"
 
-#: src/frontends/desktop/views/einstellungen-view.blp:35
+#: src/frontends/desktop/views/einstellungen-view.blp:36
 msgid ""
 "A copy of your configuration, transactions and receipts. Restoring is done "
 "by hand, see the manual."
@@ -1450,16 +1451,16 @@ msgstr ""
 "Eine Kopie von Konfiguration, Buchungen und Belegen. Wiederhergestellt wird "
 "von Hand, siehe Handbuch."
 
-#: src/frontends/desktop/views/einstellungen-view.blp:44
+#: src/frontends/desktop/views/einstellungen-view.blp:45
 msgid "Clarity"
 msgstr "Verständlichkeit"
 
-#: src/frontends/desktop/views/einstellungen-view.blp:48
+#: src/frontends/desktop/views/einstellungen-view.blp:49
 msgctxt "sync settings"
 msgid "Sync"
 msgstr "Abgleich"
 
-#: src/frontends/desktop/views/einstellungen-view.blp:49
+#: src/frontends/desktop/views/einstellungen-view.blp:50
 msgid ""
 "Fetches new data in the background. Bank fetches with TAN/PIN and ELSTER "
 "never run automatically."
@@ -1467,7 +1468,7 @@ msgstr ""
 "Holt neue Daten im Hintergrund. Bank-Abrufe mit TAN/PIN und ELSTER laufen "
 "nie automatisch."
 
-#: src/frontends/desktop/views/einstellungen-view.blp:58
+#: src/frontends/desktop/views/einstellungen-view.blp:59
 msgid ""
 "Connect external assistants — changes take effect the next time the MCP "
 "server starts."
@@ -1475,11 +1476,11 @@ msgstr ""
 "Externe Assistenten anbinden — Änderungen wirken beim nächsten Start des MCP-"
 "Servers."
 
-#: src/frontends/desktop/views/einstellungen-view.blp:62
+#: src/frontends/desktop/views/einstellungen-view.blp:63
 msgid "MCP tool groups"
 msgstr "MCP-Tool-Gruppen"
 
-#: src/frontends/desktop/views/einstellungen-view.blp:63
+#: src/frontends/desktop/views/einstellungen-view.blp:64
 msgid "Which groups are visible to the outside."
 msgstr "Welche Gruppen nach außen sichtbar sind."
 
@@ -2404,6 +2405,7 @@ msgstr "Lade Details …"
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:150
 #: src/frontends/desktop/views/rechnungen-view.ts:525
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:62
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -2799,11 +2801,11 @@ msgstr "Lade Rechnungen …"
 msgid "No Qonto account"
 msgstr "Kein Qonto-Konto"
 
-#: src/frontends/desktop/views/rechnungen-view.blp:66
+#: src/frontends/desktop/views/rechnungen-view.blp:67
 msgid "Recurring invoices"
 msgstr "Wiederkehrende Rechnungen"
 
-#: src/frontends/desktop/views/rechnungen-view.blp:80
+#: src/frontends/desktop/views/rechnungen-view.blp:81
 msgid "All invoices"
 msgstr "Alle Rechnungen"
 
@@ -2845,27 +2847,27 @@ msgstr "Entwürfe"
 
 #: src/frontends/desktop/views/rechnungen-view.ts:75
 #: src/frontends/desktop/views/rechnungen-view.ts:410
-#: src/frontends/desktop/views/util.ts:68
+#: src/frontends/desktop/views/util.ts:69
 msgctxt "invoice status"
 msgid "Open"
 msgstr "Offen"
 
 #: src/frontends/desktop/views/rechnungen-view.ts:76
 #: src/frontends/desktop/views/rechnungen-view.ts:415
-#: src/frontends/desktop/views/util.ts:69
+#: src/frontends/desktop/views/util.ts:70
 msgctxt "invoice status"
 msgid "Overdue"
 msgstr "Überfällig"
 
 #: src/frontends/desktop/views/rechnungen-view.ts:77
 #: src/frontends/desktop/views/rechnungen-view.ts:421
-#: src/frontends/desktop/views/util.ts:70
+#: src/frontends/desktop/views/util.ts:71
 msgctxt "invoice status"
 msgid "Paid"
 msgstr "Bezahlt"
 
 #: src/frontends/desktop/views/rechnungen-view.ts:78
-#: src/frontends/desktop/views/util.ts:71
+#: src/frontends/desktop/views/util.ts:72
 msgctxt "invoice status"
 msgid "Cancelled"
 msgstr "Storniert"
@@ -2985,7 +2987,7 @@ msgid "No invoice has this status — another filter shows more."
 msgstr "Keine Rechnung hat diesen Status — ein anderer Filter zeigt mehr."
 
 #: src/frontends/desktop/views/rechnungen-view.ts:477
-#: src/frontends/desktop/views/vertraege-view.ts:245
+#: src/frontends/desktop/views/vertraege-view.ts:268
 msgid "Show all"
 msgstr "Alle zeigen"
 
@@ -3311,7 +3313,7 @@ msgid "— Choose category —"
 msgstr "— Kategorie wählen —"
 
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:49
-#: src/frontends/desktop/views/zu-pruefen-view.blp:93
+#: src/frontends/desktop/views/zu-pruefen-view.blp:96
 #: src/frontends/desktop/views/zu-pruefen-view.ts:228
 msgid "Rule from selection"
 msgstr "Regel aus Auswahl"
@@ -3515,6 +3517,7 @@ msgid "This decides which questions follow. Everything can be changed later."
 msgstr "Davon hängt ab, welche Fragen folgen. Alles lässt sich später ändern."
 
 #: src/frontends/desktop/views/setup-assistant.ts:386
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:61
 msgid "VAT"
 msgstr "Umsatzsteuer"
 
@@ -3709,7 +3712,7 @@ msgid "Done"
 msgstr "Fertig"
 
 #: src/frontends/desktop/views/setup-assistant.ts:637
-#: src/frontends/desktop/window.blp:198
+#: src/frontends/desktop/window.blp:218
 msgid "Finish setup"
 msgstr "Einrichtung abschließen"
 
@@ -3770,7 +3773,7 @@ msgstr "Offene Forderungen"
 msgid "Loading transactions …"
 msgstr "Lade Transaktionen …"
 
-#: src/frontends/desktop/views/transactions-view.blp:58
+#: src/frontends/desktop/views/transactions-view.blp:59
 msgid "Search transactions …"
 msgstr "Buchungen durchsuchen …"
 
@@ -4141,71 +4144,71 @@ msgstr "Umbuchung zurückgenommen"
 msgid "Could not revert: {error}"
 msgstr "Konnte nicht zurücknehmen: {error}"
 
-#: src/frontends/desktop/views/util.ts:54
+#: src/frontends/desktop/views/util.ts:55
 msgid "{what} saved"
 msgstr "{what} gespeichert"
 
-#: src/frontends/desktop/views/util.ts:67
+#: src/frontends/desktop/views/util.ts:68
 msgctxt "invoice status"
 msgid "Draft"
 msgstr "Entwurf"
 
-#: src/frontends/desktop/views/util.ts:76
+#: src/frontends/desktop/views/util.ts:77
 msgctxt "month abbreviation"
 msgid "Jan"
 msgstr "Jan"
 
-#: src/frontends/desktop/views/util.ts:77
+#: src/frontends/desktop/views/util.ts:78
 msgctxt "month abbreviation"
 msgid "Feb"
 msgstr "Feb"
 
-#: src/frontends/desktop/views/util.ts:78
+#: src/frontends/desktop/views/util.ts:79
 msgctxt "month abbreviation"
 msgid "Mar"
 msgstr "Mär"
 
-#: src/frontends/desktop/views/util.ts:79
+#: src/frontends/desktop/views/util.ts:80
 msgctxt "month abbreviation"
 msgid "Apr"
 msgstr "Apr"
 
-#: src/frontends/desktop/views/util.ts:80
+#: src/frontends/desktop/views/util.ts:81
 msgctxt "month abbreviation"
 msgid "May"
 msgstr "Mai"
 
-#: src/frontends/desktop/views/util.ts:81
+#: src/frontends/desktop/views/util.ts:82
 msgctxt "month abbreviation"
 msgid "Jun"
 msgstr "Jun"
 
-#: src/frontends/desktop/views/util.ts:82
+#: src/frontends/desktop/views/util.ts:83
 msgctxt "month abbreviation"
 msgid "Jul"
 msgstr "Jul"
 
-#: src/frontends/desktop/views/util.ts:83
+#: src/frontends/desktop/views/util.ts:84
 msgctxt "month abbreviation"
 msgid "Aug"
 msgstr "Aug"
 
-#: src/frontends/desktop/views/util.ts:84
+#: src/frontends/desktop/views/util.ts:85
 msgctxt "month abbreviation"
 msgid "Sep"
 msgstr "Sep"
 
-#: src/frontends/desktop/views/util.ts:85
+#: src/frontends/desktop/views/util.ts:86
 msgctxt "month abbreviation"
 msgid "Oct"
 msgstr "Okt"
 
-#: src/frontends/desktop/views/util.ts:86
+#: src/frontends/desktop/views/util.ts:87
 msgctxt "month abbreviation"
 msgid "Nov"
 msgstr "Nov"
 
-#: src/frontends/desktop/views/util.ts:87
+#: src/frontends/desktop/views/util.ts:88
 msgctxt "month abbreviation"
 msgid "Dec"
 msgstr "Dez"
@@ -4251,7 +4254,7 @@ msgstr ""
 "In Paperless fehlen die Dokumenttypen und Zusatzfelder, aus denen die Zahlen "
 "gelesen werden. Sie lassen sich in den Einstellungen anlegen."
 
-#: src/frontends/desktop/views/vertraege-view.blp:22
+#: src/frontends/desktop/views/vertraege-view.blp:44
 msgid "Loading contracts …"
 msgstr "Lade Verträge …"
 
@@ -4270,71 +4273,71 @@ msgctxt "contract filter"
 msgid "Archived"
 msgstr "Archiviert"
 
-#: src/frontends/desktop/views/vertraege-view.ts:107
+#: src/frontends/desktop/views/vertraege-view.ts:128
 msgid "Contracts could not be loaded"
 msgstr "Verträge konnten nicht geladen werden"
 
-#: src/frontends/desktop/views/vertraege-view.ts:130
+#: src/frontends/desktop/views/vertraege-view.ts:151
 msgid "Per month"
 msgstr "Pro Monat"
 
-#: src/frontends/desktop/views/vertraege-view.ts:132
+#: src/frontends/desktop/views/vertraege-view.ts:153
 msgid "{n} active contract"
 msgid_plural "{n} active contracts"
 msgstr[0] "{n} aktiver Vertrag"
 msgstr[1] "{n} aktive Verträge"
 
-#: src/frontends/desktop/views/vertraege-view.ts:135
+#: src/frontends/desktop/views/vertraege-view.ts:156
 msgid "Per year"
 msgstr "Pro Jahr"
 
-#: src/frontends/desktop/views/vertraege-view.ts:137
+#: src/frontends/desktop/views/vertraege-view.ts:158
 msgid "derived from the intervals"
 msgstr "aus den Zahlungsintervallen"
 
-#: src/frontends/desktop/views/vertraege-view.ts:140
+#: src/frontends/desktop/views/vertraege-view.ts:161
 msgid "Deadline near"
 msgstr "Frist nah"
 
-#: src/frontends/desktop/views/vertraege-view.ts:143
+#: src/frontends/desktop/views/vertraege-view.ts:164
 msgid "{n} of them urgent"
 msgid_plural "{n} of them urgent"
 msgstr[0] "{n} davon dringend"
 msgstr[1] "{n} davon dringend"
 
-#: src/frontends/desktop/views/vertraege-view.ts:146
+#: src/frontends/desktop/views/vertraege-view.ts:167
 msgid "Needs a look"
 msgstr "Zu prüfen"
 
-#: src/frontends/desktop/views/vertraege-view.ts:149
+#: src/frontends/desktop/views/vertraege-view.ts:170
 msgid "missing, returned or changed debits"
 msgstr "fehlende, zurückgebuchte oder geänderte Abbuchungen"
 
-#: src/frontends/desktop/views/vertraege-view.ts:161
+#: src/frontends/desktop/views/vertraege-view.ts:182
 msgid "Export deadlines"
 msgstr "Fristen exportieren"
 
-#: src/frontends/desktop/views/vertraege-view.ts:162
+#: src/frontends/desktop/views/vertraege-view.ts:183
 msgid "Save the upcoming notice deadlines as a calendar file (.ics)"
 msgstr "Die nächsten Kündigungsfristen als Kalenderdatei (.ics) speichern"
 
-#: src/frontends/desktop/views/vertraege-view.ts:166
-#: src/frontends/desktop/views/vertraege-view.ts:233
+#: src/frontends/desktop/views/vertraege-view.ts:187
+#: src/frontends/desktop/views/vertraege-view.ts:256
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:92
 msgid "New contract"
 msgstr "Neuer Vertrag"
 
-#: src/frontends/desktop/views/vertraege-view.ts:217
+#: src/frontends/desktop/views/vertraege-view.ts:240
 msgid "{n} contract"
 msgid_plural "{n} contracts"
 msgstr[0] "{n} Vertrag"
 msgstr[1] "{n} Verträge"
 
-#: src/frontends/desktop/views/vertraege-view.ts:228
+#: src/frontends/desktop/views/vertraege-view.ts:251
 msgid "No contracts yet"
 msgstr "Noch keine Verträge"
 
-#: src/frontends/desktop/views/vertraege-view.ts:230
+#: src/frontends/desktop/views/vertraege-view.ts:253
 msgid ""
 "Hosting, insurance, a phone tariff — recorded once with its term and notice "
 "period, the app works out by itself when the last day to cancel is."
@@ -4343,49 +4346,49 @@ msgstr ""
 "Kündigungsfrist erfasst, rechnet die App selbst aus, wann der letzte Tag zum "
 "Kündigen ist."
 
-#: src/frontends/desktop/views/vertraege-view.ts:240
+#: src/frontends/desktop/views/vertraege-view.ts:263
 msgid "Nothing under this filter"
 msgstr "Nichts unter diesem Filter"
 
-#: src/frontends/desktop/views/vertraege-view.ts:243
+#: src/frontends/desktop/views/vertraege-view.ts:266
 msgid "No contract has been archived yet."
 msgstr "Es ist noch kein Vertrag archiviert."
 
-#: src/frontends/desktop/views/vertraege-view.ts:244
+#: src/frontends/desktop/views/vertraege-view.ts:267
 msgid "No contract is in this state — another filter shows more."
 msgstr "Kein Vertrag ist in diesem Zustand — ein anderer Filter zeigt mehr."
 
-#: src/frontends/desktop/views/vertraege-view.ts:253
+#: src/frontends/desktop/views/vertraege-view.ts:276
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:134
 msgid "{amount} {cycle}"
 msgstr "{amount} {cycle}"
 
-#: src/frontends/desktop/views/vertraege-view.ts:264
+#: src/frontends/desktop/views/vertraege-view.ts:288
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:139
 msgid "{amount} / month"
 msgstr "{amount} / Monat"
 
-#: src/frontends/desktop/views/vertraege-view.ts:266
+#: src/frontends/desktop/views/vertraege-view.ts:290
 msgid "Derived from {amount} {cycle}"
 msgstr "Abgeleitet aus {amount} {cycle}"
 
-#: src/frontends/desktop/views/vertraege-view.ts:279
+#: src/frontends/desktop/views/vertraege-view.ts:303
 msgid "Give notice by {date} at the latest"
 msgstr "Spätestens am {date} kündigen"
 
-#: src/frontends/desktop/views/vertraege-view.ts:280
+#: src/frontends/desktop/views/vertraege-view.ts:304
 msgid "Cancellable at any time"
 msgstr "Jederzeit kündbar"
 
-#: src/frontends/desktop/views/vertraege-view.ts:321
+#: src/frontends/desktop/views/vertraege-view.ts:356
 msgid "Deadlines saved"
 msgstr "Fristen gespeichert"
 
-#: src/frontends/desktop/views/vertraege-view.ts:324
+#: src/frontends/desktop/views/vertraege-view.ts:359
 msgid "Export failed"
 msgstr "Export fehlgeschlagen"
 
-#: src/frontends/desktop/views/vertraege-view.ts:327
+#: src/frontends/desktop/views/vertraege-view.ts:362
 msgid "Deadlines exported"
 msgstr "Fristen exportiert"
 
@@ -5330,32 +5333,32 @@ msgstr "Abgerechnet"
 msgid "Internal"
 msgstr "Intern"
 
-#: src/frontends/desktop/views/zeiten-view.ts:347
+#: src/frontends/desktop/views/zeiten-view.ts:364
 msgid "Nothing tracked yet."
 msgstr "Noch nichts erfasst."
 
-#: src/frontends/desktop/views/zeiten-view.ts:362
+#: src/frontends/desktop/views/zeiten-view.ts:379
 msgid "Today"
 msgstr "Heute"
 
-#: src/frontends/desktop/views/zeiten-view.ts:364
+#: src/frontends/desktop/views/zeiten-view.ts:381
 msgid "Yesterday"
 msgstr "Gestern"
 
-#: src/frontends/desktop/views/zeiten-view.ts:382
+#: src/frontends/desktop/views/zeiten-view.ts:399
 msgid "estimated"
 msgstr "geschätzt"
 
-#: src/frontends/desktop/views/zeiten-view.ts:414
+#: src/frontends/desktop/views/zeiten-view.ts:443
 msgid "Assign project"
 msgstr "Projekt zuordnen"
 
-#: src/frontends/desktop/views/zeiten-view.ts:414
-#: src/frontends/desktop/views/zeiten-view.ts:423
+#: src/frontends/desktop/views/zeiten-view.ts:443
+#: src/frontends/desktop/views/zeiten-view.ts:452
 msgid "Already invoiced"
 msgstr "Bereits abgerechnet"
 
-#: src/frontends/desktop/views/zeiten-view.ts:423
+#: src/frontends/desktop/views/zeiten-view.ts:452
 msgid "Delete entry"
 msgstr "Eintrag löschen"
 
@@ -5363,7 +5366,7 @@ msgstr "Eintrag löschen"
 msgid "Loading transactions to review …"
 msgstr "Lade Buchungen zu prüfen …"
 
-#: src/frontends/desktop/views/zu-pruefen-view.blp:99
+#: src/frontends/desktop/views/zu-pruefen-view.blp:102
 msgid "Suggest the common pattern of the marked transactions as a rule"
 msgstr "Gemeinsames Muster der markierten Buchungen als Regel vorschlagen"
 
@@ -5493,12 +5496,12 @@ msgstr "Über Steuererklärung"
 
 #. TRANSLATORS: Subtitle under the app name in the sidebar header, marking this as the
 #. native front-end beside the web one
-#: src/frontends/desktop/window.blp:76
+#: src/frontends/desktop/window.blp:96
 msgid "Native preview"
 msgstr "Native Vorschau"
 
 #. TRANSLATORS: Tooltip on the headerbar button that syncs Qonto and Paperless
-#: src/frontends/desktop/window.blp:133
+#: src/frontends/desktop/window.blp:153
 msgid "Sync"
 msgstr "Abgleichen"
 
@@ -5556,6 +5559,87 @@ msgid ""
 msgstr ""
 "„{view}“ — diese Ansicht wird Schritt für Schritt auf native Adwaita-Widgets "
 "portiert. In der Web-Oberfläche (steuer web) ist sie bereits verfügbar."
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:7
+msgid "Steuererklärung"
+msgstr "Steuererklärung"
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:8
+msgid "Tax return and bookkeeping for small businesses"
+msgstr "Steuererklärung und Buchhaltung für Kleinbetriebe"
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:10
+msgid ""
+"Receipts, transactions and invoices in one place. From them the app computes "
+"the income-surplus statement (EÜR), the VAT returns, trade tax and the "
+"separate assessment for partnerships, and files them through ELSTER."
+msgstr ""
+"Belege, Buchungen und Rechnungen an einem Ort. Daraus berechnet die App die "
+"Einnahmenüberschussrechnung (EÜR), die Umsatzsteuererklärungen, die "
+"Gewerbesteuer und die gesonderte Feststellung für Personengesellschaften und "
+"übermittelt sie über ELSTER."
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:11
+msgid ""
+"It runs on your machine: your bank data and documents stay in a local store. "
+"Every figure can be traced back to the transaction it came from."
+msgstr ""
+"Sie läuft auf deinem Rechner: Bankdaten und Belege bleiben in einem lokalen "
+"Speicher. Jede Zahl lässt sich bis zur Buchung zurückverfolgen."
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:12
+msgid ""
+"It works fully without AI: you write your own classification rules instead "
+"of letting a model guess. An assistant is optional and off by default."
+msgstr ""
+"Sie ist ohne KI vollständig bedienbar: Du schreibst eigene "
+"Klassifizierungsregeln, statt ein Modell raten zu lassen. Ein Assistent ist "
+"optional und standardmäßig aus."
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:13
+msgid ""
+"The tax logic follows German law, so the interface keeps the official German "
+"terms. The app is a preparation aid, not tax advice."
+msgstr ""
+"Die Steuerlogik folgt deutschem Recht, deshalb behält die Oberfläche die "
+"amtlichen deutschen Begriffe. Die App ist eine Vorbereitungshilfe, keine "
+"Steuerberatung."
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:22
+msgid "Overview with key figures and what to do next"
+msgstr "Übersicht mit Kennzahlen und dem, was als Nächstes ansteht"
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:26
+msgid "Receipts, linked to transactions"
+msgstr "Belege, mit Buchungen verknüpft"
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:30
+msgid "All transactions of all accounts, searchable"
+msgstr "Alle Buchungen aller Konten, durchsuchbar"
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:34
+msgid "Outgoing invoices with status and recurring billing"
+msgstr "Ausgangsrechnungen mit Status und wiederkehrender Abrechnung"
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:38
+msgid "Anlage EÜR, every line down to its transactions"
+msgstr "Anlage EÜR, jede Zeile bis zu den Buchungen"
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:42
+msgid "Tax return with checks before filing"
+msgstr "Steuererklärung mit Prüfungen vor der Abgabe"
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:58
+msgid "Accounting"
+msgstr "Buchhaltung"
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:59
+msgid "ELSTER"
+msgstr "ELSTER"
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:60
+msgid "EÜR"
+msgstr "EÜR"
 
 #~ msgid "Annual-only filers keep “Later”."
 #~ msgstr "Wer nur jährlich erklärt, lässt „Später“ stehen."
