@@ -119,6 +119,22 @@ try {
         console.error(`check-i18n: xgettext failed — is gettext installed? ${res.error?.message ?? res.stderr}`);
         process.exit(1);
     }
+    // The store text in the committed metainfo, as `dev/i18n.sh extract` joins it.
+    const meta = spawnSync(
+        'xgettext',
+        [
+            '--join-existing',
+            `--output=${join(tmp, 'fresh.pot')}`,
+            '--from-code=UTF-8',
+            '--language=appdata',
+            `data/${DOMAIN}.metainfo.xml`,
+        ],
+        { cwd: ROOT, encoding: 'utf8' },
+    );
+    if (meta.error || meta.status !== 0) {
+        console.error(`check-i18n: xgettext failed on the metainfo — ${meta.error?.message ?? meta.stderr}`);
+        process.exit(1);
+    }
     const fresh = parsePo(readFileSync(join(tmp, 'fresh.pot'), 'utf8'));
     const committed = new Set(parsePo(readFileSync(join(ROOT, 'po', `${DOMAIN}.pot`), 'utf8')).map(key));
     const freshKeys = new Set(fresh.map(key));

@@ -12,18 +12,26 @@ template $BhTabHub: Adw.Bin {
   child: Gtk.Box {
     orientation: vertical;
 
-    Gtk.Box {
-      orientation: horizontal;
+    // The switcher behind a sideways scroller: six labelled tabs are ~560 px, so on a phone the
+    // row was simply cut off at the right edge — the last tab unreadable and unreachable. The
+    // scrollbar is an overlay and propagate-natural-width keeps the desktop row centred and
+    // unscrolled at its full size; only a narrow window swipes. The switcher itself is pinned to
+    // its natural width in TypeScript (`pinNaturalWidth`) — without that the viewport squeezes it
+    // and the tabs ellipsize instead of scrolling.
+    Gtk.ScrolledWindow {
       halign: center;
       margin-top: 12;
       margin-bottom: 6;
+      hscrollbar-policy: automatic;
+      vscrollbar-policy: never;
+      propagate-natural-width: true;
 
-      Adw.InlineViewSwitcher {
+      child: Adw.InlineViewSwitcher switcher {
         stack: stack;
         display-mode: labels;
 
         styles ["round"]
-      }
+      };
     }
 
     // Homogeneous is right here: every page is a full-height view, so equal page heights are the

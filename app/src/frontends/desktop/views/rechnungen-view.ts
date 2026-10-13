@@ -47,6 +47,7 @@ import { BhRechnungVersandDialog } from './rechnung-versand-dialog.ts';
 import { BhRechnungFormDialog } from './rechnung-form-dialog.ts';
 import { errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
+import { chipScroller, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
 
 /** Status label + colour class for a recurring reminder. */
@@ -240,8 +241,9 @@ export class BhRechnungenView extends Adw.Bin {
             e.lastInvoiceNumber ? fmt(_('last {number}'), { number: e.lastInvoiceNumber }) : null,
         ].filter(Boolean);
         const row = new Adw.ActionRow({ title: markup(e.customer), subtitle: markup(sub.join(' · ')) });
-        row.add_suffix(amountLabel(eur(e.totals.gross)));
-        row.add_suffix(this.badge(meta.label, meta.css));
+        // Amount, badge and the two buttons as one wrapping cluster — see rowActions().
+        const actions = rowActions([amountLabel(eur(e.totals.gross)), this.badge(meta.label, meta.css)]);
+        row.add_suffix(actions);
         // A paused/cancelled schedule stays read-only; the rest get a one-click "draft from template"
         // button. This uses the recurring path (createRecurringInvoiceDraft → provider.createDraft
         // directly), so it works for the Qonto back-end too — unlike the form-based "Neue Rechnung",
@@ -253,7 +255,7 @@ export class BhRechnungenView extends Adw.Bin {
                 valign: Gtk.Align.CENTER,
             });
             btn.connect('clicked', () => void this.createDraftFromRecurring(e, btn));
-            row.add_suffix(btn);
+            actions.append(wrapButtonLabel(btn));
         }
         // Every schedule is editable, including a paused one — pausing is how you park something
         // you intend to come back to, and coming back means changing it.
@@ -261,7 +263,7 @@ export class BhRechnungenView extends Adw.Bin {
         edit.add_css_class('flat');
         edit.set_tooltip_text(_('Edit recurring item'));
         edit.connect('clicked', () => this.editSchedule(e.id));
-        row.add_suffix(edit);
+        actions.append(edit);
         return row;
     }
 
@@ -428,7 +430,7 @@ export class BhRechnungenView extends Adw.Bin {
     /** The invoices-group header suffix: the status filter + a capability-gated "Neue Rechnung". */
     private buildHeaderSuffix(): Gtk.Box {
         const box = new Gtk.Box({ spacing: 8, valign: Gtk.Align.CENTER });
-        box.append(this.buildFilterToggle());
+        box.append(chipScroller(this.buildFilterToggle()));
         if (this.capabilities?.createDraft) {
             const btn = new Gtk.Button({
                 label: _('New invoice'),
@@ -436,7 +438,7 @@ export class BhRechnungenView extends Adw.Bin {
                 valign: Gtk.Align.CENTER,
             });
             btn.connect('clicked', () => this.newInvoice());
-            box.append(btn);
+            box.append(wrapButtonLabel(btn));
         }
         return box;
     }

@@ -45,6 +45,7 @@ import type { AppEntity } from '../entities.ts';
 import { deDate, eur } from '../../../core/lib/format.ts';
 import { applyScrollHook, GroupRows, LoadToken, amountLabel, loadIntoStack, markup } from './util.ts';
 import { showToast } from '../toast.ts';
+import { wrapButtonLabel, wrappingLabel } from '../widgets/responsive.ts';
 
 const SOURCE_LABEL: Record<string, string> = {
     qonto: 'Qonto',
@@ -405,11 +406,14 @@ export class BhKontenView extends Adw.Bin {
     private fillConnections(accounts: ConnectionInfo[]): void {
         clearBox(this._connections_box);
 
-        const head = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 8 });
-        head.append(new Gtk.Label({ label: 'Aktive Verbindungen', xalign: 0, hexpand: true, cssClasses: ['title-4'] }));
+        // Heading, count, probe and "Konto hinzufügen" want 367 px side by side — seven more than a
+        // phone screen has, which cut the button off at the right edge. Wrapped, it drops to a
+        // second line; a desktop window lays the same row out unchanged.
+        const head = new Adw.WrapBox({ childSpacing: 8, lineSpacing: 6, justify: Adw.JustifyMode.FILL });
+        head.append(wrappingLabel({ label: 'Aktive Verbindungen', xalign: 0, hexpand: true, cssClasses: ['title-4'] }));
         const live = accounts.filter((a) => a.live).length;
         head.append(
-            new Gtk.Label({
+            wrappingLabel({
                 label: `${accounts.length} Konten · ${live} live`,
                 cssClasses: ['dim-label', 'caption'],
                 valign: Gtk.Align.CENTER,
@@ -432,7 +436,7 @@ export class BhKontenView extends Adw.Bin {
         add.add_css_class('suggested-action');
         add.add_css_class('pill');
         add.connect('clicked', () => this.presentAddAccount());
-        head.append(add);
+        head.append(wrapButtonLabel(add));
         this._connections_box.append(head);
 
         if (accounts.length === 0) {

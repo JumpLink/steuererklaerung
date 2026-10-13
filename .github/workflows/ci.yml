@@ -47,6 +47,8 @@ jobs:
       image: quay.io/fedora/fedora:44
     steps:
       - name: Install system prerequisites (gjs + runtime typelibs + prebuild deps)
+        # `appstream` ships metainfo.its: without it xgettext falls back to its built-in appdata
+        # rules, splits <description> differently and check-i18n calls the committed .pot stale.
         run: >
           dnf install -y --setopt=install_weak_deps=False
           git tar xz findutils
@@ -54,7 +56,7 @@ jobs:
           libsoup3 json-glib gnutls libnghttp2
           libgda libgda-sqlite
           pango cairo
-          gettext
+          gettext appstream
 
       - uses: actions/checkout@v4
 

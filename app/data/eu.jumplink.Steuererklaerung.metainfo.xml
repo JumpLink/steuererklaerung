@@ -5,60 +5,66 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>AGPL-3.0-or-later</project_license>
   <name>Steuererklärung</name>
-  <!-- TRANSLATORS: One line, no full stop: what the app does for the person using it -->
-  <summary>Bookkeeping and tax returns for a small German business</summary>
+  <summary>Tax return and bookkeeping for small businesses</summary>
   <description>
-    <!-- TRANSLATORS: Opening paragraph: what the app does. Keep EÜR and ELSTER as they are. -->
-    <p>Receipts, bookings and invoices in one place — and out of them the German income surplus statement (EÜR), the VAT return, trade tax and the partnership assessment, as ELSTER XML or transmitted directly.</p>
-    <!-- TRANSLATORS: Second paragraph: the app works without AI, and the AI boundary -->
-    <p>Fully usable without AI: your own classification rules instead of guessing, and every figure traceable down to the booking it came from. An assistant can help, but it never books anything by itself.</p>
-    <!-- TRANSLATORS: Bullet list of what the app does -->
-    <ul>
-      <!-- TRANSLATORS: Feature list: import and classification -->
-      <li>Import bank statements and receipts, classify them by your own rules</li>
-      <!-- TRANSLATORS: Feature list: invoicing. Keep XRechnung and ZUGFeRD as they are. -->
-      <li>Write invoices as PDF and e-invoice (XRechnung, ZUGFeRD)</li>
-      <!-- TRANSLATORS: Feature list: the tax forms. Keep EÜR as it is. -->
-      <li>Compute EÜR, VAT return, trade tax and the partnership assessment</li>
-      <!-- TRANSLATORS: Feature list: ELSTER submission. Keep ELSTER as it is. -->
-      <li>Transmit to the tax office through ELSTER, or export the XML and keep it</li>
-    </ul>
+    <p>Receipts, transactions and invoices in one place. From them the app computes the income-surplus statement (EÜR), the VAT returns, trade tax and the separate assessment for partnerships, and files them through ELSTER.</p>
+    <p>It runs on your machine: your bank data and documents stay in a local store. Every figure can be traced back to the transaction it came from.</p>
+    <p>It works fully without AI: you write your own classification rules instead of letting a model guess. An assistant is optional and off by default.</p>
+    <p>The tax logic follows German law, so the interface keeps the official German terms. The app is a preparation aid, not tax advice.</p>
   </description>
   <developer id="eu.jumplink">
     <name translate="no">Pascal Garber</name>
-    <email>pascal@jumplink.eu</email>
   </developer>
   <launchable type="desktop-id">eu.jumplink.Steuererklaerung.desktop</launchable>
-  <url type="homepage">https://github.com/JumpLink/steuererklaerung</url>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/01-uebersicht.png</image>
+      <caption>Overview with key figures and what to do next</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/04-belege.png</image>
+      <caption>Receipts, linked to transactions</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/05-buchungen.png</image>
+      <caption>All transactions of all accounts, searchable</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/06-rechnungen.png</image>
+      <caption>Outgoing invoices with status and recurring billing</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/10-euer.png</image>
+      <caption>Anlage EÜR, every line down to its transactions</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/09-steuererklaerung.png</image>
+      <caption>Tax return with checks before filing</caption>
+    </screenshot>
+  </screenshots>
+  <url type="homepage">https://jumplink.eu/steuererklaerung/</url>
   <url type="bugtracker">https://github.com/JumpLink/steuererklaerung/issues</url>
   <url type="vcs-browser">https://github.com/JumpLink/steuererklaerung</url>
-  <content_rating type="oars-1.1" />
+  <content_rating type="oars-1.1"/>
   <releases>
-    <release version="0.1.0" date="2026-10-12">
-      <description>
-        <!-- TRANSLATORS: Release notes for 0.1.0 — the one-line summary -->
-        <p>First packaged release: bookkeeping, invoicing and the German tax forms in one window.</p>
-      </description>
-    </release>
+    <release version="0.1.0" date="2026-10-12"/>
   </releases>
   <categories>
     <category>Office</category>
     <category>Finance</category>
-    <category>GTK</category>
   </categories>
   <keywords>
-    <keyword>Steuer</keyword>
-    <keyword>Buchhaltung</keyword>
+    <keyword>Tax</keyword>
+    <keyword>Accounting</keyword>
     <keyword>ELSTER</keyword>
     <keyword>EÜR</keyword>
-    <keyword>Umsatzsteuer</keyword>
-    <keyword>Rechnung</keyword>
-    <keyword>Tax</keyword>
+    <keyword>VAT</keyword>
+    <keyword>Invoice</keyword>
   </keywords>
-  <kudos>
-    <kudo>ModernToolkit</kudo>
-    <kudo>HiDpiIcon</kudo>
-  </kudos>
+  <branding>
+    <color type="primary" scheme_preference="light">#62a0ea</color>
+    <color type="primary" scheme_preference="dark">#1a5fb4</color>
+  </branding>
   <provides>
     <binary>steuererklaerung</binary>
   </provides>
