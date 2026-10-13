@@ -91,24 +91,7 @@
      "iban": "DE94100101232090324020"
     }
    ]
-  }
- },
- "scripts": {
-  "build": "gjsify workspace steuererklaerung-cli build",
-  "build:cli": "gjsify workspace steuererklaerung-cli build:gjs",
-  "build:app": "gjsify workspace steuererklaerung-cli build:app",
-  "build:web": "gjsify workspace steuererklaerung-cli build:web",
-  "start": "gjsify workspace steuererklaerung-cli start",
-  "start:app": "gjsify workspace steuererklaerung-cli start:app",
-  "start:web": "gjsify workspace steuererklaerung-cli start web",
-  "dev:app": "gjsify workspace steuererklaerung-cli dev:app",
-  "storybook": "gjsify workspace steuererklaerung-cli storybook",
-  "check": "gjsify foreach -A check",
-  "test": "gjsify workspace steuererklaerung-cli test",
-  "format": "gjsify workspace steuererklaerung-cli format",
-  "lint": "gjsify workspace steuererklaerung-cli lint"
- },
- "gjsify": {
+  },
   "flatpak": {
    "appId": "eu.jumplink.Steuererklaerung",
    "icon": "app/data/icons/hicolor/scalable/apps/eu.jumplink.Steuererklaerung.svg",
@@ -333,5 +316,20 @@
     }
    ]
   }
+ },
+ "scripts": {
+  "build": "gjsify workspace steuererklaerung-cli build",
+  "build:cli": "gjsify workspace steuererklaerung-cli build:gjs",
+  "build:app": "gjsify workspace steuererklaerung-cli build:app",
+  "build:web": "gjsify workspace steuererklaerung-cli build:web",
+  "start": "gjsify workspace steuererklaerung-cli start",
+  "start:app": "gjsify workspace steuererklaerung-cli start:app",
+  "start:web": "gjsify workspace steuererklaerung-cli start web",
+  "dev:app": "gjsify workspace steuererklaerung-cli dev:app",
+  "storybook": "gjsify workspace steuererklaerung-cli storybook",
+  "check": "gjsify foreach -A check",
+  "test": "gjsify workspace steuererklaerung-cli test",
+  "format": "gjsify workspace steuererklaerung-cli format",
+  "lint": "gjsify workspace steuererklaerung-cli lint"
  }
 }
