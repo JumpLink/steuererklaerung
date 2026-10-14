@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-14 09:00+0200\n"
+"POT-Creation-Date: 2026-10-14 13:47+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -152,7 +152,8 @@ msgstr ""
 "Es ist kein KI-Agent installiert. Installiere opencode oder wähle eine "
 "andere KI-Engine."
 
-#: src/frontends/desktop/about.ts:30
+#: src/frontends/desktop/about.ts:32
+#: src/frontends/desktop/views/support-dialog.ts:32
 msgid "Support"
 msgstr "Unterstützen"
 
@@ -3743,6 +3744,24 @@ msgstr "Bitte einen Namen eingeben."
 #: src/frontends/desktop/views/setup-assistant.ts:676
 msgid "Optional. The tax office is already part of the tax number."
 msgstr "Optional. Das Finanzamt steckt schon in der Steuernummer."
+
+#: src/frontends/desktop/views/support-dialog.ts:25
+msgid "Thank you for using Steuererklärung"
+msgstr "Danke, dass du Steuererklärung nutzt"
+
+#: src/frontends/desktop/views/support-dialog.ts:27
+msgid ""
+"Steuererklärung is built and maintained by one person. If it saved you time "
+"this year, you can support its development — entirely optional, and the app "
+"works the same either way."
+msgstr ""
+"Steuererklärung wird von einer einzelnen Person gebaut und gepflegt. Wenn dir "
+"die App dieses Jahr Zeit gespart hat, kannst du die Entwicklung unterstützen "
+"— ganz freiwillig, und die App funktioniert in jedem Fall gleich."
+
+#: src/frontends/desktop/views/support-dialog.ts:31
+msgid "Not Now"
+msgstr "Jetzt nicht"
 
 #: src/frontends/desktop/views/tab-hub.ts:181
 msgid "Tax return"

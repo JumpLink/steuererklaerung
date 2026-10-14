@@ -31,6 +31,7 @@ import { isAssistantEnabled, loadMailEingang, loadManifest } from '../../core/co
 import { capabilities } from '../../core/countries/index.ts';
 import { loadAppWorkspace, type AppEntity, type AppWorkspace } from './entities.ts';
 import { showToast } from './toast.ts';
+import { showSupportPrompt } from './views/support-dialog.ts';
 import { presentRemoveEntity, presentRenameEntity } from './views/entity-dialogs.ts';
 import { BhSetupAssistant } from './views/setup-assistant.ts';
 import { BhWelcome, type WelcomeChoice } from './views/welcome.ts';
@@ -569,6 +570,9 @@ export class MainWindow extends Adw.ApplicationWindow {
         this.refreshBanner();
         this.syncAssistantContext();
         this.fetchMailOnStart();
+        // STEUER_APP_SUPPORT_PROMPT=1 (dev/testing hook): show the post-filing support prompt right away,
+        // so it can be screenshotted without a real ELSTER submission. Bypasses the once-per-year ledger.
+        if (process.env.STEUER_APP_SUPPORT_PROMPT === '1') void showSupportPrompt(this);
     }
 
     private mailFetchedOnStart = false;

@@ -16,6 +16,8 @@
 #                           has a full duplicate on RE-2025-0004 and a partial overpayment on RE-2026-0003
 #   STEUER_APP_TX_DETAIL=1  open the Buchungs-Detail sheet on the first classified booking
 #   STEUER_APP_MAIL_DIALOG=1 open the invoice mail dialog on the first issued invoice (view rechnungen)
+#   STEUER_SHOT_SCREENCAST=1 capture the compositor's monitor at its physical resolution (2× under
+#                           `headless-run --scale 2 --size <2×W>x<2×H>`) instead of devtools' 1× render
 #   STEUER_SHOT_SIZE="W H"  window size before capture (default 1280 860)
 #   STEUER_SHOT_SETTLE=s    seconds to wait after resize before capturing (default 2.5)
 #   STEUER_APP_SEARCH=text  prefill the Buchungen search box (reaches the "nothing found" state)
@@ -23,6 +25,7 @@
 #   STEUER_APP_SCROLL=      scroll the Einstellungen page: "end" or a fraction 0..1; "vor-abgabe" in the Abgabe step
 #   STEUER_APP_ENTITY=id    entity to open
 #   STEUER_APP_YEAR=YYYY    year to open
+#   STEUER_APP_SUPPORT_PROMPT=1 open the post-filing support prompt (ignores the once-per-year ledger)
 #   STEUER_SHOT_ACTION=     activate a GAction before capturing, e.g. "win goto-konten" (scope and
 #                           name, space-separated) — proves a
 #                           keyboard shortcut's action exists and does something (the accel itself
@@ -83,6 +86,7 @@ ENV_ARGS=(GJSIFY_DEVTOOLS=1 "STEUER_APP_ID=$APP_ID" "STEUER_APP_VIEW=$VIEW")
 [ -n "${STEUER_APP_MAIL_DIALOG:-}" ] && ENV_ARGS+=("STEUER_APP_MAIL_DIALOG=$STEUER_APP_MAIL_DIALOG")
 [ -n "${STEUER_APP_SEARCH:-}" ] && ENV_ARGS+=("STEUER_APP_SEARCH=$STEUER_APP_SEARCH")
 [ -n "${STEUER_APP_STEP:-}" ] && ENV_ARGS+=("STEUER_APP_STEP=$STEUER_APP_STEP")
+[ -n "${STEUER_APP_SUPPORT_PROMPT:-}" ] && ENV_ARGS+=("STEUER_APP_SUPPORT_PROMPT=$STEUER_APP_SUPPORT_PROMPT")
 ENV_ARGS+=("STEUER_APP_SIZE=${STEUER_SHOT_SIZE:-1280 860}")
 [ -n "${STEUER_APP_SCROLL:-}" ] && ENV_ARGS+=("STEUER_APP_SCROLL=$STEUER_APP_SCROLL")
 
@@ -184,7 +188,22 @@ if [ -n "${STEUER_SHOT_ACTIVATE:-}" ]; then
   sleep "${STEUER_SHOT_SETTLE:-2.5}"
 fi
 
-SHOT="$(gjs -m "$HERE/dbus-shot.js" "$APP_ID" "$OBJ" "$OUT")" || exit 1
+if [ "${STEUER_SHOT_SCREENCAST:-}" = "1" ]; then
+  # The monitor at its PHYSICAL resolution (needs `headless-run --scale N`); devtools renders at 1x.
+  # The frame holds the whole virtual monitor, so cut the window out of the wallpaper: it is the
+  # bounding box of everything light — the wallpaper is dark, the window and the dialog scrim are not.
+  gjs -m "$HERE/screencast-shot.js" "$OUT" >/dev/null || exit 1
+  python3 - "$OUT" <<'PY' || exit 1
+import sys
+from PIL import Image
+im = Image.open(sys.argv[1]).convert("RGB")
+box = im.convert("L").point(lambda v: 255 if v > 150 else 0).getbbox()
+im.crop(box).save(sys.argv[1])
+PY
+  SHOT="wrote $OUT ($(python3 -c "from PIL import Image; print('%d×%d' % Image.open('$OUT').size)"))"
+else
+  SHOT="$(gjs -m "$HERE/dbus-shot.js" "$APP_ID" "$OBJ" "$OUT")" || exit 1
+fi
 echo "$SHOT"
 # Hold the picture to the size that was asked for — read from the PNG itself, the one number about
 # a screenshot that cannot be faked. A capture at the wrong size looks like a layout bug in the app.

@@ -57,6 +57,8 @@ import { abgabeWarnungen } from '../../../core/invoices/doppelzahlung-text.ts';
 import { deDateTime, eur } from '../../../core/lib/format.ts';
 import { LoadToken, applyScrollToHook, currentOperator, markup, saveFileViaDialog } from './util.ts';
 import { errorDialog } from './dialogs.ts';
+import { showSupportPrompt } from './support-dialog.ts';
+import { claimSupportPrompt } from '../../../core/config/support-prompt.ts';
 import { promptLiveSend, promptRelease, promptTestSend } from './absenden-dialog.ts';
 import { vorAbgabeGroup } from './vor-abgabe-group.ts';
 import { showToast } from '../toast.ts';
@@ -546,6 +548,11 @@ export class SubmissionSection {
                 });
                 done.add_response('ok', 'OK');
                 done.set_default_response('ok');
+                done.set_close_response('ok');
+                // Only after this one is dismissed, so the thank-you never stacks on the confirmation.
+                done.connect('response', () => {
+                    if (claimSupportPrompt(this.year)) void showSupportPrompt(this.root);
+                });
                 done.present(this.root);
             } else {
                 await errorDialog(this.root, 'Echt-Versand', result.message);
