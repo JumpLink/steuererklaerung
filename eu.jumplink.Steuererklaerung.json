@@ -110,7 +110,7 @@
       "build-commands": [
         "XDG_CACHE_HOME=\"$PWD/flatpak-gjsify-cache\" gjs -m build-aux/gjsify.gjs.mjs install --immutable",
         "XDG_CACHE_HOME=\"$PWD/flatpak-gjsify-cache\" gjs -m build-aux/gjsify.gjs.mjs workspace steuererklaerung-cli i18n:compile",
-        "STEUER_CHANNEL=flathub XDG_CACHE_HOME=\"$PWD/flatpak-gjsify-cache\" gjs -m build-aux/gjsify.gjs.mjs workspace steuererklaerung-cli build:app",
+        "XDG_CACHE_HOME=\"$PWD/flatpak-gjsify-cache\" gjs -m build-aux/gjsify.gjs.mjs workspace steuererklaerung-cli build:app:flathub",
         "install -d /app/bin",
         "printf '#!/usr/bin/gjs -m\\n' > /app/bin/steuererklaerung",
         "cat app/dist/app/steuer-app.gjs.mjs >> /app/bin/steuererklaerung",
