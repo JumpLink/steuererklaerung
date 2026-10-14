@@ -329,7 +329,11 @@ export class BhSteuerView extends Adw.Bin {
                 subtitle: 'Messbetrag 0 € — die Erklärung wird dennoch abgegeben',
             });
             note.add_prefix(
-                new Gtk.Image({ iconName: 'emblem-ok-symbolic', cssClasses: ['success'], valign: Gtk.Align.CENTER }),
+                new Gtk.Image({
+                    iconName: 'object-select-symbolic',
+                    cssClasses: ['success'],
+                    valign: Gtk.Align.CENTER,
+                }),
             );
             this.gewst.add(note);
         }

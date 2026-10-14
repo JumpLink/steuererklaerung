@@ -106,7 +106,7 @@ export class BhForderungenView extends Adw.Bin {
         if (u.posten.length === 0 && u.verhalten.length === 0 && u.vermutlichBezahlt.length === 0) {
             this._content_box.append(
                 emptyState({
-                    icon: 'emblem-ok-symbolic',
+                    icon: 'object-select-symbolic',
                     title: 'Keine offenen Forderungen',
                     description:
                         'Sobald eine Ausgangsrechnung festgeschrieben ist und noch nicht bezahlt, steht sie hier.',
@@ -184,7 +184,7 @@ export class BhForderungenView extends Adw.Bin {
         if (u.posten.length === 0) {
             group.add(
                 emptyState({
-                    icon: 'emblem-ok-symbolic',
+                    icon: 'object-select-symbolic',
                     title: 'Nichts offen',
                     description: 'Alle Rechnungen sind bezahlt.',
                 }),

@@ -28,7 +28,7 @@ export function rechnungsartRow(
     row.set_subtitle_lines(0);
     row.add_prefix(
         new Gtk.Image({
-            iconName: eRechnung ? 'emblem-ok-symbolic' : 'text-x-generic-symbolic',
+            iconName: eRechnung ? 'object-select-symbolic' : 'text-x-generic-symbolic',
             cssClasses: eRechnung ? ['success'] : ['dim-label'],
         }),
     );
