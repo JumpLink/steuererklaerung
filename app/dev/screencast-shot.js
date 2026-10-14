@@ -17,17 +17,47 @@ if (!out) {
 
 const bus = Gio.bus_get_sync(Gio.BusType.SESSION, null);
 const call = (path, iface, method, params, type) =>
-    bus.call_sync('org.gnome.Mutter.ScreenCast', path, iface, method, params, GLib.VariantType.new(type), Gio.DBusCallFlags.NONE, 10000, null);
+    bus.call_sync(
+        'org.gnome.Mutter.ScreenCast',
+        path,
+        iface,
+        method,
+        params,
+        GLib.VariantType.new(type),
+        Gio.DBusCallFlags.NONE,
+        10000,
+        null,
+    );
 
-const session = call('/org/gnome/Mutter/ScreenCast', 'org.gnome.Mutter.ScreenCast', 'CreateSession', new GLib.Variant('(a{sv})', [{}]), '(o)').deepUnpack()[0];
-const stream = call(session, 'org.gnome.Mutter.ScreenCast.Session', 'RecordMonitor', new GLib.Variant('(sa{sv})', ['Meta-0', {}]), '(o)').deepUnpack()[0];
+const session = call(
+    '/org/gnome/Mutter/ScreenCast',
+    'org.gnome.Mutter.ScreenCast',
+    'CreateSession',
+    new GLib.Variant('(a{sv})', [{}]),
+    '(o)',
+).deepUnpack()[0];
+const stream = call(
+    session,
+    'org.gnome.Mutter.ScreenCast.Session',
+    'RecordMonitor',
+    new GLib.Variant('(sa{sv})', ['Meta-0', {}]),
+    '(o)',
+).deepUnpack()[0];
 
 const loop = GLib.MainLoop.new(null, false);
 let node = null;
-bus.signal_subscribe('org.gnome.Mutter.ScreenCast', 'org.gnome.Mutter.ScreenCast.Stream', 'PipeWireStreamAdded', stream, null, Gio.DBusSignalFlags.NONE, (_c, _s, _p, _i, _n, params) => {
-    node = params.deepUnpack()[0];
-    loop.quit();
-});
+bus.signal_subscribe(
+    'org.gnome.Mutter.ScreenCast',
+    'org.gnome.Mutter.ScreenCast.Stream',
+    'PipeWireStreamAdded',
+    stream,
+    null,
+    Gio.DBusSignalFlags.NONE,
+    (_c, _s, _p, _i, _n, params) => {
+        node = params.deepUnpack()[0];
+        loop.quit();
+    },
+);
 call(session, 'org.gnome.Mutter.ScreenCast.Session', 'Start', null, '()');
 GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 10, () => (loop.quit(), GLib.SOURCE_REMOVE));
 loop.run();
@@ -37,7 +67,23 @@ if (node === null) {
 }
 
 const gst = Gio.Subprocess.new(
-    ['timeout', '15', 'gst-launch-1.0', '-q', 'pipewiresrc', `path=${node}`, 'num-buffers=15', '!', 'videoconvert', '!', 'pngenc', 'snapshot=false', '!', 'multifilesink', `location=${out}.%d.png`],
+    [
+        'timeout',
+        '15',
+        'gst-launch-1.0',
+        '-q',
+        'pipewiresrc',
+        `path=${node}`,
+        'num-buffers=15',
+        '!',
+        'videoconvert',
+        '!',
+        'pngenc',
+        'snapshot=false',
+        '!',
+        'multifilesink',
+        `location=${out}.%d.png`,
+    ],
     Gio.SubprocessFlags.NONE,
 );
 gst.wait(null);
