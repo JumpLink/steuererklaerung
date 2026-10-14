@@ -31,6 +31,29 @@ jobs:
           libgda libgda-sqlite
           pango cairo
           gettext
+          squashfs-tools file
+
+      # `appimagetool` is the one tool here that is DOWNLOADED rather than installed: nothing
+      # packages it, not Fedora and not Debian (ADR 0024 § M5 in gjsify). Pinned by version AND
+      # digest. The RUNTIME is pinned separately: appimagetool embeds ~940 KB of ELF into every
+      # artifact and, left alone, fetches it from type2-runtime's rolling `continuous` tag on every
+      # pack, so the bytes a person executes would come from a tag nothing here can name.
+      - name: Install appimagetool and pin its runtime
+        env:
+          APPIMAGETOOL_VERSION: "1.9.1"
+          APPIMAGETOOL_SHA256: "ed4ce84f0d9caff66f50bcca6ff6f35aae54ce8135408b3fa33abfc3cb384eb0"
+          APPIMAGE_RUNTIME_VERSION: "20251108"
+          APPIMAGE_RUNTIME_X86_64_SHA256: "2fca8b443c92510f1483a883f60061ad09b46b978b2631c807cd873a47ec260d"
+        run: |
+          set -eu
+          curl -fsSL -o /usr/local/bin/appimagetool \
+            "https://github.com/AppImage/appimagetool/releases/download/${APPIMAGETOOL_VERSION}/appimagetool-x86_64.AppImage"
+          echo "${APPIMAGETOOL_SHA256}  /usr/local/bin/appimagetool" | sha256sum -c -
+          chmod +x /usr/local/bin/appimagetool
+          mkdir -p /usr/local/share/gjsify/appimage-runtime
+          curl -fsSL -o /usr/local/share/gjsify/appimage-runtime/runtime-x86_64 \
+            "https://github.com/AppImage/type2-runtime/releases/download/${APPIMAGE_RUNTIME_VERSION}/runtime-x86_64"
+          echo "${APPIMAGE_RUNTIME_X86_64_SHA256}  /usr/local/share/gjsify/appimage-runtime/runtime-x86_64" | sha256sum -c -
 
       - uses: actions/checkout@v4
 
@@ -62,8 +85,19 @@ jobs:
       - name: Third-party licences are all decided
         run: cd app && gjsify run check:licenses
 
-      - name: Pack deb and rpm
-        run: cd app && gjsify ship --skip-build
+      # `appimage` is opt-in through `--target` because it needs a tool the CLI does not carry
+      # (ADR 0024). Naming the targets means a missing `appimagetool` fails loudly instead of
+      # quietly shipping one format fewer.
+      - name: Pack deb, rpm and AppImage
+        run: cd app && gjsify ship linux --skip-build --target deb,rpm,appimage
+
+      - name: The AppImage arrived
+        run: |
+          set -eu
+          ls -la app/ship/out
+          version=$(node -p "require('./app/package.json').version")
+          f="app/ship/out/steuererklaerung-${version}-1.x86_64.AppImage"
+          [ -s "$f" ] || { echo "::error::missing or empty artifact: $f"; exit 1; }
 
       # The package must contain the APP and nothing else. `ship` stages every file beside the
       # bundle, so a stray build output next to it silently becomes part of the release — this is
