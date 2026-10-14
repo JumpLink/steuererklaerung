@@ -120,6 +120,9 @@
             "channel": "web",
             "bundle": "dist/app/steuer-app.gjs.mjs",
             "binaryName": "steuererklaerung",
+            "bundledTypelibs": [
+                "../node_modules/@gjsify/http-soup-bridge-linux-x64/prebuilds/linux-x64"
+            ],
             "appId": "eu.jumplink.Steuererklaerung",
             "name": "Steuererklärung",
             "summary": "Tax return and bookkeeping for small businesses",

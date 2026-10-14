@@ -43,5 +43,17 @@
   "@steuererklaerung/store": {
     "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
     "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
+  },
+  "@lotse/core": {
+    "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
+    "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
+  },
+  "@lotse/session": {
+    "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
+    "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
+  },
+  "@lotse/widget": {
+    "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
+    "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
   }
 }
