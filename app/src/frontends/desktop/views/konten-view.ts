@@ -337,7 +337,7 @@ export class BhKontenView extends Adw.Bin {
         });
         row.add_prefix(
             new Gtk.Image({
-                iconName: stored ? 'emblem-ok-symbolic' : 'dialog-password-symbolic',
+                iconName: stored ? 'object-select-symbolic' : 'dialog-password-symbolic',
                 cssClasses: [stored ? 'success' : 'dim-label'],
                 valign: Gtk.Align.CENTER,
             }),
@@ -729,7 +729,7 @@ function ericPill(ok: boolean, label: string): Gtk.Box {
     const box = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 6, valign: Gtk.Align.CENTER });
     box.append(
         new Gtk.Image({
-            iconName: ok ? 'emblem-ok-symbolic' : 'dialog-warning-symbolic',
+            iconName: ok ? 'object-select-symbolic' : 'dialog-warning-symbolic',
             cssClasses: [ok ? 'success' : 'error'],
         }),
     );

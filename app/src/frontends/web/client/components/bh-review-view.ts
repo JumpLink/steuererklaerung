@@ -47,7 +47,7 @@ export class BhReviewView extends HTMLElement {
     private render() {
         if (this.pending) return this.renderConfirm();
         if (!this.docs.length) {
-            this.innerHTML = `<adw-status-page icon="emblem-ok-symbolic" title="Alles zugeordnet" description="Alle Belege im Eingang sind einer Buchung zugeordnet. Neue Belege aus Import & E-Mail erscheinen automatisch hier."></adw-status-page>`;
+            this.innerHTML = `<adw-status-page icon="object-select-symbolic" title="Alles zugeordnet" description="Alle Belege im Eingang sind einer Buchung zugeordnet. Neue Belege aus Import & E-Mail erscheinen automatisch hier."></adw-status-page>`;
             return;
         }
         const list = this.docs

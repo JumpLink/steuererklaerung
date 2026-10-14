@@ -52,7 +52,7 @@ export class ToggleTabsStory extends StoryWidget {
         }
         const icons = this.args.showIcons as boolean;
         const tabs = new BhToggleTabs();
-        tabs.add('kurz', 'Kurz', page(1), icons ? { iconName: 'emblem-ok-symbolic' } : {});
+        tabs.add('kurz', 'Kurz', page(1), icons ? { iconName: 'object-select-symbolic' } : {});
         tabs.add('mittel', 'Mittel', page(3), icons ? { iconName: 'dialog-warning-symbolic' } : {});
         tabs.add('lang', 'Lang', page(8), icons ? { iconName: 'dialog-error-symbolic' } : {});
         this.host.append(tabs);

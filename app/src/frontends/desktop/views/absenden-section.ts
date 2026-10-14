@@ -203,14 +203,14 @@ export class SubmissionSection {
         });
         row.add_prefix(
             new Gtk.Image({
-                iconName: overview.ericAvailable ? 'emblem-ok-symbolic' : 'dialog-warning-symbolic',
+                iconName: overview.ericAvailable ? 'object-select-symbolic' : 'dialog-warning-symbolic',
                 cssClasses: [overview.ericAvailable ? 'success' : 'warning'],
                 valign: Gtk.Align.CENTER,
             }),
         );
         row.add_suffix(
             overview.ericAvailable
-                ? statusPill({ icon: 'emblem-ok-symbolic', css: 'success', label: 'verfügbar' })
+                ? statusPill({ icon: 'object-select-symbolic', css: 'success', label: 'verfügbar' })
                 : statusPill({ icon: 'dialog-warning-symbolic', css: 'warning', label: 'nicht verfügbar' }),
         );
         group.add(row);
@@ -222,7 +222,7 @@ export class SubmissionSection {
         const group = new Adw.PreferencesGroup({ title: markup(form.title) });
         group.set_header_suffix(
             form.gate.unlocked
-                ? statusPill({ icon: 'emblem-ok-symbolic', css: 'success', label: '✓ freigeschaltet' })
+                ? statusPill({ icon: 'object-select-symbolic', css: 'success', label: '✓ freigeschaltet' })
                 : statusPill({ icon: 'changes-prevent-symbolic', css: 'error', label: '✗ gesperrt' }),
         );
 
@@ -268,7 +268,7 @@ export class SubmissionSection {
         if (form.gate.unlocked) {
             const ok = new Adw.ActionRow({ title: 'Absenden freigeschaltet' });
             ok.add_prefix(
-                new Gtk.Image({ iconName: 'emblem-ok-symbolic', cssClasses: ['success'], valign: Gtk.Align.CENTER }),
+                new Gtk.Image({ iconName: 'object-select-symbolic', cssClasses: ['success'], valign: Gtk.Align.CENTER }),
             );
             group.add(ok);
         } else {

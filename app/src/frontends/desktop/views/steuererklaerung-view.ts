@@ -51,14 +51,14 @@ import { errorDialog } from './dialogs.ts';
 
 /** Icon + accent per Steuer-Thema status (design 08-steuer.png). */
 const THEME_STATUS: Record<EstThemeCard['status'], { icon: string; css: string[] }> = {
-    done: { icon: 'emblem-ok-symbolic', css: ['success'] },
+    done: { icon: 'object-select-symbolic', css: ['success'] },
     open: { icon: 'dialog-warning-symbolic', css: ['warning'] },
     na: { icon: 'radio-symbolic', css: ['dim-label'] },
 };
 
 /** Symbolic icon per step status — shown on the stepper's ViewSwitcher tabs. */
 const STEP_STATUS_ICON: Record<StepStatus, string> = {
-    ok: 'emblem-ok-symbolic',
+    ok: 'object-select-symbolic',
     warn: 'dialog-warning-symbolic',
     blocked: 'dialog-error-symbolic',
     info: 'dialog-information-symbolic',
@@ -69,7 +69,7 @@ const STEP_STATUS_ICON: Record<StepStatus, string> = {
  * provenance-chip idiom): ok→success ✓, warn→warning ⚠, error→error ✗, info→dim ℹ.
  */
 const CROSSCHECK_STATUS: Record<CrossCheckStatus, { glyph: string; css: string; icon: string }> = {
-    ok: { glyph: '✓', css: 'success', icon: 'emblem-ok-symbolic' },
+    ok: { glyph: '✓', css: 'success', icon: 'object-select-symbolic' },
     warn: { glyph: '⚠', css: 'warning', icon: 'dialog-warning-symbolic' },
     error: { glyph: '✗', css: 'error', icon: 'dialog-error-symbolic' },
     info: { glyph: 'ℹ', css: 'dim-label', icon: 'dialog-information-symbolic' },
@@ -433,7 +433,7 @@ export class BhSteuererklaerungView extends Adw.Bin {
             // A step with nothing to flag is a positive confirmation — mark it with an ok icon.
             const clear = new Adw.ActionRow({ title: 'Keine offenen Punkte in diesem Schritt.' });
             clear.add_prefix(
-                new Gtk.Image({ iconName: 'emblem-ok-symbolic', cssClasses: ['success'], valign: Gtk.Align.CENTER }),
+                new Gtk.Image({ iconName: 'object-select-symbolic', cssClasses: ['success'], valign: Gtk.Align.CENTER }),
             );
             group.add(clear);
         }

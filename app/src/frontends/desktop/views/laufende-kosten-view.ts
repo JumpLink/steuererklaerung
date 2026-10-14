@@ -124,7 +124,7 @@ export class BhLaufendeKostenView extends Adw.Bin {
         if (u.vorschlaege.length === 0) {
             offen.add(
                 emptyState({
-                    icon: 'emblem-ok-symbolic',
+                    icon: 'object-select-symbolic',
                     title: 'Nichts zu bestätigen',
                     description: u.bestaetigt.length
                         ? 'Jede erkannte Serie ist entschieden.'

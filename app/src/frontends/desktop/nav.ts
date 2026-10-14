@@ -52,7 +52,7 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
     { view: 'home', icon: 'go-home-symbolic', label: _('Overview'), sub: _('KPIs & trends') },
-    { view: 'review', icon: 'mail-inbox-symbolic', label: _('Receipt inbox'), sub: _('Check & match receipts') },
+    { view: 'review', icon: 'mail-unread-symbolic', label: _('Receipt inbox'), sub: _('Check & match receipts') },
     { view: 'transactions', icon: 'view-list-symbolic', label: _('Transactions'), sub: _('all accounts') },
     { view: 'rechnungen', icon: 'document-send-symbolic', label: _('Invoices'), sub: _('open items & status') },
     { view: 'zeiten', icon: 'alarm-symbolic', label: _('Time'), sub: _('timer & unbilled hours') },

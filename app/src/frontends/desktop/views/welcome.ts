@@ -263,7 +263,7 @@ export class BhWelcome extends Adw.Dialog {
         );
         group.add(this.infoRow('network-server-symbolic', 'FinTS', _('Online banking with German banks')));
         group.add(this.infoRow('starred-symbolic', _('AI assistant'), _('Answers questions and proposes bookings')));
-        group.add(this.infoRow('emblem-ok-symbolic', 'ERiC', _('Validate returns with the official ELSTER library')));
+        group.add(this.infoRow('object-select-symbolic', 'ERiC', _('Validate returns with the official ELSTER library')));
         box.append(group);
         return this.page('connections', _('Connections'), box, {
             label: _('Next'),
