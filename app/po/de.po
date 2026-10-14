@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-13 08:17+0200\n"
+"POT-Creation-Date: 2026-10-14 09:00+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -151,6 +151,10 @@ msgid "No AI agent is installed. Install opencode or choose another AI engine."
 msgstr ""
 "Es ist kein KI-Agent installiert. Installiere opencode oder wähle eine "
 "andere KI-Engine."
+
+#: src/frontends/desktop/about.ts:30
+msgid "Support"
+msgstr "Unterstützen"
 
 #. TRANSLATORS: Title of the AI assistant side panel
 #. TRANSLATORS: Title of the side panel holding the external coding agent
@@ -364,7 +368,7 @@ msgid "dates · payments · open items"
 msgstr "Termine · Zahlungen · offene Posten"
 
 #: src/frontends/desktop/nav.ts:68
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:57
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:60
 msgid "Tax"
 msgstr "Steuer"
 
@@ -1298,8 +1302,8 @@ msgid ""
 "The Flatpak sandbox cannot reach your own opencode, so the bundled one is "
 "always used."
 msgstr ""
-"Die Flatpak-Sandbox erreicht dein eigenes opencode nicht, deshalb wird "
-"immer das mitgelieferte verwendet."
+"Die Flatpak-Sandbox erreicht dein eigenes opencode nicht, deshalb wird immer "
+"das mitgelieferte verwendet."
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:118
 msgid "Assistant engine"
@@ -2413,7 +2417,7 @@ msgstr "Lade Details …"
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:150
 #: src/frontends/desktop/views/rechnungen-view.ts:525
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:62
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:65
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -3525,7 +3529,7 @@ msgid "This decides which questions follow. Everything can be changed later."
 msgstr "Davon hängt ab, welche Fragen folgen. Alles lässt sich später ändern."
 
 #: src/frontends/desktop/views/setup-assistant.ts:386
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:61
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:64
 msgid "VAT"
 msgstr "Umsatzsteuer"
 
@@ -5637,15 +5641,15 @@ msgstr "Anlage EÜR, jede Zeile bis zu den Buchungen"
 msgid "Tax return with checks before filing"
 msgstr "Steuererklärung mit Prüfungen vor der Abgabe"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:58
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:61
 msgid "Accounting"
 msgstr "Buchhaltung"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:59
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:62
 msgid "ELSTER"
 msgstr "ELSTER"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:60
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:63
 msgid "EÜR"
 msgstr "EÜR"
 
