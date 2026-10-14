@@ -121,8 +121,13 @@ jobs:
       # And the step after THAT: what was installed has to start. Under Xvfb because a GTK app
       # needs a display, and inside `dbus-run-session` because the devtools control plane — the
       # only way to ask a running GUI whether it is alive — speaks over the session bus.
+      # libglvnd-gles + mesa-dri-drivers: GTK4's GL renderer dlopens libGLESv2 and the bare
+      # container has neither it nor a software rasteriser, so the app aborted right after
+      # exporting devtools. The package does not own these; a desktop always has them.
       - name: Install the runtime the start proof needs
-        run: dnf install -y --setopt=install_weak_deps=False xorg-x11-server-Xvfb dbus-daemon
+        run: >
+          dnf install -y --setopt=install_weak_deps=False
+          xorg-x11-server-Xvfb dbus-daemon libglvnd-gles libglvnd-egl mesa-dri-drivers
 
       - name: The installed app starts
         run: |
