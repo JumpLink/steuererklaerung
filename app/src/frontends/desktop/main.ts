@@ -30,6 +30,7 @@ import { setFinTSInteraction } from '../../core/clients/fints/interaction.ts';
 import { applyPathEnv } from '../../core/paths.ts';
 import { ensureDemoSeeded } from '../cli/demo.ts';
 import { BACKUP_RESULT_PREFIX } from './background-backup.ts';
+import { installAboutAction } from './about.ts';
 import { APP_ID, APP_NAME, APP_VERSION } from './constants.ts';
 import { dialogFinTSInteraction } from './fints-interaction.ts';
 import { APP_ICON } from './icons.ts';
@@ -98,22 +99,26 @@ if (mcpMode) {
     // isn't empty out of the box. No-op outside demo mode and when already seeded.
     await ensureDemoSeeded();
 
+    const about = {
+        applicationName: APP_NAME,
+        applicationIcon: APP_ICON,
+        // Keep in sync with the web About dialog (frontends/web/client/components/bh-app.ts):
+        // one project, one vendor line. "Art+Code Studio" was the dissolved GbR.
+        developerName: 'JumpLink',
+        version: APP_VERSION,
+        website: 'https://github.com/JumpLink',
+        copyright: '© 2026 Pascal Garber',
+        comments:
+            'Native Adwaita-Oberfläche für die Steuererklärung — parallel zur Web-Oberfläche, ' +
+            'auf demselben Backend (Store, EÜR/Steuer-Reports, Belege, Kontakte).',
+    };
     const status = await runAdwaitaApp({
         applicationId: APP_ID,
-        about: {
-            applicationName: APP_NAME,
-            applicationIcon: APP_ICON,
-            // Keep in sync with the web About dialog (frontends/web/client/components/bh-app.ts):
-            // one project, one vendor line. "Art+Code Studio" was the dissolved GbR.
-            developerName: 'JumpLink',
-            version: APP_VERSION,
-            website: 'https://github.com/JumpLink',
-            copyright: '© 2026 Pascal Garber',
-            comments:
-                'Native Adwaita-Oberfläche für die Steuererklärung — parallel zur Web-Oberfläche, ' +
-                'auf demselben Backend (Store, EÜR/Steuer-Reports, Belege, Kontakte).',
+        about,
+        createWindow: (app) => {
+            installAboutAction(app, about);
+            return new MainWindow(app);
         },
-        createWindow: (app) => new MainWindow(app),
     });
     relaunchIfRequested();
     process.exit(status);
