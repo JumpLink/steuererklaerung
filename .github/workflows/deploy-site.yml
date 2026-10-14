@@ -34,7 +34,7 @@ jobs:
       - name: Install system prerequisites
         run: >
           dnf install -y --setopt=install_weak_deps=False
-          git tar xz findutils gjs gdk-pixbuf2 librsvg2 avif-pixbuf-loader webp-pixbuf-loader
+          git tar xz findutils gjs json-glib libsoup3 gdk-pixbuf2 librsvg2 avif-pixbuf-loader webp-pixbuf-loader
 
       - uses: actions/checkout@v4
 
