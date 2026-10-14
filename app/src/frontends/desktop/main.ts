@@ -23,6 +23,7 @@ import './i18n-init.ts';
 import 'dotenv/config';
 import Gtk from '@girs/gtk-4.0';
 import { runAdwaitaApp } from '@gjsify/adwaita-app';
+import { donationsAllowed } from '@gjsify/distribution';
 import { installMigrationBackup, runConfiguredBackup } from '../../core/actions/backup.ts';
 import { applyDemoEnv } from '../../core/config/demo.ts';
 import { loadUserSettings } from '../../core/config/user-settings.ts';
@@ -30,11 +31,12 @@ import { setFinTSInteraction } from '../../core/clients/fints/interaction.ts';
 import { applyPathEnv } from '../../core/paths.ts';
 import { ensureDemoSeeded } from '../cli/demo.ts';
 import { BACKUP_RESULT_PREFIX } from './background-backup.ts';
-import { installAboutAction } from './about.ts';
 import { APP_ID, APP_NAME, APP_VERSION } from './constants.ts';
 import { dialogFinTSInteraction } from './fints-interaction.ts';
+import { _ } from './i18n.ts';
 import { APP_ICON } from './icons.ts';
 import { relaunchIfRequested, snapshotLaunchEnv } from './restart.ts';
+import { localizedSupportUrl } from './views/support-dialog.ts';
 import { MainWindow } from './window.ts';
 
 // Pin GTK 4 before libadwaita pulls it in; keep the import referenced.
@@ -108,6 +110,9 @@ if (mcpMode) {
         version: APP_VERSION,
         website: 'https://github.com/JumpLink',
         copyright: '© 2026 Pascal Garber',
+        // "Support", never "Donate": business income, nothing here implies a tax deduction. A store
+        // channel shows no donation UI at all.
+        links: donationsAllowed() ? [{ title: _('Support'), url: localizedSupportUrl() }] : [],
         comments:
             'Native Adwaita-Oberfläche für die Steuererklärung — parallel zur Web-Oberfläche, ' +
             'auf demselben Backend (Store, EÜR/Steuer-Reports, Belege, Kontakte).',
@@ -116,7 +121,6 @@ if (mcpMode) {
         applicationId: APP_ID,
         about,
         createWindow: (app) => {
-            installAboutAction(app, about);
             return new MainWindow(app);
         },
     });
