@@ -82,6 +82,11 @@ export const UserSettingsSchema = z.looseObject({
      * login and models (`host`). UNSET is `bundled`.
      */
     aiAgentSource: z.enum(['bundled', 'host']).optional(),
+    /**
+     * The tax years the one-time support prompt was already shown for, so a filing never asks twice
+     * for the same year ({@link shouldPromptSupport}). UNSET = never shown.
+     */
+    supportPromptYears: z.array(z.number().int()).optional(),
     backup: BackupSettingsSchema,
 });
 

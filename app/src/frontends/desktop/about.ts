@@ -15,8 +15,7 @@ import Gio from '@girs/gio-2.0';
 import type { AboutInfo } from '@gjsify/adwaita-app';
 import { donationsAllowed } from '@gjsify/distribution';
 import { _ } from './i18n.ts';
-
-export const SUPPORT_URL = 'https://jumplink.eu/steuererklaerung/en/support/';
+import { localizedSupportUrl } from './views/support-dialog.ts';
 
 export function installAboutAction(app: Adw.Application, info: AboutInfo): void {
     const action = new Gio.SimpleAction({ name: 'about' });
@@ -30,7 +29,7 @@ export function installAboutAction(app: Adw.Application, info: AboutInfo): void 
             copyright: info.copyright ?? '',
             comments: info.comments ?? '',
         });
-        if (donationsAllowed()) dialog.add_link(_('Support'), SUPPORT_URL);
+        if (donationsAllowed()) dialog.add_link(_('Support'), localizedSupportUrl());
         dialog.present(app.get_active_window());
     });
     app.add_action(action);
