@@ -268,7 +268,11 @@ export class SubmissionSection {
         if (form.gate.unlocked) {
             const ok = new Adw.ActionRow({ title: 'Absenden freigeschaltet' });
             ok.add_prefix(
-                new Gtk.Image({ iconName: 'object-select-symbolic', cssClasses: ['success'], valign: Gtk.Align.CENTER }),
+                new Gtk.Image({
+                    iconName: 'object-select-symbolic',
+                    cssClasses: ['success'],
+                    valign: Gtk.Align.CENTER,
+                }),
             );
             group.add(ok);
         } else {

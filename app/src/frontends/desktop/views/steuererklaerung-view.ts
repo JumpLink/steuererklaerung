@@ -433,7 +433,11 @@ export class BhSteuererklaerungView extends Adw.Bin {
             // A step with nothing to flag is a positive confirmation — mark it with an ok icon.
             const clear = new Adw.ActionRow({ title: 'Keine offenen Punkte in diesem Schritt.' });
             clear.add_prefix(
-                new Gtk.Image({ iconName: 'object-select-symbolic', cssClasses: ['success'], valign: Gtk.Align.CENTER }),
+                new Gtk.Image({
+                    iconName: 'object-select-symbolic',
+                    cssClasses: ['success'],
+                    valign: Gtk.Align.CENTER,
+                }),
             );
             group.add(clear);
         }
