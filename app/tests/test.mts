@@ -7,6 +7,8 @@ import './helpers/isolate-env.ts';
 
 import secretStore from './unit/secrets/store.test.ts';
 import ericPlatform from './unit/elster/eric-platform.test.ts';
+import ericRuntime from './unit/elster/eric-runtime.test.ts';
+import privacyAck from './unit/elster/privacy-ack.test.ts';
 import kredit from './unit/finanzierung/kredit.test.ts';
 import finanzierung from './unit/finanzierung/finanzierung.test.ts';
 
@@ -428,6 +430,8 @@ run({
     finanzierung,
     secretStore,
     ericPlatform,
+    ericRuntime,
+    privacyAck,
     testIsolation,
     fieldCoverageScan,
 });
