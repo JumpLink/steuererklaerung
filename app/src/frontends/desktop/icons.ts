@@ -15,24 +15,13 @@
  */
 
 import Gtk from '@girs/gtk-4.0';
-import { dirname, join } from 'node:path';
+import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { iconsDir } from '../../core/lib/icons-dir.ts';
 
 /** Icon-theme name of the application icon (matches the SVG basename under data/icons). */
 export const APP_ICON = 'eu.jumplink.Steuererklaerung';
-
-/**
- * The shipped icon-theme root (`<app>/data/icons`), resolved relative to THIS module so it is
- * correct from any cwd and in both the source and the bundled form — same trick as
- * {@link demoDir} in core/config/demo.ts.
- */
-function iconsDir(): string {
-    const fileUrl = import.meta.url;
-    const dir = dirname(fileURLToPath(fileUrl));
-    // source: <app>/src/frontends/desktop/icons.ts → up 3 = <app>; bundled: <app>/dist/<bundle> → up 1.
-    const appRoot = fileUrl.includes('/dist/') ? join(dir, '..') : join(dir, '..', '..', '..');
-    return join(appRoot, 'data', 'icons');
-}
 
 /**
  * Register the shipped icon theme on the widget's display. Safe to call more than once
@@ -41,5 +30,5 @@ function iconsDir(): string {
 export function registerAppIcons(widget: Gtk.Widget): void {
     const display = widget.get_display();
     if (!display) return;
-    Gtk.IconTheme.get_for_display(display).add_search_path(iconsDir());
+    Gtk.IconTheme.get_for_display(display).add_search_path(iconsDir(dirname(fileURLToPath(import.meta.url))));
 }

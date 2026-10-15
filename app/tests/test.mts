@@ -37,6 +37,7 @@ import taxOff from './unit/countries/tax-off.test.ts';
 import taxGuards from './unit/countries/tax-guards.test.ts';
 import userSettings from './unit/config/user-settings.test.ts';
 import supportPrompt from './unit/config/support-prompt.test.ts';
+import appIcons from './unit/config/app-icons.test.ts';
 import backup from './unit/actions/backup.test.ts';
 import entitySetup from './unit/actions/entity-setup.test.ts';
 import assistantExamples from './unit/actions/assistant-examples.test.ts';
@@ -250,6 +251,7 @@ run({
     entityCountry,
     userSettings,
     supportPrompt,
+    appIcons,
     backup,
     entitySetup,
     assistantExamples,
