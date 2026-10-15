@@ -49,7 +49,7 @@ import { loadDocuments } from '../../core/presenters/belege.ts';
 import { appSession } from './data/session.ts';
 import { reloadEst } from './data/settings.ts';
 import { VIEW_FACTORIES } from './views/registry.ts';
-import { markup } from './views/util.ts';
+import { bumpViewEpoch, markup } from './views/util.ts';
 import { BhEntitySwitcher } from './widgets/entity-switcher.ts';
 import { BhYearSwitcher } from './widgets/year-switcher.ts';
 import { BhAssistentPanel } from './assistent-panel.ts';
@@ -60,6 +60,7 @@ import { currentMcpInstallation } from './self-launch.ts';
 import Template from './window.blp';
 import type { PortedView } from './view.ts';
 import { _, fmt } from './i18n.ts';
+import { logTiming, timingOn } from '../../core/lib/timing.ts';
 
 // window.blp names these three as `$BhEntitySwitcher`, `$BhYearSwitcher` and `$BhAssistentPanel`,
 // which GtkBuilder resolves by GType at instantiation — so each class has to be REGISTERED before
@@ -165,6 +166,7 @@ export class MainWindow extends Adw.ApplicationWindow {
         });
         // Before anything resolves an icon by name: put the shipped icon theme on the search path.
         registerAppIcons(this);
+        if (timingOn()) this.watchMainLoopStalls();
         if (process.env.STEUER_DEBUG_MEASURE) {
             // Late on purpose, and later than it looks like it needs to be: every list in this app
             // fills from an async load, so a sweep at 1.5 s measures the empty placeholders and
@@ -575,6 +577,24 @@ export class MainWindow extends Adw.ApplicationWindow {
         if (process.env.STEUER_APP_SUPPORT_PROMPT === '1') void showSupportPrompt(this);
     }
 
+    /**
+     * STEUER_DEBUG_TIMING: report stretches where the main loop did not run. A 20 ms timer that
+     * fires 300 ms late means something synchronous (SQLite, a sync read, view construction) held
+     * the UI for ~280 ms — the freeze a spinner page cannot even animate through.
+     */
+    private watchMainLoopStalls(): void {
+        const TICK = 20;
+        const THRESHOLD = 100;
+        let last = GLib.get_monotonic_time();
+        GLib.timeout_add(GLib.PRIORITY_DEFAULT, TICK, () => {
+            const t = GLib.get_monotonic_time();
+            const late = (t - last) / 1000 - TICK;
+            if (late > THRESHOLD) logTiming('mainloop stall', late);
+            last = t;
+            return GLib.SOURCE_CONTINUE;
+        });
+    }
+
     private mailFetchedOnStart = false;
 
     /**
@@ -858,6 +878,7 @@ export class MainWindow extends Adw.ApplicationWindow {
         const entity = this.workspace.entities.find((e) => e.id === id);
         if (!entity) return;
         this.currentEntity = entity;
+        bumpViewEpoch();
         this.sync?.refresh();
         this.currentYear = entity.defaultYear;
         this.renderEntitySwitcher();
@@ -870,6 +891,7 @@ export class MainWindow extends Adw.ApplicationWindow {
     private onYearChanged(year: number): void {
         if (!this.currentEntity) return;
         this.currentYear = year;
+        bumpViewEpoch(); // another year: the visited views' content is the wrong subject, not just stale
         this.reloadVisibleView();
         this.syncAssistantContext();
     }

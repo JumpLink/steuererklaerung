@@ -13,6 +13,7 @@ import GLib from '@girs/glib-2.0';
 import { showToast } from '../toast.ts';
 import { isDmsUnsupported, isManifestMissing, isPaperlessSetupRequired } from '../../../core/lib/errors.ts';
 import { navigateTo } from '../nav.ts';
+import { stopwatch, timed } from '../../../core/lib/timing.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 import { wrappingLabel } from '../widgets/responsive.ts';
 import { _, _p, fmt } from '../i18n.ts';
@@ -297,12 +298,33 @@ export class LoadToken {
 }
 
 /**
+ * Bumped by the window whenever what a view shows is a different SUBJECT (another entity or year,
+ * or a re-read workspace). Content built before the bump is wrong for the new subject and must not
+ * be shown while the reload runs; content from the same epoch is merely possibly stale.
+ */
+let viewEpoch = 0;
+export function bumpViewEpoch(): void {
+    viewEpoch++;
+}
+
+/** The epoch in which each stack last showed `content` — see {@link loadIntoStack}. */
+const filledAt = new WeakMap<Gtk.Stack, number>();
+
+/**
  * Drive a view's loading → content/error transition for one `reload`.
  *
- * Shows the `loading` page, runs `load` (sync or async — sync throws are caught too), and on
- * success fills + shows `content`. A stale result (a newer reload bumped the token) is dropped.
- * On failure it logs `[app] <errorContext>: …`, shows the `error` page with the message, and keeps
- * the app running.
+ * Stale-while-revalidate: a stack that already shows content for the current subject keeps showing
+ * it while `load` runs and is refreshed in place when the data arrives — switching back to a visited
+ * page costs a redraw, not a spinner. Only a cold stack (first visit, new entity/year, or after an
+ * error) shows the `loading` page. If the background refresh fails, the old content stays and a toast
+ * says so; a cold failure shows the `error` page with the message.
+ *
+ * `load` (sync or async — sync throws are caught too) feeds `fill`, which fills + shows `content`. A
+ * stale result (a newer reload bumped the token) is dropped. Failures log `[app] <errorContext>: …`
+ * and keep the app running.
+ *
+ * With STEUER_DEBUG_TIMING=1 each call logs how long `load` and `fill` took and when the page was
+ * ready, labelled by `errorContext`.
  *
  * Requires the app's main loop to be driven by `Adw.Application.runAsync()` (see app/main.ts): under
  * the synchronous `run()` the GJS promise-job queue isn't flushed for a purely synchronous load, so
@@ -316,18 +338,29 @@ export function loadIntoStack<T>(opts: {
     load: () => Promise<T> | T;
     fill: (data: T) => void;
 }): void {
-    opts.stack.set_visible_child_name('loading');
+    const warm = filledAt.get(opts.stack) === viewEpoch && opts.stack.get_visible_child_name() === 'content';
+    if (!warm) opts.stack.set_visible_child_name('loading');
     const token = opts.token.next();
+    const label = `view ${opts.errorContext}${warm ? ' (warm)' : ''}`;
+    const total = stopwatch(`${label} → ready`);
+    const epoch = viewEpoch;
     Promise.resolve()
-        .then(opts.load)
+        .then(() => timed(`${label} load`, opts.load))
         .then((data) => {
             if (token !== opts.token.current) return; // superseded by a newer reload
-            opts.fill(data);
+            timed(`${label} fill`, () => opts.fill(data));
+            filledAt.set(opts.stack, epoch);
             opts.stack.set_visible_child_name('content');
+            total();
         })
         .catch((err: unknown) => {
             if (token !== opts.token.current) return;
             console.error(`[app] ${opts.errorContext}: ${err instanceof Error ? err.message : err}`);
+            if (warm && filledAt.get(opts.stack) === viewEpoch) {
+                showToast(_('Could not refresh — showing the previous data'));
+                return;
+            }
+            filledAt.delete(opts.stack);
             // The retry re-runs THIS call with the same opts, so the button is available on every
             // failure without a single view having to wire one. Most failures here are a timed-out
             // Paperless fetch or a network blip; the answer to those is "try again", and an error
