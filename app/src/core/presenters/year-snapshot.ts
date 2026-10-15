@@ -95,7 +95,12 @@ export async function buildYearCache(
 ): Promise<YearCache> {
     const from = `${year}-01-01`;
     const to = `${year}-12-31`;
-    const agg = await euerReportByTransactions(config, year, { detail: true, elster, accountKeys });
+    const agg = await euerReportByTransactions(config, year, {
+        detail: true,
+        elster,
+        accountKeys,
+        noPaperless: dms.kind !== 'paperless',
+    });
     const dmsDocs = await dms.list({ from, to });
     // The entity's store transactions for this period (reused for the raw-field lookup below).
     const entityStoreTxs = searchAccountKeys(accountKeys, { from, to });

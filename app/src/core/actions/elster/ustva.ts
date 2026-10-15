@@ -24,9 +24,26 @@ export function ustvaAusBuchungenAktiv(entityId: string): boolean {
     return findEntity(loadManifest(), entityId)?.dms?.type === 'builtin';
 }
 
+/**
+ * Whether the entity's receipts live in Paperless. Anything else (built-in DMS, the default) must
+ * never trigger a Paperless call — without credentials it throws "PAPERLESS_BASE_URL not set".
+ */
+export function entityUsesPaperless(entityId: string | undefined): boolean {
+    if (!entityId) return true;
+    try {
+        return findEntity(loadManifest(), entityId)?.dms?.type === 'paperless';
+    } catch {
+        return true;
+    }
+}
+
 /** The EÜR rows of a year with their details — the input of {@link ustvaAusBuchungen}. */
 async function buchungenDesJahres(config: ElsterConfig, year: number) {
-    const agg = await euerReportByTransactions(loadPaperlessConfig(), year, { detail: true, elster: config });
+    const agg = await euerReportByTransactions(loadPaperlessConfig(), year, {
+        detail: true,
+        elster: config,
+        noPaperless: true,
+    });
     return agg.detail ?? [];
 }
 

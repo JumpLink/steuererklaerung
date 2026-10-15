@@ -21,6 +21,7 @@ import { aggregateUstvaYear, type UstvaYearQuarter } from '../../elster/ustva-ag
 import { vorsteuerKorrekturenDesJahres } from '../erstattungen.ts';
 import { euerReportByTransactions } from './euer.ts';
 import { listFilingSnapshots } from './snapshots.ts';
+import { entityUsesPaperless, ustvaAusBuchungenAktiv, ustvaJahrAusBuchungen } from './ustva.ts';
 import { usteReport } from './uste.ts';
 import { feststellungReport } from './feststellung.ts';
 import { steuerkontoReport, steuerkontoScope, type SteuerkontoReport } from './steuerkonto.ts';
@@ -401,7 +402,13 @@ export async function computeCrossChecks(
     // caller supplies its cached aggregate, reuse it verbatim (same entity scope + adjustments).
     let euer: EuerTxAggregate | undefined;
     try {
-        euer = agg ?? (await euerReportByTransactions(config, year, { accountKeys, elster }));
+        euer =
+            agg ??
+            (await euerReportByTransactions(config, year, {
+                accountKeys,
+                elster,
+                noPaperless: !entityUsesPaperless(entity),
+            }));
     } catch {
         euer = undefined;
     }
@@ -421,7 +428,9 @@ export async function computeCrossChecks(
     let ustvaQuarters: UstvaYearQuarter[] | undefined;
     if (hasUst && elster) {
         try {
-            ustvaQuarters = await aggregateUstvaYear(elster, year, vorsteuerKorrekturenDesJahres(elster, year));
+            ustvaQuarters = ustvaAusBuchungenAktiv(elster.entity_id)
+                ? await ustvaJahrAusBuchungen(elster, year)
+                : await aggregateUstvaYear(elster, year, vorsteuerKorrekturenDesJahres(elster, year));
         } catch (err) {
             skips.ustva = errMsg(err);
         }
