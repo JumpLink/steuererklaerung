@@ -43,14 +43,23 @@ function log(db: LedgerDatabase, action: string, refundTxId: string, detail: Rec
 }
 
 /** Every link and rejection, or those touching the given transaction ids (as refund OR original). */
+/** Above this many ids a scoped read scans the table instead of binding every id. */
+const BIND_LIMIT = 200;
+
 export function getRefundLinks(db: LedgerDatabase, transactionIds?: readonly string[]): RefundLinkRecord[] {
   if (transactionIds && transactionIds.length === 0) return [];
   let rows: RefundLinkRow[];
-  if (transactionIds) {
+  if (transactionIds && transactionIds.length <= BIND_LIMIT) {
     const ph = transactionIds.map(() => "?").join(", ");
     rows = db
       .prepare(`SELECT * FROM refund_links WHERE refund_tx_id IN (${ph}) OR original_tx_id IN (${ph})`)
       .all(...transactionIds, ...transactionIds) as unknown as RefundLinkRow[];
+  } else if (transactionIds) {
+    // Thousands of bound parameters cost far more than reading the (small) link table once.
+    const wanted = new Set(transactionIds);
+    rows = (db.prepare(`SELECT * FROM refund_links`).all() as unknown as RefundLinkRow[]).filter(
+      (r) => wanted.has(r.refund_tx_id) || wanted.has(r.original_tx_id),
+    );
   } else {
     rows = db.prepare(`SELECT * FROM refund_links`).all() as unknown as RefundLinkRow[];
   }
