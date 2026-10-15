@@ -29,6 +29,16 @@ export interface EricStatus {
     pluginCount: number;
     /** Present only when the files exist but loading/initialising the native binding failed. */
     error?: string;
+    /**
+     * False off Linux: our binding loads `lib*.so` only, so no ERiC install there can ever work.
+     * The UI says so instead of asking the user to download something that would not be used.
+     */
+    platformSupported: boolean;
+}
+
+/** Whether ELSTER submission through ERiC can work on this OS at all (see {@link EricStatus.platformSupported}). */
+export function ericPlatformSupported(platform: string = process.platform): boolean {
+    return platform === 'linux';
 }
 
 /**
@@ -66,6 +76,7 @@ export async function getEricStatus(ericHome?: string): Promise<EricStatus> {
         libPath: paths.lib,
         missing: verification.missing,
         pluginCount: verification.pluginCount,
+        platformSupported: ericPlatformSupported(),
     };
 
     if (!eric.isEricAvailable()) return base;

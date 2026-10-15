@@ -13,6 +13,7 @@
  * persisted (to the OS keyring) only by the caller, only on `savePin`, only after a successful send.
  */
 
+import { keyringNote } from '../data/elster-secret.ts';
 import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 
@@ -142,7 +143,7 @@ function promptSend(
         if (opts.defaults?.canSavePin) {
             saveRow = new Adw.SwitchRow({
                 title: 'PIN im Schlüsselbund speichern',
-                subtitle: 'Verschlüsselt im GNOME-Schlüsselbund, nie im Klartext.',
+                subtitle: keyringNote(),
                 active: !!opts.defaults?.pin,
             });
             group.add(saveRow);

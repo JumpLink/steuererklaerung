@@ -5,6 +5,8 @@ import { run } from '@gjsify/unit';
 
 import './helpers/isolate-env.ts';
 
+import secretStore from './unit/secrets/store.test.ts';
+import ericPlatform from './unit/elster/eric-platform.test.ts';
 import kredit from './unit/finanzierung/kredit.test.ts';
 import finanzierung from './unit/finanzierung/finanzierung.test.ts';
 
@@ -422,6 +424,8 @@ run({
     ohneKi,
     kredit,
     finanzierung,
+    secretStore,
+    ericPlatform,
     testIsolation,
     fieldCoverageScan,
 });

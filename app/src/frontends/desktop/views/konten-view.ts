@@ -8,6 +8,7 @@
  * to the same core actions the web uses. Below it the ERiC/ELSTER system-library card (unchanged).
  */
 
+import { keyringNote } from '../data/elster-secret.ts';
 import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 import GObject from '@girs/gobject-2.0';
@@ -151,6 +152,22 @@ export class BhKontenView extends Adw.Bin {
             statusRow.add_suffix(ericPill(false, status.error ? 'Fehler' : 'nicht gefunden'));
         }
         this.eric.add(statusRow);
+
+        // macOS and Windows: no ERiC path can work (the binding loads lib*.so only), so skip the path
+        // row and the download help and say what still works.
+        if (!status.platformSupported) {
+            statusRow.set_subtitle('auf diesem System nicht unterstützt — die ERiC-Anbindung gibt es nur unter Linux');
+            const note = new Adw.ActionRow({
+                title: 'Absenden an ELSTER nicht möglich',
+                subtitle: markup(
+                    'XML erzeugen und prüfen funktioniert weiter; zum Absenden das XML in Mein ELSTER hochladen ' +
+                        'oder die App unter Linux starten.',
+                ),
+            });
+            note.set_subtitle_lines(0);
+            this.eric.add(note);
+            return;
+        }
 
         // Editable ERIC_HOME path (persisted per active entity's ELSTER config).
         const entry = new Adw.EntryRow({ title: 'ERiC-Pfad (ERIC_HOME)' });
@@ -746,7 +763,7 @@ function promptPin(parent: Gtk.Widget): Promise<string | null> {
     return new Promise((resolve) => {
         const dlg = new Adw.AlertDialog({
             heading: 'Zertifikat-PIN hinterlegen',
-            body: 'Die PIN wird verschlüsselt im GNOME-Schlüsselbund gespeichert — nie im Klartext in der Konfiguration.',
+            body: `${keyringNote()} Nie im Klartext in der Konfiguration.`,
         });
         const group = new Adw.PreferencesGroup();
         const pinRow = new Adw.PasswordEntryRow({ title: 'Zertifikat-PIN' });

@@ -7,7 +7,7 @@
  * On Linux x86_64, STDCALL is empty (= CDECL), which is koffi's default.
  */
 
-import koffi from 'koffi';
+import { createRequire } from 'node:module';
 import { join } from 'node:path';
 import { mkdirSync } from 'node:fs';
 
@@ -19,26 +19,51 @@ import { EricNotAvailableError } from './errors.ts';
 // ---------------------------------------------------------------------------
 
 // Opaque pointer: EricRueckgabepufferHandle = struct EricReturnBufferApi*
-const EricReturnBufferApi = koffi.opaque('EricReturnBufferApi');
 type EricRueckgabepufferHandle = unknown;
 
-// eric_druck_parameter_t struct
-const eric_druck_parameter_t = koffi.struct('eric_druck_parameter_t', {
-  version: 'uint32_t',
-  vorschau: 'uint32_t',
-  duplexDruck: 'uint32_t',
-  pdfName: 'const char *',
-  fussText: 'const char *',
-  pdfCallback: 'void *',              // function pointer — always null for now
-  pdfCallbackBenutzerdaten: 'void *',  // always null for now
-});
+// ---------------------------------------------------------------------------
+// koffi, loaded on first use
+// ---------------------------------------------------------------------------
 
-// eric_verschluesselungs_parameter_t struct
-const eric_verschluesselungs_parameter_t = koffi.struct('eric_verschluesselungs_parameter_t', {
-  version: 'uint32_t',
-  zertifikatHandle: 'uint32_t',
-  pin: 'const char *',
-});
+// koffi is a native addon with a prebuild per OS, and ERiC itself is only ever present on a Linux
+// machine the user set up (see paths.ts). A static `import koffi` made the whole app bundle fail
+// at start on macOS and Windows, where neither exists — and for a feature that is optional. So it
+// is required when ERiC is first called, and a missing module reads as "ERiC not available".
+type Koffi = typeof import('koffi');
+
+let koffiModule: Koffi | null = null;
+
+function loadKoffi(): Koffi {
+  if (koffiModule) return koffiModule;
+  let koffi: Koffi;
+  try {
+    koffi = createRequire(import.meta.url)('koffi') as Koffi;
+  } catch {
+    throw new EricNotAvailableError(ERIC_NOT_FOUND_MESSAGE);
+  }
+  // Types are registered once, by name, process-wide — a second registration throws.
+  koffi.opaque('EricReturnBufferApi');
+
+  // eric_druck_parameter_t struct
+  koffi.struct('eric_druck_parameter_t', {
+    version: 'uint32_t',
+    vorschau: 'uint32_t',
+    duplexDruck: 'uint32_t',
+    pdfName: 'const char *',
+    fussText: 'const char *',
+    pdfCallback: 'void *', // function pointer — always null for now
+    pdfCallbackBenutzerdaten: 'void *', // always null for now
+  });
+
+  // eric_verschluesselungs_parameter_t struct
+  koffi.struct('eric_verschluesselungs_parameter_t', {
+    version: 'uint32_t',
+    zertifikatHandle: 'uint32_t',
+    pin: 'const char *',
+  });
+  koffiModule = koffi;
+  return koffi;
+}
 
 // ---------------------------------------------------------------------------
 // Library state
@@ -91,6 +116,7 @@ function loadLibrary(): EricLib {
     throw new EricNotAvailableError(ERIC_NOT_FOUND_MESSAGE);
   }
 
+  const koffi = loadKoffi();
   const paths = getEricPaths();
 
   // Pre-load dependencies with RTLD_GLOBAL so libericapi.so can find them.

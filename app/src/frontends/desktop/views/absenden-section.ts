@@ -57,6 +57,7 @@ import { abgabeWarnungen } from '../../../core/invoices/doppelzahlung-text.ts';
 import { deDateTime, eur } from '../../../core/lib/format.ts';
 import { LoadToken, applyScrollToHook, currentOperator, markup, saveFileViaDialog } from './util.ts';
 import { errorDialog } from './dialogs.ts';
+import { ericPlatformSupported } from '../../../core/actions/elster/eric-status.ts';
 import { showSupportPrompt } from './support-dialog.ts';
 import { claimSupportPrompt } from '../../../core/config/support-prompt.ts';
 import { promptLiveSend, promptRelease, promptTestSend } from './absenden-dialog.ts';
@@ -199,7 +200,9 @@ export class SubmissionSection {
             title: 'ERiC (ELSTER Rich Client)',
             subtitle: overview.ericAvailable
                 ? markup(`verfügbar${overview.ericVersion ? ` · Version ${overview.ericVersion}` : ''}`)
-                : 'nicht verfügbar — in der Konten-Ansicht einrichten',
+                : ericPlatformSupported()
+                  ? 'nicht verfügbar — in der Konten-Ansicht einrichten'
+                  : 'auf diesem System nicht unterstützt (ERiC nur unter Linux) — XML in Mein ELSTER hochladen',
         });
         row.add_prefix(
             new Gtk.Image({
