@@ -5798,3 +5798,11 @@ msgstr "EÜR"
 
 #~ msgid "Provide MCP tools"
 #~ msgstr "MCP-Tools bereitstellen"
+
+#: src/frontends/desktop/views/konten-view.ts:154
+msgid ""
+"The ERiC binding of this installation is broken. Rebuild it with \"gjsify "
+"run -w @steuererklaerung/eric build:meson\" or reinstall the app."
+msgstr ""
+"Die ERiC-Anbindung dieser Installation ist defekt. Baue sie mit „gjsify run "
+"-w @steuererklaerung/eric build:meson“ neu oder installiere die App neu."

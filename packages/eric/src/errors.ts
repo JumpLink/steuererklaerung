@@ -27,3 +27,17 @@ export class EricNotAvailableError extends Error {
     super(message);
   }
 }
+
+/**
+ * The native GJS binding exists but is unusable: its typelib resolved no GType, which GJS reports as
+ * "Unsupported type void". In practice a stale prebuild whose libsteuereric.so still links a
+ * library that is gone. Rebuilding the binding fixes it; the message of the cause is kept.
+ */
+export class EricBindingError extends EricNotAvailableError {
+  readonly cause: string;
+
+  constructor(cause: string) {
+    super(`The native SteuerEric binding is broken (${cause}). Rebuild it with \`gjsify run -w @steuererklaerung/eric build:meson\`.`);
+    this.cause = cause;
+  }
+}

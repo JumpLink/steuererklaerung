@@ -26,7 +26,7 @@ export {
   ERIC_NOT_FOUND_MESSAGE,
 } from './paths.ts';
 export type { EricPaths } from './paths.ts';
-export { EricError, EricNotAvailableError } from './errors.ts';
+export { EricError, EricNotAvailableError, EricBindingError } from './errors.ts';
 export {
   EricFlags,
   EricErrorCodes,
@@ -42,7 +42,7 @@ export { runSetup, verifyInstallation, findJarFile } from './setup.ts';
 export type { SetupVerification } from './setup.ts';
 
 import { mkdirSync } from 'node:fs';
-import { EricError, EricNotAvailableError } from './errors.ts';
+import { EricBindingError, EricError, EricNotAvailableError } from './errors.ts';
 import {
   EricErrorCodes,
   EricFlags,
@@ -78,6 +78,7 @@ interface NativeEric {
 }
 interface NativeEricClass {
   new (): NativeEric;
+  $gtype: unknown;
 }
 
 let _instance: NativeEric | null = null;
@@ -101,6 +102,14 @@ function load(): NativeEricClass {
         '`npm run -w @steuererklaerung/eric build:meson` and ensure its prebuilds are on GI_TYPELIB_PATH/LD_LIBRARY_PATH.\n\n' +
         ERIC_NOT_FOUND_MESSAGE,
     );
+  }
+  // A typelib whose shared library cannot be opened (stale prebuild) still lists `Eric`, but the
+  // class has no GType: GJS throws "Unsupported type void, deriving from fundamental void" on first
+  // use. Probe it here so the caller gets a typed error instead of the raw GI one.
+  try {
+    void mod.Eric.$gtype;
+  } catch (err) {
+    throw new EricBindingError(err instanceof Error ? err.message : String(err));
   }
   return mod.Eric;
 }

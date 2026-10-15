@@ -35,6 +35,8 @@ export interface EricStatus {
     pluginCount: number;
     /** Present only when the files exist but loading/initialising the native binding failed. */
     error?: string;
+    /** The native SteuerEric binding itself is unusable (stale prebuild), not ERiC: `error` is the raw GI text. */
+    bindingBroken?: boolean;
     /**
      * False where no ERiC build exists (an architecture other than x86_64 / macOS). The UI says so
      * instead of asking the user to download something that would not be used.
@@ -95,7 +97,12 @@ export async function getEricStatus(ericHome?: string): Promise<EricStatus> {
         eric.initializeEric();
         return { ...base, available: true, version: parseEricVersion(eric.getVersion()) };
     } catch (err) {
-        return { ...base, available: false, error: err instanceof Error ? err.message : String(err) };
+        return {
+            ...base,
+            available: false,
+            error: err instanceof Error ? err.message : String(err),
+            ...(err instanceof eric.EricBindingError ? { bindingBroken: true } : {}),
+        };
     } finally {
         try {
             eric.shutdownEric();
