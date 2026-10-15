@@ -29,7 +29,8 @@ export interface EricPaths {
 /**
  * Where an INSTALLED application keeps ERiC: `$XDG_DATA_HOME/steuererklaerung/eric`.
  *
- * ERiC is never redistributed — the licence forbids it, so the user fetches it themselves. That
+ * ERiC is not part of the source repo (proprietary; official release builds may bundle it, licence
+ * § 4 (1)), so a build without it needs the user to fetch it. That
  * makes "where do I put it" a question the program has to answer, and `<cwd>/elster/runtime` is no
  * answer at all for an app launched from the GNOME overview, where the working directory is `/`
  * or `$HOME`. Measured on a real `.rpm` install: without this, ELSTER submission can never work
@@ -85,8 +86,8 @@ export function isEricAvailable(platform: string = process.platform): boolean {
 export const ERIC_NOT_FOUND_MESSAGE = `ERiC ist nicht installiert. Ohne ERiC funktioniert alles außer dem
 Absenden an ELSTER — XML erzeugen, prüfen und in Mein ELSTER hochladen geht.
 
-ERiC darf nicht mitgeliefert werden (die Lizenz verbietet die Weitergabe), also musst du es selbst
-holen:
+ERiC ist in dieser Installation nicht enthalten (es ist proprietär und liegt nicht im Quell-Repo),
+also musst du es selbst holen:
 
 1. Von https://www.elster.de/elsterweb/entwickler/infoseite/eric herunterladen
    (Registrierung als Entwickler und Zustimmung zur Lizenz nötig)

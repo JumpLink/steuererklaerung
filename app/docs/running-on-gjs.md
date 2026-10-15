@@ -60,7 +60,7 @@ ELSTER validation runs natively via [`@steuererklaerung/eric`](../../packages/er
 (`gi://SteuerEric`). Build its native binding once and provide ERiC:
 
 ```bash
-export ERIC_HOME=/path/to/eric/runtime          # your ERiC install (never bundled)
+export ERIC_HOME=/path/to/eric/runtime          # your ERiC install (not in the source repo)
 gjsify run -w @steuererklaerung/eric build:meson         # build the typelib (needs meson+valac)
 # gjsify run auto-detects the @steuererklaerung/eric typelib; the external ERiC .so
 # libs come from ERIC_HOME (gjsify run appends its paths to an inherited one):

@@ -8,19 +8,20 @@ ERiC is a C library provided free of charge by the Bayerisches Landesamt für St
 
 ## Open-Source Distribution Constraint
 
-**ERiC must not be distributed as part of this repository.**
+**ERiC is not checked into this repository, but official release builds may ship it.**
 
-Per §4 (3) of the license agreement, transferring the usage rights to third parties and sublicensing beyond the scope of §4 (1) is explicitly prohibited. This means:
+§4 (1) of the license agreement grants the right to integrate ERiC into one's own software products and to distribute it together with them as a single product, directly or indirectly. §4 (3) prohibits transferring that right to third parties and sublicensing beyond §4 (1). This means:
 
-- The ERiC binary library **cannot** be bundled in any public repository or release artifact.
-- Each user of this software must **individually** accept the ERiC license agreement and download the library themselves from [elster.de](https://www.elster.de).
-- The project must treat ERiC as an **external, user-supplied dependency** (BYOB — Bring Your Own Binary).
+- The ERiC binary library stays **out of the public source repository** (proprietary, version-bound).
+- Official release artifacts (Flatpak, deb/rpm, AppImage, MSI/zip, macOS zip) **may bundle ERiC** as part of the one product. Planned: the release pipeline fetches ERiC from a private repo. Not implemented yet.
+- Forks and self-builds do not inherit our right: they provide their own ERiC (`ERIC_HOME`) after accepting the license themselves.
+- Distribution through third-party stores is "indirect" distribution of our product; ERiC must stay bound to the app and must not be offered as a standalone download.
 
 ### Recommended approach
 
-- Provide a setup script or documented instructions for users to download ERiC from the ELSTER developer portal.
-- The setup process should make clear that the user must accept the ERiC license before proceeding.
-- Application code may link against ERiC, but must not redistribute it.
+- Keep the setup script and documented instructions for forks, self-builds and development.
+- Until bundling exists, the setup process must make clear that the user has to accept the ERiC license.
+- Never offer ERiC separately from the application.
 
 ## Mandatory End-User Notices
 
@@ -69,12 +70,12 @@ If the application uses RABE (reference-based document retrieval), additional ob
 
 | Topic | Rule |
 |---|---|
-| Distribution | Do NOT bundle ERiC — users must download it themselves |
-| Sublicensing | Not permitted |
+| Distribution | Not in the source repo; official builds may bundle it (§4 (1)); forks bring their own |
+| Sublicensing | Not permitted (§4 (3)) |
 | End-user notices | GDPR sheet + privacy notice + log file notice required |
 | Minimum version | Must use at least the designated Mindestversion |
 | Product naming | Must not contain "ELSTER" |
 | ELSTER logo | Only in ERiC documentation |
 | Confidentiality | Do not publish developer portal internals |
 | Support | Your responsibility, not LfSt's |
-| Hersteller-ID | Keep secret; can be revoked on violation |
+| Hersteller-ID | Keep out of the repo (private config); can be revoked on violation (§9) |

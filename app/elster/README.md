@@ -5,7 +5,7 @@ only tracked file). It holds two kinds of non-committable things:
 
 | Path | What | Why ignored |
 |------|------|-------------|
-| `runtime/` | the **user-provided ERiC runtime** (`lib/libericapi.so` + `lib/plugins/…`) — the default `ERIC_HOME` | ERiC is **not redistributable** (see below) |
+| `runtime/` | the **user-provided ERiC runtime** (`lib/libericapi.so` + `lib/plugins/…`) — the default `ERIC_HOME` | ERiC is proprietary and not committed (see below) |
 | `downloads/` | the ERiC `.jar` you downloaded from elster.de, consumed by `elster setup` | same |
 | `ERiC-*`, `*.jar`, `*.zip` | the extracted ERiC distribution + its docs/schemas | same |
 | `*.xml` | generated ELSTER submission files (Anlage EÜR / USt / GewSt / Feststellung) | contain **real tax data** |
