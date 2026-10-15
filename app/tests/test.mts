@@ -74,6 +74,7 @@ import mailEingangAbruf from './unit/mail-eingang/abruf.test.ts';
 import imapClient from './unit/clients/imap-client.test.ts';
 import elsterSection from './unit/config/elster-section.test.ts';
 import slug from './unit/config/slug.test.ts';
+import editionBadges from './unit/lib/edition-badges.test.ts';
 
 import presentersWorkspace from './unit/presenters/workspace.test.ts';
 import presentersSession from './unit/presenters/session.test.ts';
@@ -274,6 +275,7 @@ run({
     invoiceMail,
     invoiceMailE2e,
     desktopMailSender,
+    editionBadges,
     notifyHints,
     estKinder,
     validateSteuernummer,

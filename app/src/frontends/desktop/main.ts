@@ -32,6 +32,7 @@ import { applyPathEnv } from '../../core/paths.ts';
 import { ensureDemoSeeded } from '../cli/demo.ts';
 import { BACKUP_RESULT_PREFIX } from './background-backup.ts';
 import { APP_ID, APP_NAME, APP_VERSION } from './constants.ts';
+import { EDITION_BADGE_CSS, installAbout } from './about-dialog.ts';
 import { dialogFinTSInteraction } from './fints-interaction.ts';
 import { _ } from './i18n.ts';
 import { APP_ICON } from './icons.ts';
@@ -113,13 +114,16 @@ if (mcpMode) {
         // "Support", never "Donate": business income, nothing here implies a tax deduction. A store
         // channel shows no donation UI at all.
         links: donationsAllowed() ? [{ title: _('Support'), url: localizedSupportUrl() }] : [],
-        comments:
-            'Native Adwaita-Oberfläche für die Steuererklärung — parallel zur Web-Oberfläche, ' +
-            'auf demselben Backend (Store, EÜR/Steuer-Reports, Belege, Kontakte).',
+        comments: _(
+            'Native Adwaita interface for the tax return — alongside the web interface, ' +
+                'on the same backend (store, EÜR/tax reports, receipts, contacts).',
+        ),
     };
     const status = await runAdwaitaApp({
         applicationId: APP_ID,
-        about,
+        css: EDITION_BADGE_CSS,
+        // Not the `about` option: the plain dialog has no room for the edition badges.
+        onStartup: (app) => installAbout(app, about),
         createWindow: (app) => {
             return new MainWindow(app);
         },
