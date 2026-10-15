@@ -10,7 +10,7 @@ import { join } from 'node:path';
 import type { ElsterConfig } from '../config/index.ts';
 import type { UstvaAggregate } from './ustva-aggregate.ts';
 import { hasReverseCharge } from './reverse-charge.ts';
-import { buildEdsEnvelope, escapeXml, PLACEHOLDER_HERSTELLER_ID } from './eds-envelope.ts';
+import { buildEdsEnvelope, escapeXml, PLACEHOLDER_HERSTELLER_ID, resolveHerstellerId } from './eds-envelope.ts';
 import { toElsterSteuernummer, bufaFromElsterSteuernummer } from './steuernummer.ts';
 
 const USTVA_NS_PREFIX = 'http://finkonsens.de/elster/elsteranmeldung/ustva/v';
@@ -120,7 +120,7 @@ export function buildUstvaEds(aggregate: UstvaAggregate, config: ElsterConfig): 
     // id, so validate-eric failed for every entity that configures one. It stayed hidden while the
     // returns went out through the Mein-ELSTER XML import, where the portal supplies the id and the
     // plain builder's '00000' is correct — which is why buildUstvaXml keeps it.
-    const herstellerId = config.hersteller_id ?? PLACEHOLDER_HERSTELLER_ID;
+    const herstellerId = resolveHerstellerId(config.hersteller_id);
 
     // ERiC requires the Erstellungsdatum + DatenLieferant address inside the Anmeldungssteuern
     // Nutzdaten. The PLAIN buildUstvaXml (for the Mein-ELSTER XML-Import) omits them — Mein ELSTER

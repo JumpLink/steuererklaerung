@@ -1,6 +1,6 @@
 /**
  * TypeScript types mirroring ERiC C API structs, enums, and constants.
- * Based on eric_types.h, eric_fehlercodes.h, and ericdef.h (Release 43.4.6.0).
+ * Based on eric_types.h, eric_fehlercodes.h, and ericdef.h (Release 44.3.6.0).
  */
 
 // ---------------------------------------------------------------------------

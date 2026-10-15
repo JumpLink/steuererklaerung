@@ -5,7 +5,14 @@
  * All functions handle buffer management and error mapping automatically.
  */
 
-export { isEricAvailable, getEricPaths, ERIC_NOT_FOUND_MESSAGE } from './paths.ts';
+export {
+  isEricAvailable,
+  ericPlatformKnown,
+  appDataDir,
+  bundledHerstellerId,
+  getEricPaths,
+  ERIC_NOT_FOUND_MESSAGE,
+} from './paths.ts';
 export type { EricPaths } from './paths.ts';
 
 export { EricError, EricNotAvailableError } from './errors.ts';
@@ -132,7 +139,6 @@ export function validateXml(xml: string, datenartVersion: string): EricValidatio
       flags,
       null,  // no print
       null,  // no crypto
-      null,  // no transfer handle
       rueckgabe.raw,
       serverantwort.raw,
     );
@@ -201,7 +207,6 @@ export function sendXml(
 
     try {
       const flags = EricFlags.VALIDIERE | EricFlags.SENDE;
-      const transferHandle: number[] = [0];
       const crypto = { version: 3, zertifikatHandle: hToken[0], pin: opts.pin };
       const rc = ericBearbeiteVorgang(
         xml,
@@ -209,7 +214,6 @@ export function sendXml(
         flags,
         null, // no print
         crypto,
-        transferHandle,
         rueckgabe.raw,
         serverantwort.raw,
       );

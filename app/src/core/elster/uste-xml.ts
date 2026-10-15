@@ -22,7 +22,7 @@ import { round2 } from '../lib/money.ts';
 
 const USTE_NS_PREFIX = 'http://finkonsens.de/elster/elstererklaerung/ust/e50/v';
 /**
- * Schema years this builder writes (ERiC 43.4.6.0 ships E50-2024 to E50-2026). Every E-code emitted
+ * Schema years this builder writes (ERiC 44.3.6.0 ships E50-2024 to E50-2026). Every E-code emitted
  * here exists in all three, except the W-IdNr E3000401, which E50-2024 does not know.
  */
 const USTE_SCHEMA_JAHRE = [2024, 2025, 2026] as const;
