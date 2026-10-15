@@ -34,6 +34,7 @@ import {
     type AppSettings,
     type McpGroup,
 } from '../data/settings.ts';
+import { isManifestMissing } from '../../../core/lib/errors.ts';
 import { appSession } from '../data/session.ts';
 import type { AppEntity } from '../entities.ts';
 import { applyScrollHook, markup } from './util.ts';
@@ -332,7 +333,10 @@ export class BhEinstellungenView extends Adw.Bin {
                     this._entity_groups.append(buildMailTemplatesGroup(this.host, entity, this));
                 }
             } catch (err) {
-                this.banner(fmt(_('Could not read connections: {error}'), { error: msg(err) }));
+                // No manifest yet is the first-run state, already explained by the page itself.
+                if (!isManifestMissing(err)) {
+                    this.banner(fmt(_('Could not read connections: {error}'), { error: msg(err) }));
+                }
             }
 
             // B) Business entities: Betrieb + Umsatzsteuer + Jahresabschluss-Anpassungen from the ELSTER config.
@@ -424,7 +428,7 @@ export class BhEinstellungenView extends Adw.Bin {
     }
 
     private banner(message: string): void {
-        this._save_banner.set_title(markup(message)); // Banner title is Pango markup — escape it
+        this._save_banner.set_title(message); // use-markup is off in the blueprint: markup() would show a literal &quot;
         this._save_banner.set_revealed(true);
     }
 
