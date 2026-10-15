@@ -353,24 +353,22 @@ export class QontoOutgoingInvoiceProvider implements OutgoingInvoiceProvider {
 
     async listInvoices(opts: ListOutgoingInvoicesOptions = {}): Promise<OutgoingInvoiceSummary[]> {
         const invoices = await listClientInvoices(opts.status ? { status: opts.status } : {});
-        const summaries = invoices.map(
-            (inv): OutgoingInvoiceSummary => ({
-                id: inv.id,
-                number: inv.number ?? null,
-                status: inv.status ?? 'draft',
-                // The list endpoint embeds the full client object (no flat client_id) — read both.
-                clientId: inv.client?.id ?? inv.client_id ?? null,
-                customerName: invoiceClientName(inv.client),
-                issueDate: inv.issue_date ?? null,
-                dueDate: inv.due_date ?? null,
-                total: parseMoney(inv.total_amount?.value),
-                currency: inv.total_amount?.currency ?? inv.currency ?? null,
-                url: inv.invoice_url ?? null,
-                performanceStart: inv.performance_start_date ?? null,
-                performanceEnd: inv.performance_end_date ?? null,
-                provider: 'qonto',
-            }),
-        );
+        const summaries = invoices.map((inv): OutgoingInvoiceSummary => ({
+            id: inv.id,
+            number: inv.number ?? null,
+            status: inv.status ?? 'draft',
+            // The list endpoint embeds the full client object (no flat client_id) — read both.
+            clientId: inv.client?.id ?? inv.client_id ?? null,
+            customerName: invoiceClientName(inv.client),
+            issueDate: inv.issue_date ?? null,
+            dueDate: inv.due_date ?? null,
+            total: parseMoney(inv.total_amount?.value),
+            currency: inv.total_amount?.currency ?? inv.currency ?? null,
+            url: inv.invoice_url ?? null,
+            performanceStart: inv.performance_start_date ?? null,
+            performanceEnd: inv.performance_end_date ?? null,
+            provider: 'qonto',
+        }));
         // Newest first by issue date (Qonto returns oldest-first); undated rows sink to the bottom.
         return summaries.sort((a, b) => (b.issueDate ?? '').localeCompare(a.issueDate ?? ''));
     }
