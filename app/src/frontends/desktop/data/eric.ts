@@ -21,7 +21,7 @@ export type { EricStatus };
 
 // The ELSTER certificate PIN lives in the OS keyring (never in config) — re-exported here so the
 // Konten card (cert path) and the Absenden section (test send) share one ELSTER-credentials seam.
-export { keyringAvailable, lookupElsterPin, storeElsterPin, clearElsterPin } from './elster-secret.ts';
+export { keyringAvailable, keyringNote, lookupElsterPin, storeElsterPin, clearElsterPin } from './elster-secret.ts';
 
 /** ERiC status enriched with the explicitly configured `eric_home` (for the editable path row). */
 export interface EricStatusView extends EricStatus {

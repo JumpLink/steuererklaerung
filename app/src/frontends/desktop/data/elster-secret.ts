@@ -11,6 +11,7 @@
  * certificate can carry its own PIN.
  */
 
+import { secretStore, type SecretRef } from '../../../core/secrets/store.ts';
 import { entitySchema, secret, type SecretApi, type SecretSchema } from './libsecret.ts';
 
 const SCHEMA_NAME = 'eu.jumplink.Steuererklaerung.ElsterPin';
@@ -29,15 +30,29 @@ function schemaFor(s: SecretApi, name: string = SCHEMA_NAME): SecretSchema {
     return entitySchema(s, name);
 }
 
+/**
+ * Without the libsecret typelib (macOS, Windows, a Linux without it) the OS store from
+ * `core/secrets/store.ts` takes over: macOS Keychain, Windows DPAPI.
+ */
+const ref = (entityId: string): SecretRef => ({ service: SCHEMA_NAME, attribute: 'entity', id: entityId });
+
 /** Whether a secret store is reachable (⇒ offering to save the PIN makes sense). */
 export function keyringAvailable(): boolean {
-    return secret() !== null;
+    return secret() !== null || secretStore() !== null;
+}
+
+/** One sentence for the UI: where a saved PIN goes and how it is protected. Empty when nowhere. */
+export function keyringNote(): string {
+    if (secret()) return 'Verschlüsselt im GNOME-Schlüsselbund, nie im Klartext.';
+    const store = secretStore();
+    return store ? `Gespeichert ${store.description}.` : '';
 }
 
 /** Store (or overwrite) the ELSTER PIN for an entity in the keyring. Returns false if unavailable. */
 export function storeElsterPin(entityId: string, pin: string): boolean {
     const s = secret();
-    if (!s || !pin) return false;
+    if (!s) return !!pin && (secretStore()?.set(ref(entityId), pin, LABEL) ?? false);
+    if (!pin) return false;
     try {
         return s.password_store_sync(schemaFor(s), { entity: entityId }, s.COLLECTION_DEFAULT, LABEL, pin, null);
     } catch {
@@ -51,7 +66,7 @@ export function storeElsterPin(entityId: string, pin: string): boolean {
  */
 export function lookupElsterPin(entityId: string): string | null {
     const s = secret();
-    if (!s) return null;
+    if (!s) return secretStore()?.get(ref(entityId)) ?? null;
     for (const name of [SCHEMA_NAME, LEGACY_SCHEMA_NAME]) {
         try {
             const pin = s.password_lookup_sync(schemaFor(s, name), { entity: entityId }, null) || null;
@@ -70,7 +85,12 @@ export function lookupElsterPin(entityId: string): string | null {
  */
 export function clearElsterPin(entityId: string): boolean {
     const s = secret();
-    if (!s) return false;
+    if (!s) {
+        const store = secretStore();
+        if (!store || store.get(ref(entityId)) === undefined) return false;
+        store.delete(ref(entityId));
+        return true;
+    }
     let cleared = false;
     for (const name of [SCHEMA_NAME, LEGACY_SCHEMA_NAME]) {
         try {

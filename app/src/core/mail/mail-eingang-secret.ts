@@ -1,17 +1,17 @@
 /**
  * The password of an entity's mail folder (Idee 15) — in the OS keyring, never in the manifest.
  *
- * Reached through `secret-tool` like the ELSTER PIN (`core/elster/pin.ts`), not through the libsecret
- * GIR binding the SMTP password uses: CLI, MCP and desktop must all read the SAME entry, and
- * `secret-tool` is the one route that works in every one of them. The secret goes to `secret-tool
- * store` on stdin, so it never becomes an argument in the process list.
+ * Reached through the OS secret store (`core/secrets/store.ts`) like the ELSTER PIN
+ * (`core/elster/pin.ts`), not through the libsecret GIR binding the SMTP password uses: CLI, MCP and
+ * desktop must all read the SAME entry, and the store is the one route that works in every one of
+ * them. The secret goes to the backend on stdin, so it never becomes an argument in the process list.
  *
  * Resolution order, most explicit first: the `STEUER_MAIL_EINGANG_PASSWORD` environment variable
  * (one shell, never stored — for a headless host without a keyring, the same shape as `ELSTER_PIN`),
  * then the keyring. A missing or locked keyring reads as "no password", never as an error.
  */
 
-import { execFileSync } from 'node:child_process';
+import { secretStore, type SecretRef } from '../secrets/store.ts';
 
 const KEYRING_SERVICE = 'eu.jumplink.Steuererklaerung.MailEingang';
 
@@ -23,17 +23,11 @@ export interface ResolvedMailPassword {
     source: MailPasswordSource;
 }
 
+const ref = (entityId: string): SecretRef => ({ service: KEYRING_SERVICE, attribute: 'entity', id: entityId });
+
 function fromKeyring(entityId: string): string | undefined {
-    try {
-        const out = execFileSync('secret-tool', ['lookup', 'service', KEYRING_SERVICE, 'entity', entityId], {
-            encoding: 'utf8',
-            stdio: ['ignore', 'pipe', 'ignore'],
-        });
-        return out.replace(/\r?\n$/, '') || undefined;
-    } catch {
-        // No entry, no secret-tool, a locked keyring: all "not available here".
-        return undefined;
-    }
+    // No entry, no store, a locked keyring: all "not available here".
+    return secretStore()?.get(ref(entityId));
 }
 
 /** The stored password, or null when there is none. */
@@ -49,36 +43,13 @@ export function hasStoredMailEingangPassword(entityId: string): boolean {
     return fromKeyring(entityId) !== undefined;
 }
 
-/** Store (or overwrite) the password. Returns false when the keyring is unavailable. */
+/** Store (or overwrite) the password. Returns false when there is no store or it refuses. */
 export function storeMailEingangPassword(entityId: string, password: string): boolean {
     if (!password) return false;
-    try {
-        execFileSync(
-            'secret-tool',
-            [
-                'store',
-                '--label',
-                'Steuererklärung — Passwort des Belege-Postfachs',
-                'service',
-                KEYRING_SERVICE,
-                'entity',
-                entityId,
-            ],
-            { input: password, encoding: 'utf8', stdio: ['pipe', 'ignore', 'ignore'] },
-        );
-        return true;
-    } catch {
-        return false;
-    }
+    return secretStore()?.set(ref(entityId), password, 'Steuererklärung — Passwort des Belege-Postfachs') ?? false;
 }
 
 /** Forget the stored password. Idempotent. */
 export function clearMailEingangPassword(entityId: string): void {
-    try {
-        execFileSync('secret-tool', ['clear', 'service', KEYRING_SERVICE, 'entity', entityId], {
-            stdio: ['ignore', 'ignore', 'ignore'],
-        });
-    } catch {
-        // Nothing stored, or no secret-tool: nothing left to clear.
-    }
+    secretStore()?.delete(ref(entityId));
 }

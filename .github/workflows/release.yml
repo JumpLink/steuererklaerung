@@ -169,3 +169,119 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release upload "${GITHUB_REF_NAME}" app/ship/out/* --clobber
+
+  # macOS and Windows packages, assembled on Linux (ADR 0024 § A1: assembly is not host-bound, the
+  # Mach-O and PE payloads are only RUN on their own OS). They carry the NODE bundle
+  # (`build:app:node`) on node-gi + the GTK closure from `@gjsify/gtk-runtime-*`, not the GJS one.
+  # Order matters: the Linux smoke start needs the Linux node_modules, and every
+  # `gjsify install --os …` below replaces them, so it comes first.
+  package-macos-windows:
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/fedora/fedora:44
+    steps:
+      - name: Install system prerequisites
+        run: >
+          dnf install -y --setopt=install_weak_deps=False
+          git tar xz findutils gjs
+          libsoup3 json-glib gnutls libnghttp2
+          pango cairo gtk4 libadwaita
+          gettext glib2 msitools zip unzip
+          xorg-x11-server-Xvfb dbus-daemon libglvnd-gles libglvnd-egl mesa-dri-drivers
+
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Cache gjsify tarball store
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/gjsify/tarballs
+          key: gjsify-tarballs-${{ hashFiles('gjsify-lock.json') }}
+          restore-keys: |
+            gjsify-tarballs-
+
+      - name: Bootstrap the gjsify CLI
+        run: |
+          VERSION=$(node -p "require('./app/package.json').devDependencies['@gjsify/cli']")
+          npm install -g "@gjsify/cli@$VERSION"
+
+      - name: Install dependencies
+        run: gjsify install --immutable
+
+      # BEFORE ship: `gjsify.ship.localeDir` points at dist/locale, nothing else creates it.
+      - name: Compile the catalogues and build the node bundle
+        run: cd app && gjsify run i18n:compile && gjsify run build:app:node
+
+      - name: The node bundle starts without koffi
+        run: |
+          set -eu
+          cat > /tmp/prove.sh <<'SH'
+          set -eu
+          export GJSIFY_DEVTOOLS=1 STEUER_DEMO=1 STEUER_APP_ID=eu.jumplink.Steuererklaerung.CI
+          export HOME=/tmp/fresh XDG_DATA_HOME=/tmp/fresh/data XDG_CONFIG_HOME=/tmp/fresh/config
+          mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME"
+          node app/dist/app/steuer-app.node.mjs &
+          APP=$!
+          for _ in $(seq 1 60); do
+            if gdbus call --session --dest eu.jumplink.Steuererklaerung.CI \
+                 --object-path /eu/jumplink/Steuererklaerung/CI/devtools \
+                 --method org.gjsify.Devtools.GetStatus >/dev/null 2>&1; then
+              echo "the node bundle answered"; kill "$APP" 2>/dev/null || true; exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::the node bundle never answered GetStatus"; kill "$APP" 2>/dev/null || true; exit 1
+          SH
+          chmod +x /tmp/prove.sh
+          xvfb-run -a dbus-run-session -- /tmp/prove.sh
+
+      # Naming the target installs the os/cpu-gated optionalDependencies (node-runtime, gtk-runtime,
+      # node-gi prebuild) that a plain Linux install skips.
+      - name: Ship macOS (arm64)
+        run: |
+          gjsify install --os darwin --cpu arm64 --immutable
+          cd app && gjsify ship darwin --arch arm64 --skip-build --target macos-app-zip
+
+      - name: Ship macOS (x64)
+        run: |
+          gjsify install --os darwin --cpu x64 --immutable
+          cd app && gjsify ship darwin --arch x64 --skip-build --target macos-app-zip
+
+      - name: Ship Windows (x64)
+        run: |
+          gjsify install --os win32 --cpu x64 --immutable
+          cd app && gjsify ship windows --arch x64 --skip-build --target windows-dir-zip,msi
+
+      # `ship` exits 0 after writing nothing when every target is filtered away: assert by name.
+      - name: Assert the artifacts arrived
+        working-directory: app/ship/out
+        run: |
+          set -eu
+          ls -la
+          version=$(node -p "require('$GITHUB_WORKSPACE/app/package.json').version")
+          for f in \
+            "steuererklaerung-${version}-1.macos.arm64.zip" \
+            "steuererklaerung-${version}-1.macos.x86_64.zip" \
+            "steuererklaerung-${version}-1.windows.x64.zip" \
+            "steuererklaerung-${version}-1.x64.msi"; do
+            [ -s "$f" ] || { echo "::error::missing or empty artifact: $f"; exit 1; }
+          done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ship-macos-windows
+          path: |
+            app/ship/out/*.zip
+            app/ship/out/*.msi
+          compression-level: 0
+
+      # Only for a tag — a manual run exercises the chain without publishing anything.
+      - name: Attach to the release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${GITHUB_REF_NAME}" app/ship/out/*.zip app/ship/out/*.msi --clobber

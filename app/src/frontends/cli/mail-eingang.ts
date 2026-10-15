@@ -144,7 +144,9 @@ export const mailPasswortModule: CommandModule = {
                                 'Kein Passwort auf stdin. Beispiel: read -rs p; echo "$p" | steuer belege mail-passwort speichern',
                             );
                         if (!storeMailEingangPassword(id, password)) {
-                            throw new Error('Der Schlüsselbund ließ sich nicht erreichen (secret-tool, entsperrt?).');
+                            throw new Error(
+                                'Der Schlüsselbund ließ sich nicht erreichen (gibt es auf diesem System einen, ist er entsperrt?).',
+                            );
                         }
                         return { gespeichert: true };
                     }),

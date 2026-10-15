@@ -452,3 +452,4 @@ Kopfzeile per `ActivateWidget` schließen, dann auslösen. Und `pkill -f steuer-
 eigene Shell mit; zum Beenden `ActivateAction 'app' 'quit'` verwenden.
 
 - [PDF-Kontoauszüge per FinTS ins DMS](fints-kontoauszuege.md)
+- [macOS und Windows: Pakete, Geheimnisse, Grenzen](plattformen.md)

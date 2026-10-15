@@ -68,9 +68,12 @@ export function getEricPaths(): EricPaths {
 
 /**
  * Check whether the ERiC library is available at the resolved path.
- * Verifies that the main shared library and at least one plugin exist.
+ * Verifies that the main shared library and at least one plugin exist. Always false off Linux.
  */
-export function isEricAvailable(): boolean {
+export function isEricAvailable(platform: string = process.platform): boolean {
+  // Our binding loads `lib*.so` and nothing else. ERiC exists for macOS and Windows too, but a
+  // `.dylib` or `.dll` in ERIC_HOME would not be loaded, so claiming "available" there is a lie.
+  if (platform !== 'linux') return false;
   const paths = getEricPaths();
   return (
     existsSync(join(paths.lib, 'libericapi.so')) &&
