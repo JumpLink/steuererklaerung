@@ -76,3 +76,4 @@ app/po/POTFILES.in
 # docs/app/lotse-entwicklung.md). It names an absolute path on one machine, and
 # `gjsify install --immutable` refuses to run while it exists.
 .gjsify-link.json
+shots/
