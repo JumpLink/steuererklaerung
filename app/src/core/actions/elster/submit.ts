@@ -19,8 +19,8 @@
  *      (double-live block), an explicit `allowLive`, and ERiC available
  *   5. only then: latch `submitting` (live), call ERiC once (no auto-retry), record the outcome.
  *
- * The keystore PIN is passed per call and NEVER persisted (mandate). The ERiC native lib stays
- * user-provided (ERIC_HOME) and is never shipped.
+ * The keystore PIN is passed per call and NEVER persisted (mandate). The ERiC native lib is
+ * resolved via ERIC_HOME (or a bundled copy in official release builds), never from the source repo.
  */
 
 import { hasTestmerker, type EricSendResult } from '@steuererklaerung/eric';

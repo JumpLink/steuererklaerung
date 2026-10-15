@@ -134,20 +134,22 @@ cp app/.env.example app/.env          # Zugangsdaten für Bank, DMS, LLM
 cd app && gjsify run start config validate
 ```
 
-## ERiC — die Bibliothek musst du selbst besorgen
+## ERiC — nicht im Quell-Repo
 
 Übermittlung und amtliche Plausibilitätsprüfung laufen über **ERiC** (ELSTER Rich Client),
 die native Bibliothek des Bayerischen Landesamts für Steuern.
 
-> **ERiC ist nicht Teil dieses Projekts und darf nicht weitergegeben werden.**
-> Der Softwarehersteller-Lizenzvertrag verbietet die Weitergabe an Dritte und die
-> Unterlizenzierung (§ 4 Abs. 3). Ausgeliefert wird hier ausschließlich **unser eigener
-> Wrapper** ([`packages/eric`](packages/eric/README.md)) — kein ERiC-Quellcode, keine
-> Binaries, keine Schemata.
+> **ERiC ist proprietär und wird nicht in dieses Repo eingecheckt.**
+> Der Softwarehersteller-Lizenzvertrag erlaubt es, ERiC zusammen mit der eigenen Software als
+> einheitliches Produkt zu verbreiten (§ 4 Abs. 1); Unterlizenzierung und Übertragung des
+> Nutzungsrechts an Dritte sind verboten (§ 4 Abs. 3). Im Quell-Repo liegt ausschließlich
+> **unser eigener Wrapper** ([`packages/eric`](packages/eric/README.md)) — kein ERiC-Quellcode,
+> keine Binaries, keine Schemata. Geplant: Die offiziellen Release-Builds liefern ERiC mit; die
+> Release-Pipeline holt es aus einem privaten Repo (noch nicht umgesetzt).
 
-Jede Nutzerin und jeder Nutzer lädt ERiC selbst herunter (Entwickler-Registrierung im
+Bis dahin sowie für Forks und Eigenbauten besorgst du ERiC selbst (Entwickler-Registrierung im
 [ELSTER-Entwicklerbereich](https://www.elster.de/eportal/infoseite/entwickler), Lizenz
-selbst akzeptieren) und bringt es über `ERIC_HOME` mit:
+selbst akzeptieren) und bringst es über `ERIC_HOME` mit:
 
 ```bash
 export ERIC_HOME=/pfad/zur/eric/runtime          # enthält lib/libericapi.so
@@ -225,7 +227,7 @@ hinzu: wer dieses Programm **als Netzdienst anbietet**, muss den Nutzern dieses
 Dienstes den Quelltext seiner Fassung zugänglich machen. Wer es lokal für sich
 betreibt, hat dadurch keine zusätzliche Pflicht.
 
-Der Wrapper in `packages/eric` ist eigener Code; **ERiC selbst wird nicht ausgeliefert**
+Der Wrapper in `packages/eric` ist eigener Code; **ERiC selbst liegt nicht im Quell-Repo**
 (siehe oben). Abhängigkeiten mit abweichender Lizenz, die beim Bauen mit hineingezogen
 werden: `lib-fints` (LGPL-2.1-or-later, FinTS-Anbindung), die Adwaita-Symbole (LGPL-3.0-or-later / CC-BY-SA-3.0) und Adwaita Sans (OFL-1.1) in der
 Web-Oberfläche. Wer ein gebündeltes Artefakt weitergibt, muss deren Bedingungen erfüllen.

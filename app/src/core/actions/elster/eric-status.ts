@@ -1,8 +1,8 @@
 /**
  * ERiC library status probe — the read side of the in-app ELSTER submission feature (Phase 1).
  *
- * The ERiC native library is USER-PROVIDED (never shipped, see @steuererklaerung/eric README): the app
- * validates ELSTER XML against it, but the user installs it and points the app at it via
+ * The ERiC native library is not in the source repo (see @steuererklaerung/eric README): the app
+ * validates ELSTER XML against it, and unless a release build bundles it the user installs it and points the app at it via
  * `config.eric_home` / the `ERIC_HOME` env var. This action reports, for a resolved home directory,
  * whether ERiC is available, its version, and (when incomplete) exactly what is missing — so a UI
  * can show the status and let the user set the path.

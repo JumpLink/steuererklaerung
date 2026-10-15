@@ -143,13 +143,16 @@ CAMT/FinTS imports and the built-in document store.
 Submission and the official plausibility check use **ERiC** (ELSTER Rich Client), the native
 library from the Bavarian tax authority.
 
-> **ERiC is not part of this project and must not be redistributed.** The vendor licence
-> forbids passing it on and sublicensing it. This repo ships only our own wrapper
+> **ERiC is proprietary and is not checked into this repo.** The vendor licence (§ 4 (1))
+> allows shipping it together with our own software as one product, but forbids sublicensing
+> and passing the right on (§ 4 (3)). The source repo holds only our own wrapper
 > ([`packages/eric`](packages/eric/README.md)): no ERiC source, no binaries, no schemas.
+> Planned: official release builds bundle ERiC, fetched by the release pipeline from a private
+> repo (not implemented yet).
 
-Each user downloads ERiC themselves (developer registration in the
-[ELSTER developer area](https://www.elster.de/eportal/infoseite/entwickler), accepting the
-licence) and points `ERIC_HOME` at it:
+Until then, and for forks and self-builds, you provide ERiC yourself (developer registration
+in the [ELSTER developer area](https://www.elster.de/eportal/infoseite/entwickler), accepting
+the licence) and point `ERIC_HOME` at it:
 
 ```bash
 export ERIC_HOME=/path/to/eric/runtime           # contains lib/libericapi.so

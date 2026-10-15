@@ -5,7 +5,7 @@
   "author": "Pascal Garber",
   "private": true,
   "type": "module",
-  "description": "ERiC (ELSTER Rich Client) binding for Node (koffi) and GJS (native gi:// typelib). The ERiC native library is user-provided via ERIC_HOME and is NEVER bundled or published — see README.",
+  "description": "ERiC (ELSTER Rich Client) binding for Node (koffi) and GJS (native gi:// typelib). The ERiC native library is proprietary and not part of this package: it is provided via ERIC_HOME (official app builds bundle it separately) — see README.",
   "exports": {
     ".": {
       "browser": "./src/index.gjs.ts",

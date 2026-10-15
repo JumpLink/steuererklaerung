@@ -74,7 +74,8 @@ screenshots, issues or commits. Use the demo data (`app/demo/`, the *Fischer & W
 entity) only. The real config (`steuererklaerung.json`, formerly `buchhaltung.json`), `.env`
 and anything under `app/elster/` are gitignored; keep it that way.
 
-ERiC is never committed, not even encrypted. See
+ERiC is never committed to this repo, not even encrypted (release builds get it from a private
+repo in the pipeline, see the AGENTS.md section on ERiC). See
 [`app/docs/eric-license-considerations.md`](app/docs/eric-license-considerations.md).
 
 ## Security

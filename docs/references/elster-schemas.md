@@ -5,8 +5,9 @@ Welches ELSTER-Verfahren, welche `DatenArt`, welcher Nutzdaten-Root und welches 
 verifiziert (nicht aus dem Gedächtnis). Gegenstück zu [tax-sources.md](tax-sources.md), das die
 steuerrechtlichen *Zahlen* belegt; hier stehen die *technischen* Fakten der Übermittlung.
 
-> Die ERiC-Distribution selbst wird **nie committet** (nicht weiterverteilbar, siehe Memory
-> `eric-lib-not-redistributable` / `eric-local-schemas`). Sie liegt lokal unter `app/elster/`.
+> Die ERiC-Distribution selbst wird **nie ins Quell-Repo committet** (proprietär und
+> versionsgebunden; Mitliefern in Release-Builds erlaubt § 4 Abs. 1 der Herstellerlizenz).
+> Sie liegt lokal unter `app/elster/`.
 
 ## Wo die Wahrheit steht
 

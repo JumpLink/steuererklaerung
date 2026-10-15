@@ -104,12 +104,16 @@ Diese App ist self-service (kein Steuerberater) → jede Zahl muss **gegenprüfb
   (EStH/LStH, jahresgenau) → seriöser Spiegel (nwb/haufe/dejure/finanz-tools) zur Bestätigung.
   ELSTER/ERiC ist die verbindliche Validierung; App-Zahlen sind Schätzung/Vorbereitung.
 
-## ERiC (validation/submission) — bring-your-own, never bundled
+## ERiC (validation/submission) — not in the source repo
 
-- ERiC is the tax authority's native lib: **non-redistributable + version-expiring** →
-  NEVER committed, even encrypted (git-secret is wrong for it — see
-  [`packages/eric/README.md`](packages/eric/README.md)). We ship only our wrapper
+- ERiC is the tax authority's native lib: **proprietary + version-expiring** → NEVER committed
+  to this repo, even encrypted (git-secret is wrong for it — see
+  [`packages/eric/README.md`](packages/eric/README.md)). The repo holds only our wrapper
   (`packages/eric/src` — Vala binding + koffi).
+- The vendor licence (§ 4 (1)) DOES allow shipping ERiC together with our own software as one
+  product. Planned: official release builds fetch ERiC from a private repo in the release
+  pipeline and bundle it. Forks and self-builds keep working with their own ERiC (`ERIC_HOME`).
+  Not yet implemented. Sublicensing and passing the right on to third parties stay forbidden (§ 4 (3)).
 - **Setup:** download ERiC (developer registration at elster.de) into
   `app/elster/runtime/` (= default `ERIC_HOME`) via `elster setup`; build our GJS
   binding once with `gjsify run -w @steuererklaerung/eric build:meson` (needs `ERIC_HOME` +

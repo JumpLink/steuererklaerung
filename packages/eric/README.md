@@ -11,7 +11,7 @@ behind one facade**:
 Consumers just `import { validateXml, checkIBAN, … } from '@steuererklaerung/eric'`;
 the right implementation is resolved automatically per runtime.
 
-## ⚠️ The ERiC library is NOT included (and must not be redistributed)
+## ⚠️ The ERiC library is NOT included in this package
 
 This package ships **only our own wrapper** — the koffi signatures, the Vala
 binding, and a hand-written ABI header (`src/vala/eric-extern.h`). It contains
@@ -20,10 +20,13 @@ binding, and a hand-written ABI header (`src/vala/eric-extern.h`). It contains
 The ERiC shared library (`libericapi.so` + `libotto.so` / `libeSigner.so` /
 `libericxerces.so` + plugins) is provided by the **German tax authorities** under
 the *Softwarehersteller-Lizenzvertrag* (Bayerisches Landesamt für Steuern). That
-license forbids passing ERiC to third parties / sublicensing (§ 4 (3)) and
-restricts use to electronic tax submission (§ 3 (2)). So:
+license allows shipping ERiC together with your own software as one product
+(§ 4 (1)), but forbids sublicensing and passing the right on to third parties
+(§ 4 (3)), and restricts use to electronic tax submission (§ 3 (2)). So:
 
-- **Never commit or publish ERiC binaries/headers** with this package.
+- **Never commit or publish ERiC binaries/headers** with this package or the source repo.
+- Official application builds MAY bundle ERiC (planned: the release pipeline fetches it from a
+  private repo; not implemented yet). Forks and self-builds provide their own.
 - Each user downloads ERiC themselves (developer registration + license
   acceptance) from <https://www.elster.de/eportal/infoseite/entwickler> and runs
   `steuererklaerung-cli elster setup`, or points `ERIC_HOME` at an existing install.
@@ -74,7 +77,8 @@ follow-up if automated submission is ever wanted.)
 ERiC is licensed to us by the Bayerisches Landesamt für Steuern under the
 *Softwarehersteller-Lizenzvertrag*. Three clauses shape everything below:
 
-- **§ 4 (3)** — ERiC may not be passed to third parties or sublicensed.
+- **§ 4 (1)** — ERiC may be shipped together with our own software as one product.
+- **§ 4 (3)** — the right may not be transferred to third parties or sublicensed.
 - **§ 3 (2)** — use is restricted to electronic tax submission.
 - ERiC **versions expire** — the Finanzamt rejects outdated ones.
 
@@ -84,10 +88,10 @@ A private repo eventually goes public **with its full history**, so anything eve
 committed leaks the moment it flips. Keep ERiC out of git **today**.
 
 **`git-secret` does not solve this.** Encrypting + committing still publishes the
-ciphertext, and sharing the decryption key with a contributor *is* passing ERiC to a
-third party (§ 4 (3)). `git-secret` is the right tool for **our own** secrets
+ciphertext, and sharing the decryption key with a contributor would pass the right on to
+a third party (§ 4 (3)). `git-secret` is the right tool for **our own** secrets
 (`.env`, the per-entity `elster-config-*.json` that hold real tax IDs) — never for a
-third-party, expiring, non-redistributable binary. (For per-user tax config the
+third-party, expiring, proprietary binary. (For per-user tax config the
 simpler answer is: don't commit it at all — ship `elster-config.example.json` and
 gitignore the real ones, which is what we do.)
 
@@ -110,7 +114,10 @@ a developer and accepts the licence. We ship only our wrapper.
 
 ### Rule 3 — Flatpak: don't bundle ERiC, fetch it on the user's machine
 
-We can't put ERiC in a Flathub artifact (redistribution). Options, most-realistic first:
+The licence allows bundling ERiC with our own product (§ 4 (1)), so a Flatpak that contains it
+is permitted; what is open is the technical route (the release pipeline would pull ERiC from a
+private repo — not implemented yet, and Flathub's own source/redistribution rules still need
+checking). Until then, options, most-realistic first:
 
 1. **In-app first-run setup (recommended).** The app ships and works without ERiC;
    the first time the user hits *Validieren/Übermitteln*, a guided flow opens the
@@ -140,4 +147,4 @@ build it locally into the gitignored `prebuilds/`.
 ## Licence
 
 [LGPL-3.0-or-later](LICENSE) (see also [COPYING](COPYING)). This covers our wrapper only.
-ERiC itself is proprietary and is never shipped with this package.
+ERiC itself is proprietary and is not part of this package.

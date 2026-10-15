@@ -81,5 +81,7 @@ Grenzen im Flatpak:
 - Pfade außerhalb der eigenen XDG-Ordner (`.env` über `DOTENV_CONFIG_PATH`, cwd-relative
   `steuererklaerung.json`, Belegordner, `~/Downloads`) sind unsichtbar; Dateien kommen nur über den
   Dateiauswahl-Portal herein.
-- ERiC (`ERIC_HOME`) wird nie gebündelt; die ELSTER-Übermittlung ist im Flatpak eine bekannte Grenze.
+- ERiC (`ERIC_HOME`) ist im Flatpak noch nicht gebündelt; die ELSTER-Übermittlung ist dort eine
+  bekannte Grenze. Die Herstellerlizenz erlaubt das Mitliefern (§ 4 Abs. 1), geplant über ein
+  privates Repo in der Release-Pipeline.
 - Der MCP-Server läuft als `flatpak run … mcp` im selben Sandkasten.

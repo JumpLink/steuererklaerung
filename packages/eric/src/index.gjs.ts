@@ -5,7 +5,8 @@
  * here we only translate return codes into the same shapes the Node (koffi) build
  * produces.
  *
- * The ERiC shared library is USER-PROVIDED (ERIC_HOME) and never shipped. At
+ * The ERiC shared library is not part of this package; it comes from ERIC_HOME (or an official
+ * release build that bundles it). At
  * runtime, the package's prebuilds must be on GI_TYPELIB_PATH/LD_LIBRARY_PATH
  * (the gjsify CLI injects these automatically for installed native packages) and
  * `$ERIC_HOME/lib` must be on LD_LIBRARY_PATH so libericapi.so + its dependencies
