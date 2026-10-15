@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-15 11:29+0200\n"
+"POT-Creation-Date: 2026-10-15 14:15+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -69,17 +69,16 @@ msgid ""
 "stated purpose.\""
 msgstr ""
 "Datenschutzhinweis durch die Finanzverwaltung:\n"
-"\"Mit dieser Software werden personenbezogene Daten im Sinne des Art. "
-"4 Nr. 1 Datenschutzgrundverordnung (DSGVO) und Art. 9 Abs. 1 DSGVO zum"
-" Zwecke der Verarbeitung erhoben. Neben den reinen Daten, die zur "
-"Steuerveranlagung benötigt werden, erhebt die Software Daten über die "
-"Art des Betriebssystems des Nutzers und übermittelt diese an die "
-"Finanzverwaltung. Diese Daten werden benötigt, um die ordnungsgemäße "
-"Verarbeitung der Daten sicherzustellen und Fehlern im "
-"Verarbeitungsprozess vorzubeugen. Die Nutzung der Daten erfolgt im "
-"Rahmen des Art. 6 Abs. 1 UAbs. 1 Buchst. e i.V.m. Abs. 3 UAbs. 1 "
-"Buchst. b DSGVO i.V.m. bundes- bzw. landesgesetzlicher Steuergesetze "
-"durch die Finanzverwaltung und nur für den genannten Zweck.\""
+"\"Mit dieser Software werden personenbezogene Daten im Sinne des Art. 4 Nr. "
+"1 Datenschutzgrundverordnung (DSGVO) und Art. 9 Abs. 1 DSGVO zum Zwecke der "
+"Verarbeitung erhoben. Neben den reinen Daten, die zur Steuerveranlagung "
+"benötigt werden, erhebt die Software Daten über die Art des Betriebssystems "
+"des Nutzers und übermittelt diese an die Finanzverwaltung. Diese Daten "
+"werden benötigt, um die ordnungsgemäße Verarbeitung der Daten "
+"sicherzustellen und Fehlern im Verarbeitungsprozess vorzubeugen. Die Nutzung "
+"der Daten erfolgt im Rahmen des Art. 6 Abs. 1 UAbs. 1 Buchst. e i.V.m. Abs. "
+"3 UAbs. 1 Buchst. b DSGVO i.V.m. bundes- bzw. landesgesetzlicher "
+"Steuergesetze durch die Finanzverwaltung und nur für den genannten Zweck.\""
 
 #: src/core/actions/elster/privacy-ack.ts:78
 msgid ""
@@ -87,10 +86,10 @@ msgid ""
 "computer, in {path}, and stay here. They are only passed on to the software "
 "vendor in a support case, and only with your explicit permission."
 msgstr ""
-"Bei der Arbeit von ERiC werden Protokolldateien erstellt. Sie werden "
-"lokal auf diesem Rechner gespeichert, in {path}, und verbleiben hier. "
-"Lediglich im Supportfall können sie nach deiner ausdrücklichen "
-"Erlaubnis an den Softwarehersteller übermittelt werden."
+"Bei der Arbeit von ERiC werden Protokolldateien erstellt. Sie werden lokal "
+"auf diesem Rechner gespeichert, in {path}, und verbleiben hier. Lediglich im "
+"Supportfall können sie nach deiner ausdrücklichen Erlaubnis an den "
+"Softwarehersteller übermittelt werden."
 
 #: src/core/actions/elster/submit.ts:271
 msgid ""
@@ -98,9 +97,9 @@ msgid ""
 "read and confirm it first (desktop: it appears before sending; CLI: `elster "
 "datenschutz`)."
 msgstr ""
-"Der Datenschutzhinweis der Finanzverwaltung wurde noch nicht bestätigt"
-" — erst lesen und bestätigen (Desktop: erscheint vor dem Versand; CLI:"
-" `elster datenschutz`)."
+"Der Datenschutzhinweis der Finanzverwaltung wurde noch nicht bestätigt — "
+"erst lesen und bestätigen (Desktop: erscheint vor dem Versand; CLI: `elster "
+"datenschutz`)."
 
 #: src/core/actions/fints-statements.ts:150
 msgid "This DMS cannot list documents by type."
@@ -199,21 +198,34 @@ msgstr ""
 "Es ist kein KI-Agent installiert. Installiere opencode oder wähle eine "
 "andere KI-Engine."
 
+#: src/core/lib/edition-badges.ts:29
+msgid "Open Source"
+msgstr "Open Source"
+
+#: src/core/lib/edition-badges.ts:30
+msgid "Thank you for using open source software."
+msgstr "Danke, dass du Open-Source-Software nutzt."
+
+#: src/core/lib/edition-badges.ts:34
+msgid "Supporter"
+msgstr "Unterstützer"
+
+#: src/core/lib/edition-badges.ts:35
+msgid "You supported this open source project by buying the app. Thank you!"
+msgstr "Mit dem Kauf der App hast du dieses Open-Source-Projekt unterstützt. Danke!"
+
 #: src/frontends/cli/elster/datenschutz.ts:36
 msgid "Confirmed on {date}."
-msgstr ""
-"Bestätigt am {date}."
+msgstr "Bestätigt am {date}."
 
 #: src/frontends/cli/elster/datenschutz.ts:42
 msgid "Already confirmed on {date}."
-msgstr ""
-"Bereits bestätigt am {date}."
+msgstr "Bereits bestätigt am {date}."
 
 #: src/frontends/cli/elster/datenschutz.ts:43
 msgid "Not confirmed yet. Run again with --bestaetigen once you have read it."
 msgstr ""
-"Noch nicht bestätigt. Nach dem Lesen erneut mit --bestaetigen "
-"ausführen."
+"Noch nicht bestätigt. Nach dem Lesen erneut mit --bestaetigen ausführen."
 
 #. TRANSLATORS: Title of the AI assistant side panel
 #. TRANSLATORS: Title of the side panel holding the external coding agent
@@ -360,10 +372,19 @@ msgstr "de"
 msgid "Documentation"
 msgstr "Dokumentation"
 
-#: src/frontends/desktop/main.ts:115
+#: src/frontends/desktop/main.ts:116
 #: src/frontends/desktop/views/support-dialog.ts:32
 msgid "Support"
 msgstr "Unterstützen"
+
+#: src/frontends/desktop/main.ts:118
+msgid ""
+"Native Adwaita interface for the tax return — alongside the web interface, "
+"on the same backend (store, EÜR/tax reports, receipts, contacts)."
+msgstr ""
+"Native Adwaita-Oberfläche für die Steuererklärung — parallel zur "
+"Web-Oberfläche, auf demselben Backend (Store, EÜR/Steuer-Reports, Belege, "
+"Kontakte)."
 
 #: src/frontends/desktop/nav.ts:54
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:532
@@ -1212,28 +1233,23 @@ msgstr "Beleg konnte nicht gespeichert werden"
 
 #: src/frontends/desktop/views/datenschutz-dialog.ts:38
 msgid "Privacy notice for ELSTER transmissions"
-msgstr ""
-"Datenschutzhinweis für ELSTER-Übermittlungen"
+msgstr "Datenschutzhinweis für ELSTER-Übermittlungen"
 
 #: src/frontends/desktop/views/datenschutz-dialog.ts:55
 msgid "Open the full privacy letter (PDF)"
-msgstr ""
-"Vollständiges Datenschutzschreiben öffnen (PDF)"
+msgstr "Vollständiges Datenschutzschreiben öffnen (PDF)"
 
 #: src/frontends/desktop/views/datenschutz-dialog.ts:55
 msgid "Open the privacy letter on elster.de"
-msgstr ""
-"Datenschutzschreiben auf elster.de öffnen"
+msgstr "Datenschutzschreiben auf elster.de öffnen"
 
 #: src/frontends/desktop/views/datenschutz-dialog.ts:68
 msgid "I have read the privacy notice and the privacy letter."
-msgstr ""
-"Ich habe den Datenschutzhinweis und das Datenschutzschreiben gelesen."
+msgstr "Ich habe den Datenschutzhinweis und das Datenschutzschreiben gelesen."
 
 #: src/frontends/desktop/views/datenschutz-dialog.ts:73
 msgid "Confirm"
-msgstr ""
-"Bestätigen"
+msgstr "Bestätigen"
 
 #: src/frontends/desktop/views/dialogs.ts:42
 msgid "OK"

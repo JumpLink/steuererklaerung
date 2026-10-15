@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-15 11:29+0200\n"
+"POT-Creation-Date: 2026-10-15 14:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -157,6 +157,22 @@ msgstr ""
 
 #: src/core/clients/llm/job-error.ts:63
 msgid "No AI agent is installed. Install opencode or choose another AI engine."
+msgstr ""
+
+#: src/core/lib/edition-badges.ts:29
+msgid "Open Source"
+msgstr ""
+
+#: src/core/lib/edition-badges.ts:30
+msgid "Thank you for using open source software."
+msgstr ""
+
+#: src/core/lib/edition-badges.ts:34
+msgid "Supporter"
+msgstr ""
+
+#: src/core/lib/edition-badges.ts:35
+msgid "You supported this open source project by buying the app. Thank you!"
 msgstr ""
 
 #: src/frontends/cli/elster/datenschutz.ts:36
@@ -313,9 +329,15 @@ msgstr ""
 msgid "Documentation"
 msgstr ""
 
-#: src/frontends/desktop/main.ts:115
+#: src/frontends/desktop/main.ts:116
 #: src/frontends/desktop/views/support-dialog.ts:32
 msgid "Support"
+msgstr ""
+
+#: src/frontends/desktop/main.ts:118
+msgid ""
+"Native Adwaita interface for the tax return — alongside the web interface, "
+"on the same backend (store, EÜR/tax reports, receipts, contacts)."
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:54
