@@ -23,7 +23,11 @@ export default async () => {
         });
 
         await it('leaves an ASCII path untouched', async () => {
-            const out = eric8bitPath('/opt/eric/plugins', { shortPath: never, fallbackDir: '/tmp/x', copyAs: 'plugins' });
+            const out = eric8bitPath('/opt/eric/plugins', {
+                shortPath: never,
+                fallbackDir: '/tmp/x',
+                copyAs: 'plugins',
+            });
             expect(out).toBe('/opt/eric/plugins');
         });
 
@@ -53,7 +57,11 @@ export default async () => {
 
         await it('returns the original when nothing works, so the real error shows', async () => {
             const missing = join(tmpdir(), 'does-not-exist-ä', 'plugins');
-            const out = eric8bitPath(missing, { shortPath: () => undefined, fallbackDir: join(tmpdir(), 'a'), copyAs: 'plugins' });
+            const out = eric8bitPath(missing, {
+                shortPath: () => undefined,
+                fallbackDir: join(tmpdir(), 'a'),
+                copyAs: 'plugins',
+            });
             expect(out).toBe(missing);
             expect(existsSync(join(tmpdir(), 'a', 'plugins'))).toBe(false);
         });
