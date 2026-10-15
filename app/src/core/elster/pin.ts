@@ -10,8 +10,8 @@
  *   1. an explicit argument — unchanged, for scripts that already pass one
  *   2. `ELSTER_PIN` — the same shape FinTS already uses (`FINTS_PIN_<name>`), so an operator
  *      only has to learn the pattern once
- *   3. the login keyring, via `secret-tool` — the only one that survives a reboot without
- *      putting the secret in a file. Store it once with {@link storePinInKeyring}.
+ *   3. the OS secret store (`core/secrets/store.ts`: Secret Service, macOS Keychain, Windows DPAPI)
+ *      — the only one that survives a reboot without putting the secret in a plain file. Store it once with {@link storePinInKeyring}.
  *
  * A GUI prompt is deliberately NOT here: the desktop app already asks for the PIN in its own
  * masked dialog, and a CLI that pops up a window would be surprising in a script.
@@ -20,7 +20,7 @@
  * back is handed straight to ERiC for one call.
  */
 
-import { execFileSync } from 'node:child_process';
+import { secretStore, type SecretRef } from '../secrets/store.ts';
 
 /** Keyring lookup attributes — one entry per certificate path, so several keystores can coexist. */
 const KEYRING_SERVICE = 'de.elster.keystore';
@@ -33,19 +33,17 @@ export interface ResolvedPin {
     source: PinSource;
 }
 
-/** Ask `secret-tool` for a stored PIN. Returns undefined when absent, locked, or unavailable. */
+const ref = (keystorePath: string): SecretRef => ({
+    service: KEYRING_SERVICE,
+    attribute: 'keystore',
+    id: keystorePath,
+});
+
+/** Ask the secret store for a PIN. Returns undefined when absent, locked, or no store exists. */
 function pinFromKeyring(keystorePath: string): string | undefined {
-    try {
-        const out = execFileSync('secret-tool', ['lookup', 'service', KEYRING_SERVICE, 'keystore', keystorePath], {
-            encoding: 'utf8',
-            stdio: ['ignore', 'pipe', 'ignore'],
-        });
-        return out.trim() || undefined;
-    } catch {
-        // No entry, no secret-tool, or a locked keyring — all mean "not available here", and none
-        // of them is an error worth aborting on: the caller still has the other sources.
-        return undefined;
-    }
+    // Absent, a locked keyring or no store at all all mean "not available here", and none of them
+    // is an error worth aborting on: the caller still has the other sources.
+    return secretStore()?.get(ref(keystorePath))?.trim() || undefined;
 }
 
 /**
@@ -72,27 +70,18 @@ export function resolveElsterPin(explicit: string | undefined, keystorePath: str
 }
 
 /**
- * Put the PIN into the login keyring, read from stdin so it never becomes an argument.
- *
- * `secret-tool store` reads the secret from stdin by design — that is why it is used here rather
- * than the libsecret GIR binding: the same call works under GJS and Node, and the secret never
- * travels as a parameter.
+ * Put the PIN into the OS secret store. It reaches the backend on stdin, never as an argument.
+ * Throws when there is no store or it refuses, so the CLI can say the PIN was NOT saved.
  */
 export function storePinInKeyring(keystorePath: string, pin: string): void {
-    execFileSync(
-        'secret-tool',
-        ['store', '--label', `ELSTER-Zertifikat ${keystorePath}`, 'service', KEYRING_SERVICE, 'keystore', keystorePath],
-        { input: pin, encoding: 'utf8', stdio: ['pipe', 'ignore', 'pipe'] },
-    );
+    const store = secretStore();
+    if (!store) throw new Error('Auf diesem System gibt es keinen Schlüsselbund für die PIN.');
+    if (!store.set(ref(keystorePath), pin, `ELSTER-Zertifikat ${keystorePath}`)) {
+        throw new Error('Der Schlüsselbund hat die PIN nicht angenommen (entsperrt?).');
+    }
 }
 
 /** Remove a stored PIN. Idempotent — clearing what is not there is not an error. */
 export function clearPinFromKeyring(keystorePath: string): void {
-    try {
-        execFileSync('secret-tool', ['clear', 'service', KEYRING_SERVICE, 'keystore', keystorePath], {
-            stdio: ['ignore', 'ignore', 'ignore'],
-        });
-    } catch {
-        // Nothing stored, or no secret-tool: either way there is nothing left to clear.
-    }
+    secretStore()?.delete(ref(keystorePath));
 }
