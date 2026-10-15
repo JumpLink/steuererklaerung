@@ -129,7 +129,13 @@ export default async () => {
                 JSON.stringify({
                     ...JSON.parse(MANIFEST),
                     entities: [
-                        { id: 'test', name: 'Test GbR', kind: 'gbr', accounts: ['camt:test'], dms: { type: 'paperless' } },
+                        {
+                            id: 'test',
+                            name: 'Test GbR',
+                            kind: 'gbr',
+                            accounts: ['camt:test'],
+                            dms: { type: 'paperless' },
+                        },
                     ],
                 }),
             );
