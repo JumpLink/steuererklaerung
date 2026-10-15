@@ -111,6 +111,11 @@ jobs:
       - name: Build GJS bundle
         run: cd app && gjsify run build:gjs
 
+      # The web client is a separate Vite build; a missing dependency there (@gjsify/app-settings,
+      # stubbed as an optional peer) only surfaced when someone ran the full `build`.
+      - name: Build web client
+        run: cd app && gjsify run build:web
+
       - name: Assert koffi stays out of the GJS bundle
         run: |
           if grep -q "koffi" app/dist/steuer.gjs.mjs; then

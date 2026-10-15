@@ -512,6 +512,13 @@
   },
   {
     "type": "file",
+    "url": "https://registry.npmjs.org/@gjsify/app-settings/-/app-settings-0.64.1-next.240.tgz",
+    "dest": "flatpak-gjsify-cache/gjsify/tarballs/v1/sha512/83",
+    "dest-filename": "832ebb583d11b6c301d7126768f8ac1523bffed8a3843f7b8451eafd70a766d7a461a2162b704090094e67dea1cff8a4b7f39e294a82673c74e7bdcad5af684c.tgz",
+    "sha512": "832ebb583d11b6c301d7126768f8ac1523bffed8a3843f7b8451eafd70a766d7a461a2162b704090094e67dea1cff8a4b7f39e294a82673c74e7bdcad5af684c"
+  },
+  {
+    "type": "file",
     "url": "https://registry.npmjs.org/@gjsify/assert/-/assert-0.64.1-next.240.tgz",
     "dest": "flatpak-gjsify-cache/gjsify/tarballs/v1/sha512/95",
     "dest-filename": "95f860bcf5a45ee3cd350fe015a9b8ae5f44c9043149bf5d8d69ca50445243fb0ab0ba908dca217a3570305ab684f6e62c793be4eb496015e334db8e45573d58.tgz",

@@ -32,6 +32,7 @@
     "@gjsify/adwaita-app@0.64.1-next.240",
     "@gjsify/adwaita-fonts@0.64.1-next.240",
     "@gjsify/adwaita-web@0.64.1-next.240",
+    "@gjsify/app-settings@0.64.1-next.240",
     "@gjsify/devtools@0.64.1-next.240",
     "@gjsify/distribution@0.64.1-next.240",
     "@gjsify/node-gi@0.64.0",
@@ -969,6 +970,19 @@
       },
       "peerDependenciesMeta": {
         "@gjsify/app-settings": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/@gjsify/app-settings": {
+      "version": "0.64.1-next.240",
+      "resolved": "https://registry.npmjs.org/@gjsify/app-settings/-/app-settings-0.64.1-next.240.tgz",
+      "integrity": "sha512-gy67WD0RtsMB1xJnaPisFSO//tijhD97hFHq/XCnZtekYaIWK3BAkAlOZ96hz/ikt/OeKUqCZzx0573K1a9oTA==",
+      "peerDependencies": {
+        "@nativescript/core": "*"
+      },
+      "peerDependenciesMeta": {
+        "@nativescript/core": {
           "optional": true
         }
       }
