@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-15 14:15+0200\n"
+"POT-Creation-Date: 2026-10-15 22:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -192,7 +192,7 @@ msgstr ""
 #. TRANSLATORS: Tooltip on the button revealing the AI assistant side panel
 #: src/frontends/desktop/assistent-panel.blp:30
 #: src/frontends/desktop/lotse-panel.blp:26
-#: src/frontends/desktop/views/einstellungen-view.blp:54
+#: src/frontends/desktop/views/einstellungen-view.blp:55
 #: src/frontends/desktop/views/tab-hub.ts:182
 #: src/frontends/desktop/window.blp:160
 msgid "Assistant"
@@ -289,7 +289,7 @@ msgstr ""
 #: src/frontends/desktop/views/entity-dialogs.ts:101
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:465
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:76
-#: src/frontends/desktop/window.ts:256
+#: src/frontends/desktop/window.ts:258
 msgid "Cancel"
 msgstr ""
 
@@ -383,7 +383,7 @@ msgid "timer & unbilled hours"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:59
-#: src/frontends/desktop/views/einstellungen-view.ts:74
+#: src/frontends/desktop/views/einstellungen-view.ts:75
 msgid "Contacts"
 msgstr ""
 
@@ -425,7 +425,7 @@ msgid "customer · costs · result"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:79
-#: src/frontends/desktop/views/einstellungen-view.ts:75
+#: src/frontends/desktop/views/einstellungen-view.ts:76
 #: src/frontends/desktop/views/vertraege-view.blp:90
 msgid "Contracts"
 msgstr ""
@@ -673,8 +673,8 @@ msgstr ""
 #: src/frontends/desktop/views/rechnung-detail-dialog.blp:41
 #: src/frontends/desktop/views/rechnungen-view.blp:32
 #: src/frontends/desktop/views/transactions-view.blp:32
-#: src/frontends/desktop/views/util.ts:409
-#: src/frontends/desktop/views/util.ts:412
+#: src/frontends/desktop/views/util.ts:442
+#: src/frontends/desktop/views/util.ts:445
 #: src/frontends/desktop/views/vertraege-view.blp:54
 #: src/frontends/desktop/views/zu-pruefen-view.blp:33
 msgid "Could not load"
@@ -724,7 +724,7 @@ msgid "Could not determine candidate transactions"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:315
-#: src/frontends/desktop/views/util.ts:427
+#: src/frontends/desktop/views/util.ts:460
 msgid "Try again"
 msgstr ""
 
@@ -1288,7 +1288,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:41
 #: src/frontends/desktop/views/welcome.ts:201
-#: src/frontends/desktop/window.ts:631
+#: src/frontends/desktop/window.ts:651
 msgid "Use my own data"
 msgstr ""
 
@@ -1470,193 +1470,193 @@ msgstr ""
 msgid "ELSTER returns, tax forecast, tax deadlines and the Tax area"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.blp:31
+#: src/frontends/desktop/views/einstellungen-view.blp:32
 msgid "General"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.blp:35
+#: src/frontends/desktop/views/einstellungen-view.blp:36
 msgid "Backup"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.blp:36
+#: src/frontends/desktop/views/einstellungen-view.blp:37
 msgid ""
 "A copy of your configuration, transactions and receipts. Restoring is done "
 "by hand, see the manual."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.blp:45
+#: src/frontends/desktop/views/einstellungen-view.blp:46
 msgid "Clarity"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.blp:49
+#: src/frontends/desktop/views/einstellungen-view.blp:50
 msgctxt "sync settings"
 msgid "Sync"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.blp:50
+#: src/frontends/desktop/views/einstellungen-view.blp:51
 msgid ""
 "Fetches new data in the background. Bank fetches with TAN/PIN and ELSTER "
 "never run automatically."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.blp:59
+#: src/frontends/desktop/views/einstellungen-view.blp:60
 msgid ""
 "Connect external assistants — changes take effect the next time the MCP "
 "server starts."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.blp:63
+#: src/frontends/desktop/views/einstellungen-view.blp:64
 msgid "MCP tool groups"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.blp:64
+#: src/frontends/desktop/views/einstellungen-view.blp:65
 msgid "Which groups are visible to the outside."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:65
+#: src/frontends/desktop/views/einstellungen-view.ts:66
 msgid "Documents (DMS)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:68
+#: src/frontends/desktop/views/einstellungen-view.ts:69
 msgctxt "MCP tool group"
 msgid "Transactions"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:69
+#: src/frontends/desktop/views/einstellungen-view.ts:70
 msgctxt "auto-matching"
 msgid "Matching"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:70
+#: src/frontends/desktop/views/einstellungen-view.ts:71
 msgid "Document workflow"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:73
+#: src/frontends/desktop/views/einstellungen-view.ts:74
 msgid "Invoices (self)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:167
+#: src/frontends/desktop/views/einstellungen-view.ts:168
 msgid "AI engine"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:171
+#: src/frontends/desktop/views/einstellungen-view.ts:172
 msgid "set via LLM_PROVIDER"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:171
+#: src/frontends/desktop/views/einstellungen-view.ts:172
 msgid "default"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:172
+#: src/frontends/desktop/views/einstellungen-view.ts:173
 msgid "Not configured — check LLM_PROVIDER."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:177
-#: src/frontends/desktop/views/einstellungen-view.ts:190
+#: src/frontends/desktop/views/einstellungen-view.ts:178
+#: src/frontends/desktop/views/einstellungen-view.ts:191
 msgid "Test connection"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:178
+#: src/frontends/desktop/views/einstellungen-view.ts:179
 msgid "Asks the model a tiny question — costs a few tokens."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:181
+#: src/frontends/desktop/views/einstellungen-view.ts:182
 msgid "Testing …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:186
+#: src/frontends/desktop/views/einstellungen-view.ts:187
 msgid "AI engine does not respond: {message}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:205
+#: src/frontends/desktop/views/einstellungen-view.ts:206
 msgid "Settings not available: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:212
+#: src/frontends/desktop/views/einstellungen-view.ts:213
 msgid "Learning mode"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:213
+#: src/frontends/desktop/views/einstellungen-view.ts:214
 msgid ""
 "Shows a “?” next to technical terms — Overview, Reports, USt-VA (VAT return) "
 "and the master data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:222
+#: src/frontends/desktop/views/einstellungen-view.ts:223
 msgid "Sync automatically"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:223
+#: src/frontends/desktop/views/einstellungen-view.ts:224
 msgid "At start-up and then at fixed intervals, without blocking the view"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:231
+#: src/frontends/desktop/views/einstellungen-view.ts:232
 msgid "Invoices (Qonto)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:231
-#: src/frontends/desktop/views/einstellungen-view.ts:233
+#: src/frontends/desktop/views/einstellungen-view.ts:232
+#: src/frontends/desktop/views/einstellungen-view.ts:234
 msgid "Minutes, at least 5; 0 = off"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:232
+#: src/frontends/desktop/views/einstellungen-view.ts:233
 msgid "Transactions (Qonto)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:232
+#: src/frontends/desktop/views/einstellungen-view.ts:233
 msgid "Minutes, at least 15 (rate limit); 0 = off"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:233
+#: src/frontends/desktop/views/einstellungen-view.ts:234
 msgid "Receipts (Paperless)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:242
+#: src/frontends/desktop/views/einstellungen-view.ts:243
 msgid "MCP server for external agents"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:243
+#: src/frontends/desktop/views/einstellungen-view.ts:244
 msgid "Claude, Cursor, VS Code … — the built-in assistant does not need it"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:252
+#: src/frontends/desktop/views/einstellungen-view.ts:253
 msgid "Allow writing tools"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:253
+#: src/frontends/desktop/views/einstellungen-view.ts:254
 msgid "Expose mutating MCP tools (default: read-only)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:260
+#: src/frontends/desktop/views/einstellungen-view.ts:261
 msgid "Connect an external agent …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:309
-#: src/frontends/desktop/views/einstellungen-view.ts:422
+#: src/frontends/desktop/views/einstellungen-view.ts:310
+#: src/frontends/desktop/views/einstellungen-view.ts:426
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:254
 #: src/frontends/desktop/views/umbuchen-dialog.ts:251
 msgid "Could not save: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:335
+#: src/frontends/desktop/views/einstellungen-view.ts:338
 msgid "Could not read connections: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:356
+#: src/frontends/desktop/views/einstellungen-view.ts:360
 msgid "Could not read the ELSTER configuration: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:380
+#: src/frontends/desktop/views/einstellungen-view.ts:384
 msgid "Could not read the ESt (income tax) configuration: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:407
+#: src/frontends/desktop/views/einstellungen-view.ts:411
 msgid ""
 "The configuration was changed from outside in the meantime (CLI, MCP or a "
 "second window). The view is reloaded — please repeat the input."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:420
+#: src/frontends/desktop/views/einstellungen-view.ts:424
 msgid "Saved"
 msgstr ""
 
@@ -2830,27 +2830,27 @@ msgstr ""
 
 #: src/frontends/desktop/views/rechnungen-view.ts:75
 #: src/frontends/desktop/views/rechnungen-view.ts:410
-#: src/frontends/desktop/views/util.ts:69
+#: src/frontends/desktop/views/util.ts:70
 msgctxt "invoice status"
 msgid "Open"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnungen-view.ts:76
 #: src/frontends/desktop/views/rechnungen-view.ts:415
-#: src/frontends/desktop/views/util.ts:70
+#: src/frontends/desktop/views/util.ts:71
 msgctxt "invoice status"
 msgid "Overdue"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnungen-view.ts:77
 #: src/frontends/desktop/views/rechnungen-view.ts:421
-#: src/frontends/desktop/views/util.ts:71
+#: src/frontends/desktop/views/util.ts:72
 msgctxt "invoice status"
 msgid "Paid"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnungen-view.ts:78
-#: src/frontends/desktop/views/util.ts:72
+#: src/frontends/desktop/views/util.ts:73
 msgctxt "invoice status"
 msgid "Cancelled"
 msgstr ""
@@ -3370,7 +3370,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:63
 #: src/frontends/desktop/views/setup-assistant.ts:468
-#: src/frontends/desktop/window.ts:698
+#: src/frontends/desktop/window.ts:718
 msgid "Private"
 msgstr ""
 
@@ -3540,7 +3540,7 @@ msgid "Dauerfristverlängerung: every VAT return is due one month later."
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:424
-#: src/frontends/desktop/window.ts:698
+#: src/frontends/desktop/window.ts:718
 msgid "Business"
 msgstr ""
 
@@ -4101,107 +4101,111 @@ msgstr ""
 msgid "Could not revert: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:55
+#: src/frontends/desktop/views/util.ts:56
 msgid "{what} saved"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:68
+#: src/frontends/desktop/views/util.ts:69
 msgctxt "invoice status"
 msgid "Draft"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:77
+#: src/frontends/desktop/views/util.ts:78
 msgctxt "month abbreviation"
 msgid "Jan"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:78
+#: src/frontends/desktop/views/util.ts:79
 msgctxt "month abbreviation"
 msgid "Feb"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:79
+#: src/frontends/desktop/views/util.ts:80
 msgctxt "month abbreviation"
 msgid "Mar"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:80
+#: src/frontends/desktop/views/util.ts:81
 msgctxt "month abbreviation"
 msgid "Apr"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:81
+#: src/frontends/desktop/views/util.ts:82
 msgctxt "month abbreviation"
 msgid "May"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:82
+#: src/frontends/desktop/views/util.ts:83
 msgctxt "month abbreviation"
 msgid "Jun"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:83
+#: src/frontends/desktop/views/util.ts:84
 msgctxt "month abbreviation"
 msgid "Jul"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:84
+#: src/frontends/desktop/views/util.ts:85
 msgctxt "month abbreviation"
 msgid "Aug"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:85
+#: src/frontends/desktop/views/util.ts:86
 msgctxt "month abbreviation"
 msgid "Sep"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:86
+#: src/frontends/desktop/views/util.ts:87
 msgctxt "month abbreviation"
 msgid "Oct"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:87
+#: src/frontends/desktop/views/util.ts:88
 msgctxt "month abbreviation"
 msgid "Nov"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:88
+#: src/frontends/desktop/views/util.ts:89
 msgctxt "month abbreviation"
 msgid "Dec"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:362
+#: src/frontends/desktop/views/util.ts:360
+msgid "Could not refresh — showing the previous data"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:395
 msgid "Not set up yet"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:364
+#: src/frontends/desktop/views/util.ts:397
 msgid ""
 "There is no configuration yet. The assistant creates it — entity, "
 "Steuernummer (tax number) and where the data should live."
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:367
+#: src/frontends/desktop/views/util.ts:400
 msgid "Start setup"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:372
+#: src/frontends/desktop/views/util.ts:405
 msgid "{capability} needs Paperless"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:373
+#: src/frontends/desktop/views/util.ts:406
 msgid "Receipt management can be switched in the settings."
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:374
-#: src/frontends/desktop/views/util.ts:384
+#: src/frontends/desktop/views/util.ts:407
+#: src/frontends/desktop/views/util.ts:417
 msgid "Go to settings"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:379
+#: src/frontends/desktop/views/util.ts:412
 msgid "Paperless is not set up yet"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:381
+#: src/frontends/desktop/views/util.ts:414
 msgid ""
 "Paperless lacks the document types and custom fields the figures are read "
 "from. They can be created in the settings."
@@ -5393,48 +5397,48 @@ msgstr ""
 msgid "Sync"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:250
+#: src/frontends/desktop/window.ts:252
 msgid "Switch to the demo?"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:250
+#: src/frontends/desktop/window.ts:252
 msgid "Switch to your own data?"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:253
+#: src/frontends/desktop/window.ts:255
 msgid ""
 "The app restarts with fictional sample data. Your own data is not changed."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:254
+#: src/frontends/desktop/window.ts:256
 msgid "The app restarts with your own data. The demo data stays separate."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:257
+#: src/frontends/desktop/window.ts:259
 msgid "Restart"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:270
+#: src/frontends/desktop/window.ts:272
 msgid "Please restart the app yourself to switch."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:623
+#: src/frontends/desktop/window.ts:643
 msgid "Data could not be loaded completely: {error}"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:630
+#: src/frontends/desktop/window.ts:650
 msgid "Demo data – fictional examples, no real financial data"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:660
+#: src/frontends/desktop/window.ts:680
 msgid "Setup is not finished: no business or private tax return is set up yet."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:661
+#: src/frontends/desktop/window.ts:681
 msgid "Setup is not finished: “{entity}” has no bank account yet."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:766
+#: src/frontends/desktop/window.ts:786
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."

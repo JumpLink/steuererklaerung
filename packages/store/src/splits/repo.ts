@@ -42,15 +42,24 @@ function log(db: LedgerDatabase, action: string, txId: string, detail: Record<st
   );
 }
 
+/** Above this many ids a scoped read scans the table instead of binding every id. */
+const BIND_LIMIT = 200;
+
 /** Every stored part, or the parts of the given transaction ids — ordered by tx, then part number. */
 export function getBookingSplits(db: LedgerDatabase, transactionIds?: readonly string[]): SplitPartRecord[] {
   if (transactionIds && transactionIds.length === 0) return [];
   let rows: SplitPartRow[];
-  if (transactionIds) {
+  if (transactionIds && transactionIds.length <= BIND_LIMIT) {
     const ph = transactionIds.map(() => "?").join(", ");
     rows = db
       .prepare(`SELECT * FROM booking_splits WHERE tx_id IN (${ph}) ORDER BY tx_id, part_no`)
       .all(...transactionIds) as unknown as SplitPartRow[];
+  } else if (transactionIds) {
+    // Thousands of bound parameters cost far more than reading the (small) split table once.
+    const wanted = new Set(transactionIds);
+    rows = (
+      db.prepare(`SELECT * FROM booking_splits ORDER BY tx_id, part_no`).all() as unknown as SplitPartRow[]
+    ).filter((r) => wanted.has(r.tx_id));
   } else {
     rows = db.prepare(`SELECT * FROM booking_splits ORDER BY tx_id, part_no`).all() as unknown as SplitPartRow[];
   }

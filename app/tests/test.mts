@@ -169,6 +169,7 @@ import forderungen from './unit/invoices/forderungen.test.ts';
 import sqliteBinding from './unit/lib/sqlite-binding.test.ts';
 import contacts from './unit/lib/contacts.test.ts';
 import classifications from './unit/lib/classifications.test.ts';
+import ledgerBulkReads from './unit/lib/ledger-bulk-reads.test.ts';
 import steuernummer from './unit/lib/steuernummer.test.ts';
 import usteAggregate from './unit/lib/uste-aggregate.test.ts';
 import usteXml from './unit/lib/uste-xml.test.ts';
@@ -382,6 +383,7 @@ run({
     sqliteBinding,
     contacts,
     classifications,
+    ledgerBulkReads,
     steuernummer,
     usteAggregate,
     usteXml,

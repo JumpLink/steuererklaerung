@@ -84,6 +84,9 @@ export function getClassifications(
  * Manual overrides ONLY — the subset the EÜR aggregate honours: `source='manual'` rows that carry a
  * category. Optionally scoped to a set of transaction ids (the year's bookings). Keyed by tx id.
  */
+/** Above this many ids a scoped read scans the table instead of binding every id. */
+const BIND_LIMIT = 200;
+
 export function getManualOverrides(
   db: LedgerDatabase,
   transactionIds?: string[],
@@ -91,7 +94,7 @@ export function getManualOverrides(
   const out = new Map<string, ClassificationRecord>();
   if (transactionIds && transactionIds.length === 0) return out;
   let rows: ClassificationRow[];
-  if (transactionIds) {
+  if (transactionIds && transactionIds.length <= BIND_LIMIT) {
     const placeholders = transactionIds.map(() => "?").join(", ");
     rows = db
       .prepare(
@@ -99,6 +102,14 @@ export function getManualOverrides(
                  WHERE source = 'manual' AND category IS NOT NULL AND transaction_id IN (${placeholders})`,
       )
       .all(...transactionIds) as unknown as ClassificationRow[];
+  } else if (transactionIds) {
+    // Thousands of bound parameters cost far more than reading the (small) decision table once.
+    const wanted = new Set(transactionIds);
+    rows = (
+      db
+        .prepare(`SELECT * FROM classifications WHERE source = 'manual' AND category IS NOT NULL`)
+        .all() as unknown as ClassificationRow[]
+    ).filter((r) => wanted.has(r.transaction_id));
   } else {
     rows = db
       .prepare(`SELECT * FROM classifications WHERE source = 'manual' AND category IS NOT NULL`)

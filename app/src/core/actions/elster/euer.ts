@@ -26,6 +26,7 @@ import {
 import { loadManualOverrides } from '../classifications.ts';
 import { loadEuerErstattungen } from '../erstattungen.ts';
 import { loadAufteilungen } from '../aufteilungen.ts';
+import { lapwatch } from '../../lib/timing.ts';
 import { getCustomFieldValue, parseMonetaryValue } from '@steuererklaerung/paperless';
 import {
     getSelectFieldLabel,
@@ -168,7 +169,9 @@ export async function euerReportByTransactions(
               transactionsSummary().accounts.map((a) => a.accountKey),
               options.elster,
           );
+    const sw = lapwatch('aggregate');
     const rawTxs = scopeKeys.length ? searchAccountKeys(scopeKeys, { from, to }) : [];
+    sw.lap('search');
     // Resolve PayPal-routed charges to their real merchant (e.g. "…/PP.1555.PP" →
     // DeepSeek / YouTube Music) so the rules can classify by merchant, not the
     // opaque bank purpose. Report-time overlay only — the store is untouched.
@@ -227,12 +230,14 @@ export async function euerReportByTransactions(
         }
     }
 
+    sw.lap('docs');
     const adjustments = options.elster ? buildEuerAdjustments(options.elster, year) : undefined;
     // Persisted MANUAL owner overrides (S2): loaded ONCE per build (not per-tx), scoped to the
     // year's tx ids. Empty on a fresh store / when nothing was reclassified → the aggregate is
     // byte-identical to the pre-override behaviour. A matching tx is booked under its override's
     // category with source='manual', winning over the linked document AND the rule chain.
     const overrides = loadManualOverrides(txs.map((t) => t.id));
+    sw.lap('overrides');
     // Linked refunds (Idee 9): the original may be booked in an earlier year, so the label lookup
     // reads the whole scope — lazily, only when a link exists.
     let allById: Map<string, (typeof rawTxs)[number]> | undefined;
@@ -242,7 +247,10 @@ export async function euerReportByTransactions(
     );
     // Scope the laufende EÜR to the business-active window (Betriebsaufgabe → mid-year end;
     // default = the full year). Post-Aufgabe / pre-start bookings land in coverage.outsidePeriod.
-    return aggregateEuerByTransactions(txs, docByTxId, year, {
+    sw.lap('erstattungen');
+    const aufteil = loadAufteilungen(txs.map((t) => t.id));
+    sw.lap('aufteilungen');
+    const res = aggregateEuerByTransactions(txs, docByTxId, year, {
         detail: options.detail,
         adjustments,
         activeFrom: options.elster?.business_start_date,
@@ -252,8 +260,10 @@ export async function euerReportByTransactions(
         doppelzahlungIds: doppelzahlungIds(options.elster),
         overrides,
         erstattungen,
-        aufteilungen: loadAufteilungen(txs.map((t) => t.id)),
+        aufteilungen: aufteil,
     });
+    sw.lap('aggregate');
+    return res;
 }
 
 /**

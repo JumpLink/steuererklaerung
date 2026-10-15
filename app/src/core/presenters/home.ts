@@ -24,6 +24,7 @@ import { countZuPruefen } from './zu-pruefen.ts';
 import { countErstattungenOffen } from './erstattungen.ts';
 import { countLaufendeKostenOffen } from './laufende-kosten.ts';
 import { loadUste, loadGewst, loadFeststellung } from './steuer.ts';
+import { timed } from '../lib/timing.ts';
 import type { PresenterSession } from './session.ts';
 import type { EntityModel } from './workspace.ts';
 
@@ -84,20 +85,28 @@ async function loadDashboard(
 
 /** Load the Übersicht model for one entity-year (async; may fetch Paperless via the dashboard). */
 export async function loadHome(session: PresenterSession, entity: EntityModel, year: number): Promise<HomeModel> {
-    const txs = searchAccountKeys(entity.accountKeys, {});
-    const dashboard = await loadDashboard(session, entity, year, txs);
+    const txs = timed('home.txs (sqlite/ndjson)', () => searchAccountKeys(entity.accountKeys, {}));
+    const dashboard = await timed('home.dashboard (aggregate)', () => loadDashboard(session, entity, year, txs));
     // Fail-soft: an unreadable invoice back-end / store shows no task instead of breaking the Übersicht.
-    const doppelzahlungVerdacht = await listDoppelzahlungVerdacht(entity.id, { year }).catch(() => []);
-    const forderungen = await forderungenHinweisDaten(entity.id);
-    const hinweise = await loadHinweise(session, entity, year, { forderungen }).catch((err: unknown) => {
-        console.error(`[home] Hinweise ${entity.id} ${year}: ${err instanceof Error ? err.message : err}`);
-        return [];
-    });
-    const zuPruefen = await countZuPruefen(session, entity, year, { ohneErstattungen: true }).catch((err: unknown) => {
+    const doppelzahlungVerdacht = await timed('home.doppelzahlung', () =>
+        listDoppelzahlungVerdacht(entity.id, { year }),
+    ).catch(() => []);
+    const forderungen = await timed('home.forderungen', () => forderungenHinweisDaten(entity.id));
+    const hinweise = await timed('home.hinweise', () => loadHinweise(session, entity, year, { forderungen })).catch(
+        (err: unknown) => {
+            console.error(`[home] Hinweise ${entity.id} ${year}: ${err instanceof Error ? err.message : err}`);
+            return [];
+        },
+    );
+    const zuPruefen = await timed('home.zuPruefen', () =>
+        countZuPruefen(session, entity, year, { ohneErstattungen: true }),
+    ).catch((err: unknown) => {
         console.error(`[home] Zu prüfen ${entity.id} ${year}: ${err instanceof Error ? err.message : err}`);
         return 0;
     });
-    const erstattungenOffen = await countErstattungenOffen(session, entity, year).catch((err: unknown) => {
+    const erstattungenOffen = await timed('home.erstattungen', () =>
+        countErstattungenOffen(session, entity, year),
+    ).catch((err: unknown) => {
         console.error(`[home] Erstattungen ${entity.id} ${year}: ${err instanceof Error ? err.message : err}`);
         return 0;
     });

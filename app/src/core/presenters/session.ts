@@ -23,6 +23,7 @@ import { euerReportByTransactions } from '../actions/elster/euer.ts';
 import type { EuerTxAggregate } from '../elster/euer-transactions.ts';
 import { type DmsProvider, type DmsDocument } from '@steuererklaerung/dms';
 import { dmsProviderForEntity } from '../dms-provider.ts';
+import { timed } from '../lib/timing.ts';
 import { loadWorkspaceModel, entityOf, type EntityModel, type WorkspaceModel } from './workspace.ts';
 
 /** An entity, by id (resolved against the workspace, falling back to the default) or as a model. */
@@ -128,12 +129,14 @@ export function createPresenterSession(opts: { years?: number[] } = {}): Present
             // the snapshot in `elster(e)` would keep classifying with the old ones until a restart.
             const cfg = elster(e);
             const fresh = cfg ? resolveEntityElster(e.id)?.klassifizierung : undefined;
-            cached = euerReportByTransactions(ctx.config, year, {
-                detail: true,
-                elster: cfg && fresh ? { ...cfg, klassifizierung: fresh } : cfg,
-                accountKeys: e.accountKeys,
-                noPaperless: dms(e).kind !== 'paperless',
-            }).catch((err) => {
+            cached = timed(`session.aggregate ${key}`, () =>
+                euerReportByTransactions(ctx.config, year, {
+                    detail: true,
+                    elster: cfg && fresh ? { ...cfg, klassifizierung: fresh } : cfg,
+                    accountKeys: e.accountKeys,
+                    noPaperless: dms(e).kind !== 'paperless',
+                }),
+            ).catch((err) => {
                 aggCache.delete(key); // never cache a rejection — a retry rebuilds
                 throw err;
             });
@@ -148,8 +151,9 @@ export function createPresenterSession(opts: { years?: number[] } = {}): Present
         let cached = docCache.get(key);
         if (!cached) {
             const provider = dms(e);
-            cached = provider
-                .list({ from: `${year}-01-01`, to: `${year}-12-31` })
+            cached = timed(`session.documents ${key}`, () =>
+                provider.list({ from: `${year}-01-01`, to: `${year}-12-31` }),
+            )
                 .then((docs) => ({ docs, dmsKind: provider.kind }))
                 .catch((err) => {
                     docCache.delete(key); // never cache a rejection — a retry rebuilds
