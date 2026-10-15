@@ -29,7 +29,7 @@
     "@girs/graphene-1.0@^5.5.0",
     "@girs/gsk-4.0@^5.5.0",
     "@girs/gtk-4.0@^5.5.0",
-    "@gjsify/adwaita-app@0.64.1-next.240",
+    "@gjsify/adwaita-app@0.64.1-next.241",
     "@gjsify/adwaita-fonts@0.64.1-next.240",
     "@gjsify/adwaita-web@0.64.1-next.240",
     "@gjsify/app-settings@0.64.1-next.240",
@@ -819,9 +819,9 @@
       }
     },
     "node_modules/@gjsify/adwaita-app": {
-      "version": "0.64.1-next.240",
-      "resolved": "https://registry.npmjs.org/@gjsify/adwaita-app/-/adwaita-app-0.64.1-next.240.tgz",
-      "integrity": "sha512-OGLWCyjvXiDCCBnl0b/EhduEBwVBfwwNlvKwiMd+r6pmPHcXLYPd3+RuCpgvH2ZHWPwKgDJ0ZfS5ufekLBv6lg==",
+      "version": "0.64.1-next.241",
+      "resolved": "https://registry.npmjs.org/@gjsify/adwaita-app/-/adwaita-app-0.64.1-next.241.tgz",
+      "integrity": "sha512-IwfxxTfUXKHbszrLsl3FARsewTZltk/h/gs/rHxmhn2y3d7S//kYLMwMGfu3fvQC2XccURqVWai8SoFyiGmkUQ==",
       "dependencies": {
         "@girs/gjs": "5.4.0",
         "@girs/adw-1": "5.4.0",
@@ -829,9 +829,9 @@
         "@girs/gio-2.0": "5.4.0",
         "@girs/gtk-4.0": "5.4.0",
         "@girs/glib-2.0": "5.4.0",
-        "@gjsify/devtools": "0.64.1-next.240",
+        "@gjsify/devtools": "0.64.1-next.241",
         "@girs/gobject-2.0": "5.4.0",
-        "@gjsify/adwaita-core": "0.64.1-next.240"
+        "@gjsify/adwaita-core": "0.64.1-next.241"
       }
     },
     "node_modules/@gjsify/adwaita-app/node_modules/@girs/adw-1": {
@@ -935,10 +935,41 @@
         "@girs/pangocairo-1.0": "^5.4.0"
       }
     },
+    "node_modules/@gjsify/adwaita-app/node_modules/@gjsify/devtools": {
+      "version": "0.64.1-next.241",
+      "resolved": "https://registry.npmjs.org/@gjsify/devtools/-/devtools-0.64.1-next.241.tgz",
+      "integrity": "sha512-9gQDawSoYlSj2L/tHZrGwhUpcdprv2yGxziowl6kOe9mBe3AiQS96JTxQ4Ea0f1JcmMzA5AH3/NZwAnGoxRD4Q==",
+      "dependencies": {
+        "@girs/gjs": "5.4.0",
+        "@girs/adw-1": "5.4.0",
+        "@girs/gdk-4.0": "5.4.0",
+        "@girs/gio-2.0": "5.4.0",
+        "@girs/gtk-4.0": "5.4.0",
+        "@girs/glib-2.0": "5.4.0",
+        "@girs/gobject-2.0": "5.4.0",
+        "@girs/graphene-1.0": "5.4.0",
+        "@gjsify/devtools-protocol": "0.64.1-next.241"
+      }
+    },
+    "node_modules/@gjsify/adwaita-app/node_modules/@gjsify/devtools/node_modules/@girs/graphene-1.0": {
+      "version": "5.4.0",
+      "resolved": "https://registry.npmjs.org/@girs/graphene-1.0/-/graphene-1.0-5.4.0.tgz",
+      "integrity": "sha512-K52RuIJtBzjR+rPbHe+3jS7Rub08F0e3ad1KeQh94zogTkDFr3eiJMuLLcet1IPG5CCJVoDHoqqF0DhBJCBLIQ==",
+      "dependencies": {
+        "@girs/gjs": "^5.4.0",
+        "@girs/glib-2.0": "^5.4.0",
+        "@girs/gobject-2.0": "^5.4.0"
+      }
+    },
+    "node_modules/@gjsify/adwaita-app/node_modules/@gjsify/devtools/node_modules/@gjsify/devtools-protocol": {
+      "version": "0.64.1-next.241",
+      "resolved": "https://registry.npmjs.org/@gjsify/devtools-protocol/-/devtools-protocol-0.64.1-next.241.tgz",
+      "integrity": "sha512-xU1XMmzRmr/OnHipDFrrKAtOmTWLsYPyeQAXBvvplq1/5B8FUtpWGvSHsHJfXlhchQQdAgFwFxnmUoJXz7Qfgw=="
+    },
     "node_modules/@gjsify/adwaita-core": {
-      "version": "0.64.1-next.240",
-      "resolved": "https://registry.npmjs.org/@gjsify/adwaita-core/-/adwaita-core-0.64.1-next.240.tgz",
-      "integrity": "sha512-y9NJHOp58StFgC8IMQo4yQnCkBLHfDQOa6FjcyomiZWNcVOaDhE2GEn8dbpG+cof1NBFGX9qa+GekI3Vjb+TmA=="
+      "version": "0.64.1-next.241",
+      "resolved": "https://registry.npmjs.org/@gjsify/adwaita-core/-/adwaita-core-0.64.1-next.241.tgz",
+      "integrity": "sha512-E4sxVHPor2tvWO0wXNAXM73cqtCDZLGeU4+E1nKprPvwKBrN6z1VTWujK0RCClCD/ke+KruIhzLoqmcVWANS3A=="
     },
     "node_modules/@gjsify/adwaita-fonts": {
       "version": "0.64.1-next.240",
@@ -973,6 +1004,11 @@
           "optional": true
         }
       }
+    },
+    "node_modules/@gjsify/adwaita-web/node_modules/@gjsify/adwaita-core": {
+      "version": "0.64.1-next.240",
+      "resolved": "https://registry.npmjs.org/@gjsify/adwaita-core/-/adwaita-core-0.64.1-next.240.tgz",
+      "integrity": "sha512-y9NJHOp58StFgC8IMQo4yQnCkBLHfDQOa6FjcyomiZWNcVOaDhE2GEn8dbpG+cof1NBFGX9qa+GekI3Vjb+TmA=="
     },
     "node_modules/@gjsify/app-settings": {
       "version": "0.64.1-next.240",
@@ -1869,6 +1905,11 @@
       "dependencies": {
         "@gjsify/adwaita-core": "0.64.1-next.240"
       }
+    },
+    "node_modules/@gjsify/gtksource-core/node_modules/@gjsify/adwaita-core": {
+      "version": "0.64.1-next.240",
+      "resolved": "https://registry.npmjs.org/@gjsify/adwaita-core/-/adwaita-core-0.64.1-next.240.tgz",
+      "integrity": "sha512-y9NJHOp58StFgC8IMQo4yQnCkBLHfDQOa6FjcyomiZWNcVOaDhE2GEn8dbpG+cof1NBFGX9qa+GekI3Vjb+TmA=="
     },
     "node_modules/@gjsify/http": {
       "version": "0.64.1-next.240",
@@ -2971,6 +3012,11 @@
         "@gjsify/adwaita-core": "0.64.1-next.240"
       }
     },
+    "node_modules/@gjsify/storybook-core/node_modules/@gjsify/adwaita-core": {
+      "version": "0.64.1-next.240",
+      "resolved": "https://registry.npmjs.org/@gjsify/adwaita-core/-/adwaita-core-0.64.1-next.240.tgz",
+      "integrity": "sha512-y9NJHOp58StFgC8IMQo4yQnCkBLHfDQOa6FjcyomiZWNcVOaDhE2GEn8dbpG+cof1NBFGX9qa+GekI3Vjb+TmA=="
+    },
     "node_modules/@gjsify/storybook/node_modules/@girs/adw-1": {
       "version": "5.4.0",
       "resolved": "https://registry.npmjs.org/@girs/adw-1/-/adw-1-5.4.0.tgz",
@@ -3071,6 +3117,27 @@
         "@girs/gdkpixbuf-2.0": "^5.4.0",
         "@girs/pangocairo-1.0": "^5.4.0"
       }
+    },
+    "node_modules/@gjsify/storybook/node_modules/@gjsify/adwaita-app": {
+      "version": "0.64.1-next.240",
+      "resolved": "https://registry.npmjs.org/@gjsify/adwaita-app/-/adwaita-app-0.64.1-next.240.tgz",
+      "integrity": "sha512-OGLWCyjvXiDCCBnl0b/EhduEBwVBfwwNlvKwiMd+r6pmPHcXLYPd3+RuCpgvH2ZHWPwKgDJ0ZfS5ufekLBv6lg==",
+      "dependencies": {
+        "@girs/gjs": "5.4.0",
+        "@girs/adw-1": "5.4.0",
+        "@girs/gdk-4.0": "5.4.0",
+        "@girs/gio-2.0": "5.4.0",
+        "@girs/gtk-4.0": "5.4.0",
+        "@girs/glib-2.0": "5.4.0",
+        "@gjsify/devtools": "0.64.1-next.240",
+        "@girs/gobject-2.0": "5.4.0",
+        "@gjsify/adwaita-core": "0.64.1-next.240"
+      }
+    },
+    "node_modules/@gjsify/storybook/node_modules/@gjsify/adwaita-core": {
+      "version": "0.64.1-next.240",
+      "resolved": "https://registry.npmjs.org/@gjsify/adwaita-core/-/adwaita-core-0.64.1-next.240.tgz",
+      "integrity": "sha512-y9NJHOp58StFgC8IMQo4yQnCkBLHfDQOa6FjcyomiZWNcVOaDhE2GEn8dbpG+cof1NBFGX9qa+GekI3Vjb+TmA=="
     },
     "node_modules/@gjsify/stream": {
       "version": "0.64.1-next.240",

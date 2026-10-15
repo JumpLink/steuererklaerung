@@ -484,10 +484,24 @@
   },
   {
     "type": "file",
+    "url": "https://registry.npmjs.org/@gjsify/adwaita-app/-/adwaita-app-0.64.1-next.241.tgz",
+    "dest": "flatpak-gjsify-cache/gjsify/tarballs/v1/sha512/23",
+    "dest-filename": "2307f1c537d45ca1dbb33acbb25dc5011b1ec13665b64fe1fe0b3fac7c66867db2ddded2fff9182ccc0c19fbb77ef402d9771c511a9559a8bc4a81728869a451.tgz",
+    "sha512": "2307f1c537d45ca1dbb33acbb25dc5011b1ec13665b64fe1fe0b3fac7c66867db2ddded2fff9182ccc0c19fbb77ef402d9771c511a9559a8bc4a81728869a451"
+  },
+  {
+    "type": "file",
     "url": "https://registry.npmjs.org/@gjsify/adwaita-core/-/adwaita-core-0.64.1-next.240.tgz",
     "dest": "flatpak-gjsify-cache/gjsify/tarballs/v1/sha512/cb",
     "dest-filename": "cbd3491cea79f12b45802f08310a38c909c29012c77c340e6ba163732a2689958d71539a0e11361849fc75ba46f9ca1fd4d045197f6a6be19e908dd58dbf9398.tgz",
     "sha512": "cbd3491cea79f12b45802f08310a38c909c29012c77c340e6ba163732a2689958d71539a0e11361849fc75ba46f9ca1fd4d045197f6a6be19e908dd58dbf9398"
+  },
+  {
+    "type": "file",
+    "url": "https://registry.npmjs.org/@gjsify/adwaita-core/-/adwaita-core-0.64.1-next.241.tgz",
+    "dest": "flatpak-gjsify-cache/gjsify/tarballs/v1/sha512/13",
+    "dest-filename": "138b315473e8af6b6f58ed305cd01733bddcaad08364b19e538f84d672a9acfbf0281acdeb3d554d6ba32b44420a5083fe47be2abb888732e8aa6715580352dc.tgz",
+    "sha512": "138b315473e8af6b6f58ed305cd01733bddcaad08364b19e538f84d672a9acfbf0281acdeb3d554d6ba32b44420a5083fe47be2abb888732e8aa6715580352dc"
   },
   {
     "type": "file",
@@ -617,10 +631,24 @@
   },
   {
     "type": "file",
+    "url": "https://registry.npmjs.org/@gjsify/devtools-protocol/-/devtools-protocol-0.64.1-next.241.tgz",
+    "dest": "flatpak-gjsify-cache/gjsify/tarballs/v1/sha512/c5",
+    "dest-filename": "c54d57326cd19abfce9c78a90c5aeb280b4e99358bb183f279001706fbe996ad7fe41f0552da561af487b0725f5e585c85041d0201701719e6528257cfb41f83.tgz",
+    "sha512": "c54d57326cd19abfce9c78a90c5aeb280b4e99358bb183f279001706fbe996ad7fe41f0552da561af487b0725f5e585c85041d0201701719e6528257cfb41f83"
+  },
+  {
+    "type": "file",
     "url": "https://registry.npmjs.org/@gjsify/devtools/-/devtools-0.64.1-next.240.tgz",
     "dest": "flatpak-gjsify-cache/gjsify/tarballs/v1/sha512/bb",
     "dest-filename": "bbf11e610cb8d2eff00061cb3e73986b5ab4756a053f7199cdb4cc82c35c6fecac025fc2733a011f2ac126bca71083d54feb8963637fff25e218bad00f5714e7.tgz",
     "sha512": "bbf11e610cb8d2eff00061cb3e73986b5ab4756a053f7199cdb4cc82c35c6fecac025fc2733a011f2ac126bca71083d54feb8963637fff25e218bad00f5714e7"
+  },
+  {
+    "type": "file",
+    "url": "https://registry.npmjs.org/@gjsify/devtools/-/devtools-0.64.1-next.241.tgz",
+    "dest": "flatpak-gjsify-cache/gjsify/tarballs/v1/sha512/f6",
+    "dest-filename": "f604036b04a86254a3d8bfed1d9ac6c2152971da6bbf6c86c738a8c25ea439ef6605edc08904bde894f143811ad1fd49726333039007dff359c009c6a31443e1.tgz",
+    "sha512": "f604036b04a86254a3d8bfed1d9ac6c2152971da6bbf6c86c738a8c25ea439ef6605edc08904bde894f143811ad1fd49726333039007dff359c009c6a31443e1"
   },
   {
     "type": "file",
