@@ -152,7 +152,7 @@
             },
             "appId": "eu.jumplink.Steuererklaerung",
             "name": "Steuererklärung",
-            "summary": "Tax return and bookkeeping for small businesses",
+            "summary": "Taxes and bookkeeping",
             "description": [
                 {
                     "p": "Receipts, transactions and invoices in one place. From them the app computes the income-surplus statement (EÜR), the VAT returns, trade tax and the separate assessment for partnerships, and files them through ELSTER."
@@ -192,7 +192,8 @@
             "releases": [
                 {
                     "version": "0.1.0",
-                    "date": "2026-10-12"
+                    "date": "2026-10-12",
+                    "description": "First public release: receipts, transactions and invoices, the EÜR and VAT returns, and filing through ELSTER."
                 }
             ],
             "screenshots": [
