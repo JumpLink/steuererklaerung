@@ -18,6 +18,7 @@
 #   STEUER_APP_MAIL_DIALOG=1 open the invoice mail dialog on the first issued invoice (view rechnungen)
 #   STEUER_SHOT_SCREENCAST=1 capture the compositor's monitor at its physical resolution (2× under
 #                           `headless-run --scale 2 --size <2×W>x<2×H>`) instead of devtools' 1× render
+#   STEUER_SHOT_KEEP_SHADOW=1 with SCREENCAST: keep the whole monitor frame (window + shadow), no crop
 #   STEUER_SHOT_SIZE="W H"  window size before capture (default 1280 860)
 #   STEUER_SHOT_SETTLE=s    seconds to wait after resize before capturing (default 2.5)
 #   STEUER_APP_SEARCH=text  prefill the Buchungen search box (reaches the "nothing found" state)
@@ -193,7 +194,7 @@ if [ "${STEUER_SHOT_SCREENCAST:-}" = "1" ]; then
   # The frame holds the whole virtual monitor, so cut the window out of the wallpaper: it is the
   # bounding box of everything light — the wallpaper is dark, the window and the dialog scrim are not.
   gjs -m "$HERE/screencast-shot.js" "$OUT" >/dev/null || exit 1
-  python3 - "$OUT" <<'PY' || exit 1
+  [ "${STEUER_SHOT_KEEP_SHADOW:-}" = "1" ] || python3 - "$OUT" <<'PY' || exit 1
 import sys
 from PIL import Image
 im = Image.open(sys.argv[1]).convert("RGB")
