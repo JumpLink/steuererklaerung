@@ -5449,7 +5449,7 @@ msgid "Steuererklärung"
 msgstr ""
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:8
-msgid "Tax return and bookkeeping for small businesses"
+msgid "Taxes and bookkeeping"
 msgstr ""
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:10
@@ -5517,4 +5517,9 @@ msgstr ""
 msgid ""
 "The ERiC binding of this installation is broken. Rebuild it with \"gjsify "
 "run -w @steuererklaerung/eric build:meson\" or reinstall the app."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:70
+msgid ""
+"First public release: receipts, transactions and invoices, the EÜR and VAT returns, and filing through ELSTER."
 msgstr ""

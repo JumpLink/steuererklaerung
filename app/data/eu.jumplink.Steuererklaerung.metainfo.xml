@@ -5,7 +5,7 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>AGPL-3.0-or-later</project_license>
   <name>Steuererklärung</name>
-  <summary>Tax return and bookkeeping for small businesses</summary>
+  <summary>Taxes and bookkeeping</summary>
   <description>
     <p>Receipts, transactions and invoices in one place. From them the app computes the income-surplus statement (EÜR), the VAT returns, trade tax and the separate assessment for partnerships, and files them through ELSTER.</p>
     <p>It runs on your machine: your bank data and documents stay in a local store. Every figure can be traced back to the transaction it came from.</p>
@@ -50,7 +50,11 @@
   <url type="donation">https://jumplink.eu/steuererklaerung/en/support/</url>
   <content_rating type="oars-1.1"/>
   <releases>
-    <release version="0.1.0" date="2026-10-12"/>
+    <release version="0.1.0" date="2026-10-12">
+      <description>
+        <p>First public release: receipts, transactions and invoices, the EÜR and VAT returns, and filing through ELSTER.</p>
+      </description>
+    </release>
   </releases>
   <categories>
     <category>Office</category>
