@@ -12,7 +12,9 @@
  * first still owns the D-Bus name would only remote-activate it and exit.
  */
 
-import { readFileSync } from 'node:fs';
+import { spawn } from 'node:child_process';
+import { existsSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 
 import Gio from '@girs/gio-2.0';
 
@@ -28,10 +30,24 @@ export function snapshotLaunchEnv(): void {
     for (const [key, value] of Object.entries(process.env)) {
         if (value !== undefined) launchEnv[key] = value;
     }
-    launchArgv = readOwnCommandLine();
+    launchArgv = ownCommandLine();
 }
 
-function readOwnCommandLine(): string[] | undefined {
+/**
+ * The command that starts this app again. Linux reads `/proc`; Windows has none, but the program
+ * directory holds the launcher (`steuererklaerung.exe`) next to the `node.exe` this runs under, and
+ * the launcher needs no arguments beyond the user's own.
+ */
+export function ownCommandLine(
+    platform: string = process.platform,
+    execPath: string = process.execPath,
+    argv: string[] = process.argv,
+    exists: (path: string) => boolean = existsSync,
+): string[] | undefined {
+    if (platform === 'win32') {
+        const launcher = join(dirname(execPath), 'steuererklaerung.exe');
+        return exists(launcher) ? [launcher, ...argv.slice(2)] : undefined;
+    }
     try {
         const parts = readFileSync('/proc/self/cmdline', 'utf8').split('\0');
         if (parts.at(-1) === '') parts.pop();
@@ -41,7 +57,12 @@ function readOwnCommandLine(): string[] | undefined {
     }
 }
 
-/** Whether this process can start a successor at all (Linux with `/proc`). */
+// Windows has no `sh` and no `kill -0`: a throwaway node waits for our pid, then starts the successor.
+const WAIT_THEN_START =
+    'const p=+process.argv[1];const t=setInterval(()=>{try{process.kill(p,0)}catch{clearInterval(t);' +
+    "require('child_process').spawn(process.argv[2],process.argv.slice(3),{detached:true,stdio:'ignore'}).unref()}},100)";
+
+/** Whether this process can start a successor at all (Linux with `/proc`, Windows with the launcher). */
 export function canRestart(): boolean {
     return launchArgv !== undefined;
 }
@@ -74,6 +95,14 @@ export function restartInMode(app: Gio.Application, mode: 'demo' | 'own'): void 
 /** Start the successor requested by {@link requestRestart}, if any. Call after the main loop ends. */
 export function relaunchIfRequested(): void {
     if (!pending || !launchEnv || !launchArgv) return;
+    if (process.platform === 'win32') {
+        spawn(process.execPath, ['-e', WAIT_THEN_START, String(process.pid), ...launchArgv], {
+            env: launchEnv,
+            detached: true,
+            stdio: 'ignore',
+        }).unref();
+        return;
+    }
     const launcher = new Gio.SubprocessLauncher({ flags: Gio.SubprocessFlags.NONE });
     launcher.set_environ(Object.entries(launchEnv).map(([key, value]) => `${key}=${value}`));
     // `sh` outlives us, polls until our pid is gone, then becomes the new app.

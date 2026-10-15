@@ -123,6 +123,22 @@ export default async () => {
         });
 
         await it('a rejected build is not cached — the next call rebuilds', async () => {
+            // Only a Paperless entity asks Paperless; a built-in one resolves offline.
+            writeFileSync(
+                join(dir, 'steuererklaerung.json'),
+                JSON.stringify({
+                    ...JSON.parse(MANIFEST),
+                    entities: [
+                        {
+                            id: 'test',
+                            name: 'Test GbR',
+                            kind: 'gbr',
+                            accounts: ['camt:test'],
+                            dms: { type: 'paperless' },
+                        },
+                    ],
+                }),
+            );
             const s = createPresenterSession();
             const a1 = s.aggregate('test', 2025);
             let threw = false;

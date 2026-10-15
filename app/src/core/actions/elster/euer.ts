@@ -155,7 +155,7 @@ export function buildAufgabegewinn(elster: ElsterConfig, year: number): Aufgabeg
 export async function euerReportByTransactions(
     config: SyncConfig,
     year: number,
-    options: { accountKeys?: string[]; detail?: boolean; elster?: ElsterConfig } = {},
+    options: { accountKeys?: string[]; detail?: boolean; elster?: ElsterConfig; noPaperless?: boolean } = {},
 ): Promise<EuerTxAggregate> {
     const from = `${year}-01-01`;
     const to = `${year}-12-31`;
@@ -174,7 +174,8 @@ export async function euerReportByTransactions(
     // opaque bank purpose. Report-time overlay only — the store is untouched.
     const txs = enrichWithPaypal(rawTxs, searchTransactions({ source: 'paypal' }).transactions);
 
-    const docs = await fetchInvoiceDocsInPeriod(config, { from, to });
+    // An entity on the built-in DMS has no Paperless to ask: the call would throw without credentials.
+    const docs = options.noPaperless ? [] : await fetchInvoiceDocsInPeriod(config, { from, to });
     const docByTxId = new Map<string, TxDocInfo>();
     for (const doc of docs) {
         const raw = getCustomFieldValue(doc, cf.qonto_transaction_id);

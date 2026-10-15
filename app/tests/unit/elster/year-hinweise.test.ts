@@ -146,6 +146,23 @@ export default async () => {
             expect(JSON.stringify(yc.hinweise)).toBe(JSON.stringify(shared));
         });
 
+        await it('skips the Paperless fetch for an entity on the built-in DMS', async () => {
+            const config = { ...DEFAULT_SYNC_CONFIG, document_type_ids: { incoming_invoice: 1, outgoing_invoice: 2 } };
+            const cfg = normalizeElsterConfig(ElsterConfigRawSchema.parse(ELSTER));
+            const opts = { elster: cfg, accountKeys: KEYS };
+
+            let threw = false;
+            try {
+                await euerReportByTransactions(config, 2025, opts);
+            } catch {
+                threw = true;
+            }
+            expect(threw).toBe(true);
+
+            const agg = await euerReportByTransactions(config, 2025, { ...opts, noPaperless: true });
+            expect(agg).toBeDefined();
+        });
+
         await it('produces the FULL hint set the old reduced desktop input dropped', async () => {
             const config = DEFAULT_SYNC_CONFIG;
             const cfg = normalizeElsterConfig(ElsterConfigRawSchema.parse(ELSTER));

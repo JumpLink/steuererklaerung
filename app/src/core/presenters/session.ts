@@ -132,6 +132,7 @@ export function createPresenterSession(opts: { years?: number[] } = {}): Present
                 detail: true,
                 elster: cfg && fresh ? { ...cfg, klassifizierung: fresh } : cfg,
                 accountKeys: e.accountKeys,
+                noPaperless: dms(e).kind !== 'paperless',
             }).catch((err) => {
                 aggCache.delete(key); // never cache a rejection — a retry rebuilds
                 throw err;
