@@ -2,8 +2,8 @@
  * ERiC library status probe — the read side of the in-app ELSTER submission feature (Phase 1).
  *
  * The ERiC native library is not in the source repo (see @steuererklaerung/eric README): the app
- * validates ELSTER XML against it, and unless a release build bundles it the user installs it and points the app at it via
- * `config.eric_home` / the `ERIC_HOME` env var. This action reports, for a resolved home directory,
+ * validates ELSTER XML against it. Official release builds bundle it; otherwise the user installs
+ * it and points the app at it via `config.eric_home` / the `ERIC_HOME` env var. This action reports, for a resolved home directory,
  * whether ERiC is available, its version, and (when incomplete) exactly what is missing — so a UI
  * can show the status and let the user set the path.
  *
@@ -13,32 +13,38 @@
  * `available:false` + `error`.
  */
 
+import { ericPlatformKnown } from '@steuererklaerung/eric';
+
 /** Machine-readable ERiC availability snapshot for one resolved home directory. */
 export interface EricStatus {
     /** ERiC is installed AND its native binding loaded (the version could be read). */
     available: boolean;
-    /** ERiC product version (e.g. "43.4.6.0"), or null when unavailable/unreadable. */
+    /** ERiC product version (e.g. "44.3.6.0"), or null when unavailable/unreadable. */
     version: string | null;
     /** The resolved ERiC home directory that was probed (where the lib is expected). */
     ericHome: string;
-    /** The resolved lib directory (`<ericHome>/lib`) — the expected libericapi.so location. */
+    /** The resolved lib directory (`<ericHome>/lib`, `dll` on Windows) — where the ERiC library is expected. */
     libPath: string;
-    /** Required files missing from the runtime (empty when complete); see setup.ts REQUIRED_FILES. */
+    /** Where ERiC writes its log files (licence § 15: they hold data from the filing and stay local). */
+    logPath: string;
+    /** Whether the runtime in use is the one shipped with the application. */
+    bundled: boolean;
+    /** Required files missing from the runtime (empty when complete); see setup.ts requiredFiles. */
     missing: string[];
-    /** Number of validation plugins (`*.so`) found under `<ericHome>/lib/plugins`. */
+    /** Number of validation plugins found under `<ericHome>/lib/plugins`. */
     pluginCount: number;
     /** Present only when the files exist but loading/initialising the native binding failed. */
     error?: string;
     /**
-     * False off Linux: our binding loads `lib*.so` only, so no ERiC install there can ever work.
-     * The UI says so instead of asking the user to download something that would not be used.
+     * False where no ERiC build exists (an architecture other than x86_64 / macOS). The UI says so
+     * instead of asking the user to download something that would not be used.
      */
     platformSupported: boolean;
 }
 
 /** Whether ELSTER submission through ERiC can work on this OS at all (see {@link EricStatus.platformSupported}). */
-export function ericPlatformSupported(platform: string = process.platform): boolean {
-    return platform === 'linux';
+export function ericPlatformSupported(platform: string = process.platform, arch: string = process.arch): boolean {
+    return ericPlatformKnown(platform, arch);
 }
 
 /**
@@ -74,6 +80,8 @@ export async function getEricStatus(ericHome?: string): Promise<EricStatus> {
         version: null,
         ericHome: paths.home,
         libPath: paths.lib,
+        logPath: paths.logs,
+        bundled: paths.source === 'bundled',
         missing: verification.missing,
         pluginCount: verification.pluginCount,
         platformSupported: ericPlatformSupported(),
@@ -99,8 +107,8 @@ export async function getEricStatus(ericHome?: string): Promise<EricStatus> {
 
 /**
  * Extract a human-readable version from ERiC's `<EricVersion>` XML. Each `<Bibliothek>` carries a
- * comma-separated `<Produktversion>` (e.g. "43, 4, 6, 0"); we prefer the core `ericapi` library and
- * render it dotted ("43.4.6.0"). Falls back to any dotted version token, else null.
+ * comma-separated `<Produktversion>` (e.g. "44, 3, 6, 0"); we prefer the core `ericapi` library and
+ * render it dotted ("44.3.6.0"). Falls back to any dotted version token, else null.
  */
 function parseEricVersion(xml: string): string | null {
     if (!xml) return null;

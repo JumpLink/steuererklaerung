@@ -4,14 +4,16 @@
  * This is the only file that depends on koffi directly.
  * All ERiC function calls go through this module.
  *
- * On Linux x86_64, STDCALL is empty (= CDECL), which is koffi's default.
+ * On 64-bit targets (Linux x86_64, Windows x86_64, macOS) STDCALL is empty (= CDECL), which is
+ * koffi's default.
  */
 
 import { createRequire } from 'node:module';
-import { join } from 'node:path';
 import { mkdirSync } from 'node:fs';
 
-import { getEricPaths, isEricAvailable, ERIC_NOT_FOUND_MESSAGE } from './paths.ts';
+import { baseLibraryPaths, getEricPaths, isEricAvailable, ERIC_NOT_FOUND_MESSAGE } from './paths.ts';
+import { ericPlatform } from './platform.ts';
+import { prepareLoad } from './runtime-env.ts';
 import { EricNotAvailableError } from './errors.ts';
 
 // ---------------------------------------------------------------------------
@@ -25,10 +27,10 @@ type EricRueckgabepufferHandle = unknown;
 // koffi, loaded on first use
 // ---------------------------------------------------------------------------
 
-// koffi is a native addon with a prebuild per OS, and ERiC itself is only ever present on a Linux
-// machine the user set up (see paths.ts). A static `import koffi` made the whole app bundle fail
-// at start on macOS and Windows, where neither exists — and for a feature that is optional. So it
-// is required when ERiC is first called, and a missing module reads as "ERiC not available".
+// koffi is a native addon with a prebuild per OS, and ERiC is optional: a build without it, or a
+// platform it does not exist for, must still start. A static `import koffi` made the whole app
+// bundle fail at start where the addon is missing. So it is required when ERiC is first called, and
+// a missing module reads as "ERiC not available".
 type Koffi = typeof import('koffi');
 
 let koffiModule: Koffi | null = null;
@@ -78,7 +80,6 @@ interface EricLib {
     bearbeitungsFlags: number,
     druckParameter: unknown,
     cryptoParameter: unknown,
-    transferHandle: unknown,
     rueckgabeXmlPuffer: EricRueckgabepufferHandle,
     serverantwortXmlPuffer: EricRueckgabepufferHandle,
   ) => number;
@@ -116,16 +117,17 @@ function loadLibrary(): EricLib {
     throw new EricNotAvailableError(ERIC_NOT_FOUND_MESSAGE);
   }
 
+  const platform = ericPlatform();
+  if (!platform) throw new EricNotAvailableError(ERIC_NOT_FOUND_MESSAGE);
+
   const koffi = loadKoffi();
-  const paths = getEricPaths();
+  const paths = getEricPaths(platform);
+  prepareLoad(paths.home, paths.lib, platform);
 
-  // Pre-load dependencies with RTLD_GLOBAL so libericapi.so can find them.
-  // koffi.load uses dlopen with RTLD_LAZY | RTLD_GLOBAL by default on Linux.
-  koffi.load(join(paths.lib, 'libericxerces.so'));
-  koffi.load(join(paths.lib, 'libeSigner.so'));
-  koffi.load(join(paths.lib, 'libotto.so'));
-
-  const eric = koffi.load(join(paths.lib, 'libericapi.so'));
+  // Every library by ABSOLUTE path, dependencies first, so libericapi finds the ones it needs
+  // already loaded whatever the platform's search rules are. The last entry is the API itself.
+  const handles = baseLibraryPaths(paths, platform).map((file) => koffi.load(file));
+  const eric = handles[handles.length - 1];
 
   lib = {
     EricInitialisiere: eric.func('int EricInitialisiere(const char *pluginPfad, const char *logPfad)'),
@@ -139,7 +141,6 @@ function loadLibrary(): EricLib {
         uint32_t bearbeitungsFlags,
         const eric_druck_parameter_t *druckParameter,
         const eric_verschluesselungs_parameter_t *cryptoParameter,
-        _Out_ uint32_t *transferHandle,
         EricReturnBufferApi *rueckgabeXmlPuffer,
         EricReturnBufferApi *serverantwortXmlPuffer)`,
     ),
@@ -207,7 +208,6 @@ export function ericBearbeiteVorgang(
   bearbeitungsFlags: number,
   druckParameter: unknown,
   cryptoParameter: unknown,
-  transferHandle: unknown,
   rueckgabeXmlPuffer: EricRueckgabepufferHandle,
   serverantwortXmlPuffer: EricRueckgabepufferHandle,
 ): number {
@@ -217,7 +217,6 @@ export function ericBearbeiteVorgang(
     bearbeitungsFlags,
     druckParameter,
     cryptoParameter,
-    transferHandle,
     rueckgabeXmlPuffer,
     serverantwortXmlPuffer,
   );

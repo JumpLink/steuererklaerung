@@ -5,19 +5,26 @@
  * here we only translate return codes into the same shapes the Node (koffi) build
  * produces.
  *
- * The ERiC shared library is not part of this package; it comes from ERIC_HOME (or an official
- * release build that bundles it). At
- * runtime, the package's prebuilds must be on GI_TYPELIB_PATH/LD_LIBRARY_PATH
- * (the gjsify CLI injects these automatically for installed native packages) and
- * `$ERIC_HOME/lib` must be on LD_LIBRARY_PATH so libericapi.so + its dependencies
- * resolve.
+ * The ERiC shared library is not part of this package; it comes from ERIC_HOME, the copy an
+ * official release build bundles, or the user's data directory (see paths.ts). The binding is not
+ * linked against it: the Vala layer opens the libraries by absolute path (`load()`), so no
+ * LD_LIBRARY_PATH is involved. At runtime only the package's prebuilds must be on
+ * GI_TYPELIB_PATH/LD_LIBRARY_PATH (the gjsify CLI injects these for installed native packages).
  *
  * Selected automatically via package.json `exports` (browser → here, node →
  * index.node.ts). Keep the exported surface identical to index.node.ts.
  */
 
 // --- Runtime-agnostic re-exports (shared with the Node build) ---
-export { isEricAvailable, getEricPaths, resolveEricHome, ERIC_NOT_FOUND_MESSAGE } from './paths.ts';
+export {
+  isEricAvailable,
+  ericPlatformKnown,
+  appDataDir,
+  bundledHerstellerId,
+  getEricPaths,
+  resolveEricHome,
+  ERIC_NOT_FOUND_MESSAGE,
+} from './paths.ts';
 export type { EricPaths } from './paths.ts';
 export { EricError, EricNotAvailableError } from './errors.ts';
 export {
@@ -48,6 +55,8 @@ import { getEricPaths, ERIC_NOT_FOUND_MESSAGE } from './paths.ts';
 
 /** Shape of the native `SteuerEric.Eric` GObject (snake_case GIR methods). */
 interface NativeEric {
+  load(libDir: string): boolean;
+  load_error(): string;
   initialisiere(pluginPfad: string, logPfad: string): number;
   beende(): number;
   pruefe_steuernummer(stnr: string): number;
@@ -89,8 +98,7 @@ function load(): NativeEricClass {
   if (!mod?.Eric) {
     throw new EricNotAvailableError(
       'The native @steuererklaerung/eric binding (SteuerEric typelib) is not loadable. Build it with ' +
-        '`npm run -w @steuererklaerung/eric build:meson`, ensure its prebuilds are on GI_TYPELIB_PATH/LD_LIBRARY_PATH, ' +
-        'and put $ERIC_HOME/lib on LD_LIBRARY_PATH so libericapi.so resolves.\n\n' +
+        '`npm run -w @steuererklaerung/eric build:meson` and ensure its prebuilds are on GI_TYPELIB_PATH/LD_LIBRARY_PATH.\n\n' +
         ERIC_NOT_FOUND_MESSAGE,
     );
   }
@@ -98,7 +106,14 @@ function load(): NativeEricClass {
 }
 
 function instance(): NativeEric {
-  if (!_instance) _instance = new (load())();
+  if (!_instance) {
+    const eric = new (load())();
+    const paths = getEricPaths();
+    if (!eric.load(paths.lib)) {
+      throw new EricNotAvailableError(`ERiC konnte nicht geladen werden (${eric.load_error()}).\n\n${ERIC_NOT_FOUND_MESSAGE}`);
+    }
+    _instance = eric;
+  }
   return _instance;
 }
 

@@ -77,3 +77,4 @@ app/po/POTFILES.in
 # `gjsify install --immutable` refuses to run while it exists.
 .gjsify-link.json
 shots/
+.eric-stage/

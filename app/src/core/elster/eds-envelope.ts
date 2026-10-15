@@ -7,12 +7,23 @@
  * envelope — only the Verfahren/DatenArt and the inner Nutzdaten block differ.
  */
 
+import { bundledHerstellerId } from '@steuererklaerung/eric';
+
 /**
  * The ELSTER placeholder Hersteller-ID: "no registered software id". Exported because three places
  * need to agree on it — the envelope's default, Kz09 in the USt-VA, and the guard that refuses to
  * transmit a snapshot still carrying it ({@link hasPlaceholderHerstellerId}).
  */
 export const PLACEHOLDER_HERSTELLER_ID = '00000';
+
+/**
+ * The Hersteller-ID to put on the wire: the person's own `hersteller_id` from the config, else the
+ * one an official build carries (written there by the release pipeline from a CI secret), else the
+ * placeholder, which the send guard then refuses.
+ */
+export function resolveHerstellerId(configured?: string): string {
+    return configured || bundledHerstellerId() || PLACEHOLDER_HERSTELLER_ID;
+}
 
 /** XML-escape a text value for safe insertion into element content/attributes. */
 export function escapeXml(s: string): string {
@@ -78,7 +89,7 @@ export function buildEdsEnvelope(opts: EdsEnvelopeOptions): string {
           `            <Ziel>${escapeXml(opts.empfaengerZiel)}</Ziel>\n` +
           '        </Empfaenger>\n'
         : '';
-    const herstellerId = escapeXml(opts.herstellerId ?? PLACEHOLDER_HERSTELLER_ID);
+    const herstellerId = escapeXml(resolveHerstellerId(opts.herstellerId));
     // Must be escaped like every other text field: a Datenlieferant is a free-form company
     // name, and a real filing failed on one shaped like "Meier & Schulz GbR" — the bare `&` made
     // ERiC reject the whole EDS with ERIC_IO_PARSE_FEHLER, "expected entity name for reference".

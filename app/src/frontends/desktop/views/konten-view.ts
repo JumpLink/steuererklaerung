@@ -123,8 +123,8 @@ export class BhKontenView extends Adw.Bin {
             return;
         }
         this._eric_group.set_description(
-            'Wird für die Prüfung und die spätere Übermittlung an ELSTER benötigt. ERiC ist selbst zu ' +
-                'installieren (ELSTER-Entwicklerbereich) und nicht Teil der App. Leer = ERIC_HOME / Standardpfad.',
+            'Wird für die Prüfung und die Übermittlung an ELSTER benötigt. Die offiziellen Builds bringen ERiC ' +
+                'mit; sonst selbst installieren (ELSTER-Entwicklerbereich). Leer = ERIC_HOME / mitgeliefertes ERiC / Standardpfad.',
         );
         loadEricStatus(this.entity)
             .then((status) => {
@@ -140,7 +140,12 @@ export class BhKontenView extends Adw.Bin {
         // Status row: version + resolved path when available; else a clear "nicht gefunden" + why.
         const statusRow = new Adw.ActionRow({ title: 'ERiC (ELSTER Rich Client)' });
         if (status.available) {
-            statusRow.set_subtitle(markup(`Version ${status.version ?? 'unbekannt'} · ${status.ericHome}`));
+            statusRow.set_subtitle(
+                markup(
+                    `Version ${status.version ?? 'unbekannt'} · ${status.ericHome}` +
+                        (status.bundled ? ' · mit der App geliefert' : ''),
+                ),
+            );
             statusRow.add_suffix(ericPill(true, 'verfügbar'));
         } else {
             const detail = status.error
@@ -153,15 +158,26 @@ export class BhKontenView extends Adw.Bin {
         }
         this.eric.add(statusRow);
 
-        // macOS and Windows: no ERiC path can work (the binding loads lib*.so only), so skip the path
-        // row and the download help and say what still works.
+        // Licence § 15: the end user must be told ERiC writes log files and that they stay local.
+        const logRow = new Adw.ActionRow({
+            title: 'ERiC-Protokolldateien',
+            subtitle: markup(
+                `ERiC legt Protokolldateien lokal in ${status.logPath} ab. Sie bleiben auf diesem Rechner und ` +
+                    'werden nur im Supportfall und nur mit deiner ausdrücklichen Erlaubnis weitergegeben.',
+            ),
+        });
+        logRow.set_subtitle_lines(0);
+        this.eric.add(logRow);
+
+        // An architecture ERiC is not built for (it ships x86_64 for Linux and Windows, universal for
+        // macOS): skip the path row and the download help and say what still works.
         if (!status.platformSupported) {
-            statusRow.set_subtitle('auf diesem System nicht unterstützt — die ERiC-Anbindung gibt es nur unter Linux');
+            statusRow.set_subtitle('für diese Architektur gibt es kein ERiC');
             const note = new Adw.ActionRow({
                 title: 'Absenden an ELSTER nicht möglich',
                 subtitle: markup(
                     'XML erzeugen und prüfen funktioniert weiter; zum Absenden das XML in Mein ELSTER hochladen ' +
-                        'oder die App unter Linux starten.',
+                        'oder die App auf einem x86_64-System starten.',
                 ),
             });
             note.set_subtitle_lines(0);
@@ -214,8 +230,9 @@ export class BhKontenView extends Adw.Bin {
             const help = new Adw.ActionRow({
                 title: 'ERiC selbst herunterladen',
                 subtitle: markup(
-                    'Die Lizenz verbietet die Weitergabe, deshalb liegt ERiC nicht bei. Nach dem Entpacken ' +
-                        'hier den Ordner wählen, der lib/libericapi.so enthält. Ohne ERiC funktioniert alles ' +
+                    'Dieser Build bringt ERiC nicht mit (die Lizenz erlaubt die Weitergabe nur im offiziellen ' +
+                        'Release). Nach dem Entpacken hier den Ordner wählen, der lib/libericapi.so ' +
+                        '(Windows: dll/ericapi.dll) enthält. Ohne ERiC funktioniert alles ' +
                         'außer dem direkten Absenden — XML erzeugen und in Mein ELSTER hochladen geht.',
                 ),
             });

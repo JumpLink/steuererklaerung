@@ -5,8 +5,8 @@
  * as a real symbol in libsteuereric.so regardless of the C optimisation
  * level the Vala/meson build uses. It contains only OUR OWN calls into the
  * public ERiC ABI (declared in eric-extern.h) — no ERiC source or header
- * content — and the ERiC shared library itself is user-provided (ERIC_HOME) and
- * never shipped with this package.
+ * content — and the ERiC shared library itself is opened at runtime (see
+ * eric-shim.c), never linked and never part of this package.
  */
 
 #include "eric-extern.h"
@@ -24,10 +24,9 @@ int st_eric_sende(const char *datenpuffer, const char *datenart_version,
     }
 
     st_eric_verschluesselung_t crypto = { 3u, htoken, pin };
-    unsigned int transfer_handle = 0u;
     rc = EricBearbeiteVorgang(datenpuffer, datenart_version, flags,
                               (const void *) 0, (const void *) &crypto,
-                              (void *) &transfer_handle, rueckgabe, serverantwort);
+                              rueckgabe, serverantwort);
 
     EricCloseHandleToCertificate(htoken);
     return rc;

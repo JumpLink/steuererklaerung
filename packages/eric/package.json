@@ -21,7 +21,7 @@
   },
   "scripts": {
     "check": "tsc --noEmit --project tsconfig.json",
-    "init:meson": "meson setup build . -Deric_lib_dir=\"${ERIC_HOME:?set ERIC_HOME to your ERiC install}/lib\"",
+    "init:meson": "meson setup build .",
     "build:meson": "npm run init:meson && meson compile -C build && npm run copy:prebuilds",
     "rebuild:meson": "rm -rf build && npm run build:meson",
     "copy:prebuilds": "mkdir -p prebuilds/linux-x86_64 && cp build/libsteuereric.so build/SteuerEric-1.0.gir build/SteuerEric-1.0.typelib prebuilds/linux-x86_64/"
@@ -29,7 +29,6 @@
   "files": [
     "src",
     "meson.build",
-    "meson_options.txt",
     "prebuilds"
   ],
   "dependencies": {

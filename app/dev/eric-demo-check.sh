@@ -6,7 +6,7 @@
 #   app/dev/eric-demo-check.sh [out-dir]     (build first: gjsify run build:gjs; needs ERiC, see
 #                                             app/elster/README.md — without it the script says so and exits 0)
 #
-# Per return it prints pass / FAIL / n/a with ERiC's first message. n/a is a year ERiC 43.4.6.0 has no
+# Per return it prints pass / FAIL / n/a with ERiC's first message. n/a is a year ERiC 44.3.6.0 has no
 # plugin for (EUER/GewSt/FEIN/ESt 2026), the Feststellung before 2025 (Anlage FE 1, not built) and
 # the ESt years the demo has no Lohnsteuerbescheinigung for. Exit 1 on any FAIL.
 #
@@ -66,7 +66,7 @@ EH="$T/eric/runtime"
 ENV=(PATH="$PATH" HOME="$T/home" XDG_CONFIG_HOME="$T/cfg" XDG_DATA_HOME="$T/data"
   DOTENV_CONFIG_PATH="$T/empty.env" PAPERLESS_BASE_URL=http://127.0.0.1:$STUB_PORT PAPERLESS_API_TOKEN=demo
   STEUER_DEMO=1 STEUER_WORKSPACE="$T/demo/steuererklaerung.json" TRANSACTIONS_DATA_DIR="$T/demo/transactions-data"
-  LEDGER_DB_PATH="$T/demo/ledger.db" ERIC_HOME="$EH" LD_LIBRARY_PATH="$EH/lib:$EH/lib/plugins")
+  LEDGER_DB_PATH="$T/demo/ledger.db" ERIC_HOME="$EH")
 cli() { ( cd "$T" && env -i "${ENV[@]}" "$GJSIFY" run "$APP/dist/steuer.gjs.mjs" "$@" ) 2>&1 | grep -v '^\$ GI_TYPELIB'; }
 
 # The extra Bewirtung of 2025 (invented, like everything in the demo).

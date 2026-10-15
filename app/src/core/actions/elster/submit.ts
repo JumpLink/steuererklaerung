@@ -41,6 +41,8 @@ import { recordFiling } from '../filings.ts';
 import { filingKindForForm, filingPeriodForScope, type FilingForm } from './filing-keys.ts';
 import { evaluateSubmissionGate, type SubmissionGate } from './signoffs.ts';
 import { applyEricHome, getEricStatus } from './eric-status.ts';
+import { isPrivacyAcknowledged } from './privacy-ack.ts';
+import { _ } from '../../lib/i18n.ts';
 import {
     euerDatenartVersion,
     usteDatenartVersion,
@@ -212,6 +214,8 @@ export interface SubmitReadinessInputs {
     stale: boolean;
     /** The snapshot XML carries no valid Hersteller-ID (placeholder 00000 / empty) → ELSTER rejects the send. */
     herstellerIdMissing?: boolean;
+    /** The ERiC licence's privacy notice (§ 5) has not been confirmed on this machine yet. */
+    privacyNoticeMissing?: boolean;
     /** Live only: the release-gate verdict (valid sign-off + clean cross-checks). */
     gate?: SubmissionGate;
     /** Live only: a `submitted` snapshot already exists for this entity/year/form. */
@@ -259,6 +263,13 @@ export function computeSubmitReadiness(inp: SubmitReadinessInputs): { ready: boo
     if (inp.herstellerIdMissing) {
         blockers.push(
             'Keine gültige ELSTER-Hersteller-ID (Platzhalter 00000) — 5-stellige Hersteller-ID im Entwicklerbereich von elster.de beantragen, in den Einstellungen hinterlegen und den Snapshot neu erfassen.',
+        );
+    }
+    if (inp.privacyNoticeMissing) {
+        blockers.push(
+            _(
+                'The privacy notice of the tax administration has not been confirmed yet — read and confirm it first (desktop: it appears before sending; CLI: `elster datenschutz`).',
+            ),
         );
     }
     if (inp.mode === 'test' && !inp.isTestArtifact) {
@@ -318,6 +329,12 @@ export function evaluateSubmitReadiness(opts: {
     allowLive?: boolean;
     /** Deliberate correction of an already-filed return (see {@link SubmitReadinessInputs.isCorrection}). */
     isCorrection?: boolean;
+    /**
+     * Leave the privacy-notice confirmation out of the verdict. For a view that asks the person to
+     * confirm right before the send (the desktop does): the button must stay usable, or the dialog
+     * could never appear. The actual send never sets this.
+     */
+    deferPrivacyNotice?: boolean;
 }): SubmitReadiness {
     const form = assertFormType(opts.formType);
     const snapshot = opts.snapshotId
@@ -354,6 +371,7 @@ export function evaluateSubmitReadiness(opts: {
         isTestArtifact,
         stale,
         herstellerIdMissing,
+        privacyNoticeMissing: !opts.deferPrivacyNotice && !isPrivacyAcknowledged(),
         gate,
         alreadyFiled,
         isCorrection: opts.isCorrection,

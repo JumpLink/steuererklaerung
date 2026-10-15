@@ -17,6 +17,7 @@ import { signoffSubcommand } from './signoff.ts';
 import { submitSubcommand } from './submit.ts';
 import { filingSubcommand } from './filing.ts';
 import { ustvaSubcommand } from './ustva.ts';
+import { datenschutzSubcommand } from './datenschutz.ts';
 import { exitWhenTaxOff } from './shared.ts';
 
 export const elsterCommand: CommandModule = {
@@ -27,7 +28,7 @@ export const elsterCommand: CommandModule = {
         yargs
             .demandCommand(
                 1,
-                'Choose a subcommand: setup, ustva, euer, explain, reclassify, uste, gewst, feststellung, stammdaten, wizard, est, steuerkonto, kontoabfrage, pin, crosscheck, snapshot, signoff, submit, filing, lock',
+                'Choose a subcommand: setup, datenschutz, ustva, euer, explain, reclassify, uste, gewst, feststellung, stammdaten, wizard, est, steuerkonto, kontoabfrage, pin, crosscheck, snapshot, signoff, submit, filing, lock',
             )
             .option('entity', {
                 type: 'string',
@@ -53,6 +54,7 @@ export const elsterCommand: CommandModule = {
             .command(submitSubcommand)
             .command(filingSubcommand)
             .command(lockSubcommand)
+            .command(datenschutzSubcommand)
             .command({
                 command: 'setup',
                 describe: 'Extract ERiC JAR and verify installation.',

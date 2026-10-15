@@ -4,8 +4,9 @@
  * through koffi. Buffer lifecycle (create → read → free) is handled here, so GJS
  * callers only ever see plain strings and ints.
  *
- * The ERiC native library is USER-PROVIDED (ERIC_HOME) and is never shipped with
- * this package; this file re-declares only the public ABI we use.
+ * The ERiC native library is opened at runtime by absolute path (see eric-shim.c) and
+ * is never linked or shipped by this package; this file re-declares only the public
+ * ABI we use.
  */
 
 using GLib;
@@ -14,6 +15,10 @@ namespace SteuerEric {
 
     [CCode (cheader_filename = "eric-extern.h")]
     namespace Native {
+        [CCode (cname = "st_eric_load")]
+        public static extern int load (string lib_dir);
+        [CCode (cname = "st_eric_load_error")]
+        public static extern unowned string load_error ();
         [CCode (cname = "EricInitialisiere")]
         public static extern int initialisiere (string plugin_pfad, string log_pfad);
         [CCode (cname = "EricBeende")]
@@ -36,7 +41,7 @@ namespace SteuerEric {
         public static extern int hole_fehler_text (int fehlerkode, void* puffer);
         [CCode (cname = "EricBearbeiteVorgang")]
         public static extern int bearbeite_vorgang (string datenpuffer, string datenart_version, uint flags,
-                                                    void* druck, void* crypto, void* transfer,
+                                                    void* druck, void* crypto,
                                                     void* rueckgabe, void* serverantwort);
         [CCode (cname = "st_eric_sende")]
         public static extern int sende (string datenpuffer, string datenart_version, uint flags,
@@ -48,6 +53,20 @@ namespace SteuerEric {
      * Eric — GObject facade over libericapi.so.
      */
     public class Eric : GLib.Object {
+
+        /**
+         * Open the ERiC libraries in @lib_dir (by absolute path). Must succeed before any other
+         * call; returns false when a library is missing or does not match this machine, and
+         * load_error() then says why.
+         */
+        public bool load (string lib_dir) {
+            return Native.load (lib_dir) != 0;
+        }
+
+        /** The loader's message for the last failed load(), empty otherwise. */
+        public string load_error () {
+            return Native.load_error ();
+        }
 
         /** EricInitialisiere — must run before validation/version. Returns the ERiC code (0 = OK). */
         public int initialisiere (string plugin_pfad, string log_pfad) {
@@ -100,7 +119,7 @@ namespace SteuerEric {
         }
 
         /**
-         * EricBearbeiteVorgang in validate-only mode (druck/crypto/transfer are
+         * EricBearbeiteVorgang in validate-only mode (druck/crypto are
          * NULL — no PDF, no encryption, no submission). @flags is e.g.
          * VALIDIERE (2) | PRUEFE_HINWEISE (128). Returns the ERiC code; the result
          * XML (hints or errors) is written to @rueckgabe_xml and the server answer
@@ -110,7 +129,7 @@ namespace SteuerEric {
                                      out string rueckgabe_xml, out string serverantwort_xml) {
             void* rb = Native.puffer_erzeugen ();
             void* sb = Native.puffer_erzeugen ();
-            int rc = Native.bearbeite_vorgang (datenpuffer, datenart_version, flags, null, null, null, rb, sb);
+            int rc = Native.bearbeite_vorgang (datenpuffer, datenart_version, flags, null, null, rb, sb);
             rueckgabe_xml = Native.puffer_inhalt (rb);
             serverantwort_xml = Native.puffer_inhalt (sb);
             Native.puffer_freigeben (rb);

@@ -25,8 +25,8 @@ license allows shipping ERiC together with your own software as one product
 (§ 4 (3)), and restricts use to electronic tax submission (§ 3 (2)). So:
 
 - **Never commit or publish ERiC binaries/headers** with this package or the source repo.
-- Official application builds MAY bundle ERiC (planned: the release pipeline fetches it from a
-  private repo; not implemented yet). Forks and self-builds provide their own.
+- Official application builds bundle a slim ERiC (the release pipeline fetches it from a private
+  repo into the ship payload). Forks and self-builds provide their own.
 - Each user downloads ERiC themselves (developer registration + license
   acceptance) from <https://www.elster.de/eportal/infoseite/entwickler> and runs
   `steuererklaerung-cli elster setup`, or points `ERIC_HOME` at an existing install.
@@ -116,15 +116,14 @@ a developer and accepts the licence. We ship only our wrapper.
 
 The licence allows bundling ERiC with our own product (§ 4 (1)), so a Flatpak that contains it
 is permitted; what is open is the technical route (the release pipeline would pull ERiC from a
-private repo — not implemented yet, and Flathub's own source/redistribution rules still need
-checking). Until then, options, most-realistic first:
+private repo; Flathub's own source/redistribution rules still need checking). Until then, options, most-realistic first:
 
 1. **In-app first-run setup (recommended).** The app ships and works without ERiC;
    the first time the user hits *Validieren/Übermitteln*, a guided flow opens the
    elster.de developer registration, has them accept the licence, and imports the
    downloaded ERiC into the per-user data dir (`~/.var/app/<app-id>/data/eric/`). Our
    binding then resolves `libericapi.so` from there at runtime via
-   `GI_TYPELIB_PATH`/`LD_LIBRARY_PATH`. This also satisfies the **per-user licence
+   the binding (`st_eric_load`) dlopens it by absolute path. This also satisfies the **per-user licence
    acceptance** ERiC requires anyway.
 2. **Flatpak `extra-data`.** The Flathub-blessed mechanism for non-redistributable
    deps (Steam, Spotify, MS fonts): the manifest carries only a URL + sha256, Flatpak
