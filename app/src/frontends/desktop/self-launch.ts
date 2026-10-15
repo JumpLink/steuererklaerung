@@ -49,9 +49,16 @@ function interpreter(): string {
     return 'gjs';
 }
 
-/** argv that runs this app's bundle with `args` instead of opening a window. */
-export function selfCommand(args: string[]): string[] {
-    return [interpreter(), '-m', bundlePath(), ...args];
+/**
+ * argv that runs this app's bundle with `args` instead of opening a window. The Windows and macOS
+ * packages run under node, which takes the bundle as a plain script path (no `-m`).
+ */
+export function selfCommand(args: string[], gjs: boolean = isGjsRuntime()): string[] {
+    return gjs ? [interpreter(), '-m', bundlePath(), ...args] : [process.execPath, bundlePath(), ...args];
+}
+
+function isGjsRuntime(): boolean {
+    return typeof (globalThis as { imports?: unknown }).imports !== 'undefined';
 }
 
 /**

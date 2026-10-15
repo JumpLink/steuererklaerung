@@ -53,7 +53,7 @@ import {
     type CrossCheckSummary,
 } from './cross-checks.ts';
 import { computeInputFingerprint } from './fingerprint.ts';
-import { aggregateUstvaDerPeriode } from './ustva.ts';
+import { aggregateUstvaDerPeriode, entityUsesPaperless } from './ustva.ts';
 
 export type { FilingFormType, FilingSnapshot, FilingSnapshotStatus } from '@steuererklaerung/store';
 
@@ -201,7 +201,11 @@ export async function createFilingSnapshot(
         figures.headline = { net_19: agg.net_19, net_7: agg.net_7, vat_in: agg.vat_in, zahllast };
     } else {
         // The annual forms all derive from ONE tx-driven EÜR aggregate — build it once and thread it.
-        const agg = await euerReportByTransactions(config, year, { accountKeys: scope.accountKeys, elster });
+        const agg = await euerReportByTransactions(config, year, {
+            accountKeys: scope.accountKeys,
+            elster,
+            noPaperless: !entityUsesPaperless(entity),
+        });
         figures.euer = {
             incomeNet: agg.totals.incomeNet,
             outputVat: agg.totals.outputVat,

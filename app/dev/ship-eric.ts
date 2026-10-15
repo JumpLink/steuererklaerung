@@ -10,7 +10,7 @@
 //
 // Layout in the payload: lib/steuererklaerung/eric/<Platform-id>/<relative path>, which is where
 // packages/eric/src/paths.ts (bundledEricHome) looks.
-import { readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { ERIC_PLATFORM_IDS, type EricPlatformId } from '../../packages/eric/src/platform.ts';
 
@@ -46,6 +46,46 @@ for (const file of files) {
     const rel = relative(root, file).split('\\').join('/');
     // Source paths are relative to app/; the staging dir lives under it.
     extra[`lib/steuererklaerung/eric/${id}/${rel}`] = relative(resolve(pkgPath, '..'), file).split('\\').join('/');
+}
+// koffi (the ERiC FFI on Windows/macOS) is `--external` in the bundle and `gjsify ship` stages only
+// @gjsify/node-gi, so without this the zip/msi/app has no koffi and every ERiC call fails. koffi's
+// index.cjs finds its native package at ../../../@koromix/koffi-<os>-<arch> from src/koffi/, which
+// is the layout below. Linux uses the Vala binding instead.
+const koffiOs = id === 'Windows-x86_64' ? 'win32' : id === 'Darwin-universal' ? 'darwin' : undefined;
+if (koffiOs) {
+    const appDir = resolve(pkgPath, '..');
+    let modules: string | undefined;
+    for (let dir = appDir; ; dir = resolve(dir, '..')) {
+        if (existsSync(join(dir, 'node_modules', 'koffi', 'package.json'))) {
+            modules = join(dir, 'node_modules');
+            break;
+        }
+        if (resolve(dir, '..') === dir) break;
+    }
+    if (!modules) {
+        console.error('koffi is not installed — run `gjsify install` first');
+        process.exit(1);
+    }
+    const natives = existsSync(join(modules, '@koromix'))
+        ? readdirSync(join(modules, '@koromix')).filter((n) => n.startsWith(`koffi-${koffiOs}-`))
+        : [];
+    if (natives.length === 0) {
+        console.error(`no @koromix/koffi-${koffiOs}-* installed — install with --os ${koffiOs}`);
+        process.exit(1);
+    }
+    // Runtime files only: the JS entry points and the prebuilt binaries, not docs/vendor/sources.
+    const keep = (path: string) => /(^|\/)(package\.json|index\.(c?js)|indirect\.(c?js)|koffi\.node)$/.test(path);
+    const stage = (pkgName: string) => {
+        const base = join(modules, pkgName);
+        for (const file of walk(base)) {
+            const rel = relative(base, file).split('\\').join('/');
+            if (!keep(rel) || rel.startsWith('doc/') || rel.startsWith('vendor/')) continue;
+            extra[`lib/steuererklaerung/node_modules/${pkgName}/${rel}`] = relative(appDir, file).split('\\').join('/');
+        }
+    };
+    stage('koffi');
+    for (const n of natives) stage(`@koromix/${n}`);
+    console.log(`shipping koffi + ${natives.join(', ')}`);
 }
 if (id === 'Linux-x86_64') {
     const typelibs = ((ship.bundledTypelibs ??= {}).linux ??= []);

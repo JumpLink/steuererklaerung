@@ -10,8 +10,10 @@
 
 import { createRequire } from 'node:module';
 import { mkdirSync } from 'node:fs';
+import { join } from 'node:path';
 
-import { baseLibraryPaths, getEricPaths, isEricAvailable, ERIC_NOT_FOUND_MESSAGE } from './paths.ts';
+import { eric8bitPath, windowsShortPath } from './ascii-path.ts';
+import { appDataDir, baseLibraryPaths, getEricPaths, isEricAvailable, ERIC_NOT_FOUND_MESSAGE } from './paths.ts';
 import { ericPlatform } from './platform.ts';
 import { prepareLoad } from './runtime-env.ts';
 import { EricNotAvailableError } from './errors.ts';
@@ -195,7 +197,12 @@ function loadLibrary(): EricLib {
 
 export function ericInitialisiere(pluginPfad: string, logPfad: string): number {
   mkdirSync(logPfad, { recursive: true });
-  return loadLibrary().EricInitialisiere(pluginPfad, logPfad);
+  const api = loadLibrary();
+  const opts = { shortPath: windowsShortPath(loadKoffi()), fallbackDir: join(appDataDir(), 'eric-ascii') };
+  return api.EricInitialisiere(
+    eric8bitPath(pluginPfad, { ...opts, copyAs: 'plugins' }),
+    eric8bitPath(logPfad, { ...opts, copyAs: 'logs' }),
+  );
 }
 
 export function ericBeende(): number {
