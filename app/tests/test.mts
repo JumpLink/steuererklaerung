@@ -8,6 +8,7 @@ import './helpers/isolate-env.ts';
 import secretStore from './unit/secrets/store.test.ts';
 import ericPlatform from './unit/elster/eric-platform.test.ts';
 import ericRuntime from './unit/elster/eric-runtime.test.ts';
+import ericAsciiPath from './unit/elster/eric-ascii-path.test.ts';
 import builtinDmsNoPaperless from './unit/elster/builtin-dms-no-paperless.test.ts';
 import selfLaunch from './unit/actions/self-launch.test.ts';
 import privacyAck from './unit/elster/privacy-ack.test.ts';
@@ -439,6 +440,7 @@ run({
     secretStore,
     ericPlatform,
     ericRuntime,
+    ericAsciiPath,
     builtinDmsNoPaperless,
     selfLaunch,
     privacyAck,
