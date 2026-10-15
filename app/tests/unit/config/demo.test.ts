@@ -2,7 +2,7 @@
  * The shipped demo: present → offered, absent → not offered, read-only → copied once to a writable place.
  */
 import { describe, expect, it } from '@gjsify/unit';
-import { chmodSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -36,6 +36,17 @@ export default async () => {
                 const shipped = fakeDemo(root);
                 expect(writableDemoDir(shipped, join(root, 'copy'))).toBe(shipped);
                 expect(existsSync(join(root, 'copy'))).toBe(false);
+            } finally {
+                rmSync(root, { recursive: true, force: true });
+            }
+        });
+
+        await it('leaves no probe file behind in a writable demo', async () => {
+            const root = mkdtempSync(join(tmpdir(), 'bh-demo-'));
+            try {
+                const shipped = fakeDemo(root);
+                writableDemoDir(shipped, join(root, 'copy'));
+                expect(readdirSync(shipped).sort().join(',')).toBe('steuererklaerung.json,transactions-data');
             } finally {
                 rmSync(root, { recursive: true, force: true });
             }

@@ -119,7 +119,7 @@ jobs:
           chmod 600 "$key"
           export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
           git clone --quiet --depth 1 --filter=blob:none --sparse "git@github.com:${ERIC_REPO}.git" /tmp/eric-repo
-          git -C /tmp/eric-repo sparse-checkout set --no-cone "${ERIC_VERSION}/eric-${ERIC_VERSION}-Linux-x86_64.tar.gz"
+          git -C /tmp/eric-repo sparse-checkout set --no-cone "/${ERIC_VERSION}/eric-${ERIC_VERSION}-Linux-x86_64.tar.gz"
           rm -f "$key"
           mkdir -p app/.eric-stage
           tar -xzf "/tmp/eric-repo/${ERIC_VERSION}/eric-${ERIC_VERSION}-Linux-x86_64.tar.gz" -C app/.eric-stage
@@ -302,7 +302,7 @@ jobs:
           chmod 600 "$key"
           export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
           git clone --quiet --depth 1 --filter=blob:none --sparse "git@github.com:${ERIC_REPO}.git" /tmp/eric-repo
-          git -C /tmp/eric-repo sparse-checkout set --no-cone "${ERIC_VERSION}/eric-${ERIC_VERSION}-Darwin-universal.tar.gz" "${ERIC_VERSION}/eric-${ERIC_VERSION}-Windows-x86_64.tar.gz"
+          git -C /tmp/eric-repo sparse-checkout set --no-cone "/${ERIC_VERSION}/eric-${ERIC_VERSION}-Darwin-universal.tar.gz" "/${ERIC_VERSION}/eric-${ERIC_VERSION}-Windows-x86_64.tar.gz"
           rm -f "$key"
           for id in Darwin-universal Windows-x86_64; do
             mkdir -p "app/.eric-stage/$id"
