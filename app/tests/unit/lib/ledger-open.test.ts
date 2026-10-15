@@ -11,7 +11,7 @@
  * SQLite, it is silently ignored — the exact shape of "green and yet nothing was configured".
  */
 import { describe, expect, it } from '@gjsify/unit';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -51,6 +51,18 @@ export default async () => {
                 // The timeout must survive on the file path too — that is the one that matters,
                 // since the multi-process contention only exists for a real database.
                 expect(Number(pragma(db, 'busy_timeout'))).toBe(5000);
+            } finally {
+                db.close();
+                rmSync(dir, { recursive: true, force: true });
+            }
+        });
+
+        await it('creates the missing parent directory of a fresh install', async () => {
+            const dir = mkdtempSync(join(tmpdir(), 'bh-ledger-'));
+            const file = join(dir, 'transactions-data', 'nested', 'ledger.db');
+            const db = openLedger(file);
+            try {
+                expect(existsSync(file)).toBe(true);
             } finally {
                 db.close();
                 rmSync(dir, { recursive: true, force: true });

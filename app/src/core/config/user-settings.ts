@@ -20,10 +20,10 @@
  */
 
 import { chmodSync, existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname } from 'node:path';
 import { z } from 'zod';
 
-import { xdgConfigHome, xdgDataHome } from '../paths.ts';
+import { joinFor, xdgConfigHome, xdgDataHome, type PathContext } from '../paths.ts';
 import { getManifestPath } from './manifest.ts';
 
 /** The canonical application id — the settings directory name. */
@@ -93,13 +93,13 @@ export const UserSettingsSchema = z.looseObject({
 export type UserSettings = z.infer<typeof UserSettingsSchema>;
 
 /** `$XDG_CONFIG_HOME/eu.jumplink.Steuererklaerung/settings.json`. */
-export function userSettingsPath(): string {
-    return join(xdgConfigHome(), SETTINGS_APP_ID, 'settings.json');
+export function userSettingsPath(ctx: PathContext = {}): string {
+    return joinFor(ctx, xdgConfigHome(ctx), SETTINGS_APP_ID, 'settings.json');
 }
 
 /** Where backups go unless the person picks a folder: `$XDG_DATA_HOME/eu.jumplink.Steuererklaerung/backups`. */
-export function defaultBackupRoot(): string {
-    return join(xdgDataHome(), SETTINGS_APP_ID, 'backups');
+export function defaultBackupRoot(ctx: PathContext = {}): string {
+    return joinFor(ctx, xdgDataHome(ctx), SETTINGS_APP_ID, 'backups');
 }
 
 /** The defaults — what a person who never opened Settings has. */
