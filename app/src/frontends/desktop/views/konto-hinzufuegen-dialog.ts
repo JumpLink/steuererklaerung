@@ -194,7 +194,7 @@ export class BhAddAccountDialog extends Adw.Dialog {
     }
 
     private fail(banner: Adw.Banner, text: string): void {
-        banner.set_title(markup(text));
+        banner.set_title(text);
         banner.set_revealed(true);
     }
 
@@ -248,7 +248,7 @@ export class BhAddAccountDialog extends Adw.Dialog {
 
     private pageFile(): Adw.NavigationPage {
         const box = this.column();
-        const banner = new Adw.Banner({ revealed: false });
+        const banner = new Adw.Banner({ revealed: false, useMarkup: false });
         const choices = formats();
         let chosenPath = '';
 
@@ -366,7 +366,7 @@ export class BhAddAccountDialog extends Adw.Dialog {
 
     private pageQonto(): Adw.NavigationPage {
         const box = this.column();
-        const banner = new Adw.Banner({ revealed: false });
+        const banner = new Adw.Banner({ revealed: false, useMarkup: false });
 
         const group = new Adw.PreferencesGroup({
             title: _('Connect Qonto'),
@@ -423,7 +423,7 @@ export class BhAddAccountDialog extends Adw.Dialog {
 
     private pageFints(): Adw.NavigationPage {
         const box = this.column();
-        const banner = new Adw.Banner({ revealed: false });
+        const banner = new Adw.Banner({ revealed: false, useMarkup: false });
 
         const group = new Adw.PreferencesGroup({
             title: _('Bank via FinTS/HBCI'),
@@ -490,7 +490,7 @@ export class BhAddAccountDialog extends Adw.Dialog {
 
     private pageAssign(pending: PendingAccount): Adw.NavigationPage {
         const box = this.column();
-        const banner = new Adw.Banner({ revealed: false });
+        const banner = new Adw.Banner({ revealed: false, useMarkup: false });
         const entities = this.manifest?.entities ?? [];
 
         const group = new Adw.PreferencesGroup({
