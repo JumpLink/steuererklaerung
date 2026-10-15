@@ -23,7 +23,7 @@ import {
 } from '../../../../core/actions/assistant/lotse-embed.ts';
 import { configuredBackupRoot } from '../../../../core/actions/backup.ts';
 import { isAssistantEnabled } from '../../../../core/config/assistant-preference.ts';
-import { isDemoMode } from '../../../../core/config/demo.ts';
+import { demoAvailable, isDemoMode } from '../../../../core/config/demo.ts';
 import { loadUserSettings, updateUserSettings } from '../../../../core/config/user-settings.ts';
 import { _, fmt } from '../../i18n.ts';
 import { isBackupRunning, runBackupInBackground } from '../../background-backup.ts';
@@ -44,6 +44,10 @@ export function buildGeneralGroup(group: Adw.PreferencesGroup): void {
     switchButton.connect('clicked', () =>
         switchButton.activate_action('win.switch-mode', GLib.Variant.new_string(demo ? 'own' : 'demo')),
     );
+    if (!demo && !demoAvailable()) {
+        switchButton.set_sensitive(false);
+        mode.set_subtitle(_('Your own data — this installation ships no demo data'));
+    }
     mode.add_suffix(switchButton);
     group.add(mode);
 

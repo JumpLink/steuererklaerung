@@ -26,7 +26,7 @@ import Gio from '@girs/gio-2.0';
 import GObject from '@girs/gobject-2.0';
 import Gtk from '@girs/gtk-4.0';
 
-import { isDemoMode } from '../../../core/config/demo.ts';
+import { demoAvailable, isDemoMode } from '../../../core/config/demo.ts';
 import { getManifestPath } from '../../../core/config/index.ts';
 import { loadUserSettings, updateUserSettings } from '../../../core/config/user-settings.ts';
 import { defaultManifestPath } from '../../../core/paths.ts';
@@ -181,17 +181,20 @@ export class BhWelcome extends Adw.Dialog {
             title: _('How do you want to start?'),
             description: _('Demo and own data are kept strictly apart. You can switch later in the Settings.'),
         });
-        group.add(
-            this.choiceRow(
-                'applications-games-symbolic',
-                _('Try the demo'),
-                _('A fictional business with sample transactions — nothing of yours is touched.'),
-                () => {
-                    this.choice = 'demo';
-                    this.nav.push(this.pageAi());
-                },
-            ),
+        const hasDemo = demoAvailable();
+        const demoRow = this.choiceRow(
+            'applications-games-symbolic',
+            _('Try the demo'),
+            hasDemo
+                ? _('A fictional business with sample transactions — nothing of yours is touched.')
+                : _('This installation ships no demo data.'),
+            () => {
+                this.choice = 'demo';
+                this.nav.push(this.pageAi());
+            },
         );
+        demoRow.set_sensitive(hasDemo);
+        group.add(demoRow);
         group.add(
             this.choiceRow(
                 'avatar-default-symbolic',

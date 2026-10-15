@@ -141,6 +141,14 @@
                     "../node_modules/@gjsify/http-soup-bridge-linux-x64/prebuilds/linux-x64"
                 ]
             },
+            "extraFiles": {
+                "lib/steuererklaerung/demo/steuererklaerung.json": "demo/steuererklaerung.json",
+                "lib/steuererklaerung/demo/transactions-data/camt_DE76370400440532013040.ndjson": "demo/transactions-data/camt_DE76370400440532013040.ndjson",
+                "lib/steuererklaerung/demo/transactions-data/fints_demo-musterbank-giro.ndjson": "demo/transactions-data/fints_demo-musterbank-giro.ndjson",
+                "lib/steuererklaerung/demo/transactions-data/paypal_demo-fw.ndjson": "demo/transactions-data/paypal_demo-fw.ndjson",
+                "lib/steuererklaerung/demo/transactions-data/qonto_demo-fw-geschaeft.ndjson": "demo/transactions-data/qonto_demo-fw-geschaeft.ndjson",
+                "lib/steuererklaerung/demo/transactions-data/statements.json": "demo/transactions-data/statements.json"
+            },
             "appId": "eu.jumplink.Steuererklaerung",
             "name": "Steuererklärung",
             "summary": "Tax return and bookkeeping for small businesses",

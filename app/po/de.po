@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-14 13:47+0200\n"
+"POT-Creation-Date: 2026-10-15 10:04+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -152,11 +152,6 @@ msgstr ""
 "Es ist kein KI-Agent installiert. Installiere opencode oder wähle eine "
 "andere KI-Engine."
 
-#: src/frontends/desktop/about.ts:32
-#: src/frontends/desktop/views/support-dialog.ts:32
-msgid "Support"
-msgstr "Unterstützen"
-
 #. TRANSLATORS: Title of the AI assistant side panel
 #. TRANSLATORS: Title of the side panel holding the external coding agent
 #. TRANSLATORS: Tooltip on the button revealing the AI assistant side panel
@@ -260,7 +255,7 @@ msgstr "Kein Fenster offen, in dem die Bank gefragt werden könnte."
 #: src/frontends/desktop/views/entity-dialogs.ts:101
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:465
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:76
-#: src/frontends/desktop/window.ts:255
+#: src/frontends/desktop/window.ts:256
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -300,6 +295,11 @@ msgstr "de"
 #: src/frontends/desktop/lotse-panel.blp:84
 msgid "Documentation"
 msgstr "Dokumentation"
+
+#: src/frontends/desktop/main.ts:115
+#: src/frontends/desktop/views/support-dialog.ts:32
+msgid "Support"
+msgstr "Unterstützen"
 
 #: src/frontends/desktop/nav.ts:54
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:532
@@ -1248,8 +1248,8 @@ msgid "Your own data"
 msgstr "Eigene Daten"
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:41
-#: src/frontends/desktop/views/welcome.ts:198
-#: src/frontends/desktop/window.ts:627
+#: src/frontends/desktop/views/welcome.ts:201
+#: src/frontends/desktop/window.ts:631
 msgid "Use my own data"
 msgstr "Eigene Daten verwenden"
 
@@ -1258,19 +1258,23 @@ msgstr "Eigene Daten verwenden"
 msgid "Try the demo"
 msgstr "Demo ausprobieren"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:50
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:49
+msgid "Your own data — this installation ships no demo data"
+msgstr "Deine eigenen Daten – diese Installation enthält keine Demo-Daten"
+
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:54
 msgid "Show welcome again"
 msgstr "Einführung erneut anzeigen"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:55
-#: src/frontends/desktop/views/welcome.ts:265
-#: src/frontends/desktop/views/welcome.ts:279
-#: src/frontends/desktop/views/welcome.ts:292
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:59
+#: src/frontends/desktop/views/welcome.ts:268
+#: src/frontends/desktop/views/welcome.ts:284
+#: src/frontends/desktop/views/welcome.ts:297
 msgid "AI assistant"
 msgstr "KI-Assistent"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:57
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:61
 msgid ""
 "Questions and the data needed to answer them go to the configured AI "
 "provider. Independent of the MCP server."
@@ -1278,11 +1282,11 @@ msgstr ""
 "Fragen und die zur Antwort nötigen Daten gehen an den eingerichteten KI-"
 "Anbieter. Unabhängig vom MCP-Server."
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:86
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:90
 msgid "Coding agent"
 msgstr "Coding-Agent"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:88
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:92
 msgid ""
 "Your own opencode uses your login and models from its global configuration. "
 "Takes effect the next time the app starts."
@@ -1290,15 +1294,15 @@ msgstr ""
 "Dein eigenes opencode nutzt deine Anmeldung und die Modelle aus seiner "
 "globalen Konfiguration. Gilt ab dem nächsten Start der App."
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:91
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:95
 msgid "Bundled opencode (recommended)"
 msgstr "Mitgeliefertes opencode (empfohlen)"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:91
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:95
 msgid "Own opencode (global configuration)"
 msgstr "Eigenes opencode (globale Konfiguration)"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:95
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:99
 msgid ""
 "The Flatpak sandbox cannot reach your own opencode, so the bundled one is "
 "always used."
@@ -1306,71 +1310,71 @@ msgstr ""
 "Die Flatpak-Sandbox erreicht dein eigenes opencode nicht, deshalb wird immer "
 "das mitgelieferte verwendet."
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:118
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:122
 msgid "Assistant engine"
 msgstr "Modus"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:119
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:123
 msgid "Takes effect the next time the app starts."
 msgstr "Gilt beim nächsten Start der App."
 
 #. TRANSLATORS: The assistant that is part of the app and answers in-process
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:122
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:126
 msgid "Built in"
 msgstr "Eingebaut"
 
 #. TRANSLATORS: lotse is a program name — it starts a coding agent as a separate process
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:124
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:128
 msgid "Coding agent (lotse)"
 msgstr "Coding-Agent (lotse)"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:140
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:144
 msgid "Last backup"
 msgstr "Letzte Sicherung"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:142
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:201
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:146
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:205
 msgid "Backup folder"
 msgstr "Sicherungsordner"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:150
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:154
 msgid "{time} in {path}"
 msgstr "{time} in {path}"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:155
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:159
 msgid "Never"
 msgstr "Noch nie"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:161
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:169
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:165
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:173
 msgid "Back up now"
 msgstr "Jetzt sichern"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:169
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:173
 msgid "Backing up …"
 msgstr "Wird gesichert …"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:177
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:181
 msgid "Backup saved: {path}"
 msgstr "Sicherung gespeichert: {path}"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:180
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:184
 msgid "Backup failed: {error}"
 msgstr "Sicherung fehlgeschlagen: {error}"
 
 #
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:195
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:199
 msgid "Choose folder"
 msgstr "Ordner wählen"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:223
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:227
 msgid "Keep backups"
 msgstr "Sicherungen behalten"
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:224
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:228
 msgid "Older ones are deleted after each new backup"
 msgstr "Ältere werden nach jeder neuen Sicherung gelöscht"
 
@@ -2031,7 +2035,7 @@ msgstr ""
 #: src/frontends/desktop/views/setup-assistant.ts:521
 #: src/frontends/desktop/views/setup-assistant.ts:581
 #: src/frontends/desktop/views/welcome.ts:149
-#: src/frontends/desktop/views/welcome.ts:269
+#: src/frontends/desktop/views/welcome.ts:274
 msgid "Next"
 msgstr "Weiter"
 
@@ -3421,7 +3425,7 @@ msgstr "Regel bestand bereits: „{pattern}“ → {category}"
 
 #: src/frontends/desktop/views/setup-assistant.ts:63
 #: src/frontends/desktop/views/setup-assistant.ts:468
-#: src/frontends/desktop/window.ts:694
+#: src/frontends/desktop/window.ts:698
 msgid "Private"
 msgstr "Privat"
 
@@ -3599,7 +3603,7 @@ msgid "Dauerfristverlängerung: every VAT return is due one month later."
 msgstr "Jede Voranmeldung ist einen Monat später fällig."
 
 #: src/frontends/desktop/views/setup-assistant.ts:424
-#: src/frontends/desktop/window.ts:694
+#: src/frontends/desktop/window.ts:698
 msgid "Business"
 msgstr "Unternehmen"
 
@@ -3755,9 +3759,10 @@ msgid ""
 "this year, you can support its development — entirely optional, and the app "
 "works the same either way."
 msgstr ""
-"Steuererklärung wird von einer einzelnen Person gebaut und gepflegt. Wenn dir "
-"die App dieses Jahr Zeit gespart hat, kannst du die Entwicklung unterstützen "
-"— ganz freiwillig, und die App funktioniert in jedem Fall gleich."
+"Steuererklärung wird von einer einzelnen Person gebaut und gepflegt. Wenn "
+"dir die App dieses Jahr Zeit gespart hat, kannst du die Entwicklung "
+"unterstützen — ganz freiwillig, und die App funktioniert in jedem Fall "
+"gleich."
 
 #: src/frontends/desktop/views/support-dialog.ts:31
 msgid "Not Now"
@@ -5232,36 +5237,40 @@ msgstr ""
 "Demo und eigene Daten bleiben strikt getrennt. Wechseln kannst du später in "
 "den Einstellungen."
 
-#: src/frontends/desktop/views/welcome.ts:188
+#: src/frontends/desktop/views/welcome.ts:189
 msgid ""
 "A fictional business with sample transactions — nothing of yours is touched."
 msgstr ""
 "Ein erfundener Betrieb mit Beispielbuchungen — nichts von dir wird angefasst."
 
-#: src/frontends/desktop/views/welcome.ts:199
+#: src/frontends/desktop/views/welcome.ts:190
+msgid "This installation ships no demo data."
+msgstr "Diese Installation enthält keine Demo-Daten."
+
+#: src/frontends/desktop/views/welcome.ts:202
 msgid "Set up your business or private tax return in a few steps."
 msgstr ""
 "Richte deinen Betrieb oder deine private Steuererklärung in wenigen "
 "Schritten ein."
 
-#: src/frontends/desktop/views/welcome.ts:209
+#: src/frontends/desktop/views/welcome.ts:212
 msgid "I already have a steuererklaerung.json"
 msgstr "Ich habe schon eine steuererklaerung.json"
 
-#: src/frontends/desktop/views/welcome.ts:210
+#: src/frontends/desktop/views/welcome.ts:213
 msgid "Show where the app looks for it."
 msgstr "Zeigt, wo die App sie sucht."
 
-#: src/frontends/desktop/views/welcome.ts:215
+#: src/frontends/desktop/views/welcome.ts:218
 msgid "Your data"
 msgstr "Deine Daten"
 
-#: src/frontends/desktop/views/welcome.ts:225
-#: src/frontends/desktop/views/welcome.ts:243
+#: src/frontends/desktop/views/welcome.ts:228
+#: src/frontends/desktop/views/welcome.ts:246
 msgid "Existing configuration"
 msgstr "Vorhandene Konfiguration"
 
-#: src/frontends/desktop/views/welcome.ts:227
+#: src/frontends/desktop/views/welcome.ts:230
 msgid ""
 "Copy your steuererklaerung.json (or the older buchhaltung.json) to this "
 "place, then restart the app. Your transactions and receipts stay where the "
@@ -5272,26 +5281,26 @@ msgstr ""
 "Datei sie erwartet."
 
 #
-#: src/frontends/desktop/views/welcome.ts:231
+#: src/frontends/desktop/views/welcome.ts:234
 msgid "Expected location"
 msgstr "Erwarteter Ort"
 
 #
-#: src/frontends/desktop/views/welcome.ts:235
+#: src/frontends/desktop/views/welcome.ts:238
 msgid "Open folder"
 msgstr "Ordner öffnen"
 
 #
-#: src/frontends/desktop/views/welcome.ts:244
+#: src/frontends/desktop/views/welcome.ts:247
 msgid "Restart now"
 msgstr "Jetzt neu starten"
 
 #
-#: src/frontends/desktop/views/welcome.ts:257
+#: src/frontends/desktop/views/welcome.ts:260
 msgid "Optional connections"
 msgstr "Optionale Verbindungen"
 
-#: src/frontends/desktop/views/welcome.ts:258
+#: src/frontends/desktop/views/welcome.ts:261
 msgid ""
 "None of them is needed to start. Set them up later in the Settings, whenever "
 "you like."
@@ -5300,32 +5309,32 @@ msgstr ""
 "ein, wann immer du magst."
 
 #
-#: src/frontends/desktop/views/welcome.ts:260
+#: src/frontends/desktop/views/welcome.ts:263
 msgid "Fetch business account transactions"
 msgstr "Buchungen vom Geschäftskonto abrufen"
 
-#: src/frontends/desktop/views/welcome.ts:262
+#: src/frontends/desktop/views/welcome.ts:265
 msgid "Use receipts from your document archive"
 msgstr "Belege aus deinem Dokumentenarchiv nutzen"
 
-#: src/frontends/desktop/views/welcome.ts:264
+#: src/frontends/desktop/views/welcome.ts:267
 msgid "Online banking with German banks"
 msgstr "Onlinebanking mit deutschen Banken"
 
-#: src/frontends/desktop/views/welcome.ts:265
+#: src/frontends/desktop/views/welcome.ts:268
 msgid "Answers questions and proposes bookings"
 msgstr "Beantwortet Fragen und schlägt Buchungen vor"
 
-#: src/frontends/desktop/views/welcome.ts:266
+#: src/frontends/desktop/views/welcome.ts:270
 msgid "Validate returns with the official ELSTER library"
 msgstr "Erklärungen mit der amtlichen ELSTER-Bibliothek prüfen"
 
 #
-#: src/frontends/desktop/views/welcome.ts:268
+#: src/frontends/desktop/views/welcome.ts:273
 msgid "Connections"
 msgstr "Verbindungen"
 
-#: src/frontends/desktop/views/welcome.ts:281
+#: src/frontends/desktop/views/welcome.ts:286
 msgid ""
 "When you use the assistant, your question and the data it needs to answer go "
 "to the AI provider you configure. Nothing is sent unless you ask. Without "
@@ -5335,20 +5344,20 @@ msgstr ""
 "Daten an den KI-Anbieter, den du einrichtest. Ohne deine Frage wird nichts "
 "gesendet. Ohne Assistent funktioniert die App vollständig."
 
-#: src/frontends/desktop/views/welcome.ts:286
+#: src/frontends/desktop/views/welcome.ts:291
 msgid "Built-in AI assistant"
 msgstr "Eingebauter KI-Assistent"
 
-#: src/frontends/desktop/views/welcome.ts:293
+#: src/frontends/desktop/views/welcome.ts:298
 msgid "Start the demo"
 msgstr "Demo starten"
 
-#: src/frontends/desktop/views/welcome.ts:293
+#: src/frontends/desktop/views/welcome.ts:298
 msgid "Set up my data"
 msgstr "Meine Daten einrichten"
 
 #
-#: src/frontends/desktop/views/welcome.ts:331
+#: src/frontends/desktop/views/welcome.ts:336
 msgid "Could not open {dir}"
 msgstr "{dir} konnte nicht geöffnet werden"
 
@@ -5536,54 +5545,54 @@ msgstr "Native Vorschau"
 msgid "Sync"
 msgstr "Abgleichen"
 
-#: src/frontends/desktop/window.ts:249
+#: src/frontends/desktop/window.ts:250
 msgid "Switch to the demo?"
 msgstr "Zur Demo wechseln?"
 
-#: src/frontends/desktop/window.ts:249
+#: src/frontends/desktop/window.ts:250
 msgid "Switch to your own data?"
 msgstr "Zu eigenen Daten wechseln?"
 
-#: src/frontends/desktop/window.ts:252
+#: src/frontends/desktop/window.ts:253
 msgid ""
 "The app restarts with fictional sample data. Your own data is not changed."
 msgstr ""
 "Die App startet mit erfundenen Beispieldaten neu. Deine eigenen Daten "
 "bleiben unverändert."
 
-#: src/frontends/desktop/window.ts:253
+#: src/frontends/desktop/window.ts:254
 msgid "The app restarts with your own data. The demo data stays separate."
 msgstr ""
 "Die App startet mit deinen eigenen Daten neu. Die Demodaten bleiben getrennt."
 
-#: src/frontends/desktop/window.ts:256
+#: src/frontends/desktop/window.ts:257
 msgid "Restart"
 msgstr "Neu starten"
 
-#: src/frontends/desktop/window.ts:269
+#: src/frontends/desktop/window.ts:270
 msgid "Please restart the app yourself to switch."
 msgstr "Bitte starte die App selbst neu, um zu wechseln."
 
-#: src/frontends/desktop/window.ts:619
+#: src/frontends/desktop/window.ts:623
 msgid "Data could not be loaded completely: {error}"
 msgstr "Daten konnten nicht vollständig geladen werden: {error}"
 
-#: src/frontends/desktop/window.ts:626
+#: src/frontends/desktop/window.ts:630
 msgid "Demo data – fictional examples, no real financial data"
 msgstr "Demodaten – fiktive Beispieldaten, keine echten Finanzdaten"
 
-#: src/frontends/desktop/window.ts:656
+#: src/frontends/desktop/window.ts:660
 msgid "Setup is not finished: no business or private tax return is set up yet."
 msgstr ""
 "Die Einrichtung ist nicht abgeschlossen: Es ist noch kein Betrieb und keine "
 "private Steuererklärung eingerichtet."
 
-#: src/frontends/desktop/window.ts:657
+#: src/frontends/desktop/window.ts:661
 msgid "Setup is not finished: “{entity}” has no bank account yet."
 msgstr ""
 "Die Einrichtung ist nicht abgeschlossen: „{entity}“ hat noch kein Bankkonto."
 
-#: src/frontends/desktop/window.ts:762
+#: src/frontends/desktop/window.ts:766
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."
