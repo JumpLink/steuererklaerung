@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Achievement draft "supporter" — steuererklaerung.
+The object is a perforated receipt with a rubber stamp imprint; only the motif changes per achievement. Shared frame across all
+three apps: 192 x 96 (2:1), 2 px grid, drawn for raster heights 48 and 96 logical px, with a
+locked state that keeps the geometry as a muted silhouette. Title and description come from
+gettext and are drawn next to the artwork, never inside it.
+No text, no raster, no filters, no baked shadows.
+-->
+<svg width="192" height="96" viewBox="0 0 192 96" version="1.1"
+     xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="body" x1="0" y1="6" x2="0" y2="90" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff8d8"/><stop offset="1" stop-color="#f5c211"/></linearGradient>
+    <linearGradient id="holo" x1="0" y1="96" x2="192" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#99c1f0"/><stop offset="0.3" stop-color="#dc8add"/><stop offset="0.6" stop-color="#f9f06b"/><stop offset="1" stop-color="#8ff0a4"/></linearGradient>
+    <clipPath id="paper-clip"><path d="M8 6 L11.0 6 A5 5 0 0 0 21.0 6 L27.0 6 A5 5 0 0 0 37.0 6 L43.0 6 A5 5 0 0 0 53.0 6 L59.0 6 A5 5 0 0 0 69.0 6 L75.0 6 A5 5 0 0 0 85.0 6 L91.0 6 A5 5 0 0 0 101.0 6 L107.0 6 A5 5 0 0 0 117.0 6 L123.0 6 A5 5 0 0 0 133.0 6 L139.0 6 A5 5 0 0 0 149.0 6 L155.0 6 A5 5 0 0 0 165.0 6 L171.0 6 A5 5 0 0 0 181.0 6 L184 6 L184 9.4 A5 5 0 0 0 184 19.4 L184 26.2 A5 5 0 0 0 184 36.2 L184 43.0 A5 5 0 0 0 184 53.0 L184 59.8 A5 5 0 0 0 184 69.8 L184 76.6 A5 5 0 0 0 184 86.6 L184 90 L181.0 90 A5 5 0 0 0 171.0 90 L165.0 90 A5 5 0 0 0 155.0 90 L149.0 90 A5 5 0 0 0 139.0 90 L133.0 90 A5 5 0 0 0 123.0 90 L117.0 90 A5 5 0 0 0 107.0 90 L101.0 90 A5 5 0 0 0 91.0 90 L85.0 90 A5 5 0 0 0 75.0 90 L69.0 90 A5 5 0 0 0 59.0 90 L53.0 90 A5 5 0 0 0 43.0 90 L37.0 90 A5 5 0 0 0 27.0 90 L21.0 90 A5 5 0 0 0 11.0 90 L8 90 L8 86.6 A5 5 0 0 0 8 76.6 L8 69.8 A5 5 0 0 0 8 59.8 L8 53.0 A5 5 0 0 0 8 43.0 L8 36.2 A5 5 0 0 0 8 26.2 L8 19.4 A5 5 0 0 0 8 9.4 Z"/></clipPath>
+    <linearGradient id="seal" x1="0" y1="16" x2="0" y2="80" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#cd7f0d"/><stop offset="1" stop-color="#8f5902"/></linearGradient>
+  </defs>
+  <path id="paper" d="M8 6 L11.0 6 A5 5 0 0 0 21.0 6 L27.0 6 A5 5 0 0 0 37.0 6 L43.0 6 A5 5 0 0 0 53.0 6 L59.0 6 A5 5 0 0 0 69.0 6 L75.0 6 A5 5 0 0 0 85.0 6 L91.0 6 A5 5 0 0 0 101.0 6 L107.0 6 A5 5 0 0 0 117.0 6 L123.0 6 A5 5 0 0 0 133.0 6 L139.0 6 A5 5 0 0 0 149.0 6 L155.0 6 A5 5 0 0 0 165.0 6 L171.0 6 A5 5 0 0 0 181.0 6 L184 6 L184 9.4 A5 5 0 0 0 184 19.4 L184 26.2 A5 5 0 0 0 184 36.2 L184 43.0 A5 5 0 0 0 184 53.0 L184 59.8 A5 5 0 0 0 184 69.8 L184 76.6 A5 5 0 0 0 184 86.6 L184 90 L181.0 90 A5 5 0 0 0 171.0 90 L165.0 90 A5 5 0 0 0 155.0 90 L149.0 90 A5 5 0 0 0 139.0 90 L133.0 90 A5 5 0 0 0 123.0 90 L117.0 90 A5 5 0 0 0 107.0 90 L101.0 90 A5 5 0 0 0 91.0 90 L85.0 90 A5 5 0 0 0 75.0 90 L69.0 90 A5 5 0 0 0 59.0 90 L53.0 90 A5 5 0 0 0 43.0 90 L37.0 90 A5 5 0 0 0 27.0 90 L21.0 90 A5 5 0 0 0 11.0 90 L8 90 L8 86.6 A5 5 0 0 0 8 76.6 L8 69.8 A5 5 0 0 0 8 59.8 L8 53.0 A5 5 0 0 0 8 43.0 L8 36.2 A5 5 0 0 0 8 26.2 L8 19.4 A5 5 0 0 0 8 9.4 Z" fill="url(#body)" stroke="#fcefa8" stroke-width="2"/>
+  <g clip-path="url(#paper-clip)"><path id="banderole" d="M8 74 L78 2 L110 2 L40 94 Z" fill="url(#holo)"/></g>
+  <rect id="paper-frame" x="18" y="16" width="156" height="64" rx="3" fill="none" stroke="#fcefa8" stroke-width="4"/>
+  <rect id="bar-1" x="26" y="30" width="50" height="8" rx="4" fill="#63452c"/><rect id="bar-2" x="26" y="44" width="50" height="8" rx="4" fill="#63452c"/><rect id="bar-3" x="26" y="58" width="38" height="8" rx="4" fill="#63452c"/><rect id="bar-4" x="26" y="72" width="30" height="8" rx="4" fill="#63452c"/>
+  <g id="imprint" transform="rotate(-8 128 48)">
+    <circle id="wax" cx="128" cy="48" r="33" fill="url(#seal)" stroke="#63452c" stroke-width="4"/>
+    <g id="motif" transform="translate(128,48) scale(0.95)"><path d="M0 18 C-10 9 -20 1 -20 -8 C-20 -14 -15 -18 -9 -18 C-4 -18 -1 -15 0 -12 C1 -15 4 -18 9 -18 C15 -18 20 -14 20 -8 C20 1 10 9 0 18 Z" fill="#fffdf2"/></g>
+  </g>
+  <path d="M30 11 Q31.5 16.5 37 18 Q31.5 19.5 30 25 Q28.5 19.5 23 18 Q28.5 16.5 30 11 Z" fill="#fffdf2"/>
+  <path d="M172 74 Q173.3 78.7 178 80 Q173.3 81.3 172 86 Q170.7 81.3 166 80 Q170.7 78.7 172 74 Z" fill="#fffdf2"/>
+</svg>
