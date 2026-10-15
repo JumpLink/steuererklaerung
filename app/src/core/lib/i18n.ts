@@ -22,3 +22,8 @@ export function setCoreTranslator(translator: ((msgid: string) => string) | null
 export function _(msgid: string): string {
     return translate(msgid);
 }
+
+/** Fill `{name}` placeholders in an already translated string (named, so a translation may reorder them). */
+export function fmt(template: string, values: Record<string, string | number>): string {
+    return template.replace(/\{(\w+)\}/g, (whole, name: string) => (name in values ? String(values[name]) : whole));
+}

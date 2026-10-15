@@ -132,7 +132,14 @@ export async function buildSubmissionOverview(
         const snapshot = latestFilingSnapshot(entity, year, form, period);
         const signoff = getSignoffStatus({ entity, year, formType: form, period });
         const gate = evaluateSubmissionGate({ entity, year, formType: form, period });
-        const test = evaluateSubmitReadiness({ entity, year, formType: form, period, mode: 'test' });
+        const test = evaluateSubmitReadiness({
+            entity,
+            year,
+            formType: form,
+            period,
+            mode: 'test',
+            deferPrivacyNotice: true,
+        });
         const live = evaluateSubmitReadiness({
             entity,
             year,
@@ -140,6 +147,7 @@ export async function buildSubmissionOverview(
             period,
             mode: 'live',
             allowLive: true,
+            deferPrivacyNotice: true,
         });
         return {
             form,

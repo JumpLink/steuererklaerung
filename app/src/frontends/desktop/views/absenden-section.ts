@@ -61,6 +61,7 @@ import { ericPlatformSupported } from '../../../core/actions/elster/eric-status.
 import { showSupportPrompt } from './support-dialog.ts';
 import { claimSupportPrompt } from '../../../core/config/support-prompt.ts';
 import { promptLiveSend, promptRelease, promptTestSend } from './absenden-dialog.ts';
+import { ensurePrivacyAck } from './datenschutz-dialog.ts';
 import { vorAbgabeGroup } from './vor-abgabe-group.ts';
 import { showToast } from '../toast.ts';
 
@@ -202,7 +203,7 @@ export class SubmissionSection {
                 ? markup(`verfügbar${overview.ericVersion ? ` · Version ${overview.ericVersion}` : ''}`)
                 : ericPlatformSupported()
                   ? 'nicht verfügbar — in der Konten-Ansicht einrichten'
-                  : 'auf diesem System nicht unterstützt (ERiC nur unter Linux) — XML in Mein ELSTER hochladen',
+                  : 'für diese Architektur gibt es kein ERiC — XML in Mein ELSTER hochladen',
         });
         row.add_prefix(
             new Gtk.Image({
@@ -489,6 +490,7 @@ export class SubmissionSection {
     }
 
     private async onTestSend(form: FormSubmissionState): Promise<void> {
+        if (!(await ensurePrivacyAck(this.root))) return; // licence § 5: before the first send
         // Pre-fill the dialog from the entity's configured certificate + any keyring-stored PIN, and
         // offer to keep the PIN only when a keyring is reachable.
         const canSavePin = keyringAvailable();
@@ -515,6 +517,7 @@ export class SubmissionSection {
     }
 
     private async onLiveSend(form: FormSubmissionState): Promise<void> {
+        if (!(await ensurePrivacyAck(this.root))) return; // licence § 5: before the first send
         // A binding, irreversible filing. Collect creds behind the heavier promptLiveSend dialog (with the
         // headline figure for a final read); pre-fill path + keyring PIN like the test send. The PIN never
         // touches the shell/history — it stays in the masked field / the OS keyring.

@@ -46,6 +46,20 @@ function base(over: Partial<SubmitReadinessInputs>): SubmitReadinessInputs {
 }
 
 export default async function () {
+    describe('computeSubmitReadiness — privacy notice (licence § 5)', () => {
+        it('blocks test and live sends until the notice is confirmed', () => {
+            for (const mode of ['test', 'live'] as const) {
+                const r = computeSubmitReadiness(base({ mode, privacyNoticeMissing: true }));
+                expect(r.ready).toBe(false);
+                expect(r.blockers.some((b) => b.includes('privacy notice'))).toBe(true);
+            }
+        });
+        it('adds no blocker once confirmed', () => {
+            const r = computeSubmitReadiness(base({ privacyNoticeMissing: false }));
+            expect(r.blockers.some((b) => b.includes('privacy notice'))).toBe(false);
+        });
+    });
+
     describe('computeSubmitReadiness — structural guards (both modes)', () => {
         it('blocks when no snapshot exists', () => {
             const r = computeSubmitReadiness(base({ snapshot: null }));

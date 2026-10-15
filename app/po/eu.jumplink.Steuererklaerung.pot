@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-15 10:04+0200\n"
+"POT-Creation-Date: 2026-10-15 11:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,6 +50,34 @@ msgstr ""
 msgid ""
 "Only the beginning of the document was read — check the fields against the "
 "original."
+msgstr ""
+
+#: src/core/actions/elster/privacy-ack.ts:71
+msgid ""
+"Privacy notice of the tax administration:\n"
+"\"With this software, personal data within the meaning of Art. 4 No. 1 GDPR "
+"and Art. 9 (1) GDPR are collected for processing. Besides the data needed "
+"for the tax assessment, the software collects data about the type of "
+"operating system of the user and transmits it to the tax administration. "
+"This data is needed to ensure correct processing and to prevent errors in "
+"the processing. The data is used by the tax administration within the scope "
+"of Art. 6 (1) subpara. 1 point (e) in conjunction with (3) subpara. 1 point "
+"(b) GDPR in conjunction with federal and state tax laws, and only for the "
+"stated purpose.\""
+msgstr ""
+
+#: src/core/actions/elster/privacy-ack.ts:78
+msgid ""
+"ERiC writes log files while it works. They are stored locally on this "
+"computer, in {path}, and stay here. They are only passed on to the software "
+"vendor in a support case, and only with your explicit permission."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:271
+msgid ""
+"The privacy notice of the tax administration has not been confirmed yet — "
+"read and confirm it first (desktop: it appears before sending; CLI: `elster "
+"datenschutz`)."
 msgstr ""
 
 #: src/core/actions/fints-statements.ts:150
@@ -129,6 +157,18 @@ msgstr ""
 
 #: src/core/clients/llm/job-error.ts:63
 msgid "No AI agent is installed. Install opencode or choose another AI engine."
+msgstr ""
+
+#: src/frontends/cli/elster/datenschutz.ts:36
+msgid "Confirmed on {date}."
+msgstr ""
+
+#: src/frontends/cli/elster/datenschutz.ts:42
+msgid "Already confirmed on {date}."
+msgstr ""
+
+#: src/frontends/cli/elster/datenschutz.ts:43
+msgid "Not confirmed yet. Run again with --bestaetigen once you have read it."
 msgstr ""
 
 #. TRANSLATORS: Title of the AI assistant side panel
@@ -226,6 +266,7 @@ msgid "No window is open in which the bank could ask."
 msgstr ""
 
 #: src/frontends/desktop/fints-interaction.ts:58
+#: src/frontends/desktop/views/datenschutz-dialog.ts:72
 #: src/frontends/desktop/views/dialogs.ts:24
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:36
 #: src/frontends/desktop/views/entity-dialogs.ts:42
@@ -1103,6 +1144,26 @@ msgstr ""
 
 #: src/frontends/desktop/views/beleg-upload.ts:127
 msgid "Receipt could not be saved"
+msgstr ""
+
+#: src/frontends/desktop/views/datenschutz-dialog.ts:38
+msgid "Privacy notice for ELSTER transmissions"
+msgstr ""
+
+#: src/frontends/desktop/views/datenschutz-dialog.ts:55
+msgid "Open the full privacy letter (PDF)"
+msgstr ""
+
+#: src/frontends/desktop/views/datenschutz-dialog.ts:55
+msgid "Open the privacy letter on elster.de"
+msgstr ""
+
+#: src/frontends/desktop/views/datenschutz-dialog.ts:68
+msgid "I have read the privacy notice and the privacy letter."
+msgstr ""
+
+#: src/frontends/desktop/views/datenschutz-dialog.ts:73
+msgid "Confirm"
 msgstr ""
 
 #: src/frontends/desktop/views/dialogs.ts:42
