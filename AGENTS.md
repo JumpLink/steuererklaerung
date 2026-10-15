@@ -112,8 +112,8 @@ Diese App ist self-service (kein Steuerberater) → jede Zahl muss **gegenprüfb
   (`packages/eric/src` — Vala binding + koffi).
 - The vendor licence (§ 4 (1)) allows shipping ERiC together with our own software as one
   product. Official release builds do: the release pipeline fetches a slim ERiC 44.3.6.0 from a
-  private repo (secret `ERIC_REPO_TOKEN`; without it the build has no ERiC) and `app/dev/ship-eric.ts`
-  adds it to the payload at `lib/steuererklaerung/eric/<platform>/`. Nothing of ERiC is ever in
+  private repo (secret `ERIC_DEPLOY_KEY`, a read-only deploy key; without it the build has no
+  ERiC) and `app/dev/ship-eric.ts` adds it to the payload at `lib/steuererklaerung/eric/<platform>/`. Nothing of ERiC is ever in
   THIS repo. Forks and self-builds keep working with their own ERiC (`ERIC_HOME`). Sublicensing and
   passing the right on to third parties stay forbidden (§ 4 (3)); the app shows the
   Datenschutzschreiben before the first send (§ 5) and points at the local log files (§ 15).

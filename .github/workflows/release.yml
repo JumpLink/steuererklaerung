@@ -14,10 +14,11 @@ on:
   workflow_dispatch:
 
 # ERiC (the tax authority's submission library) is bundled into OFFICIAL builds only (licence § 4
-# Abs. 1: shipped with our own software as one product). It is fetched from a PRIVATE repo with the
-# secret ERIC_REPO_TOKEN; without the secret (forks, runs from outside PRs) every step below is
-# skipped and the build is the one without ERiC. Secrets this workflow reads:
-#   ERIC_REPO_TOKEN     read access to the private repo's releases (contents: read)
+# Abs. 1: shipped with our own software as one product). It is cloned from a PRIVATE repo over SSH
+# with the secret ERIC_DEPLOY_KEY (a read-only deploy key; GitHub cannot create fine-grained tokens
+# through its API). Without the secret (forks, runs from outside PRs) every step below is skipped and
+# the build is the one without ERiC. Secrets this workflow reads:
+#   ERIC_DEPLOY_KEY     private half of the read-only deploy key on the private repo
 #   ERIC_HERSTELLER_ID  the registered Hersteller-ID, baked into official builds (optional)
 # A build that contains ERiC is never uploaded as a workflow artifact — those are readable by anyone
 # who can read this public repo; it only goes to the release of a tag (the product).
@@ -102,22 +103,27 @@ jobs:
       - name: Fetch ERiC and build the binding
         id: eric
         env:
-          ERIC_REPO_TOKEN: ${{ secrets.ERIC_REPO_TOKEN }}
+          ERIC_DEPLOY_KEY: ${{ secrets.ERIC_DEPLOY_KEY }}
           ERIC_HERSTELLER_ID: ${{ secrets.ERIC_HERSTELLER_ID }}
         run: |
           set -eu
-          if [ -z "${ERIC_REPO_TOKEN:-}" ]; then
-            echo "::notice::ERIC_REPO_TOKEN is not set - building without ERiC"
+          if [ -z "${ERIC_DEPLOY_KEY:-}" ]; then
+            echo "::notice::ERIC_DEPLOY_KEY is not set - building without ERiC"
             echo "fetched=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          dnf install -y --setopt=install_weak_deps=False gh meson vala gcc glib2-devel gobject-introspection-devel
-          export GH_TOKEN="$ERIC_REPO_TOKEN"
-          mkdir -p /tmp/eric app/.eric-stage
-          gh release download "eric-${ERIC_VERSION}" --repo "$ERIC_REPO" \
-            --pattern "eric-${ERIC_VERSION}-Linux-x86_64.tar.gz" --dir /tmp/eric
-          tar -xzf "/tmp/eric/eric-${ERIC_VERSION}-Linux-x86_64.tar.gz" -C app/.eric-stage
-          rm -rf /tmp/eric
+          dnf install -y --setopt=install_weak_deps=False openssh-clients meson vala gcc glib2-devel gobject-introspection-devel
+          key=$(mktemp)
+          trap 'rm -f "$key"' EXIT
+          printf '%s\n' "$ERIC_DEPLOY_KEY" > "$key"
+          chmod 600 "$key"
+          export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+          git clone --quiet --depth 1 --filter=blob:none --sparse "git@github.com:${ERIC_REPO}.git" /tmp/eric-repo
+          git -C /tmp/eric-repo sparse-checkout set --no-cone "${ERIC_VERSION}/eric-${ERIC_VERSION}-Linux-x86_64.tar.gz"
+          rm -f "$key"
+          mkdir -p app/.eric-stage
+          tar -xzf "/tmp/eric-repo/${ERIC_VERSION}/eric-${ERIC_VERSION}-Linux-x86_64.tar.gz" -C app/.eric-stage
+          rm -rf /tmp/eric-repo
           gjsify run -w @steuererklaerung/eric build:meson
           cd app && node dev/ship-eric.ts .eric-stage Linux-x86_64
           echo "fetched=true" >> "$GITHUB_OUTPUT"
@@ -281,23 +287,28 @@ jobs:
       - name: Fetch ERiC
         id: eric
         env:
-          ERIC_REPO_TOKEN: ${{ secrets.ERIC_REPO_TOKEN }}
+          ERIC_DEPLOY_KEY: ${{ secrets.ERIC_DEPLOY_KEY }}
         run: |
           set -eu
-          if [ -z "${ERIC_REPO_TOKEN:-}" ]; then
-            echo "::notice::ERIC_REPO_TOKEN is not set - building without ERiC"
+          if [ -z "${ERIC_DEPLOY_KEY:-}" ]; then
+            echo "::notice::ERIC_DEPLOY_KEY is not set - building without ERiC"
             echo "fetched=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          dnf install -y --setopt=install_weak_deps=False gh
-          export GH_TOKEN="$ERIC_REPO_TOKEN"
+          dnf install -y --setopt=install_weak_deps=False openssh-clients
+          key=$(mktemp)
+          trap 'rm -f "$key"' EXIT
+          printf '%s\n' "$ERIC_DEPLOY_KEY" > "$key"
+          chmod 600 "$key"
+          export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+          git clone --quiet --depth 1 --filter=blob:none --sparse "git@github.com:${ERIC_REPO}.git" /tmp/eric-repo
+          git -C /tmp/eric-repo sparse-checkout set --no-cone "${ERIC_VERSION}/eric-${ERIC_VERSION}-Darwin-universal.tar.gz" "${ERIC_VERSION}/eric-${ERIC_VERSION}-Windows-x86_64.tar.gz"
+          rm -f "$key"
           for id in Darwin-universal Windows-x86_64; do
             mkdir -p "app/.eric-stage/$id"
-            gh release download "eric-${ERIC_VERSION}" --repo "$ERIC_REPO" \
-              --pattern "eric-${ERIC_VERSION}-$id.tar.gz" --dir /tmp
-            tar -xzf "/tmp/eric-${ERIC_VERSION}-$id.tar.gz" -C "app/.eric-stage/$id"
-            rm -f "/tmp/eric-${ERIC_VERSION}-$id.tar.gz"
+            tar -xzf "/tmp/eric-repo/${ERIC_VERSION}/eric-${ERIC_VERSION}-$id.tar.gz" -C "app/.eric-stage/$id"
           done
+          rm -rf /tmp/eric-repo
           echo "fetched=true" >> "$GITHUB_OUTPUT"
           echo "ERIC_FETCHED=true" >> "$GITHUB_ENV"
 
