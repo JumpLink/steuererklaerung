@@ -12,7 +12,7 @@
  * STEUER_WORKSPACE — still wins.
  */
 
-import { accessSync, constants, cpSync, existsSync, mkdirSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { userDataDir } from '../paths.ts';
@@ -71,7 +71,12 @@ export function demoAvailable(): boolean {
  */
 export function writableDemoDir(shipped: string = demoDir(), target: string = join(userDataDir(), 'demo')): string {
     try {
-        accessSync(shipped, constants.W_OK);
+        // `accessSync(W_OK)` only reads the read-only attribute on Windows and says yes for
+        // `C:\Program Files`, where the ACL then refuses the first write (measured: EPERM while
+        // seeding the demo ledger). Only an actual write is an honest answer.
+        const probe = join(shipped, `.write-probe-${process.pid}`);
+        writeFileSync(probe, '');
+        rmSync(probe, { force: true });
         return shipped;
     } catch {
         if (!existsSync(join(target, 'steuererklaerung.json'))) {
