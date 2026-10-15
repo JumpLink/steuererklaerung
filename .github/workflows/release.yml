@@ -13,6 +13,18 @@ on:
     tags: ['v*']
   workflow_dispatch:
 
+# ERiC (the tax authority's submission library) is bundled into OFFICIAL builds only (licence § 4
+# Abs. 1: shipped with our own software as one product). It is fetched from a PRIVATE repo with the
+# secret ERIC_REPO_TOKEN; without the secret (forks, runs from outside PRs) every step below is
+# skipped and the build is the one without ERiC. Secrets this workflow reads:
+#   ERIC_REPO_TOKEN     read access to the private repo's releases (contents: read)
+#   ERIC_HERSTELLER_ID  the registered Hersteller-ID, baked into official builds (optional)
+# A build that contains ERiC is never uploaded as a workflow artifact — those are readable by anyone
+# who can read this public repo; it only goes to the release of a tag (the product).
+env:
+  ERIC_REPO: JumpLink/steuererklaerung-eric
+  ERIC_VERSION: "44.3.6.0"
+
 jobs:
   package:
     runs-on: ubuntu-latest
@@ -84,6 +96,31 @@ jobs:
 
       - name: Third-party licences are all decided
         run: cd app && gjsify run check:licenses
+
+      # ERiC for the Linux package: the slim runtime plus the GJS binding that loads it. The binding
+      # needs no ERiC to build (it dlopens it at run time), so it is built only when ERiC is bundled.
+      - name: Fetch ERiC and build the binding
+        id: eric
+        env:
+          ERIC_REPO_TOKEN: ${{ secrets.ERIC_REPO_TOKEN }}
+          ERIC_HERSTELLER_ID: ${{ secrets.ERIC_HERSTELLER_ID }}
+        run: |
+          set -eu
+          if [ -z "${ERIC_REPO_TOKEN:-}" ]; then
+            echo "::notice::ERIC_REPO_TOKEN is not set - building without ERiC"
+            echo "fetched=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          dnf install -y --setopt=install_weak_deps=False gh meson vala gcc glib2-devel gobject-introspection-devel
+          export GH_TOKEN="$ERIC_REPO_TOKEN"
+          mkdir -p /tmp/eric app/.eric-stage
+          gh release download "eric-${ERIC_VERSION}" --repo "$ERIC_REPO" \
+            --pattern "eric-${ERIC_VERSION}-Linux-x86_64.tar.gz" --dir /tmp/eric
+          tar -xzf "/tmp/eric/eric-${ERIC_VERSION}-Linux-x86_64.tar.gz" -C app/.eric-stage
+          rm -rf /tmp/eric
+          gjsify run -w @steuererklaerung/eric build:meson
+          cd app && node dev/ship-eric.ts .eric-stage Linux-x86_64
+          echo "fetched=true" >> "$GITHUB_OUTPUT"
 
       # `appimage` is opt-in through `--target` because it needs a tool the CLI does not carry
       # (ADR 0024). Naming the targets means a missing `appimagetool` fails loudly instead of
@@ -159,6 +196,7 @@ jobs:
           xvfb-run -a dbus-run-session -- /tmp/prove.sh
 
       - uses: actions/upload-artifact@v4
+        if: steps.eric.outputs.fetched != 'true'
         with:
           name: packages
           path: app/ship/out/*
@@ -239,22 +277,69 @@ jobs:
           chmod +x /tmp/prove.sh
           xvfb-run -a dbus-run-session -- /tmp/prove.sh
 
+      # ERiC for macOS and Windows (see the header): fetch once, stage per platform before each ship.
+      - name: Fetch ERiC
+        id: eric
+        env:
+          ERIC_REPO_TOKEN: ${{ secrets.ERIC_REPO_TOKEN }}
+        run: |
+          set -eu
+          if [ -z "${ERIC_REPO_TOKEN:-}" ]; then
+            echo "::notice::ERIC_REPO_TOKEN is not set - building without ERiC"
+            echo "fetched=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          dnf install -y --setopt=install_weak_deps=False gh
+          export GH_TOKEN="$ERIC_REPO_TOKEN"
+          for id in Darwin-universal Windows-x86_64; do
+            mkdir -p "app/.eric-stage/$id"
+            gh release download "eric-${ERIC_VERSION}" --repo "$ERIC_REPO" \
+              --pattern "eric-${ERIC_VERSION}-$id.tar.gz" --dir /tmp
+            tar -xzf "/tmp/eric-${ERIC_VERSION}-$id.tar.gz" -C "app/.eric-stage/$id"
+            rm -f "/tmp/eric-${ERIC_VERSION}-$id.tar.gz"
+          done
+          echo "fetched=true" >> "$GITHUB_OUTPUT"
+          echo "ERIC_FETCHED=true" >> "$GITHUB_ENV"
+
+      # `with_eric <platform> <command…>`: run the command with that platform's ERiC added to the
+      # payload (ship-eric.ts patches app/package.json), then put package.json back. Without ERiC
+      # it just runs the command.
+      - name: Define with_eric
+        run: |
+          cat > /usr/local/bin/with_eric <<'SH'
+          #!/bin/sh
+          set -eu
+          id="$1"; shift
+          if [ "${ERIC_FETCHED:-false}" != "true" ]; then exec "$@"; fi
+          cp package.json /tmp/package.json.orig
+          trap 'cp /tmp/package.json.orig package.json' EXIT
+          ERIC_HERSTELLER_ID="${ERIC_HERSTELLER_ID:-}" node dev/ship-eric.ts ".eric-stage/$id" "$id"
+          "$@"
+          SH
+          chmod +x /usr/local/bin/with_eric
+
       # Naming the target installs the os/cpu-gated optionalDependencies (node-runtime, gtk-runtime,
       # node-gi prebuild) that a plain Linux install skips.
       - name: Ship macOS (arm64)
+        env:
+          ERIC_HERSTELLER_ID: ${{ secrets.ERIC_HERSTELLER_ID }}
         run: |
           gjsify install --os darwin --cpu arm64 --immutable
-          cd app && gjsify ship darwin --arch arm64 --skip-build --target macos-app-zip
+          cd app && with_eric Darwin-universal gjsify ship darwin --arch arm64 --skip-build --target macos-app-zip
 
       - name: Ship macOS (x64)
+        env:
+          ERIC_HERSTELLER_ID: ${{ secrets.ERIC_HERSTELLER_ID }}
         run: |
           gjsify install --os darwin --cpu x64 --immutable
-          cd app && gjsify ship darwin --arch x64 --skip-build --target macos-app-zip
+          cd app && with_eric Darwin-universal gjsify ship darwin --arch x64 --skip-build --target macos-app-zip
 
       - name: Ship Windows (x64)
+        env:
+          ERIC_HERSTELLER_ID: ${{ secrets.ERIC_HERSTELLER_ID }}
         run: |
           gjsify install --os win32 --cpu x64 --immutable
-          cd app && gjsify ship windows --arch x64 --skip-build --target windows-dir-zip,msi
+          cd app && with_eric Windows-x86_64 gjsify ship windows --arch x64 --skip-build --target windows-dir-zip,msi
 
       # `ship` exits 0 after writing nothing when every target is filtered away: assert by name.
       - name: Assert the artifacts arrived
@@ -272,6 +357,7 @@ jobs:
           done
 
       - uses: actions/upload-artifact@v4
+        if: steps.eric.outputs.fetched != 'true'
         with:
           name: ship-macos-windows
           path: |
