@@ -31,7 +31,7 @@
 
 import { existsSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { join } from 'node:path';
+import { join, win32 } from 'node:path';
 
 import { getStoreDir } from '@steuererklaerung/store';
 import { LEGACY_MANIFEST_FILENAME, MANIFEST_FILENAME } from './config/manifest.ts';
@@ -39,36 +39,68 @@ import { LEGACY_MANIFEST_FILENAME, MANIFEST_FILENAME } from './config/manifest.t
 /** Directory name used under both XDG roots. */
 export const APP_DIR_NAME = 'steuererklaerung';
 
-/** `$XDG_CONFIG_HOME`, or the specified fallback `~/.config`. A relative value is ignored, per spec. */
-export function xdgConfigHome(): string {
-    const env = process.env.XDG_CONFIG_HOME;
-    return env?.startsWith('/') ? env : join(homedir(), '.config');
+/** What decides a root: injectable so the Windows and macOS branches are testable on Linux. */
+export interface PathContext {
+    platform?: NodeJS.Platform;
+    env?: Record<string, string | undefined>;
+    home?: string;
 }
 
-/** `$XDG_DATA_HOME`, or the specified fallback `~/.local/share`. */
-export function xdgDataHome(): string {
-    const env = process.env.XDG_DATA_HOME;
-    return env?.startsWith('/') ? env : join(homedir(), '.local', 'share');
+/**
+ * Per-user root for `kind`. Linux (and anything else) keeps the XDG rule, byte for byte: absolute
+ * `$XDG_*_HOME`, else `~/.config` / `~/.local/share`. Windows asks where GLib would — `%APPDATA%`
+ * for config, `%LOCALAPPDATA%` for data — and macOS uses `~/Library/Application Support`; before,
+ * those platforms got a Unix-style `~/.local/share` under the profile. XDG variables still win
+ * there when set to an absolute path, so a deliberate override keeps working.
+ */
+function userRoot(kind: 'config' | 'data', ctx: PathContext): string {
+    const platform = ctx.platform ?? process.platform;
+    const env = ctx.env ?? process.env;
+    const home = ctx.home ?? homedir();
+    const xdg = env[kind === 'config' ? 'XDG_CONFIG_HOME' : 'XDG_DATA_HOME'];
+    if (platform === 'win32') {
+        if (xdg && win32.isAbsolute(xdg)) return xdg;
+        const base = kind === 'config' ? env.APPDATA : env.LOCALAPPDATA;
+        return base || win32.join(home, 'AppData', kind === 'config' ? 'Roaming' : 'Local');
+    }
+    if (xdg?.startsWith('/')) return xdg;
+    if (platform === 'darwin') return join(home, 'Library', 'Application Support');
+    return kind === 'config' ? join(home, '.config') : join(home, '.local', 'share');
+}
+
+/** `$XDG_CONFIG_HOME`, or the platform's per-user config root. A relative value is ignored, per spec. */
+export function xdgConfigHome(ctx: PathContext = {}): string {
+    return userRoot('config', ctx);
+}
+
+/** `$XDG_DATA_HOME`, or the platform's per-user data root. */
+export function xdgDataHome(ctx: PathContext = {}): string {
+    return userRoot('data', ctx);
+}
+
+/** Join with the separator of the platform being described, not of the one running the tests. */
+export function joinFor(ctx: PathContext, ...parts: string[]): string {
+    return (ctx.platform ?? process.platform) === 'win32' ? win32.join(...parts) : join(...parts);
 }
 
 /** `~/.config/steuererklaerung` — where a fresh installation keeps its manifest. */
-export function userConfigDir(): string {
-    return join(xdgConfigHome(), APP_DIR_NAME);
+export function userConfigDir(ctx: PathContext = {}): string {
+    return joinFor(ctx, xdgConfigHome(ctx), APP_DIR_NAME);
 }
 
 /** `~/.local/share/steuererklaerung` — where a fresh installation keeps its store, ledger and Belege. */
-export function userDataDir(): string {
-    return join(xdgDataHome(), APP_DIR_NAME);
+export function userDataDir(ctx: PathContext = {}): string {
+    return joinFor(ctx, xdgDataHome(ctx), APP_DIR_NAME);
 }
 
 /** The manifest path a fresh installation should create and use. */
-export function defaultManifestPath(): string {
-    return join(userConfigDir(), MANIFEST_FILENAME);
+export function defaultManifestPath(ctx: PathContext = {}): string {
+    return joinFor(ctx, userConfigDir(ctx), MANIFEST_FILENAME);
 }
 
 /** The data directory a fresh installation should use. */
-export function defaultDataDir(): string {
-    return join(userDataDir(), 'transactions-data');
+export function defaultDataDir(ctx: PathContext = {}): string {
+    return joinFor(ctx, userDataDir(ctx), 'transactions-data');
 }
 
 /**

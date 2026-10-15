@@ -46,6 +46,7 @@ import migrateForward from './unit/config/migrate-forward.test.ts';
 import manifestRevisionSuite from './unit/config/manifest-revision.test.ts';
 import ledgerOpen from './unit/lib/ledger-open.test.ts';
 import paths from './unit/config/paths.test.ts';
+import demo from './unit/config/demo.test.ts';
 import importBatches from './unit/actions/import-batches.test.ts';
 import classificationRules from './unit/actions/classification-rules.test.ts';
 import recurringPeriod from './unit/actions/recurring-period.test.ts';
@@ -257,6 +258,7 @@ run({
     manifestRevisionSuite,
     ledgerOpen,
     paths,
+    demo,
     importBatches,
     classificationRules,
     recurringPeriod,

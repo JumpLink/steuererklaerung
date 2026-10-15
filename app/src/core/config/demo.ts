@@ -12,9 +12,10 @@
  * STEUER_WORKSPACE — still wins.
  */
 
-import { existsSync } from 'node:fs';
+import { accessSync, constants, cpSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { userDataDir } from '../paths.ts';
 
 /**
  * Whether demo mode is requested: `STEUER_DEMO` truthy, or a `--demo` flag on the command line.
@@ -58,13 +59,36 @@ export function demoDir(): string {
     return join(dirname(dirname(fileURLToPath(import.meta.url))), 'demo');
 }
 
+/** Whether a demo workspace is actually present — a build without one must not offer the demo. */
+export function demoAvailable(): boolean {
+    return existsSync(join(demoDir(), 'steuererklaerung.json'));
+}
+
+/**
+ * The demo directory to RUN against. The ledger is seeded next to the manifest, which fails on an
+ * installed build (`/usr/lib`, `Program Files`) where the shipped demo is read-only — so such a
+ * demo is copied once into the user's data dir and used from there.
+ */
+export function writableDemoDir(shipped: string = demoDir(), target: string = join(userDataDir(), 'demo')): string {
+    try {
+        accessSync(shipped, constants.W_OK);
+        return shipped;
+    } catch {
+        if (!existsSync(join(target, 'steuererklaerung.json'))) {
+            mkdirSync(target, { recursive: true });
+            cpSync(shipped, target, { recursive: true });
+        }
+        return target;
+    }
+}
+
 /**
  * If demo mode is on, point the config/store env vars at `app/demo/` (each only when unset).
  * No-op when demo mode is off. Safe to call more than once.
  */
 export function applyDemoEnv(): void {
     if (!isDemoMode()) return;
-    const dir = demoDir();
+    const dir = demoAvailable() ? writableDemoDir() : demoDir();
     // Normalise the switch so downstream detection (banner, meta) sees STEUER_DEMO even for `--demo`.
     process.env.STEUER_DEMO ??= '1';
     process.env.STEUER_WORKSPACE ??= join(dir, 'steuererklaerung.json');

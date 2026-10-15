@@ -4,6 +4,8 @@
  * on GJS and Node — no runtime abstraction.
  */
 
+import { mkdirSync } from 'node:fs';
+import { dirname } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 
 export type LedgerDatabase = DatabaseSync;
@@ -20,6 +22,9 @@ export type LedgerDatabase = DatabaseSync;
 const BUSY_TIMEOUT_MS = 5_000;
 
 export function openLedger(path: string): DatabaseSync {
+  // sqlite creates the file, never its folder: on a fresh install (nothing synced yet, so nothing
+  // made the store dir) it fails with "unable to open database file".
+  if (path !== ':memory:' && !path.startsWith('file:')) mkdirSync(dirname(path), { recursive: true });
   const db = new DatabaseSync(path);
   // WAL + FK enforcement; WAL is a no-op for in-memory DBs (tests).
   db.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');

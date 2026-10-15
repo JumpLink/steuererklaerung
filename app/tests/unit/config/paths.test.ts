@@ -20,6 +20,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
+import { defaultBackupRoot, userSettingsPath } from '../../../src/core/config/user-settings.ts';
 import {
     APP_DIR_NAME,
     applyPathEnv,
@@ -63,6 +64,46 @@ export default async () => {
         dirs.push(dir);
         return dir;
     }
+
+    await describe('per-OS roots (injected platform)', async () => {
+        const win = { platform: 'win32' as const, home: 'C:\\Users\\u', env: {} as Record<string, string> };
+
+        await it('Windows: %APPDATA% for config, %LOCALAPPDATA% for data', async () => {
+            const ctx = { ...win, env: { APPDATA: 'C:\\Users\\u\\AppData\\Roaming', LOCALAPPDATA: 'D:\\Local' } };
+            expect(xdgConfigHome(ctx)).toBe('C:\\Users\\u\\AppData\\Roaming');
+            expect(xdgDataHome(ctx)).toBe('D:\\Local');
+            expect(defaultDataDir(ctx)).toBe('D:\\Local\\steuererklaerung\\transactions-data');
+            expect(defaultManifestPath(ctx)).toBe(
+                'C:\\Users\\u\\AppData\\Roaming\\steuererklaerung\\steuererklaerung.json',
+            );
+        });
+
+        await it('Windows: falls back to the profile AppData folders, never ~/.local/share', async () => {
+            expect(xdgDataHome(win)).toBe('C:\\Users\\u\\AppData\\Local');
+            expect(xdgConfigHome(win)).toBe('C:\\Users\\u\\AppData\\Roaming');
+            expect(defaultBackupRoot(win)).toBe('C:\\Users\\u\\AppData\\Local\\eu.jumplink.Steuererklaerung\\backups');
+            expect(userSettingsPath(win)).toBe(
+                'C:\\Users\\u\\AppData\\Roaming\\eu.jumplink.Steuererklaerung\\settings.json',
+            );
+        });
+
+        await it('Windows: an absolute XDG override still wins', async () => {
+            expect(xdgDataHome({ ...win, env: { XDG_DATA_HOME: 'E:\\data', LOCALAPPDATA: 'D:\\L' } })).toBe('E:\\data');
+        });
+
+        await it('macOS: ~/Library/Application Support', async () => {
+            const ctx = { platform: 'darwin' as const, home: '/Users/u', env: {} };
+            expect(xdgDataHome(ctx)).toBe('/Users/u/Library/Application Support');
+            expect(defaultDataDir(ctx)).toBe('/Users/u/Library/Application Support/steuererklaerung/transactions-data');
+        });
+
+        await it('Linux keeps ~/.config and ~/.local/share exactly', async () => {
+            const ctx = { platform: 'linux' as const, home: '/home/u', env: {} };
+            expect(xdgConfigHome(ctx)).toBe('/home/u/.config');
+            expect(xdgDataHome(ctx)).toBe('/home/u/.local/share');
+            expect(defaultBackupRoot(ctx)).toBe('/home/u/.local/share/eu.jumplink.Steuererklaerung/backups');
+        });
+    });
 
     await describe('XDG resolution', async () => {
         await it('honours XDG_CONFIG_HOME / XDG_DATA_HOME when absolute', async () => {

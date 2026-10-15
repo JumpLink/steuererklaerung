@@ -217,7 +217,7 @@ export function emptyState(opts: {
     box.append(image);
     box.append(
         new Gtk.Label({
-            label: markup(opts.title),
+            label: opts.title,
             cssClasses: ['title-4'],
             wrap: true,
             justify: Gtk.Justification.CENTER,
@@ -225,7 +225,7 @@ export function emptyState(opts: {
     );
     box.append(
         new Gtk.Label({
-            label: markup(opts.description),
+            label: opts.description,
             cssClasses: ['dim-label'],
             wrap: true,
             justify: Gtk.Justification.CENTER,
