@@ -5508,3 +5508,9 @@ msgstr ""
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:63
 msgid "EÜR"
 msgstr ""
+
+#: src/frontends/desktop/views/konten-view.ts:154
+msgid ""
+"The ERiC binding of this installation is broken. Rebuild it with \"gjsify "
+"run -w @steuererklaerung/eric build:meson\" or reinstall the app."
+msgstr ""

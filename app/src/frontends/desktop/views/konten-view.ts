@@ -45,6 +45,7 @@ import {
 import type { AppEntity } from '../entities.ts';
 import { deDate, eur } from '../../../core/lib/format.ts';
 import { applyScrollHook, GroupRows, LoadToken, amountLabel, loadIntoStack, markup } from './util.ts';
+import { _ } from '../i18n.ts';
 import { showToast } from '../toast.ts';
 import { wrapButtonLabel, wrappingLabel } from '../widgets/responsive.ts';
 
@@ -148,11 +149,15 @@ export class BhKontenView extends Adw.Bin {
             );
             statusRow.add_suffix(ericPill(true, 'verfügbar'));
         } else {
-            const detail = status.error
-                ? `Bibliothek nicht ladbar: ${status.error}`
-                : `nicht gefunden — erwartet unter ${status.libPath}` +
-                  (status.missing.length ? ` · fehlend: ${status.missing.join(', ')}` : '') +
-                  ` · ${status.pluginCount} Plugin(s)`;
+            const detail = status.bindingBroken
+                ? _(
+                      'The ERiC binding of this installation is broken. Rebuild it with "gjsify run -w @steuererklaerung/eric build:meson" or reinstall the app.',
+                  )
+                : status.error
+                  ? `Bibliothek nicht ladbar: ${status.error}`
+                  : `nicht gefunden — erwartet unter ${status.libPath}` +
+                    (status.missing.length ? ` · fehlend: ${status.missing.join(', ')}` : '') +
+                    ` · ${status.pluginCount} Plugin(s)`;
             statusRow.set_subtitle(markup(detail));
             statusRow.add_suffix(ericPill(false, status.error ? 'Fehler' : 'nicht gefunden'));
         }
