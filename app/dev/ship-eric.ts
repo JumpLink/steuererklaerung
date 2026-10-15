@@ -14,9 +14,9 @@ import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from '
 import { join, relative, resolve } from 'node:path';
 import { ERIC_PLATFORM_IDS, type EricPlatformId } from '../../packages/eric/src/platform.ts';
 
-const [staging, id] = process.argv.slice(2);
+const [staging, id, arch] = process.argv.slice(2);
 if (!staging || !ERIC_PLATFORM_IDS.includes(id as EricPlatformId)) {
-    console.error(`usage: ship-eric.ts <staging-dir> <${ERIC_PLATFORM_IDS.join('|')}>`);
+    console.error(`usage: ship-eric.ts <staging-dir> <${ERIC_PLATFORM_IDS.join('|')}> [x64|arm64]`);
     process.exit(2);
 }
 
@@ -67,10 +67,10 @@ if (koffiOs) {
         process.exit(1);
     }
     const natives = existsSync(join(modules, '@koromix'))
-        ? readdirSync(join(modules, '@koromix')).filter((n) => n.startsWith(`koffi-${koffiOs}-`))
+        ? readdirSync(join(modules, '@koromix')).filter((n) => n.startsWith(`koffi-${koffiOs}-${arch ?? ''}`))
         : [];
     if (natives.length === 0) {
-        console.error(`no @koromix/koffi-${koffiOs}-* installed — install with --os ${koffiOs}`);
+        console.error(`no @koromix/koffi-${koffiOs}-${arch ?? '*'} installed — install with --os ${koffiOs}`);
         process.exit(1);
     }
     // Runtime files only: the JS entry points and the prebuilt binaries, not docs/vendor/sources.
