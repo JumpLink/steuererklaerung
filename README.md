@@ -147,17 +147,20 @@ library from the Bavarian tax authority.
 > allows shipping it together with our own software as one product, but forbids sublicensing
 > and passing the right on (§ 4 (3)). The source repo holds only our own wrapper
 > ([`packages/eric`](packages/eric/README.md)): no ERiC source, no binaries, no schemas.
-> Planned: official release builds bundle ERiC, fetched by the release pipeline from a private
-> repo (not implemented yet).
+> Official release builds bundle a slim ERiC 44.3.6.0 (Linux, Windows, macOS), which the release
+> pipeline fetches from a private repo. The app shows the tax authority's Datenschutzschreiben
+> and asks for your acknowledgement before the first send.
 
-Until then, and for forks and self-builds, you provide ERiC yourself (developer registration
-in the [ELSTER developer area](https://www.elster.de/eportal/infoseite/entwickler), accepting
-the licence) and point `ERIC_HOME` at it:
+Forks and self-builds provide ERiC themselves (developer registration in the
+[ELSTER developer area](https://www.elster.de/eportal/infoseite/entwickler), accepting the
+licence). Run `steuererklaerung elster setup` after putting the JAR for your platform into the
+app's `downloads` directory, or point `ERIC_HOME` at an existing install. The bundled runtime
+covers tax years 2024 and later; for older years point `ERIC_HOME` at a full ERiC. The search
+order is `ERIC_HOME`, then the bundled copy, then the per-user install.
 
 ```bash
-export ERIC_HOME=/path/to/eric/runtime           # contains lib/libericapi.so
-gjsify run -w @steuererklaerung/eric build:meson # compile our binding once
-export LD_LIBRARY_PATH="$ERIC_HOME/lib:$ERIC_HOME/lib/plugins:$LD_LIBRARY_PATH"
+export ERIC_HOME=/path/to/eric/runtime           # contains lib/libericapi.so (dll/ericapi.dll on Windows)
+gjsify run -w @steuererklaerung/eric build:meson # Linux/GJS only: compile our binding once
 ```
 
 **Without ERiC everything works except validation and submission**: computing, reports,

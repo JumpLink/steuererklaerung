@@ -43,7 +43,7 @@ cd app && gjsify run build:gjs && dev/eric-demo-check.sh [out-dir]
 ```
 
 Each return prints `pass`, `FAIL` (exit 1) or `n/a` with ERiC's first message. `n/a` today: EÜR, GewSt,
-Feststellung and ESt 2026 (ERiC 43.4.6.0 has no plugin for them yet), the Feststellung before 2025 (Anlage
+Feststellung and ESt 2026 (ERiC 44.3.6.0 has no plugin for them yet), the Feststellung before 2025 (Anlage
 FE 1, not built) and ESt years the demo has no Lohnsteuerbescheinigung for. The remaining Hinweise (W-IdNr,
 Entnahmen/Einlagen in FE-G Zeile 191/192) do not fail a return. The demo's IdNrn are ERiC test numbers (leading
 `0`, valid check digit — ERiC-Entwicklerhandbuch, „Test-Steueridentifikationsnummer"); ERiC accepts them with

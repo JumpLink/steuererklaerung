@@ -435,7 +435,7 @@ Anhänge landen im Beleg-Eingang. Paperless kann das selbst (Mail-Regeln); dort 
   Gewinn bleibt gleich. Quellen und ERiC-Lauf in `references/tax-sources.md`, „Erstattungen".
 - **USt-VA mit integriertem DMS:** gebaut 9.10.2026 aus den Buchungen (wie die USt-Jahreserklärung). § 13b und
   steuerfreie Umsätze rechnet dieser Weg noch nicht; dafür braucht es das Lieferland vom Beleg.
-- **ERiC-Prüfung 2026 und 2024:** ERiC 43.4.6.0 kennt EÜR, GewSt, Feststellung und ESt für 2026 noch nicht; das
+- **ERiC-Prüfung 2026 und 2024:** ERiC 44.3.6.0 kennt EÜR, GewSt, Feststellung und ESt für 2026 noch nicht; das
   bringt erst ein späteres ERiC-Release. Die Feststellung vor 2025 (Anlage FE 1) erzeugt die App nicht.
 - **Eigene Ausgangsrechnungen als E-Rechnung:** Für Umsätze ab 2027 brauchen wir sie bei mehr als
   800.000 € Vorjahresumsatz, ab 2028 immer (inländisches B2B). Nachsehen, ob die App die XRechnung bei
