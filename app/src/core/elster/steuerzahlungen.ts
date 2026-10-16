@@ -31,6 +31,7 @@
  */
 
 import type { Filing } from '@steuererklaerung/store';
+import { _, fmt } from '../lib/i18n.ts';
 import { ustvaDeadline } from './steuertermine.ts';
 
 export interface OffeneSteuerzahlung {
@@ -116,24 +117,35 @@ function parseUstvaPeriod(period: string): { year: number; endMonth: number } | 
     return null;
 }
 
-/** Display label per kind + period, e.g. "USt-VA Q1/2026 — Zahllast". */
+/**
+ * Display label per kind + period, e.g. "USt-VA Q1/2026 — VAT payable". The ELSTER form names
+ * (USt-VA, USt-Jahreserklärung, Gewerbesteuer) stay German in both catalogues: they are what the
+ * owner meets in ELSTER and on the Bescheid.
+ */
 function zahlungsLabel(kind: string, period: string): string {
     if (kind === 'ustva') {
         const q = period.match(/^(\d{4})-Q([1-4])$/);
-        if (q) return `USt-VA Q${q[2]}/${q[1]} — Zahllast`;
+        if (q) return fmt(_('USt-VA Q{quarter}/{year} — VAT payable'), { quarter: q[2], year: q[1] });
         const m = period.match(/^(\d{4})-(\d{2})$/);
-        if (m) return `USt-VA ${m[2]}/${m[1]} — Zahllast`;
-        return `USt-VA ${period} — Zahllast`;
+        if (m) return fmt(_('USt-VA {month}/{year} — VAT payable'), { month: m[2], year: m[1] });
+        return fmt(_('USt-VA {period} — VAT payable'), { period });
     }
-    if (kind === 'ust-jahr') return `USt-Jahreserklärung ${period} — Abschlusszahlung`;
+    if (kind === 'ust-jahr') return fmt(_('USt-Jahreserklärung {period} — final payment'), { period });
     if (kind === 'gewst') return `Gewerbesteuer ${period}`;
-    if (kind === 'est') return `Einkommensteuer ${period}`;
+    if (kind === 'est') return fmt(_('Income tax {period}'), { period });
     return `${kind} ${period}`;
 }
 
-const WEEKEND_NOTE = 'Wochenend-Fristende auf Montag verschoben (§108 Abs. 3 AO); Feiertage nicht berücksichtigt.';
-const BESCHEID_NOTE =
-    'Fälligkeit laut Bescheid (i. d. R. 1 Monat nach Bekanntgabe, §220 AO) — Betrag laut eigener Berechnung.';
+/**
+ * The two shared caveats. FUNCTIONS, not constants: a module-level constant is evaluated before a
+ * frontend can register its translator, which would freeze the English text into the German build.
+ */
+function weekendNote(): string {
+    return _('Weekend deadline moved to Monday (§108 Abs. 3 AO); public holidays are not modelled.');
+}
+function bescheidNote(): string {
+    return _('Due per Bescheid (typically 1 month after Bekanntgabe, §220 AO) — amount from our own calculation.');
+}
 
 /** Kinds whose declarations never create a payment obligation of their own. */
 const NO_PAYMENT_KINDS = new Set(['feststellung', 'euer', 'dauerfrist']);
@@ -162,22 +174,27 @@ export function computeOffeneSteuerzahlungen(
 
         const entity = byRegisterId.get(f.entityId);
         let dueDate: string | null = null;
-        let note = BESCHEID_NOTE;
+        let note = bescheidNote();
         if (f.kind === 'ustva') {
             const p = parseUstvaPeriod(f.period);
             if (p) {
                 // Statutory due date of the Voranmeldung itself (§18 Abs. 1 S. 4 UStG) — a late
                 // submission does not move it, the amount is simply already overdue.
                 dueDate = shiftToBusinessDay(ustvaDeadline(p.year, p.endMonth, entity?.dauerfrist ?? false));
-                note = `Zahllast fällig mit der Regelfrist der Voranmeldung (§18 Abs. 1 UStG${
-                    entity?.dauerfrist ? ', inkl. Dauerfristverlängerung' : ''
-                }). ${WEEKEND_NOTE}`;
+                const rule = entity?.dauerfrist
+                    ? _(
+                          'VAT payable due on the statutory deadline of the Voranmeldung (§18 Abs. 1 UStG, incl. Dauerfristverlängerung).',
+                      )
+                    : _('VAT payable due on the statutory deadline of the Voranmeldung (§18 Abs. 1 UStG).');
+                note = `${rule} ${weekendNote()}`;
             } else {
-                note = `Unbekanntes USt-VA-Periodenformat '${f.period}' — Fälligkeit nicht ableitbar.`;
+                note = fmt(_("Unknown USt-VA period format '{period}' — no due date can be derived."), {
+                    period: f.period,
+                });
             }
         } else if (f.kind === 'ust-jahr') {
             dueDate = shiftToBusinessDay(addOneMonthClamped(f.filedAt));
-            note = `Abschlusszahlung fällig 1 Monat nach Eingang der Erklärung (§18 Abs. 4 UStG). ${WEEKEND_NOTE}`;
+            note = `${_('Final payment due 1 month after the return reached the Finanzamt (§18 Abs. 4 UStG).')} ${weekendNote()}`;
         }
 
         const daysUntil = dueDate ? daysBetween(today, dueDate) : null;

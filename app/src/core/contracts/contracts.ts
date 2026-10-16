@@ -10,6 +10,7 @@
 import type { ContractRecord, ContractTransactionRecord, UnifiedTransaction } from '@steuererklaerung/store';
 import type { IcsEvent } from '../actions/ics.ts';
 import { ABSTAND_MONATE, gleichePartei, plusMonate, SERIE_TOLERANZ_TAGE } from '../elster/serie.ts';
+import { _, fmt } from '../lib/i18n.ts';
 import { dayDiff } from '../lib/transactions/reconcile.ts';
 
 /** How long after a debit a credit of the same amount still counts as its return (SEPA: 8 weeks). */
@@ -24,9 +25,14 @@ export type ReminderOffset = { months: number } | { days: number };
 /** Staggered notice reminders: 3 months, 2 months and 14 days before the latest notice date. */
 export const DEFAULT_NOTICE_REMINDERS: readonly ReminderOffset[] = [{ months: 3 }, { months: 2 }, { days: 14 }];
 
-/** A price increase may open a special right to cancel; the owner checks the notice and its deadline. */
-export const PRICE_INCREASE_HINT =
-    'Preiserhöhung: kann ein Sonderkündigungsrecht auslösen — Mitteilung des Anbieters und Frist prüfen.';
+/**
+ * A price increase may open a special right to cancel; the owner checks the notice and its deadline.
+ * A FUNCTION, not a constant: a module-level constant is evaluated before a frontend can register
+ * its translator, which would freeze the English text into the German build.
+ */
+export function priceIncreaseHint(): string {
+    return _('Price increase: may open a special right to cancel — check the provider’s notice and its deadline.');
+}
 
 /** A cent: the window when a contract names an amount but no tolerance. */
 const CENT = 0.005;
@@ -108,10 +114,13 @@ export type NoticeDeadline =
  */
 export function noticeDeadline(c: ContractRecord, today: string): NoticeDeadline {
     if (c.status === 'cancelled')
-        return { kind: 'none', reason: `gekündigt${c.endDate ? `, endet ${c.endDate}` : ''}` };
-    if (c.status === 'ended' || c.status === 'archived') return { kind: 'none', reason: 'beendet' };
-    if (!c.startDate) return { kind: 'none', reason: 'kein Vertragsbeginn' };
-    if (c.noticeValue == null || !c.noticeUnit) return { kind: 'none', reason: 'keine Kündigungsfrist' };
+        return {
+            kind: 'none',
+            reason: c.endDate ? fmt(_('cancelled, ends {date}'), { date: c.endDate }) : _('cancelled'),
+        };
+    if (c.status === 'ended' || c.status === 'archived') return { kind: 'none', reason: _('ended') };
+    if (!c.startDate) return { kind: 'none', reason: _('no start date') };
+    if (c.noticeValue == null || !c.noticeUnit) return { kind: 'none', reason: _('no notice period') };
 
     const fixed = (termEnd: string): NoticeDeadline => {
         const latestNotice = minusNotice(termEnd, c);
@@ -121,8 +130,8 @@ export function noticeDeadline(c: ContractRecord, today: string): NoticeDeadline
 
     if (c.endDate && !c.autoRenewal) {
         return c.endDate >= today
-            ? { kind: 'none', reason: `endet ${c.endDate} ohne Kündigung` }
-            : { kind: 'none', reason: 'beendet' };
+            ? { kind: 'none', reason: fmt(_('ends {date} without notice'), { date: c.endDate }) }
+            : { kind: 'none', reason: _('ended') };
     }
     if (!c.initialTermMonths) return anytime();
 
@@ -130,8 +139,8 @@ export function noticeDeadline(c: ContractRecord, today: string): NoticeDeadline
     if (minusNotice(end, c) >= today) return fixed(end);
     if (!c.autoRenewal)
         return end >= today
-            ? { kind: 'none', reason: `endet ${end}, Frist verstrichen` }
-            : { kind: 'none', reason: 'beendet' };
+            ? { kind: 'none', reason: fmt(_('ends {date}, deadline passed'), { date: end }) }
+            : { kind: 'none', reason: _('ended') };
     if (!c.renewalMonths) return anytime();
     while (minusNotice(end, c) < today) end = termEndFrom(plusDays(end, 1), c.renewalMonths);
     return fixed(end);
@@ -163,7 +172,7 @@ export function parseReminderOffsets(spec: string): ReminderOffset[] {
         .map((s) => {
             const m = /^(\d+)([md])$/.exec(s);
             if (!m || Number(m[1]) <= 0)
-                throw new Error(`Ungültige Erinnerung '${s}' — erlaubt: 3m (Monate), 14d (Tage)`);
+                throw new Error(fmt(_("Invalid reminder '{spec}' — allowed: 3m (months), 14d (days)"), { spec: s }));
             return m[2] === 'm' ? { months: Number(m[1]) } : { days: Number(m[1]) };
         });
 }
@@ -195,11 +204,13 @@ export function buildContractIcsEvents(
     return items.map(({ contract, deadline }) => ({
         uid: `contract-${contract.id}-${deadline.latestNotice}`,
         date: deadline.latestNotice,
-        summary: `Kündigungsfrist: ${contract.name}`,
+        summary: fmt(_('Notice deadline: {name}'), { name: contract.name }),
         description: [
-            `Spätestens heute muss die Kündigung beim Anbieter eingehen, damit der Vertrag am ${deadline.termEnd} endet.`,
-            contract.counterparty ? `Anbieter: ${contract.counterparty}` : null,
-            contract.contractNumber ? `Vertragsnummer: ${contract.contractNumber}` : null,
+            fmt(_('The notice must reach the provider today at the latest for the contract to end on {date}.'), {
+                date: deadline.termEnd,
+            }),
+            contract.counterparty ? fmt(_('Provider: {name}'), { name: contract.counterparty }) : null,
+            contract.contractNumber ? fmt(_('Contract number: {number}'), { number: contract.contractNumber }) : null,
         ]
             .filter(Boolean)
             .join('\n'),
@@ -411,7 +422,7 @@ export function expectedDates(c: ContractRecord, asOf: string): string[] {
  *   {@link DATEN_VERALTET_TAGE} days — reported once, instead of a finding per month;
  * - `returned`: a credit matching the contract with the amount of one of its debits, within
  *   {@link RUECKLASTSCHRIFT_FENSTER_TAGE} days after it (a Rücklastschrift);
- * - `changed`: a payment outside the amount window; an increase carries {@link PRICE_INCREASE_HINT}.
+ * - `changed`: a payment outside the amount window; an increase carries {@link priceIncreaseHint}.
  * Payments are the linked bookings plus the open candidates. Computed, never stored.
  */
 export function contractFindings(
@@ -484,7 +495,7 @@ export function contractFindings(
                 amount: p.amount,
                 expectedAmount: c.amount,
                 direction: increase ? 'increase' : 'decrease',
-                ...(increase ? { hint: PRICE_INCREASE_HINT } : {}),
+                ...(increase ? { hint: priceIncreaseHint() } : {}),
             });
         }
     }
