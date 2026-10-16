@@ -18,6 +18,7 @@ import { execFileSync } from 'node:child_process';
 import { chmodSync, existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
+import { _ } from '../lib/i18n.ts';
 import { userConfigDir } from '../paths.ts';
 
 /** Addresses one secret. `attribute`/`id` is e.g. `keystore` + a certificate path, or `entity` + `gbr`. */
@@ -31,7 +32,7 @@ export type SecretStoreKind = 'secret-tool' | 'keychain' | 'dpapi';
 
 export interface SecretStore {
     readonly kind: SecretStoreKind;
-    /** For the UI and docs, as the end of "Gespeichert …": where the secret ends up and how it is protected. */
+    /** For the UI and docs, as the end of "Stored …": where the secret ends up and how it is protected. */
     readonly description: string;
     /** The secret, or undefined when absent / locked / unreadable — never throws. */
     get(ref: SecretRef): string | undefined;
@@ -66,7 +67,7 @@ function chomp(out: string): string {
 export function secretToolStore(exec: Exec = execSync): SecretStore {
     return {
         kind: 'secret-tool',
-        description: 'im Schlüsselbund (Secret Service), nie im Klartext',
+        description: _('in the keyring (Secret Service), never in clear text'),
         get(ref) {
             try {
                 return (
@@ -109,7 +110,7 @@ export function keychainStore(exec: Exec = execSync): SecretStore {
     const quote = (s: string) => `"${s.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
     return {
         kind: 'keychain',
-        description: 'im macOS-Schlüsselbund, nie im Klartext',
+        description: _('in the macOS keychain, never in clear text'),
         get(ref) {
             try {
                 return (
@@ -190,8 +191,9 @@ export function dpapiStore(
     };
     return {
         kind: 'dpapi',
-        description:
-            'mit deinem Windows-Konto verschlüsselt (DPAPI) — jedes Programm unter diesem Konto kann sie lesen',
+        description: _(
+            'encrypted with your Windows account (DPAPI) — every program running under this account can read them',
+        ),
         get(ref) {
             const blob = read()[key(ref)];
             if (!blob) return undefined;

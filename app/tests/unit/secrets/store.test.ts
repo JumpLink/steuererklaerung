@@ -180,7 +180,7 @@ export default async () => {
         await it('says plainly what it is', async () => {
             const text = dpapiStore(recorder().exec, join(dir, 'x.json')).description;
             expect(text.includes('DPAPI')).toBe(true);
-            expect(text.includes('jedes Programm')).toBe(true);
+            expect(text.includes('every program')).toBe(true);
         });
 
         await it('reports a failed encryption instead of storing something', async () => {

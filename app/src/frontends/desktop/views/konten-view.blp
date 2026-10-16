@@ -1,7 +1,7 @@
 using Gtk 4.0;
 using Adw 1;
 
-// Konten view body. Static chrome in Blueprint; the "Aktive Verbindungen" card grid and the ERiC
+// Konten view body. Static chrome in Blueprint; the "Active connections" card grid and the ERiC
 // card are filled programmatically (see konten-view.ts).
 template $BhKontenView: Adw.Bin {
   Gtk.Stack stack {
@@ -19,7 +19,7 @@ template $BhKontenView: Adw.Bin {
         }
 
         Gtk.Label {
-          label: "Lade Konten …";
+          label: _("Loading accounts …");
           styles ["dim-label"]
         }
       };
@@ -29,7 +29,7 @@ template $BhKontenView: Adw.Bin {
       name: "error";
       child: Adw.StatusPage error_page {
         icon-name: "dialog-error-symbolic";
-        title: "Konnte nicht laden";
+        title: _("Could not load");
       };
     }
 
@@ -51,8 +51,8 @@ template $BhKontenView: Adw.Bin {
             orientation: vertical;
             spacing: 18;
 
-            // "Aktive Verbindungen" — section heading + a responsive card grid (one card per
-            // connection, with per-card Synchronisieren + Trennen), filled programmatically.
+            // "Active connections" — section heading + a responsive card grid (one card per
+            // connection, with a per-card Sync + Disconnect), filled programmatically.
             Gtk.Box connections_box {
               orientation: vertical;
               spacing: 12;
@@ -65,7 +65,7 @@ template $BhKontenView: Adw.Bin {
 
             // Systembibliotheken (ELSTER/ERiC) — status + path import, filled programmatically.
             Adw.PreferencesGroup eric_group {
-              title: "Systembibliotheken (ELSTER/ERiC)";
+              title: _("System libraries (ELSTER/ERiC)");
             }
           };
         };

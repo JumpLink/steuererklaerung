@@ -46,7 +46,7 @@ import type { AppEntity } from '../entities.ts';
 import { deDate, eur } from '../../../core/lib/format.ts';
 import { displayPath } from '../../../core/paths.ts';
 import { applyScrollHook, GroupRows, LoadToken, amountLabel, loadIntoStack, markup } from './util.ts';
-import { _ } from '../i18n.ts';
+import { _, _n, _p, fmt } from '../i18n.ts';
 import { ericSourceLabel, ericVersionLabel } from '../../../core/actions/elster/eric-warnings.ts';
 import { ericWarningRow } from './eric-warning-rows.ts';
 import { showToast } from '../toast.ts';
@@ -55,7 +55,7 @@ import { wrapButtonLabel, wrappingLabel } from '../widgets/responsive.ts';
 const SOURCE_LABEL: Record<string, string> = {
     qonto: 'Qonto',
     fints: 'FinTS',
-    camt: 'CAMT-Datei',
+    camt: _('CAMT file'),
     paypal: 'PayPal',
 };
 
@@ -100,7 +100,7 @@ export class BhKontenView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'Konten konnten nicht geladen werden',
+            errorContext: _('Accounts could not be loaded'),
             load: () => loadConnections(),
             fill: (accounts) => this.fill(accounts),
         });
@@ -136,13 +136,15 @@ export class BhKontenView extends Adw.Bin {
                 this._eric_banner.set_revealed(false);
                 this.fillEric(status);
             })
-            .catch((err: unknown) => this.ericBanner(`ERiC-Status nicht verfügbar: ${msg(err)}`));
+            .catch((err: unknown) =>
+                this.ericBanner(fmt(_('ERiC status not available: {error}'), { error: msg(err) })),
+            );
     }
 
     private fillEric(status: EricStatusView): void {
         this.eric.clear();
 
-        // Status row: version + resolved path when available; else a clear "nicht gefunden" + why.
+        // Status row: version + resolved path when available; else a clear "not found" + why.
         const statusRow = new Adw.ActionRow({ title: 'ERiC (ELSTER Rich Client)' });
         if (status.available) {
             statusRow.set_subtitle(
@@ -158,22 +160,26 @@ export class BhKontenView extends Adw.Bin {
                       'The ERiC binding of this installation is broken. Rebuild it with "gjsify run -w @steuererklaerung/eric build:meson" or reinstall the app.',
                   )
                 : status.error
-                  ? `Bibliothek nicht ladbar: ${status.error}`
-                  : `nicht gefunden — erwartet unter ${status.libPath}` +
-                    (status.missing.length ? ` · fehlend: ${status.missing.join(', ')}` : '') +
-                    ` · ${status.pluginCount} Plugin(s)`;
+                  ? fmt(_('Library cannot be loaded: {error}'), { error: status.error })
+                  : fmt(_('not found — expected at {path}'), { path: status.libPath }) +
+                    (status.missing.length ? fmt(_(' · missing: {names}'), { names: status.missing.join(', ') }) : '') +
+                    fmt(_n(' · {n} plugin', ' · {n} plugins', status.pluginCount), { n: status.pluginCount });
             statusRow.set_subtitle(markup(detail));
-            statusRow.add_suffix(ericPill(false, status.error ? 'Fehler' : 'nicht gefunden'));
+            statusRow.add_suffix(ericPill(false, status.error ? _('Error') : _('not found')));
         }
         this.eric.add(statusRow);
         for (const warning of status.warnings) this.eric.add(ericWarningRow(warning, status.bundled));
 
         // Licence § 15: the end user must be told ERiC writes log files and that they stay local.
         const logRow = new Adw.ActionRow({
-            title: 'ERiC-Protokolldateien',
+            title: _('ERiC log files'),
             subtitle: markup(
-                `ERiC legt Protokolldateien lokal in ${displayPath(status.logPath)} ab. Sie bleiben auf diesem Rechner und ` +
-                    'werden nur im Supportfall und nur mit deiner ausdrücklichen Erlaubnis weitergegeben.',
+                fmt(
+                    _(
+                        'ERiC writes its log files locally to {path}. They stay on this computer and are passed on only in a support case and only with your explicit permission.',
+                    ),
+                    { path: displayPath(status.logPath) },
+                ),
             ),
         });
         logRow.set_subtitle_lines(0);
@@ -182,12 +188,13 @@ export class BhKontenView extends Adw.Bin {
         // An architecture ERiC is not built for (it ships x86_64 for Linux and Windows, universal for
         // macOS): skip the path row and the download help and say what still works.
         if (!status.platformSupported) {
-            statusRow.set_subtitle('für diese Architektur gibt es kein ERiC');
+            statusRow.set_subtitle(_('there is no ERiC for this architecture'));
             const note = new Adw.ActionRow({
-                title: 'Absenden an ELSTER nicht möglich',
+                title: _('Sending to ELSTER is not possible'),
                 subtitle: markup(
-                    'XML erzeugen und prüfen funktioniert weiter; zum Absenden das XML in Mein ELSTER hochladen ' +
-                        'oder die App auf einem x86_64-System starten.',
+                    _(
+                        'Generating and checking the XML still works; to send, upload the XML to Mein ELSTER or start the app on an x86_64 system.',
+                    ),
                 ),
             });
             note.set_subtitle_lines(0);
@@ -205,7 +212,7 @@ export class BhKontenView extends Adw.Bin {
             if (!this.ericFilling) this.applyEricPath(entry.get_text() ?? '');
         });
         // A folder picker, as the certificate row has had all along. Typing an absolute path from
-        // memory is the kind of task that produces a typo and then a "nicht gefunden" nobody can
+        // memory is the kind of task that produces a typo and then a "not found" nobody can
         // explain — and this row is the one place where the whole ELSTER chain is unblocked.
         const pick = new Gtk.Button({
             iconName: 'folder-open-symbolic',
@@ -242,23 +249,22 @@ export class BhKontenView extends Adw.Bin {
         this.eric.add(entry);
 
         // Only when it is missing: where to get it, and why it is not simply included. Without this
-        // the card states a fact ("nicht gefunden") and leaves the user to guess that ERiC is a
+        // the card states a fact ("not found") and leaves the user to guess that ERiC is a
         // separate download at all — the licence forbids shipping it, which is not something anyone
         // could infer from an empty path field.
         if (!status.available) {
             const help = new Adw.ActionRow({
-                title: 'ERiC selbst herunterladen',
+                title: _('Download ERiC yourself'),
                 subtitle: markup(
-                    'Dieser Build bringt ERiC nicht mit (die Lizenz erlaubt die Weitergabe nur im offiziellen ' +
-                        'Release). Nach dem Entpacken hier den Ordner wählen, der lib/libericapi.so ' +
-                        '(Windows: dll/ericapi.dll) enthält. Ohne ERiC funktioniert alles ' +
-                        'außer dem direkten Absenden — XML erzeugen und in Mein ELSTER hochladen geht.',
+                    _(
+                        'This build does not bring ERiC with it (the licence allows redistribution only in the official release). After unpacking, choose the folder here that contains lib/libericapi.so (Windows: dll/ericapi.dll). Without ERiC everything works except sending directly — generating the XML and uploading it to Mein ELSTER still does.',
+                    ),
                 ),
             });
             help.set_subtitle_lines(0);
             const open = new Gtk.LinkButton({
                 uri: 'https://www.elster.de/elsterweb/entwickler/infoseite/eric',
-                label: 'elster.de öffnen',
+                label: _('Open elster.de'),
                 valign: Gtk.Align.CENTER,
             });
             help.add_suffix(open);
@@ -267,18 +273,18 @@ export class BhKontenView extends Adw.Bin {
 
         applyScrollHook(this._scroller);
 
-        // ELSTER certificate (.pfx/.p12) — the "Zertifikatsdatei" used for the live submission. The path
+        // ELSTER certificate (.pfx/.p12) — the certificate file used for the live submission. The path
         // is NOT secret and is persisted per active entity's ELSTER config (mirrors the ERIC_HOME row).
-        const cert = new Adw.EntryRow({ title: 'ELSTER-Zertifikat (.pfx)' });
+        const cert = new Adw.EntryRow({ title: _('ELSTER certificate (.pfx)') });
         cert.set_show_apply_button(true);
         const browse = new Gtk.Button({
             iconName: 'document-open-symbolic',
             cssClasses: ['flat'],
             valign: Gtk.Align.CENTER,
-            tooltipText: 'Zertifikatsdatei wählen',
+            tooltipText: _('Choose certificate file'),
         });
         browse.connect('clicked', () => {
-            const chooser = new Gtk.FileDialog({ title: 'ELSTER-Zertifikat wählen' });
+            const chooser = new Gtk.FileDialog({ title: _('Choose ELSTER certificate') });
             chooser.open(this.get_root() as Gtk.Window | null, null, (_s, res) => {
                 try {
                     const file = chooser.open_finish(res);
@@ -326,7 +332,7 @@ export class BhKontenView extends Adw.Bin {
         });
         this.eric.add(hersteller);
 
-        const lieferant = new Adw.EntryRow({ title: 'DatenLieferant (Name)' });
+        const lieferant = new Adw.EntryRow({ title: _('DatenLieferant (name)') });
         lieferant.set_show_apply_button(true);
         this.submitterFilling = true;
         lieferant.set_text(submitter.datenlieferant ?? '');
@@ -341,7 +347,7 @@ export class BhKontenView extends Adw.Bin {
         this.eric.add(this.buildPinRow());
 
         // Re-run the status check (e.g. after installing ERiC without changing the path).
-        const check = new Adw.ButtonRow({ title: 'Prüfen' });
+        const check = new Adw.ButtonRow({ title: _('Check') });
         check.connect('activated', () => this.refreshEricStatus());
         this.eric.add(check);
     }
@@ -351,10 +357,10 @@ export class BhKontenView extends Adw.Bin {
         try {
             saveKeystore(this.entity, path);
         } catch (err) {
-            this.ericBanner(`Zertifikat-Pfad konnte nicht gespeichert werden: ${msg(err)}`);
+            this.ericBanner(fmt(_('Certificate path could not be saved: {error}'), { error: msg(err) }));
             return;
         }
-        showToast(path.trim() ? 'Zertifikat-Pfad gespeichert' : 'Zertifikat-Pfad entfernt');
+        showToast(path.trim() ? _('Certificate path saved') : _('Certificate path removed'));
     }
 
     /** Persist one submitter-identity field (Hersteller-ID / DatenLieferant) for the active entity. */
@@ -366,23 +372,23 @@ export class BhKontenView extends Adw.Bin {
         try {
             saveSubmitter(this.entity, ids);
         } catch (err) {
-            this.ericBanner(`${label} konnte nicht gespeichert werden: ${msg(err)}`);
+            this.ericBanner(fmt(_('{label} could not be saved: {error}'), { label, error: msg(err) }));
             return;
         }
-        showToast(`${label} gespeichert`);
+        showToast(fmt(_('{label} saved'), { label }));
         if (rebuild) this.refreshEricStatus(); // the "bundled" hint depends on the stored value
     }
 
     /**
-     * The certificate-PIN row: read-first honest state (hinterlegt / keine PIN) with Hinterlegen/Ändern
-     * + Entfernen actions. When no keyring is reachable it degrades to a hint (the PIN is then prompted
+     * The certificate-PIN row: read-first honest state (stored / no PIN) with a Set/Change and a
+     * Remove action. When no keyring is reachable it degrades to a hint (the PIN is then prompted
      * at send time). The PIN itself is never displayed — only whether one is stored.
      */
     private buildPinRow(): Adw.ActionRow {
         if (!keyringAvailable()) {
             const row = new Adw.ActionRow({
-                title: 'Zertifikat-PIN',
-                subtitle: 'Schlüsselbund nicht verfügbar — die PIN wird beim Senden abgefragt.',
+                title: _('Certificate PIN'),
+                subtitle: _('Keyring not available — the PIN is asked for when sending.'),
                 cssClasses: ['dim-label'],
             });
             row.add_prefix(
@@ -398,8 +404,8 @@ export class BhKontenView extends Adw.Bin {
         const entityId = this.entity?.id;
         const stored = entityId ? lookupElsterPin(entityId) != null : false;
         const row = new Adw.ActionRow({
-            title: 'Zertifikat-PIN',
-            subtitle: stored ? 'im Schlüsselbund hinterlegt' : 'keine PIN hinterlegt',
+            title: _('Certificate PIN'),
+            subtitle: stored ? _('stored in the keyring') : _('no PIN stored'),
         });
         row.add_prefix(
             new Gtk.Image({
@@ -410,7 +416,7 @@ export class BhKontenView extends Adw.Bin {
         );
         const box = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 6, valign: Gtk.Align.CENTER });
         const set = new Gtk.Button({
-            label: stored ? 'Ändern' : 'Hinterlegen',
+            label: stored ? _('Change') : _('Store'),
             cssClasses: ['flat'],
             valign: Gtk.Align.CENTER,
             sensitive: !!entityId,
@@ -418,7 +424,7 @@ export class BhKontenView extends Adw.Bin {
         set.connect('clicked', () => void this.onSetPin());
         box.append(set);
         const clear = new Gtk.Button({
-            label: 'Entfernen',
+            label: _('Remove'),
             cssClasses: ['flat'],
             valign: Gtk.Align.CENTER,
             sensitive: stored,
@@ -435,8 +441,8 @@ export class BhKontenView extends Adw.Bin {
         if (!entityId) return;
         const pin = await promptPin(this);
         if (!pin) return; // cancelled / empty
-        if (storeElsterPin(entityId, pin)) showToast('Zertifikat-PIN im Schlüsselbund hinterlegt');
-        else this.ericBanner('Zertifikat-PIN konnte nicht gespeichert werden.');
+        if (storeElsterPin(entityId, pin)) showToast(_('Certificate PIN stored in the keyring'));
+        else this.ericBanner(_('Certificate PIN could not be saved.'));
         this.refreshEricStatus();
     }
 
@@ -445,7 +451,7 @@ export class BhKontenView extends Adw.Bin {
         const entityId = this.entity?.id;
         if (!entityId) return;
         clearElsterPin(entityId);
-        showToast('Zertifikat-PIN entfernt');
+        showToast(_('Certificate PIN removed'));
         this.refreshEricStatus();
     }
 
@@ -454,10 +460,10 @@ export class BhKontenView extends Adw.Bin {
         try {
             saveEricHome(this.entity, path);
         } catch (err) {
-            this.ericBanner(`ERiC-Pfad konnte nicht gespeichert werden: ${msg(err)}`);
+            this.ericBanner(fmt(_('ERiC path could not be saved: {error}'), { error: msg(err) }));
             return;
         }
-        showToast('ERiC-Pfad gespeichert');
+        showToast(_('ERiC path saved'));
         this.refreshEricStatus();
     }
 
@@ -466,21 +472,26 @@ export class BhKontenView extends Adw.Bin {
         this._eric_banner.set_revealed(true);
     }
 
-    // ── Aktive Verbindungen — the connection card grid ────────────────────────────────────────────
+    // ── Active connections — the connection card grid ─────────────────────────────────────────────
 
-    /** Rebuild the "Aktive Verbindungen" section (heading + card grid) from the current store. */
+    /** Rebuild the "Active connections" section (heading + card grid) from the current store. */
     private fillConnections(accounts: ConnectionInfo[]): void {
         clearBox(this._connections_box);
 
-        // Heading, count, probe and "Konto hinzufügen" want 367 px side by side — seven more than a
+        // Heading, count, probe and "Add account" want 367 px side by side — seven more than a
         // phone screen has, which cut the button off at the right edge. Wrapped, it drops to a
         // second line; a desktop window lays the same row out unchanged.
         const head = new Adw.WrapBox({ childSpacing: 8, lineSpacing: 6, justify: Adw.JustifyMode.FILL });
-        head.append(wrappingLabel({ label: 'Aktive Verbindungen', xalign: 0, hexpand: true, cssClasses: ['title-4'] }));
+        head.append(
+            wrappingLabel({ label: _('Active connections'), xalign: 0, hexpand: true, cssClasses: ['title-4'] }),
+        );
         const live = accounts.filter((a) => a.live).length;
         head.append(
             wrappingLabel({
-                label: `${accounts.length} Konten · ${live} live`,
+                label: fmt(_n('{total} account · {live} live', '{total} accounts · {live} live', accounts.length), {
+                    total: accounts.length,
+                    live,
+                }),
                 cssClasses: ['dim-label', 'caption'],
                 valign: Gtk.Align.CENTER,
             }),
@@ -489,7 +500,7 @@ export class BhKontenView extends Adw.Bin {
         // nothing appear. The probe existed only as a CLI command that printed to the console.
         const probe = new Gtk.Button({
             iconName: 'network-transmit-receive-symbolic',
-            tooltipText: 'Anbindungen prüfen',
+            tooltipText: _('Check connections'),
             valign: Gtk.Align.CENTER,
             cssClasses: ['flat'],
         });
@@ -498,7 +509,7 @@ export class BhKontenView extends Adw.Bin {
 
         // The way IN. Without it the view could sync and disconnect what was already there and
         // nothing else — connecting a bank meant editing .env, importing meant a CLI command.
-        const add = new Gtk.Button({ label: 'Konto hinzufügen', valign: Gtk.Align.CENTER });
+        const add = new Gtk.Button({ label: _('Add account'), valign: Gtk.Align.CENTER });
         add.add_css_class('suggested-action');
         add.add_css_class('pill');
         add.connect('clicked', () => this.presentAddAccount());
@@ -510,13 +521,14 @@ export class BhKontenView extends Adw.Bin {
             // This one carries the action, since it is the very first thing a fresh install shows.
             const empty = new Adw.StatusPage({
                 iconName: 'network-server-symbolic',
-                title: 'Noch keine Konten',
+                title: _('No accounts yet'),
                 description: markup(
-                    'Importiere einen Kontoauszug (CAMT, PayPal) oder verbinde Qonto bzw. deine Bank ' +
-                        'über FinTS — danach rechnet die App aus deinen Buchungen.',
+                    _(
+                        'Import a bank statement (CAMT, PayPal) or connect Qonto or your bank via FinTS — then the app calculates from your transactions.',
+                    ),
                 ),
             });
-            const start = new Gtk.Button({ label: 'Konto hinzufügen', halign: Gtk.Align.CENTER });
+            const start = new Gtk.Button({ label: _('Add account'), halign: Gtk.Align.CENTER });
             start.add_css_class('suggested-action');
             start.add_css_class('pill');
             start.connect('clicked', () => this.presentAddAccount());
@@ -537,7 +549,7 @@ export class BhKontenView extends Adw.Bin {
         }
         this.applyAddAccountHook();
 
-        // TODO: Verfügbare Anbindungen catalog (deferred) — the provider catalog (FinTS/GoCardless/
+        // TODO: available-connections catalog (deferred) — the provider catalog (FinTS/GoCardless/
         // Stripe/CSV/ELSTER/E-Mail) with connect-credential flows goes here (separate batch).
     }
 
@@ -546,7 +558,7 @@ export class BhKontenView extends Adw.Bin {
         try {
             this.fillConnections(loadConnections());
         } catch (err) {
-            showToast(`Konten konnten nicht neu geladen werden: ${msg(err)}`);
+            showToast(fmt(_('Accounts could not be reloaded: {error}'), { error: msg(err) }));
         }
     }
 
@@ -561,7 +573,7 @@ export class BhKontenView extends Adw.Bin {
             marginEnd: 16,
         });
 
-        // Header: coloured initials tile · name + entity/ref sub · live/Datei badge.
+        // Header: coloured initials tile · name + entity/ref sub · live/file badge.
         const header = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 12 });
         const label = SOURCE_LABEL[a.source] ?? a.source;
         header.append(new Adw.Avatar({ size: 40, text: label, showInitials: true, valign: Gtk.Align.START }));
@@ -582,20 +594,20 @@ export class BhKontenView extends Adw.Bin {
         header.append(titleBox);
         header.append(
             new Gtk.Label({
-                label: a.live ? 'live' : 'Datei',
+                label: a.live ? _p('account source', 'live') : _p('account source', 'File'),
                 cssClasses: ['caption', 'heading', a.live ? 'success' : 'dim-label'],
                 valign: Gtk.Align.START,
             }),
         );
         content.append(header);
 
-        // Meta: last-sync caption (live) or the imported date range (file) · Saldo.
+        // Meta: last-sync caption (live) or the imported date range (file) · balance.
         const range = a.firstDate && a.lastDate ? `${deDate(a.firstDate)} – ${deDate(a.lastDate)}` : null;
         const metaText = a.live
-            ? `Synchronisiert ${syncedLabel(a.lastSyncedAt)}`
+            ? fmt(_('Synced {when}'), { when: syncedLabel(a.lastSyncedAt) })
             : range
-              ? `Importiert ${range}`
-              : `${a.count} Buchungen`;
+              ? fmt(_('Imported {range}'), { range })
+              : fmt(_n('{n} transaction', '{n} transactions', a.count), { n: a.count });
         const meta = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 8 });
         meta.append(
             new Gtk.Label({
@@ -609,10 +621,10 @@ export class BhKontenView extends Adw.Bin {
         meta.append(amountLabel(eur(a.net), { heading: true }));
         content.append(meta);
 
-        // Actions: Synchronisieren (live only) + destructive Trennen (trash).
+        // Actions: Sync (live only) + destructive Disconnect (trash).
         const actions = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 8 });
         if (a.live) {
-            const sync = new Gtk.Button({ label: 'Synchronisieren', hexpand: true, valign: Gtk.Align.CENTER });
+            const sync = new Gtk.Button({ label: _('Sync'), hexpand: true, valign: Gtk.Align.CENTER });
             sync.connect('clicked', () => void this.onSync(a, sync));
             actions.append(sync);
         } else {
@@ -623,7 +635,7 @@ export class BhKontenView extends Adw.Bin {
             iconName: 'user-trash-symbolic',
             cssClasses: ['flat'],
             valign: Gtk.Align.CENTER,
-            tooltipText: 'Verbindung trennen',
+            tooltipText: _('Disconnect'),
         });
         trash.connect('clicked', () => void this.onDisconnect(a));
         actions.append(trash);
@@ -662,13 +674,13 @@ export class BhKontenView extends Adw.Bin {
                 .map((s) => `${s.ok ? '✓' : '✗'}  ${s.name}${s.message ? ` — ${s.message}` : ''}`)
                 .join('\n');
             const dialog = new Adw.AlertDialog({
-                heading: report.ok ? 'Alle Anbindungen erreichbar' : 'Nicht alle Anbindungen erreichbar',
+                heading: report.ok ? _('All connections reachable') : _('Not all connections reachable'),
                 body: markup(lines),
             });
-            dialog.add_response('close', 'Schließen');
+            dialog.add_response('close', _('Close'));
             dialog.present(this);
         } catch (err) {
-            showToast(`Prüfung fehlgeschlagen: ${msg(err)}`);
+            showToast(fmt(_('Check failed: {error}'), { error: msg(err) }));
         } finally {
             btn.set_sensitive(true);
         }
@@ -692,7 +704,7 @@ export class BhKontenView extends Adw.Bin {
     /** Sync one live connection: disable + relabel the button, toast the result, then refill. */
     private async onSync(a: ConnectionInfo, btn: Gtk.Button): Promise<void> {
         btn.set_sensitive(false);
-        btn.set_label('Synchronisiere …');
+        btn.set_label(_('Syncing …'));
         try {
             const { reports } = await syncTransactions({ account: accountSyncScope(a) });
             appSession().invalidate(); // new transactions → the tax/EÜR aggregate + assistant caches are stale
@@ -701,8 +713,8 @@ export class BhKontenView extends Adw.Bin {
             this.reloadConnections(); // rebuilds the cards (fresh, enabled button) → no manual restore
         } catch (err) {
             btn.set_sensitive(true);
-            btn.set_label('Synchronisieren');
-            showToast(`Sync fehlgeschlagen: ${msg(err)}`, 5);
+            btn.set_label(_('Sync'));
+            showToast(fmt(_('Sync failed: {error}'), { error: msg(err) }), 5);
         }
     }
 
@@ -718,30 +730,44 @@ export class BhKontenView extends Adw.Bin {
             }
             showToast(
                 mode === 'delete-all'
-                    ? `Getrennt · ${transactions} Buchungen gelöscht`
-                    : 'Sync gestoppt — Daten behalten',
+                    ? fmt(
+                          _n(
+                              'Disconnected · {n} transaction deleted',
+                              'Disconnected · {n} transactions deleted',
+                              transactions,
+                          ),
+                          { n: transactions },
+                      )
+                    : _('Sync stopped — data kept'),
             );
             this.reloadConnections();
         } catch (err) {
-            await errorDialog(this, 'Trennen fehlgeschlagen', msg(err));
+            await errorDialog(this, _('Disconnect failed'), msg(err));
         }
     }
 
     /**
-     * Confirmation for Trennen. `removeConnection` has two modes, so this is a small choice dialog
-     * (not the binary confirmDialog): a live account can "Nur Sync stoppen" (keep the imported data)
-     * or "Alles löschen"; a file account only offers the destructive delete. Resolves the chosen
+     * Confirmation for Disconnect. `removeConnection` has two modes, so this is a small choice dialog
+     * (not the binary confirmDialog): a live account can "Only stop syncing" (keep the imported data)
+     * or "Delete everything"; a file account only offers the destructive delete. Resolves the chosen
      * {@link RemoveMode}, or null on cancel.
      */
     private askDisconnect(a: ConnectionInfo): Promise<RemoveMode | null> {
         return new Promise((resolve) => {
             const dlg = new Adw.AlertDialog({
-                heading: 'Verbindung trennen',
-                body: `${SOURCE_LABEL[a.source] ?? a.source} · ${a.ref} — ${a.count} Buchungen. Was soll passieren?`,
+                heading: _('Disconnect'),
+                body: fmt(
+                    _n(
+                        '{source} · {ref} — {n} transaction. What should happen?',
+                        '{source} · {ref} — {n} transactions. What should happen?',
+                        a.count,
+                    ),
+                    { source: SOURCE_LABEL[a.source] ?? a.source, ref: a.ref, n: a.count },
+                ),
             });
-            dlg.add_response('cancel', 'Abbrechen');
-            if (a.live) dlg.add_response('stop-sync', 'Nur Sync stoppen');
-            dlg.add_response('delete-all', 'Alles löschen');
+            dlg.add_response('cancel', _('Cancel'));
+            if (a.live) dlg.add_response('stop-sync', _('Only stop syncing'));
+            dlg.add_response('delete-all', _('Delete everything'));
             dlg.set_response_appearance('delete-all', Adw.ResponseAppearance.DESTRUCTIVE);
             dlg.set_close_response('cancel');
             dlg.set_default_response('cancel');
@@ -763,31 +789,32 @@ function clearBox(box: Gtk.Box): void {
     }
 }
 
-/** Relative "vor …" label for the last sync (design: "vor 12 Minuten"); "noch nie" when never synced. */
+/** Relative label for the last sync (design: "12 minutes ago"); "never" when it has not synced yet. */
 function syncedLabel(iso?: string): string {
-    if (!iso) return 'noch nie';
+    if (!iso) return _('never');
     const then = new Date(iso).getTime();
     if (Number.isNaN(then)) return deDate(iso);
     const secs = Math.max(0, Math.round((Date.now() - then) / 1000));
-    if (secs < 60) return 'gerade eben';
+    if (secs < 60) return _('just now');
     const mins = Math.round(secs / 60);
-    if (mins < 60) return `vor ${mins} Minute${mins === 1 ? '' : 'n'}`;
+    if (mins < 60) return fmt(_n('{n} minute ago', '{n} minutes ago', mins), { n: mins });
     const hours = Math.round(mins / 60);
-    if (hours < 24) return `vor ${hours} Stunde${hours === 1 ? '' : 'n'}`;
+    if (hours < 24) return fmt(_n('{n} hour ago', '{n} hours ago', hours), { n: hours });
     const days = Math.round(hours / 24);
-    if (days <= 7) return `vor ${days} Tag${days === 1 ? '' : 'en'}`;
-    return `am ${deDate(iso)}`;
+    if (days <= 7) return fmt(_n('{n} day ago', '{n} days ago', days), { n: days });
+    return fmt(_('on {date}'), { date: deDate(iso) });
 }
 
 /** One-line toast summary of a per-account sync (reports are already scoped to the synced account). */
 function syncSummary(a: ConnectionInfo, reports: AccountSyncReport[]): string {
     const label = SOURCE_LABEL[a.source] ?? a.source;
-    if (reports.length === 0) return `${label}: nichts zu synchronisieren`;
+    if (reports.length === 0) return fmt(_('{label}: nothing to sync'), { label });
     const failed = reports.filter((r) => r.error);
-    if (failed.length) return `${label}: Fehler — ${failed.map((r) => r.error).join(' · ')}`;
+    if (failed.length)
+        return fmt(_('{label}: error — {errors}'), { label, errors: failed.map((r) => r.error).join(' · ') });
     const added = reports.reduce((n, r) => n + r.added, 0);
     const updated = reports.reduce((n, r) => n + r.updated, 0);
-    return `${label}: +${added} neu · ${updated} aktualisiert`;
+    return fmt(_('{label}: +{added} new · {updated} updated'), { label, added, updated });
 }
 
 /** A small status pill (icon + accented caption) for the ERiC availability row. */
@@ -811,16 +838,16 @@ function ericPill(ok: boolean, label: string): Gtk.Box {
 function promptPin(parent: Gtk.Widget): Promise<string | null> {
     return new Promise((resolve) => {
         const dlg = new Adw.AlertDialog({
-            heading: 'Zertifikat-PIN hinterlegen',
-            body: `${keyringNote()} Nie im Klartext in der Konfiguration.`,
+            heading: _('Store certificate PIN'),
+            body: fmt(_('{note} Never in clear text in the configuration.'), { note: keyringNote() }),
         });
         const group = new Adw.PreferencesGroup();
-        const pinRow = new Adw.PasswordEntryRow({ title: 'Zertifikat-PIN' });
+        const pinRow = new Adw.PasswordEntryRow({ title: _('Certificate PIN') });
         group.add(pinRow);
         dlg.set_extra_child(group);
 
-        dlg.add_response('cancel', 'Abbrechen');
-        dlg.add_response('save', 'Speichern');
+        dlg.add_response('cancel', _('Cancel'));
+        dlg.add_response('save', _('Save'));
         dlg.set_response_appearance('save', Adw.ResponseAppearance.SUGGESTED);
         dlg.set_close_response('cancel');
         dlg.set_default_response('save');
