@@ -15,6 +15,7 @@
 
 import { loadRecurringInvoices, saveRecurringInvoices } from '../config/index.ts';
 import type { RecurringInvoice } from '../config/schema/recurring.ts';
+import { _, fmt } from '../lib/i18n.ts';
 
 /** `Musterkunde GmbH` + `Hosting` → `musterkunde-gmbh-hosting`. */
 export function slugForSchedule(customer: string, description?: string): string {
@@ -36,7 +37,7 @@ export function uniqueScheduleId(base: string, existing: readonly string[]): str
         const candidate = `${base}-${n}`;
         if (!taken.has(candidate)) return candidate;
     }
-    throw new Error(`Keine freie Id für „${base}" gefunden.`);
+    throw new Error(fmt(_('No free id found for “{base}”.'), { base }));
 }
 
 /**
@@ -108,7 +109,7 @@ export function setScheduleStatus(
 ): RecurringInvoice {
     const all = loadRecurringInvoices();
     const found = all.find((r) => r.id === id && r.entityId === entityId);
-    if (!found) throw new Error(`Kein wiederkehrender Posten „${id}" für ${entityId}.`);
+    if (!found) throw new Error(fmt(_('No recurring item “{id}” for {entity}.'), { id, entity: entityId }));
     found.status = status;
     saveRecurringInvoices(all);
     return found;
@@ -118,6 +119,8 @@ export function setScheduleStatus(
 export function removeSchedule(entityId: string, id: string): void {
     const all = loadRecurringInvoices();
     const rest = all.filter((r) => !(r.id === id && r.entityId === entityId));
-    if (rest.length === all.length) throw new Error(`Kein wiederkehrender Posten „${id}" für ${entityId}.`);
+    if (rest.length === all.length) {
+        throw new Error(fmt(_('No recurring item “{id}” for {entity}.'), { id, entity: entityId }));
+    }
     saveRecurringInvoices(rest);
 }

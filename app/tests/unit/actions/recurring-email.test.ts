@@ -96,7 +96,7 @@ export default async () => {
             } catch (err) {
                 message = (err as Error).message;
             }
-            expect(message).toContain('noch keine ausgestellte Rechnung');
+            expect(message).toContain('no issued invoice');
             cleanup();
         });
 
