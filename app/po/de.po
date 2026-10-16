@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-15 22:31+0200\n"
+"POT-Creation-Date: 2026-10-16 08:10+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -54,6 +54,27 @@ msgid ""
 msgstr ""
 "Es wurde nur der Anfang des Dokuments gelesen — bitte die Felder gegen das "
 "Original prüfen."
+
+#: src/core/actions/elster/eric-warnings.ts:60
+msgid "ERiC {release} (library {library})"
+msgstr "ERiC {release} (Bibliothek {library})"
+
+#: src/core/actions/elster/eric-warnings.ts:61
+msgid "ERiC library {library}"
+msgstr "ERiC-Bibliothek {library}"
+
+#: src/core/actions/elster/eric-warnings.ts:92
+msgid ""
+"This ERiC (library {found}) is older than the one bundled with official "
+"builds ({expected}). ELSTER may reject submissions from an ERiC whose "
+"support period has ended — download a current one."
+msgstr "Dieses ERiC (Bibliothek {found}) ist älter als das der offiziellen Builds ({expected}). ELSTER kann Übermittlungen von einem ERiC ablehnen, dessen Unterstützungszeitraum abgelaufen ist — bitte ein aktuelles herunterladen."
+
+#: src/core/actions/elster/eric-warnings.ts:99
+msgid ""
+"This ERiC has no check plugin {plugin} for this form and year. Sending may "
+"fail — download a current ERiC."
+msgstr "Diesem ERiC fehlt das Prüf-Plugin {plugin} für dieses Formular und Jahr. Das Senden kann scheitern — bitte ein aktuelles ERiC herunterladen."
 
 #: src/core/actions/elster/privacy-ack.ts:71
 msgid ""
@@ -227,6 +248,27 @@ msgstr "Bereits bestätigt am {date}."
 msgid "Not confirmed yet. Run again with --bestaetigen once you have read it."
 msgstr ""
 "Noch nicht bestätigt. Nach dem Lesen erneut mit --bestaetigen ausführen."
+
+#: src/frontends/cli/elster/eric.ts:25
+msgid "ERiC cannot be loaded: {error}"
+msgstr "ERiC lässt sich nicht laden: {error}"
+
+#: src/frontends/cli/elster/eric.ts:26
+msgid "ERiC not found under {path}."
+msgstr "ERiC nicht gefunden unter {path}."
+
+#: src/frontends/cli/elster/eric.ts:30
+#: src/frontends/desktop/views/konten-view.ts:148
+msgid "ERiC version unknown"
+msgstr "ERiC-Version unbekannt"
+
+#: src/frontends/cli/elster/eric.ts:31
+msgid "Location: {path}"
+msgstr "Ort: {path}"
+
+#: src/frontends/cli/elster/eric.ts:32
+msgid "Check plugins: {count}"
+msgstr "Prüf-Plugins: {count}"
 
 #. TRANSLATORS: Title of the AI assistant side panel
 #. TRANSLATORS: Title of the side panel holding the external coding agent
@@ -455,7 +497,7 @@ msgid "dates · payments · open items"
 msgstr "Termine · Zahlungen · offene Posten"
 
 #: src/frontends/desktop/nav.ts:68
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:60
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:64
 msgid "Tax"
 msgstr "Steuer"
 
@@ -1824,6 +1866,18 @@ msgstr "Entfernen"
 msgid "Entity removed: {name}"
 msgstr "Entität entfernt: {name}"
 
+#: src/frontends/desktop/views/eric-warning-rows.ts:17
+msgid "Update the app to get the current ERiC."
+msgstr "Mit einem Update der App kommt das aktuelle ERiC."
+
+#: src/frontends/desktop/views/eric-warning-rows.ts:24
+msgid "ERiC is out of date"
+msgstr "ERiC ist veraltet"
+
+#: src/frontends/desktop/views/eric-warning-rows.ts:24
+msgid "Check plugin missing"
+msgstr "Prüf-Plugin fehlt"
+
 #: src/frontends/desktop/views/herleitung-dialog.blp:7
 msgid "Derivation"
 msgstr "Herleitung"
@@ -1997,6 +2051,14 @@ msgstr "Keine Ausgaben erfasst"
 #: src/frontends/desktop/views/home-view.ts:414
 msgid "Liquidity"
 msgstr "Liquidität"
+
+#: src/frontends/desktop/views/konten-view.ts:156
+msgid ""
+"The ERiC binding of this installation is broken. Rebuild it with \"gjsify "
+"run -w @steuererklaerung/eric build:meson\" or reinstall the app."
+msgstr ""
+"Die ERiC-Anbindung dieser Installation ist defekt. Baue sie mit „gjsify run "
+"-w @steuererklaerung/eric build:meson“ neu oder installiere die App neu."
 
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.blp:7
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:244
@@ -2528,7 +2590,7 @@ msgstr "Lade Details …"
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:150
 #: src/frontends/desktop/views/rechnungen-view.ts:525
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:65
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:69
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -3640,7 +3702,7 @@ msgid "This decides which questions follow. Everything can be changed later."
 msgstr "Davon hängt ab, welche Fragen folgen. Alles lässt sich später ändern."
 
 #: src/frontends/desktop/views/setup-assistant.ts:386
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:64
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:68
 msgid "VAT"
 msgstr "Umsatzsteuer"
 
@@ -5779,15 +5841,23 @@ msgstr "Anlage EÜR, jede Zeile bis zu den Buchungen"
 msgid "Tax return with checks before filing"
 msgstr "Steuererklärung mit Prüfungen vor der Abgabe"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:61
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:55
+msgid ""
+"First public release: receipts, transactions and invoices, the EÜR and VAT "
+"returns, and filing through ELSTER."
+msgstr ""
+"Erste öffentliche Version: Belege, Buchungen und Rechnungen, EÜR und "
+"Umsatzsteuererklärungen sowie die Übermittlung über ELSTER."
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:65
 msgid "Accounting"
 msgstr "Buchhaltung"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:62
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:66
 msgid "ELSTER"
 msgstr "ELSTER"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:63
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:67
 msgid "EÜR"
 msgstr "EÜR"
 
@@ -5803,17 +5873,3 @@ msgstr "EÜR"
 
 #~ msgid "Provide MCP tools"
 #~ msgstr "MCP-Tools bereitstellen"
-
-#: src/frontends/desktop/views/konten-view.ts:154
-msgid ""
-"The ERiC binding of this installation is broken. Rebuild it with \"gjsify "
-"run -w @steuererklaerung/eric build:meson\" or reinstall the app."
-msgstr ""
-"Die ERiC-Anbindung dieser Installation ist defekt. Baue sie mit „gjsify run "
-"-w @steuererklaerung/eric build:meson“ neu oder installiere die App neu."
-
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:70
-msgid ""
-"First public release: receipts, transactions and invoices, the EÜR and VAT returns, and filing through ELSTER."
-msgstr ""
-"Erste öffentliche Version: Belege, Buchungen und Rechnungen, EÜR und Umsatzsteuererklärungen sowie die Übermittlung über ELSTER."

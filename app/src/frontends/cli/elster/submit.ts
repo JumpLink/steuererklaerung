@@ -1,4 +1,7 @@
 import { submitFiling, evaluateSubmitReadiness } from '../../../core/actions/elster/submit.ts';
+import { ericWarningsForSend } from '../../../core/actions/elster/submission-overview.ts';
+import { ericWarningText } from '../../../core/actions/elster/eric-warnings.ts';
+import type { FilingFormType } from '../../../core/actions/elster/snapshots.ts';
 import { pickArgv } from '../output.ts';
 import { SNAPSHOT_FORMS } from './shared.ts';
 import { resolveEntityElster } from '../../../core/config/accessors.ts';
@@ -127,6 +130,15 @@ export const submitSubcommand: YargsCommandModule = {
                 return process.exit(readiness.ready ? 0 : 1);
             }
 
+            // A hint, never a stop: stderr keeps `--json` output parseable.
+            for (const w of await ericWarningsForSend(
+                entity,
+                year,
+                form as FilingFormType,
+                pickArgv<string>(raw, 'period'),
+            )) {
+                console.error(`⚠ ${ericWarningText(w)}`);
+            }
             const result = await submitFiling({
                 entity,
                 year,

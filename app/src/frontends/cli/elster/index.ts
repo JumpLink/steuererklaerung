@@ -18,7 +18,10 @@ import { submitSubcommand } from './submit.ts';
 import { filingSubcommand } from './filing.ts';
 import { ustvaSubcommand } from './ustva.ts';
 import { datenschutzSubcommand } from './datenschutz.ts';
+import { ericSubcommand } from './eric.ts';
 import { exitWhenTaxOff } from './shared.ts';
+import { parseEricVersion } from '../../../core/actions/elster/eric-status.ts';
+import { ericWarningText, outdatedWarning } from '../../../core/actions/elster/eric-warnings.ts';
 
 export const elsterCommand: CommandModule = {
     command: 'elster',
@@ -55,6 +58,7 @@ export const elsterCommand: CommandModule = {
             .command(filingSubcommand)
             .command(lockSubcommand)
             .command(datenschutzSubcommand)
+            .command(ericSubcommand)
             .command({
                 command: 'setup',
                 describe: 'Extract ERiC JAR and verify installation.',
@@ -77,6 +81,9 @@ export const elsterCommand: CommandModule = {
                         eric.shutdownEric();
                         console.log('Smoke test passed.');
                         console.log(`ERiC version info:\n${version}`);
+                        const library = parseEricVersion(version);
+                        const outdated = outdatedWarning(library);
+                        if (outdated) console.log(`⚠ ${ericWarningText(outdated)}`);
                         process.exit(0);
                     } catch (err) {
                         console.error(err instanceof Error ? err.message : err);
