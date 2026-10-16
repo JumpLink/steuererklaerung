@@ -16,8 +16,9 @@ import {
     type FilingSnapshot,
 } from './snapshots.ts';
 import { evaluateSubmissionGate, getSignoffStatus, type SubmissionGate } from './signoffs.ts';
-import { evaluateSubmitReadiness } from './submit.ts';
+import { datenartVersionFor, evaluateSubmitReadiness } from './submit.ts';
 import { getEricStatus } from './eric-status.ts';
+import { missingPluginWarning, type EricWarning } from './eric-warnings.ts';
 
 /** Human label per snapshot-able form. */
 const FORM_TITLE: Record<FilingFormType, string> = {
@@ -103,6 +104,9 @@ export interface FormSubmissionState {
     /** A live filing is ready (full release gate + test-first + no double-live + allowLive). */
     liveReady: boolean;
     liveBlockers: string[];
+    /** Non-blocking doubts about the installed ERiC for sending this form and year: the runtime's own
+     *  (too old) plus a missing check plugin. */
+    ericWarnings: EricWarning[];
 }
 
 /** The whole-entity submission picture for a year. */
@@ -111,7 +115,14 @@ export interface SubmissionOverview {
     year: number;
     /** ERiC installed AND its binding loadable (required before any real send). */
     ericAvailable: boolean;
+    /** The version `libericapi` reports (see EricStatus.version). */
     ericVersion: string | null;
+    /** The ERiC release that library belongs to, when known. */
+    ericRelease: string | null;
+    /** The runtime in use is the one shipped with the app (the fix for a warning is then an app update). */
+    ericBundled: boolean;
+    /** Doubts about the runtime itself (older than the bundled one); never block. */
+    ericWarnings: EricWarning[];
     forms: FormSubmissionState[];
 }
 
@@ -165,6 +176,12 @@ export async function buildSubmissionOverview(
             testBlockers: test.blockers,
             liveReady: live.ready,
             liveBlockers: live.blockers,
+            ericWarnings: eric.available
+                ? [
+                      ...eric.warnings,
+                      missingPluginWarning(datenartVersionFor(form, year, snapshot?.xml ?? ''), eric.plugins),
+                  ].filter((w): w is EricWarning => w !== null)
+                : [],
         };
     });
 
@@ -173,6 +190,29 @@ export async function buildSubmissionOverview(
         year,
         ericAvailable: eric.available,
         ericVersion: eric.version,
+        ericRelease: eric.release,
+        ericBundled: eric.bundled,
+        ericWarnings: eric.warnings,
         forms: states,
     };
+}
+
+/**
+ * The doubts about the installed ERiC that apply to sending ONE form — the runtime older than the
+ * bundled one, no check plugin for the form's datenartVersion. The same hints the desktop send
+ * dialog shows; for frontends that send without building the whole overview (the CLI).
+ */
+export async function ericWarningsForSend(
+    entity: string,
+    year: number,
+    form: FilingFormType,
+    period?: string,
+): Promise<EricWarning[]> {
+    const eric = await getEricStatus(resolveEntityScope(entity).elster?.eric_home);
+    if (!eric.available) return [];
+    const snapshot = latestFilingSnapshot(entity, year, form, period);
+    return [
+        ...eric.warnings,
+        missingPluginWarning(datenartVersionFor(form, year, snapshot?.xml ?? ''), eric.plugins),
+    ].filter((w): w is EricWarning => w !== null);
 }

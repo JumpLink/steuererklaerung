@@ -46,6 +46,8 @@ import type { AppEntity } from '../entities.ts';
 import { deDate, eur } from '../../../core/lib/format.ts';
 import { applyScrollHook, GroupRows, LoadToken, amountLabel, loadIntoStack, markup } from './util.ts';
 import { _ } from '../i18n.ts';
+import { ericVersionLabel } from '../../../core/actions/elster/eric-warnings.ts';
+import { ericWarningRow } from './eric-warning-rows.ts';
 import { showToast } from '../toast.ts';
 import { wrapButtonLabel, wrappingLabel } from '../widgets/responsive.ts';
 
@@ -143,7 +145,7 @@ export class BhKontenView extends Adw.Bin {
         if (status.available) {
             statusRow.set_subtitle(
                 markup(
-                    `Version ${status.version ?? 'unbekannt'} · ${status.ericHome}` +
+                    `${ericVersionLabel(status.version) ?? _('ERiC version unknown')} · ${status.ericHome}` +
                         (status.bundled ? ' · mit der App geliefert' : ''),
                 ),
             );
@@ -162,6 +164,7 @@ export class BhKontenView extends Adw.Bin {
             statusRow.add_suffix(ericPill(false, status.error ? 'Fehler' : 'nicht gefunden'));
         }
         this.eric.add(statusRow);
+        for (const warning of status.warnings) this.eric.add(ericWarningRow(warning, status.bundled));
 
         // Licence § 15: the end user must be told ERiC writes log files and that they stay local.
         const logRow = new Adw.ActionRow({

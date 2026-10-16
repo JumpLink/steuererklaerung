@@ -58,6 +58,8 @@ import { deDateTime, eur } from '../../../core/lib/format.ts';
 import { LoadToken, applyScrollToHook, currentOperator, markup, saveFileViaDialog } from './util.ts';
 import { errorDialog } from './dialogs.ts';
 import { ericPlatformSupported } from '../../../core/actions/elster/eric-status.ts';
+import { ericVersionLabel } from '../../../core/actions/elster/eric-warnings.ts';
+import { ericWarningMessage, ericWarningRow } from './eric-warning-rows.ts';
 import { showSupportPrompt } from './support-dialog.ts';
 import { claimSupportPrompt } from '../../../core/config/support-prompt.ts';
 import { promptLiveSend, promptRelease, promptTestSend } from './absenden-dialog.ts';
@@ -109,6 +111,7 @@ export class SubmissionSection {
     private warnings: string[] = [];
     /** The Prüfungen vor der Abgabe + Geld-Prüfungen' warnings with a finding (Idee 10) — fail-soft too. */
     private hinweise: YearHinweis[] = [];
+    private ericBundled = false;
     private readonly token = new LoadToken();
 
     /** (Re)load the overview for entity/year/targets and rebuild. Also the after-action refresh. */
@@ -175,6 +178,7 @@ export class SubmissionSection {
 
     private fill(overview: SubmissionOverview): void {
         this.clear();
+        this.ericBundled = overview.ericBundled;
         this.root.append(this.ericGroup(overview));
         const klaeren = vorAbgabeGroup(
             this.root,
@@ -200,7 +204,7 @@ export class SubmissionSection {
         const row = new Adw.ActionRow({
             title: 'ERiC (ELSTER Rich Client)',
             subtitle: overview.ericAvailable
-                ? markup(`verfügbar${overview.ericVersion ? ` · Version ${overview.ericVersion}` : ''}`)
+                ? markup(`verfügbar${overview.ericVersion ? ` · ${ericVersionLabel(overview.ericVersion)}` : ''}`)
                 : ericPlatformSupported()
                   ? 'nicht verfügbar — in der Konten-Ansicht einrichten'
                   : 'für diese Architektur gibt es kein ERiC — XML in Mein ELSTER hochladen',
@@ -218,6 +222,7 @@ export class SubmissionSection {
                 : statusPill({ icon: 'dialog-warning-symbolic', css: 'warning', label: 'nicht verfügbar' }),
         );
         group.add(row);
+        for (const warning of overview.ericWarnings) group.add(ericWarningRow(warning, overview.ericBundled));
         return group;
     }
 
@@ -292,6 +297,11 @@ export class SubmissionSection {
                 );
                 group.add(row);
             }
+        }
+
+        // Only the missing plugin belongs to this form; the runtime's own age is in the ERiC group.
+        for (const warning of form.ericWarnings) {
+            if (warning.kind === 'missing-plugin') group.add(ericWarningRow(warning, this.ericBundled));
         }
 
         group.add(this.actionRow(form, ericAvailable));
@@ -489,6 +499,10 @@ export class SubmissionSection {
         this.reload();
     }
 
+    private ericNotices(form: FormSubmissionState): string[] {
+        return form.ericWarnings.map((w) => ericWarningMessage(w, this.ericBundled));
+    }
+
     private async onTestSend(form: FormSubmissionState): Promise<void> {
         if (!(await ensurePrivacyAck(this.root))) return; // licence § 5: before the first send
         // Pre-fill the dialog from the entity's configured certificate + any keyring-stored PIN, and
@@ -498,6 +512,7 @@ export class SubmissionSection {
             keystorePath: loadKeystorePath(this.entity),
             pin: canSavePin ? (lookupElsterPin(this.entity.id) ?? undefined) : undefined,
             canSavePin,
+            ericNotices: this.ericNotices(form),
         });
         if (!creds) return; // cancelled — nothing is ever sent without the explicit "Test senden"
         try {
@@ -541,6 +556,7 @@ export class SubmissionSection {
                 keystorePath: loadKeystorePath(this.entity),
                 pin: canSavePin ? (lookupElsterPin(this.entity.id) ?? undefined) : undefined,
                 canSavePin,
+                ericNotices: this.ericNotices(form),
             },
             summary,
         );

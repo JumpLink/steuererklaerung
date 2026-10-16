@@ -37,6 +37,8 @@ export interface SendDefaults {
     pin?: string;
     /** Whether the OS keyring is reachable ⇒ offer the "PIN speichern" toggle. */
     canSavePin: boolean;
+    /** Non-blocking doubts about the installed ERiC (too old, no check plugin), shown above the fields. */
+    ericNotices?: string[];
 }
 export type TestSendDefaults = SendDefaults;
 
@@ -103,6 +105,20 @@ function promptSend(
         warnInner.append(new Gtk.Label({ label: opts.warning.text, wrap: true, xalign: 0, cssClasses: ['caption'] }));
         warn.append(warnInner);
         content.append(warn);
+
+        // The ERiC may be too old for this form: say so, but never stop the send.
+        for (const notice of opts.defaults?.ericNotices ?? []) {
+            const row = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 10 });
+            row.append(
+                new Gtk.Image({
+                    iconName: 'dialog-warning-symbolic',
+                    cssClasses: ['warning'],
+                    valign: Gtk.Align.START,
+                }),
+            );
+            row.append(new Gtk.Label({ label: notice, wrap: true, xalign: 0, hexpand: true, cssClasses: ['caption'] }));
+            content.append(row);
+        }
 
         // Optional final-read summary (e.g. the headline figure) before a binding send.
         if (opts.summary) {

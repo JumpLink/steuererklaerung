@@ -15,12 +15,19 @@
 
 import { ericPlatformKnown } from '@steuererklaerung/eric';
 
+import { outdatedWarning, releaseForLibrary, type EricWarning } from './eric-warnings.ts';
+
 /** Machine-readable ERiC availability snapshot for one resolved home directory. */
 export interface EricStatus {
     /** ERiC is installed AND its native binding loaded (the version could be read). */
     available: boolean;
-    /** ERiC product version (e.g. "44.3.6.0"), or null when unavailable/unreadable. */
+    /**
+     * The version the `libericapi` library reports (e.g. "44.3.4.0"), or null when unavailable/unreadable.
+     * Not the release number: official 44.3.6.0 reports 44.3.4.0 — see eric-warnings.ts.
+     */
     version: string | null;
+    /** The ERiC release `version` belongs to (e.g. "44.3.6.0"), when the mapping is known. */
+    release: string | null;
     /** The resolved ERiC home directory that was probed (where the lib is expected). */
     ericHome: string;
     /** The resolved lib directory (`<ericHome>/lib`, `dll` on Windows) — where the ERiC library is expected. */
@@ -33,6 +40,10 @@ export interface EricStatus {
     missing: string[];
     /** Number of validation plugins found under `<ericHome>/lib/plugins`. */
     pluginCount: number;
+    /** Base names of those plugins (`checkUStVA_2026`), for the per-form check in eric-warnings.ts. */
+    plugins: string[];
+    /** Doubts about this runtime that need no form (today: older than the bundled one). Never blocks. */
+    warnings: EricWarning[];
     /** Present only when the files exist but loading/initialising the native binding failed. */
     error?: string;
     /** The native SteuerEric binding itself is unusable (stale prebuild), not ERiC: `error` is the raw GI text. */
@@ -80,12 +91,15 @@ export async function getEricStatus(ericHome?: string): Promise<EricStatus> {
     const base: EricStatus = {
         available: false,
         version: null,
+        release: null,
         ericHome: paths.home,
         libPath: paths.lib,
         logPath: paths.logs,
         bundled: paths.source === 'bundled',
         missing: verification.missing,
         pluginCount: verification.pluginCount,
+        plugins: verification.pluginNames,
+        warnings: [],
         platformSupported: ericPlatformSupported(),
     };
 
@@ -95,7 +109,15 @@ export async function getEricStatus(ericHome?: string): Promise<EricStatus> {
     // reported (not thrown): the lib is on disk but not usable in this runtime/environment.
     try {
         eric.initializeEric();
-        return { ...base, available: true, version: parseEricVersion(eric.getVersion()) };
+        const version = parseEricVersion(eric.getVersion());
+        const outdated = outdatedWarning(version);
+        return {
+            ...base,
+            available: true,
+            version,
+            release: version ? releaseForLibrary(version) : null,
+            warnings: outdated ? [outdated] : [],
+        };
     } catch (err) {
         return {
             ...base,
@@ -117,7 +139,7 @@ export async function getEricStatus(ericHome?: string): Promise<EricStatus> {
  * comma-separated `<Produktversion>` (e.g. "44, 3, 6, 0"); we prefer the core `ericapi` library and
  * render it dotted ("44.3.6.0"). Falls back to any dotted version token, else null.
  */
-function parseEricVersion(xml: string): string | null {
+export function parseEricVersion(xml: string): string | null {
     if (!xml) return null;
     const libs = [...xml.matchAll(/<Bibliothek>([\s\S]*?)<\/Bibliothek>/g)].map((m) => m[1]);
     const pick = libs.find((b) => /<Name>[^<]*ericapi/i.test(b)) ?? libs[0];
