@@ -10,7 +10,12 @@ import { tmpdir } from 'node:os';
 import { delimiter, join } from 'node:path';
 import { deflateRawSync } from 'node:zlib';
 
-import { bundledEricHome, bundledHerstellerId } from '../../../../packages/eric/src/paths.ts';
+import {
+    bundledEricHome,
+    bundledHerstellerId,
+    resolveEricHomeWithSource,
+    setConfiguredEricHome,
+} from '../../../../packages/eric/src/paths.ts';
 import {
     ericPlatform,
     isNeededPlugin,
@@ -174,6 +179,35 @@ export default async () => {
                 expect(bundledEricHome(p, root)).toBe(join(root, 'eric', p.id));
                 expect(bundledEricHome(platformById('Linux-x86_64'), root)).toBe(null);
             } finally {
+                rmSync(root, { recursive: true, force: true });
+            }
+        });
+    });
+
+    await describe('ERiC home precedence', async () => {
+        await it('ranks own folder, ERIC_HOME, bundled, project, user installation', async () => {
+            const root = mkdtempSync(join(tmpdir(), 'eric-prec-'));
+            const saved = process.env.ERIC_HOME;
+            try {
+                mkdirSync(join(root, 'elster', 'runtime'), { recursive: true });
+                const probe = { bundled: '/bundled', cwd: root };
+                delete process.env.ERIC_HOME;
+                setConfiguredEricHome(undefined);
+                expect(resolveEricHomeWithSource(undefined, probe).source).toBe('bundled');
+                expect(resolveEricHomeWithSource(undefined, { ...probe, bundled: null }).source).toBe('project');
+                expect(resolveEricHomeWithSource(undefined, { bundled: null, cwd: join(root, 'x') }).source).toBe(
+                    'data',
+                );
+                process.env.ERIC_HOME = '/from-env';
+                expect(resolveEricHomeWithSource(undefined, probe)).toStrictEqual({ home: '/from-env', source: 'env' });
+                setConfiguredEricHome(' /own ');
+                expect(resolveEricHomeWithSource(undefined, probe)).toStrictEqual({ home: '/own', source: 'config' });
+                setConfiguredEricHome('');
+                expect(resolveEricHomeWithSource(undefined, probe).source).toBe('env');
+            } finally {
+                setConfiguredEricHome(undefined);
+                if (saved === undefined) delete process.env.ERIC_HOME;
+                else process.env.ERIC_HOME = saved;
                 rmSync(root, { recursive: true, force: true });
             }
         });

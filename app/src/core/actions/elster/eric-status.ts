@@ -13,7 +13,7 @@
  * `available:false` + `error`.
  */
 
-import { ericPlatformKnown } from '@steuererklaerung/eric';
+import { ericPlatformKnown, setConfiguredEricHome, type EricHomeSource } from '@steuererklaerung/eric';
 
 import { outdatedWarning, releaseForLibrary, type EricWarning } from './eric-warnings.ts';
 
@@ -36,6 +36,8 @@ export interface EricStatus {
     logPath: string;
     /** Whether the runtime in use is the one shipped with the application. */
     bundled: boolean;
+    /** Which rung of the search order `ericHome` came from (own folder, ERIC_HOME, bundled, …). */
+    source: EricHomeSource;
     /** Required files missing from the runtime (empty when complete); see setup.ts requiredFiles. */
     missing: string[];
     /** Number of validation plugins found under `<ericHome>/lib/plugins`. */
@@ -61,28 +63,28 @@ export function ericPlatformSupported(platform: string = process.platform, arch:
 }
 
 /**
- * Revive the (otherwise dead) `config.eric_home` field: when set, point `ERIC_HOME` at it so the
- * fs probes and the native init resolve the user's ERiC install. A no-op when unset (env / default
- * path stay authoritative). Call this wherever ERiC is about to be used from a loaded ELSTER config.
+ * Make `config.eric_home` count: the fs probes and the native init then resolve the person's own
+ * ERiC folder, ranked like `ERIC_HOME` above the bundled copy. A blank value clears it again, so
+ * resetting the folder falls back to ERIC_HOME / bundled / auto-detection. Call this wherever ERiC
+ * is about to be used from a loaded ELSTER config.
  */
 export function applyEricHome(config: { eric_home?: string }): void {
-    const home = config.eric_home?.trim();
-    if (home) process.env.ERIC_HOME = home;
+    setConfiguredEricHome(config.eric_home);
 }
 
 /**
  * Probe ERiC for a given home directory.
  *
- * Resolution: an explicit `ericHome` wins (and is written to `ERIC_HOME` so the eric package's
- * path helpers pick it up); otherwise the already-set `ERIC_HOME` env / `<cwd>/elster/runtime`
- * default is used. First does the pure-fs availability + verification probe; only if the files are
+ * Resolution: an explicit `ericHome` wins (registered as the configured folder so the eric
+ * package's path helpers pick it up); otherwise whatever {@link applyEricHome} registered, then the
+ * `ERIC_HOME` env, the bundled copy and the defaults. First does the pure-fs availability + verification probe; only if the files are
  * present does it try to actually load the binding and read the version — wrapped so a load failure
  * (unbuilt binding, missing LD_LIBRARY_PATH, arch mismatch) yields `available:false` + `error`
  * instead of throwing.
  */
 export async function getEricStatus(ericHome?: string): Promise<EricStatus> {
     const explicit = ericHome?.trim();
-    if (explicit) process.env.ERIC_HOME = explicit;
+    if (explicit) setConfiguredEricHome(explicit);
 
     const eric = await import('@steuererklaerung/eric');
     const paths = eric.getEricPaths();
@@ -96,6 +98,7 @@ export async function getEricStatus(ericHome?: string): Promise<EricStatus> {
         libPath: paths.lib,
         logPath: paths.logs,
         bundled: paths.source === 'bundled',
+        source: paths.source,
         missing: verification.missing,
         pluginCount: verification.pluginCount,
         plugins: verification.pluginNames,

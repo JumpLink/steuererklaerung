@@ -10,7 +10,7 @@ import {
     privacyNoticeText,
     readPrivacyAck,
 } from '../../../src/core/actions/elster/privacy-ack.ts';
-import { resolveHerstellerId } from '../../../src/core/elster/eds-envelope.ts';
+import { herstellerIdSource, resolveHerstellerId } from '../../../src/core/elster/eds-envelope.ts';
 
 // The ERiC licence (§ 5, § 15) makes the confirmation a precondition of the first send, so the
 // store behind it is checked on a temp directory, including the cases that must NOT count.
@@ -53,7 +53,17 @@ export default async function () {
             expect(resolveHerstellerId('42001')).toBe('42001');
         });
         it('falls back to the placeholder when nothing is configured or bundled', () => {
-            expect(resolveHerstellerId(undefined)).toBe('00000');
+            expect(resolveHerstellerId(undefined, undefined)).toBe('00000');
+        });
+        it('uses the bundled id when no own one is configured, the own one otherwise', () => {
+            expect(resolveHerstellerId(undefined, '11111')).toBe('11111');
+            expect(resolveHerstellerId('42001', '11111')).toBe('42001');
+            expect(resolveHerstellerId('', '11111')).toBe('11111');
+        });
+        it('reports the source without exposing a number', () => {
+            expect(herstellerIdSource('42001', '11111')).toBe('own');
+            expect(herstellerIdSource(undefined, '11111')).toBe('bundled');
+            expect(herstellerIdSource('', undefined)).toBe('none');
         });
     });
 }

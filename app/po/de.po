@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-16 08:10+0200\n"
+"POT-Creation-Date: 2026-10-16 08:57+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -55,26 +55,52 @@ msgstr ""
 "Es wurde nur der Anfang des Dokuments gelesen — bitte die Felder gegen das "
 "Original prüfen."
 
-#: src/core/actions/elster/eric-warnings.ts:60
+#: src/core/actions/elster/eric-warnings.ts:62
 msgid "ERiC {release} (library {library})"
 msgstr "ERiC {release} (Bibliothek {library})"
 
-#: src/core/actions/elster/eric-warnings.ts:61
+#: src/core/actions/elster/eric-warnings.ts:63
 msgid "ERiC library {library}"
 msgstr "ERiC-Bibliothek {library}"
 
-#: src/core/actions/elster/eric-warnings.ts:92
+#: src/core/actions/elster/eric-warnings.ts:94
 msgid ""
 "This ERiC (library {found}) is older than the one bundled with official "
 "builds ({expected}). ELSTER may reject submissions from an ERiC whose "
 "support period has ended — download a current one."
-msgstr "Dieses ERiC (Bibliothek {found}) ist älter als das der offiziellen Builds ({expected}). ELSTER kann Übermittlungen von einem ERiC ablehnen, dessen Unterstützungszeitraum abgelaufen ist — bitte ein aktuelles herunterladen."
+msgstr ""
+"Dieses ERiC (Bibliothek {found}) ist älter als das der offiziellen Builds "
+"({expected}). ELSTER kann Übermittlungen von einem ERiC ablehnen, dessen "
+"Unterstützungszeitraum abgelaufen ist — bitte ein aktuelles herunterladen."
 
-#: src/core/actions/elster/eric-warnings.ts:99
+#: src/core/actions/elster/eric-warnings.ts:100
 msgid ""
 "This ERiC has no check plugin {plugin} for this form and year. Sending may "
 "fail — download a current ERiC."
-msgstr "Diesem ERiC fehlt das Prüf-Plugin {plugin} für dieses Formular und Jahr. Das Senden kann scheitern — bitte ein aktuelles ERiC herunterladen."
+msgstr ""
+"Diesem ERiC fehlt das Prüf-Plugin {plugin} für dieses Formular und Jahr. Das "
+"Senden kann scheitern — bitte ein aktuelles ERiC herunterladen."
+
+#
+#: src/core/actions/elster/eric-warnings.ts:110
+msgid "own folder"
+msgstr "eigener Ordner"
+
+#: src/core/actions/elster/eric-warnings.ts:112
+msgid "ERIC_HOME"
+msgstr "ERIC_HOME"
+
+#: src/core/actions/elster/eric-warnings.ts:114
+msgid "bundled with the app"
+msgstr "mit der App geliefert"
+
+#: src/core/actions/elster/eric-warnings.ts:116
+msgid "project folder (elster/runtime)"
+msgstr "Projektordner (elster/runtime)"
+
+#: src/core/actions/elster/eric-warnings.ts:118
+msgid "user installation"
+msgstr "Nutzerinstallation"
 
 #: src/core/actions/elster/privacy-ack.ts:71
 msgid ""
@@ -249,24 +275,28 @@ msgid "Not confirmed yet. Run again with --bestaetigen once you have read it."
 msgstr ""
 "Noch nicht bestätigt. Nach dem Lesen erneut mit --bestaetigen ausführen."
 
-#: src/frontends/cli/elster/eric.ts:25
+#: src/frontends/cli/elster/eric.ts:61
 msgid "ERiC cannot be loaded: {error}"
 msgstr "ERiC lässt sich nicht laden: {error}"
 
-#: src/frontends/cli/elster/eric.ts:26
+#: src/frontends/cli/elster/eric.ts:62
 msgid "ERiC not found under {path}."
 msgstr "ERiC nicht gefunden unter {path}."
 
-#: src/frontends/cli/elster/eric.ts:30
-#: src/frontends/desktop/views/konten-view.ts:148
+#: src/frontends/cli/elster/eric.ts:66
+#: src/frontends/desktop/views/konten-view.ts:149
 msgid "ERiC version unknown"
 msgstr "ERiC-Version unbekannt"
 
-#: src/frontends/cli/elster/eric.ts:31
+#: src/frontends/cli/elster/eric.ts:67
 msgid "Location: {path}"
 msgstr "Ort: {path}"
 
-#: src/frontends/cli/elster/eric.ts:32
+#: src/frontends/cli/elster/eric.ts:68
+msgid "Source: {source}"
+msgstr "Quelle: {source}"
+
+#: src/frontends/cli/elster/eric.ts:69
 msgid "Check plugins: {count}"
 msgstr "Prüf-Plugins: {count}"
 
@@ -1866,15 +1896,15 @@ msgstr "Entfernen"
 msgid "Entity removed: {name}"
 msgstr "Entität entfernt: {name}"
 
-#: src/frontends/desktop/views/eric-warning-rows.ts:17
+#: src/frontends/desktop/views/eric-warning-rows.ts:16
 msgid "Update the app to get the current ERiC."
 msgstr "Mit einem Update der App kommt das aktuelle ERiC."
 
-#: src/frontends/desktop/views/eric-warning-rows.ts:24
+#: src/frontends/desktop/views/eric-warning-rows.ts:22
 msgid "ERiC is out of date"
 msgstr "ERiC ist veraltet"
 
-#: src/frontends/desktop/views/eric-warning-rows.ts:24
+#: src/frontends/desktop/views/eric-warning-rows.ts:22
 msgid "Check plugin missing"
 msgstr "Prüf-Plugin fehlt"
 
@@ -2052,13 +2082,56 @@ msgstr "Keine Ausgaben erfasst"
 msgid "Liquidity"
 msgstr "Liquidität"
 
-#: src/frontends/desktop/views/konten-view.ts:156
+#: src/frontends/desktop/views/konten-view.ts:130
+msgid ""
+"Needed to check and send to ELSTER. Official builds include ERiC; otherwise "
+"install it yourself (ELSTER developer area). Empty = ERIC_HOME, bundled ERiC "
+"or the default location."
+msgstr ""
+"Wird für die Prüfung und die Übermittlung an ELSTER benötigt. Offizielle "
+"Builds bringen ERiC mit; sonst selbst installieren (ELSTER-Entwicklerbereich). "
+"Leer = ERIC_HOME, mitgeliefertes ERiC oder Standardpfad."
+
+#: src/frontends/desktop/views/konten-view.ts:153
+msgid "available"
+msgstr "verfügbar"
+
+#: src/frontends/desktop/views/konten-view.ts:157
 msgid ""
 "The ERiC binding of this installation is broken. Rebuild it with \"gjsify "
 "run -w @steuererklaerung/eric build:meson\" or reinstall the app."
 msgstr ""
 "Die ERiC-Anbindung dieser Installation ist defekt. Baue sie mit „gjsify run "
 "-w @steuererklaerung/eric build:meson“ neu oder installiere die App neu."
+
+#: src/frontends/desktop/views/konten-view.ts:198
+msgid "Own ERiC folder (overrides ERIC_HOME and the bundled one)"
+msgstr "Eigener ERiC-Ordner (hat Vorrang vor ERIC_HOME und dem mitgelieferten)"
+
+#: src/frontends/desktop/views/konten-view.ts:213
+msgid "Choose ERiC folder (contains lib/libericapi.so)"
+msgstr "ERiC-Ordner wählen (enthält lib/libericapi.so)"
+
+#
+#: src/frontends/desktop/views/konten-view.ts:216
+msgid "Choose ERiC folder"
+msgstr "ERiC-Ordner wählen"
+
+#: src/frontends/desktop/views/konten-view.ts:236
+msgid "Reset to the bundled or detected ERiC"
+msgstr "Auf mitgeliefertes oder erkanntes ERiC zurücksetzen"
+
+#: src/frontends/desktop/views/konten-view.ts:314
+msgid "ELSTER Hersteller-ID (bundled with the app, enter your own to override)"
+msgstr "ELSTER-Hersteller-ID (mitgeliefert; eigene eintragen zum Überschreiben)"
+
+#: src/frontends/desktop/views/konten-view.ts:315
+msgid "ELSTER Hersteller-ID (elster.de)"
+msgstr "ELSTER-Hersteller-ID (elster.de)"
+
+#: src/frontends/desktop/views/konten-view.ts:318
+msgid "bundled"
+msgstr "mitgeliefert"
 
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.blp:7
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:244

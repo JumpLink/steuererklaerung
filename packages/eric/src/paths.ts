@@ -3,10 +3,11 @@
  *
  * Resolution order for the runtime ("home") directory:
  *   1. explicit argument
- *   2. ERIC_HOME environment variable
- *   3. the copy bundled with the application (`<prefix>/lib/steuererklaerung/eric/<platform>/`)
- *   4. <cwd>/elster/runtime  (the steuererklaerung CLI is normally run from app/) when it exists
- *   5. the user's data directory (`ericDataDir()`), where `elster setup` puts a JAR it unpacked
+ *   2. the folder the person chose in the app (`eric_home` in the config, see setConfiguredEricHome)
+ *   3. ERIC_HOME environment variable
+ *   4. the copy bundled with the application (`<prefix>/lib/steuererklaerung/eric/<platform>/`)
+ *   5. <cwd>/elster/runtime  (the steuererklaerung CLI is normally run from app/) when it exists
+ *   6. the user's data directory (`ericDataDir()`), where `elster setup` puts a JAR it unpacked
  *
  * The cwd and data-directory entries are NOT derived from import.meta.url: this module is bundled
  * for GJS (the bundle path is not the project path) and lives in its own package, so a
@@ -33,7 +34,18 @@ export interface EricPaths {
   source: EricHomeSource;
 }
 
-export type EricHomeSource = 'explicit' | 'env' | 'bundled' | 'project' | 'data';
+export type EricHomeSource = 'explicit' | 'config' | 'env' | 'bundled' | 'project' | 'data';
+
+let configuredEricHome: string | undefined;
+
+/**
+ * Register the ERiC folder the person chose (`eric_home`; blank or undefined clears it). It ranks
+ * like `ERIC_HOME` above the bundled copy, but stays its own source so the UI can say "your own
+ * folder" instead of "ERIC_HOME" — which it used to be, by writing the config into `process.env`.
+ */
+export function setConfiguredEricHome(home: string | undefined): void {
+  configuredEricHome = home?.trim() || undefined;
+}
 
 /**
  * The per-user data directory of the application: `$XDG_DATA_HOME/steuererklaerung` on Linux,
@@ -111,12 +123,16 @@ export function bundledHerstellerId(
  * years, a newer release). The cwd entry keeps a checkout working exactly as before and only yields
  * when there is nothing there, which is every installed app.
  */
-export function resolveEricHomeWithSource(ericHome?: string): { home: string; source: EricHomeSource } {
+export function resolveEricHomeWithSource(
+  ericHome?: string,
+  probe: { bundled?: string | null; cwd?: string } = {},
+): { home: string; source: EricHomeSource } {
   if (ericHome) return { home: resolve(ericHome), source: 'explicit' };
+  if (configuredEricHome) return { home: resolve(configuredEricHome), source: 'config' };
   if (process.env.ERIC_HOME) return { home: resolve(process.env.ERIC_HOME), source: 'env' };
-  const bundled = bundledEricHome();
+  const bundled = probe.bundled === undefined ? bundledEricHome() : probe.bundled;
   if (bundled) return { home: bundled, source: 'bundled' };
-  const inProject = join(process.cwd(), 'elster', 'runtime');
+  const inProject = join(probe.cwd ?? process.cwd(), 'elster', 'runtime');
   if (existsSync(inProject)) return { home: inProject, source: 'project' };
   return { home: ericDataDir(), source: 'data' };
 }
