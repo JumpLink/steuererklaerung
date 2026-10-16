@@ -44,6 +44,7 @@ import {
 } from '../data/eric.ts';
 import type { AppEntity } from '../entities.ts';
 import { deDate, eur } from '../../../core/lib/format.ts';
+import { displayPath } from '../../../core/paths.ts';
 import { applyScrollHook, GroupRows, LoadToken, amountLabel, loadIntoStack, markup } from './util.ts';
 import { _ } from '../i18n.ts';
 import { ericSourceLabel, ericVersionLabel } from '../../../core/actions/elster/eric-warnings.ts';
@@ -146,7 +147,7 @@ export class BhKontenView extends Adw.Bin {
         if (status.available) {
             statusRow.set_subtitle(
                 markup(
-                    `${ericVersionLabel(status.version) ?? _('ERiC version unknown')} · ${status.ericHome}` +
+                    `${ericVersionLabel(status.version) ?? _('ERiC version unknown')} · ${displayPath(status.ericHome)}` +
                         ` · ${ericSourceLabel(status.source)}`,
                 ),
             );
@@ -171,7 +172,7 @@ export class BhKontenView extends Adw.Bin {
         const logRow = new Adw.ActionRow({
             title: 'ERiC-Protokolldateien',
             subtitle: markup(
-                `ERiC legt Protokolldateien lokal in ${status.logPath} ab. Sie bleiben auf diesem Rechner und ` +
+                `ERiC legt Protokolldateien lokal in ${displayPath(status.logPath)} ab. Sie bleiben auf diesem Rechner und ` +
                     'werden nur im Supportfall und nur mit deiner ausdrücklichen Erlaubnis weitergegeben.',
             ),
         });

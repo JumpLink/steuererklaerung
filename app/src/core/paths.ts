@@ -83,6 +83,19 @@ export function joinFor(ctx: PathContext, ...parts: string[]): string {
     return (ctx.platform ?? process.platform) === 'win32' ? win32.join(...parts) : join(...parts);
 }
 
+/**
+ * A path the way it should appear on screen: the home directory collapsed to `~`. Status rows and
+ * notices would otherwise carry the user name of whoever is logged in — into every screenshot too.
+ */
+export function displayPath(path: string, ctx: PathContext = {}): string {
+    const home = ctx.home ?? homedir();
+    if (!home || home === '/') return path;
+    if (path === home) return '~';
+    const sep = (ctx.platform ?? process.platform) === 'win32' ? '\\' : '/';
+    const prefix = home.endsWith(sep) ? home : home + sep;
+    return path.startsWith(prefix) ? `~${sep}${path.slice(prefix.length)}` : path;
+}
+
 /** `~/.config/steuererklaerung` — where a fresh installation keeps its manifest. */
 export function userConfigDir(ctx: PathContext = {}): string {
     return joinFor(ctx, xdgConfigHome(ctx), APP_DIR_NAME);
