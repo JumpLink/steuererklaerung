@@ -15,18 +15,19 @@ import type { AppEntity } from '../../entities.ts';
 import { entlastungBetrag } from '../../../../core/actions/elster/est-intake-topics.ts';
 import { comboRow, entryRow, spinRow, toggleRow, type SettingsHost } from './rows.ts';
 import { markup } from '../util.ts';
+import { _, _n, fmt } from '../../i18n.ts';
 
 /** Church-tax rate options (fraction) ⇄ the ComboRow index. */
 const KIRCHENSTEUER_RATES = [0, 0.08, 0.09];
 
 /** Amtliche Religionsschlüssel (`E0100402`) ⇄ the ComboRow index — codes nobody knows by heart. */
 const RELIGIONEN: ReadonlyArray<readonly [code: string, label: string]> = [
-    ['11', 'Keine / nicht kirchensteuerpflichtig'],
-    ['02', 'Evangelisch'],
-    ['03', 'Römisch-katholisch'],
-    ['04', 'Altkatholisch'],
-    ['05', 'Freireligiös'],
-    ['06', 'Jüdisch'],
+    ['11', _('None / not liable for church tax')],
+    ['02', _('Protestant')],
+    ['03', _('Roman Catholic')],
+    ['04', _('Old Catholic')],
+    ['05', _('Free religious')],
+    ['06', _('Jewish')],
 ];
 
 /** The Religionsschlüssel as a combo over its meanings, storing the two-digit code. */
@@ -35,7 +36,7 @@ function religionRow(host: SettingsHost, entity: AppEntity, current: string | un
     const index = Math.max(0, codes.indexOf(current ?? '11'));
     return comboRow(
         host,
-        'Religion (Kirchensteuer)',
+        _('Religion (church tax)'),
         RELIGIONEN.map(([, label]) => label),
         index,
         (i) => host.saveWith(() => saveEstPerson(entity, { religion: codes[i] ?? '11' }), { clearCache: true }),
@@ -46,11 +47,11 @@ function religionRow(host: SettingsHost, entity: AppEntity, current: string | un
 
 export function buildPersonGroup(host: SettingsHost, entity: AppEntity, est: EstConfig): Adw.PreferencesGroup {
     const p = est.person;
-    const group = new Adw.PreferencesGroup({ title: 'Person' });
-    const name = entryRow(host, 'Name', p.name ?? '', (t) =>
+    const group = new Adw.PreferencesGroup({ title: _('Person') });
+    const name = entryRow(host, _('Name'), p.name ?? '', (t) =>
         host.saveWith(() => saveEstPerson(entity, { name: t.trim() }), { clearCache: true }),
     );
-    const steuerId = entryRow(host, 'Steuer-IdNr (11-stellig)', p.steuer_id ?? '', (t) =>
+    const steuerId = entryRow(host, _('Steuer-IdNr (11 digits)'), p.steuer_id ?? '', (t) =>
         saveSteuerId(host, entity, t),
     );
     // The rest of the E10 Hauptvordruck identity. Every one of these is a field the XML asks for and
@@ -64,16 +65,16 @@ export function buildPersonGroup(host: SettingsHost, entity: AppEntity, est: Est
         entryRow(host, title, value ?? '', (t) =>
             host.saveWith(() => saveEstPerson(entity, { [key]: t.trim() || undefined }), { clearCache: true }),
         );
-    const steuernummer = person('Steuernummer (FF/BBB/UUUUP)', p.steuernummer, 'steuernummer');
-    const finanzamt = person('Finanzamt', p.finanzamt, 'finanzamt');
-    const bundesland = person('Bundesland', p.bundesland, 'bundesland');
-    const beruf = person('Ausgeübter Beruf', p.beruf, 'beruf');
-    const telefon = person('Telefon (für Rückfragen)', p.telefon, 'telefon');
+    const steuernummer = person(_('Steuernummer (FF/BBB/UUUUP)'), p.steuernummer, 'steuernummer');
+    const finanzamt = person(_('Finanzamt'), p.finanzamt, 'finanzamt');
+    const bundesland = person(_('Federal state'), p.bundesland, 'bundesland');
+    const beruf = person(_('Occupation'), p.beruf, 'beruf');
+    const telefon = person(_('Phone (for queries)'), p.telefon, 'telefon');
     const religion = religionRow(host, entity, p.religion);
     const veranlagung = comboRow(
         host,
-        'Veranlagung',
-        ['Einzelveranlagung', 'Zusammenveranlagung (Splitting)'],
+        _('Assessment'),
+        [_('Individual assessment'), _('Joint assessment (splitting)')],
         est.veranlagung === 'splitting' ? 1 : 0,
         (i) =>
             host.saveWith(
@@ -86,9 +87,10 @@ export function buildPersonGroup(host: SettingsHost, entity: AppEntity, est: Est
     );
     const abgabeExtern = toggleRow(
         host,
-        'Gibt selbst ab',
-        'Diese Person übermittelt ihre Einkommensteuererklärung selbst — dann wird hier kein ESt-Termin ' +
-            'erinnert. Die Berechnung bleibt nutzbar.',
+        _('Files their own return'),
+        _(
+            'This person files their income tax return themselves — then no income tax deadline is reminded here. The calculation stays usable.',
+        ),
         est.abgabe_extern === true,
         (on) =>
             host.saveWith(
@@ -99,12 +101,12 @@ export function buildPersonGroup(host: SettingsHost, entity: AppEntity, est: Est
                 { clearCache: true },
             ),
     );
-    const kinder = spinRow(host, 'Kinder', p.kinder ?? 0, { digits: 0, lower: 0, upper: 20 }, (v) =>
+    const kinder = spinRow(host, _('Children'), p.kinder ?? 0, { digits: 0, lower: 0, upper: 20 }, (v) =>
         host.saveWith(() => saveEstPerson(entity, { kinder: Math.round(v) }), { clearCache: true }),
     );
     const kirche = comboRow(
         host,
-        'Kirchensteuersatz',
+        _('Church tax rate'),
         ['0 %', '8 %', '9 %'],
         kirchensteuerIndex(p.kirchensteuersatz),
         (i) =>
@@ -139,7 +141,7 @@ function saveSteuerId(host: SettingsHost, entity: AppEntity, text: string): void
         return;
     }
     if (!/^\d{11}$/.test(value)) {
-        host.banner('Steuer-IdNr muss 11-stellig sein.');
+        host.banner(_('The Steuer-IdNr must have 11 digits.'));
         return;
     }
     host.saveWith(() => saveEstPerson(entity, { steuer_id: value }), { clearCache: true });
@@ -154,19 +156,19 @@ export function buildLohnGroup(
     year: number,
 ): Adw.PreferencesGroup {
     const j = estJahr(est, year);
-    const group = new Adw.PreferencesGroup({ title: `Lohnsteuerbescheinigung ${year}` });
+    const group = new Adw.PreferencesGroup({ title: fmt(_('Lohnsteuerbescheinigung {year}'), { year }) });
     const money = (title: string, value: number | undefined, save: (v: number) => void, allowNeg = false) =>
         spinRow(host, title, value ?? 0, { digits: 2, lower: allowNeg ? -100_000_000 : 0, upper: 100_000_000 }, (v) =>
             host.saveWith(() => save(v), { clearCache: true }),
         );
-    const brutto = money('Bruttoarbeitslohn (€)', j?.bruttoarbeitslohn, (v) =>
+    const brutto = money(_('Gross wages (€)'), j?.bruttoarbeitslohn, (v) =>
         saveEstJahr(entity, year, { bruttoarbeitslohn: v }),
     );
-    const lohnsteuer = money('Lohnsteuer (€)', j?.lohnsteuer, (v) => saveEstJahr(entity, year, { lohnsteuer: v }));
-    const soli = money('Solidaritätszuschlag (€)', j?.soli, (v) => saveEstJahr(entity, year, { soli: v }));
-    const kirche = money('Kirchensteuer (€)', j?.kirchensteuer, (v) => saveEstJahr(entity, year, { kirchensteuer: v }));
+    const lohnsteuer = money(_('Wage tax (€)'), j?.lohnsteuer, (v) => saveEstJahr(entity, year, { lohnsteuer: v }));
+    const soli = money(_('Solidarity surcharge (€)'), j?.soli, (v) => saveEstJahr(entity, year, { soli: v }));
+    const kirche = money(_('Church tax (€)'), j?.kirchensteuer, (v) => saveEstJahr(entity, year, { kirchensteuer: v }));
     const gewerbe = money(
-        'Einkünfte aus Gewerbebetrieb (EÜR-Gewinn) (€)',
+        _('Income from a trade or business (EÜR profit) (€)'),
         j?.einkuenfte_gewerbe,
         (v) => saveEstJahr(entity, year, { einkuenfte_gewerbe: v }),
         true,
@@ -176,22 +178,22 @@ export function buildLohnGroup(
     // the manifest.
     const steuerklasse = comboRow(
         host,
-        'Steuerklasse',
-        ['(keine Angabe)', 'I', 'II', 'III', 'IV', 'V', 'VI'],
+        _('Tax class'),
+        [_('(not specified)'), 'I', 'II', 'III', 'IV', 'V', 'VI'],
         j?.steuerklasse ?? 0,
         (i) => host.saveWith(() => saveEstJahr(entity, year, { steuerklasse: i || undefined }), { clearCache: true }),
     );
-    const vorauszahlung = money('Geleistete ESt-Vorauszahlungen (€)', j?.est_vorauszahlung, (v) =>
+    const vorauszahlung = money(_('Income tax prepayments made (€)'), j?.est_vorauszahlung, (v) =>
         saveEstJahr(entity, year, { est_vorauszahlung: v }),
     );
-    const bezeichnung = entryRow(host, 'Bezeichnung des Gewerbes', j?.gewerbe_bezeichnung ?? '', (t) =>
+    const bezeichnung = entryRow(host, _('Name of the trade or business'), j?.gewerbe_bezeichnung ?? '', (t) =>
         host.saveWith(() => saveEstJahr(entity, year, { gewerbe_bezeichnung: t.trim() || undefined }), {
             clearCache: true,
         }),
     );
     // Declares WHICH entity's Anlage EÜR the figure above is a copy of, so the cross-checks can compare
     // the two instead of letting the copy go stale.
-    const quelle = entryRow(host, 'Quelle des EÜR-Gewinns (Entitäts-ID)', j?.einkuenfte_gewerbe_quelle ?? '', (t) =>
+    const quelle = entryRow(host, _('Source of the EÜR profit (entity ID)'), j?.einkuenfte_gewerbe_quelle ?? '', (t) =>
         host.saveWith(() => saveEstJahr(entity, year, { einkuenfte_gewerbe_quelle: t.trim() || undefined }), {
             clearCache: true,
         }),
@@ -211,22 +213,22 @@ export function buildVorsorgeGroup(
     year: number,
 ): Adw.PreferencesGroup {
     const v = estJahr(est, year)?.vorsorge;
-    const group = new Adw.PreferencesGroup({ title: `Vorsorgeaufwendungen ${year}` });
+    const group = new Adw.PreferencesGroup({ title: fmt(_('Insurance contributions {year}'), { year }) });
     const money = (title: string, value: number | undefined, key: string) =>
         spinRow(host, title, value ?? 0, { digits: 2, lower: 0, upper: 100_000_000 }, (val) =>
             mutateJahrBlock(host, entity, year, 'vorsorge', { [key]: val }),
         );
-    const rv = money('Rentenversicherung (Arbeitnehmer) (€)', v?.rv_arbeitnehmer, 'rv_arbeitnehmer');
-    const kv = money('Krankenversicherung (Basis) (€)', v?.kv_basis, 'kv_basis');
-    const pv = money('Pflegeversicherung (Basis) (€)', v?.pv_basis, 'pv_basis');
+    const rv = money(_('Pension insurance (employee) (€)'), v?.rv_arbeitnehmer, 'rv_arbeitnehmer');
+    const kv = money(_('Health insurance (basic) (€)'), v?.kv_basis, 'kv_basis');
+    const pv = money(_('Long-term care insurance (basic) (€)'), v?.pv_basis, 'pv_basis');
     const rvAg = money(
-        'Rentenversicherung (steuerfreier Arbeitgeberanteil) (€)',
+        _('Pension insurance (tax-free employer share) (€)'),
         v?.rv_arbeitgeber_steuerfrei,
         'rv_arbeitgeber_steuerfrei',
     );
-    const av = money('Arbeitslosenversicherung (Arbeitnehmer) (€)', v?.av_arbeitnehmer, 'av_arbeitnehmer');
-    const sonstige = money('Sonstige Vorsorge (€)', v?.sonstige, 'sonstige');
-    const agZuschuss = toggleRow(host, 'Arbeitgeberzuschuss', null, v?.ag_zuschuss ?? true, (on) =>
+    const av = money(_('Unemployment insurance (employee) (€)'), v?.av_arbeitnehmer, 'av_arbeitnehmer');
+    const sonstige = money(_('Other insurance contributions (€)'), v?.sonstige, 'sonstige');
+    const agZuschuss = toggleRow(host, _('Employer subsidy'), null, v?.ag_zuschuss ?? true, (on) =>
         mutateJahrBlock(host, entity, year, 'vorsorge', { ag_zuschuss: on }),
     );
     for (const r of [rv, rvAg, kv, pv, av, sonstige, agZuschuss]) group.add(r);
@@ -243,13 +245,14 @@ export function buildWerbungGroup(
 ): Adw.PreferencesGroup {
     const wk = estJahr(est, year)?.werbungskosten;
     const group = new Adw.PreferencesGroup({
-        title: `Werbungskosten ${year}`,
-        description:
-            'Einzelne Werbungskosten-Posten und die Pendelpauschale werden aktuell über die Konfiguration/den Assistenten gepflegt.',
+        title: fmt(_('Work-related expenses {year}'), { year }),
+        description: _(
+            'Individual work-expense items and the commuting allowance are currently maintained through the configuration / the assistant.',
+        ),
     });
     const homeoffice = spinRow(
         host,
-        'Homeoffice-Tage',
+        _('Home-office days'),
         wk?.homeoffice_tage ?? 0,
         { digits: 0, lower: 0, upper: 365 },
         (v) => mutateJahrBlock(host, entity, year, 'werbungskosten', { homeoffice_tage: Math.round(v) }),
@@ -260,8 +263,8 @@ export function buildWerbungGroup(
     group.add(
         toggleRow(
             host,
-            'Anderer Arbeitsplatz stand zur Verfügung',
-            'Aus für „dauerhaft kein anderer Arbeitsplatz" — das ist im Formular eine eigene Zeile.',
+            _('Another workplace was available'),
+            _('Off for “permanently no other workplace” — that is a line of its own on the form.'),
             wk?.homeoffice_anderer_arbeitsplatz ?? true,
             (on) => mutateJahrBlock(host, entity, year, 'werbungskosten', { homeoffice_anderer_arbeitsplatz: on }),
         ),
@@ -269,11 +272,18 @@ export function buildWerbungGroup(
     // Compact read-only summary of the posten array + Pendel (no array editor this pass).
     const postenCount = wk?.posten?.length ?? 0;
     const pendel = wk?.pendel;
-    const pendelText = pendel ? `${pendel.arbeitstage} Tage × ${pendel.km_einfach} km` : 'nicht gesetzt';
+    const pendelText = pendel
+        ? fmt(_('{days} days × {km} km'), { days: pendel.arbeitstage, km: pendel.km_einfach })
+        : _('not set');
     group.add(
         new Adw.ActionRow({
-            title: 'Weitere Posten',
-            subtitle: markup(`${postenCount} Einzelposten · Pendelpauschale: ${pendelText}`),
+            title: _('Further items'),
+            subtitle: markup(
+                [
+                    fmt(_n('{n} individual item', '{n} individual items', postenCount), { n: postenCount }),
+                    fmt(_('Commuting allowance: {pendel}'), { pendel: pendelText }),
+                ].join(' · '),
+            ),
         }),
     );
     return group;
@@ -299,8 +309,8 @@ export function buildAbzuegeGroup(
 ): Adw.PreferencesGroup {
     const j = estJahr(est, year);
     const group = new Adw.PreferencesGroup({
-        title: `Sonderausgaben und Belastungen ${year}`,
-        description: 'Beträge, die niemand meldet — Spenden, Krankheitskosten, Handwerker, Schulgeld.',
+        title: fmt(_('Special expenses and burdens {year}'), { year }),
+        description: _('Amounts nobody reports — donations, medical costs, tradespeople, school fees.'),
     });
     const money = (title: string, value: number | undefined, save: (v: number) => void) =>
         spinRow(host, title, value ?? 0, { digits: 2, lower: 0, upper: 100_000_000 }, (v) =>
@@ -318,28 +328,30 @@ export function buildAbzuegeGroup(
             | 'parteibeitrag',
     ) => money(title, value, (v) => saveEstJahr(entity, year, { [key]: v }));
 
+    group.add(jahr(_('Church tax paid (§10 (1) no. 4) (€)'), j?.gezahlte_kirchensteuer, 'gezahlte_kirchensteuer'));
+    group.add(jahr(_('Donations (in addition to detected bookings) (€)'), j?.spenden, 'spenden'));
+    group.add(jahr(_('Party dues and donations (§34g) (€)'), j?.parteibeitrag, 'parteibeitrag'));
+    group.add(jahr(_('School fees (§10 (1) no. 9, the tuition share only) (€)'), j?.schulgeld, 'schulgeld'));
+    group.add(jahr(_('Childcare costs (§10 (1) no. 5) (€)'), j?.kinderbetreuung, 'kinderbetreuung'));
     group.add(
-        jahr('Gezahlte Kirchensteuer (§10 Abs. 1 Nr. 4) (€)', j?.gezahlte_kirchensteuer, 'gezahlte_kirchensteuer'),
-    );
-    group.add(jahr('Spenden (zusätzlich zu erkannten Buchungen) (€)', j?.spenden, 'spenden'));
-    group.add(jahr('Parteibeiträge und -spenden (§34g) (€)', j?.parteibeitrag, 'parteibeitrag'));
-    group.add(jahr('Schulgeld (§10 Abs. 1 Nr. 9, nur der Schulgeldanteil) (€)', j?.schulgeld, 'schulgeld'));
-    group.add(jahr('Kinderbetreuungskosten (§10 Abs. 1 Nr. 5) (€)', j?.kinderbetreuung, 'kinderbetreuung'));
-    group.add(
-        jahr('Krankheitskosten (agB, zusätzlich zu erkannten Buchungen) (€)', j?.krankheitskosten, 'krankheitskosten'),
+        jahr(
+            _('Medical costs (extraordinary burden, in addition to detected bookings) (€)'),
+            j?.krankheitskosten,
+            'krankheitskosten',
+        ),
     );
 
     // §35a amounts with no transaction of their own — typically the service share of a
     // Nebenkostenabrechnung, which arrives as one line on a statement and is not a payment.
     const par35a = new Adw.ExpanderRow({
-        title: 'Haushaltsnahe Leistungen (§35a) ohne eigene Buchung',
-        subtitle: 'Zum Beispiel die Dienstleistungsanteile aus der Nebenkostenabrechnung.',
+        title: _('Household-related services (§35a) without a booking of their own'),
+        subtitle: _('For example the service shares from a service-charge statement.'),
     });
     const p35 = j?.par35a_manuell;
     for (const [key, title] of [
-        ['handwerker', 'Handwerkerleistungen (Lohnanteil) (€)'],
-        ['haushaltsnah', 'Haushaltsnahe Dienstleistungen (€)'],
-        ['minijob', 'Haushaltsnahe Minijobs (€)'],
+        ['handwerker', _('Tradesperson services (labour share) (€)')],
+        ['haushaltsnah', _('Household-related services (€)')],
+        ['minijob', _('Household-related mini-jobs (€)')],
     ] as const) {
         par35a.add_row(
             spinRow(host, title, p35?.[key] ?? 0, { digits: 2, lower: 0, upper: 100_000_000 }, (v) =>
@@ -352,12 +364,12 @@ export function buildAbzuegeGroup(
     // Progressionsvorbehalt: the repayment is a separate field on purpose (§11 Abflussprinzip), and
     // netting it into one number by hand is how a repayment year gets filed as a smaller receipt.
     const ersatz = new Adw.ExpanderRow({
-        title: 'Lohnersatzleistungen (§32b)',
-        subtitle: 'Eltern-, Arbeitslosen-, Kranken-, Mutterschaftsgeld — ändern den Steuersatz.',
+        title: _('Wage replacement benefits (§32b)'),
+        subtitle: _('Parental, unemployment, sickness and maternity benefits — they change the tax rate.'),
     });
     for (const [key, title] of [
-        ['erhalten', 'Im Jahr erhalten (€)'],
-        ['zurueckgezahlt', 'Im Jahr zurückgezahlt (€)'],
+        ['erhalten', _('Received during the year (€)')],
+        ['zurueckgezahlt', _('Repaid during the year (€)')],
     ] as const) {
         ersatz.add_row(
             spinRow(host, title, j?.lohnersatz?.[key] ?? 0, { digits: 2, lower: 0, upper: 100_000_000 }, (v) =>
@@ -381,29 +393,29 @@ export function buildEntlastungGroup(
     const monate = e?.monate ?? 0;
     const weitereKinder = e?.weitere_kinder ?? 0;
     const group = new Adw.PreferencesGroup({
-        title: `Entlastungsbetrag für Alleinerziehende (§24b) ${year}`,
-        description:
-            'Für Alleinstehende mit mindestens einem Kind im Haushalt (kein weiterer Erwachsener): 4.260 € + ' +
-            '240 € je weiterem Kind, anteilig je Monat.',
+        title: fmt(_('Single-parent allowance (§24b) {year}'), { year }),
+        description: _(
+            'For single people with at least one child in the household (no second adult): 4,260 € + 240 € per further child, pro rata per month.',
+        ),
     });
     // Live preview: saveWith() does NOT reload the view, so recompute the amount in the row handlers
     // (§24b since VZ 2023: 4.260 € Grundbetrag + 240 € per further child, pro rata monate/12).
     let curMonate = monate;
     let curWeitere = weitereKinder;
-    const preview = new Adw.ActionRow({ title: 'Voraussichtlicher Entlastungsbetrag' });
+    const preview = new Adw.ActionRow({ title: _('Expected allowance') });
     const refreshPreview = () => {
         preview.set_subtitle(markup(`${entlastungBetrag(curMonate, curWeitere)} € (${curMonate}/12)`));
     };
     refreshPreview();
-    const monateRow = spinRow(host, 'Monate alleinerziehend', monate, { digits: 0, lower: 0, upper: 12 }, (v) => {
+    const monateRow = spinRow(host, _('Months as a single parent'), monate, { digits: 0, lower: 0, upper: 12 }, (v) => {
         curMonate = Math.round(v);
         refreshPreview();
         mutateEntlastung(host, entity, year, { monate: curMonate });
     });
-    monateRow.set_subtitle('z. B. ab dem Auszug des anderen Elternteils; 0 = kein Anspruch');
+    monateRow.set_subtitle(_('e.g. from when the other parent moved out; 0 = no entitlement'));
     const weitereRow = spinRow(
         host,
-        'Weitere Kinder im Haushalt',
+        _('Further children in the household'),
         weitereKinder,
         { digits: 0, lower: 0, upper: 20 },
         (v) => {
@@ -414,7 +426,7 @@ export function buildEntlastungGroup(
     );
     const kindOptions = ['—', ...est.kinder.map((k) => (k.idnr ? `${k.vorname} (${k.idnr})` : k.vorname))];
     const kindIndex = e?.kind_idnr ? est.kinder.findIndex((k) => k.idnr === e.kind_idnr) + 1 : 0;
-    const kindRow = comboRow(host, 'Kind (Grundbetrag)', kindOptions, Math.max(0, kindIndex), (i) =>
+    const kindRow = comboRow(host, _('Child (base amount)'), kindOptions, Math.max(0, kindIndex), (i) =>
         mutateEntlastung(host, entity, year, { kind_idnr: i > 0 ? est.kinder[i - 1]?.idnr : undefined }),
     );
     for (const r of [monateRow, weitereRow, kindRow, preview]) group.add(r);

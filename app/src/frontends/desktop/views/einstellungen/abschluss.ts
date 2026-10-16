@@ -22,6 +22,7 @@ import {
 import type { AppEntity } from '../../entities.ts';
 import { comboRow, entryRow, removeRow, spinRow, spliceRow, type SettingsHost } from './rows.ts';
 import { helpFor } from '../../widgets/glossary-help.ts';
+import { _ } from '../../i18n.ts';
 
 /** The widgets backing one Anlagegut expander (kept in a parallel array, not stashed on the row). */
 interface AnlageRowWidgets {
@@ -64,13 +65,13 @@ export function buildAnlagenGroup(host: SettingsHost, entity: AppEntity, elster:
     const rows: AnlageRowWidgets[] = [];
     const group = helpFor(
         new Adw.PreferencesGroup({
-            title: 'Anlagegüter (AfA)',
-            description: 'Abschreibbare Wirtschaftsgüter (lineare AfA) für die Anlage AVEÜR.',
+            title: _('Fixed assets (AfA)'),
+            description: _('Depreciable assets (straight-line AfA) for the Anlage AVEÜR.'),
         }),
         'afa',
     );
     for (const a of elster.adjustments?.anlageverzeichnis ?? []) addAnlageRow(host, entity, group, rows, a);
-    const addBtn = new Adw.ButtonRow({ title: '＋ Anlagegut hinzufügen' });
+    const addBtn = new Adw.ButtonRow({ title: _('＋ Add asset') });
     addBtn.connect('activated', () => {
         addAnlageRow(host, entity, group, rows, newAnlage());
         group.remove(addBtn); // keep the add button at the bottom, below the new expander
@@ -88,22 +89,22 @@ function addAnlageRow(
     rows: AnlageRowWidgets[],
     item: ElsterAnlagegut,
 ): void {
-    const row = new Adw.ExpanderRow({ title: item.bezeichnung.trim() || 'Neues Anlagegut' });
+    const row = new Adw.ExpanderRow({ title: item.bezeichnung.trim() || _('New asset') });
     const save = () => saveAnlagen(host, entity, rows);
     const w: AnlageRowWidgets = {
         row,
         erinnerungswert: item.erinnerungswert,
         buchung_ids: item.buchung_ids,
-        id: entryRow(host, 'Kennung (id)', item.id, save),
-        bezeichnung: entryRow(host, 'Bezeichnung', item.bezeichnung, save),
-        anschaffung: entryRow(host, 'Anschaffung (JJJJ-MM-TT)', item.anschaffung, save),
-        ahk: spinRow(host, 'Anschaffungskosten AHK (€)', item.ahk, MONEY, save),
-        nutzungsdauer: spinRow(host, 'Nutzungsdauer (Jahre)', item.nutzungsdauer_jahre, YEARS, save),
-        restbuchwert: spinRow(host, 'Restbuchwert 01.01. (€)', item.restbuchwert_anfang, MONEY, save),
-        art: comboRow(host, 'Art', ['beweglich', 'Gebäude'], item.art === 'gebaeude' ? 1 : 0, save),
+        id: entryRow(host, _('Key (id)'), item.id, save),
+        bezeichnung: entryRow(host, _('Designation'), item.bezeichnung, save),
+        anschaffung: entryRow(host, _('Acquisition (YYYY-MM-DD)'), item.anschaffung, save),
+        ahk: spinRow(host, _('Acquisition cost AHK (€)'), item.ahk, MONEY, save),
+        nutzungsdauer: spinRow(host, _('Useful life (years)'), item.nutzungsdauer_jahre, YEARS, save),
+        restbuchwert: spinRow(host, _('Residual book value at 01.01. (€)'), item.restbuchwert_anfang, MONEY, save),
+        art: comboRow(host, _('Type'), [_('Movable'), _('Building')], item.art === 'gebaeude' ? 1 : 0, save),
     };
-    w.bezeichnung.connect('apply', () => row.set_title(w.bezeichnung.get_text()?.trim() || 'Neues Anlagegut'));
-    const remove = removeRow('Anlagegut entfernen', () => {
+    w.bezeichnung.connect('apply', () => row.set_title(w.bezeichnung.get_text()?.trim() || _('New asset')));
+    const remove = removeRow(_('Remove asset'), () => {
         spliceRow(rows, w, group, row);
         saveAnlagen(host, entity, rows);
     });
@@ -117,17 +118,19 @@ function saveAnlagen(host: SettingsHost, entity: AppEntity, rows: AnlageRowWidge
     if (host.isFilling()) return;
     // Typed map (not `unknown[]`) so the shared writer validates the shape; the widgets don't surface
     // `vorsteuerabzug`, so it's omitted here exactly as before (setAdjArray dropped it too).
-    const list = rows.map((w): ElsterAnlagegut => ({
-        id: (w.id.get_text() ?? '').trim(),
-        bezeichnung: (w.bezeichnung.get_text() ?? '').trim(),
-        anschaffung: (w.anschaffung.get_text() ?? '').trim(),
-        ahk: money2(w.ahk.get_value()),
-        nutzungsdauer_jahre: Math.round(w.nutzungsdauer.get_value()),
-        restbuchwert_anfang: money2(w.restbuchwert.get_value()),
-        erinnerungswert: w.erinnerungswert,
-        art: w.art.get_selected() === 1 ? 'gebaeude' : 'beweglich',
-        ...(w.buchung_ids?.length ? { buchung_ids: w.buchung_ids } : {}),
-    }));
+    const list = rows.map(
+        (w): ElsterAnlagegut => ({
+            id: (w.id.get_text() ?? '').trim(),
+            bezeichnung: (w.bezeichnung.get_text() ?? '').trim(),
+            anschaffung: (w.anschaffung.get_text() ?? '').trim(),
+            ahk: money2(w.ahk.get_value()),
+            nutzungsdauer_jahre: Math.round(w.nutzungsdauer.get_value()),
+            restbuchwert_anfang: money2(w.restbuchwert.get_value()),
+            erinnerungswert: w.erinnerungswert,
+            art: w.art.get_selected() === 1 ? 'gebaeude' : 'beweglich',
+            ...(w.buchung_ids?.length ? { buchung_ids: w.buchung_ids } : {}),
+        }),
+    );
     host.saveWith(() => saveAnlageverzeichnis(entity, list), { clearCache: true });
 }
 
@@ -165,13 +168,13 @@ export function buildPrivatanteileGroup(
     const rows: PrivatanteilRowWidgets[] = [];
     const group = helpFor(
         new Adw.PreferencesGroup({
-            title: 'Privatanteile',
-            description: 'Unentgeltliche Wertabgaben — als fiktive Betriebseinnahme angesetzt.',
+            title: _('Private shares'),
+            description: _('Gratuitous transfers — recognised as notional business income.'),
         }),
         'privatentnahme',
     );
     for (const p of elster.adjustments?.privatanteile ?? []) addPrivatanteilRow(host, entity, group, rows, p);
-    const addBtn = new Adw.ButtonRow({ title: '＋ Privatanteil hinzufügen' });
+    const addBtn = new Adw.ButtonRow({ title: _('＋ Add private share') });
     addBtn.connect('activated', () => {
         addPrivatanteilRow(host, entity, group, rows, newPrivatanteil());
         group.remove(addBtn);
@@ -189,16 +192,16 @@ function addPrivatanteilRow(
     rows: PrivatanteilRowWidgets[],
     item: ElsterPrivatanteil,
 ): void {
-    const row = new Adw.ExpanderRow({ title: item.bezeichnung.trim() || 'Neuer Privatanteil' });
+    const row = new Adw.ExpanderRow({ title: item.bezeichnung.trim() || _('New private share') });
     const save = () => savePrivatanteile(host, entity, rows);
     const w: PrivatanteilRowWidgets = {
         row,
-        bezeichnung: entryRow(host, 'Bezeichnung', item.bezeichnung, save),
-        netto: spinRow(host, 'Netto (€)', item.netto, MONEY_SIGNED, save),
-        ustSatz: comboRow(host, 'USt-Satz', UST_SATZ_LABELS, ustSatzIndex(item.ust_satz), save),
+        bezeichnung: entryRow(host, _('Designation'), item.bezeichnung, save),
+        netto: spinRow(host, _('Net (€)'), item.netto, MONEY_SIGNED, save),
+        ustSatz: comboRow(host, _('VAT rate'), UST_SATZ_LABELS, ustSatzIndex(item.ust_satz), save),
     };
-    w.bezeichnung.connect('apply', () => row.set_title(w.bezeichnung.get_text()?.trim() || 'Neuer Privatanteil'));
-    const remove = removeRow('Privatanteil entfernen', () => {
+    w.bezeichnung.connect('apply', () => row.set_title(w.bezeichnung.get_text()?.trim() || _('New private share')));
+    const remove = removeRow(_('Remove private share'), () => {
         spliceRow(rows, w, group, row);
         savePrivatanteile(host, entity, rows);
     });
@@ -230,19 +233,17 @@ export function buildSonderbetriebGroup(
     const partners: Partner[] = elster.gesellschafter.map((g) => ({ id: g.id, name: g.name }));
     const group = helpFor(
         new Adw.PreferencesGroup({
-            title: 'Sonderbetriebsausgaben',
-            description: 'Aufwendungen einzelner Gesellschafter (z. B. häusliches Arbeitszimmer).',
+            title: _('Special partner expenses'),
+            description: _('Expenses of individual partners (e.g. a home office).'),
         }),
         'sonderbetriebsausgaben',
     );
     for (const s of elster.adjustments?.sonderbetriebsausgaben ?? [])
         addSonderRow(host, entity, group, rows, partners, s);
-    const addBtn = new Adw.ButtonRow({ title: '＋ Sonderbetriebsausgabe hinzufügen' });
+    const addBtn = new Adw.ButtonRow({ title: _('＋ Add special partner expense') });
     if (partners.length === 0) {
         addBtn.set_sensitive(false);
-        group.set_description(
-            'Aufwendungen einzelner Gesellschafter — erst Gesellschafter in der Konfiguration anlegen.',
-        );
+        group.set_description(_('Expenses of individual partners — create the partners in the configuration first.'));
     }
     addBtn.connect('activated', () => {
         addSonderRow(host, entity, group, rows, partners, newSonder(partners));
@@ -262,7 +263,7 @@ function addSonderRow(
     partners: Partner[],
     item: ElsterSonderbetriebsausgabe,
 ): void {
-    const row = new Adw.ExpanderRow({ title: item.bezeichnung.trim() || 'Neue Sonderbetriebsausgabe' });
+    const row = new Adw.ExpanderRow({ title: item.bezeichnung.trim() || _('New special partner expense') });
     const save = () => saveSonder(host, entity, rows, partners);
     const idx = Math.max(
         0,
@@ -272,18 +273,18 @@ function addSonderRow(
         row,
         gesellschafter: comboRow(
             host,
-            'Gesellschafter',
+            _('Partner'),
             partners.map((p) => p.name),
             idx,
             save,
         ),
-        bezeichnung: entryRow(host, 'Bezeichnung', item.bezeichnung, save),
-        betrag: spinRow(host, 'Betrag (€)', item.betrag, MONEY, save),
+        bezeichnung: entryRow(host, _('Designation'), item.bezeichnung, save),
+        betrag: spinRow(host, _('Amount (€)'), item.betrag, MONEY, save),
     };
     w.bezeichnung.connect('apply', () =>
-        row.set_title(w.bezeichnung.get_text()?.trim() || 'Neue Sonderbetriebsausgabe'),
+        row.set_title(w.bezeichnung.get_text()?.trim() || _('New special partner expense')),
     );
-    const remove = removeRow('Sonderbetriebsausgabe entfernen', () => {
+    const remove = removeRow(_('Remove special partner expense'), () => {
         spliceRow(rows, w, group, row);
         saveSonder(host, entity, rows, partners);
     });
