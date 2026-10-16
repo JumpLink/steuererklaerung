@@ -20,12 +20,13 @@ import { kindKey, listKinder, removeKind, upsertKind, type EstKind } from '../..
 import type { AppEntity } from '../../entities.ts';
 import { markup } from '../util.ts';
 import type { SettingsHost } from './rows.ts';
+import { _, fmt } from '../../i18n.ts';
 
 /** `kindschaftsverhaeltnis` as the schema spells it, in the order the form offers. */
 const VERHAELTNIS: Array<{ value: '1' | '2' | '3'; label: string }> = [
-    { value: '1', label: 'Leibliches Kind oder Adoptivkind' },
-    { value: '2', label: 'Pflegekind' },
-    { value: '3', label: 'Enkel- oder Stiefkind' },
+    { value: '1', label: _('Biological or adopted child') },
+    { value: '2', label: _('Foster child') },
+    { value: '3', label: _('Grandchild or stepchild') },
 ];
 
 export function buildKinderGroup(
@@ -35,17 +36,19 @@ export function buildKinderGroup(
     parent: Gtk.Widget,
 ): Adw.PreferencesGroup {
     const group = new Adw.PreferencesGroup({
-        title: 'Kinder',
-        description:
-            'Je Kind ein Block der Anlage Kind. Kinderfreibetrag und Kindergeld-Anspruch wirken ' +
-            'unmittelbar auf die festzusetzende Steuer.',
+        title: _('Children'),
+        description: _(
+            'One Anlage Kind block per child. The Kinderfreibetrag and the Kindergeld claim act directly on the assessed tax.',
+        ),
     });
 
     let kinder: EstKind[] = [];
     try {
         kinder = listKinder(entity.id);
     } catch (err) {
-        host.banner(`Kinder nicht lesbar: ${err instanceof Error ? err.message : err}`);
+        host.banner(
+            fmt(_('Children not readable: {error}'), { error: err instanceof Error ? err.message : String(err) }),
+        );
         return group;
     }
 
@@ -53,8 +56,10 @@ export function buildKinderGroup(
         const jahr = kind.jahre?.find((j) => j.jahr === year);
         const parts = [
             kind.geburtsdatum,
-            kind.idnr ? `IdNr ${kind.idnr}` : 'ohne IdNr',
-            jahr ? `Kindergeld ${year}: ${jahr.kindergeld_anspruch} €` : `keine Angaben für ${year}`,
+            kind.idnr ? fmt(_('IdNr {id}'), { id: kind.idnr }) : _('no IdNr'),
+            jahr
+                ? fmt(_('Kindergeld {year}: {amount} €'), { year, amount: jahr.kindergeld_anspruch })
+                : fmt(_('no details for {year}'), { year }),
         ];
         const row = new Adw.ActionRow({
             title: markup([kind.vorname, kind.nachname].filter(Boolean).join(' ')),
@@ -62,13 +67,13 @@ export function buildKinderGroup(
         });
         const edit = new Gtk.Button({ iconName: 'document-edit-symbolic', valign: Gtk.Align.CENTER });
         edit.add_css_class('flat');
-        edit.set_tooltip_text('Kind bearbeiten');
+        edit.set_tooltip_text(_('Edit child'));
         edit.connect('clicked', () => presentKindDialog(parent, host, entity, year, kind));
         row.add_suffix(edit);
 
         const remove = new Gtk.Button({ iconName: 'user-trash-symbolic', valign: Gtk.Align.CENTER });
         remove.add_css_class('flat');
-        remove.set_tooltip_text('Kind entfernen — ändert die Steuerberechnung des Jahres');
+        remove.set_tooltip_text(_('Remove child — changes the tax calculation for the year'));
         remove.connect('clicked', () => {
             host.saveWith(() => removeKind(entity.id, kindKey(kind)), { clearCache: true });
             host.reloadEntityGroups();
@@ -78,7 +83,7 @@ export function buildKinderGroup(
         group.add(row);
     }
 
-    const add = new Adw.ActionRow({ title: '+ Kind hinzufügen' });
+    const add = new Adw.ActionRow({ title: _('+ Add child') });
     add.set_activatable(true);
     add.connect('activated', () => presentKindDialog(parent, host, entity, year, null));
     group.add(add);
@@ -94,7 +99,7 @@ function presentKindDialog(
     existing: EstKind | null,
 ): void {
     const dialog = new Adw.Dialog();
-    dialog.set_title(existing ? 'Kind bearbeiten' : 'Kind hinzufügen');
+    dialog.set_title(existing ? _('Edit child') : _('Add child'));
     dialog.set_content_width(560);
     dialog.set_content_height(620);
 
@@ -104,16 +109,16 @@ function presentKindDialog(
         banner.set_revealed(true);
     };
 
-    const vorname = new Adw.EntryRow({ title: 'Vorname' });
-    const nachname = new Adw.EntryRow({ title: 'Nachname (nur falls abweichend)' });
-    const geburtsdatum = new Adw.EntryRow({ title: 'Geburtsdatum (JJJJ-MM-TT)' });
-    const idnr = new Adw.EntryRow({ title: 'Steuer-IdNr des Kindes (11-stellig)' });
-    const familienkasse = new Adw.EntryRow({ title: 'Familienkasse' });
+    const vorname = new Adw.EntryRow({ title: _('First name') });
+    const nachname = new Adw.EntryRow({ title: _('Surname (only if different)') });
+    const geburtsdatum = new Adw.EntryRow({ title: _('Date of birth (YYYY-MM-DD)') });
+    const idnr = new Adw.EntryRow({ title: _('The child’s Steuer-IdNr (11 digits)') });
+    const familienkasse = new Adw.EntryRow({ title: _('Familienkasse') });
     const verhaeltnis = new Adw.ComboRow({
-        title: 'Kindschaftsverhältnis',
+        title: _('Relationship to the child'),
         model: Gtk.StringList.new(VERHAELTNIS.map((v) => v.label)),
     });
-    const kindergeld = new Adw.EntryRow({ title: `Kindergeld-Anspruch ${year} (€ im Jahr)` });
+    const kindergeld = new Adw.EntryRow({ title: fmt(_('Kindergeld claim {year} (€ per year)'), { year }) });
 
     if (existing) {
         vorname.set_text(existing.vorname);
@@ -136,15 +141,15 @@ function presentKindDialog(
     bannerGroup.add(banner);
     page.add(bannerGroup);
 
-    const who = new Adw.PreferencesGroup({ title: 'Kind' });
+    const who = new Adw.PreferencesGroup({ title: _('Child') });
     for (const row of [vorname, nachname, geburtsdatum, idnr, familienkasse, verhaeltnis]) who.add(row);
     page.add(who);
 
     const yearGroup = new Adw.PreferencesGroup({
-        title: `Angaben ${year}`,
-        description:
-            'Der Jahresanspruch auf Kindergeld — bei hälftigem Kinderfreibetrag der HALBE Anspruch, ' +
-            'so wie in der eingereichten Vorjahreserklärung.',
+        title: fmt(_('Details {year}'), { year }),
+        description: _(
+            'The yearly Kindergeld claim — with a halved Kinderfreibetrag the HALF claim, exactly as in the previous year’s filed return.',
+        ),
     });
     yearGroup.add(kindergeld);
     page.add(yearGroup);
@@ -163,22 +168,22 @@ function presentKindDialog(
         marginStart: 12,
         marginEnd: 12,
     });
-    const save = new Gtk.Button({ label: 'Speichern' });
+    const save = new Gtk.Button({ label: _('Save') });
     save.add_css_class('suggested-action');
     save.add_css_class('pill');
     save.connect('clicked', () => {
         const name = (vorname.get_text() ?? '').trim();
-        if (!name) return warn('Der Vorname fehlt.');
+        if (!name) return warn(_('The first name is missing.'));
         const born = (geburtsdatum.get_text() ?? '').trim();
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(born)) return warn('Geburtsdatum muss im Format JJJJ-MM-TT stehen.');
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(born)) return warn(_('The date of birth must be in YYYY-MM-DD format.'));
         const id = (idnr.get_text() ?? '').trim();
         // Checked here rather than at save time in the core: an IdNr that is almost right is the
         // kind of thing ELSTER rejects months later, and the person who can fix it is looking at
         // the letter right now.
-        if (id && !/^\d{11}$/.test(id)) return warn('Die Steuer-IdNr des Kindes hat genau 11 Ziffern.');
+        if (id && !/^\d{11}$/.test(id)) return warn(_('The child’s Steuer-IdNr has exactly 11 digits.'));
         const anspruch = Number((kindergeld.get_text() ?? '').trim().replace(',', '.'));
         if ((kindergeld.get_text() ?? '').trim() && !Number.isFinite(anspruch)) {
-            return warn('Der Kindergeld-Anspruch ist keine Zahl.');
+            return warn(_('The Kindergeld claim is not a number.'));
         }
 
         // The year block is MERGED, never replaced: a child may carry Schulgeld or Betreuungskosten
@@ -208,7 +213,7 @@ function presentKindDialog(
             host.reloadEntityGroups();
             dialog.close();
         } catch (err) {
-            warn(`Konnte nicht speichern: ${err instanceof Error ? err.message : String(err)}`);
+            warn(fmt(_('Could not save: {error}'), { error: err instanceof Error ? err.message : String(err) }));
         }
     });
     bottom.append(save);

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-16 23:19+0200\n"
+"POT-Creation-Date: 2026-10-16 23:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2398,7 +2398,7 @@ msgid "Suggestion · {title}"
 msgstr ""
 
 #: src/frontends/desktop/assistent-panel.ts:192
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:209
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:211
 #: src/frontends/desktop/views/herleitung-dialog.ts:625
 msgid "Apply"
 msgstr ""
@@ -3056,6 +3056,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:111
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:207
+#: src/frontends/desktop/views/einstellungen/kinder.ts:169
 #: src/frontends/desktop/views/konten-view.ts:850
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:466
 #: src/frontends/desktop/views/umbuchen-dialog.ts:204
@@ -3743,6 +3744,135 @@ msgstr ""
 msgid "Paperless assignment not available"
 msgstr ""
 
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:68
+msgid "Fixed assets (AfA)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:69
+msgid "Depreciable assets (straight-line AfA) for the Anlage AVEÜR."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:74
+msgid "＋ Add asset"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:92
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:106
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:178
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:180
+msgid "New asset"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:98
+msgid "Key (id)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:99
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:197
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:279
+msgid "Designation"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:100
+msgid "Acquisition (YYYY-MM-DD)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:101
+msgid "Acquisition cost AHK (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:102
+msgid "Useful life (years)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:103
+msgid "Residual book value at 01.01. (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:104
+#: src/frontends/desktop/views/tx-detail-dialog.ts:201
+msgid "Type"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:104
+msgid "Movable"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:104
+msgid "Building"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:107
+msgid "Remove asset"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:169
+msgid "Private shares"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:170
+msgid "Gratuitous transfers — recognised as notional business income."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:175
+msgid "＋ Add private share"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:193
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:201
+msgid "New private share"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:198
+msgid "Net (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:199
+msgid "VAT rate"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:202
+msgid "Remove private share"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:234
+msgid "Special partner expenses"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:235
+msgid "Expenses of individual partners (e.g. a home office)."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:241
+msgid "＋ Add special partner expense"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:244
+msgid ""
+"Expenses of individual partners — create the partners in the configuration "
+"first."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:264
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:283
+msgid "New special partner expense"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:274
+msgid "Partner"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:280
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:199
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:396
+#: src/frontends/desktop/views/vertrag-labels.ts:160
+msgid "Amount (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:285
+msgid "Remove special partner expense"
+msgstr ""
+
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:38
 msgid "Data"
 msgstr ""
@@ -3884,7 +4014,8 @@ msgid "Details for the Anlage EÜR / tax return."
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:53
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:248
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:250
+#: src/frontends/desktop/views/einstellungen/privat.ts:51
 #: src/frontends/desktop/views/entity-dialogs.ts:37
 #: src/frontends/desktop/views/setup-assistant.ts:258
 #: src/frontends/desktop/views/setup-assistant.ts:334
@@ -3902,12 +4033,12 @@ msgid "House number"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:56
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:251
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:253
 msgid "Postcode"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:57
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:252
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:254
 msgid "City"
 msgstr ""
 
@@ -3976,61 +4107,61 @@ msgstr ""
 msgid "The postcode must have 5 digits."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:203
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:202
 msgid ""
 "The W-IdNr must be DE + 9 digits (11 characters) — ELSTER does not take the "
 "“-00001” suffix."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:208
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:206
 msgid "The USt-IdNr must be DE + 9 digits."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:230
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:228
 #: src/frontends/desktop/views/setup-assistant.ts:386
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:68
 msgid "VAT"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:233
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:231
 msgid "VAT prepayments already made (€)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:240
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:238
 msgid "Taxation basis"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:241
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:239
 msgid "Cash accounting (Ist)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:241
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:239
 msgid "Accrual accounting (Soll)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:250
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:248
 msgid "Test mode (ELSTER Testmerker)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:251
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:249
 msgid "Transmissions go to the ELSTER test server."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:255
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:253
 msgid "VAT permanent deadline extension"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:260
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:258
 msgid "Released from VAT returns"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:261
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:259
 msgid ""
 "The tax office released you (§ 18 (2) UStG): annual VAT return only, no VAT "
 "return deadlines."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:267
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:265
 msgid "Deadline extension (months)"
 msgstr ""
 
@@ -4074,7 +4205,7 @@ msgid ""
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:88
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:113
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:115
 msgid "Set up"
 msgstr ""
 
@@ -4092,123 +4223,359 @@ msgstr[1] ""
 msgid "Paperless was already fully set up."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:109
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:110
 #: src/frontends/desktop/views/setup-assistant.ts:648
 msgid "Setup failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:126
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:128
 msgid "Invoicing"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:127
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:129
 msgid "How this entity’s outgoing invoices are created."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:153
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:155
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:144
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:168
 #: src/frontends/desktop/views/vertrag-labels.ts:158
 msgid "Provider"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:153
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:155
 msgid "Self"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:154
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:156
 msgid "IBAN (for incoming payments)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:157
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:159
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:172
 msgid "Payment term (days)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:162
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:164
 msgid "Invoice number prefix"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:163
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:165
 msgid "Default sign-off (e.g. “Beste Grüße”)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:166
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:168
 msgid "Default sign-off, formal (e.g. “Mit freundlichen Grüßen”)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:192
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:194
 msgid "Default cover letter"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:193
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:195
 msgid "Default cover letter, formal"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:204
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:206
 msgid ""
 "Text above the line items for invoices without their own. Placeholders: "
 "{anrede} {kunde} {domain} {periode} {vorperiode} {paket} {gruss} {aussteller}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:237
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:239
 msgid "Issuer (§ 14 UStG)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:238
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:240
 msgid "Name, address and Steuernummer/USt-IdNr printed on the invoice."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:249
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:251
 msgid "Signature under the cover letter (empty = name)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:250
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:252
 msgid "Street and house number"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:253
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:255
 msgid "Country code (DE)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:254
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:256
 msgid "Email"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:255
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:257
 msgid "Phone"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:256
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:258
 msgid "Website"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:257
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:259
 msgid "Steuernummer (display format)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:258
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:260
 msgid "USt-IdNr"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:259
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:261
 msgid "Bank"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:260
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:262
 msgid "Account holder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:261
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:263
 msgid "IBAN (on the invoice)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:266
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:268
 msgid "Small business (§ 19 UStG)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:267
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:269
 msgid "Invoices show no VAT and carry the § 19 notice."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:63
+msgid "Gewerbesteuer"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:64
+msgid "The levying municipality and the Hebesatz for the GewSt 1 A."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:70
+msgid "Municipality"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:75
+msgid "Official municipality key (AGS)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:78
+msgid ""
+"The AGS has 8 digits (e.g. 03459015). Leave it empty if it is not known."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:85
+msgid "Hebesatz (%)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:91
+msgid "Add-backs (§ 8 GewStG)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:92
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:111
+msgid "Only fill in if there were such items — otherwise 0."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:95
+msgid "Financing shares (consideration for debts, rents, licences)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:96
+msgid "Free-float dividends"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:97
+msgid "Loss shares from partnerships"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:98
+msgid "Other add-backs"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:110
+msgid "Reductions (§ 9 GewStG)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:114
+msgid "Real property (1.2 % of the assessed value)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:115
+msgid "Profit shares from partnerships"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:116
+msgid "Donations and membership dues"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:117
+msgid "Other reductions"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:144
+msgid "Business cessation"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:146
+msgid ""
+"Only when the business ceases: the remaining fixed assets move into private "
+"assets at their fair value."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:153
+msgid "Cessation date (YYYY-MM-DD)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:156
+msgid "The cessation date must be YYYY-MM-DD, e.g. 2025-12-31."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:163
+msgid "Cessation costs (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:179
+msgid "Asset ID"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:183
+msgid "Fair value (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:187
+#: src/frontends/desktop/views/entity-dialogs.ts:102
+#: src/frontends/desktop/views/konten-view.ts:427
+msgid "Remove"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:197
+msgid "＋ Add fair value"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:27
+msgid "Biological or adopted child"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:28
+msgid "Foster child"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:29
+msgid "Grandchild or stepchild"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:39
+#: src/frontends/desktop/views/einstellungen/privat.ts:104
+msgid "Children"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:41
+msgid ""
+"One Anlage Kind block per child. The Kinderfreibetrag and the Kindergeld "
+"claim act directly on the assessed tax."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:49
+msgid "Children not readable: {error}"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:57
+msgid "IdNr {id}"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:57
+msgid "no IdNr"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:59
+msgid "Kindergeld {year}: {amount} €"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:60
+msgid "no details for {year}"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:68
+#: src/frontends/desktop/views/einstellungen/kinder.ts:100
+msgid "Edit child"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:74
+msgid "Remove child — changes the tax calculation for the year"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:84
+msgid "+ Add child"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:100
+msgid "Add child"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:110
+msgid "First name"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:111
+msgid "Surname (only if different)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:112
+msgid "Date of birth (YYYY-MM-DD)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:113
+msgid "The child’s Steuer-IdNr (11 digits)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:114
+msgid "Familienkasse"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:116
+msgid "Relationship to the child"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:119
+msgid "Kindergeld claim {year} (€ per year)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:142
+msgid "Child"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:147
+msgid "Details {year}"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:149
+msgid ""
+"The yearly Kindergeld claim — with a halved Kinderfreibetrag the HALF claim, "
+"exactly as in the previous year’s filed return."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:174
+msgid "The first name is missing."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:176
+msgid "The date of birth must be in YYYY-MM-DD format."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:181
+msgid "The child’s Steuer-IdNr has exactly 11 digits."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:184
+msgid "The Kindergeld claim is not a number."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/kinder.ts:214
+#: src/frontends/desktop/views/einstellungen-view.ts:314
+#: src/frontends/desktop/views/einstellungen-view.ts:430
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:254
+#: src/frontends/desktop/views/umbuchen-dialog.ts:251
+msgid "Could not save: {error}"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:30
@@ -4263,6 +4630,322 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:59
 #: src/frontends/desktop/views/setup-assistant.ts:361
 msgid "ELSTER returns, tax forecast, tax deadlines and the Tax area"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:25
+msgid "None / not liable for church tax"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:26
+msgid "Protestant"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:27
+msgid "Roman Catholic"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:28
+msgid "Old Catholic"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:29
+msgid "Free religious"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:30
+msgid "Jewish"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:39
+msgid "Religion (church tax)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:50
+msgid "Person"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:54
+msgid "Steuer-IdNr (11 digits)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:68
+msgid "Steuernummer (FF/BBB/UUUUP)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:69
+msgid "Finanzamt"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:70
+msgid "Federal state"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:71
+msgid "Occupation"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:72
+msgid "Phone (for queries)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:76
+#: src/frontends/desktop/views/setup-assistant.ts:460
+#: src/frontends/desktop/views/setup-assistant.ts:616
+msgid "Assessment"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:77
+#: src/frontends/desktop/views/setup-assistant.ts:457
+#: src/frontends/desktop/views/setup-assistant.ts:614
+msgid "Individual assessment"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:77
+#: src/frontends/desktop/views/setup-assistant.ts:458
+#: src/frontends/desktop/views/setup-assistant.ts:612
+msgid "Joint assessment (splitting)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:90
+msgid "Files their own return"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:92
+msgid ""
+"This person files their income tax return themselves — then no income tax "
+"deadline is reminded here. The calculation stays usable."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:109
+msgid "Church tax rate"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:144
+msgid "The Steuer-IdNr must have 11 digits."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:159
+msgid "Lohnsteuerbescheinigung {year}"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:164
+msgid "Gross wages (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:167
+msgid "Wage tax (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:168
+msgid "Solidarity surcharge (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:169
+msgid "Church tax (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:173
+msgid "Income from a trade or business (EÜR profit) (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:183
+msgid "Tax class"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:184
+msgid "(not specified)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:188
+msgid "Income tax prepayments made (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:191
+msgid "Name of the trade or business"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:198
+msgid "Source of the EÜR profit (entity ID)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:218
+msgid "Insurance contributions {year}"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:223
+msgid "Pension insurance (employee) (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:224
+msgid "Health insurance (basic) (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:225
+msgid "Long-term care insurance (basic) (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:227
+msgid "Pension insurance (tax-free employer share) (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:231
+msgid "Unemployment insurance (employee) (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:232
+msgid "Other insurance contributions (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:233
+msgid "Employer subsidy"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:250
+msgid "Work-related expenses {year}"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:252
+msgid ""
+"Individual work-expense items and the commuting allowance are currently "
+"maintained through the configuration / the assistant."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:257
+msgid "Home-office days"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:268
+msgid "Another workplace was available"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:269
+msgid ""
+"Off for “permanently no other workplace” — that is a line of its own on the "
+"form."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:278
+msgid "{days} days × {km} km"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:279
+msgid "not set"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:282
+msgid "Further items"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:285
+msgid "{n} individual item"
+msgid_plural "{n} individual items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:286
+msgid "Commuting allowance: {pendel}"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:314
+msgid "Special expenses and burdens {year}"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:315
+msgid ""
+"Amounts nobody reports — donations, medical costs, tradespeople, school fees."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:334
+msgid "Church tax paid (§10 (1) no. 4) (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:336
+msgid "Donations (in addition to detected bookings) (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:337
+msgid "Party dues and donations (§34g) (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:338
+msgid "School fees (§10 (1) no. 9, the tuition share only) (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:339
+msgid "Childcare costs (§10 (1) no. 5) (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:342
+msgid ""
+"Medical costs (extraordinary burden, in addition to detected bookings) (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:351
+msgid "Household-related services (§35a) without a booking of their own"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:352
+msgid "For example the service shares from a service-charge statement."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:356
+msgid "Tradesperson services (labour share) (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:357
+msgid "Household-related services (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:358
+msgid "Household-related mini-jobs (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:371
+msgid "Wage replacement benefits (§32b)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:372
+msgid ""
+"Parental, unemployment, sickness and maternity benefits — they change the "
+"tax rate."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:375
+msgid "Received during the year (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:376
+msgid "Repaid during the year (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:400
+msgid "Single-parent allowance (§24b) {year}"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:402
+msgid ""
+"For single people with at least one child in the household (no second "
+"adult): 4,260 € + 240 € per further child, pro rata per month."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:409
+msgid "Expected allowance"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:414
+msgid "Months as a single parent"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:419
+msgid "e.g. from when the other parent moved out; 0 = no entitlement"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:422
+msgid "Further children in the household"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/privat.ts:433
+msgid "Child (base amount)"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen-view.blp:32
@@ -4426,13 +5109,6 @@ msgstr ""
 msgid "Connect an external agent …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:314
-#: src/frontends/desktop/views/einstellungen-view.ts:430
-#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:254
-#: src/frontends/desktop/views/umbuchen-dialog.ts:251
-msgid "Could not save: {error}"
-msgstr ""
-
 #: src/frontends/desktop/views/einstellungen-view.ts:342
 msgid "Could not read connections: {error}"
 msgstr ""
@@ -4497,11 +5173,6 @@ msgstr ""
 msgid ""
 "The entity disappears from the list. Transactions, receipts, invoices and "
 "filings are kept — only the entry is removed, not the data."
-msgstr ""
-
-#: src/frontends/desktop/views/entity-dialogs.ts:102
-#: src/frontends/desktop/views/konten-view.ts:427
-msgid "Remove"
 msgstr ""
 
 #: src/frontends/desktop/views/entity-dialogs.ts:110
@@ -6974,21 +7645,6 @@ msgid ""
 "Joint assessment is for married couples and civil partners filing together."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:457
-#: src/frontends/desktop/views/setup-assistant.ts:614
-msgid "Individual assessment"
-msgstr ""
-
-#: src/frontends/desktop/views/setup-assistant.ts:458
-#: src/frontends/desktop/views/setup-assistant.ts:612
-msgid "Joint assessment (splitting)"
-msgstr ""
-
-#: src/frontends/desktop/views/setup-assistant.ts:460
-#: src/frontends/desktop/views/setup-assistant.ts:616
-msgid "Assessment"
-msgstr ""
-
 #: src/frontends/desktop/views/setup-assistant.ts:491
 msgid "Which bank accounts belong to it?"
 msgstr ""
@@ -7366,10 +8022,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:200
 msgid "Form line (Kz)"
-msgstr ""
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:201
-msgid "Type"
 msgstr ""
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:203
@@ -8056,12 +8708,6 @@ msgstr ""
 msgid ""
 "What it costs and how often. The monthly figure in the list is derived from "
 "these two."
-msgstr ""
-
-#: src/frontends/desktop/views/vertrag-form-dialog.ts:199
-#: src/frontends/desktop/views/vertrag-form-dialog.ts:396
-#: src/frontends/desktop/views/vertrag-labels.ts:160
-msgid "Amount (€)"
 msgstr ""
 
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:201

@@ -17,6 +17,7 @@ import { mutateElster, type ElsterConfig } from '../../data/settings.ts';
 import type { AppEntity } from '../../entities.ts';
 import { entryRow, removeRow, spinRow, spliceRow, type SettingsHost } from './rows.ts';
 import { helpFor } from '../../widgets/glossary-help.ts';
+import { _ } from '../../i18n.ts';
 
 // ── Gewerbesteuer ───────────────────────────────────────────────────────────────────────────────
 
@@ -59,40 +60,42 @@ export function buildGewerbeGroup(host: SettingsHost, entity: AppEntity, elster:
     const g = elster.gewerbe;
     const group = helpFor(
         new Adw.PreferencesGroup({
-            title: 'Gewerbesteuer',
-            description: 'Hebende Gemeinde und Hebesatz für die GewSt 1 A.',
+            title: _('Gewerbesteuer'),
+            description: _('The levying municipality and the Hebesatz for the GewSt 1 A.'),
         }),
         'gewerbesteuer',
     );
 
-    group.add(entryRow(host, 'Gemeinde', g?.gemeinde ?? '', (t) => saveGewerbe(host, entity, { gemeinde: t.trim() })));
+    group.add(
+        entryRow(host, _('Municipality'), g?.gemeinde ?? '', (t) => saveGewerbe(host, entity, { gemeinde: t.trim() })),
+    );
     // The AGS is what the Gemeinde is called in the ELSTER form; the name above is what a person
     // calls it. Both are stored, because neither can be derived from the other offline.
     group.add(
-        entryRow(host, 'Amtlicher Gemeindeschlüssel (AGS)', g?.ags ?? '', (t) => {
+        entryRow(host, _('Official municipality key (AGS)'), g?.ags ?? '', (t) => {
             const ags = t.trim();
             if (ags && !/^\d{8}$/.test(ags)) {
-                host.banner('Der AGS ist 8-stellig (z. B. 03459015). Leer lassen, wenn er nicht bekannt ist.');
+                host.banner(_('The AGS has 8 digits (e.g. 03459015). Leave it empty if it is not known.'));
                 return;
             }
             saveGewerbe(host, entity, { ags: ags || undefined });
         }),
     );
     group.add(
-        spinRow(host, 'Hebesatz (%)', g?.hebesatz ?? 0, { digits: 0, lower: 0, upper: 1000 }, (v) =>
+        spinRow(host, _('Hebesatz (%)'), g?.hebesatz ?? 0, { digits: 0, lower: 0, upper: 1000 }, (v) =>
             saveGewerbe(host, entity, { hebesatz: Math.round(v) }),
         ),
     );
 
     const hinzu = new Adw.ExpanderRow({
-        title: 'Hinzurechnungen (§ 8 GewStG)',
-        subtitle: 'Nur ausfüllen, wenn es solche Posten gab — sonst 0.',
+        title: _('Add-backs (§ 8 GewStG)'),
+        subtitle: _('Only fill in if there were such items — otherwise 0.'),
     });
     for (const [key, title] of [
-        ['finanzierungsanteile', 'Finanzierungsanteile (Entgelte für Schulden, Mieten, Lizenzen)'],
-        ['streubesitzdividenden', 'Streubesitzdividenden'],
-        ['verlustanteile_pers_ges', 'Verlustanteile aus Personengesellschaften'],
-        ['sonstige', 'Sonstige Hinzurechnungen'],
+        ['finanzierungsanteile', _('Financing shares (consideration for debts, rents, licences)')],
+        ['streubesitzdividenden', _('Free-float dividends')],
+        ['verlustanteile_pers_ges', _('Loss shares from partnerships')],
+        ['sonstige', _('Other add-backs')],
     ] as const) {
         const value = (g?.hinzurechnungen as Record<string, number> | undefined)?.[key] ?? 0;
         hinzu.add_row(
@@ -104,14 +107,14 @@ export function buildGewerbeGroup(host: SettingsHost, entity: AppEntity, elster:
     group.add(hinzu);
 
     const kuerz = new Adw.ExpanderRow({
-        title: 'Kürzungen (§ 9 GewStG)',
-        subtitle: 'Nur ausfüllen, wenn es solche Posten gab — sonst 0.',
+        title: _('Reductions (§ 9 GewStG)'),
+        subtitle: _('Only fill in if there were such items — otherwise 0.'),
     });
     for (const [key, title] of [
-        ['grundbesitz', 'Grundbesitz (1,2 % des Einheitswerts)'],
-        ['gewinnanteile_pers_ges', 'Gewinnanteile aus Personengesellschaften'],
-        ['spenden', 'Spenden und Mitgliedsbeiträge'],
-        ['sonstige', 'Sonstige Kürzungen'],
+        ['grundbesitz', _('Real property (1.2 % of the assessed value)')],
+        ['gewinnanteile_pers_ges', _('Profit shares from partnerships')],
+        ['spenden', _('Donations and membership dues')],
+        ['sonstige', _('Other reductions')],
     ] as const) {
         const value = (g?.kuerzungen as Record<string, number> | undefined)?.[key] ?? 0;
         kuerz.add_row(
@@ -138,26 +141,31 @@ export function buildAufgabeGroup(host: SettingsHost, entity: AppEntity, elster:
     const a = elster.adjustments?.betriebsaufgabe;
     const group = helpFor(
         new Adw.PreferencesGroup({
-            title: 'Betriebsaufgabe',
-            description:
-                'Nur bei Aufgabe des Betriebs: das restliche Anlagevermögen geht zum gemeinen Wert ins Privatvermögen.',
+            title: _('Business cessation'),
+            description: _(
+                'Only when the business ceases: the remaining fixed assets move into private assets at their fair value.',
+            ),
         }),
         'aufgabe',
     );
 
     group.add(
-        entryRow(host, 'Aufgabedatum (JJJJ-MM-TT)', a?.datum ?? '', (t) => {
+        entryRow(host, _('Cessation date (YYYY-MM-DD)'), a?.datum ?? '', (t) => {
             const datum = t.trim();
             if (datum && !/^\d{4}-\d{2}-\d{2}$/.test(datum)) {
-                host.banner('Das Aufgabedatum muss JJJJ-MM-TT sein, z. B. 2025-12-31.');
+                host.banner(_('The cessation date must be YYYY-MM-DD, e.g. 2025-12-31.'));
                 return;
             }
             saveAufgabe(host, entity, { datum: datum || undefined });
         }),
     );
     group.add(
-        spinRow(host, 'Aufgabekosten (€)', a?.aufgabekosten ?? 0, { digits: 2, lower: 0, upper: 100_000_000 }, (v) =>
-            saveAufgabe(host, entity, { aufgabekosten: v }),
+        spinRow(
+            host,
+            _('Cessation costs (€)'),
+            a?.aufgabekosten ?? 0,
+            { digits: 2, lower: 0, upper: 100_000_000 },
+            (v) => saveAufgabe(host, entity, { aufgabekosten: v }),
         ),
     );
 
@@ -171,16 +179,16 @@ export function buildAufgabeGroup(host: SettingsHost, entity: AppEntity, elster:
         });
 
     const addWert = (id: string, wert: number) => {
-        const row = new Adw.ExpanderRow({ title: id || 'Neues Anlagegut' });
-        const idRow = entryRow(host, 'Anlagegut-ID', id, (t) => {
-            row.set_title(t.trim() || 'Neues Anlagegut');
+        const row = new Adw.ExpanderRow({ title: id || _('New asset') });
+        const idRow = entryRow(host, _('Asset ID'), id, (t) => {
+            row.set_title(t.trim() || _('New asset'));
             persist();
         });
-        const wertRow = spinRow(host, 'Gemeiner Wert (€)', wert, { digits: 2, lower: 0, upper: 100_000_000 }, persist);
+        const wertRow = spinRow(host, _('Fair value (€)'), wert, { digits: 2, lower: 0, upper: 100_000_000 }, persist);
         const w: WertRowWidgets = { row, anlagegut_id: idRow, gemeiner_wert: wertRow };
         row.add_row(idRow);
         row.add_row(wertRow);
-        row.add_row(removeRow('Entfernen', () => spliceRow(werte, w, group, row)));
+        row.add_row(removeRow(_('Remove'), () => spliceRow(werte, w, group, row)));
         werte.push(w);
         group.add(row);
         return row;
@@ -190,7 +198,7 @@ export function buildAufgabeGroup(host: SettingsHost, entity: AppEntity, elster:
 
     // Without a value here an asset is withdrawn at its Restbuchwert — which is a DEFAULT, not a
     // measurement, so the subtitle says so rather than leaving an empty list looking complete.
-    const add = new Adw.ButtonRow({ title: '＋ Gemeinen Wert hinzufügen' });
+    const add = new Adw.ButtonRow({ title: _('＋ Add fair value') });
     add.connect('activated', () => {
         addWert('', 0);
         persist();
