@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-16 13:06+0200\n"
+"POT-Creation-Date: 2026-10-16 19:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -208,6 +208,1195 @@ msgstr ""
 msgid "This version has no built-in AI assistant."
 msgstr ""
 
+#: src/core/elster/anlagegut-kandidat.ts:108
+msgid "Fixed-asset candidates: cannot be checked"
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:109
+msgid "No low-value asset threshold on file for {year}."
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:111
+msgid "the low-value asset threshold before 2018 is not in the source list"
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:115
+msgid "gross"
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:115
+msgid "net"
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:152
+msgid "Retailer"
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:160
+msgid "{n} instalments to {name} ({interval}) totalling {amount} € {basis}"
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:167
+msgid "One expense to {name} of {amount} € {basis}"
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:173
+msgid ""
+"Up to {limit} € a collective item is possible instead (§ 6 Abs. 2a EStG: one "
+"fifth per year, uniformly for all assets of the year above {from} €)."
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:181
+msgid ""
+"Gross, because without input tax deduction the VAT is part of the "
+"acquisition cost (§ 9b Abs. 1 EStG)."
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:188
+msgid "Fixed asset? {name}, {amount} €"
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:192
+msgid ""
+"{what} is above the low-value asset threshold of {limit} € and is not in the "
+"asset register. Probably a fixed asset: it is then depreciated over its "
+"useful life instead of deducted at once."
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:199
+msgid ""
+"To clarify: add it to the asset register — or mark it as fine if it is "
+"consumables or a service."
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:205
+msgid "Add to the asset register"
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:210
+#: src/core/elster/iban-wechsel.ts:206 src/core/elster/laufende-kosten.ts:373
+#: src/core/elster/reverse-charge-kandidat.ts:251
+msgid "Open the transaction"
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:222
+msgid "Fixed-asset candidates: none"
+msgstr ""
+
+#: src/core/elster/anlagegut-kandidat.ts:225
+msgid "{n} expense from {year} checked in categories for acquisitions."
+msgid_plural "{n} expenses from {year} checked in categories for acquisitions."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/anlagegut-kandidat.ts:234
+msgid ""
+"office equipment, office supplies, other and unclassified against the low-"
+"value asset threshold of {limit} € {basis}, instalments to the same retailer "
+"as one asset; excluded: in the asset register ({registered}), confirmed "
+"recurring costs ({recurring})"
+msgstr ""
+
+#: src/core/elster/doppelte-rechnung.ts:67
+msgid "Duplicate invoice: cannot be checked"
+msgstr ""
+
+#: src/core/elster/doppelte-rechnung.ts:68
+msgid "No incoming invoice with a sender on file for {year}."
+msgstr ""
+
+#: src/core/elster/doppelte-rechnung.ts:72
+msgid "the document system holds no incoming invoice for this year"
+msgstr ""
+
+#: src/core/elster/doppelte-rechnung.ts:73
+msgid "no incoming invoice has a sender assigned"
+msgstr ""
+
+#: src/core/elster/doppelte-rechnung.ts:107
+msgid "same invoice number"
+msgstr ""
+
+#: src/core/elster/doppelte-rechnung.ts:128
+msgid "same amount within {days} days"
+msgstr ""
+
+#: src/core/elster/doppelte-rechnung.ts:153
+msgid "Duplicate invoice: none found"
+msgstr ""
+
+#: src/core/elster/doppelte-rechnung.ts:156
+msgid "{n} incoming invoice from {year} compared."
+msgid_plural "{n} incoming invoices from {year} compared."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/doppelte-rechnung.ts:166
+msgid ""
+"same sender with the same invoice number, or with the same gross amount "
+"within {days} days; excluded: series such as subscriptions (at least three "
+"at a fixed interval: {series} pair(s); confirmed recurring costs: "
+"{recurring} pair(s))"
+msgstr ""
+
+#: src/core/elster/doppelte-rechnung.ts:169
+msgid "; not compared without a sender: {n}"
+msgstr ""
+
+#: src/core/elster/doppelte-rechnung.ts:179
+msgid " for {amount} €"
+msgstr ""
+
+#: src/core/elster/doppelte-rechnung.ts:183
+msgid "Duplicate invoice from {name}?"
+msgstr ""
+
+#: src/core/elster/doppelte-rechnung.ts:185
+msgid ""
+"{n} documents from {name}{amount} probably concern the same claim ({reason})."
+msgstr ""
+
+#: src/core/elster/doppelte-rechnung.ts:192
+msgid ""
+"To clarify before both are paid: is one of them a copy, a reminder or a "
+"correction?"
+msgstr ""
+
+#: src/core/elster/doppelte-rechnung.ts:198
+#: src/core/elster/ust-ohne-angabe.ts:167
+msgid "Open the document"
+msgstr ""
+
+#: src/core/elster/erstattung.ts:244
+msgid "Assign {n} refund"
+msgid_plural "Assign {n} refunds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/hinweise.ts:112
+msgid "Mark as fine"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:149
+msgid "no date"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:152
+msgid "no. {number}"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:239
+msgid "Standard taxation is mandatory"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:240
+msgid ""
+"Revenue {year} {revenue} € above {limit} € — the small business scheme is "
+"ruled out."
+msgstr ""
+
+#: src/core/elster/hinweise.ts:251
+msgid "The small business scheme would be possible"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:253
+msgid "Revenue {year} {revenue} € below {limit} € (previous-year limit)."
+msgstr ""
+
+#: src/core/elster/hinweise.ts:260
+msgid ""
+"Currently standard taxation (VAT charged) — a switch to the small business "
+"scheme would be possible (no VAT, but no input tax deduction). Check whether "
+"it pays off."
+msgstr ""
+
+#: src/core/elster/hinweise.ts:268
+msgid "Check the switch to standard taxation"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:271
+msgid ""
+"Revenue {year} {revenue} € above the previous-year limit {limit} € — the "
+"small business status may lapse."
+msgstr ""
+
+#: src/core/elster/hinweise.ts:281
+msgid "Type of taxation: {type}"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:282
+msgid "standard taxation"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:282
+msgid "small business / no VAT"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:286
+msgid ""
+"Revenue {year} {revenue} €. Small business limits: {previous} € (previous "
+"year) · {current} € (current year)."
+msgstr ""
+
+#: src/core/elster/hinweise.ts:299
+msgid "VAT prepayments not recorded yet"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:302
+msgid ""
+"The advance VAT returns during the year are not entered — the closing "
+"payment ({amount} €) is reduced by the prepayments already made."
+msgstr ""
+
+#: src/core/elster/hinweise.ts:315
+msgid "Input tax without a linked receipt"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:319
+msgid "{amount} € input tax in {n} booking without a stored invoice."
+msgid_plural "{amount} € input tax in {n} bookings without a stored invoice."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/hinweise.ts:327
+msgid ""
+"To deduct the input tax, keep the invoices and present them on request by "
+"the tax office (not to be transmitted to ELSTER)."
+msgstr ""
+
+#: src/core/elster/hinweise.ts:337
+msgid "Match"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:342
+msgid "Open the receipt inbox"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:358
+msgid "{n} unclassified booking"
+msgid_plural "{n} unclassified bookings"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/hinweise.ts:362
+msgid ""
+"These bookings are assigned neither through a receipt nor through a rule — "
+"clarify before filing."
+msgstr ""
+
+#: src/core/elster/hinweise.ts:372
+msgid "Create a rule"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:377 src/core/elster/ust-abweichung.ts:273
+msgid "Open transactions"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:392
+msgid "Business ceased during the year"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:394
+msgid "Business ceased on {date}."
+msgstr ""
+
+#: src/core/elster/hinweise.ts:397
+msgid ""
+"Subsequent § 24 income of {amount} € is included in the result (exempt from "
+"trade tax)."
+msgstr ""
+
+#: src/core/elster/hinweise.ts:414
+msgid "Invoice {number} · {amount} € too much"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:426
+msgid "{n} payment possibly received twice — clarify before filing"
+msgid_plural "{n} payments possibly received twice — clarify before filing"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/hinweise.ts:433
+msgid ""
+"A customer has apparently paid an invoice more than once or too much. The "
+"excess received is not revenue but an obligation to repay — confirm it or "
+"mark it as fine."
+msgstr ""
+
+#: src/core/elster/hinweise.ts:442 src/core/elster/hinweise.ts:476
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:148
+msgid "Open the invoice"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:458
+msgid "{n} double payment not refunded to the customer yet"
+msgid_plural "{n} double payments not refunded to the customer yet"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/hinweise.ts:465
+msgid ""
+"Once the refund is booked, link the transfer to the double payment — it is "
+"then treated as a pass-through item as well."
+msgstr ""
+
+#: src/core/elster/hinweise.ts:496
+msgid "{n} double payment neutralised"
+msgid_plural "{n} double payments neutralised"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/hinweise.ts:500
+msgid ""
+"Invoices paid twice are excluded from revenue and VAT as a pass-through item "
+"(obligation to repay)."
+msgstr ""
+
+#: src/core/elster/hinweise.ts:510
+msgid "Depreciation taken into account"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:513
+msgid ""
+"Depreciation of {amount} €{assets} is included in the EÜR — keep the asset "
+"register (residual values, additions/disposals) up to date."
+msgstr ""
+
+#: src/core/elster/hinweise.ts:518
+msgid " from {n} fixed asset"
+msgid_plural " from {n} fixed assets"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/hinweise.ts:530
+msgid "Next filing deadline"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:533
+msgid ""
+"The annual returns are due by {date} (regular deadline without an adviser; a "
+"granted extension moves it)."
+msgstr ""
+
+#: src/core/elster/hinweise.ts:545
+msgid "Trade tax: base amount 0 €"
+msgstr ""
+
+#: src/core/elster/hinweise.ts:547
+msgid ""
+"The trade income is below the allowance (24,500 €) — no trade tax is due, "
+"but the return still has to be filed."
+msgstr ""
+
+#: src/core/elster/home.ts:104
+msgid "est. tax due"
+msgstr ""
+
+#: src/core/elster/home.ts:104
+msgid "est. refund"
+msgstr ""
+
+#: src/core/elster/home.ts:113
+msgid ""
+"Unclassified or caught only by a catch-all rule — confirm or recategorise"
+msgstr ""
+
+#: src/core/elster/home.ts:125
+msgid ""
+"Incoming payments that refund an earlier one — “Yes” adopts its category and "
+"input tax"
+msgstr ""
+
+#: src/core/elster/home.ts:137
+msgid "Open outgoing invoices by due date — draft a reminder, mark it sent"
+msgstr ""
+
+#: src/core/elster/home.ts:149
+msgid "Regular debits detected — confirm, correct, or mark as not recurring"
+msgstr ""
+
+#: src/core/elster/home.ts:164
+msgid "and one more"
+msgid_plural "and {n} more"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/home.ts:202 src/frontends/desktop/views/util.ts:78
+msgctxt "month abbreviation"
+msgid "Jan"
+msgstr ""
+
+#: src/core/elster/home.ts:203 src/frontends/desktop/views/util.ts:79
+msgctxt "month abbreviation"
+msgid "Feb"
+msgstr ""
+
+#: src/core/elster/home.ts:204 src/frontends/desktop/views/util.ts:80
+msgctxt "month abbreviation"
+msgid "Mar"
+msgstr ""
+
+#: src/core/elster/home.ts:205 src/frontends/desktop/views/util.ts:81
+msgctxt "month abbreviation"
+msgid "Apr"
+msgstr ""
+
+#: src/core/elster/home.ts:206 src/frontends/desktop/views/util.ts:82
+msgctxt "month abbreviation"
+msgid "May"
+msgstr ""
+
+#: src/core/elster/home.ts:207 src/frontends/desktop/views/util.ts:83
+msgctxt "month abbreviation"
+msgid "Jun"
+msgstr ""
+
+#: src/core/elster/home.ts:208 src/frontends/desktop/views/util.ts:84
+msgctxt "month abbreviation"
+msgid "Jul"
+msgstr ""
+
+#: src/core/elster/home.ts:209 src/frontends/desktop/views/util.ts:85
+msgctxt "month abbreviation"
+msgid "Aug"
+msgstr ""
+
+#: src/core/elster/home.ts:210 src/frontends/desktop/views/util.ts:86
+msgctxt "month abbreviation"
+msgid "Sep"
+msgstr ""
+
+#: src/core/elster/home.ts:211 src/frontends/desktop/views/util.ts:87
+msgctxt "month abbreviation"
+msgid "Oct"
+msgstr ""
+
+#: src/core/elster/home.ts:212 src/frontends/desktop/views/util.ts:88
+msgctxt "month abbreviation"
+msgid "Nov"
+msgstr ""
+
+#: src/core/elster/home.ts:213 src/frontends/desktop/views/util.ts:89
+msgctxt "month abbreviation"
+msgid "Dec"
+msgstr ""
+
+#: src/core/elster/home.ts:240
+msgid "Bank account"
+msgstr ""
+
+#: src/core/elster/home.ts:242
+msgid "CAMT file"
+msgstr ""
+
+#. TRANSLATORS: Chart slice for expenses with no category of their own.
+#: src/core/elster/home.ts:266
+msgctxt "expense category"
+msgid "Other"
+msgstr ""
+
+#: src/core/elster/home.ts:316
+msgid "Invoice {number} paid twice?"
+msgstr ""
+
+#: src/core/elster/home.ts:318
+msgid "{amount} € received too much"
+msgstr ""
+
+#: src/core/elster/home.ts:319
+msgid "partly too much"
+msgstr ""
+
+#: src/core/elster/home.ts:320
+msgid "clarify"
+msgstr ""
+
+#: src/core/elster/home.ts:350
+#: src/frontends/desktop/views/rechnungen-view.ts:529
+msgid "due {date}"
+msgstr ""
+
+#: src/core/elster/iban-wechsel.ts:94
+msgid "IBAN change: cannot be checked"
+msgstr ""
+
+#: src/core/elster/iban-wechsel.ts:95
+msgid "No debit in {year} names the payee’s IBAN ({accounts})."
+msgstr ""
+
+#: src/core/elster/iban-wechsel.ts:100
+msgid "the accounts carry no counterparty IBAN"
+msgstr ""
+
+#: src/core/elster/iban-wechsel.ts:143
+msgid "; not checked: {accounts} (no counterparty IBAN)"
+msgstr ""
+
+#: src/core/elster/iban-wechsel.ts:150
+msgid "IBAN change: none found"
+msgstr ""
+
+#: src/core/elster/iban-wechsel.ts:153
+msgid "{n} debit in {year} with the payee’s IBAN checked."
+msgid_plural "{n} debits in {year} with the payee’s IBAN checked."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/iban-wechsel.ts:163
+msgid ""
+"every debit against the IBANs the same payee was paid at before; excluded: "
+"first payment to a payee ({first}), own accounts and transfers ({own}), a "
+"second IBAN already used earlier ({second})"
+msgstr ""
+
+#: src/core/elster/iban-wechsel.ts:181
+msgid "IBAN change at {name}: probably new bank details"
+msgstr ""
+
+#: src/core/elster/iban-wechsel.ts:185
+msgid ""
+"{n} payment to {name} went to an IBAN never paid before ({ibans}); so far: "
+"{known}."
+msgid_plural ""
+"{n} payments to {name} went to IBANs never paid before ({ibans}); so far: "
+"{known}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/iban-wechsel.ts:193
+msgid ""
+"To clarify before paying again: ask the supplier on the phone number or e-"
+"mail address known so far — not on the contact details printed on the "
+"invoice with the new IBAN."
+msgstr ""
+
+#: src/core/elster/iban-wechsel.ts:200
+msgid "{line} · to {iban}"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:70
+msgctxt "month"
+msgid "January"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:71
+msgctxt "month"
+msgid "February"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:72
+msgctxt "month"
+msgid "March"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:73
+msgctxt "month"
+msgid "April"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:74
+msgctxt "month"
+msgid "May"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:75
+msgctxt "month"
+msgid "June"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:76
+msgctxt "month"
+msgid "July"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:77
+msgctxt "month"
+msgid "August"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:78
+msgctxt "month"
+msgid "September"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:79
+msgctxt "month"
+msgid "October"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:80
+msgctxt "month"
+msgid "November"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:81
+msgctxt "month"
+msgid "December"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:87
+msgid "Import a bank statement"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:111
+msgid "{month} {year}"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:112
+msgid "{from} to {to} {year}"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:165
+msgid ""
+"in all of {year} neither transactions nor a statement, although the account "
+"has transactions before and after"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:182
+msgid ""
+"statement {from}–{to}: opening balance {opening} € + transactions {sum} € ≠ "
+"closing balance {closing} € (difference {diff} €)"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:206
+msgid " (no. {numbers})"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:211
+msgid " — closing balance {closing} € ≠ opening balance {opening} €"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:217
+msgid ""
+"a statement is probably missing between {from} and {to}{numbers}{balances}"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:239
+msgid ""
+"the statements {from}–{to} total {statements} €, the bookings in the same "
+"period {bookings} € — bookings are probably missing or duplicated"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:279
+msgid ""
+"no transactions in {period}, although the account otherwise has them every "
+"month"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:290
+msgid "Not checked after {date} (account closed or business ceased)."
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:296
+msgid "Bank statement {account}: probably incomplete"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:298
+msgid "To clarify: {findings}."
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:300
+msgid "A missing statement file skews the EÜR without anyone noticing."
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:303
+msgid ""
+"The balances can only be checked once bank statements (CAMT) are imported."
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:316
+msgid "; outside the statements only months without transactions"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:320
+msgid "Bank statement {account} complete"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:324
+msgid "{n} statement from {from} to {to} checked."
+msgid_plural "{n} statements from {from} to {to} checked."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/kontoauszug.ts:333
+msgid ""
+"opening balance + transactions = closing balance per statement, closing "
+"balance = next opening balance"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:335
+msgid ", statement numbers consecutive"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:336
+msgid ", sum of the statements = sum of the bookings"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:343
+msgid "Bank statement {account}: balances cannot be checked"
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:346
+msgid ""
+"Only checked whether a month in {year} has no transactions — none found."
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:347
+msgid "Too few transactions per month to spot a gap that way."
+msgstr ""
+
+#: src/core/elster/kontoauszug.ts:349
+msgid "the account supplies no balances"
+msgstr ""
+
+#: src/core/elster/laufende-kosten.ts:66
+msgid "monthly"
+msgstr ""
+
+#: src/core/elster/laufende-kosten.ts:68
+msgid "quarterly"
+msgstr ""
+
+#: src/core/elster/laufende-kosten.ts:70
+msgid "twice a year"
+msgstr ""
+
+#: src/core/elster/laufende-kosten.ts:72
+msgid "yearly"
+msgstr ""
+
+#: src/core/elster/laufende-kosten.ts:253
+msgid "{n} recurring cost to confirm"
+msgid_plural "{n} recurring costs to confirm"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/laufende-kosten.ts:341
+msgid "more expensive"
+msgstr ""
+
+#: src/core/elster/laufende-kosten.ts:341
+msgid "cheaper"
+msgstr ""
+
+#: src/core/elster/laufende-kosten.ts:345
+msgid "Price change at {name}"
+msgstr ""
+
+#: src/core/elster/laufende-kosten.ts:349
+msgid ""
+"The recurring cost at {name} ({interval}) has been {direction} since {date}: "
+"{new} € instead of {old} €."
+msgstr ""
+
+#: src/core/elster/laufende-kosten.ts:361
+msgid "To clarify whether the change was agreed."
+msgstr ""
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:105
+msgid "Supplier"
+msgstr ""
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:116
+msgid "invoice {number}"
+msgstr ""
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:116
+msgid "invoice"
+msgstr ""
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:124
+msgid "Supplier paid twice? {name}, {invoice}"
+msgstr ""
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:128
+msgid ""
+"{invoice} for {gross} € was paid by {n} payment totalling {paid} € — "
+"probably {excess} € too much."
+msgid_plural ""
+"{invoice} for {gross} € was paid by {n} payments totalling {paid} € — "
+"probably {excess} € too much."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:142
+msgid ""
+"To clarify: ask the supplier for a refund or have it offset against the next "
+"invoice. Input tax is due once per invoice; the app does not deduct the "
+"second debit."
+msgstr ""
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:161
+msgid "Supplier paid twice: cannot be checked"
+msgstr ""
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:164
+msgid ""
+"{n} incoming invoice from {year} carries an amount, but none has a payment "
+"assigned."
+msgid_plural ""
+"{n} incoming invoices from {year} carry an amount, but none has a payment "
+"assigned."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:171
+msgid ""
+"no incoming invoice has a linked payment or one recognisable by invoice "
+"number"
+msgstr ""
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:179
+msgid "Supplier paid twice: nothing found"
+msgstr ""
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:182
+msgid "{n} incoming invoice from {year} compared with its payments."
+msgid_plural "{n} incoming invoices from {year} compared with their payments."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:191
+msgid ""
+"the sum of the linked debits and those recognised by invoice number against "
+"the gross amount; excluded: part payments as well as deposit + remainder "
+"({part}), refunded later ({refunded}), series such as subscriptions "
+"({series}), confirmed recurring costs ({recurring})"
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:90
+msgid "counter account in {country}"
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:93
+msgid "VAT ID on the receipt from {country}"
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:102
+msgid "contact “{name}” based in {country}"
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:109
+msgid "other bookings to this counterparty are classified as § 13b"
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:115
+msgid "Abs. 1 or Abs. 2 Nr. 1"
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:116
+msgid "Abs. 1: supply from the EU"
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:116
+msgid "Abs. 2 Nr. 1: non-EU country"
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:172
+msgid "§ 13b candidates: cannot be checked"
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:173
+msgid "For {year} the app knows where none of the suppliers is based."
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:178
+msgid ""
+"no booking carries a counter account IBAN or a supplier country and no "
+"contact names a country"
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:189
+msgid "§ 13b candidates: none missed"
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:192
+msgid ""
+"{n} expense from {year} without declared VAT checked for foreign suppliers."
+msgid_plural ""
+"{n} expenses from {year} without declared VAT checked for foreign suppliers."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:201
+msgid ""
+"IBAN country, VAT ID on the receipt, contacts and earlier § 13b bookings of "
+"the same counterparty; classified as § 13b: {booked}, flagged for review: "
+"{review}"
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:213
+msgid ""
+"As a small business this applies too — only without input tax deduction, so "
+"the tax is a real burden and has to be declared for that period in an "
+"advance return (§ 18 Abs. 4a UStG)."
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:215
+msgid ""
+"With a full input tax deduction the input tax offsets it, but it still has "
+"to be declared."
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:224
+msgid "§ 13b not recognised? {name}"
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:228
+msgid ""
+"One expense to {name} of {amount} € without declared VAT, not classified as "
+"reverse charge — {signal}."
+msgid_plural ""
+"{n} expenses to {name} totalling {amount} € without declared VAT, not "
+"classified as reverse charge — {signal}."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:235
+msgid ""
+"Probably a foreign supplier: then you owe the VAT under § 13b Abs. 5 UStG "
+"({paragraph})."
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:240
+msgid ""
+"To clarify: assign the invoice with a supplier country, then the app "
+"classifies § 13b itself."
+msgstr ""
+
+#: src/core/elster/reverse-charge-kandidat.ts:246
+msgid "Assign a document"
+msgstr ""
+
+#: src/core/elster/ust-abweichung.ts:153 src/core/elster/ust-abweichung.ts:172
+msgid "VAT deviation: cannot be checked"
+msgstr ""
+
+#: src/core/elster/ust-abweichung.ts:154
+msgid "The entity does not charge VAT."
+msgstr ""
+
+#: src/core/elster/ust-abweichung.ts:156
+msgid "as a small business there are no regular advance returns to compare"
+msgstr ""
+
+#: src/core/elster/ust-abweichung.ts:176
+msgid "{n} closed period in {year}, but too little history before it."
+msgid_plural ""
+"{n} closed periods in {year}, but too little history before them."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/ust-abweichung.ts:182
+msgid ""
+"No closed advance return period in {year} with bookings or a register entry."
+msgstr ""
+
+#: src/core/elster/ust-abweichung.ts:186
+msgid "fewer than {n} earlier advance return periods are available to compare"
+msgstr ""
+
+#: src/core/elster/ust-abweichung.ts:201
+msgid "VAT deviation: nothing stands out"
+msgstr ""
+
+#: src/core/elster/ust-abweichung.ts:204
+msgid "{n} advance return period in {year} compared with the earlier ones."
+msgid_plural ""
+"{n} advance return periods in {year} compared with the earlier ones."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/ust-abweichung.ts:213
+msgid ""
+"the payable per period against the median of the up to {periods} periods "
+"before it; flagged from {percent} % and at least {amount} € deviation; "
+"declared values from the register before computed ones"
+msgstr ""
+
+#: src/core/elster/ust-abweichung.ts:233
+msgid ""
+"{period}: {payable} € ({source}), otherwise around {median} € (median of {n} "
+"earlier periods) — {deviation} €"
+msgstr ""
+
+#: src/core/elster/ust-abweichung.ts:238
+msgid "declared"
+msgstr ""
+
+#: src/core/elster/ust-abweichung.ts:238
+msgid "computed"
+msgstr ""
+
+#: src/core/elster/ust-abweichung.ts:254
+msgid "{line} · VAT {amount} €"
+msgstr ""
+
+#: src/core/elster/ust-abweichung.ts:262
+msgid "VAT payable deviates: {periods}"
+msgstr ""
+
+#: src/core/elster/ust-abweichung.ts:268
+msgid ""
+"Probably a large order, a large acquisition or missing bookings — to clarify "
+"whether the period is complete. The app does not judge the deviation; below "
+"are the largest VAT items."
+msgstr ""
+
+#: src/core/elster/ust-ohne-angabe.ts:63
+msgid "Bookings without a VAT figure: not applicable"
+msgstr ""
+
+#: src/core/elster/ust-ohne-angabe.ts:65
+msgid ""
+"As a small business you deduct no input tax — a missing VAT figure on the "
+"receipt changes nothing."
+msgstr ""
+
+#: src/core/elster/ust-ohne-angabe.ts:68
+msgid ""
+"not applicable without input tax deduction (§ 15 Abs. 2 Satz 1 Nr. 1 UStG)"
+msgstr ""
+
+#: src/core/elster/ust-ohne-angabe.ts:105
+msgid "Bookings without a VAT figure: cannot be checked"
+msgstr ""
+
+#: src/core/elster/ust-ohne-angabe.ts:106
+msgid "No expense in {year} has a linked receipt."
+msgstr ""
+
+#: src/core/elster/ust-ohne-angabe.ts:108
+msgid "no expense of the year is linked to a receipt"
+msgstr ""
+
+#: src/core/elster/ust-ohne-angabe.ts:115
+msgid "Bookings without a VAT figure: none"
+msgstr ""
+
+#: src/core/elster/ust-ohne-angabe.ts:118
+msgid "{n} expense from {year} with a receipt checked."
+msgid_plural "{n} expenses from {year} with a receipt checked."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/ust-ohne-angabe.ts:127
+msgid ""
+"every linked receipt names a VAT amount or net and gross; excluded: VAT-free "
+"categories ({free}), § 13b candidates ({elsewhere})"
+msgstr ""
+
+#: src/core/elster/ust-ohne-angabe.ts:143
+msgid "{n} booking without a VAT figure on the receipt"
+msgid_plural "{n} bookings without a VAT figure on the receipt"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/ust-ohne-angabe.ts:152
+msgid ""
+"For this expense of {amount} € the receipt names neither a VAT amount nor a "
+"net amount."
+msgid_plural ""
+"For these expenses totalling {amount} € the receipt names neither a VAT "
+"amount nor a net amount."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/ust-ohne-angabe.ts:160
+msgid ""
+"The input tax from the receipts is therefore a lower bound: if VAT is "
+"included, its deduction is missing. To clarify: enter the VAT amount on the "
+"receipt — or mark it as fine if it shows none."
+msgstr ""
+
+#: src/core/elster/zu-pruefen.ts:69
+msgid "{n} booking to review"
+msgid_plural "{n} bookings to review"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/invoices/forderungen-hinweis.ts:33
+msgid ""
+"The app does not track suspension or restart of the limitation period (§§ "
+"203 ff., 212 BGB — e.g. through negotiations, acknowledgement or a court "
+"order for payment)."
+msgstr ""
+
+#: src/core/invoices/forderungen-hinweis.ts:41
+msgid "probably time-barred since {date}"
+msgstr ""
+
+#: src/core/invoices/forderungen-hinweis.ts:42
+msgid "act by {date}"
+msgstr ""
+
+#: src/core/invoices/forderungen-hinweis.ts:44
+msgid "no number"
+msgstr ""
+
+#: src/core/invoices/forderungen-hinweis.ts:55
+#: src/core/invoices/forderungen-hinweis.ts:71
+msgid "Limitation of open receivables"
+msgstr ""
+
+#: src/core/invoices/forderungen-hinweis.ts:56
+msgid "The open receivables could not be checked."
+msgstr ""
+
+#: src/core/invoices/forderungen-hinweis.ts:58
+msgid "the invoices could not be read"
+msgstr ""
+
+#: src/core/invoices/forderungen-hinweis.ts:72
+msgid ""
+"No open receivable runs out of the regular limitation period in the "
+"foreseeable future."
+msgstr ""
+
+#: src/core/invoices/forderungen-hinweis.ts:74
+msgid ""
+"Regular period of three years from the end of the year the receivable arose; "
+"reported from {days} days before 31 December of that year."
+msgstr ""
+
+#: src/core/invoices/forderungen-hinweis.ts:86
+msgid ""
+"{n} receivable probably becomes time-barred on {date} — act by then if it is "
+"still to be enforced."
+msgid_plural ""
+"{n} receivables probably become time-barred on {date} or later — act by then "
+"if they are still to be enforced."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/invoices/forderungen-hinweis.ts:97
+msgid ""
+"{n} receivable is probably time-barred already; whether that applies here is "
+"to be clarified."
+msgid_plural ""
+"{n} receivables are probably time-barred already; whether that applies here "
+"is to be clarified."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/invoices/forderungen-hinweis.ts:111
+msgid "Open receivables are close to the limitation period"
+msgstr ""
+
+#: src/core/invoices/forderungen-hinweis.ts:112
+msgid "This is not legal advice."
+msgstr ""
+
+#: src/core/invoices/forderungen-hinweis.ts:119
+msgid "View receivables"
+msgstr ""
+
+#: src/core/invoices/forderungen.ts:453
+msgid "{n} receivable overdue"
+msgid_plural "{n} receivables overdue"
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/core/lib/edition-badges.ts:29
 msgid "Open Source"
 msgstr ""
@@ -245,7 +1434,7 @@ msgid "ERiC not found under {path}."
 msgstr ""
 
 #: src/frontends/cli/elster/eric.ts:66
-#: src/frontends/desktop/views/konten-view.ts:149
+#: src/frontends/desktop/views/konten-view.ts:150
 msgid "ERiC version unknown"
 msgstr ""
 
@@ -268,7 +1457,7 @@ msgstr ""
 #: src/frontends/desktop/lotse-panel.blp:26
 #: src/frontends/desktop/views/einstellungen-view.blp:55
 #: src/frontends/desktop/views/tab-hub.ts:182
-#: src/frontends/desktop/window.blp:160
+#: src/frontends/desktop/window.blp:159
 msgid "Assistant"
 msgstr ""
 
@@ -276,7 +1465,7 @@ msgstr ""
 #: src/frontends/desktop/assistent-panel.blp:40
 #: src/frontends/desktop/lotse-panel.blp:36
 #: src/frontends/desktop/views/beleg-upload.ts:130
-#: src/frontends/desktop/window.blp:207
+#: src/frontends/desktop/window.blp:206
 msgid "Close"
 msgstr ""
 
@@ -356,7 +1545,7 @@ msgid "No window is open in which the bank could ask."
 msgstr ""
 
 #: src/frontends/desktop/fints-interaction.ts:58
-#: src/frontends/desktop/views/datenschutz-dialog.ts:72
+#: src/frontends/desktop/views/datenschutz-dialog.ts:73
 #: src/frontends/desktop/views/dialogs.ts:24
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:36
 #: src/frontends/desktop/views/entity-dialogs.ts:42
@@ -1242,23 +2431,23 @@ msgstr ""
 msgid "Receipt could not be saved"
 msgstr ""
 
-#: src/frontends/desktop/views/datenschutz-dialog.ts:38
+#: src/frontends/desktop/views/datenschutz-dialog.ts:39
 msgid "Privacy notice for ELSTER transmissions"
 msgstr ""
 
-#: src/frontends/desktop/views/datenschutz-dialog.ts:55
+#: src/frontends/desktop/views/datenschutz-dialog.ts:56
 msgid "Open the full privacy letter (PDF)"
 msgstr ""
 
-#: src/frontends/desktop/views/datenschutz-dialog.ts:55
+#: src/frontends/desktop/views/datenschutz-dialog.ts:56
 msgid "Open the privacy letter on elster.de"
 msgstr ""
 
-#: src/frontends/desktop/views/datenschutz-dialog.ts:68
+#: src/frontends/desktop/views/datenschutz-dialog.ts:69
 msgid "I have read the privacy notice and the privacy letter."
 msgstr ""
 
-#: src/frontends/desktop/views/datenschutz-dialog.ts:73
+#: src/frontends/desktop/views/datenschutz-dialog.ts:74
 msgid "Confirm"
 msgstr ""
 
@@ -1362,7 +2551,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:42
 #: src/frontends/desktop/views/welcome.ts:201
-#: src/frontends/desktop/window.ts:651
+#: src/frontends/desktop/window.ts:655
 msgid "Use my own data"
 msgstr ""
 
@@ -1980,48 +3169,48 @@ msgstr ""
 msgid "Liquidity"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:130
+#: src/frontends/desktop/views/konten-view.ts:131
 msgid ""
 "Needed to check and send to ELSTER. Official builds include ERiC; otherwise "
 "install it yourself (ELSTER developer area). Empty = ERIC_HOME, bundled ERiC "
 "or the default location."
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:153
+#: src/frontends/desktop/views/konten-view.ts:154
 msgid "available"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:157
+#: src/frontends/desktop/views/konten-view.ts:158
 msgid ""
 "The ERiC binding of this installation is broken. Rebuild it with \"gjsify "
 "run -w @steuererklaerung/eric build:meson\" or reinstall the app."
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:198
+#: src/frontends/desktop/views/konten-view.ts:199
 msgid "Own ERiC folder (overrides ERIC_HOME and the bundled one)"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:213
+#: src/frontends/desktop/views/konten-view.ts:214
 msgid "Choose ERiC folder (contains lib/libericapi.so)"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:216
+#: src/frontends/desktop/views/konten-view.ts:217
 msgid "Choose ERiC folder"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:236
+#: src/frontends/desktop/views/konten-view.ts:237
 msgid "Reset to the bundled or detected ERiC"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:314
+#: src/frontends/desktop/views/konten-view.ts:315
 msgid "ELSTER Hersteller-ID (bundled with the app, enter your own to override)"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:315
+#: src/frontends/desktop/views/konten-view.ts:316
 msgid "ELSTER Hersteller-ID (elster.de)"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:318
+#: src/frontends/desktop/views/konten-view.ts:319
 msgid "bundled"
 msgstr ""
 
@@ -3120,10 +4309,6 @@ msgstr ""
 msgid "issued {date}"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:529
-msgid "due {date}"
-msgstr ""
-
 #: src/frontends/desktop/views/rechnungen-view.ts:536
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:384
 msgid "Sending failed"
@@ -3501,7 +4686,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:63
 #: src/frontends/desktop/views/setup-assistant.ts:468
-#: src/frontends/desktop/window.ts:718
+#: src/frontends/desktop/window.ts:722
 msgid "Private"
 msgstr ""
 
@@ -3671,7 +4856,7 @@ msgid "Dauerfristverlängerung: every VAT return is due one month later."
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:424
-#: src/frontends/desktop/window.ts:718
+#: src/frontends/desktop/window.ts:722
 msgid "Business"
 msgstr ""
 
@@ -3790,7 +4975,7 @@ msgid "Done"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:637
-#: src/frontends/desktop/window.blp:218
+#: src/frontends/desktop/window.blp:217
 msgid "Finish setup"
 msgstr ""
 
@@ -4239,66 +5424,6 @@ msgstr ""
 #: src/frontends/desktop/views/util.ts:69
 msgctxt "invoice status"
 msgid "Draft"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:78
-msgctxt "month abbreviation"
-msgid "Jan"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:79
-msgctxt "month abbreviation"
-msgid "Feb"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:80
-msgctxt "month abbreviation"
-msgid "Mar"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:81
-msgctxt "month abbreviation"
-msgid "Apr"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:82
-msgctxt "month abbreviation"
-msgid "May"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:83
-msgctxt "month abbreviation"
-msgid "Jun"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:84
-msgctxt "month abbreviation"
-msgid "Jul"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:85
-msgctxt "month abbreviation"
-msgid "Aug"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:86
-msgctxt "month abbreviation"
-msgid "Sep"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:87
-msgctxt "month abbreviation"
-msgid "Oct"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:88
-msgctxt "month abbreviation"
-msgid "Nov"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:89
-msgctxt "month abbreviation"
-msgid "Dec"
 msgstr ""
 
 #: src/frontends/desktop/views/util.ts:360
@@ -5517,14 +6642,8 @@ msgstr ""
 msgid "About Steuererklärung"
 msgstr ""
 
-#. TRANSLATORS: Subtitle under the app name in the sidebar header, marking this as the
-#. native front-end beside the web one
-#: src/frontends/desktop/window.blp:96
-msgid "Native preview"
-msgstr ""
-
 #. TRANSLATORS: Tooltip on the headerbar button that syncs Qonto and Paperless
-#: src/frontends/desktop/window.blp:153
+#: src/frontends/desktop/window.blp:152
 msgid "Sync"
 msgstr ""
 
@@ -5553,23 +6672,23 @@ msgstr ""
 msgid "Please restart the app yourself to switch."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:643
+#: src/frontends/desktop/window.ts:647
 msgid "Data could not be loaded completely: {error}"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:650
+#: src/frontends/desktop/window.ts:654
 msgid "Demo data – fictional examples, no real financial data"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:680
+#: src/frontends/desktop/window.ts:684
 msgid "Setup is not finished: no business or private tax return is set up yet."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:681
+#: src/frontends/desktop/window.ts:685
 msgid "Setup is not finished: “{entity}” has no bank account yet."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:786
+#: src/frontends/desktop/window.ts:790
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."

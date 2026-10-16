@@ -18,7 +18,8 @@
 
 import { fmtDe, round2 } from '../lib/money.ts';
 import { dayDiff } from '../lib/transactions/reconcile.ts';
-import { buchungZeile, HANDLUNG_IN_ORDNUNG, hinweisFingerprint, type Hinweis } from './hinweise.ts';
+import { _, _n, fmt } from '../lib/i18n.ts';
+import { buchungZeile, handlungInOrdnung, hinweisFingerprint, type Hinweis } from './hinweise.ts';
 import {
     ABSTAND_MONATE,
     findeSerienMitDrift,
@@ -53,12 +54,24 @@ export const LAUFENDE_KOSTEN_DRIFT_ANTEIL = 0.25;
  *  „beendet?". App choice, see tax-sources.md. */
 export const LAUFENDE_KOSTEN_STOP_FAKTOR = 1.5;
 
-export const ABSTAND_TEXT: Record<SerienAbstand, string> = {
-    monatlich: 'monatlich',
-    vierteljaehrlich: 'vierteljährlich',
-    halbjaehrlich: 'halbjährlich',
-    jaehrlich: 'jährlich',
-};
+/**
+ * How often a series recurs, as a word.
+ *
+ * A function, not a `Record` constant: a constant is built at import time, which can be before the
+ * frontend registers its translator — and a label resolved too early stays English for good.
+ */
+export function abstandText(abstand: SerienAbstand): string {
+    switch (abstand) {
+        case 'monatlich':
+            return _('monthly');
+        case 'vierteljaehrlich':
+            return _('quarterly');
+        case 'halbjaehrlich':
+            return _('twice a year');
+        case 'jaehrlich':
+            return _('yearly');
+    }
+}
 
 /** The slice of a booking detection reads (structurally a store transaction). */
 export interface LkBuchung {
@@ -235,9 +248,9 @@ export function laufendeKostenUebersicht(
     };
 }
 
-/** „N laufende Kosten zu bestätigen" — the Als-Nächstes task and the CLI headline. */
+/** "N recurring costs to confirm" — the Als-Nächstes task and the CLI headline. */
 export function zuBestaetigenTitel(n: number): string {
-    return n === 1 ? '1 laufende Kosten zu bestätigen' : `${n} laufende Kosten zu bestätigen`;
+    return fmt(_n('{n} recurring cost to confirm', '{n} recurring costs to confirm', n), { n });
 }
 
 export interface ErwarteteZahlung {
@@ -325,14 +338,27 @@ export function preisaenderungHinweise(bestaetigt: readonly LaufendeKosten[], ye
         const p = lk.preisaenderung;
         if (!p || Number(p.datum.slice(0, 4)) !== year) continue;
         if (lk.entschiedenAm && p.datum <= lk.entschiedenAm) continue;
-        const richtung = p.auf > p.von ? 'teurer' : 'günstiger';
+        const richtung = p.auf > p.von ? _('more expensive') : _('cheaper');
         out.push({
             key: `laufende-kosten-preis:${lk.key}`,
             level: 'tipp',
-            title: `Preisänderung bei ${lk.empfaenger}`,
+            title: fmt(_('Price change at {name}'), { name: lk.empfaenger }),
             text:
-                `Die laufenden Kosten bei ${lk.empfaenger} (${ABSTAND_TEXT[lk.abstand]}) sind seit ${deDate(p.datum)} ${richtung}: ` +
-                `${fmtDe(p.auf)} € statt ${fmtDe(p.von)} €. Zu klären, ob die Änderung vereinbart ist.`,
+                fmt(
+                    _(
+                        'The recurring cost at {name} ({interval}) has been {direction} since {date}: {new} € instead of {old} €.',
+                    ),
+                    {
+                        name: lk.empfaenger,
+                        interval: abstandText(lk.abstand),
+                        direction: richtung,
+                        date: deDate(p.datum),
+                        new: fmtDe(p.auf),
+                        old: fmtDe(p.von),
+                    },
+                ) +
+                ' ' +
+                _('To clarify whether the change was agreed.'),
             status: 'befund',
             betroffen: [
                 {
@@ -342,8 +368,12 @@ export function preisaenderungHinweise(bestaetigt: readonly LaufendeKosten[], ye
                 },
             ],
             handlungen: [
-                { id: 'buchung', label: 'Buchung öffnen', target: { art: 'dialog', dialog: 'buchung', ref: p.id } },
-                HANDLUNG_IN_ORDNUNG,
+                {
+                    id: 'buchung',
+                    label: _('Open the transaction'),
+                    target: { art: 'dialog', dialog: 'buchung', ref: p.id },
+                },
+                handlungInOrdnung(),
             ],
             fingerprint: hinweisFingerprint([lk.key, p.id]),
             begriff: 'laufende-kosten',

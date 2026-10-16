@@ -21,12 +21,13 @@
 
 import { fmtDe as fmt } from '../lib/money.ts';
 import { referenceMatches } from '../lib/transactions/reconcile.ts';
+import { _, _n, fmt as t } from '../lib/i18n.ts';
 import type { RechnungsBeleg } from './doppelte-rechnung.ts';
 import {
     belegZeile,
     buchungZeile,
     capBetroffen,
-    HANDLUNG_IN_ORDNUNG,
+    handlungInOrdnung,
     hinweisFingerprint,
     type Hinweis,
     type HinweisBetroffen,
@@ -101,7 +102,7 @@ export function pruefeLieferantDoppeltBezahlt(i: LieferantDoppeltInput): Hinweis
             laufend++;
             continue;
         }
-        const name = d.correspondent?.trim() || zahlungen[0].counterparty?.trim() || 'Lieferant';
+        const name = d.correspondent?.trim() || zahlungen[0].counterparty?.trim() || _('Supplier');
         const erstattung = credits.find(
             (c) =>
                 c.bookingDate >= zahlungen[0].bookingDate &&
@@ -112,7 +113,7 @@ export function pruefeLieferantDoppeltBezahlt(i: LieferantDoppeltInput): Hinweis
             erstattet++;
             continue;
         }
-        const nr = d.invoiceNumber ? `Rechnung ${d.invoiceNumber}` : 'Rechnung';
+        const nr = d.invoiceNumber ? t(_('invoice {number}'), { number: d.invoiceNumber }) : _('invoice');
         const betroffen: HinweisBetroffen[] = [
             { art: 'beleg', id: d.id, zeile: belegZeile(d) },
             ...zahlungen.map((t) => ({ art: 'buchung' as const, id: t.id, zeile: buchungZeile(t) })),
@@ -120,18 +121,32 @@ export function pruefeLieferantDoppeltBezahlt(i: LieferantDoppeltInput): Hinweis
         out.push({
             key: `lieferant-doppelt-bezahlt:${d.id}`,
             level: 'warnung',
-            title: `Lieferant doppelt bezahlt? ${name}, ${nr}`,
+            title: t(_('Supplier paid twice? {name}, {invoice}'), { name, invoice: nr }),
             text:
-                `Zur ${nr} über ${fmt(d.gross!)} € gingen ${zahlungen.length === 1 ? 'eine Zahlung' : `${zahlungen.length} Zahlungen`} ` +
-                `über zusammen ${fmt(summe / 100)} € hinaus — vermutlich ${fmt(zuViel / 100)} € zu viel. Zu klären: beim Lieferanten ` +
-                'die Erstattung anfordern oder mit der nächsten Rechnung verrechnen lassen. Vorsteuer steht je Rechnung nur einmal zu; ' +
-                'die App rechnet die zweite Abbuchung nicht heraus.',
+                t(
+                    _n(
+                        '{invoice} for {gross} € was paid by {n} payment totalling {paid} € — probably {excess} € too much.',
+                        '{invoice} for {gross} € was paid by {n} payments totalling {paid} € — probably {excess} € too much.',
+                        zahlungen.length,
+                    ),
+                    {
+                        invoice: nr,
+                        gross: fmt(d.gross!),
+                        n: zahlungen.length,
+                        paid: fmt(summe / 100),
+                        excess: fmt(zuViel / 100),
+                    },
+                ) +
+                ' ' +
+                _(
+                    'To clarify: ask the supplier for a refund or have it offset against the next invoice. Input tax is due once per invoice; the app does not deduct the second debit.',
+                ),
             ref: '§ 15 Abs. 1 UStG',
             status: 'befund',
             ...capBetroffen(betroffen),
             handlungen: [
-                { id: 'rechnung', label: 'Rechnung öffnen', target: { art: 'dialog', dialog: 'beleg', ref: d.id } },
-                HANDLUNG_IN_ORDNUNG,
+                { id: 'rechnung', label: _('Open the invoice'), target: { art: 'dialog', dialog: 'beleg', ref: d.id } },
+                handlungInOrdnung(),
             ],
             fingerprint: hinweisFingerprint([d.id, ...zahlungen.map((t) => t.id)]),
         });
@@ -143,10 +158,17 @@ export function pruefeLieferantDoppeltBezahlt(i: LieferantDoppeltInput): Hinweis
             {
                 key: 'lieferant-doppelt-bezahlt',
                 level: 'info',
-                title: 'Lieferant doppelt bezahlt: nicht prüfbar',
-                text: `${rechnungen.length} Eingangsrechnung(en) ${i.year} mit Betrag, aber keiner ist eine Zahlung zugeordnet.`,
+                title: _('Supplier paid twice: cannot be checked'),
+                text: t(
+                    _n(
+                        '{n} incoming invoice from {year} carries an amount, but none has a payment assigned.',
+                        '{n} incoming invoices from {year} carry an amount, but none has a payment assigned.',
+                        rechnungen.length,
+                    ),
+                    { n: rechnungen.length, year: i.year },
+                ),
                 status: 'nicht_pruefbar',
-                weil: 'keine Eingangsrechnung eine verknüpfte oder per Rechnungsnummer erkennbare Zahlung hat',
+                weil: _('no incoming invoice has a linked payment or one recognisable by invoice number'),
             },
         ];
     }
@@ -154,13 +176,22 @@ export function pruefeLieferantDoppeltBezahlt(i: LieferantDoppeltInput): Hinweis
         {
             key: 'lieferant-doppelt-bezahlt',
             level: 'info',
-            title: 'Lieferant doppelt bezahlt: nichts gefunden',
-            text: `${geprueft} Eingangsrechnung(en) ${i.year} mit ihren Zahlungen verglichen.`,
+            title: _('Supplier paid twice: nothing found'),
+            text: t(
+                _n(
+                    '{n} incoming invoice from {year} compared with its payments.',
+                    '{n} incoming invoices from {year} compared with their payments.',
+                    geprueft,
+                ),
+                { n: geprueft, year: i.year },
+            ),
             status: 'ohne_befund',
-            geprueft:
-                'Summe der verknüpften und per Rechnungsnummer erkannten Abbuchungen gegen den Bruttobetrag; ausgenommen: ' +
-                `Teilzahlungen sowie Anzahlung + Rest (${teil}), später erstattet (${erstattet}), Serien wie Abos (${serie}), ` +
-                `bestätigte laufende Kosten (${laufend})`,
+            geprueft: t(
+                _(
+                    'the sum of the linked debits and those recognised by invoice number against the gross amount; excluded: part payments as well as deposit + remainder ({part}), refunded later ({refunded}), series such as subscriptions ({series}), confirmed recurring costs ({recurring})',
+                ),
+                { part: teil, refunded: erstattet, series: serie, recurring: laufend },
+            ),
         },
     ];
 }

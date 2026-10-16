@@ -117,7 +117,7 @@ export default async () => {
             expect(h.vorrang).toBe(true);
             expect(h.key).toBe('iban-wechsel:musterhostinggmbh');
             expect(h.betroffen?.[0].id).toBe(neu.id);
-            expect(h.text).toContain('bisher bekannten');
+            expect(h.text).toContain('so far:');
             expect(h.text).toContain('DE…0222');
             expect(h.text.includes(normalisiereIban(IBAN_B))).toBe(false);
             expect(h.handlungen?.map((a) => a.id)).toStrictEqual(['buchung', 'in-ordnung']);
@@ -138,7 +138,7 @@ export default async () => {
         await it('the first payment ever is no finding', async () => {
             const [h] = iban([debit({ counterpartyIban: IBAN_A })]);
             expect(h.status).toBe('ohne_befund');
-            expect(h.geprueft).toContain('erste Zahlung an einen Empfänger (1)');
+            expect(h.geprueft).toContain('first payment to a payee (1)');
         });
         await it('own accounts and Umbuchungen are excluded', async () => {
             const [h] = iban(
@@ -149,7 +149,7 @@ export default async () => {
                 [EIGEN],
             );
             expect(h.status).toBe('ohne_befund');
-            expect(h.geprueft).toContain('Umbuchungen (1)');
+            expect(h.geprueft).toContain('own accounts and transfers (1)');
         });
         await it('an established second account used alternately is excluded', async () => {
             const [h] = iban([
@@ -159,7 +159,7 @@ export default async () => {
                 debit({ bookingDate: '2025-05-01', counterpartyIban: IBAN_B }),
             ]);
             expect(h.status).toBe('ohne_befund');
-            expect(h.geprueft).toContain('zweite IBAN (2)');
+            expect(h.geprueft).toContain('a second IBAN already used earlier (2)');
         });
         await it('nicht_pruefbar when no debit carries a counterparty IBAN; PayPal is skipped', async () => {
             const [h] = iban([
@@ -167,7 +167,7 @@ export default async () => {
                 debit({ source: 'paypal', accountKey: 'paypal:x', counterpartyIban: IBAN_A }),
             ]);
             expect(h.status).toBe('nicht_pruefbar');
-            expect(h.weil).toContain('keine IBAN der Gegenseite');
+            expect(h.weil).toContain('no counterparty IBAN');
             expect(iban([debit({ source: 'paypal', accountKey: 'paypal:x', counterpartyIban: IBAN_A })]).length).toBe(
                 0,
             );
@@ -178,7 +178,7 @@ export default async () => {
                 debit({ accountKey: 'qonto:alt', source: 'qonto', counterpartyIban: undefined }),
             ]);
             expect(h.status).toBe('ohne_befund');
-            expect(h.geprueft).toContain('nicht geprüft: qonto:alt');
+            expect(h.geprueft).toContain('not checked: qonto:alt');
         });
     });
 
@@ -188,7 +188,7 @@ export default async () => {
             const b = beleg({ invoiceNumber: 'bb 2025 17', gross: 240, created: '2025-08-01' });
             const [h] = pruefeDoppelteRechnungen({ year: 2025, belege: [a, b] });
             expect(h.status).toBe('befund');
-            expect(h.text).toContain('gleiche Rechnungsnummer');
+            expect(h.text).toContain('same invoice number');
             expect(h.betroffen?.map((x) => x.art)).toStrictEqual(['beleg', 'beleg']);
             expect(h.handlungen?.map((x) => x.id)).toStrictEqual(['beleg', 'in-ordnung']);
         });
@@ -210,8 +210,8 @@ export default async () => {
             );
             const [h] = pruefeDoppelteRechnungen({ year: 2025, belege });
             expect(h.status).toBe('ohne_befund');
-            expect(h.geprueft).toContain('Serien wie Abos');
-            expect(h.geprueft).toContain('2 Paar(e)');
+            expect(h.geprueft).toContain('series such as subscriptions');
+            expect(h.geprueft).toContain('2 pair(s)');
         });
         await it('a third copy changes the fingerprint', async () => {
             const a = beleg({ created: '2025-05-10' });
@@ -225,7 +225,7 @@ export default async () => {
             const [leer] = pruefeDoppelteRechnungen({ year: 2025, belege: [beleg({ direction: 'outgoing' })] });
             expect(leer.status).toBe('nicht_pruefbar');
             const [ohne] = pruefeDoppelteRechnungen({ year: 2025, belege: [beleg({ correspondent: null })] });
-            expect(ohne.weil).toContain('kein');
+            expect(ohne.weil).toContain('no incoming invoice');
         });
     });
 
@@ -236,7 +236,7 @@ export default async () => {
             const d = beleg({ invoiceNumber: 'BB-2025-77', linkedTxIds: [z1.id] });
             const [h] = pruefeLieferantDoppeltBezahlt({ year: 2025, belege: [d], buchungen: [z1, z2] });
             expect(h.status).toBe('befund');
-            expect(h.text).toContain('238,00 € zu viel');
+            expect(h.text).toContain('238,00 € too much');
             expect(h.betroffen?.map((x) => x.art)).toStrictEqual(['beleg', 'buchung', 'buchung']);
             expect(h.handlungen?.map((x) => x.id)).toStrictEqual(['rechnung', 'in-ordnung']);
             // A third payment is a new finding.
@@ -252,7 +252,7 @@ export default async () => {
                 buchungen: [z],
             });
             expect(h.status).toBe('befund');
-            expect(h.text).toContain('62,00 € zu viel');
+            expect(h.text).toContain('62,00 € too much');
         });
         await it('partial payments and Anzahlung + Rest are excluded', async () => {
             const a = zahlung({ amount: -100, purpose: 'Anzahlung BB-2025-78' });
@@ -263,7 +263,7 @@ export default async () => {
                 buchungen: [a, b],
             });
             expect(h.status).toBe('ohne_befund');
-            expect(h.geprueft).toContain('Anzahlung + Rest (1)');
+            expect(h.geprueft).toContain('deposit + remainder (1)');
         });
         await it('a later refund credit from the supplier is excluded', async () => {
             const z1 = zahlung({});
@@ -275,7 +275,7 @@ export default async () => {
                 buchungen: [z1, z2, back],
             });
             expect(h.status).toBe('ohne_befund');
-            expect(h.geprueft).toContain('später erstattet (1)');
+            expect(h.geprueft).toContain('refunded later (1)');
         });
         await it('a series quoting one contract number is excluded', async () => {
             const zs = ['2025-01-05', '2025-02-05', '2025-03-05'].map((bookingDate) =>
@@ -287,7 +287,7 @@ export default async () => {
                 buchungen: zs,
             });
             expect(h.status).toBe('ohne_befund');
-            expect(h.geprueft).toContain('Serien wie Abos (1)');
+            expect(h.geprueft).toContain('series such as subscriptions (1)');
         });
         await it('a combined payment quoting two invoices is left alone', async () => {
             const z = zahlung({ amount: -476, purpose: 'BB-2025-80 BB-2025-81' });
@@ -301,7 +301,7 @@ export default async () => {
         await it('nicht_pruefbar when no invoice has a payment', async () => {
             const [h] = pruefeLieferantDoppeltBezahlt({ year: 2025, belege: [beleg({})], buchungen: [] });
             expect(h.status).toBe('nicht_pruefbar');
-            expect(h.weil).toContain('keine Eingangsrechnung');
+            expect(h.weil).toContain('no incoming invoice');
         });
     });
 

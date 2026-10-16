@@ -21,9 +21,10 @@
 
 import { fmtDe as fmt } from '../lib/money.ts';
 import { dayDiff } from '../lib/transactions/reconcile.ts';
-import { belegZeile, capBetroffen, HANDLUNG_IN_ORDNUNG, hinweisFingerprint, type Hinweis } from './hinweise.ts';
+import { belegZeile, capBetroffen, handlungInOrdnung, hinweisFingerprint, type Hinweis } from './hinweise.ts';
 import { findeSerien, parteiSchluessel } from './serie.ts';
 import { istSerienPaar, type LaufendeKosten } from './laufende-kosten.ts';
+import { _, _n, fmt as t } from '../lib/i18n.ts';
 
 /**
  * Days within which two invoices of one sender over the same gross count as one claim. An app
@@ -63,13 +64,13 @@ export function pruefeDoppelteRechnungen(i: DoppelteRechnungInput): Hinweis[] {
             {
                 key: 'doppelte-rechnung',
                 level: 'info',
-                title: 'Doppelte Rechnung: nicht prüfbar',
-                text: `Für ${i.year} liegt keine Eingangsrechnung mit Absender vor.`,
+                title: _('Duplicate invoice: cannot be checked'),
+                text: t(_('No incoming invoice with a sender on file for {year}.'), { year: i.year }),
                 status: 'nicht_pruefbar',
                 weil:
                     eingang.length === 0
-                        ? 'im Belegsystem für dieses Jahr keine Eingangsrechnung liegt'
-                        : 'keiner Eingangsrechnung ein Absender zugeordnet ist',
+                        ? _('the document system holds no incoming invoice for this year')
+                        : _('no incoming invoice has a sender assigned'),
             },
         ];
     }
@@ -103,7 +104,7 @@ export function pruefeDoppelteRechnungen(i: DoppelteRechnungInput): Hinweis[] {
                 const y = docs[b];
                 let grund: string | null = null;
                 if (nummer(x.invoiceNumber) && nummer(x.invoiceNumber) === nummer(y.invoiceNumber)) {
-                    grund = 'gleiche Rechnungsnummer';
+                    grund = _('same invoice number');
                 } else if (
                     x.gross != null &&
                     y.gross != null &&
@@ -124,7 +125,7 @@ export function pruefeDoppelteRechnungen(i: DoppelteRechnungInput): Hinweis[] {
                         laufend++;
                         continue;
                     }
-                    grund = `gleicher Betrag binnen ${DOPPELTE_RECHNUNG_FENSTER_TAGE} Tagen`;
+                    grund = t(_('same amount within {days} days'), { days: DOPPELTE_RECHNUNG_FENSTER_TAGE });
                 }
                 if (!grund) continue;
                 const rx = wurzel(x.id);
@@ -149,14 +150,23 @@ export function pruefeDoppelteRechnungen(i: DoppelteRechnungInput): Hinweis[] {
             {
                 key: 'doppelte-rechnung',
                 level: 'info',
-                title: 'Doppelte Rechnung: keine gefunden',
-                text: `${mitAbsender.length} Eingangsrechnung(en) ${i.year} verglichen.`,
+                title: _('Duplicate invoice: none found'),
+                text: t(
+                    _n(
+                        '{n} incoming invoice from {year} compared.',
+                        '{n} incoming invoices from {year} compared.',
+                        mitAbsender.length,
+                    ),
+                    { n: mitAbsender.length, year: i.year },
+                ),
                 status: 'ohne_befund',
                 geprueft:
-                    `gleicher Absender mit gleicher Rechnungsnummer oder mit gleichem Bruttobetrag binnen ${DOPPELTE_RECHNUNG_FENSTER_TAGE} Tagen; ` +
-                    `ausgenommen: Serien wie Abos (mindestens drei im festen Abstand: ${serie} Paar(e); ` +
-                    `bestätigte laufende Kosten: ${laufend} Paar(e))` +
-                    (ohneAbsender ? `; ohne Absender nicht verglichen: ${ohneAbsender}` : ''),
+                    t(
+                        _(
+                            'same sender with the same invoice number, or with the same gross amount within {days} days; excluded: series such as subscriptions (at least three at a fixed interval: {series} pair(s); confirmed recurring costs: {recurring} pair(s))',
+                        ),
+                        { days: DOPPELTE_RECHNUNG_FENSTER_TAGE, series: serie, recurring: laufend },
+                    ) + (ohneAbsender ? t(_('; not compared without a sender: {n}'), { n: ohneAbsender }) : ''),
             },
         ];
     }
@@ -166,19 +176,29 @@ export function pruefeDoppelteRechnungen(i: DoppelteRechnungInput): Hinweis[] {
         docs.sort((a, b) => (a.created ?? '').localeCompare(b.created ?? '') || a.id.localeCompare(b.id));
         const name = docs[0].correspondent!.trim();
         const grund = [...new Set(docs.flatMap((d) => [...gruende.get(d.id)!]))].join(', ');
-        const betrag = docs[0].gross != null ? ` über ${fmt(docs[0].gross)} €` : '';
+        const betrag = docs[0].gross != null ? t(_(' for {amount} €'), { amount: fmt(docs[0].gross) }) : '';
         out.push({
             key: `doppelte-rechnung:${docs[0].id}`,
             level: 'warnung',
-            title: `Doppelte Rechnung von ${name}?`,
+            title: t(_('Duplicate invoice from {name}?'), { name }),
             text:
-                `${docs.length} Belege von ${name}${betrag} betreffen vermutlich dieselbe Forderung (${grund}). ` +
-                'Zu klären, bevor beide bezahlt werden: ist einer davon eine Kopie, eine Mahnung oder eine Korrektur?',
+                t(_('{n} documents from {name}{amount} probably concern the same claim ({reason}).'), {
+                    n: docs.length,
+                    name,
+                    amount: betrag,
+                    reason: grund,
+                }) +
+                ' ' +
+                _('To clarify before both are paid: is one of them a copy, a reminder or a correction?'),
             status: 'befund',
             ...capBetroffen(docs.map((d) => ({ art: 'beleg' as const, id: d.id, zeile: belegZeile(d) }))),
             handlungen: [
-                { id: 'beleg', label: 'Beleg öffnen', target: { art: 'dialog', dialog: 'beleg', ref: docs[0].id } },
-                HANDLUNG_IN_ORDNUNG,
+                {
+                    id: 'beleg',
+                    label: _('Open the document'),
+                    target: { art: 'dialog', dialog: 'beleg', ref: docs[0].id },
+                },
+                handlungInOrdnung(),
             ],
             fingerprint: hinweisFingerprint(docs.map((d) => d.id)),
         });

@@ -23,7 +23,7 @@ import {
     type LaufendeKostenUebersicht,
     type LkEntscheidungInput,
 } from '../../../core/presenters/laufende-kosten.ts';
-import { ABSTAND_TEXT, zuBestaetigenTitel, type SerienAbstand } from '../../../core/elster/laufende-kosten.ts';
+import { abstandText, zuBestaetigenTitel, type SerienAbstand } from '../../../core/elster/laufende-kosten.ts';
 import { loadEnrichedTransactions } from '../../../core/presenters/buchungen.ts';
 import { appSession } from '../data/session.ts';
 import { loadDms } from '../data/settings.ts';
@@ -156,7 +156,7 @@ export class BhLaufendeKostenView extends Adw.Bin {
     }
 
     private untertitel(k: LaufendeKosten, art: LaufendeKosten['status']): string {
-        const teile = [ABSTAND_TEXT[k.abstand], `zuletzt ${deDate(k.zuletzt)}`];
+        const teile = [abstandText(k.abstand), `zuletzt ${deDate(k.zuletzt)}`];
         if (art === 'bestaetigt' || art === 'vorschlag') {
             teile.push(k.aktiv ? `nächste ${deDate(k.naechste)}` : 'beendet? — seit über 1,5 Abständen keine Zahlung');
         }
@@ -164,7 +164,7 @@ export class BhLaufendeKostenView extends Adw.Bin {
         const p = k.preisaenderung;
         if (p) teile.push(`Preisänderung am ${deDate(p.datum)}: ${eur(p.von)} → ${eur(p.auf)}`);
         if (k.korrigiert)
-            teile.push(`korrigiert (erkannt: ${ABSTAND_TEXT[k.erkannterAbstand]}, ${eur(k.letzterBetrag)})`);
+            teile.push(`korrigiert (erkannt: ${abstandText(k.erkannterAbstand)}, ${eur(k.letzterBetrag)})`);
         return teile.join(' · ');
     }
 
@@ -232,11 +232,11 @@ export class BhLaufendeKostenView extends Adw.Bin {
     private korrigieren(k: LaufendeKosten): Promise<void> {
         const dlg = new Adw.AlertDialog({
             heading: `Laufende Kosten korrigieren`,
-            body: `${k.empfaenger}: erkannt ${ABSTAND_TEXT[k.erkannterAbstand]}, zuletzt ${eur(k.letzterBetrag)}. Die Korrektur gilt für die nächste erwartete Zahlung.`,
+            body: `${k.empfaenger}: erkannt ${abstandText(k.erkannterAbstand)}, zuletzt ${eur(k.letzterBetrag)}. Die Korrektur gilt für die nächste erwartete Zahlung.`,
         });
         const group = new Adw.PreferencesGroup();
         const model = new Gtk.StringList();
-        for (const a of ABSTAENDE) model.append(ABSTAND_TEXT[a]);
+        for (const a of ABSTAENDE) model.append(abstandText(a));
         const abstand = new Adw.ComboRow({ title: 'Abstand', model, selected: ABSTAENDE.indexOf(k.abstand) });
         const betrag = new Adw.SpinRow({
             title: 'Betrag (€)',

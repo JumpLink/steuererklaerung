@@ -9,7 +9,7 @@
  */
 
 import { setCoreTranslator } from '../../core/lib/i18n.ts';
-import { _, initI18n } from './i18n.ts';
+import { _, _n, _p, initI18n } from './i18n.ts';
 
 initI18n();
-setCoreTranslator(_);
+setCoreTranslator({ gettext: _, ngettext: _n, pgettext: _p });

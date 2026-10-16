@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-16 13:06+0200\n"
+"POT-Creation-Date: 2026-10-16 19:03+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -253,6 +253,1361 @@ msgstr ""
 msgid "This version has no built-in AI assistant."
 msgstr "Diese Version hat keinen eingebauten KI-Assistenten."
 
+#: src/core/elster/anlagegut-kandidat.ts:108
+msgid "Fixed-asset candidates: cannot be checked"
+msgstr "Anlagegut-Kandidaten: nicht prüfbar"
+
+#: src/core/elster/anlagegut-kandidat.ts:109
+msgid "No low-value asset threshold on file for {year}."
+msgstr "Für {year} ist keine GWG-Grenze hinterlegt."
+
+#: src/core/elster/anlagegut-kandidat.ts:111
+msgid "the low-value asset threshold before 2018 is not in the source list"
+msgstr "die GWG-Grenze vor 2018 nicht in der Quellenliste steht"
+
+#: src/core/elster/anlagegut-kandidat.ts:115
+msgid "gross"
+msgstr "brutto"
+
+#: src/core/elster/anlagegut-kandidat.ts:115
+msgid "net"
+msgstr "netto"
+
+#: src/core/elster/anlagegut-kandidat.ts:152
+msgid "Retailer"
+msgstr "Händler"
+
+#: src/core/elster/anlagegut-kandidat.ts:160
+msgid "{n} instalments to {name} ({interval}) totalling {amount} € {basis}"
+msgstr "{n} Raten an {name} ({interval}) über zusammen {amount} € {basis}"
+
+#: src/core/elster/anlagegut-kandidat.ts:167
+msgid "One expense to {name} of {amount} € {basis}"
+msgstr "Eine Ausgabe an {name} über {amount} € {basis}"
+
+#: src/core/elster/anlagegut-kandidat.ts:173
+msgid ""
+"Up to {limit} € a collective item is possible instead (§ 6 Abs. 2a EStG: "
+"one fifth per year, uniformly for all assets of the year above {from} €)."
+msgstr ""
+"Bis {limit} € geht statt dessen ein Sammelposten (§ 6 Abs. 2a EStG: ein "
+"Fünftel je Jahr, einheitlich für alle Güter des Jahres über {from} €)."
+
+#: src/core/elster/anlagegut-kandidat.ts:181
+msgid ""
+"Gross, because without input tax deduction the VAT is part of the "
+"acquisition cost (§ 9b Abs. 1 EStG)."
+msgstr ""
+"Brutto, weil ohne Vorsteuerabzug die USt zu den Anschaffungskosten gehört "
+"(§ 9b Abs. 1 EStG)."
+
+#: src/core/elster/anlagegut-kandidat.ts:188
+msgid "Fixed asset? {name}, {amount} €"
+msgstr "Anlagegut? {name}, {amount} €"
+
+#: src/core/elster/anlagegut-kandidat.ts:192
+msgid ""
+"{what} is above the low-value asset threshold of {limit} € and is not in "
+"the asset register. Probably a fixed asset: it is then depreciated over its "
+"useful life instead of deducted at once."
+msgstr ""
+"{what} liegt über der GWG-Grenze von {limit} € und steht nicht im "
+"Anlageverzeichnis. Vermutlich ein Anlagegut: dann wird es über die "
+"Nutzungsdauer abgeschrieben statt sofort abgezogen."
+
+#: src/core/elster/anlagegut-kandidat.ts:199
+msgid ""
+"To clarify: add it to the asset register — or mark it as fine if it is "
+"consumables or a service."
+msgstr ""
+"Zu klären: ins Anlageverzeichnis aufnehmen — oder als in Ordnung markieren, "
+"wenn es Verbrauchsmaterial oder eine Dienstleistung ist."
+
+#: src/core/elster/anlagegut-kandidat.ts:205
+msgid "Add to the asset register"
+msgstr "Ins Anlageverzeichnis"
+
+#: src/core/elster/anlagegut-kandidat.ts:210
+#: src/core/elster/iban-wechsel.ts:206 src/core/elster/laufende-kosten.ts:373
+#: src/core/elster/reverse-charge-kandidat.ts:251
+msgid "Open the transaction"
+msgstr "Buchung öffnen"
+
+#: src/core/elster/anlagegut-kandidat.ts:222
+msgid "Fixed-asset candidates: none"
+msgstr "Anlagegut-Kandidaten: keine"
+
+#: src/core/elster/anlagegut-kandidat.ts:225
+msgid "{n} expense from {year} checked in categories for acquisitions."
+msgid_plural ""
+"{n} expenses from {year} checked in categories for acquisitions."
+msgstr[0] "{n} Ausgabe {year} in Kategorien für Anschaffungen geprüft."
+msgstr[1] "{n} Ausgaben {year} in Kategorien für Anschaffungen geprüft."
+
+#: src/core/elster/anlagegut-kandidat.ts:234
+msgid ""
+"office equipment, office supplies, other and unclassified against the "
+"low-value asset threshold of {limit} € {basis}, instalments to the same "
+"retailer as one asset; excluded: in the asset register ({registered}), "
+"confirmed recurring costs ({recurring})"
+msgstr ""
+"Büroeinrichtung, Bürobedarf, Sonstiges und Unklassifiziertes gegen die "
+"GWG-Grenze von {limit} € {basis}, Raten an denselben Händler als ein Gut; "
+"ausgenommen: im Anlageverzeichnis ({registered}), bestätigte laufende "
+"Kosten ({recurring})"
+
+#: src/core/elster/doppelte-rechnung.ts:67
+msgid "Duplicate invoice: cannot be checked"
+msgstr "Doppelte Rechnung: nicht prüfbar"
+
+#: src/core/elster/doppelte-rechnung.ts:68
+msgid "No incoming invoice with a sender on file for {year}."
+msgstr "Für {year} liegt keine Eingangsrechnung mit Absender vor."
+
+#: src/core/elster/doppelte-rechnung.ts:72
+msgid "the document system holds no incoming invoice for this year"
+msgstr "im Belegsystem für dieses Jahr keine Eingangsrechnung liegt"
+
+#: src/core/elster/doppelte-rechnung.ts:73
+msgid "no incoming invoice has a sender assigned"
+msgstr "keiner Eingangsrechnung ein Absender zugeordnet ist"
+
+#: src/core/elster/doppelte-rechnung.ts:107
+msgid "same invoice number"
+msgstr "gleiche Rechnungsnummer"
+
+#: src/core/elster/doppelte-rechnung.ts:128
+msgid "same amount within {days} days"
+msgstr "gleicher Betrag binnen {days} Tagen"
+
+#: src/core/elster/doppelte-rechnung.ts:153
+msgid "Duplicate invoice: none found"
+msgstr "Doppelte Rechnung: keine gefunden"
+
+#: src/core/elster/doppelte-rechnung.ts:156
+msgid "{n} incoming invoice from {year} compared."
+msgid_plural "{n} incoming invoices from {year} compared."
+msgstr[0] "{n} Eingangsrechnung {year} verglichen."
+msgstr[1] "{n} Eingangsrechnungen {year} verglichen."
+
+#: src/core/elster/doppelte-rechnung.ts:166
+msgid ""
+"same sender with the same invoice number, or with the same gross amount "
+"within {days} days; excluded: series such as subscriptions (at least three "
+"at a fixed interval: {series} pair(s); confirmed recurring costs: "
+"{recurring} pair(s))"
+msgstr ""
+"gleicher Absender mit gleicher Rechnungsnummer oder mit gleichem "
+"Bruttobetrag binnen {days} Tagen; ausgenommen: Serien wie Abos (mindestens "
+"drei im festen Abstand: {series} Paar(e); bestätigte laufende Kosten: "
+"{recurring} Paar(e))"
+
+#: src/core/elster/doppelte-rechnung.ts:169
+msgid "; not compared without a sender: {n}"
+msgstr "; ohne Absender nicht verglichen: {n}"
+
+#: src/core/elster/doppelte-rechnung.ts:179
+msgid " for {amount} €"
+msgstr " über {amount} €"
+
+#: src/core/elster/doppelte-rechnung.ts:183
+msgid "Duplicate invoice from {name}?"
+msgstr "Doppelte Rechnung von {name}?"
+
+#: src/core/elster/doppelte-rechnung.ts:185
+msgid ""
+"{n} documents from {name}{amount} probably concern the same claim "
+"({reason})."
+msgstr ""
+"{n} Belege von {name}{amount} betreffen vermutlich dieselbe Forderung "
+"({reason})."
+
+#: src/core/elster/doppelte-rechnung.ts:192
+msgid ""
+"To clarify before both are paid: is one of them a copy, a reminder or a "
+"correction?"
+msgstr ""
+"Zu klären, bevor beide bezahlt werden: ist einer davon eine Kopie, eine "
+"Mahnung oder eine Korrektur?"
+
+#: src/core/elster/doppelte-rechnung.ts:198
+#: src/core/elster/ust-ohne-angabe.ts:167
+msgid "Open the document"
+msgstr "Beleg öffnen"
+
+#: src/core/elster/erstattung.ts:244
+msgid "Assign {n} refund"
+msgid_plural "Assign {n} refunds"
+msgstr[0] "{n} Erstattung zuordnen"
+msgstr[1] "{n} Erstattungen zuordnen"
+
+#: src/core/elster/hinweise.ts:112
+msgid "Mark as fine"
+msgstr "Als in Ordnung markieren"
+
+#: src/core/elster/hinweise.ts:149
+msgid "no date"
+msgstr "ohne Datum"
+
+#: src/core/elster/hinweise.ts:152
+msgid "no. {number}"
+msgstr "Nr. {number}"
+
+#: src/core/elster/hinweise.ts:239
+msgid "Standard taxation is mandatory"
+msgstr "Regelbesteuerung verpflichtend"
+
+#: src/core/elster/hinweise.ts:240
+msgid ""
+"Revenue {year} {revenue} € above {limit} € — the small business scheme is "
+"ruled out."
+msgstr ""
+"Umsatz {year} {revenue} € über {limit} € — die Kleinunternehmerregelung ist "
+"ausgeschlossen."
+
+#: src/core/elster/hinweise.ts:251
+msgid "The small business scheme would be possible"
+msgstr "Kleinunternehmerregelung wäre möglich"
+
+#: src/core/elster/hinweise.ts:253
+msgid "Revenue {year} {revenue} € below {limit} € (previous-year limit)."
+msgstr "Umsatz {year} {revenue} € unter {limit} € (Vorjahresgrenze)."
+
+#: src/core/elster/hinweise.ts:260
+msgid ""
+"Currently standard taxation (VAT charged) — a switch to the small business "
+"scheme would be possible (no VAT, but no input tax deduction). Check "
+"whether it pays off."
+msgstr ""
+"Aktuell Regelbesteuerung (USt ausgewiesen) — ein Wechsel zur "
+"Kleinunternehmerregelung wäre möglich (keine USt, aber kein "
+"Vorsteuerabzug). Prüfen, ob es sich lohnt."
+
+#: src/core/elster/hinweise.ts:268
+msgid "Check the switch to standard taxation"
+msgstr "Wechsel zur Regelbesteuerung prüfen"
+
+#: src/core/elster/hinweise.ts:271
+msgid ""
+"Revenue {year} {revenue} € above the previous-year limit {limit} € — the "
+"small business status may lapse."
+msgstr ""
+"Umsatz {year} {revenue} € über der Vorjahresgrenze {limit} € — der "
+"Kleinunternehmerstatus kann entfallen."
+
+#: src/core/elster/hinweise.ts:281
+msgid "Type of taxation: {type}"
+msgstr "Besteuerungsart: {type}"
+
+#: src/core/elster/hinweise.ts:282
+msgid "standard taxation"
+msgstr "Regelbesteuerung"
+
+#: src/core/elster/hinweise.ts:282
+msgid "small business / no VAT"
+msgstr "Kleinunternehmer / keine USt"
+
+#: src/core/elster/hinweise.ts:286
+msgid ""
+"Revenue {year} {revenue} €. Small business limits: {previous} € (previous "
+"year) · {current} € (current year)."
+msgstr ""
+"Umsatz {year} {revenue} €. Kleinunternehmer-Grenzen: {previous} € (Vorjahr) "
+"· {current} € (laufendes Jahr)."
+
+#: src/core/elster/hinweise.ts:299
+msgid "VAT prepayments not recorded yet"
+msgstr "USt-Vorauszahlungen noch nicht erfasst"
+
+#: src/core/elster/hinweise.ts:302
+msgid ""
+"The advance VAT returns during the year are not entered — the closing "
+"payment ({amount} €) is reduced by the prepayments already made."
+msgstr ""
+"Die unterjährigen USt-Voranmeldungen sind nicht eingetragen — die "
+"Abschlusszahlung ({amount} €) verringert sich um die bereits geleisteten "
+"Vorauszahlungen."
+
+#: src/core/elster/hinweise.ts:315
+msgid "Input tax without a linked receipt"
+msgstr "Vorsteuer ohne verknüpften Beleg"
+
+#: src/core/elster/hinweise.ts:319
+msgid "{amount} € input tax in {n} booking without a stored invoice."
+msgid_plural "{amount} € input tax in {n} bookings without a stored invoice."
+msgstr[0] "{amount} € Vorsteuer in {n} Buchung ohne hinterlegte Rechnung."
+msgstr[1] "{amount} € Vorsteuer in {n} Buchungen ohne hinterlegte Rechnung."
+
+#: src/core/elster/hinweise.ts:327
+msgid ""
+"To deduct the input tax, keep the invoices and present them on request by "
+"the tax office (not to be transmitted to ELSTER)."
+msgstr ""
+"Für den Vorsteuerabzug die Rechnungen aufbewahren und auf Anforderung des "
+"Finanzamts vorlegen (nicht an ELSTER zu übermitteln)."
+
+#: src/core/elster/hinweise.ts:337
+msgid "Match"
+msgstr "Zuordnen"
+
+#: src/core/elster/hinweise.ts:342
+msgid "Open the receipt inbox"
+msgstr "Offene Belege öffnen"
+
+#: src/core/elster/hinweise.ts:358
+msgid "{n} unclassified booking"
+msgid_plural "{n} unclassified bookings"
+msgstr[0] "{n} unklassifizierte Buchung"
+msgstr[1] "{n} unklassifizierte Buchungen"
+
+#: src/core/elster/hinweise.ts:362
+msgid ""
+"These bookings are assigned neither through a receipt nor through a rule — "
+"clarify before filing."
+msgstr ""
+"Diese Buchungen sind weder über einen Beleg noch über eine Regel zugeordnet "
+"— vor der Abgabe klären."
+
+#: src/core/elster/hinweise.ts:372
+msgid "Create a rule"
+msgstr "Regel anlegen"
+
+#: src/core/elster/hinweise.ts:377 src/core/elster/ust-abweichung.ts:273
+msgid "Open transactions"
+msgstr "Buchungen öffnen"
+
+#: src/core/elster/hinweise.ts:392
+msgid "Business ceased during the year"
+msgstr "Betriebsaufgabe im Jahr"
+
+#: src/core/elster/hinweise.ts:394
+msgid "Business ceased on {date}."
+msgstr "Betrieb zum {date} beendet."
+
+#: src/core/elster/hinweise.ts:397
+msgid ""
+"Subsequent § 24 income of {amount} € is included in the result (exempt from "
+"trade tax)."
+msgstr ""
+"Nachträgliche §24-Einkünfte {amount} € sind im Ergebnis enthalten "
+"(gewerbesteuerfrei)."
+
+#: src/core/elster/hinweise.ts:414
+msgid "Invoice {number} · {amount} € too much"
+msgstr "Rechnung {number} · {amount} € zu viel"
+
+#: src/core/elster/hinweise.ts:426
+msgid "{n} payment possibly received twice — clarify before filing"
+msgid_plural "{n} payments possibly received twice — clarify before filing"
+msgstr[0] ""
+"{n} Zahlung möglicherweise doppelt erhalten — klären vor der Abgabe"
+msgstr[1] ""
+"{n} Zahlungen möglicherweise doppelt erhalten — klären vor der Abgabe"
+
+#: src/core/elster/hinweise.ts:433
+msgid ""
+"A customer has apparently paid an invoice more than once or too much. The "
+"excess received is not revenue but an obligation to repay — confirm it or "
+"mark it as fine."
+msgstr ""
+"Ein Kunde hat eine Rechnung offenbar mehrfach oder zu hoch bezahlt. Der zu "
+"viel erhaltene Betrag ist kein Umsatz, sondern eine Rückzahlungspflicht — "
+"bestätigen oder als in Ordnung markieren."
+
+#: src/core/elster/hinweise.ts:442 src/core/elster/hinweise.ts:476
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:148
+msgid "Open the invoice"
+msgstr "Rechnung öffnen"
+
+#: src/core/elster/hinweise.ts:458
+msgid "{n} double payment not refunded to the customer yet"
+msgid_plural "{n} double payments not refunded to the customer yet"
+msgstr[0] "{n} Doppelzahlung noch nicht an den Kunden zurückgezahlt"
+msgstr[1] "{n} Doppelzahlungen noch nicht an den Kunden zurückgezahlt"
+
+#: src/core/elster/hinweise.ts:465
+msgid ""
+"Once the refund is booked, link the transfer to the double payment — it is "
+"then treated as a pass-through item as well."
+msgstr ""
+"Sobald die Rückzahlung gebucht ist, die Überweisung mit der Doppelzahlung "
+"verknüpfen — sie wird dann ebenfalls als durchlaufender Posten behandelt."
+
+#: src/core/elster/hinweise.ts:496
+msgid "{n} double payment neutralised"
+msgid_plural "{n} double payments neutralised"
+msgstr[0] "{n} Doppelzahlung neutralisiert"
+msgstr[1] "{n} Doppelzahlungen neutralisiert"
+
+#: src/core/elster/hinweise.ts:500
+msgid ""
+"Invoices paid twice are excluded from revenue and VAT as a pass-through "
+"item (obligation to repay)."
+msgstr ""
+"Doppelt bezahlte Rechnungen sind als durchlaufender Posten aus Umsatz und "
+"USt herausgerechnet (Rückzahlungsverpflichtung)."
+
+#: src/core/elster/hinweise.ts:510
+msgid "Depreciation taken into account"
+msgstr "Abschreibungen berücksichtigt"
+
+#: src/core/elster/hinweise.ts:513
+msgid ""
+"Depreciation of {amount} €{assets} is included in the EÜR — keep the asset "
+"register (residual values, additions/disposals) up to date."
+msgstr ""
+"AfA {amount} €{assets} ist in der EÜR enthalten — das Anlageverzeichnis "
+"(Restbuchwerte, Zugänge/Abgänge) aktuell halten."
+
+#: src/core/elster/hinweise.ts:518
+msgid " from {n} fixed asset"
+msgid_plural " from {n} fixed assets"
+msgstr[0] " aus {n} Anlagegut"
+msgstr[1] " aus {n} Anlagegütern"
+
+#: src/core/elster/hinweise.ts:530
+msgid "Next filing deadline"
+msgstr "Nächste Abgabefrist"
+
+#: src/core/elster/hinweise.ts:533
+msgid ""
+"The annual returns are due by {date} (regular deadline without an adviser; "
+"a granted extension moves it)."
+msgstr ""
+"Die Jahreserklärungen sind bis {date} abzugeben (Regelfrist ohne Berater; "
+"eine gewährte Fristverlängerung verschiebt das)."
+
+#: src/core/elster/hinweise.ts:545
+msgid "Trade tax: base amount 0 €"
+msgstr "Gewerbesteuer: Messbetrag 0 €"
+
+#: src/core/elster/hinweise.ts:547
+msgid ""
+"The trade income is below the allowance (24,500 €) — no trade tax is due, "
+"but the return still has to be filed."
+msgstr ""
+"Der Gewerbeertrag liegt unter dem Freibetrag (24.500 €) — es fällt keine "
+"Gewerbesteuer an, die Erklärung ist aber dennoch abzugeben."
+
+#: src/core/elster/home.ts:104
+msgid "est. tax due"
+msgstr "vsl. Nachzahlung"
+
+#: src/core/elster/home.ts:104
+msgid "est. refund"
+msgstr "vsl. Erstattung"
+
+#: src/core/elster/home.ts:113
+msgid ""
+"Unclassified or caught only by a catch-all rule — confirm or recategorise"
+msgstr ""
+"Unklassifiziert oder nur von einer Auffangregel erfasst — bestätigen oder "
+"umbuchen"
+
+#: src/core/elster/home.ts:125
+msgid ""
+"Incoming payments that refund an earlier one — “Yes” adopts its category and "
+"input tax"
+msgstr ""
+"Eingänge, die eine frühere Zahlung erstatten — „Ja“ übernimmt deren "
+"Kategorie und Vorsteuer"
+
+#: src/core/elster/home.ts:137
+msgid "Open outgoing invoices by due date — draft a reminder, mark it sent"
+msgstr ""
+"Offene Ausgangsrechnungen nach Fälligkeit — Mahnung entwerfen, versandt "
+"markieren"
+
+#: src/core/elster/home.ts:149
+msgid "Regular debits detected — confirm, correct, or mark as not recurring"
+msgstr ""
+"Regelmäßige Abbuchungen erkannt — bestätigen, korrigieren oder „keine "
+"laufenden Kosten“"
+
+#: src/core/elster/home.ts:164
+msgid "and one more"
+msgid_plural "and {n} more"
+msgstr[0] "und eine weitere"
+msgstr[1] "und {n} weitere"
+
+#: src/core/elster/home.ts:202 src/frontends/desktop/views/util.ts:78
+msgctxt "month abbreviation"
+msgid "Jan"
+msgstr "Jan"
+
+#: src/core/elster/home.ts:203 src/frontends/desktop/views/util.ts:79
+msgctxt "month abbreviation"
+msgid "Feb"
+msgstr "Feb"
+
+#: src/core/elster/home.ts:204 src/frontends/desktop/views/util.ts:80
+msgctxt "month abbreviation"
+msgid "Mar"
+msgstr "Mär"
+
+#: src/core/elster/home.ts:205 src/frontends/desktop/views/util.ts:81
+msgctxt "month abbreviation"
+msgid "Apr"
+msgstr "Apr"
+
+#: src/core/elster/home.ts:206 src/frontends/desktop/views/util.ts:82
+msgctxt "month abbreviation"
+msgid "May"
+msgstr "Mai"
+
+#: src/core/elster/home.ts:207 src/frontends/desktop/views/util.ts:83
+msgctxt "month abbreviation"
+msgid "Jun"
+msgstr "Jun"
+
+#: src/core/elster/home.ts:208 src/frontends/desktop/views/util.ts:84
+msgctxt "month abbreviation"
+msgid "Jul"
+msgstr "Jul"
+
+#: src/core/elster/home.ts:209 src/frontends/desktop/views/util.ts:85
+msgctxt "month abbreviation"
+msgid "Aug"
+msgstr "Aug"
+
+#: src/core/elster/home.ts:210 src/frontends/desktop/views/util.ts:86
+msgctxt "month abbreviation"
+msgid "Sep"
+msgstr "Sep"
+
+#: src/core/elster/home.ts:211 src/frontends/desktop/views/util.ts:87
+msgctxt "month abbreviation"
+msgid "Oct"
+msgstr "Okt"
+
+#: src/core/elster/home.ts:212 src/frontends/desktop/views/util.ts:88
+msgctxt "month abbreviation"
+msgid "Nov"
+msgstr "Nov"
+
+#: src/core/elster/home.ts:213 src/frontends/desktop/views/util.ts:89
+msgctxt "month abbreviation"
+msgid "Dec"
+msgstr "Dez"
+
+#: src/core/elster/home.ts:240
+msgid "Bank account"
+msgstr "Bankkonto"
+
+#: src/core/elster/home.ts:242
+msgid "CAMT file"
+msgstr "CAMT-Datei"
+
+#. TRANSLATORS: Chart slice for expenses with no category of their own.
+#: src/core/elster/home.ts:266
+msgctxt "expense category"
+msgid "Other"
+msgstr "Sonstige"
+
+#: src/core/elster/home.ts:316
+msgid "Invoice {number} paid twice?"
+msgstr "Rechnung {number} doppelt bezahlt?"
+
+#: src/core/elster/home.ts:318
+msgid "{amount} € received too much"
+msgstr "{amount} € zu viel eingegangen"
+
+#: src/core/elster/home.ts:319
+msgid "partly too much"
+msgstr "teilweise zu viel"
+
+#: src/core/elster/home.ts:320
+msgid "clarify"
+msgstr "klären"
+
+#: src/core/elster/home.ts:350
+#: src/frontends/desktop/views/rechnungen-view.ts:529
+msgid "due {date}"
+msgstr "fällig {date}"
+
+#: src/core/elster/iban-wechsel.ts:94
+msgid "IBAN change: cannot be checked"
+msgstr "IBAN-Wechsel: nicht prüfbar"
+
+#: src/core/elster/iban-wechsel.ts:95
+msgid "No debit in {year} names the payee’s IBAN ({accounts})."
+msgstr "Keine Abbuchung {year} nennt die IBAN des Empfängers ({accounts})."
+
+#: src/core/elster/iban-wechsel.ts:100
+msgid "the accounts carry no counterparty IBAN"
+msgstr "die Konten keine IBAN der Gegenseite liefern"
+
+#: src/core/elster/iban-wechsel.ts:143
+msgid "; not checked: {accounts} (no counterparty IBAN)"
+msgstr "; nicht geprüft: {accounts} (keine IBAN der Gegenseite)"
+
+#: src/core/elster/iban-wechsel.ts:150
+msgid "IBAN change: none found"
+msgstr "IBAN-Wechsel: keiner gefunden"
+
+#: src/core/elster/iban-wechsel.ts:153
+msgid "{n} debit in {year} with the payee’s IBAN checked."
+msgid_plural "{n} debits in {year} with the payee’s IBAN checked."
+msgstr[0] "{n} Abbuchung {year} mit IBAN des Empfängers geprüft."
+msgstr[1] "{n} Abbuchungen {year} mit IBAN des Empfängers geprüft."
+
+#: src/core/elster/iban-wechsel.ts:163
+msgid ""
+"every debit against the IBANs the same payee was paid at before; excluded: "
+"first payment to a payee ({first}), own accounts and transfers ({own}), a "
+"second IBAN already used earlier ({second})"
+msgstr ""
+"jede Abbuchung gegen die IBANs, an die derselbe Empfänger vorher bezahlt "
+"wurde; ausgenommen: erste Zahlung an einen Empfänger ({first}), eigene "
+"Konten und Umbuchungen ({own}), eine schon früher genutzte zweite IBAN "
+"({second})"
+
+#: src/core/elster/iban-wechsel.ts:181
+msgid "IBAN change at {name}: probably new bank details"
+msgstr "IBAN-Wechsel bei {name}: vermutlich neue Bankverbindung"
+
+#: src/core/elster/iban-wechsel.ts:185
+msgid ""
+"{n} payment to {name} went to an IBAN never paid before ({ibans}); so far: "
+"{known}."
+msgid_plural ""
+"{n} payments to {name} went to IBANs never paid before ({ibans}); so far: "
+"{known}."
+msgstr[0] ""
+"{n} Zahlung an {name} ging an eine IBAN, an die bisher nie gezahlt wurde "
+"({ibans}); bisher: {known}."
+msgstr[1] ""
+"{n} Zahlungen an {name} gingen an IBANs, an die bisher nie gezahlt wurde "
+"({ibans}); bisher: {known}."
+
+#: src/core/elster/iban-wechsel.ts:193
+msgid ""
+"To clarify before paying again: ask the supplier on the phone number or "
+"e-mail address known so far — not on the contact details printed on the "
+"invoice with the new IBAN."
+msgstr ""
+"Zu klären, bevor weiter gezahlt wird: beim Lieferanten unter der bisher "
+"bekannten Telefonnummer oder E-Mail-Adresse nachfragen — nicht unter den "
+"Kontaktdaten auf der Rechnung mit der neuen IBAN."
+
+#: src/core/elster/iban-wechsel.ts:200
+msgid "{line} · to {iban}"
+msgstr "{line} · an {iban}"
+
+#: src/core/elster/kontoauszug.ts:70
+msgctxt "month"
+msgid "January"
+msgstr "Januar"
+
+#: src/core/elster/kontoauszug.ts:71
+msgctxt "month"
+msgid "February"
+msgstr "Februar"
+
+#: src/core/elster/kontoauszug.ts:72
+msgctxt "month"
+msgid "March"
+msgstr "März"
+
+#: src/core/elster/kontoauszug.ts:73
+msgctxt "month"
+msgid "April"
+msgstr "April"
+
+#: src/core/elster/kontoauszug.ts:74
+msgctxt "month"
+msgid "May"
+msgstr "Mai"
+
+#: src/core/elster/kontoauszug.ts:75
+msgctxt "month"
+msgid "June"
+msgstr "Juni"
+
+#: src/core/elster/kontoauszug.ts:76
+msgctxt "month"
+msgid "July"
+msgstr "Juli"
+
+#: src/core/elster/kontoauszug.ts:77
+msgctxt "month"
+msgid "August"
+msgstr "August"
+
+#: src/core/elster/kontoauszug.ts:78
+msgctxt "month"
+msgid "September"
+msgstr "September"
+
+#: src/core/elster/kontoauszug.ts:79
+msgctxt "month"
+msgid "October"
+msgstr "Oktober"
+
+#: src/core/elster/kontoauszug.ts:80
+msgctxt "month"
+msgid "November"
+msgstr "November"
+
+#: src/core/elster/kontoauszug.ts:81
+msgctxt "month"
+msgid "December"
+msgstr "Dezember"
+
+#: src/core/elster/kontoauszug.ts:87
+msgid "Import a bank statement"
+msgstr "Kontoauszug importieren"
+
+#: src/core/elster/kontoauszug.ts:111
+msgid "{month} {year}"
+msgstr "{month} {year}"
+
+#: src/core/elster/kontoauszug.ts:112
+msgid "{from} to {to} {year}"
+msgstr "{from} bis {to} {year}"
+
+#: src/core/elster/kontoauszug.ts:165
+msgid ""
+"in all of {year} neither transactions nor a statement, although the account "
+"has transactions before and after"
+msgstr ""
+"im ganzen Jahr {year} weder Umsätze noch Auszug, obwohl das Konto davor und "
+"danach Umsätze hat"
+
+#: src/core/elster/kontoauszug.ts:182
+msgid ""
+"statement {from}–{to}: opening balance {opening} € + transactions {sum} € ≠ "
+"closing balance {closing} € (difference {diff} €)"
+msgstr ""
+"Auszug {from}–{to}: Anfangssaldo {opening} € + Umsätze {sum} € ≠ Endsaldo "
+"{closing} € (Differenz {diff} €)"
+
+#: src/core/elster/kontoauszug.ts:206
+msgid " (no. {numbers})"
+msgstr " (Nr. {numbers})"
+
+#: src/core/elster/kontoauszug.ts:211
+msgid " — closing balance {closing} € ≠ opening balance {opening} €"
+msgstr " — Endsaldo {closing} € ≠ Anfangssaldo {opening} €"
+
+#: src/core/elster/kontoauszug.ts:217
+msgid ""
+"a statement is probably missing between {from} and {to}{numbers}{balances}"
+msgstr ""
+"zwischen {from} und {to} fehlt vermutlich ein Auszug{numbers}{balances}"
+
+#: src/core/elster/kontoauszug.ts:239
+msgid ""
+"the statements {from}–{to} total {statements} €, the bookings in the same "
+"period {bookings} € — bookings are probably missing or duplicated"
+msgstr ""
+"die Auszüge {from}–{to} summieren {statements} €, die Buchungen im selben "
+"Zeitraum {bookings} € — vermutlich fehlen Buchungen oder sind doppelt"
+
+#: src/core/elster/kontoauszug.ts:279
+msgid ""
+"no transactions in {period}, although the account otherwise has them every "
+"month"
+msgstr ""
+"keine Umsätze im {period}, obwohl das Konto sonst jeden Monat Umsätze hat"
+
+#: src/core/elster/kontoauszug.ts:290
+msgid "Not checked after {date} (account closed or business ceased)."
+msgstr "Nach dem {date} nicht geprüft (Konto aufgelöst oder Betrieb beendet)."
+
+#: src/core/elster/kontoauszug.ts:296
+msgid "Bank statement {account}: probably incomplete"
+msgstr "Kontoauszug {account}: vermutlich lückenhaft"
+
+#: src/core/elster/kontoauszug.ts:298
+msgid "To clarify: {findings}."
+msgstr "Zu klären: {findings}."
+
+#: src/core/elster/kontoauszug.ts:300
+msgid "A missing statement file skews the EÜR without anyone noticing."
+msgstr "Eine fehlende Auszugsdatei verfälscht die EÜR, ohne dass es auffällt."
+
+#: src/core/elster/kontoauszug.ts:303
+msgid ""
+"The balances can only be checked once bank statements (CAMT) are imported."
+msgstr ""
+"Die Salden lassen sich erst mit importierten Kontoauszügen (CAMT) prüfen."
+
+#: src/core/elster/kontoauszug.ts:316
+msgid "; outside the statements only months without transactions"
+msgstr "; außerhalb der Auszüge nur Monate ohne Umsätze"
+
+#: src/core/elster/kontoauszug.ts:320
+msgid "Bank statement {account} complete"
+msgstr "Kontoauszug {account} lückenlos"
+
+#: src/core/elster/kontoauszug.ts:324
+msgid "{n} statement from {from} to {to} checked."
+msgid_plural "{n} statements from {from} to {to} checked."
+msgstr[0] "{n} Auszug vom {from} bis {to} geprüft."
+msgstr[1] "{n} Auszüge vom {from} bis {to} geprüft."
+
+#: src/core/elster/kontoauszug.ts:333
+msgid ""
+"opening balance + transactions = closing balance per statement, closing "
+"balance = next opening balance"
+msgstr ""
+"Anfangssaldo + Umsätze = Endsaldo je Auszug, Endsaldo = nächster "
+"Anfangssaldo"
+
+#: src/core/elster/kontoauszug.ts:335
+msgid ", statement numbers consecutive"
+msgstr ", Auszugsnummern fortlaufend"
+
+#: src/core/elster/kontoauszug.ts:336
+msgid ", sum of the statements = sum of the bookings"
+msgstr ", Summe der Auszüge = Summe der Buchungen"
+
+#: src/core/elster/kontoauszug.ts:343
+msgid "Bank statement {account}: balances cannot be checked"
+msgstr "Kontoauszug {account}: Salden nicht prüfbar"
+
+#: src/core/elster/kontoauszug.ts:346
+msgid ""
+"Only checked whether a month in {year} has no transactions — none found."
+msgstr ""
+"Geprüft wurde nur, ob ein Monat {year} ohne Umsätze ist — keiner gefunden."
+
+#: src/core/elster/kontoauszug.ts:347
+msgid "Too few transactions per month to spot a gap that way."
+msgstr "Zu wenige Umsätze je Monat, um daran eine Lücke zu erkennen."
+
+#: src/core/elster/kontoauszug.ts:349
+msgid "the account supplies no balances"
+msgstr "das Konto keine Salden liefert"
+
+#: src/core/elster/laufende-kosten.ts:66
+msgid "monthly"
+msgstr "monatlich"
+
+#: src/core/elster/laufende-kosten.ts:68
+msgid "quarterly"
+msgstr "vierteljährlich"
+
+#: src/core/elster/laufende-kosten.ts:70
+msgid "twice a year"
+msgstr "halbjährlich"
+
+#: src/core/elster/laufende-kosten.ts:72
+msgid "yearly"
+msgstr "jährlich"
+
+#: src/core/elster/laufende-kosten.ts:253
+msgid "{n} recurring cost to confirm"
+msgid_plural "{n} recurring costs to confirm"
+msgstr[0] "{n} laufende Kosten zu bestätigen"
+msgstr[1] "{n} laufende Kosten zu bestätigen"
+
+#: src/core/elster/laufende-kosten.ts:341
+msgid "more expensive"
+msgstr "teurer"
+
+#: src/core/elster/laufende-kosten.ts:341
+msgid "cheaper"
+msgstr "günstiger"
+
+#: src/core/elster/laufende-kosten.ts:345
+msgid "Price change at {name}"
+msgstr "Preisänderung bei {name}"
+
+#: src/core/elster/laufende-kosten.ts:349
+msgid ""
+"The recurring cost at {name} ({interval}) has been {direction} since "
+"{date}: {new} € instead of {old} €."
+msgstr ""
+"Die laufenden Kosten bei {name} ({interval}) sind seit {date} {direction}: "
+"{new} € statt {old} €."
+
+#: src/core/elster/laufende-kosten.ts:361
+msgid "To clarify whether the change was agreed."
+msgstr "Zu klären, ob die Änderung vereinbart ist."
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:105
+msgid "Supplier"
+msgstr "Lieferant"
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:116
+msgid "invoice {number}"
+msgstr "Rechnung {number}"
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:116
+msgid "invoice"
+msgstr "Rechnung"
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:124
+msgid "Supplier paid twice? {name}, {invoice}"
+msgstr "Lieferant doppelt bezahlt? {name}, {invoice}"
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:128
+msgid ""
+"{invoice} for {gross} € was paid by {n} payment totalling {paid} € — "
+"probably {excess} € too much."
+msgid_plural ""
+"{invoice} for {gross} € was paid by {n} payments totalling {paid} € — "
+"probably {excess} € too much."
+msgstr[0] ""
+"Auf {invoice} über {gross} € ging {n} Zahlung über zusammen {paid} € ein — "
+"vermutlich {excess} € zu viel."
+msgstr[1] ""
+"Auf {invoice} über {gross} € gingen {n} Zahlungen über zusammen {paid} € "
+"ein — vermutlich {excess} € zu viel."
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:142
+msgid ""
+"To clarify: ask the supplier for a refund or have it offset against the "
+"next invoice. Input tax is due once per invoice; the app does not deduct "
+"the second debit."
+msgstr ""
+"Zu klären: beim Lieferanten die Erstattung anfordern oder mit der nächsten "
+"Rechnung verrechnen lassen. Vorsteuer steht je Rechnung nur einmal zu; die "
+"App rechnet die zweite Abbuchung nicht heraus."
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:161
+msgid "Supplier paid twice: cannot be checked"
+msgstr "Lieferant doppelt bezahlt: nicht prüfbar"
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:164
+msgid ""
+"{n} incoming invoice from {year} carries an amount, but none has a payment "
+"assigned."
+msgid_plural ""
+"{n} incoming invoices from {year} carry an amount, but none has a payment "
+"assigned."
+msgstr[0] ""
+"{n} Eingangsrechnung {year} mit Betrag, aber keiner ist eine Zahlung "
+"zugeordnet."
+msgstr[1] ""
+"{n} Eingangsrechnungen {year} mit Betrag, aber keiner ist eine Zahlung "
+"zugeordnet."
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:171
+msgid ""
+"no incoming invoice has a linked payment or one recognisable by invoice "
+"number"
+msgstr ""
+"keine Eingangsrechnung eine verknüpfte oder per Rechnungsnummer erkennbare "
+"Zahlung hat"
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:179
+msgid "Supplier paid twice: nothing found"
+msgstr "Lieferant doppelt bezahlt: nichts gefunden"
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:182
+msgid "{n} incoming invoice from {year} compared with its payments."
+msgid_plural "{n} incoming invoices from {year} compared with their payments."
+msgstr[0] "{n} Eingangsrechnung {year} mit ihren Zahlungen verglichen."
+msgstr[1] "{n} Eingangsrechnungen {year} mit ihren Zahlungen verglichen."
+
+#: src/core/elster/lieferant-doppelt-bezahlt.ts:191
+msgid ""
+"the sum of the linked debits and those recognised by invoice number against "
+"the gross amount; excluded: part payments as well as deposit + remainder "
+"({part}), refunded later ({refunded}), series such as subscriptions "
+"({series}), confirmed recurring costs ({recurring})"
+msgstr ""
+"Summe der verknüpften und per Rechnungsnummer erkannten Abbuchungen gegen "
+"den Bruttobetrag; ausgenommen: Teilzahlungen sowie Anzahlung + Rest "
+"({part}), später erstattet ({refunded}), Serien wie Abos ({series}), "
+"bestätigte laufende Kosten ({recurring})"
+
+#: src/core/elster/reverse-charge-kandidat.ts:90
+msgid "counter account in {country}"
+msgstr "Gegenkonto in {country}"
+
+#: src/core/elster/reverse-charge-kandidat.ts:93
+msgid "VAT ID on the receipt from {country}"
+msgstr "USt-IdNr. auf dem Beleg aus {country}"
+
+#: src/core/elster/reverse-charge-kandidat.ts:102
+msgid "contact “{name}” based in {country}"
+msgstr "Kontakt „{name}“ mit Sitz in {country}"
+
+#: src/core/elster/reverse-charge-kandidat.ts:109
+msgid "other bookings to this counterparty are classified as § 13b"
+msgstr "andere Buchungen an diese Gegenseite sind als § 13b eingeordnet"
+
+#: src/core/elster/reverse-charge-kandidat.ts:115
+msgid "Abs. 1 or Abs. 2 Nr. 1"
+msgstr "Abs. 1 oder Abs. 2 Nr. 1"
+
+#: src/core/elster/reverse-charge-kandidat.ts:116
+msgid "Abs. 1: supply from the EU"
+msgstr "Abs. 1: Leistung aus der EU"
+
+#: src/core/elster/reverse-charge-kandidat.ts:116
+msgid "Abs. 2 Nr. 1: non-EU country"
+msgstr "Abs. 2 Nr. 1: Drittland"
+
+#: src/core/elster/reverse-charge-kandidat.ts:172
+msgid "§ 13b candidates: cannot be checked"
+msgstr "§ 13b-Kandidaten: nicht prüfbar"
+
+#: src/core/elster/reverse-charge-kandidat.ts:173
+msgid "For {year} the app knows where none of the suppliers is based."
+msgstr "Für {year} weiß die App bei keinem Lieferanten, wo er sitzt."
+
+#: src/core/elster/reverse-charge-kandidat.ts:178
+msgid ""
+"no booking carries a counter account IBAN or a supplier country and no "
+"contact names a country"
+msgstr ""
+"keine Buchung eine Gegenkonto-IBAN oder ein Lieferantenland trägt und kein "
+"Kontakt ein Land nennt"
+
+#: src/core/elster/reverse-charge-kandidat.ts:189
+msgid "§ 13b candidates: none missed"
+msgstr "§ 13b-Kandidaten: keine übersehenen"
+
+#: src/core/elster/reverse-charge-kandidat.ts:192
+msgid ""
+"{n} expense from {year} without declared VAT checked for foreign suppliers."
+msgid_plural ""
+"{n} expenses from {year} without declared VAT checked for foreign suppliers."
+msgstr[0] ""
+"{n} Ausgabe {year} ohne ausgewiesene USt auf ausländische Lieferanten "
+"geprüft."
+msgstr[1] ""
+"{n} Ausgaben {year} ohne ausgewiesene USt auf ausländische Lieferanten "
+"geprüft."
+
+#: src/core/elster/reverse-charge-kandidat.ts:201
+msgid ""
+"IBAN country, VAT ID on the receipt, contacts and earlier § 13b bookings of "
+"the same counterparty; classified as § 13b: {booked}, flagged for review: "
+"{review}"
+msgstr ""
+"IBAN-Land, USt-IdNr. am Beleg, Kontakte und frühere § 13b-Buchungen "
+"derselben Gegenseite; als § 13b eingeordnet: {booked}, zur Prüfung "
+"vorgemerkt: {review}"
+
+#: src/core/elster/reverse-charge-kandidat.ts:213
+msgid ""
+"As a small business this applies too — only without input tax deduction, so "
+"the tax is a real burden and has to be declared for that period in an "
+"advance return (§ 18 Abs. 4a UStG)."
+msgstr ""
+"Als Kleinunternehmer gilt das auch — nur ohne Vorsteuerabzug, die Steuer "
+"ist dann eine echte Last und für diesen Zeitraum in einer Voranmeldung "
+"anzumelden (§ 18 Abs. 4a UStG)."
+
+#: src/core/elster/reverse-charge-kandidat.ts:215
+msgid ""
+"With a full input tax deduction the input tax offsets it, but it still has "
+"to be declared."
+msgstr ""
+"Bei vollem Vorsteuerabzug gleicht die Vorsteuer sie aus, anzumelden ist sie "
+"trotzdem."
+
+#: src/core/elster/reverse-charge-kandidat.ts:224
+msgid "§ 13b not recognised? {name}"
+msgstr "§ 13b nicht erkannt? {name}"
+
+#: src/core/elster/reverse-charge-kandidat.ts:228
+msgid ""
+"One expense to {name} of {amount} € without declared VAT, not classified as "
+"reverse charge — {signal}."
+msgid_plural ""
+"{n} expenses to {name} totalling {amount} € without declared VAT, not "
+"classified as reverse charge — {signal}."
+msgstr[0] ""
+"Eine Ausgabe an {name} über {amount} € ohne ausgewiesene USt, nicht als "
+"Reverse Charge eingeordnet — {signal}."
+msgstr[1] ""
+"{n} Ausgaben an {name} über zusammen {amount} € ohne ausgewiesene USt, "
+"nicht als Reverse Charge eingeordnet — {signal}."
+
+#: src/core/elster/reverse-charge-kandidat.ts:235
+msgid ""
+"Probably a foreign supplier: then you owe the VAT under § 13b Abs. 5 UStG "
+"({paragraph})."
+msgstr ""
+"Vermutlich ein ausländischer Lieferant: dann schuldest du die Umsatzsteuer "
+"nach § 13b Abs. 5 UStG ({paragraph})."
+
+#: src/core/elster/reverse-charge-kandidat.ts:240
+msgid ""
+"To clarify: assign the invoice with a supplier country, then the app "
+"classifies § 13b itself."
+msgstr ""
+"Zu klären: die Rechnung mit Lieferantenland zuordnen, dann ordnet die App § "
+"13b selbst ein."
+
+#: src/core/elster/reverse-charge-kandidat.ts:246
+msgid "Assign a document"
+msgstr "Beleg zuordnen"
+
+#: src/core/elster/ust-abweichung.ts:153 src/core/elster/ust-abweichung.ts:172
+msgid "VAT deviation: cannot be checked"
+msgstr "USt-Abweichung: nicht prüfbar"
+
+#: src/core/elster/ust-abweichung.ts:154
+msgid "The entity does not charge VAT."
+msgstr "Die Entität weist keine Umsatzsteuer aus."
+
+#: src/core/elster/ust-abweichung.ts:156
+msgid "as a small business there are no regular advance returns to compare"
+msgstr ""
+"als Kleinunternehmer keine regelmäßigen Voranmeldungen zum Vergleich "
+"vorliegen"
+
+#: src/core/elster/ust-abweichung.ts:176
+msgid "{n} closed period in {year}, but too little history before it."
+msgid_plural ""
+"{n} closed periods in {year}, but too little history before them."
+msgstr[0] "{n} abgeschlossener Zeitraum {year}, aber zu wenig Verlauf davor."
+msgstr[1] "{n} abgeschlossene Zeiträume {year}, aber zu wenig Verlauf davor."
+
+#: src/core/elster/ust-abweichung.ts:182
+msgid ""
+"No closed advance return period in {year} with bookings or a register entry."
+msgstr ""
+"Kein abgeschlossener Voranmeldungszeitraum {year} mit Buchungen oder "
+"Register-Eintrag."
+
+#: src/core/elster/ust-abweichung.ts:186
+msgid "fewer than {n} earlier advance return periods are available to compare"
+msgstr ""
+"weniger als {n} frühere Voranmeldungszeiträume zum Vergleich vorliegen"
+
+#: src/core/elster/ust-abweichung.ts:201
+msgid "VAT deviation: nothing stands out"
+msgstr "USt-Abweichung: nichts auffällig"
+
+#: src/core/elster/ust-abweichung.ts:204
+msgid "{n} advance return period in {year} compared with the earlier ones."
+msgid_plural ""
+"{n} advance return periods in {year} compared with the earlier ones."
+msgstr[0] "{n} Voranmeldungszeitraum {year} mit den früheren verglichen."
+msgstr[1] "{n} Voranmeldungszeiträume {year} mit den früheren verglichen."
+
+#: src/core/elster/ust-abweichung.ts:213
+msgid ""
+"the payable per period against the median of the up to {periods} periods "
+"before it; flagged from {percent} % and at least {amount} € deviation; "
+"declared values from the register before computed ones"
+msgstr ""
+"Zahllast je Zeitraum gegen den Median der bis zu {periods} Zeiträume davor; "
+"markiert ab {percent} % und mindestens {amount} € Abweichung; erklärte "
+"Werte aus dem Register vor berechneten"
+
+#: src/core/elster/ust-abweichung.ts:233
+msgid ""
+"{period}: {payable} € ({source}), otherwise around {median} € (median of "
+"{n} earlier periods) — {deviation} €"
+msgstr ""
+"{period}: {payable} € ({source}), sonst um {median} € (Median aus {n} "
+"Zeiträumen davor) — {deviation} €"
+
+#: src/core/elster/ust-abweichung.ts:238
+msgid "declared"
+msgstr "erklärt"
+
+#: src/core/elster/ust-abweichung.ts:238
+msgid "computed"
+msgstr "berechnet"
+
+#: src/core/elster/ust-abweichung.ts:254
+msgid "{line} · VAT {amount} €"
+msgstr "{line} · USt {amount} €"
+
+#: src/core/elster/ust-abweichung.ts:262
+msgid "VAT payable deviates: {periods}"
+msgstr "USt-Zahllast weicht ab: {periods}"
+
+#: src/core/elster/ust-abweichung.ts:268
+msgid ""
+"Probably a large order, a large acquisition or missing bookings — to "
+"clarify whether the period is complete. The app does not judge the "
+"deviation; below are the largest VAT items."
+msgstr ""
+"Vermutlich ein großer Auftrag, eine große Anschaffung oder fehlende "
+"Buchungen — zu klären, ob der Zeitraum vollständig ist. Die App bewertet "
+"die Abweichung nicht; darunter die größten USt-Posten."
+
+#: src/core/elster/ust-ohne-angabe.ts:63
+msgid "Bookings without a VAT figure: not applicable"
+msgstr "Buchungen ohne USt-Angabe: entfällt"
+
+#: src/core/elster/ust-ohne-angabe.ts:65
+msgid ""
+"As a small business you deduct no input tax — a missing VAT figure on the "
+"receipt changes nothing."
+msgstr ""
+"Als Kleinunternehmer ziehst du keine Vorsteuer ab — eine fehlende "
+"USt-Angabe am Beleg ändert nichts."
+
+#: src/core/elster/ust-ohne-angabe.ts:68
+msgid ""
+"not applicable without input tax deduction (§ 15 Abs. 2 Satz 1 Nr. 1 UStG)"
+msgstr "entfällt ohne Vorsteuerabzug (§ 15 Abs. 2 Satz 1 Nr. 1 UStG)"
+
+#: src/core/elster/ust-ohne-angabe.ts:105
+msgid "Bookings without a VAT figure: cannot be checked"
+msgstr "Buchungen ohne USt-Angabe: nicht prüfbar"
+
+#: src/core/elster/ust-ohne-angabe.ts:106
+msgid "No expense in {year} has a linked receipt."
+msgstr "Keine Ausgabe {year} hat einen verknüpften Beleg."
+
+#: src/core/elster/ust-ohne-angabe.ts:108
+msgid "no expense of the year is linked to a receipt"
+msgstr "keine Ausgabe des Jahres mit einem Beleg verknüpft ist"
+
+#: src/core/elster/ust-ohne-angabe.ts:115
+msgid "Bookings without a VAT figure: none"
+msgstr "Buchungen ohne USt-Angabe: keine"
+
+#: src/core/elster/ust-ohne-angabe.ts:118
+msgid "{n} expense from {year} with a receipt checked."
+msgid_plural "{n} expenses from {year} with a receipt checked."
+msgstr[0] "{n} Ausgabe {year} mit Beleg geprüft."
+msgstr[1] "{n} Ausgaben {year} mit Beleg geprüft."
+
+#: src/core/elster/ust-ohne-angabe.ts:127
+msgid ""
+"every linked receipt names a VAT amount or net and gross; excluded: "
+"VAT-free categories ({free}), § 13b candidates ({elsewhere})"
+msgstr ""
+"jeder verknüpfte Beleg nennt USt-Betrag oder Netto und Brutto; ausgenommen: "
+"USt-freie Kategorien ({free}), § 13b-Kandidaten ({elsewhere})"
+
+#: src/core/elster/ust-ohne-angabe.ts:143
+msgid "{n} booking without a VAT figure on the receipt"
+msgid_plural "{n} bookings without a VAT figure on the receipt"
+msgstr[0] "{n} Buchung ohne USt-Angabe auf dem Beleg"
+msgstr[1] "{n} Buchungen ohne USt-Angabe auf dem Beleg"
+
+#: src/core/elster/ust-ohne-angabe.ts:152
+msgid ""
+"For this expense of {amount} € the receipt names neither a VAT amount nor a "
+"net amount."
+msgid_plural ""
+"For these expenses totalling {amount} € the receipt names neither a VAT "
+"amount nor a net amount."
+msgstr[0] ""
+"Für diese Ausgabe über {amount} € nennt der Beleg weder USt-Betrag noch "
+"Nettobetrag."
+msgstr[1] ""
+"Für diese Ausgaben über zusammen {amount} € nennt der Beleg weder "
+"USt-Betrag noch Nettobetrag."
+
+#: src/core/elster/ust-ohne-angabe.ts:160
+msgid ""
+"The input tax from the receipts is therefore a lower bound: if VAT is "
+"included, its deduction is missing. To clarify: enter the VAT amount on the "
+"receipt — or mark it as fine if it shows none."
+msgstr ""
+"Die Vorsteuer aus den Belegen ist darum eine Untergrenze: steckt darin "
+"Umsatzsteuer, fehlt ihr Abzug. Zu klären: am Beleg den USt-Betrag eintragen "
+"— oder als in Ordnung markieren, wenn er keine ausweist."
+
+#: src/core/elster/zu-pruefen.ts:69
+msgid "{n} booking to review"
+msgid_plural "{n} bookings to review"
+msgstr[0] "{n} Buchung zu prüfen"
+msgstr[1] "{n} Buchungen zu prüfen"
+
+#: src/core/invoices/forderungen-hinweis.ts:33
+msgid ""
+"The app does not track suspension or restart of the limitation period (§§ "
+"203 ff., 212 BGB — e.g. through negotiations, acknowledgement or a court "
+"order for payment)."
+msgstr ""
+"Hemmung und Neubeginn der Verjährung (§§ 203 ff., 212 BGB — etwa durch "
+"Verhandlungen, Anerkenntnis oder Mahnbescheid) verfolgt die App nicht."
+
+#: src/core/invoices/forderungen-hinweis.ts:41
+msgid "probably time-barred since {date}"
+msgstr "vermutlich verjährt seit {date}"
+
+#: src/core/invoices/forderungen-hinweis.ts:42
+msgid "act by {date}"
+msgstr "Handeln bis {date}"
+
+#: src/core/invoices/forderungen-hinweis.ts:44
+msgid "no number"
+msgstr "ohne Nr."
+
+#: src/core/invoices/forderungen-hinweis.ts:55
+#: src/core/invoices/forderungen-hinweis.ts:71
+msgid "Limitation of open receivables"
+msgstr "Verjährung offener Forderungen"
+
+#: src/core/invoices/forderungen-hinweis.ts:56
+msgid "The open receivables could not be checked."
+msgstr "Die offenen Forderungen konnten nicht geprüft werden."
+
+#: src/core/invoices/forderungen-hinweis.ts:58
+msgid "the invoices could not be read"
+msgstr "die Rechnungen nicht gelesen werden konnten"
+
+#: src/core/invoices/forderungen-hinweis.ts:72
+msgid ""
+"No open receivable runs out of the regular limitation period in the "
+"foreseeable future."
+msgstr ""
+"Keine offene Forderung läuft in absehbarer Zeit aus der regelmäßigen "
+"Verjährung."
+
+#: src/core/invoices/forderungen-hinweis.ts:74
+msgid ""
+"Regular period of three years from the end of the year the receivable "
+"arose; reported from {days} days before 31 December of that year."
+msgstr ""
+"Regelfrist drei Jahre ab Ende des Jahres, in dem die Forderung entstand; "
+"gemeldet wird ab {days} Tagen vor dem 31.12. des Fristjahres."
+
+#: src/core/invoices/forderungen-hinweis.ts:86
+msgid ""
+"{n} receivable probably becomes time-barred on {date} — act by then if it "
+"is still to be enforced."
+msgid_plural ""
+"{n} receivables probably become time-barred on {date} or later — act by "
+"then if they are still to be enforced."
+msgstr[0] ""
+"{n} Forderung verjährt vermutlich zum {date} — bis dahin handeln, wenn sie "
+"noch durchgesetzt werden soll."
+msgstr[1] ""
+"{n} Forderungen verjähren vermutlich zum {date} oder später — bis dahin "
+"handeln, wenn sie noch durchgesetzt werden sollen."
+
+#: src/core/invoices/forderungen-hinweis.ts:97
+msgid ""
+"{n} receivable is probably time-barred already; whether that applies here "
+"is to be clarified."
+msgid_plural ""
+"{n} receivables are probably time-barred already; whether that applies here "
+"is to be clarified."
+msgstr[0] ""
+"{n} Forderung ist vermutlich bereits verjährt; ob das hier gilt, ist zu "
+"klären."
+msgstr[1] ""
+"{n} Forderungen sind vermutlich bereits verjährt; ob das hier gilt, ist zu "
+"klären."
+
+#: src/core/invoices/forderungen-hinweis.ts:111
+msgid "Open receivables are close to the limitation period"
+msgstr "Verjährung droht bei offenen Forderungen"
+
+#: src/core/invoices/forderungen-hinweis.ts:112
+msgid "This is not legal advice."
+msgstr "Das ist keine Rechtsberatung."
+
+#: src/core/invoices/forderungen-hinweis.ts:119
+msgid "View receivables"
+msgstr "Forderungen ansehen"
+
+#: src/core/invoices/forderungen.ts:453
+msgid "{n} receivable overdue"
+msgid_plural "{n} receivables overdue"
+msgstr[0] "{n} Forderung überfällig"
+msgstr[1] "{n} Forderungen überfällig"
+
 #: src/core/lib/edition-badges.ts:29
 msgid "Open Source"
 msgstr "Open Source"
@@ -292,7 +1647,7 @@ msgid "ERiC not found under {path}."
 msgstr "ERiC nicht gefunden unter {path}."
 
 #: src/frontends/cli/elster/eric.ts:66
-#: src/frontends/desktop/views/konten-view.ts:149
+#: src/frontends/desktop/views/konten-view.ts:150
 msgid "ERiC version unknown"
 msgstr "ERiC-Version unbekannt"
 
@@ -315,7 +1670,7 @@ msgstr "Prüf-Plugins: {count}"
 #: src/frontends/desktop/lotse-panel.blp:26
 #: src/frontends/desktop/views/einstellungen-view.blp:55
 #: src/frontends/desktop/views/tab-hub.ts:182
-#: src/frontends/desktop/window.blp:160
+#: src/frontends/desktop/window.blp:159
 msgid "Assistant"
 msgstr "Assistent"
 
@@ -323,7 +1678,7 @@ msgstr "Assistent"
 #: src/frontends/desktop/assistent-panel.blp:40
 #: src/frontends/desktop/lotse-panel.blp:36
 #: src/frontends/desktop/views/beleg-upload.ts:130
-#: src/frontends/desktop/window.blp:207
+#: src/frontends/desktop/window.blp:206
 msgid "Close"
 msgstr "Schließen"
 
@@ -405,7 +1760,7 @@ msgid "No window is open in which the bank could ask."
 msgstr "Kein Fenster offen, in dem die Bank gefragt werden könnte."
 
 #: src/frontends/desktop/fints-interaction.ts:58
-#: src/frontends/desktop/views/datenschutz-dialog.ts:72
+#: src/frontends/desktop/views/datenschutz-dialog.ts:73
 #: src/frontends/desktop/views/dialogs.ts:24
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:36
 #: src/frontends/desktop/views/entity-dialogs.ts:42
@@ -1312,23 +2667,23 @@ msgstr "Nicht alle Belege konnten gespeichert werden"
 msgid "Receipt could not be saved"
 msgstr "Beleg konnte nicht gespeichert werden"
 
-#: src/frontends/desktop/views/datenschutz-dialog.ts:38
+#: src/frontends/desktop/views/datenschutz-dialog.ts:39
 msgid "Privacy notice for ELSTER transmissions"
 msgstr "Datenschutzhinweis für ELSTER-Übermittlungen"
 
-#: src/frontends/desktop/views/datenschutz-dialog.ts:55
+#: src/frontends/desktop/views/datenschutz-dialog.ts:56
 msgid "Open the full privacy letter (PDF)"
 msgstr "Vollständiges Datenschutzschreiben öffnen (PDF)"
 
-#: src/frontends/desktop/views/datenschutz-dialog.ts:55
+#: src/frontends/desktop/views/datenschutz-dialog.ts:56
 msgid "Open the privacy letter on elster.de"
 msgstr "Datenschutzschreiben auf elster.de öffnen"
 
-#: src/frontends/desktop/views/datenschutz-dialog.ts:68
+#: src/frontends/desktop/views/datenschutz-dialog.ts:69
 msgid "I have read the privacy notice and the privacy letter."
 msgstr "Ich habe den Datenschutzhinweis und das Datenschutzschreiben gelesen."
 
-#: src/frontends/desktop/views/datenschutz-dialog.ts:73
+#: src/frontends/desktop/views/datenschutz-dialog.ts:74
 msgid "Confirm"
 msgstr "Bestätigen"
 
@@ -1435,7 +2790,7 @@ msgstr "Eigene Daten"
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:42
 #: src/frontends/desktop/views/welcome.ts:201
-#: src/frontends/desktop/window.ts:651
+#: src/frontends/desktop/window.ts:655
 msgid "Use my own data"
 msgstr "Eigene Daten verwenden"
 
@@ -1794,7 +3149,8 @@ msgstr "MCP-Server für externe Agenten"
 
 #: src/frontends/desktop/views/einstellungen-view.ts:248
 msgid "Claude, Cursor, VS Code … — your own client, connected to this app"
-msgstr "Claude, Cursor, VS Code … — dein eigener Client, verbunden mit dieser App"
+msgstr ""
+"Claude, Cursor, VS Code … — dein eigener Client, verbunden mit dieser App"
 
 #: src/frontends/desktop/views/einstellungen-view.ts:257
 msgid "Allow writing tools"
@@ -2090,7 +3446,7 @@ msgstr "Keine Ausgaben erfasst"
 msgid "Liquidity"
 msgstr "Liquidität"
 
-#: src/frontends/desktop/views/konten-view.ts:130
+#: src/frontends/desktop/views/konten-view.ts:131
 msgid ""
 "Needed to check and send to ELSTER. Official builds include ERiC; otherwise "
 "install it yourself (ELSTER developer area). Empty = ERIC_HOME, bundled ERiC "
@@ -2100,11 +3456,11 @@ msgstr ""
 "Builds bringen ERiC mit; sonst selbst installieren (ELSTER-"
 "Entwicklerbereich). Leer = ERIC_HOME, mitgeliefertes ERiC oder Standardpfad."
 
-#: src/frontends/desktop/views/konten-view.ts:153
+#: src/frontends/desktop/views/konten-view.ts:154
 msgid "available"
 msgstr "verfügbar"
 
-#: src/frontends/desktop/views/konten-view.ts:157
+#: src/frontends/desktop/views/konten-view.ts:158
 msgid ""
 "The ERiC binding of this installation is broken. Rebuild it with \"gjsify "
 "run -w @steuererklaerung/eric build:meson\" or reinstall the app."
@@ -2112,33 +3468,33 @@ msgstr ""
 "Die ERiC-Anbindung dieser Installation ist defekt. Baue sie mit „gjsify run "
 "-w @steuererklaerung/eric build:meson“ neu oder installiere die App neu."
 
-#: src/frontends/desktop/views/konten-view.ts:198
+#: src/frontends/desktop/views/konten-view.ts:199
 msgid "Own ERiC folder (overrides ERIC_HOME and the bundled one)"
 msgstr "Eigener ERiC-Ordner (hat Vorrang vor ERIC_HOME und dem mitgelieferten)"
 
-#: src/frontends/desktop/views/konten-view.ts:213
+#: src/frontends/desktop/views/konten-view.ts:214
 msgid "Choose ERiC folder (contains lib/libericapi.so)"
 msgstr "ERiC-Ordner wählen (enthält lib/libericapi.so)"
 
 #
-#: src/frontends/desktop/views/konten-view.ts:216
+#: src/frontends/desktop/views/konten-view.ts:217
 msgid "Choose ERiC folder"
 msgstr "ERiC-Ordner wählen"
 
-#: src/frontends/desktop/views/konten-view.ts:236
+#: src/frontends/desktop/views/konten-view.ts:237
 msgid "Reset to the bundled or detected ERiC"
 msgstr "Auf mitgeliefertes oder erkanntes ERiC zurücksetzen"
 
-#: src/frontends/desktop/views/konten-view.ts:314
+#: src/frontends/desktop/views/konten-view.ts:315
 msgid "ELSTER Hersteller-ID (bundled with the app, enter your own to override)"
 msgstr ""
 "ELSTER-Hersteller-ID (mitgeliefert; eigene eintragen zum Überschreiben)"
 
-#: src/frontends/desktop/views/konten-view.ts:315
+#: src/frontends/desktop/views/konten-view.ts:316
 msgid "ELSTER Hersteller-ID (elster.de)"
 msgstr "ELSTER-Hersteller-ID (elster.de)"
 
-#: src/frontends/desktop/views/konten-view.ts:318
+#: src/frontends/desktop/views/konten-view.ts:319
 msgid "bundled"
 msgstr "mitgeliefert"
 
@@ -3276,10 +4632,6 @@ msgstr "Rechnung anlegen"
 msgid "issued {date}"
 msgstr "ausgestellt {date}"
 
-#: src/frontends/desktop/views/rechnungen-view.ts:529
-msgid "due {date}"
-msgstr "fällig {date}"
-
 #: src/frontends/desktop/views/rechnungen-view.ts:536
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:384
 msgid "Sending failed"
@@ -3675,7 +5027,7 @@ msgstr "Regel bestand bereits: „{pattern}“ → {category}"
 
 #: src/frontends/desktop/views/setup-assistant.ts:63
 #: src/frontends/desktop/views/setup-assistant.ts:468
-#: src/frontends/desktop/window.ts:718
+#: src/frontends/desktop/window.ts:722
 msgid "Private"
 msgstr "Privat"
 
@@ -3853,7 +5205,7 @@ msgid "Dauerfristverlängerung: every VAT return is due one month later."
 msgstr "Jede Voranmeldung ist einen Monat später fällig."
 
 #: src/frontends/desktop/views/setup-assistant.ts:424
-#: src/frontends/desktop/window.ts:718
+#: src/frontends/desktop/window.ts:722
 msgid "Business"
 msgstr "Unternehmen"
 
@@ -3979,7 +5331,7 @@ msgid "Done"
 msgstr "Fertig"
 
 #: src/frontends/desktop/views/setup-assistant.ts:637
-#: src/frontends/desktop/window.blp:218
+#: src/frontends/desktop/window.blp:217
 msgid "Finish setup"
 msgstr "Einrichtung abschließen"
 
@@ -4438,66 +5790,6 @@ msgstr "{what} gespeichert"
 msgctxt "invoice status"
 msgid "Draft"
 msgstr "Entwurf"
-
-#: src/frontends/desktop/views/util.ts:78
-msgctxt "month abbreviation"
-msgid "Jan"
-msgstr "Jan"
-
-#: src/frontends/desktop/views/util.ts:79
-msgctxt "month abbreviation"
-msgid "Feb"
-msgstr "Feb"
-
-#: src/frontends/desktop/views/util.ts:80
-msgctxt "month abbreviation"
-msgid "Mar"
-msgstr "Mär"
-
-#: src/frontends/desktop/views/util.ts:81
-msgctxt "month abbreviation"
-msgid "Apr"
-msgstr "Apr"
-
-#: src/frontends/desktop/views/util.ts:82
-msgctxt "month abbreviation"
-msgid "May"
-msgstr "Mai"
-
-#: src/frontends/desktop/views/util.ts:83
-msgctxt "month abbreviation"
-msgid "Jun"
-msgstr "Jun"
-
-#: src/frontends/desktop/views/util.ts:84
-msgctxt "month abbreviation"
-msgid "Jul"
-msgstr "Jul"
-
-#: src/frontends/desktop/views/util.ts:85
-msgctxt "month abbreviation"
-msgid "Aug"
-msgstr "Aug"
-
-#: src/frontends/desktop/views/util.ts:86
-msgctxt "month abbreviation"
-msgid "Sep"
-msgstr "Sep"
-
-#: src/frontends/desktop/views/util.ts:87
-msgctxt "month abbreviation"
-msgid "Oct"
-msgstr "Okt"
-
-#: src/frontends/desktop/views/util.ts:88
-msgctxt "month abbreviation"
-msgid "Nov"
-msgstr "Nov"
-
-#: src/frontends/desktop/views/util.ts:89
-msgctxt "month abbreviation"
-msgid "Dec"
-msgstr "Dez"
 
 #: src/frontends/desktop/views/util.ts:360
 msgid "Could not refresh — showing the previous data"
@@ -5788,14 +7080,8 @@ msgstr "Entität einrichten …"
 msgid "About Steuererklärung"
 msgstr "Über Steuererklärung"
 
-#. TRANSLATORS: Subtitle under the app name in the sidebar header, marking this as the
-#. native front-end beside the web one
-#: src/frontends/desktop/window.blp:96
-msgid "Native preview"
-msgstr "Native Vorschau"
-
 #. TRANSLATORS: Tooltip on the headerbar button that syncs Qonto and Paperless
-#: src/frontends/desktop/window.blp:153
+#: src/frontends/desktop/window.blp:152
 msgid "Sync"
 msgstr "Abgleichen"
 
@@ -5827,26 +7113,26 @@ msgstr "Neu starten"
 msgid "Please restart the app yourself to switch."
 msgstr "Bitte starte die App selbst neu, um zu wechseln."
 
-#: src/frontends/desktop/window.ts:643
+#: src/frontends/desktop/window.ts:647
 msgid "Data could not be loaded completely: {error}"
 msgstr "Daten konnten nicht vollständig geladen werden: {error}"
 
-#: src/frontends/desktop/window.ts:650
+#: src/frontends/desktop/window.ts:654
 msgid "Demo data – fictional examples, no real financial data"
 msgstr "Demodaten – fiktive Beispieldaten, keine echten Finanzdaten"
 
-#: src/frontends/desktop/window.ts:680
+#: src/frontends/desktop/window.ts:684
 msgid "Setup is not finished: no business or private tax return is set up yet."
 msgstr ""
 "Die Einrichtung ist nicht abgeschlossen: Es ist noch kein Betrieb und keine "
 "private Steuererklärung eingerichtet."
 
-#: src/frontends/desktop/window.ts:681
+#: src/frontends/desktop/window.ts:685
 msgid "Setup is not finished: “{entity}” has no bank account yet."
 msgstr ""
 "Die Einrichtung ist nicht abgeschlossen: „{entity}“ hat noch kein Bankkonto."
 
-#: src/frontends/desktop/window.ts:786
+#: src/frontends/desktop/window.ts:790
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."
@@ -5941,6 +7227,86 @@ msgstr "ELSTER"
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:67
 msgid "EÜR"
 msgstr "EÜR"
+
+#~ msgid "Native preview"
+#~ msgstr "Native Vorschau"
+
+#, fuzzy
+#~| msgctxt "month abbreviation"
+#~| msgid "Jan"
+#~ msgctxt "month"
+#~ msgid "Jan"
+#~ msgstr "Jan"
+
+#, fuzzy
+#~| msgctxt "month abbreviation"
+#~| msgid "Feb"
+#~ msgctxt "month"
+#~ msgid "Feb"
+#~ msgstr "Feb"
+
+#, fuzzy
+#~| msgctxt "month abbreviation"
+#~| msgid "Mar"
+#~ msgctxt "month"
+#~ msgid "Mar"
+#~ msgstr "Mär"
+
+#, fuzzy
+#~| msgctxt "month abbreviation"
+#~| msgid "Apr"
+#~ msgctxt "month"
+#~ msgid "Apr"
+#~ msgstr "Apr"
+
+#, fuzzy
+#~| msgctxt "month abbreviation"
+#~| msgid "Jun"
+#~ msgctxt "month"
+#~ msgid "Jun"
+#~ msgstr "Jun"
+
+#, fuzzy
+#~| msgctxt "month abbreviation"
+#~| msgid "Jul"
+#~ msgctxt "month"
+#~ msgid "Jul"
+#~ msgstr "Jul"
+
+#, fuzzy
+#~| msgctxt "month abbreviation"
+#~| msgid "Aug"
+#~ msgctxt "month"
+#~ msgid "Aug"
+#~ msgstr "Aug"
+
+#, fuzzy
+#~| msgctxt "month abbreviation"
+#~| msgid "Sep"
+#~ msgctxt "month"
+#~ msgid "Sep"
+#~ msgstr "Sep"
+
+#, fuzzy
+#~| msgctxt "month abbreviation"
+#~| msgid "Oct"
+#~ msgctxt "month"
+#~ msgid "Oct"
+#~ msgstr "Okt"
+
+#, fuzzy
+#~| msgctxt "month abbreviation"
+#~| msgid "Nov"
+#~ msgctxt "month"
+#~ msgid "Nov"
+#~ msgstr "Nov"
+
+#, fuzzy
+#~| msgctxt "month abbreviation"
+#~| msgid "Dec"
+#~ msgctxt "month"
+#~ msgid "Dec"
+#~ msgstr "Dez"
 
 #~ msgid "Annual-only filers keep “Later”."
 #~ msgstr "Wer nur jährlich erklärt, lässt „Später“ stehen."

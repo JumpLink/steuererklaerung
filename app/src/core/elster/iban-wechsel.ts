@@ -20,7 +20,8 @@
  * Pure — the caller loads the store bookings (all years) and the entity's own IBANs.
  */
 
-import { buchungZeile, capBetroffen, HANDLUNG_IN_ORDNUNG, hinweisFingerprint, type Hinweis } from './hinweise.ts';
+import { buchungZeile, capBetroffen, handlungInOrdnung, hinweisFingerprint, type Hinweis } from './hinweise.ts';
+import { _, _n, fmt as t } from '../lib/i18n.ts';
 import { parteiSchluessel } from './serie.ts';
 
 /** Sources without a bank account of their own and so without IBANs. */
@@ -90,10 +91,13 @@ export function pruefeIbanWechsel(i: IbanWechselInput): Hinweis[] {
             {
                 key: 'iban-wechsel',
                 level: 'info',
-                title: 'IBAN-Wechsel: nicht prüfbar',
-                text: `Keine Abbuchung ${i.year} nennt die IBAN des Empfängers (${ohne.join(', ')}).`,
+                title: _('IBAN change: cannot be checked'),
+                text: t(_('No debit in {year} names the payee’s IBAN ({accounts}).'), {
+                    year: i.year,
+                    accounts: ohne.join(', '),
+                }),
                 status: 'nicht_pruefbar',
-                weil: 'die Konten keine IBAN der Gegenseite liefern',
+                weil: _('the accounts carry no counterparty IBAN'),
                 begriff: 'iban-wechsel',
             },
         ];
@@ -135,19 +139,31 @@ export function pruefeIbanWechsel(i: IbanWechselInput): Hinweis[] {
         known.add(iban);
     }
 
-    const nichtGeprueft = ohne.length ? `; nicht geprüft: ${ohne.join(', ')} (keine IBAN der Gegenseite)` : '';
+    const nichtGeprueft = ohne.length
+        ? t(_('; not checked: {accounts} (no counterparty IBAN)'), { accounts: ohne.join(', ') })
+        : '';
     if (funde.size === 0) {
         return [
             {
                 key: 'iban-wechsel',
                 level: 'info',
-                title: 'IBAN-Wechsel: keiner gefunden',
-                text: `${geprueft} Abbuchung(en) ${i.year} mit IBAN des Empfängers geprüft.`,
+                title: _('IBAN change: none found'),
+                text: t(
+                    _n(
+                        '{n} debit in {year} with the payee’s IBAN checked.',
+                        '{n} debits in {year} with the payee’s IBAN checked.',
+                        geprueft,
+                    ),
+                    { n: geprueft, year: i.year },
+                ),
                 status: 'ohne_befund',
                 geprueft:
-                    'jede Abbuchung gegen die IBANs, an die derselbe Empfänger vorher bezahlt wurde; ausgenommen: ' +
-                    `erste Zahlung an einen Empfänger (${erste}), eigene Konten und Umbuchungen (${eigen}), ` +
-                    `eine schon früher genutzte zweite IBAN (${zweitkonto})${nichtGeprueft}`,
+                    t(
+                        _(
+                            'every debit against the IBANs the same payee was paid at before; excluded: first payment to a payee ({first}), own accounts and transfers ({own}), a second IBAN already used earlier ({second})',
+                        ),
+                        { first: erste, own: eigen, second: zweitkonto },
+                    ) + nichtGeprueft,
                 begriff: 'iban-wechsel',
             },
         ];
@@ -162,27 +178,35 @@ export function pruefeIbanWechsel(i: IbanWechselInput): Hinweis[] {
             key: `iban-wechsel:${partei}`,
             level: 'warnung',
             vorrang: true,
-            title: `IBAN-Wechsel bei ${name}: vermutlich neue Bankverbindung`,
+            title: t(_('IBAN change at {name}: probably new bank details'), { name }),
             text:
-                `${list.length === 1 ? 'Eine Zahlung' : `${list.length} Zahlungen`} an ${name} ging${list.length === 1 ? '' : 'en'} ` +
-                `an ${neu.length === 1 ? 'eine IBAN' : 'IBANs'}, an die bisher nie gezahlt wurde (${neu.map(maskiereIban).join(', ')}); ` +
-                `bisher: ${vorher}. Zu klären, bevor weiter gezahlt wird: beim Lieferanten unter der bisher bekannten ` +
-                'Telefonnummer oder E-Mail-Adresse nachfragen — nicht unter den Kontaktdaten auf der Rechnung mit der neuen IBAN.',
+                t(
+                    _n(
+                        '{n} payment to {name} went to an IBAN never paid before ({ibans}); so far: {known}.',
+                        '{n} payments to {name} went to IBANs never paid before ({ibans}); so far: {known}.',
+                        list.length,
+                    ),
+                    { n: list.length, name, ibans: neu.map(maskiereIban).join(', '), known: vorher },
+                ) +
+                ' ' +
+                _(
+                    'To clarify before paying again: ask the supplier on the phone number or e-mail address known so far — not on the contact details printed on the invoice with the new IBAN.',
+                ),
             status: 'befund',
             ...capBetroffen(
                 list.map((f) => ({
                     art: 'buchung' as const,
                     id: f.tx.id,
-                    zeile: `${buchungZeile(f.tx)} · an ${maskiereIban(f.neu)}`,
+                    zeile: t(_('{line} · to {iban}'), { line: buchungZeile(f.tx), iban: maskiereIban(f.neu) }),
                 })),
             ),
             handlungen: [
                 {
                     id: 'buchung',
-                    label: 'Buchung öffnen',
+                    label: _('Open the transaction'),
                     target: { art: 'dialog', dialog: 'buchung', ref: list[0].tx.id },
                 },
-                HANDLUNG_IN_ORDNUNG,
+                handlungInOrdnung(),
             ],
             fingerprint: hinweisFingerprint([partei, ...neu]),
             begriff: 'iban-wechsel',

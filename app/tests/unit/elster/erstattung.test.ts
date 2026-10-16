@@ -353,7 +353,7 @@ export default async () => {
                     .filter((t) => t.kind === 'erstattungen')
                     .map((t) => t.title)
                     .join(),
-            ).toBe('2 Erstattungen zuordnen');
+            ).toBe('Assign 2 refunds');
             expect(m.tasks.some((t) => t.ref === 'unklassifiziert')).toBe(false);
             expect(m.tasks.some((t) => t.kind === 'zu-pruefen')).toBe(false);
         });

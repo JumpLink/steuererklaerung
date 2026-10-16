@@ -13,8 +13,8 @@ export default async () => {
             expect(m.tasks.some((t) => t.title === 'Einkommensteuererklärung')).toBe(true);
             expect(m.tasks[0]?.sub).toContain('2026-07-31');
             // KPI = the personal ESt result, not the zero business load. + Erstattung → negative KPI
-            // total (mirrors the load's "+ = Nachzahlung" convention) → labelled 'vsl. Erstattung'.
-            expect(m.kpis.tax).toStrictEqual({ total: -34.17, label: 'vsl. Erstattung' });
+            // total (mirrors the load's "+ = Nachzahlung" convention) → labelled 'est. refund'.
+            expect(m.kpis.tax).toStrictEqual({ total: -34.17, label: 'est. refund' });
         });
 
         await it('shows the deadline but NO tax KPI when the ESt estimate is unavailable (never a bogus 0 €)', async () => {
@@ -30,7 +30,7 @@ export default async () => {
                 uste: { vatPayable: 1196.82, closingBalance: 1196.82, prepaidVat: 0 },
             });
             const m = buildHomeModel({ year: 2025, txs: [], dashboard });
-            expect(m.kpis.tax).toStrictEqual({ total: 1196.82, label: 'vsl. Nachzahlung' });
+            expect(m.kpis.tax).toStrictEqual({ total: 1196.82, label: 'est. tax due' });
             expect(m.tasks.some((t) => t.title === 'USt-Jahreserklärung')).toBe(true);
         });
 
@@ -49,8 +49,8 @@ export default async () => {
                 doppelzahlungVerdacht: [{ rechnungId: 'inv-1', rechnungNummer: 'RE-2025-0001', zuViel: 1234.5 }],
             });
             expect(m.tasks[0]).toStrictEqual({
-                title: 'Rechnung RE-2025-0001 doppelt bezahlt?',
-                sub: '1.234,50 € zu viel eingegangen — klären',
+                title: 'Invoice RE-2025-0001 paid twice?',
+                sub: '1.234,50 € received too much — clarify',
                 tone: 'warn',
                 kind: 'doppelzahlung',
                 ref: 'inv-1',
@@ -65,7 +65,7 @@ export default async () => {
                 dashboard: null,
                 doppelzahlungVerdacht: [{ rechnungId: 'inv-1', rechnungNummer: 'RE-1', zuViel: 20, teilweise: true }],
             });
-            expect(m.tasks[0].sub).toBe('20,00 € zu viel eingegangen (teilweise zu viel) — klären');
+            expect(m.tasks[0].sub).toBe('20,00 € received too much (partly too much) — clarify');
         });
     });
 };

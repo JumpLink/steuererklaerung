@@ -9,13 +9,14 @@
 import { deDate } from '../lib/format.ts';
 import { fmtDe } from '../lib/money.ts';
 import {
-    HANDLUNG_IN_ORDNUNG,
+    handlungInOrdnung,
     BETROFFEN_MAX,
     hinweisFingerprint,
     type Hinweis,
     type HinweisBetroffen,
 } from '../elster/hinweise.ts';
 import { VERJAEHRUNG_WARNFENSTER_TAGE, verjaehrungDroht, type OffenerPosten } from './forderungen.ts';
+import { _, _n, fmt as t } from '../lib/i18n.ts';
 
 export const VERJAEHRUNG_HINWEIS_KEY = 'forderung-verjaehrung';
 
@@ -26,17 +27,21 @@ export interface ForderungenHinweisDaten {
     weil?: string;
 }
 
-const NICHT_VERFOLGT =
-    'Hemmung und Neubeginn der Verjährung (§§ 203 ff., 212 BGB — etwa durch Verhandlungen, Anerkenntnis oder Mahnbescheid) verfolgt die App nicht.';
+/** A function, not a constant: a constant resolves before the frontend registers its translator. */
+function nichtVerfolgt(): string {
+    return _(
+        'The app does not track suspension or restart of the limitation period (§§ 203 ff., 212 BGB — e.g. through negotiations, acknowledgement or a court order for payment).',
+    );
+}
 
 function zeile(p: OffenerPosten): string {
     const v = p.verjaehrung;
     const frist = v
         ? v.status === 'verjaehrt'
-            ? `vermutlich verjährt seit ${deDate(v.handelnBis)}`
-            : `Handeln bis ${deDate(v.handelnBis)}`
+            ? t(_('probably time-barred since {date}'), { date: deDate(v.handelnBis) })
+            : t(_('act by {date}'), { date: deDate(v.handelnBis) })
         : '';
-    return `${p.nummer ?? 'ohne Nr.'} · ${p.kunde} · ${fmtDe(p.offen)} € · ${frist}`;
+    return `${p.nummer ?? _('no number')} · ${p.kunde} · ${fmtDe(p.offen)} € · ${frist}`;
 }
 
 export function verjaehrungHinweise(daten: ForderungenHinweisDaten | undefined): Hinweis[] {
@@ -47,10 +52,10 @@ export function verjaehrungHinweise(daten: ForderungenHinweisDaten | undefined):
             {
                 ...base,
                 level: 'info',
-                title: 'Verjährung offener Forderungen',
-                text: 'Die offenen Forderungen konnten nicht geprüft werden.',
+                title: _('Limitation of open receivables'),
+                text: _('The open receivables could not be checked.'),
                 status: 'nicht_pruefbar',
-                weil: daten.weil ?? 'die Rechnungen nicht gelesen werden konnten',
+                weil: daten.weil ?? _('the invoices could not be read'),
             },
         ];
     }
@@ -63,10 +68,10 @@ export function verjaehrungHinweise(daten: ForderungenHinweisDaten | undefined):
             {
                 ...base,
                 level: 'info',
-                title: 'Verjährung offener Forderungen',
-                text: 'Keine offene Forderung läuft in absehbarer Zeit aus der regelmäßigen Verjährung.',
+                title: _('Limitation of open receivables'),
+                text: _('No open receivable runs out of the regular limitation period in the foreseeable future.'),
                 status: 'ohne_befund',
-                geprueft: `Regelfrist drei Jahre ab Ende des Jahres, in dem die Forderung entstand; gemeldet wird ab ${VERJAEHRUNG_WARNFENSTER_TAGE} Tagen vor dem 31.12. des Fristjahres. ${NICHT_VERFOLGT}`,
+                geprueft: `${t(_('Regular period of three years from the end of the year the receivable arose; reported from {days} days before 31 December of that year.'), { days: VERJAEHRUNG_WARNFENSTER_TAGE })} ${nichtVerfolgt()}`,
             },
         ];
     }
@@ -76,11 +81,25 @@ export function verjaehrungHinweise(daten: ForderungenHinweisDaten | undefined):
     const teile: string[] = [];
     if (bald > 0 && fruehestes)
         teile.push(
-            `${bald === 1 ? 'Eine Forderung verjährt' : `${bald} Forderungen verjähren`} vermutlich zum ${deDate(fruehestes)}${bald > 1 ? ' oder später' : ''} — bis dahin handeln, wenn sie noch durchgesetzt werden sollen.`,
+            t(
+                _n(
+                    '{n} receivable probably becomes time-barred on {date} — act by then if it is still to be enforced.',
+                    '{n} receivables probably become time-barred on {date} or later — act by then if they are still to be enforced.',
+                    bald,
+                ),
+                { n: bald, date: deDate(fruehestes) },
+            ),
         );
     if (verjaehrt > 0)
         teile.push(
-            `${verjaehrt === 1 ? 'Eine Forderung ist' : `${verjaehrt} Forderungen sind`} vermutlich bereits verjährt; ob das hier gilt, ist zu klären.`,
+            t(
+                _n(
+                    '{n} receivable is probably time-barred already; whether that applies here is to be clarified.',
+                    '{n} receivables are probably time-barred already; whether that applies here is to be clarified.',
+                    verjaehrt,
+                ),
+                { n: verjaehrt },
+            ),
         );
     const betroffen: HinweisBetroffen[] = droht
         .slice(0, BETROFFEN_MAX)
@@ -89,18 +108,18 @@ export function verjaehrungHinweise(daten: ForderungenHinweisDaten | undefined):
         {
             ...base,
             level: 'warnung',
-            title: 'Verjährung droht bei offenen Forderungen',
-            text: `${teile.join(' ')} ${NICHT_VERFOLGT} Das ist keine Rechtsberatung.`,
+            title: _('Open receivables are close to the limitation period'),
+            text: `${teile.join(' ')} ${nichtVerfolgt()} ${_('This is not legal advice.')}`,
             status: 'befund',
             betroffen,
             ...(droht.length > BETROFFEN_MAX ? { betroffenWeitere: droht.length - BETROFFEN_MAX } : {}),
             handlungen: [
                 {
                     id: 'forderungen',
-                    label: 'Forderungen ansehen',
+                    label: _('View receivables'),
                     target: { art: 'ansicht', ansicht: 'rechnungen', filter: 'forderungen' },
                 },
-                HANDLUNG_IN_ORDNUNG,
+                handlungInOrdnung(),
             ],
             fingerprint: hinweisFingerprint(droht.map((p) => `${p.rechnungId}:${p.verjaehrung?.handelnBis}`)),
         },

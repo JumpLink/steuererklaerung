@@ -90,11 +90,10 @@ template $BhMainWindow: Adw.ApplicationWindow {
       child: Adw.ToolbarView {
         [top]
         Adw.HeaderBar {
-          title-widget: Adw.WindowTitle sidebar_title {
-            // TRANSLATORS: Subtitle under the app name in the sidebar header, marking this as the
-            // native front-end beside the web one
-            subtitle: _("Native preview");
-          };
+          // No subtitle: it once read „Native preview", which told a user nothing and told a
+          // visitor the app is unfinished. Which front-end they are looking at is a fact about
+          // the project, not about their tax year.
+          title-widget: Adw.WindowTitle sidebar_title {};
 
           [end]
           Gtk.MenuButton {
