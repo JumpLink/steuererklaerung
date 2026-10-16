@@ -10,6 +10,8 @@
 
 import type { MailEingangState } from '@steuererklaerung/store';
 
+import { _ } from '../lib/i18n.ts';
+
 export interface AbrufPlan {
     /** Fetch the messages with a UID above this. */
     since: number;
@@ -35,10 +37,12 @@ export function planeAbruf(
 /** Loopback hosts — the only ones a connection without TLS may go to. */
 const LOOPBACK = new Set(['localhost', '127.0.0.1', '::1']);
 
-/** What is wrong with a configuration, in German, or null. Refuses a plain connection to a remote host. */
+/** What is wrong with a configuration, or null. Refuses a plain connection to a remote host. */
 export function pruefeMailEingang(config: { host: string; security: 'tls' | 'none' }): string | null {
     if (config.security === 'none' && !LOOPBACK.has(config.host.trim().toLowerCase())) {
-        return 'Ohne Verschlüsselung geht es nur zu einem Server auf diesem Rechner — sonst liefe das Passwort offen durchs Netz.';
+        return _(
+            'Without encryption only a server on this machine works — otherwise the password would travel the network in the clear.',
+        );
     }
     return null;
 }

@@ -9,7 +9,7 @@
 
 import { readFileSync } from 'node:fs';
 import type { CommandModule } from 'yargs';
-import { belegeAusMailAbrufenFuer, mailEingangStatus, PAPERLESS_HINWEIS } from '../../core/actions/mail-eingang.ts';
+import { belegeAusMailAbrufenFuer, mailEingangStatus, paperlessMailHint } from '../../core/actions/mail-eingang.ts';
 import { gioMailConnector } from '../../core/clients/imap/index.ts';
 import { loadMailEingang, saveMailEingang } from '../../core/config/index.ts';
 import {
@@ -192,7 +192,7 @@ export const mailAbrufModule: CommandModule = {
 };
 
 function printStatus(v: ReturnType<typeof mailEingangStatus>): void {
-    if (v.dms === 'paperless') return console.log(PAPERLESS_HINWEIS);
+    if (v.dms === 'paperless') return console.log(paperlessMailHint());
     if (!v.konfiguriert)
         return console.log('Kein Postfach eingerichtet. Einrichten: belege mail-konfig setzen --server … --benutzer …');
     console.log(`Postfach: ${v.host} · Ordner ${v.folder}${v.sender ? ` · Absender „${v.sender}“` : ''}`);

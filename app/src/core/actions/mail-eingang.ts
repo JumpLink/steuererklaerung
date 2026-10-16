@@ -37,6 +37,7 @@ import { createAppContext } from '../context.ts';
 import { loadManifest, loadMailEingang, resolveWorkspaceEntities } from '../config/index.ts';
 import type { MailEingangConfig } from '../config/schema/mail-eingang.ts';
 import { dmsProviderForEntity } from '../dms-provider.ts';
+import { _, _n, fmt } from '../lib/i18n.ts';
 import { getLogger } from '../lib/logger.ts';
 import type { MailConnector, MailSource } from '../clients/imap/client.ts';
 import { selectAttachments } from '../mail-eingang/anhaenge.ts';
@@ -55,8 +56,12 @@ export const MAX_MESSAGE_BYTES = MAX_RECEIPT_BYTES * 2;
 export const MAX_MESSAGES_PER_RUN = 100;
 
 /** How the Beleg-Eingang and the CLI tell where Paperless users find the same function. */
-export const PAPERLESS_HINWEIS =
-    'Mit Paperless-ngx holt Paperless die Belege selbst aus dem Postfach: in Paperless unter „Mail“ ein Konto und eine Regel anlegen (Aktion „Dokument verarbeiten“). Hier ist nichts einzurichten.';
+/** A function, not a constant: a module-level literal would be translated before the locale is known. */
+export function paperlessMailHint(): string {
+    return _(
+        'With Paperless-ngx, Paperless fetches the receipts from the mailbox itself: in Paperless under „Mail“ add an account and a rule (action „Dokument verarbeiten“). There is nothing to set up here.',
+    );
+}
 
 export interface MailEingangDeps {
     connector: MailConnector;
@@ -109,7 +114,7 @@ export type AbrufErgebnis =
           neuNummeriert: boolean;
           fehler: string[];
           belege: AbrufBeleg[];
-          /** One German line with counts only. */
+          /** One line with counts only. */
           zusammenfassung: string;
       }
     | { ok: false; grund: AbrufRefusal; meldung: string };
@@ -128,17 +133,18 @@ function summary(r: {
     neuNummeriert: boolean;
     dryRun: boolean;
 }): string {
-    if (r.nachrichten === 0)
-        return r.neuNummeriert ? 'Ordner neu nummeriert, keine Nachrichten' : 'Keine neuen Nachrichten';
+    if (r.nachrichten === 0) return r.neuNummeriert ? _('Folder renumbered, no messages') : _('No new messages');
     const parts = [
-        `${r.nachrichten} ${r.nachrichten === 1 ? 'Nachricht' : 'Nachrichten'} geprüft`,
+        fmt(_n('{count} message checked', '{count} messages checked', r.nachrichten), { count: r.nachrichten }),
         r.dryRun
-            ? `${r.neu} ${r.neu === 1 ? 'neuer Beleg würde' : 'neue Belege würden'} importiert`
-            : `${r.neu} ${r.neu === 1 ? 'neuer Beleg' : 'neue Belege'}`,
+            ? fmt(_n('{count} new receipt would be imported', '{count} new receipts would be imported', r.neu), {
+                  count: r.neu,
+              })
+            : fmt(_n('{count} new receipt', '{count} new receipts', r.neu), { count: r.neu }),
     ];
-    if (r.vorhanden > 0) parts.push(`${r.vorhanden} schon vorhanden`);
-    if (r.offen > 0) parts.push(`${r.offen} weitere warten`);
-    if (r.neuNummeriert) parts.push('Ordner neu nummeriert, alles neu geprüft');
+    if (r.vorhanden > 0) parts.push(fmt(_('{count} already there'), { count: r.vorhanden }));
+    if (r.offen > 0) parts.push(fmt(_('{count} more waiting'), { count: r.offen }));
+    if (r.neuNummeriert) parts.push(_('Folder renumbered, everything checked again'));
     return parts.join(' · ');
 }
 
@@ -148,17 +154,17 @@ export async function belegeAusMailAbrufen(deps: MailEingangDeps, options: Abruf
     const now = deps.now ?? (() => new Date());
     const refuse = (grund: AbrufRefusal, meldung: string): AbrufErgebnis => ({ ok: false, grund, meldung });
 
-    if (deps.provider.kind !== 'builtin') return refuse('paperless', PAPERLESS_HINWEIS);
+    if (deps.provider.kind !== 'builtin') return refuse('paperless', paperlessMailHint());
     const config = deps.config;
     if (!config) {
-        return refuse('nicht-konfiguriert', 'Kein Postfach eingerichtet (Einstellungen → Belege aus Mail).');
+        return refuse('nicht-konfiguriert', _('No mailbox set up (Settings → Receipts from mail).'));
     }
     const invalid = pruefeMailEingang(config);
     if (invalid) return refuse('ungueltig', invalid);
     if (!deps.password) {
         return refuse(
             'kein-passwort',
-            'Kein Passwort für das Postfach im Schlüsselbund (Einstellungen → Belege aus Mail → Passwort speichern).',
+            _('No password for the mailbox in the keyring (Settings → Receipts from mail → Save mailbox).'),
         );
     }
 
@@ -206,7 +212,7 @@ export async function belegeAusMailAbrufen(deps: MailEingangDeps, options: Abruf
             let failed = false;
             for (const att of attachments) {
                 if (att.bytes.length > MAX_RECEIPT_BYTES) {
-                    fehler.push(`„${att.filename}“ ist zu groß.`);
+                    fehler.push(fmt(_('„{file}“ is too large.'), { file: att.filename }));
                     continue;
                 }
                 const exists = await deps.provider.get(sha256(att.bytes));
@@ -257,7 +263,9 @@ export async function belegeAusMailAbrufen(deps: MailEingangDeps, options: Abruf
                 uidValidity: folder.uidValidity,
                 lastUid,
                 lastRunAt: now().toISOString(),
-                lastResult: fehler.length ? `${zusammenfassung} · ${fehler.length} Fehler` : zusammenfassung,
+                lastResult: fehler.length
+                    ? `${zusammenfassung} · ${fmt(_n('{count} error', '{count} errors', fehler.length), { count: fehler.length })}`
+                    : zusammenfassung,
             });
         }
         return {
@@ -276,7 +284,8 @@ export async function belegeAusMailAbrufen(deps: MailEingangDeps, options: Abruf
     } catch (err) {
         const meldung = errorText(err);
         log.warn(`mail fetch for ${deps.entityId} failed: ${meldung}`);
-        if (!dryRun) deps.state.recordRun(folderName, now().toISOString(), `Fehler: ${meldung}`);
+        if (!dryRun)
+            deps.state.recordRun(folderName, now().toISOString(), fmt(_('Error: {message}'), { message: meldung }));
         return refuse('verbindung', meldung);
     } finally {
         await source?.close();
@@ -356,7 +365,7 @@ export function mailEingangStatus(entityId: string, hasPassword: boolean): MailE
         beimStart: config?.onStart === true,
         passwortGespeichert: hasPassword,
         letzterAbruf: last ? { at: last.lastRunAt, ergebnis: last.lastResult } : null,
-        hinweis: dms?.type === 'paperless' ? PAPERLESS_HINWEIS : null,
+        hinweis: dms?.type === 'paperless' ? paperlessMailHint() : null,
     };
 }
 

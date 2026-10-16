@@ -73,9 +73,7 @@ export default async () => {
         });
 
         await it('refuses a connection without TLS to anything but this machine', async () => {
-            expect(pruefeMailEingang({ host: 'mail.firma.invalid', security: 'none' })).toContain(
-                'Ohne Verschlüsselung',
-            );
+            expect(pruefeMailEingang({ host: 'mail.firma.invalid', security: 'none' })).toContain('Without encryption');
             expect(pruefeMailEingang({ host: '127.0.0.1', security: 'none' })).toBe(null);
             expect(pruefeMailEingang({ host: 'mail.firma.invalid', security: 'tls' })).toBe(null);
         });
@@ -145,7 +143,7 @@ export default async () => {
             expect(r.ok).toBe(true);
             if (!r.ok) return;
             expect(r.neu).toBe(1);
-            expect(r.zusammenfassung).toBe('1 Nachricht geprüft · 1 neuer Beleg');
+            expect(r.zusammenfassung).toBe('1 message checked · 1 new receipt');
             const docs = await new BuiltinDmsProvider('gbr').list({ from: '2026-01-01', to: '2026-12-31' });
             expect(docs.length).toBe(1);
             expect(docs[0].origin).toStrictEqual({
@@ -182,7 +180,7 @@ export default async () => {
             expect(state.uidValidity).toBe(99);
             expect(state.lastUid).toBe(5);
             expect(state.lastRunAt).toBe('2026-06-01T08:00:00.000Z');
-            expect(state.lastResult).toBe('1 Nachricht geprüft · 1 neuer Beleg');
+            expect(state.lastResult).toBe('1 message checked · 1 new receipt');
             expect(state.lastResult!.includes('Streng')).toBe(false);
         });
 
@@ -200,7 +198,7 @@ export default async () => {
             expect(r.nachrichten).toBe(3);
             expect(r.neu).toBe(1);
             expect(r.vorhanden).toBe(2);
-            expect(r.zusammenfassung).toContain('Ordner neu nummeriert');
+            expect(r.zusammenfassung).toContain('Folder renumbered');
             const docs = await new BuiltinDmsProvider('gbr').list({ from: '2026-01-01', to: '2026-12-31' });
             expect(docs.length).toBe(3);
             expect(withLedger((db) => getMailEingangState(db, 'gbr', 'Belege'))!.uidValidity).toBe(2);
@@ -306,7 +304,7 @@ export default async () => {
             const r = await belegeAusMailAbrufen(makeDeps(box), { dryRun: true });
             expect(r.ok && r.dryRun).toBe(true);
             expect(r.ok && r.neu).toBe(2);
-            expect(r.ok && r.zusammenfassung).toContain('würden');
+            expect(r.ok && r.zusammenfassung).toContain('would be imported');
             expect(await new BuiltinDmsProvider('gbr').list({ from: '2000-01-01', to: '2100-01-01' })).toStrictEqual(
                 [],
             );
@@ -345,7 +343,7 @@ export default async () => {
             const r = await belegeAusMailAbrufen(makeDeps(box));
             expect(!r.ok && r.grund).toBe('verbindung');
             const state = withLedger((db) => getMailEingangState(db, 'gbr', 'Belege'))!;
-            expect(state.lastResult).toBe('Fehler: Anmeldung abgelehnt');
+            expect(state.lastResult).toBe('Error: Anmeldung abgelehnt');
             expect(state.lastUid).toBe(0);
         });
 

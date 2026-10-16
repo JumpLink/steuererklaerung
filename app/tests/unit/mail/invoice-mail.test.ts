@@ -154,7 +154,7 @@ export default async () => {
         });
 
         await it('classifies every placeholder as optional, required or the special due date', async () => {
-            const all = Object.keys(MAIL_PLACEHOLDERS).sort();
+            const all = [...MAIL_PLACEHOLDERS].sort();
             const classified = [...OPTIONAL_PLACEHOLDERS, ...REQUIRED_PLACEHOLDERS, 'faelligkeit'].sort();
             expect(classified).toStrictEqual(all);
         });

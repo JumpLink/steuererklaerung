@@ -20,6 +20,7 @@
  */
 
 import { mutateElsterConfig, resolveEntityElster } from '../config/accessors.ts';
+import { _ } from '../lib/i18n.ts';
 import type { ElsterKlassifizierung, ElsterKlassifizierungRegel } from '../config/schema/elster.ts';
 import { suggestPattern } from '../elster/regel-aus-beispielen.ts';
 
@@ -31,30 +32,38 @@ export type NeedleList =
     | 'ksk_kennungen'
     | 'erloes_gegenseiten';
 
-/** German labels + one-line explanations, shared by every surface that edits these lists. */
-export const NEEDLE_LIST_META: Record<NeedleList, { title: string; description: string }> = {
-    eigene_konten: {
-        title: 'Eigene Konten',
-        description:
-            'Namen eigener Konten und früherer Firmierungen — Buchungen dorthin sind Umbuchungen, keine Zahlungen.',
-    },
-    privat_gegenseiten: {
-        title: 'Privat',
-        description: 'Händler und Verwendungszwecke, die für dich privat sind — sie werden zur Privatentnahme.',
-    },
-    gesellschafter_gegenseiten: {
-        title: 'Gesellschafter',
-        description: 'Namen der Gesellschafter — ohne Rechnungsnummer eine Kapitalbewegung, keine Ausgabe.',
-    },
-    ksk_kennungen: {
-        title: 'KSK-Kennungen',
-        description: 'Zusätzliche Kennzeichen einer KSK-Mitgliedschaft, z. B. die Mitgliedsnummer.',
-    },
-    erloes_gegenseiten: {
-        title: 'Kunden (Erlöse)',
-        description: 'Kundennamen, die einen Zahlungseingang als Erlös kennzeichnen.',
-    },
-};
+/**
+ * Labels + one-line explanations, shared by every surface that edits these lists. A function, not a
+ * constant: a module-level literal would be translated once at import, before the locale is known.
+ */
+export function needleListMeta(): Record<NeedleList, { title: string; description: string }> {
+    return {
+        eigene_konten: {
+            title: _('Own accounts'),
+            description: _(
+                'Names of your own accounts and former company names — bookings there are transfers, not payments.',
+            ),
+        },
+        privat_gegenseiten: {
+            title: _('Private'),
+            description: _(
+                'Merchants and payment references that are private for you — they become a private withdrawal.',
+            ),
+        },
+        gesellschafter_gegenseiten: {
+            title: _('Partners'),
+            description: _('Names of the partners — without an invoice number a capital movement, not an expense.'),
+        },
+        ksk_kennungen: {
+            title: _('KSK identifiers'),
+            description: _('Additional marks of a KSK membership, e.g. the membership number.'),
+        },
+        erloes_gegenseiten: {
+            title: _('Customers (revenue)'),
+            description: _('Customer names that mark an incoming payment as revenue.'),
+        },
+    };
+}
 
 /** Everything the rules editor shows for one entity, already normalised. */
 export interface ClassificationRules {

@@ -11,27 +11,52 @@
  */
 
 import { eur, deDate } from '../lib/format.ts';
+import { _ } from '../lib/i18n.ts';
 import type { MailTemplate } from '../config/schema/mail.ts';
 import { defaultClosingFor, type Formality } from '../invoices/header-template.ts';
 
-/** Placeholder → what it stands for. Single source for the renderer, the editor list and the manual. */
-export const MAIL_PLACEHOLDERS = {
-    anrede: 'komplette Anredezeile nach Du/Sie, mit dem Namen aus der Anrede-Angabe, wenn es eine gibt',
-    kunde: 'Kundenname',
-    rechnungsnummer: 'Rechnungsnummer',
-    betrag: 'Bruttobetrag, z. B. 119,00 €',
-    netto: 'Nettobetrag, z. B. 100,00 €',
-    datum: 'Rechnungsdatum, z. B. 01.03.2026',
-    faelligkeit: 'Fälligkeitsdatum, z. B. 15.03.2026',
-    leistungszeitraum: 'Leistungszeitraum, z. B. 01.01.2026 – 31.12.2026',
-    positionen: 'Titel der Positionen, mit „und" verbunden',
-    domain: 'Domains des Vertrags, mit „und" verbunden; ohne Domains die Bezeichnung',
-    projekt: 'Name des Projekts',
-    zahlungslink: 'öffentlicher Link zum Ansehen und Bezahlen (Qonto)',
-    gruss: 'Grußformel nach Du/Sie',
-    aussteller: 'Name des Ausstellers',
-} as const;
-export type MailPlaceholder = keyof typeof MAIL_PLACEHOLDERS;
+/** Every placeholder name. Single source for the renderer, the editor list and the manual. */
+export const MAIL_PLACEHOLDERS = [
+    'anrede',
+    'kunde',
+    'rechnungsnummer',
+    'betrag',
+    'netto',
+    'datum',
+    'faelligkeit',
+    'leistungszeitraum',
+    'positionen',
+    'domain',
+    'projekt',
+    'zahlungslink',
+    'gruss',
+    'aussteller',
+] as const;
+export type MailPlaceholder = (typeof MAIL_PLACEHOLDERS)[number];
+
+/**
+ * One line per placeholder for the template editors. A function, not a constant: a module-level
+ * literal would be translated at import, before the locale is known. The placeholder NAMES stay
+ * German — they are what a saved template writes, and renaming them would break every template.
+ */
+export function mailPlaceholderHelp(): Record<MailPlaceholder, string> {
+    return {
+        anrede: _('the full salutation line for du/Sie, with the name from the salutation field if there is one'),
+        kunde: _('customer name'),
+        rechnungsnummer: _('invoice number'),
+        betrag: _('gross amount, e.g. 119,00 €'),
+        netto: _('net amount, e.g. 100,00 €'),
+        datum: _('invoice date, e.g. 01.03.2026'),
+        faelligkeit: _('due date, e.g. 15.03.2026'),
+        leistungszeitraum: _('service period, e.g. 01.01.2026 – 31.12.2026'),
+        positionen: _('titles of the line items, joined with „und"'),
+        domain: _('domains of the contract, joined with „und"; without domains the description'),
+        projekt: _('name of the project'),
+        zahlungslink: _('public link to view and pay (Qonto)'),
+        gruss: _('closing line for du/Sie'),
+        aussteller: _('name of the issuer'),
+    };
+}
 
 /**
  * Placeholders whose line may vanish when there is no value (a `Projekt: {projekt}` line without a
@@ -62,7 +87,7 @@ const ALIASES: Record<string, MailPlaceholder> = { nummer: 'rechnungsnummer', pe
 
 const canonical = (name: string): MailPlaceholder | undefined => {
     const key = name.trim().toLowerCase();
-    if (key in MAIL_PLACEHOLDERS) return key as MailPlaceholder;
+    if ((MAIL_PLACEHOLDERS as readonly string[]).includes(key)) return key as MailPlaceholder;
     return ALIASES[key];
 };
 
