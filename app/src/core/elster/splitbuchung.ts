@@ -12,7 +12,8 @@
  * Pure: amounts, categories and register entries in, parts and sentences out.
  */
 
-import { fmtDe as fmt, round2 } from '../lib/money.ts';
+import { fmtDe, round2 } from '../lib/money.ts';
+import { _n, fmt } from '../lib/i18n.ts';
 import { ACCOUNTING_CATEGORY_OPTIONS } from '../lib/select-field-constants.ts';
 import { NEUTRAL_MIT_VORSTEUER, SKR03_TO_EUER, type EuerKind } from './euer-aggregate.ts';
 import { impliedRate } from './euer-classify.ts';
@@ -80,7 +81,7 @@ const cents = (n: number) => Math.round(n * 100);
 
 /** „aufgeteilt in 2 Teile" — the origin a split booking shows wherever a rule name would stand. */
 export function aufteilungTitel(n: number): string {
-    return `aufgeteilt in ${n} Teile`;
+    return fmt(_n('Split into {n} part', 'Split into {n} parts', n), { n });
 }
 
 /** Whether a part of this category is private money: neutral, and its VAT is not deductible. */
@@ -162,7 +163,9 @@ export function berechneTeile(
     const restCents = gesamt - fest;
     const restNr = restIndex + 1;
     if (restCents < 0) {
-        throw new AufteilungFehler(`Die Teile ergeben ${fmt(fest / 100)} €, die Buchung nur ${fmt(gesamt / 100)} €.`);
+        throw new AufteilungFehler(
+            `Die Teile ergeben ${fmtDe(fest / 100)} €, die Buchung nur ${fmtDe(gesamt / 100)} €.`,
+        );
     }
     if (restCents === 0) {
         throw new AufteilungFehler(`Für den Rest (Teil ${restNr}) bleibt nichts — dann ist es ein Teil weniger.`);
@@ -171,7 +174,7 @@ export function berechneTeile(
     const restAngabe = roh[restIndex].cents;
     if (restAngabe !== 0 && restAngabe !== restCents) {
         throw new AufteilungFehler(
-            `Die Teile ergeben ${fmt((fest + restAngabe) / 100)} €, die Buchung ${fmt(gesamt / 100)} €.`,
+            `Die Teile ergeben ${fmtDe((fest + restAngabe) / 100)} €, die Buchung ${fmtDe(gesamt / 100)} €.`,
         );
     }
 

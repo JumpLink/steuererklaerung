@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-16 19:03+0200\n"
+"POT-Creation-Date: 2026-10-16 21:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -367,11 +367,37 @@ msgstr ""
 msgid "Open the document"
 msgstr ""
 
-#: src/core/elster/erstattung.ts:244
+#: src/core/elster/erstattung.ts:212
+msgid "booking of {date} ({who})"
+msgstr ""
+
+#: src/core/elster/erstattung.ts:213
+msgid "booking of {date}"
+msgstr ""
+
+#: src/core/elster/erstattung.ts:247
 msgid "Assign {n} refund"
 msgid_plural "Assign {n} refunds"
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/core/elster/euer-transactions.ts:247
+msgid "refund for {original}"
+msgstr ""
+
+#: src/core/elster/euer-transactions.ts:262
+#: src/frontends/desktop/views/beleg-link-dialog.ts:230
+#: src/frontends/desktop/views/beleg-link-dialog.ts:246
+msgid "Receipt #{id}"
+msgstr ""
+
+#: src/core/elster/euer-transactions.ts:263
+#: src/frontends/desktop/views/beleg-eingang-view.ts:344
+#: src/frontends/desktop/views/beleg-eingang-view.ts:622
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:153
+#: src/frontends/desktop/views/tx-detail-dialog.ts:36
+msgid "Receipt"
+msgstr ""
 
 #: src/core/elster/hinweise.ts:112
 msgid "Mark as fine"
@@ -712,7 +738,7 @@ msgid "clarify"
 msgstr ""
 
 #: src/core/elster/home.ts:350
-#: src/frontends/desktop/views/rechnungen-view.ts:529
+#: src/frontends/desktop/views/rechnungen-view.ts:561
 msgid "due {date}"
 msgstr ""
 
@@ -1168,6 +1194,13 @@ msgstr ""
 msgid "Assign a document"
 msgstr ""
 
+#: src/core/elster/splitbuchung.ts:84
+#: src/frontends/desktop/views/aufteilen-dialog.ts:324
+msgid "Split into {n} part"
+msgid_plural "Split into {n} parts"
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/core/elster/ust-abweichung.ts:153 src/core/elster/ust-abweichung.ts:172
 msgid "VAT deviation: cannot be checked"
 msgstr ""
@@ -1309,11 +1342,69 @@ msgid ""
 "receipt — or mark it as fine if it shows none."
 msgstr ""
 
-#: src/core/elster/zu-pruefen.ts:69
+#: src/core/elster/zu-pruefen.ts:69 src/core/elster/zu-pruefen.ts:98
+#: src/frontends/desktop/views/tx-detail-dialog.ts:39
+msgid "unclassified"
+msgstr ""
+
+#: src/core/elster/zu-pruefen.ts:71
+msgid "catch-all rule only"
+msgstr ""
+
+#: src/core/elster/zu-pruefen.ts:73
+msgid "refund? assign the payment"
+msgstr ""
+
+#: src/core/elster/zu-pruefen.ts:79
 msgid "{n} booking to review"
 msgid_plural "{n} bookings to review"
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/core/elster/zu-pruefen.ts:100
+msgid "manually"
+msgstr ""
+
+#: src/core/elster/zu-pruefen.ts:101 src/core/elster/zu-pruefen.ts:104
+msgid "via {source}"
+msgstr ""
+
+#: src/core/elster/zu-pruefen.ts:101
+msgid "a receipt"
+msgstr ""
+
+#: src/core/elster/zu-pruefen.ts:102
+msgid "via a rule"
+msgstr ""
+
+#: src/core/elster/zu-pruefen.ts:103
+msgid "via a double payment"
+msgstr ""
+
+#: src/core/elster/zu-pruefen.ts:110
+msgid "via rule “{rule}” (catch-all)"
+msgstr ""
+
+#: src/core/elster/zu-pruefen.ts:111
+msgid "via rule {rule} (catch-all)"
+msgstr ""
+
+#: src/core/elster/zu-pruefen.ts:113
+msgid "via rule “{rule}”"
+msgstr ""
+
+#: src/core/elster/zu-pruefen.ts:114
+#: src/frontends/desktop/views/dokumente-view.ts:182
+msgid "via rule {rule}"
+msgstr ""
+
+#: src/core/elster/zu-pruefen.ts:131
+msgid "The booking is unclassified afterwards."
+msgstr ""
+
+#: src/core/elster/zu-pruefen.ts:132
+msgid "Then this applies again: {source} → {category}."
+msgstr ""
 
 #: src/core/invoices/forderungen-hinweis.ts:33
 msgid ""
@@ -1411,6 +1502,38 @@ msgstr ""
 
 #: src/core/lib/edition-badges.ts:35
 msgid "You supported this open source project by buying the app. Thank you!"
+msgstr ""
+
+#: src/core/presenters/erstattungen.ts:153
+msgid "booking {id}"
+msgstr ""
+
+#: src/core/presenters/erstattungen.ts:215
+#: src/core/presenters/erstattungen.ts:242
+msgid "Booking {id} does not belong to {entity} {year}."
+msgstr ""
+
+#: src/core/presenters/erstattungen.ts:221
+msgid "{id} is not a candidate for this refund. Candidates: {known}"
+msgstr ""
+
+#: src/core/presenters/zu-pruefen.ts:76
+msgid "Booking {id} is not up for review in {entity} {year}."
+msgstr ""
+
+#: src/core/presenters/zu-pruefen.ts:79
+msgid ""
+"An unclassified booking has nothing to confirm — change its category instead."
+msgstr ""
+
+#: src/core/presenters/zu-pruefen.ts:83
+msgid ""
+"The payment is probably a refund — answer \"Does this belong to that payment?"
+"\" first."
+msgstr ""
+
+#: src/core/presenters/zu-pruefen.ts:138
+msgid "None of the chosen bookings belongs to this year."
 msgstr ""
 
 #: src/frontends/cli/elster/datenschutz.ts:36
@@ -1913,12 +2036,6 @@ msgstr ""
 msgid "Split anyway"
 msgstr ""
 
-#: src/frontends/desktop/views/aufteilen-dialog.ts:324
-msgid "Split into {n} part"
-msgid_plural "Split into {n} parts"
-msgstr[0] ""
-msgstr[1] ""
-
 #: src/frontends/desktop/views/aufteilen-dialog.ts:328
 msgid "Could not split"
 msgstr ""
@@ -1934,7 +2051,7 @@ msgstr ""
 #: src/frontends/desktop/views/home-view.blp:32
 #: src/frontends/desktop/views/offene-belege-view.blp:32
 #: src/frontends/desktop/views/rechnung-detail-dialog.blp:41
-#: src/frontends/desktop/views/rechnungen-view.blp:32
+#: src/frontends/desktop/views/rechnungen-view.blp:45
 #: src/frontends/desktop/views/transactions-view.blp:32
 #: src/frontends/desktop/views/util.ts:442
 #: src/frontends/desktop/views/util.ts:445
@@ -1972,7 +2089,7 @@ msgstr ""
 #: src/frontends/desktop/views/dokumente-view.ts:180
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:422
-#: src/frontends/desktop/views/rechnungen-view.ts:527
+#: src/frontends/desktop/views/rechnungen-view.ts:559
 msgid "No. {number}"
 msgstr ""
 
@@ -1997,13 +2114,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:332
 msgid "Choose the matching transaction, then confirm."
-msgstr ""
-
-#: src/frontends/desktop/views/beleg-eingang-view.ts:344
-#: src/frontends/desktop/views/beleg-eingang-view.ts:622
-#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:153
-#: src/frontends/desktop/views/tx-detail-dialog.ts:36
-msgid "Receipt"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:361
@@ -2233,11 +2343,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/beleg-link-dialog.ts:211
 msgid "Search failed"
-msgstr ""
-
-#: src/frontends/desktop/views/beleg-link-dialog.ts:230
-#: src/frontends/desktop/views/beleg-link-dialog.ts:246
-msgid "Receipt #{id}"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-link-dialog.ts:269
@@ -2519,10 +2624,6 @@ msgstr[1] ""
 
 #: src/frontends/desktop/views/dokumente-view.ts:176
 msgid "no transaction"
-msgstr ""
-
-#: src/frontends/desktop/views/dokumente-view.ts:182
-msgid "via rule {rule}"
 msgstr ""
 
 #: src/frontends/desktop/views/dokumentregel-row.ts:40
@@ -2994,6 +3095,76 @@ msgstr ""
 #: src/frontends/desktop/views/eric-warning-rows.ts:22
 msgid "Check plugin missing"
 msgstr ""
+
+#: src/frontends/desktop/views/erstattung-group.ts:30
+msgid "same amount"
+msgstr ""
+
+#: src/frontends/desktop/views/erstattung-group.ts:31
+msgid "partial refund — {amount} € still open"
+msgstr ""
+
+#: src/frontends/desktop/views/erstattung-group.ts:32
+msgid "reference matches"
+msgstr ""
+
+#: src/frontends/desktop/views/erstattung-group.ts:43
+msgid "Which payment does the refund belong to?"
+msgstr ""
+
+#: src/frontends/desktop/views/erstattung-group.ts:76
+msgid "Does this belong to that payment?"
+msgstr ""
+
+#: src/frontends/desktop/views/erstattung-group.ts:78
+msgid ""
+"\"Yes\" takes over the payment's category and VAT rate and reduces its "
+"expense along with the input VAT."
+msgstr ""
+
+#: src/frontends/desktop/views/erstattung-group.ts:92
+msgid "Refund"
+msgstr ""
+
+#: src/frontends/desktop/views/erstattung-group.ts:98
+msgid "Refund assigned: {category}"
+msgstr ""
+
+#: src/frontends/desktop/views/erstattung-group.ts:108
+#: src/frontends/desktop/views/setup-assistant.ts:404
+#: src/frontends/desktop/views/setup-assistant.ts:595
+#: src/frontends/desktop/views/setup-assistant.ts:606
+msgid "No"
+msgstr ""
+
+#: src/frontends/desktop/views/erstattung-group.ts:109
+msgid "Does not belong to: {booking}"
+msgstr ""
+
+#: src/frontends/desktop/views/erstattung-group.ts:111
+#: src/frontends/desktop/views/setup-assistant.ts:504
+msgid "Not assigned"
+msgstr ""
+
+#: src/frontends/desktop/views/erstattung-group.ts:113
+#: src/frontends/desktop/views/setup-assistant.ts:595
+#: src/frontends/desktop/views/setup-assistant.ts:606
+msgid "Yes"
+msgstr ""
+
+#: src/frontends/desktop/views/erstattung-group.ts:114
+msgid "Belongs to: {booking}"
+msgstr ""
+
+#: src/frontends/desktop/views/erstattung-group.ts:123
+msgid "Pick another payment …"
+msgstr ""
+
+#: src/frontends/desktop/views/erstattung-group.ts:124
+msgid "{n} candidate"
+msgid_plural "{n} candidates"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/frontends/desktop/views/herleitung-dialog.blp:7
 msgid "Derivation"
@@ -3715,7 +3886,7 @@ msgid "Loading details …"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:150
-#: src/frontends/desktop/views/rechnungen-view.ts:525
+#: src/frontends/desktop/views/rechnungen-view.ts:557
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:69
 msgid "Invoice"
 msgstr ""
@@ -3937,7 +4108,7 @@ msgid "Not sent by email yet."
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:516
-#: src/frontends/desktop/views/rechnungen-view.ts:535
+#: src/frontends/desktop/views/rechnungen-view.ts:570
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:206
 msgid "sent"
 msgstr ""
@@ -4096,19 +4267,19 @@ msgstr ""
 msgid "XRechnung not available"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.blp:22
+#: src/frontends/desktop/views/rechnungen-view.blp:35
 msgid "Loading invoices …"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.blp:40
+#: src/frontends/desktop/views/rechnungen-view.blp:53
 msgid "No Qonto account"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.blp:67
+#: src/frontends/desktop/views/rechnungen-view.blp:80
 msgid "Recurring invoices"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.blp:81
+#: src/frontends/desktop/views/rechnungen-view.blp:94
 msgid "All invoices"
 msgstr ""
 
@@ -4149,21 +4320,21 @@ msgid "Drafts"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnungen-view.ts:75
-#: src/frontends/desktop/views/rechnungen-view.ts:410
+#: src/frontends/desktop/views/rechnungen-view.ts:441
 #: src/frontends/desktop/views/util.ts:70
 msgctxt "invoice status"
 msgid "Open"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnungen-view.ts:76
-#: src/frontends/desktop/views/rechnungen-view.ts:415
+#: src/frontends/desktop/views/rechnungen-view.ts:446
 #: src/frontends/desktop/views/util.ts:71
 msgctxt "invoice status"
 msgid "Overdue"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnungen-view.ts:77
-#: src/frontends/desktop/views/rechnungen-view.ts:421
+#: src/frontends/desktop/views/rechnungen-view.ts:452
 #: src/frontends/desktop/views/util.ts:72
 msgctxt "invoice status"
 msgid "Paid"
@@ -4175,146 +4346,146 @@ msgctxt "invoice status"
 msgid "Cancelled"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:158
+#: src/frontends/desktop/views/rechnungen-view.ts:186
 msgid "Invoices could not be loaded"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:179
+#: src/frontends/desktop/views/rechnungen-view.ts:209
 msgid "{overdue} overdue · {soon} due soon · {total} total"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:184
+#: src/frontends/desktop/views/rechnungen-view.ts:214
 msgid "none recorded"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:190
+#: src/frontends/desktop/views/rechnungen-view.ts:220
 msgid "No recurring invoices"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:192
+#: src/frontends/desktop/views/rechnungen-view.ts:222
 msgid ""
 "What is billed the same every year or month — hosting, maintenance, rent — "
 "is set up here once and then reminds you by itself."
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:195
+#: src/frontends/desktop/views/rechnungen-view.ts:225
 msgid "Add recurring invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:216
+#: src/frontends/desktop/views/rechnungen-view.ts:246
 msgid "Recurring item “{id}” not found."
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:231
+#: src/frontends/desktop/views/rechnungen-view.ts:261
 msgid "{n} day overdue"
 msgid_plural "{n} days overdue"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:235
+#: src/frontends/desktop/views/rechnungen-view.ts:265
 msgid "today"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:236
+#: src/frontends/desktop/views/rechnungen-view.ts:266
 msgid "in {n} day"
 msgid_plural "in {n} days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:240
+#: src/frontends/desktop/views/rechnungen-view.ts:270
 msgid "due {date} ({when})"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:241
+#: src/frontends/desktop/views/rechnungen-view.ts:271
 msgid "last {number}"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:253
-#: src/frontends/desktop/views/rechnungen-view.ts:292
+#: src/frontends/desktop/views/rechnungen-view.ts:284
+#: src/frontends/desktop/views/rechnungen-view.ts:323
 msgid "Create draft"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:264
+#: src/frontends/desktop/views/rechnungen-view.ts:295
 msgid "Edit recurring item"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:279
+#: src/frontends/desktop/views/rechnungen-view.ts:310
 msgid "Creating draft …"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:284
+#: src/frontends/desktop/views/rechnungen-view.ts:315
 msgid "Draft {number} created"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:285
+#: src/frontends/desktop/views/rechnungen-view.ts:316
 msgid "Draft created"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:293
+#: src/frontends/desktop/views/rechnungen-view.ts:324
 msgid "Draft failed"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:299
+#: src/frontends/desktop/views/rechnungen-view.ts:330
 msgid "Loading invoices from the back end …"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:330
+#: src/frontends/desktop/views/rechnungen-view.ts:361
 msgid "Invoices not available"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:412
-#: src/frontends/desktop/views/rechnungen-view.ts:418
-#: src/frontends/desktop/views/rechnungen-view.ts:424
+#: src/frontends/desktop/views/rechnungen-view.ts:443
+#: src/frontends/desktop/views/rechnungen-view.ts:449
+#: src/frontends/desktop/views/rechnungen-view.ts:455
 msgid "{n} invoice"
 msgid_plural "{n} invoices"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:436
+#: src/frontends/desktop/views/rechnungen-view.ts:467
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:116
 msgid "New invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:468
+#: src/frontends/desktop/views/rechnungen-view.ts:500
 msgid "{n} total"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:475
+#: src/frontends/desktop/views/rechnungen-view.ts:507
 msgid "Nothing in this status"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:476
+#: src/frontends/desktop/views/rechnungen-view.ts:508
 msgid "No invoice has this status — another filter shows more."
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:477
+#: src/frontends/desktop/views/rechnungen-view.ts:509
 #: src/frontends/desktop/views/vertraege-view.ts:268
 msgid "Show all"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:481
+#: src/frontends/desktop/views/rechnungen-view.ts:513
 msgid "No invoices yet"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:482
+#: src/frontends/desktop/views/rechnungen-view.ts:514
 msgid ""
 "Outgoing invoices are created here — as PDF and as e-invoice (XRechnung)."
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:483
+#: src/frontends/desktop/views/rechnungen-view.ts:515
 msgid "Create invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:528
+#: src/frontends/desktop/views/rechnungen-view.ts:560
 msgid "issued {date}"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:536
+#: src/frontends/desktop/views/rechnungen-view.ts:571
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:384
 msgid "Sending failed"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:537
+#: src/frontends/desktop/views/rechnungen-view.ts:572
 msgid "not sent"
 msgstr ""
 
@@ -4836,12 +5007,6 @@ msgid ""
 "As set by the tax office. “None” only if it released you from VAT returns."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:404
-#: src/frontends/desktop/views/setup-assistant.ts:595
-#: src/frontends/desktop/views/setup-assistant.ts:606
-msgid "No"
-msgstr ""
-
 #: src/frontends/desktop/views/setup-assistant.ts:405
 msgid "Yes, granted"
 msgstr ""
@@ -4892,10 +5057,6 @@ msgstr ""
 msgid ""
 "A ticked account moves to the new entity. New accounts are added under "
 "Accounts → Connections & import."
-msgstr ""
-
-#: src/frontends/desktop/views/setup-assistant.ts:504
-msgid "Not assigned"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:512
@@ -4954,11 +5115,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:590
 msgid "Summary"
-msgstr ""
-
-#: src/frontends/desktop/views/setup-assistant.ts:595
-#: src/frontends/desktop/views/setup-assistant.ts:606
-msgid "Yes"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:620
@@ -5140,10 +5296,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:38
 msgid "manual"
-msgstr ""
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:39
-msgid "unclassified"
 msgstr ""
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:40

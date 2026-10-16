@@ -18,7 +18,7 @@ import GObject from '@girs/gobject-2.0';
 import Template from './zu-pruefen-view.blp';
 import { nextOpenId, reviewProgressLabel, stepOpenId } from '../../../core/presenters/belege.ts';
 import { confirmZuPruefen, loadZuPruefen, type ZuPruefenRow } from '../../../core/presenters/zu-pruefen.ts';
-import { GRUND_TEXT } from '../../../core/elster/zu-pruefen.ts';
+import { grundText } from '../../../core/elster/zu-pruefen.ts';
 import { appSession } from '../data/session.ts';
 import { loadDms } from '../data/settings.ts';
 import type { AppEntity } from '../entities.ts';
@@ -202,7 +202,7 @@ export class BhZuPruefenView extends Adw.Bin {
         const handled = this.done.get(item.id);
         const title = markup(item.counterparty?.trim() || item.purpose?.trim() || '—');
         entry.action.set_title(handled ? `<s>${title}</s>` : title);
-        entry.action.set_subtitle(markup(`${deDate(item.bookingDate)}  ·  ${handled ?? GRUND_TEXT[item.grund]}`));
+        entry.action.set_subtitle(markup(`${deDate(item.bookingDate)}  ·  ${handled ?? grundText(item.grund)}`));
         entry.done.set_visible(handled != null);
         entry.check.set_sensitive(handled == null);
     }

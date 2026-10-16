@@ -12,7 +12,7 @@
  */
 
 import type { ClassSource, MatchedRule } from './euer-classify.ts';
-import { _n, fmt } from '../lib/i18n.ts';
+import { _, _n, fmt } from '../lib/i18n.ts';
 
 /** Why a booking is in the queue. `erstattung`: an incoming payment that may refund an earlier debit (Idee 9). */
 export type ZuPruefenGrund = 'unklassifiziert' | 'auffangregel' | 'erstattung';
@@ -57,12 +57,22 @@ export function zuPruefenQueue<T extends ZuPruefenZeile>(
     return out;
 }
 
-/** The two short phrases a queue row shows next to its category. */
-export const GRUND_TEXT: Record<ZuPruefenGrund, string> = {
-    unklassifiziert: 'unklassifiziert',
-    auffangregel: 'nur Auffangregel',
-    erstattung: 'Erstattung? Zahlung zuordnen',
-};
+/**
+ * The short phrase a queue row shows next to its category.
+ *
+ * A function, not the table it used to be: a `Record` is built when the module is evaluated, which
+ * is before any frontend could register its translator (see `core/lib/i18n.ts`).
+ */
+export function grundText(grund: ZuPruefenGrund): string {
+    switch (grund) {
+        case 'unklassifiziert':
+            return _('unclassified');
+        case 'auffangregel':
+            return _('catch-all rule only');
+        case 'erstattung':
+            return _('refund? assign the payment');
+    }
+}
 
 /** "N bookings to review" — the Übersicht task and the tab; the catalogue picks the plural form. */
 export function zuPruefenTitel(n: number): string {
@@ -76,21 +86,33 @@ export interface Herkunft {
 }
 
 /**
- * Where a classification came from, in one phrase: „via Regel „Hosting"", „via Beleg #12",
- * „manuell", „unklassifiziert". An Auffangregel says so, because that is the difference between
+ * Where a classification came from, in one phrase: "via rule “Hosting”", "via Receipt #12",
+ * "manually", "unclassified". An Auffangregel says so, because that is the difference between
  * „the program knows" and „the program guessed".
+ *
+ * The rule and category LABELS inside the phrase are not translated: a built-in rule names German
+ * SKR03 categories and a user rule is whatever the owner typed.
  */
 export function herkunftText(h: Herkunft): string {
     const m = h.matchedRule;
-    if (h.source === 'unclassified') return 'unklassifiziert';
+    if (h.source === 'unclassified') return _('unclassified');
     if (m?.art === 'aufteilung') return m.label;
-    if (h.source === 'manual') return 'manuell';
-    if (h.source === 'document') return `via ${m?.label ?? 'Beleg'}`;
-    if (!m) return 'via Regel';
-    if (m.art === 'doppelzahlung') return 'via Doppelzahlung';
-    if (m.art === 'erstattung') return `via ${m.label}`;
-    const label = m.art === 'eigene' ? m.label : `„${m.label}“`;
-    return `via Regel ${label}${m.auffang ? ' (Auffangregel)' : ''}`;
+    if (h.source === 'manual') return _('manually');
+    if (h.source === 'document') return fmt(_('via {source}'), { source: m?.label ?? _('a receipt') });
+    if (!m) return _('via a rule');
+    if (m.art === 'doppelzahlung') return _('via a double payment');
+    if (m.art === 'erstattung') return fmt(_('via {source}'), { source: m.label });
+    // A user rule carries its own quotes („needle“ (list)); a built-in one is quoted by the
+    // catalogue, so each language sets its own quotation marks.
+    const quoted = m.art !== 'eigene';
+    const template = m.auffang
+        ? quoted
+            ? _('via rule “{rule}” (catch-all)')
+            : _('via rule {rule} (catch-all)')
+        : quoted
+          ? _('via rule “{rule}”')
+          : _('via rule {rule}');
+    return fmt(template, { rule: m.label });
 }
 
 /**
@@ -106,8 +128,11 @@ export function wasGiltDanach(row: {
 }): string | null {
     if (!row.ohneUmbuchung || (row.source !== 'manual' && !istErstattung(row))) return null;
     const ohne = row.ohneUmbuchung;
-    if (ohne.source === 'unclassified') return 'Danach ist die Buchung unklassifiziert.';
-    return `Danach gilt wieder: ${herkunftText(ohne)} → ${ohne.category}.`;
+    if (ohne.source === 'unclassified') return _('The booking is unclassified afterwards.');
+    return fmt(_('Then this applies again: {source} → {category}.'), {
+        source: herkunftText(ohne),
+        category: ohne.category,
+    });
 }
 
 /** Whether a booking is split into parts (Idee 13) — its undo is „Aufteilung aufheben", not „Umbuchung zurücknehmen". */

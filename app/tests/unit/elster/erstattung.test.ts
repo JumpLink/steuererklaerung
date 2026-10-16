@@ -203,7 +203,7 @@ export default async () => {
             expect(geerbterSteuersatz({ net: 50, vat: 0 })).toBe(0);
             expect(erbeVonUrsprung(b({ source: 'rule', documentId: 3 })).originalDocumentId).toBe(null);
             expect(ursprungLabel({ bookingDate: '2026-03-10', counterparty: 'Büromöbel Kranich GmbH' })).toBe(
-                'Buchung vom 10.03.2026 (Büromöbel Kranich GmbH)',
+                'booking of 10.03.2026 (Büromöbel Kranich GmbH)',
             );
         });
     });
@@ -233,7 +233,7 @@ export default async () => {
             originalTxId: 'orig',
             category: BUERO,
             vatRate: 0.19,
-            originalLabel: 'Buchung vom 10.03.2026 (Büromöbel Kranich GmbH)',
+            originalLabel: 'booking of 10.03.2026 (Büromöbel Kranich GmbH)',
         };
         const txs = [original, refund, umsatz, miete];
 
@@ -274,7 +274,7 @@ export default async () => {
                 .detail!.filter((r) => r.bookingDate < '2026-04-01' && r.kind === 'expense')
                 .reduce((s, r) => s + r.vat, 0);
             expect(q1).toBe(19);
-            expect(herkunftText(row)).toBe('via Erstattung zu Buchung vom 10.03.2026 (Büromöbel Kranich GmbH)');
+            expect(herkunftText(row)).toBe('via refund for booking of 10.03.2026 (Büromöbel Kranich GmbH)');
         });
 
         await it('books a refund of a 2025 debit in 2026 and leaves 2025 untouched', async () => {
@@ -310,7 +310,7 @@ export default async () => {
             const row = mit.detail!.find((r) => r.id === 'ref')!;
             expect(istErstattung(row)).toBe(true);
             expect(row.ohneUmbuchung?.source).toBe('unclassified');
-            expect(wasGiltDanach(row)).toBe('Danach ist die Buchung unklassifiziert.');
+            expect(wasGiltDanach(row)).toBe('The booking is unclassified afterwards.');
             const umgebucht = classifyTransaction(refund, undefined, {
                 override: { category: '8500 Sonstige Erträge/Zinsen' },
                 erstattung: link,
@@ -410,7 +410,7 @@ export default async () => {
                 id === 'o2' ? { bookingDate: '2026-02-01', counterparty: 'Pixel' } : undefined,
             );
             expect(euer.get('r')?.category).toBe('4964 Software/Lizenzen');
-            expect(euer.get('r')?.originalLabel).toBe('Buchung vom 01.02.2026 (Pixel)');
+            expect(euer.get('r')?.originalLabel).toBe('booking of 01.02.2026 (Pixel)');
             expect(removeErstattungLink('r')).toBe(true);
             expect(removeErstattungLink('r')).toBe(false);
             expect(

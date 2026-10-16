@@ -144,7 +144,7 @@ export default async () => {
             expect(agg.coverage.classifiedByRule).toBe(4);
             expect(agg.coverage.unclassified.map((u) => u.id)).toStrictEqual(['a6']);
             const byId = new Map((agg.detail ?? []).map((r) => [r.id, r]));
-            expect(byId.get('a4')?.matchedRule).toStrictEqual({ id: 'beleg:7', label: 'Beleg #7', art: 'beleg' });
+            expect(byId.get('a4')?.matchedRule).toStrictEqual({ id: 'beleg:7', label: 'Receipt #7', art: 'beleg' });
             expect(byId.get('a5')?.matchedRule?.art).toBe('doppelzahlung');
             expect(byId.get('a6')?.matchedRule).toBeUndefined();
         });
@@ -210,11 +210,11 @@ export default async () => {
             );
             const byId = new Map((agg.detail ?? []).map((r) => [r.id, r]));
             expect(wasGiltDanach(byId.get('w1')!)).toBe(
-                'Danach gilt wieder: via Regel „Stichwort reise“ (Auffangregel) → 4670 Reisekosten.',
+                'Then this applies again: via rule “Stichwort reise” (catch-all) → 4670 Reisekosten.',
             );
-            expect(wasGiltDanach(byId.get('w2')!)).toBe('Danach ist die Buchung unklassifiziert.');
-            expect(wasGiltDanach(byId.get('w3')!)).toBe('Danach gilt wieder: via Beleg #9 → 4930 Bürobedarf.');
-            expect(herkunftText(byId.get('w1')!)).toBe('manuell');
+            expect(wasGiltDanach(byId.get('w2')!)).toBe('The booking is unclassified afterwards.');
+            expect(wasGiltDanach(byId.get('w3')!)).toBe('Then this applies again: via Receipt #9 → 4930 Bürobedarf.');
+            expect(herkunftText(byId.get('w1')!)).toBe('manually');
         });
 
         await it('says nothing for a booking without an Umbuchung', async () => {
