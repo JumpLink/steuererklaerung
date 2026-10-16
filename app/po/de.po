@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-16 22:08+0200\n"
+"POT-Creation-Date: 2026-10-16 22:21+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -288,7 +288,9 @@ msgstr "Diese Version hat keinen eingebauten KI-Assistenten."
 msgid ""
 "Price increase: may open a special right to cancel — check the provider’s "
 "notice and its deadline."
-msgstr "Preiserhöhung: kann ein Sonderkündigungsrecht auslösen — Mitteilung des Anbieters und Frist prüfen."
+msgstr ""
+"Preiserhöhung: kann ein Sonderkündigungsrecht auslösen — Mitteilung des "
+"Anbieters und Frist prüfen."
 
 #: src/core/contracts/contracts.ts:119
 msgid "cancelled, ends {date}"
@@ -331,7 +333,9 @@ msgstr "Kündigungsfrist: {name}"
 msgid ""
 "The notice must reach the provider today at the latest for the contract to "
 "end on {date}."
-msgstr "Spätestens heute muss die Kündigung beim Anbieter eingehen, damit der Vertrag am {date} endet."
+msgstr ""
+"Spätestens heute muss die Kündigung beim Anbieter eingehen, damit der "
+"Vertrag am {date} endet."
 
 #: src/core/contracts/contracts.ts:212
 msgid "Provider: {name}"
@@ -1827,6 +1831,117 @@ msgid_plural "Split into {n} parts"
 msgstr[0] "Aufgeteilt in {n} Teil"
 msgstr[1] "Aufgeteilt in {n} Teile"
 
+#: src/core/elster/splitbuchung.ts:110
+msgid "A booking of €0 cannot be split."
+msgstr "Eine Buchung über 0 € lässt sich nicht aufteilen."
+
+#: src/core/elster/splitbuchung.ts:111
+msgid "A split needs at least two parts."
+msgstr "Eine Aufteilung braucht mindestens zwei Teile."
+
+#: src/core/elster/splitbuchung.ts:115
+msgid "Only one part can take the remainder."
+msgstr "Nur ein Teil kann den Rest nehmen."
+
+#: src/core/elster/splitbuchung.ts:120
+msgid "Only one part may be left without an amount — it takes the remainder."
+msgstr "Nur ein Teil darf ohne Betrag bleiben — er nimmt den Rest."
+
+#: src/core/elster/splitbuchung.ts:132
+msgid "Part {n}: “{category}” is not a category for a part."
+msgstr "Teil {n}: „{category}\" ist keine Kategorie für einen Teil."
+
+#: src/core/elster/splitbuchung.ts:140
+msgid "Part {n}: {category} is income, the booking an expense."
+msgstr "Teil {n}: {category} ist eine Einnahme, die Buchung eine Ausgabe."
+
+#: src/core/elster/splitbuchung.ts:141
+msgid "Part {n}: {category} is an expense, the booking income."
+msgstr "Teil {n}: {category} ist eine Ausgabe, die Buchung eine Einnahme."
+
+#: src/core/elster/splitbuchung.ts:147
+msgid "Part {n}: there is no {rate} % VAT rate (0, 7 or 19 %)."
+msgstr "Teil {n}: Steuersatz {rate} % gibt es nicht (0, 7 oder 19 %)."
+
+#: src/core/elster/splitbuchung.ts:157
+msgid "Part {n}: amount missing."
+msgstr "Teil {n}: Betrag fehlt."
+
+#: src/core/elster/splitbuchung.ts:161
+msgid ""
+"Part {n}: enter amounts as positive — the booking says whether it is an "
+"expense or income."
+msgstr "Teil {n}: Beträge positiv eingeben — ob Ausgabe oder Einnahme, sagt die Buchung."
+
+#: src/core/elster/splitbuchung.ts:169
+msgid "Part {n}: two decimal places at most."
+msgstr "Teil {n}: höchstens zwei Nachkommastellen."
+
+#: src/core/elster/splitbuchung.ts:172
+msgid "Part {n}: a part of €0 is not a part."
+msgstr "Teil {n}: ein Teil über 0 € ist kein Teil."
+
+#: src/core/elster/splitbuchung.ts:182
+msgid "The parts add up to {parts} €, the booking only to {total} €."
+msgstr "Die Teile ergeben {parts} €, die Buchung nur {total} €."
+
+#: src/core/elster/splitbuchung.ts:190
+msgid ""
+"Nothing is left for the remainder (part {n}) — then it is one part fewer."
+msgstr "Für den Rest (Teil {n}) bleibt nichts — dann ist es ein Teil weniger."
+
+#: src/core/elster/splitbuchung.ts:197
+msgid "The parts add up to {parts} €, the booking to {total} €."
+msgstr "Die Teile ergeben {parts} €, die Buchung {total} €."
+
+#: src/core/elster/splitbuchung.ts:229
+msgid "“{text}” is not a part (form: category=amount@rate)."
+msgstr "„{text}\" ist kein Teil (Form: Kategorie=Betrag@Satz)."
+
+#: src/core/elster/splitbuchung.ts:236
+msgid "“{name}” is not a category for a part."
+msgstr "„{name}\" ist keine Kategorie für einen Teil."
+
+#: src/core/elster/splitbuchung.ts:237
+msgid "“{name}” is not unique: {matches}."
+msgstr "„{name}\" ist nicht eindeutig: {matches}."
+
+#: src/core/elster/splitbuchung.ts:244
+msgid "“{text}” is not an amount."
+msgstr "„{text}\" ist kein Betrag."
+
+#: src/core/elster/splitbuchung.ts:302
+msgid "A flat private share is already recorded for this company ({names})."
+msgstr "Für diese Firma ist schon ein pauschaler Privatanteil eingetragen ({names})."
+
+#: src/core/elster/splitbuchung.ts:303
+msgid ""
+"If it covers the same costs, the private part is counted twice — then keep "
+"only one of the two."
+msgstr "Gilt er für dieselben Kosten, ist der private Teil doppelt erfasst — dann nur eins von beiden behalten."
+
+#: src/core/elster/splitbuchung.ts:356
+msgid "{list} has already been filed."
+msgid_plural "{list} have already been filed."
+msgstr[0] "{list} ist schon eingereicht."
+msgstr[1] "{list} sind schon eingereicht."
+
+#: src/core/elster/splitbuchung.ts:362
+msgid ""
+"Removing the split changes this period’s figures; the filed values stay in "
+"the register as they are. The Finanzamt only learns of the change through a "
+"corrected return (§ 153 AO; a Voranmeldung is re-submitted as a corrected "
+"Anmeldung, § 168 AO)."
+msgstr "Das Aufheben der Aufteilung ändert die Zahlen dieses Zeitraums; die eingereichten Werte bleiben im Register, wie sie sind. Beim Finanzamt kommt die Änderung nur mit einer berichtigten Erklärung an (§ 153 AO; eine Voranmeldung wird als berichtigte Anmeldung neu übermittelt, § 168 AO)."
+
+#: src/core/elster/splitbuchung.ts:365
+msgid ""
+"The split changes this period’s figures; the filed values stay in the "
+"register as they are. The Finanzamt only learns of the change through a "
+"corrected return (§ 153 AO; a Voranmeldung is re-submitted as a corrected "
+"Anmeldung, § 168 AO)."
+msgstr "Die Aufteilung ändert die Zahlen dieses Zeitraums; die eingereichten Werte bleiben im Register, wie sie sind. Beim Finanzamt kommt die Änderung nur mit einer berichtigten Erklärung an (§ 153 AO; eine Voranmeldung wird als berichtigte Anmeldung neu übermittelt, § 168 AO)."
+
 #: src/core/elster/steuerzahlungen.ts:128
 msgid "USt-VA Q{quarter}/{year} — VAT payable"
 msgstr "USt-VA Q{quarter}/{year} — Zahllast"
@@ -1851,19 +1966,25 @@ msgstr "Einkommensteuer {period}"
 msgid ""
 "Weekend deadline moved to Monday (§108 Abs. 3 AO); public holidays are not "
 "modelled."
-msgstr "Wochenend-Fristende auf Montag verschoben (§108 Abs. 3 AO); Feiertage nicht berücksichtigt."
+msgstr ""
+"Wochenend-Fristende auf Montag verschoben (§108 Abs. 3 AO); Feiertage nicht "
+"berücksichtigt."
 
 #: src/core/elster/steuerzahlungen.ts:147
 msgid ""
 "Due per Bescheid (typically 1 month after Bekanntgabe, §220 AO) — amount "
 "from our own calculation."
-msgstr "Fälligkeit laut Bescheid (i. d. R. 1 Monat nach Bekanntgabe, §220 AO) — Betrag laut eigener Berechnung."
+msgstr ""
+"Fälligkeit laut Bescheid (i. d. R. 1 Monat nach Bekanntgabe, §220 AO) — "
+"Betrag laut eigener Berechnung."
 
 #: src/core/elster/steuerzahlungen.ts:186
 msgid ""
 "VAT payable due on the statutory deadline of the Voranmeldung (§18 Abs. 1 "
 "UStG, incl. Dauerfristverlängerung)."
-msgstr "Zahllast fällig mit der Regelfrist der Voranmeldung (§18 Abs. 1 UStG, inkl. Dauerfristverlängerung)."
+msgstr ""
+"Zahllast fällig mit der Regelfrist der Voranmeldung (§18 Abs. 1 UStG, inkl. "
+"Dauerfristverlängerung)."
 
 #: src/core/elster/steuerzahlungen.ts:188
 msgid ""
@@ -1873,13 +1994,15 @@ msgstr "Zahllast fällig mit der Regelfrist der Voranmeldung (§18 Abs. 1 UStG).
 
 #: src/core/elster/steuerzahlungen.ts:191
 msgid "Unknown USt-VA period format '{period}' — no due date can be derived."
-msgstr "Unbekanntes USt-VA-Periodenformat '{period}' — Fälligkeit nicht ableitbar."
+msgstr ""
+"Unbekanntes USt-VA-Periodenformat '{period}' — Fälligkeit nicht ableitbar."
 
 #: src/core/elster/steuerzahlungen.ts:197
 msgid ""
 "Final payment due 1 month after the return reached the Finanzamt (§18 Abs. 4 "
 "UStG)."
-msgstr "Abschlusszahlung fällig 1 Monat nach Eingang der Erklärung (§18 Abs. 4 UStG)."
+msgstr ""
+"Abschlusszahlung fällig 1 Monat nach Eingang der Erklärung (§18 Abs. 4 UStG)."
 
 #: src/core/elster/ust-abweichung.ts:153 src/core/elster/ust-abweichung.ts:172
 msgid "VAT deviation: cannot be checked"
