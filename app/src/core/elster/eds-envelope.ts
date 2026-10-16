@@ -16,13 +16,28 @@ import { bundledHerstellerId } from '@steuererklaerung/eric';
  */
 export const PLACEHOLDER_HERSTELLER_ID = '00000';
 
+/** Where the Hersteller-ID on the wire comes from: the person's config, the official build, or neither. */
+export type HerstellerIdSource = 'own' | 'bundled' | 'none';
+
+/**
+ * Which Hersteller-ID wins, without exposing it: the person's own one beats the one an official
+ * build carries. UIs use this to say "bundled" without ever showing the number.
+ */
+export function herstellerIdSource(
+    configured?: string,
+    bundled: string | undefined = bundledHerstellerId(),
+): HerstellerIdSource {
+    if (configured) return 'own';
+    return bundled ? 'bundled' : 'none';
+}
+
 /**
  * The Hersteller-ID to put on the wire: the person's own `hersteller_id` from the config, else the
  * one an official build carries (written there by the release pipeline from a CI secret), else the
  * placeholder, which the send guard then refuses.
  */
-export function resolveHerstellerId(configured?: string): string {
-    return configured || bundledHerstellerId() || PLACEHOLDER_HERSTELLER_ID;
+export function resolveHerstellerId(configured?: string, bundled: string | undefined = bundledHerstellerId()): string {
+    return configured || bundled || PLACEHOLDER_HERSTELLER_ID;
 }
 
 /** XML-escape a text value for safe insertion into element content/attributes. */

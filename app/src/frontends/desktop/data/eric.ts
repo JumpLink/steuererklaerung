@@ -8,13 +8,14 @@
  * install per machine, so a workspace-/env-level home may fit better later.
  */
 
-import { getEricStatus, type EricStatus } from '../../../core/actions/elster/eric-status.ts';
+import { applyEricHome, getEricStatus, type EricStatus } from '../../../core/actions/elster/eric-status.ts';
 import {
     saveEricHome as coreSaveEricHome,
     saveKeystorePath as coreSaveKeystorePath,
     saveElsterSubmitter as coreSaveElsterSubmitter,
 } from '../../../core/config/index.ts';
 import type { ElsterConfig } from '../../../core/config/index.ts';
+import { herstellerIdSource } from '../../../core/elster/eds-envelope.ts';
 import type { AppEntity } from '../entities.ts';
 
 export type { EricStatus };
@@ -41,7 +42,9 @@ function requireEntityId(entity: AppEntity | null): string {
  */
 export async function loadEricStatus(entity: AppEntity | null): Promise<EricStatusView> {
     const configuredHome = entity?.elster?.eric_home;
-    const status = await getEricStatus(configuredHome);
+    // Also when unset: a reset (or another entity) must drop the previous entity's folder.
+    applyEricHome({ eric_home: configuredHome });
+    const status = await getEricStatus();
     return { ...status, configuredHome };
 }
 
@@ -68,12 +71,18 @@ export function saveKeystore(entity: AppEntity | null, keystorePath: string): El
 export interface SubmitterIds {
     herstellerId?: string;
     datenlieferant?: string;
+    /** This build carries a Hersteller-ID of its own. Only the fact — the number is never handed to the UI. */
+    herstellerIdBundled?: boolean;
 }
 
 /** Read the submitter identity for the active entity (tolerates a missing ELSTER config). */
 export function loadSubmitter(entity: AppEntity | null): SubmitterIds {
     const cfg = entity?.elster;
-    return { herstellerId: cfg?.hersteller_id, datenlieferant: cfg?.datenlieferant };
+    return {
+        herstellerId: cfg?.hersteller_id,
+        datenlieferant: cfg?.datenlieferant,
+        herstellerIdBundled: herstellerIdSource(undefined) === 'bundled',
+    };
 }
 
 /** Persist the submitter identity into the active entity's ELSTER config (blank clears a field). */

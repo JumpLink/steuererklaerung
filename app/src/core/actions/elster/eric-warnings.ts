@@ -10,6 +10,8 @@
  * `eric-warnings.test.ts` pins the table to `ERIC_VERSION` so a bump cannot forget it.
  */
 
+import type { EricHomeSource } from '@steuererklaerung/eric';
+
 import { _, fmt } from '../../lib/i18n.ts';
 
 /** ERiC release → the `libericapi` version its `EricVersion` reports. Add a row per release shipped. */
@@ -98,4 +100,21 @@ export function ericWarningText(w: EricWarning): string {
         _('This ERiC has no check plugin {plugin} for this form and year. Sending may fail — download a current ERiC.'),
         { plugin: w.plugin },
     );
+}
+
+/** Which ERiC the app is using, in words: the line the status row and `elster eric` show. */
+export function ericSourceLabel(source: EricHomeSource): string {
+    switch (source) {
+        case 'explicit':
+        case 'config':
+            return _('own folder');
+        case 'env':
+            return _('ERIC_HOME');
+        case 'bundled':
+            return _('bundled with the app');
+        case 'project':
+            return _('project folder (elster/runtime)');
+        case 'data':
+            return _('user installation');
+    }
 }

@@ -46,7 +46,7 @@ import type { AppEntity } from '../entities.ts';
 import { deDate, eur } from '../../../core/lib/format.ts';
 import { applyScrollHook, GroupRows, LoadToken, amountLabel, loadIntoStack, markup } from './util.ts';
 import { _ } from '../i18n.ts';
-import { ericVersionLabel } from '../../../core/actions/elster/eric-warnings.ts';
+import { ericSourceLabel, ericVersionLabel } from '../../../core/actions/elster/eric-warnings.ts';
 import { ericWarningRow } from './eric-warning-rows.ts';
 import { showToast } from '../toast.ts';
 import { wrapButtonLabel, wrappingLabel } from '../widgets/responsive.ts';
@@ -126,8 +126,9 @@ export class BhKontenView extends Adw.Bin {
             return;
         }
         this._eric_group.set_description(
-            'Wird für die Prüfung und die Übermittlung an ELSTER benötigt. Die offiziellen Builds bringen ERiC ' +
-                'mit; sonst selbst installieren (ELSTER-Entwicklerbereich). Leer = ERIC_HOME / mitgeliefertes ERiC / Standardpfad.',
+            _(
+                'Needed to check and send to ELSTER. Official builds include ERiC; otherwise install it yourself (ELSTER developer area). Empty = ERIC_HOME, bundled ERiC or the default location.',
+            ),
         );
         loadEricStatus(this.entity)
             .then((status) => {
@@ -146,10 +147,10 @@ export class BhKontenView extends Adw.Bin {
             statusRow.set_subtitle(
                 markup(
                     `${ericVersionLabel(status.version) ?? _('ERiC version unknown')} · ${status.ericHome}` +
-                        (status.bundled ? ' · mit der App geliefert' : ''),
+                        ` · ${ericSourceLabel(status.source)}`,
                 ),
             );
-            statusRow.add_suffix(ericPill(true, 'verfügbar'));
+            statusRow.add_suffix(ericPill(true, _('available')));
         } else {
             const detail = status.bindingBroken
                 ? _(
@@ -194,7 +195,7 @@ export class BhKontenView extends Adw.Bin {
         }
 
         // Editable ERIC_HOME path (persisted per active entity's ELSTER config).
-        const entry = new Adw.EntryRow({ title: 'ERiC-Pfad (ERIC_HOME)' });
+        const entry = new Adw.EntryRow({ title: _('Own ERiC folder (overrides ERIC_HOME and the bundled one)') });
         entry.set_show_apply_button(true);
         this.ericFilling = true;
         entry.set_text(status.configuredHome ?? '');
@@ -209,10 +210,10 @@ export class BhKontenView extends Adw.Bin {
             iconName: 'folder-open-symbolic',
             cssClasses: ['flat'],
             valign: Gtk.Align.CENTER,
-            tooltipText: 'ERiC-Verzeichnis wählen (enthält lib/libericapi.so)',
+            tooltipText: _('Choose ERiC folder (contains lib/libericapi.so)'),
         });
         pick.connect('clicked', () => {
-            const chooser = new Gtk.FileDialog({ title: 'ERiC-Verzeichnis wählen' });
+            const chooser = new Gtk.FileDialog({ title: _('Choose ERiC folder') });
             chooser.select_folder(this.get_root() as Gtk.Window | null, null, (_s, res) => {
                 try {
                     const dir = chooser.select_folder_finish(res);
@@ -228,6 +229,15 @@ export class BhKontenView extends Adw.Bin {
             });
         });
         entry.add_suffix(pick);
+        const reset = new Gtk.Button({
+            iconName: 'edit-clear-symbolic',
+            cssClasses: ['flat'],
+            valign: Gtk.Align.CENTER,
+            tooltipText: _('Reset to the bundled or detected ERiC'),
+            sensitive: !!status.configuredHome,
+        });
+        reset.connect('clicked', () => this.applyEricPath(''));
+        entry.add_suffix(reset);
         this.eric.add(entry);
 
         // Only when it is missing: where to get it, and why it is not simply included. Without this
@@ -296,14 +306,22 @@ export class BhKontenView extends Adw.Bin {
         // developer area) + DatenLieferant. Required to TRANSMIT (even test cases); without it the
         // server rejects the send. NOT secret; persisted per entity's ELSTER config.
         const submitter = loadSubmitter(this.entity);
-        const hersteller = new Adw.EntryRow({ title: 'ELSTER Hersteller-ID (elster.de)' });
+        // An official build carries one: say so, never show the number. Typing an own ID overrides it,
+        // clearing the field falls back to it.
+        const bundledId = !submitter.herstellerId && submitter.herstellerIdBundled === true;
+        const hersteller = new Adw.EntryRow({
+            title: bundledId
+                ? _('ELSTER Hersteller-ID (bundled with the app, enter your own to override)')
+                : _('ELSTER Hersteller-ID (elster.de)'),
+        });
         hersteller.set_show_apply_button(true);
+        if (bundledId) hersteller.add_suffix(ericPill(true, _('bundled')));
         this.submitterFilling = true;
         hersteller.set_text(submitter.herstellerId ?? '');
         this.submitterFilling = false;
         hersteller.connect('apply', () => {
             if (!this.submitterFilling)
-                this.applySubmitter({ herstellerId: hersteller.get_text() ?? '' }, 'Hersteller-ID');
+                this.applySubmitter({ herstellerId: hersteller.get_text() ?? '' }, 'Hersteller-ID', true);
         });
         this.eric.add(hersteller);
 
@@ -339,7 +357,11 @@ export class BhKontenView extends Adw.Bin {
     }
 
     /** Persist one submitter-identity field (Hersteller-ID / DatenLieferant) for the active entity. */
-    private applySubmitter(ids: { herstellerId?: string; datenlieferant?: string }, label: string): void {
+    private applySubmitter(
+        ids: { herstellerId?: string; datenlieferant?: string },
+        label: string,
+        rebuild = false,
+    ): void {
         try {
             saveSubmitter(this.entity, ids);
         } catch (err) {
@@ -347,6 +369,7 @@ export class BhKontenView extends Adw.Bin {
             return;
         }
         showToast(`${label} gespeichert`);
+        if (rebuild) this.refreshEricStatus(); // the "bundled" hint depends on the stored value
     }
 
     /**

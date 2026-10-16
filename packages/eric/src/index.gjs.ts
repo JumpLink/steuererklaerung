@@ -22,10 +22,11 @@ export {
   appDataDir,
   bundledHerstellerId,
   getEricPaths,
+  setConfiguredEricHome,
   resolveEricHome,
   ERIC_NOT_FOUND_MESSAGE,
 } from './paths.ts';
-export type { EricPaths } from './paths.ts';
+export type { EricPaths, EricHomeSource } from './paths.ts';
 export { EricError, EricNotAvailableError, EricBindingError } from './errors.ts';
 export {
   EricFlags,
