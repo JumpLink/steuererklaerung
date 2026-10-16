@@ -106,7 +106,7 @@ export default async () => {
                         { category: SOFTWARE, betrag: 5 },
                     ]),
                 ),
-            ).toContain('Die Teile ergeben 9,00 €');
+            ).toContain('The parts add up to 9,00 €');
         });
 
         await it('defaults the rate to the receipt, else the category; private parts to 0 without receipt', async () => {
@@ -129,9 +129,9 @@ export default async () => {
             );
             expect(teilAusText('4964 = 1.234,56').betrag).toBe(1234.56);
             expect(teilAusText('4654 Nicht').category).toBe(BEWIRTUNG_NICHT_ABZIEHBAR_KATEGORIE);
-            expect(fehler(() => teilAusText('4654=10'))).toContain('nicht eindeutig');
-            expect(fehler(() => teilAusText('9999=10'))).toContain('keine Kategorie');
-            expect(fehler(() => teilAusText('4930=zehn'))).toContain('kein Betrag');
+            expect(fehler(() => teilAusText('4654=10'))).toContain('is not unique');
+            expect(fehler(() => teilAusText('9999=10'))).toContain('not a category');
+            expect(fehler(() => teilAusText('4930=zehn'))).toContain('is not an amount');
         });
     });
 
@@ -139,20 +139,20 @@ export default async () => {
         await it('refuses parts that exceed the booking, zero, a sign, and nothing left', async () => {
             expect(
                 fehler(() => berechneTeile(-100, [{ category: BUERO, betrag: 120 }, { category: PRIVAT_KATEGORIE }])),
-            ).toContain('nur 100,00 €');
+            ).toContain('only to 100,00 €');
             expect(
                 fehler(() => berechneTeile(-100, [{ category: BUERO, betrag: 0 }, { category: PRIVAT_KATEGORIE }])),
-            ).toContain('über 0 €');
+            ).toContain('a part of €0');
             expect(
                 fehler(() => berechneTeile(-100, [{ category: BUERO, betrag: -5 }, { category: PRIVAT_KATEGORIE }])),
-            ).toContain('positiv');
+            ).toContain('as positive');
             expect(
                 fehler(() => berechneTeile(-100, [{ category: BUERO, betrag: 100 }, { category: PRIVAT_KATEGORIE }])),
-            ).toContain('bleibt nichts');
+            ).toContain('Nothing is left');
         });
 
         await it('refuses one part, two rests, cents below a cent, unknown categories and rates', async () => {
-            expect(fehler(() => berechneTeile(-100, [{ category: BUERO }]))).toContain('mindestens zwei');
+            expect(fehler(() => berechneTeile(-100, [{ category: BUERO }]))).toContain('at least two parts');
             expect(
                 fehler(() =>
                     berechneTeile(-100, [
@@ -160,18 +160,18 @@ export default async () => {
                         { category: PRIVAT_KATEGORIE, rest: true },
                     ]),
                 ),
-            ).toContain('Nur ein Teil');
+            ).toContain('Only one part can take the remainder');
             expect(fehler(() => berechneTeile(-100, [{ category: BUERO }, { category: PRIVAT_KATEGORIE }]))).toContain(
-                'ohne Betrag',
+                'without an amount',
             );
             expect(
                 fehler(() => berechneTeile(-100, [{ category: BUERO, betrag: 1.005 }, { category: PRIVAT_KATEGORIE }])),
-            ).toContain('Nachkommastellen');
+            ).toContain('decimal places');
             expect(
                 fehler(() =>
                     berechneTeile(-100, [{ category: 'Erfunden', betrag: 1 }, { category: PRIVAT_KATEGORIE }]),
                 ),
-            ).toContain('keine Kategorie');
+            ).toContain('not a category');
             expect(
                 fehler(() =>
                     berechneTeile(-100, [
@@ -179,8 +179,8 @@ export default async () => {
                         { category: PRIVAT_KATEGORIE },
                     ]),
                 ),
-            ).toContain('Steuersatz');
-            expect(fehler(() => berechneTeile(0, halbPrivat))).toContain('0 €');
+            ).toContain('no 16 % VAT rate');
+            expect(fehler(() => berechneTeile(0, halbPrivat))).toContain('A booking of €0 cannot be split');
         });
 
         await it('keeps income and expense apart from the booking direction', async () => {
@@ -188,7 +188,7 @@ export default async () => {
                 fehler(() =>
                     berechneTeile(-100, [{ category: '8400 Erlöse 19% USt', betrag: 10 }, { category: BUERO }]),
                 ),
-            ).toContain('eine Einnahme');
+            ).toContain('is income');
             const gutschrift = berechneTeile(107 + 119, [
                 { category: '8400 Erlöse 19% USt', betrag: 119 },
                 { category: '8300 Erlöse 7% USt' },
@@ -351,7 +351,7 @@ export default async () => {
                     .join(),
             ).toBe('USt-Jahreserklärung 2025,USt-Voranmeldung 11/2025');
             const w = abgabeWarnung(betroffeneAbgaben('2026-03-10', register));
-            expect(w).toContain('schon eingereicht');
+            expect(w).toContain('has already been filed');
             expect(w).toContain('§ 153 AO');
         });
 

@@ -13,7 +13,7 @@
  */
 
 import { fmtDe, round2 } from '../lib/money.ts';
-import { _n, fmt } from '../lib/i18n.ts';
+import { _, _n, fmt } from '../lib/i18n.ts';
 import { ACCOUNTING_CATEGORY_OPTIONS } from '../lib/select-field-constants.ts';
 import { NEUTRAL_MIT_VORSTEUER, SKR03_TO_EUER, type EuerKind } from './euer-aggregate.ts';
 import { impliedRate } from './euer-classify.ts';
@@ -107,17 +107,17 @@ export function berechneTeile(
     opts: { belegSatz?: number } = {},
 ): Teil[] {
     const gesamt = cents(Math.abs(amount));
-    if (gesamt === 0) throw new AufteilungFehler('Eine Buchung über 0 € lässt sich nicht aufteilen.');
-    if (eingaben.length < 2) throw new AufteilungFehler('Eine Aufteilung braucht mindestens zwei Teile.');
+    if (gesamt === 0) throw new AufteilungFehler(_('A booking of €0 cannot be split.'));
+    if (eingaben.length < 2) throw new AufteilungFehler(_('A split needs at least two parts.'));
 
     let restIndex = eingaben.findIndex((t) => t.rest);
     if (eingaben.filter((t) => t.rest).length > 1) {
-        throw new AufteilungFehler('Nur ein Teil kann den Rest nehmen.');
+        throw new AufteilungFehler(_('Only one part can take the remainder.'));
     }
     if (restIndex < 0) {
         const ohneBetrag = eingaben.map((t, i) => (t.betrag == null ? i : -1)).filter((i) => i >= 0);
         if (ohneBetrag.length > 1)
-            throw new AufteilungFehler('Nur ein Teil darf ohne Betrag bleiben — er nimmt den Rest.');
+            throw new AufteilungFehler(_('Only one part may be left without an amount — it takes the remainder.'));
         restIndex = ohneBetrag[0] ?? eingaben.length - 1;
     }
 
@@ -128,33 +128,48 @@ export function berechneTeile(
         const category = t.category?.trim() ?? '';
         const meta = SKR03_TO_EUER[category];
         if (!meta || !AUFTEILUNG_KATEGORIEN.includes(category)) {
-            throw new AufteilungFehler(`Teil ${nr}: „${category || '—'}" ist keine Kategorie für einen Teil.`);
+            throw new AufteilungFehler(
+                fmt(_('Part {n}: “{category}” is not a category for a part.'), { n: nr, category: category || '—' }),
+            );
         }
+        // Only two of the four combinations are reachable (the condition pairs kind with the sign),
+        // and each is a whole sentence: a translator cannot place a sub-clause through a placeholder.
         if (meta.kind !== 'neutral' && (meta.kind === 'income') === debit) {
             throw new AufteilungFehler(
-                `Teil ${nr}: ${category} ist ${meta.kind === 'income' ? 'eine Einnahme' : 'eine Ausgabe'}, die Buchung ${debit ? 'eine Ausgabe' : 'eine Einnahme'}.`,
+                meta.kind === 'income'
+                    ? fmt(_('Part {n}: {category} is income, the booking an expense.'), { n: nr, category })
+                    : fmt(_('Part {n}: {category} is an expense, the booking income.'), { n: nr, category }),
             );
         }
         const vatRate = t.vatRate ?? standardSatz(category, meta.kind, opts.belegSatz);
         if (!STEUERSAETZE.some((s) => Math.abs(s - vatRate) < 1e-9)) {
             throw new AufteilungFehler(
-                `Teil ${nr}: Steuersatz ${round2(vatRate * 100)} % gibt es nicht (0, 7 oder 19 %).`,
+                fmt(_('Part {n}: there is no {rate} % VAT rate (0, 7 or 19 %).'), {
+                    n: nr,
+                    rate: round2(vatRate * 100),
+                }),
             );
         }
         let c = 0;
         if (i !== restIndex || t.betrag != null) {
             const b = t.betrag;
-            if (b == null || !Number.isFinite(b)) throw new AufteilungFehler(`Teil ${nr}: Betrag fehlt.`);
+            if (b == null || !Number.isFinite(b))
+                throw new AufteilungFehler(fmt(_('Part {n}: amount missing.'), { n: nr }));
             if (b < 0) {
                 throw new AufteilungFehler(
-                    `Teil ${nr}: Beträge positiv eingeben — ob Ausgabe oder Einnahme, sagt die Buchung.`,
+                    fmt(
+                        _('Part {n}: enter amounts as positive — the booking says whether it is an expense or income.'),
+                        {
+                            n: nr,
+                        },
+                    ),
                 );
             }
             if (Math.abs(b * 100 - Math.round(b * 100)) > 1e-6) {
-                throw new AufteilungFehler(`Teil ${nr}: höchstens zwei Nachkommastellen.`);
+                throw new AufteilungFehler(fmt(_('Part {n}: two decimal places at most.'), { n: nr }));
             }
             c = cents(b);
-            if (c === 0) throw new AufteilungFehler(`Teil ${nr}: ein Teil über 0 € ist kein Teil.`);
+            if (c === 0) throw new AufteilungFehler(fmt(_('Part {n}: a part of €0 is not a part.'), { n: nr }));
             if (i !== restIndex) fest += c;
         }
         return { nr, category, kind: meta.kind, vatRate, cents: c, note: t.note ?? undefined };
@@ -164,17 +179,25 @@ export function berechneTeile(
     const restNr = restIndex + 1;
     if (restCents < 0) {
         throw new AufteilungFehler(
-            `Die Teile ergeben ${fmtDe(fest / 100)} €, die Buchung nur ${fmtDe(gesamt / 100)} €.`,
+            fmt(_('The parts add up to {parts} €, the booking only to {total} €.'), {
+                parts: fmtDe(fest / 100),
+                total: fmtDe(gesamt / 100),
+            }),
         );
     }
     if (restCents === 0) {
-        throw new AufteilungFehler(`Für den Rest (Teil ${restNr}) bleibt nichts — dann ist es ein Teil weniger.`);
+        throw new AufteilungFehler(
+            fmt(_('Nothing is left for the remainder (part {n}) — then it is one part fewer.'), { n: restNr }),
+        );
     }
     // A remainder part that came with an amount (all parts filled in) must match what is left.
     const restAngabe = roh[restIndex].cents;
     if (restAngabe !== 0 && restAngabe !== restCents) {
         throw new AufteilungFehler(
-            `Die Teile ergeben ${fmtDe((fest + restAngabe) / 100)} €, die Buchung ${fmtDe(gesamt / 100)} €.`,
+            fmt(_('The parts add up to {parts} €, the booking to {total} €.'), {
+                parts: fmtDe((fest + restAngabe) / 100),
+                total: fmtDe(gesamt / 100),
+            }),
         );
     }
 
@@ -203,21 +226,22 @@ export function berechneTeile(
  */
 export function teilAusText(text: string): TeilEingabe {
     const m = /^([^=@]+?)\s*(?:=\s*([^@]*?))?\s*(?:@\s*([\d.,]+)\s*%?)?$/.exec(text.trim());
-    if (!m) throw new AufteilungFehler(`„${text}" ist kein Teil (Form: Kategorie=Betrag@Satz).`);
+    if (!m) throw new AufteilungFehler(fmt(_('“{text}” is not a part (form: category=amount@rate).'), { text }));
     const name = m[1].trim();
     const treffer = AUFTEILUNG_KATEGORIEN.filter((c) => c === name || c.startsWith(`${name} `) || c.startsWith(name));
     const exakt = AUFTEILUNG_KATEGORIEN.find((c) => c === name);
     if (!exakt && treffer.length !== 1) {
         throw new AufteilungFehler(
             treffer.length === 0
-                ? `„${name}" ist keine Kategorie für einen Teil.`
-                : `„${name}" ist nicht eindeutig: ${treffer.join(', ')}.`,
+                ? fmt(_('“{name}” is not a category for a part.'), { name })
+                : fmt(_('“{name}” is not unique: {matches}.'), { name, matches: treffer.join(', ') }),
         );
     }
     const zahl = (s: string) => Number(s.replace(/\.(?=\d{3}(\D|$))/g, '').replace(',', '.'));
     const betragText = m[2]?.trim();
     const betrag = betragText ? zahl(betragText) : null;
-    if (betragText && !Number.isFinite(betrag)) throw new AufteilungFehler(`„${betragText}" ist kein Betrag.`);
+    if (betragText && !Number.isFinite(betrag))
+        throw new AufteilungFehler(fmt(_('“{text}” is not an amount.'), { text: betragText }));
     const satz = m[3] != null ? zahl(m[3]) / 100 : undefined;
     return {
         category: exakt ?? treffer[0],
@@ -275,10 +299,9 @@ export function doppelzaehlungHinweis(
 ): string | null {
     if (privatanteile.length === 0 || teile.every((t) => t.betrieblich)) return null;
     const namen = privatanteile.map((p) => p.bezeichnung).join(', ');
-    return (
-        `Für diese Firma ist schon ein pauschaler Privatanteil eingetragen (${namen}). ` +
-        'Gilt er für dieselben Kosten, ist der private Teil doppelt erfasst — dann nur eins von beiden behalten.'
-    );
+    return `${fmt(_('A flat private share is already recorded for this company ({names}).'), { names: namen })} ${_(
+        'If it covers the same costs, the private part is counted twice — then keep only one of the two.',
+    )}`;
 }
 
 // ── Already filed periods ─────────────────────────────────────────────────────────────────────
@@ -330,11 +353,16 @@ export function betroffeneAbgaben(datum: string, abgaben: readonly Abgabe[]): Ab
  */
 export function abgabeWarnung(konflikte: readonly AbgabeKonflikt[], aufheben = false): string {
     const liste = konflikte.map((k) => k.label).join(', ');
-    const was = aufheben ? 'Das Aufheben der Aufteilung' : 'Die Aufteilung';
-    return (
-        `${liste} ${konflikte.length === 1 ? 'ist' : 'sind'} schon eingereicht. ${was} ändert die Zahlen dieses ` +
-        'Zeitraums; die eingereichten Werte bleiben im Register, wie sie sind. Beim Finanzamt kommt die Änderung ' +
-        'nur mit einer berichtigten Erklärung an (§ 153 AO; eine Voranmeldung wird als berichtigte Anmeldung neu ' +
-        'übermittelt, § 168 AO).'
-    );
+    const eingereicht = fmt(_n('{list} has already been filed.', '{list} have already been filed.', konflikte.length), {
+        list: liste,
+    });
+    // Two whole sentences rather than one with a swapped subject: German puts the verb elsewhere.
+    const folge = aufheben
+        ? _(
+              'Removing the split changes this period’s figures; the filed values stay in the register as they are. The Finanzamt only learns of the change through a corrected return (§ 153 AO; a Voranmeldung is re-submitted as a corrected Anmeldung, § 168 AO).',
+          )
+        : _(
+              'The split changes this period’s figures; the filed values stay in the register as they are. The Finanzamt only learns of the change through a corrected return (§ 153 AO; a Voranmeldung is re-submitted as a corrected Anmeldung, § 168 AO).',
+          );
+    return `${eingereicht} ${folge}`;
 }

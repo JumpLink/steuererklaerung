@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-16 22:08+0200\n"
+"POT-Creation-Date: 2026-10-16 22:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1613,6 +1613,117 @@ msgid "Split into {n} part"
 msgid_plural "Split into {n} parts"
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/core/elster/splitbuchung.ts:110
+msgid "A booking of €0 cannot be split."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:111
+msgid "A split needs at least two parts."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:115
+msgid "Only one part can take the remainder."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:120
+msgid "Only one part may be left without an amount — it takes the remainder."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:132
+msgid "Part {n}: “{category}” is not a category for a part."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:140
+msgid "Part {n}: {category} is income, the booking an expense."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:141
+msgid "Part {n}: {category} is an expense, the booking income."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:147
+msgid "Part {n}: there is no {rate} % VAT rate (0, 7 or 19 %)."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:157
+msgid "Part {n}: amount missing."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:161
+msgid ""
+"Part {n}: enter amounts as positive — the booking says whether it is an "
+"expense or income."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:169
+msgid "Part {n}: two decimal places at most."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:172
+msgid "Part {n}: a part of €0 is not a part."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:182
+msgid "The parts add up to {parts} €, the booking only to {total} €."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:190
+msgid ""
+"Nothing is left for the remainder (part {n}) — then it is one part fewer."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:197
+msgid "The parts add up to {parts} €, the booking to {total} €."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:229
+msgid "“{text}” is not a part (form: category=amount@rate)."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:236
+msgid "“{name}” is not a category for a part."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:237
+msgid "“{name}” is not unique: {matches}."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:244
+msgid "“{text}” is not an amount."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:302
+msgid "A flat private share is already recorded for this company ({names})."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:303
+msgid ""
+"If it covers the same costs, the private part is counted twice — then keep "
+"only one of the two."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:356
+msgid "{list} has already been filed."
+msgid_plural "{list} have already been filed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/elster/splitbuchung.ts:362
+msgid ""
+"Removing the split changes this period’s figures; the filed values stay in "
+"the register as they are. The Finanzamt only learns of the change through a "
+"corrected return (§ 153 AO; a Voranmeldung is re-submitted as a corrected "
+"Anmeldung, § 168 AO)."
+msgstr ""
+
+#: src/core/elster/splitbuchung.ts:365
+msgid ""
+"The split changes this period’s figures; the filed values stay in the "
+"register as they are. The Finanzamt only learns of the change through a "
+"corrected return (§ 153 AO; a Voranmeldung is re-submitted as a corrected "
+"Anmeldung, § 168 AO)."
+msgstr ""
 
 #: src/core/elster/steuerzahlungen.ts:128
 msgid "USt-VA Q{quarter}/{year} — VAT payable"
