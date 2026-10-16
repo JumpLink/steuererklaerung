@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-16 21:18+0200\n"
+"POT-Creation-Date: 2026-10-16 21:43+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -451,19 +451,349 @@ msgstr[1] "{n} Erstattungen zuordnen"
 msgid "refund for {original}"
 msgstr "Erstattung zu {original}"
 
-#: src/core/elster/euer-transactions.ts:262
+#: src/core/elster/euer-transactions.ts:260
 #: src/frontends/desktop/views/beleg-link-dialog.ts:230
 #: src/frontends/desktop/views/beleg-link-dialog.ts:246
 msgid "Receipt #{id}"
 msgstr "Beleg #{id}"
 
-#: src/core/elster/euer-transactions.ts:263
+#: src/core/elster/euer-transactions.ts:260
 #: src/frontends/desktop/views/beleg-eingang-view.ts:344
 #: src/frontends/desktop/views/beleg-eingang-view.ts:622
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:153
 #: src/frontends/desktop/views/tx-detail-dialog.ts:36
 msgid "Receipt"
 msgstr "Beleg"
+
+#: src/core/elster/frei-verfuegbar.ts:258
+msgid "Newest advance return in the register: {period}, filed on {date}."
+msgstr "Letzte Voranmeldung im Register: {period}, eingereicht am {date}."
+
+#: src/core/elster/frei-verfuegbar.ts:274
+msgid ""
+"No filed advance return in the register — counted from the first period "
+"whose filing deadline is still running ({period}). Record filed advance "
+"returns under Deadlines, then the app counts from the newest one."
+msgstr "Keine eingereichte Voranmeldung im Register — gerechnet ab dem ersten Zeitraum, dessen Abgabefrist noch läuft ({period}). Eingereichte Voranmeldungen unter Fristen eintragen, dann rechnet die App ab der letzten."
+
+#: src/core/elster/frei-verfuegbar.ts:280
+msgid ""
+"No advance returns required (annual return only) — counted from the start of "
+"the year."
+msgstr "Keine Voranmeldungen vorgesehen (nur Jahreserklärung) — gerechnet ab Jahresbeginn."
+
+#: src/core/elster/frei-verfuegbar.ts:294
+msgid "Does not apply because {reason}"
+msgstr "Entfällt, weil {reason}"
+
+#: src/core/elster/frei-verfuegbar.ts:295
+msgid "Not computable because {reason}"
+msgstr "Nicht berechenbar, weil {reason}"
+
+#: src/core/elster/frei-verfuegbar.ts:301
+#: src/core/elster/frei-verfuegbar.ts:309
+msgid "Account balance"
+msgstr "Kontostand"
+
+#: src/core/elster/frei-verfuegbar.ts:303
+msgid "no own accounts with imported transactions exist."
+msgstr "keine eigenen Konten mit importierten Umsätzen vorliegen."
+
+#: src/core/elster/frei-verfuegbar.ts:315
+msgid ""
+"Sum of the imported transactions on the one own account — as in the "
+"liquidity."
+msgid_plural ""
+"Sum of the imported transactions on the {n} own accounts — as in the "
+"liquidity."
+msgstr[0] "Summe der importierten Umsätze auf dem eigenen Konto — wie in der Liquidität."
+msgstr[1] "Summe der importierten Umsätze auf den {n} eigenen Konten — wie in der Liquidität."
+
+#: src/core/elster/frei-verfuegbar.ts:326
+msgid "newest transaction {date}"
+msgstr "letzte Buchung {date}"
+
+#: src/core/elster/frei-verfuegbar.ts:327
+msgid "no transactions"
+msgstr "keine Buchung"
+
+#: src/core/elster/frei-verfuegbar.ts:331
+msgid ""
+"The balance is the sum of the imported transactions; it is only correct when "
+"they are imported without a gap since the account was opened."
+msgstr "Der Saldo ist die Summe der importierten Umsätze; er stimmt nur, wenn die Umsätze ab Kontoeröffnung lückenlos importiert sind."
+
+#: src/core/elster/frei-verfuegbar.ts:341
+msgid "VAT since the last advance return"
+msgstr "USt seit der letzten Voranmeldung"
+
+#: src/core/elster/frei-verfuegbar.ts:346
+msgid "Period {from} to {to}"
+msgstr "Zeitraum {from} bis {to}"
+
+#: src/core/elster/frei-verfuegbar.ts:362
+msgid "There was no business activity after the last advance return."
+msgstr "Nach der letzten Voranmeldung lag keine Geschäftstätigkeit mehr."
+
+#: src/core/elster/frei-verfuegbar.ts:384
+msgid "VAT from {n} income"
+msgid_plural "VAT from {n} incomes"
+msgstr[0] "Umsatzsteuer aus {n} Einnahme"
+msgstr[1] "Umsatzsteuer aus {n} Einnahmen"
+
+#: src/core/elster/frei-verfuegbar.ts:386
+#: src/core/elster/frei-verfuegbar.ts:391
+msgid "transactions of the EÜR in the period"
+msgstr "Buchungen der EÜR im Zeitraum"
+
+#: src/core/elster/frei-verfuegbar.ts:389
+msgid "− input VAT from {n} expense"
+msgid_plural "− input VAT from {n} expenses"
+msgstr[0] "− Vorsteuer aus {n} Ausgabe"
+msgstr[1] "− Vorsteuer aus {n} Ausgaben"
+
+#: src/core/elster/frei-verfuegbar.ts:396
+msgid ""
+"Input VAT surplus: the Finanzamt will probably refund — this raises the free "
+"amount."
+msgstr "Vorsteuer-Überhang: das Finanzamt erstattet voraussichtlich — erhöht den freien Betrag."
+
+#: src/core/elster/frei-verfuegbar.ts:402
+msgid ""
+"Accrual taxation: the VAT arises with the invoice, not with the payment — "
+"computed from the payments here, so only an approximation."
+msgstr "Soll-Versteuerung: die USt entsteht mit der Rechnung, nicht mit der Zahlung — hier aus den Zahlungen gerechnet, also nur eine Näherung."
+
+#: src/core/elster/frei-verfuegbar.ts:414
+msgid ""
+"VAT collected minus input VAT paid since the last advance return — it "
+"belongs to the Finanzamt."
+msgstr "Vereinnahmte Umsatzsteuer minus gezahlte Vorsteuer seit der letzten Voranmeldung — gehört dem Finanzamt."
+
+#: src/core/elster/frei-verfuegbar.ts:422
+msgid "due date as per Bescheid, still unknown — deducted as a precaution"
+msgstr "Fälligkeit laut Bescheid, noch unbekannt — vorsichtshalber abgezogen"
+
+#: src/core/elster/frei-verfuegbar.ts:424
+msgid "overdue for {n} day ({date})"
+msgid_plural "overdue for {n} days ({date})"
+msgstr[0] "überfällig seit {n} Tag ({date})"
+msgstr[1] "überfällig seit {n} Tagen ({date})"
+
+#: src/core/elster/frei-verfuegbar.ts:428
+msgid "due today ({date})"
+msgstr "heute fällig ({date})"
+
+#: src/core/elster/frei-verfuegbar.ts:429
+msgid "due in {n} day ({date})"
+msgid_plural "due in {n} days ({date})"
+msgstr[0] "fällig in {n} Tag ({date})"
+msgstr[1] "fällig in {n} Tagen ({date})"
+
+#: src/core/elster/frei-verfuegbar.ts:437
+msgid "Tax payments due ({days} days)"
+msgstr "Fällige Steuerzahlungen ({days} Tage)"
+
+#: src/core/elster/frei-verfuegbar.ts:449
+msgid "{amount} not deducted: not due before {date}"
+msgstr "{amount} nicht abgezogen: fällig erst am {date}"
+
+#: src/core/elster/frei-verfuegbar.ts:455
+msgid "No filed, unpaid tax in the register."
+msgstr "Keine eingereichte, unbezahlte Steuer im Register."
+
+#: src/core/elster/frei-verfuegbar.ts:463
+msgid ""
+"Filed but not paid (deadline register): overdue, without a known date or due "
+"in the next {days} days."
+msgstr "Eingereicht, aber nicht bezahlt (Fristen-Register): überfällig, ohne bekanntes Datum oder in den nächsten {days} Tagen fällig."
+
+#: src/core/elster/frei-verfuegbar.ts:472
+msgid "Open incoming invoices"
+msgstr "Offene Eingangsrechnungen"
+
+#: src/core/elster/frei-verfuegbar.ts:485
+msgid "not computable because no amount is recorded — not deducted"
+msgstr "nicht berechenbar, weil kein Betrag erfasst ist — nicht abgezogen"
+
+#: src/core/elster/frei-verfuegbar.ts:487 src/core/elster/home.ts:350
+#: src/frontends/desktop/views/rechnungen-view.ts:561
+msgid "due {date}"
+msgstr "fällig {date}"
+
+#: src/core/elster/frei-verfuegbar.ts:491
+msgid "No open incoming invoice."
+msgstr "Keine offene Eingangsrechnung."
+
+#: src/core/elster/frei-verfuegbar.ts:500
+msgid ""
+"Gross amounts of open supplier invoices; {n} without an amount — not "
+"computable, not deducted."
+msgstr "Bruttobeträge offener Rechnungen von Lieferanten; {n} ohne Betrag — nicht berechenbar, nicht abgezogen."
+
+#: src/core/elster/frei-verfuegbar.ts:503
+msgid "Gross amounts of open supplier invoices."
+msgstr "Bruttobeträge offener Rechnungen von Lieferanten."
+
+#: src/core/elster/frei-verfuegbar.ts:510
+msgid "Recurring costs (next {days} days)"
+msgstr "Laufende Kosten (nächste {days} Tage)"
+
+#: src/core/elster/frei-verfuegbar.ts:512
+msgid "Free to spend without recurring costs (first version)"
+msgstr "Frei verfügbar ohne laufende Kosten (erste Fassung)"
+
+#: src/core/elster/frei-verfuegbar.ts:514
+msgid "account balance − VAT − tax payments due − open incoming invoices"
+msgstr "Kontostand − USt − fällige Steuerzahlungen − offene Eingangsrechnungen"
+
+#: src/core/elster/frei-verfuegbar.ts:530
+msgid "ended? newest payment {date} — not deducted"
+msgstr "beendet? letzte Zahlung {date} — nicht abgezogen"
+
+#: src/core/elster/frei-verfuegbar.ts:541
+msgid "expected since {date}, not debited up to the import date · {interval}"
+msgstr "erwartet seit {date}, bis zum Datenstand nicht abgebucht · {interval}"
+
+#: src/core/elster/frei-verfuegbar.ts:546
+msgid "expected {date}, after the last import · {interval}"
+msgstr "erwartet {date}, nach dem letzten Import · {interval}"
+
+#: src/core/elster/frei-verfuegbar.ts:550
+msgid "expected {date} · {interval}"
+msgstr "erwartet {date} · {interval}"
+
+#: src/core/elster/frei-verfuegbar.ts:561
+msgid ""
+"Transactions imported only up to {date}: {n} expected payment after it is "
+"not in the balance and is deducted. The next import makes it more exact."
+msgid_plural ""
+"Transactions imported only up to {date}: {n} expected payments after it are "
+"not in the balance and are deducted. The next import makes it more exact."
+msgstr[0] "Umsätze nur bis {date} importiert: {n} erwartete Zahlung danach ist im Kontostand nicht enthalten und abgezogen. Nach dem nächsten Import stimmt es genauer."
+msgstr[1] "Umsätze nur bis {date} importiert: {n} erwartete Zahlungen danach sind im Kontostand nicht enthalten und abgezogen. Nach dem nächsten Import stimmt es genauer."
+
+#: src/core/elster/frei-verfuegbar.ts:571
+msgid "No confirmed recurring costs."
+msgstr "Keine bestätigten laufenden Kosten."
+
+#: src/core/elster/frei-verfuegbar.ts:577
+msgid ""
+"{n} detected series not confirmed yet — not deducted (Transactions → "
+"Recurring costs)."
+msgid_plural ""
+"{n} detected series not confirmed yet — not deducted (Transactions → "
+"Recurring costs)."
+msgstr[0] "{n} erkannte Serie noch nicht bestätigt — nicht abgezogen (Buchungen → Laufende Kosten)."
+msgstr[1] "{n} erkannte Serien noch nicht bestätigt — nicht abgezogen (Buchungen → Laufende Kosten)."
+
+#: src/core/elster/frei-verfuegbar.ts:594
+msgid ""
+"Confirmed recurring costs whose next payment is expected up to {days} days "
+"after the reference date, or was already due and is not debited yet."
+msgstr "Bestätigte laufende Kosten, deren nächste Zahlung bis {days} Tage nach dem Stichtag erwartet wird oder schon fällig war und noch nicht abgebucht ist."
+
+#: src/core/elster/frei-verfuegbar.ts:604
+msgid "Income tax {year} (estimate)"
+msgstr "Einkommensteuer {year} (Schätzung)"
+
+#: src/core/elster/frei-verfuegbar.ts:615
+msgid ""
+"The same estimate as the tax forecast: income tax, Soli and church tax minus "
+"what was withheld and prepaid."
+msgstr "Dieselbe Schätzung wie die Steuer-Prognose: ESt, Soli und Kirchensteuer minus Einbehaltenes und Vorauszahlungen."
+
+#: src/core/elster/frei-verfuegbar.ts:619
+msgid "ESt + Soli + church tax as estimated"
+msgstr "ESt + Soli + Kirchensteuer laut Schätzung"
+
+#: src/core/elster/frei-verfuegbar.ts:621
+msgid "ESt calculation (Settings → Private)"
+msgstr "ESt-Berechnung (Einstellungen → Privat)"
+
+#: src/core/elster/frei-verfuegbar.ts:624
+msgid "− wage tax, Soli, church tax withheld"
+msgstr "− Lohnsteuer, Soli, Kirchensteuer einbehalten"
+
+#: src/core/elster/frei-verfuegbar.ts:626
+msgid "Lohnsteuerbescheinigung"
+msgstr "Lohnsteuerbescheinigung"
+
+#: src/core/elster/frei-verfuegbar.ts:629
+msgid "− ESt prepayments made"
+msgstr "− ESt-Vorauszahlungen geleistet"
+
+#: src/core/elster/frei-verfuegbar.ts:631
+msgid "Settings → Private"
+msgstr "Einstellungen → Privat"
+
+#: src/core/elster/frei-verfuegbar.ts:633
+#: src/core/elster/frei-verfuegbar.ts:680
+msgid "Result negative: probably a refund."
+msgstr "Ergebnis negativ: voraussichtlich eine Erstattung."
+
+#: src/core/elster/frei-verfuegbar.ts:640
+msgid "Gewerbesteuer {year} (estimate)"
+msgstr "Gewerbesteuer {year} (Schätzung)"
+
+#: src/core/elster/frei-verfuegbar.ts:652
+msgid ""
+"The same estimate as the tax forecast, minus the Gewerbesteuer payments "
+"booked in the year."
+msgstr "Dieselbe Schätzung wie die Steuer-Prognose, minus die im Jahr gebuchten Gewerbesteuer-Zahlungen."
+
+#: src/core/elster/frei-verfuegbar.ts:655
+msgid "Gewerbesteuer as estimated"
+msgstr "Gewerbesteuer laut Schätzung"
+
+#: src/core/elster/frei-verfuegbar.ts:659
+msgid "base amount {base} × Hebesatz {rate} % (below the allowance)"
+msgstr "Messbetrag {base} × Hebesatz {rate} % (unter dem Freibetrag)"
+
+#: src/core/elster/frei-verfuegbar.ts:663
+msgid "base amount {base} × Hebesatz {rate} %"
+msgstr "Messbetrag {base} × Hebesatz {rate} %"
+
+#: src/core/elster/frei-verfuegbar.ts:668
+msgid "booked {date}"
+msgstr "gebucht {date}"
+
+#: src/core/elster/frei-verfuegbar.ts:674
+msgid "No Gewerbesteuer payment {year} found on this company’s accounts."
+msgstr "Keine Gewerbesteuer-Zahlung {year} auf den Konten dieser Firma gefunden."
+
+#: src/core/elster/frei-verfuegbar.ts:719
+#: src/frontends/desktop/views/home-view.ts:186
+#: src/frontends/desktop/views/home-view.ts:196
+msgid "Free to spend"
+msgstr "Frei verfügbar"
+
+#: src/core/elster/frei-verfuegbar.ts:724
+msgid ""
+"account balance − VAT since the last advance return − tax payments due − "
+"open incoming invoices − recurring costs ({days} days)"
+msgstr "Kontostand − USt seit der letzten Voranmeldung − fällige Steuerzahlungen − offene Eingangsrechnungen − laufende Kosten ({days} Tage)"
+
+#: src/core/elster/frei-verfuegbar.ts:729
+msgid ""
+"A calculation, not a recommendation. As of {date}; the tax reserve is not "
+"deducted."
+msgstr "Eine Rechnung, keine Empfehlung. Stand {date}; die Steuerrücklage ist nicht abgezogen."
+
+#: src/core/elster/frei-verfuegbar.ts:734
+#: src/frontends/desktop/views/home-view.ts:208
+msgid "Tax reserve {year} (estimate)"
+msgstr "Steuerrücklage {year} (Schätzung)"
+
+#: src/core/elster/frei-verfuegbar.ts:739
+msgid "estimated income tax + Gewerbesteuer − prepayments made"
+msgstr "geschätzte Einkommensteuer + Gewerbesteuer − geleistete Vorauszahlungen"
+
+#: src/core/elster/frei-verfuegbar.ts:742
+msgid ""
+"Only a calculation, not a booking: the same estimate as the tax forecast. "
+"Only the Steuerbescheid is binding."
+msgstr "Nur eine Rechnung, keine Buchung: dieselbe Schätzung wie die Steuer-Prognose. Verbindlich ist allein der Steuerbescheid."
 
 #: src/core/elster/hinweise.ts:112
 msgid "Mark as fine"
@@ -842,11 +1172,6 @@ msgstr "teilweise zu viel"
 #: src/core/elster/home.ts:320
 msgid "clarify"
 msgstr "klären"
-
-#: src/core/elster/home.ts:350
-#: src/frontends/desktop/views/rechnungen-view.ts:561
-msgid "due {date}"
-msgstr "fällig {date}"
 
 #: src/core/elster/iban-wechsel.ts:94
 msgid "IBAN change: cannot be checked"
@@ -1715,14 +2040,93 @@ msgstr ""
 msgid "booking {id}"
 msgstr "Buchung {id}"
 
-#: src/core/presenters/erstattungen.ts:215
-#: src/core/presenters/erstattungen.ts:242
+#: src/core/presenters/erstattungen.ts:217
+#: src/core/presenters/erstattungen.ts:245
 msgid "Booking {id} does not belong to {entity} {year}."
 msgstr "Die Buchung {id} gehört nicht zu {entity} {year}."
 
-#: src/core/presenters/erstattungen.ts:221
+#: src/core/presenters/erstattungen.ts:224
 msgid "{id} is not a candidate for this refund. Candidates: {known}"
 msgstr "{id} ist für diese Erstattung kein Kandidat. Kandidaten: {known}"
+
+#: src/core/presenters/frei-verfuegbar.ts:47
+msgid ""
+"the German tax features are switched off for this entity (Settings → Country "
+"& taxes)."
+msgstr "die deutschen Steuerfunktionen für diese Entität ausgeschaltet sind (Einstellungen → Land & Steuern)."
+
+#: src/core/presenters/frei-verfuegbar.ts:72
+msgid "the deadline register is not readable: {error}"
+msgstr "das Fristen-Register nicht lesbar ist: {error}"
+
+#: src/core/presenters/frei-verfuegbar.ts:85
+msgid "no VAT arises here (no ELSTER details)."
+msgstr "hier keine Umsatzsteuer anfällt (keine ELSTER-Angaben)."
+
+#: src/core/presenters/frei-verfuegbar.ts:117
+msgid "the transactions could not be loaded: {error}"
+msgstr "die Buchungen nicht geladen werden konnten: {error}"
+
+#: src/core/presenters/frei-verfuegbar.ts:158
+msgid ""
+"Paperless: incoming invoices {from}–{to} with payment status “open” (amount: "
+"to pay, else gross)."
+msgstr "Paperless: Eingangsrechnungen {from}–{to} mit Zahlungsstatus „offen“ (Betrag: zu zahlen, sonst brutto)."
+
+#: src/core/presenters/frei-verfuegbar.ts:176
+msgid ""
+"Built-in DMS: incoming invoices {from}–{to} without a linked payment. "
+"Linking the payment in the receipt inbox takes the invoice out of here."
+msgstr "Eingebautes DMS: Eingangsrechnungen {from}–{to} ohne verknüpfte Zahlung. Wer im Beleg-Eingang die Zahlung verknüpft, nimmt die Rechnung hier heraus."
+
+#: src/core/presenters/frei-verfuegbar.ts:186
+msgid "Receipt without a title"
+msgstr "Beleg ohne Titel"
+
+#: src/core/presenters/frei-verfuegbar.ts:195
+msgid "the receipts could not be loaded: {error}"
+msgstr "die Belege nicht geladen werden konnten: {error}"
+
+#: src/core/presenters/frei-verfuegbar.ts:211
+msgid "the recurring costs could not be loaded: {error}"
+msgstr "die laufenden Kosten nicht geladen werden konnten: {error}"
+
+#: src/core/presenters/frei-verfuegbar.ts:222
+msgid "the partners pay their income tax personally — as in the tax forecast."
+msgstr "die Gesellschafter ihre Einkommensteuer persönlich zahlen — wie in der Steuer-Prognose."
+
+#: src/core/presenters/frei-verfuegbar.ts:227
+msgid "no ESt details are recorded for this entity (Settings → Private)."
+msgstr "für diese Entität keine ESt-Angaben hinterlegt sind (Einstellungen → Privat)."
+
+#: src/core/presenters/frei-verfuegbar.ts:233
+msgid "no ESt details are recorded for {year} (Settings → Private)."
+msgstr "für {year} keine ESt-Angaben hinterlegt sind (Einstellungen → Privat)."
+
+#: src/core/presenters/frei-verfuegbar.ts:251
+msgid "the ESt estimate failed: {error}"
+msgstr "die ESt-Schätzung fehlschlug: {error}"
+
+#: src/core/presenters/frei-verfuegbar.ts:259
+msgid "no business is recorded (no ELSTER details)."
+msgstr "kein Gewerbebetrieb hinterlegt ist (keine ELSTER-Angaben)."
+
+#: src/core/presenters/frei-verfuegbar.ts:261
+msgid "the business was given up before {year}."
+msgstr "der Betrieb vor {year} aufgegeben wurde."
+
+#: src/core/presenters/frei-verfuegbar.ts:264
+msgid "the business only started after {year}."
+msgstr "der Betrieb erst nach {year} begann."
+
+#: src/core/presenters/frei-verfuegbar.ts:269
+msgid ""
+"the municipality and the Hebesatz are missing (Settings → Gewerbesteuer)."
+msgstr "Gemeinde und Hebesatz fehlen (Einstellungen → Gewerbesteuer)."
+
+#: src/core/presenters/frei-verfuegbar.ts:295
+msgid "the Gewerbesteuer estimate failed: {error}"
+msgstr "die Gewerbesteuer-Schätzung fehlschlug: {error}"
 
 #: src/core/presenters/zu-pruefen.ts:76
 msgid "Booking {id} is not up for review in {entity} {year}."
@@ -1731,15 +2135,18 @@ msgstr "Die Buchung {id} ist für {entity} {year} nicht zu prüfen."
 #: src/core/presenters/zu-pruefen.ts:79
 msgid ""
 "An unclassified booking has nothing to confirm — change its category instead."
-msgstr "Eine unklassifizierte Buchung hat nichts zu bestätigen — bitte umbuchen."
+msgstr ""
+"Eine unklassifizierte Buchung hat nichts zu bestätigen — bitte umbuchen."
 
-#: src/core/presenters/zu-pruefen.ts:83
+#: src/core/presenters/zu-pruefen.ts:82
 msgid ""
 "The payment is probably a refund — answer \"Does this belong to that payment?"
 "\" first."
-msgstr "Die Zahlung ist vermutlich eine Erstattung — erst „Gehört das zu dieser Zahlung?“ beantworten."
+msgstr ""
+"Die Zahlung ist vermutlich eine Erstattung — erst „Gehört das zu dieser "
+"Zahlung?“ beantworten."
 
-#: src/core/presenters/zu-pruefen.ts:138
+#: src/core/presenters/zu-pruefen.ts:136
 msgid "None of the chosen bookings belongs to this year."
 msgstr "Keine der gewählten Buchungen gehört zu diesem Jahr."
 
@@ -3380,59 +3787,61 @@ msgstr "Teilerstattung — offen {amount} €"
 msgid "reference matches"
 msgstr "Verwendungszweck passt"
 
-#: src/frontends/desktop/views/erstattung-group.ts:43
+#: src/frontends/desktop/views/erstattung-group.ts:44
 msgid "Which payment does the refund belong to?"
 msgstr "Zu welcher Zahlung gehört die Erstattung?"
 
-#: src/frontends/desktop/views/erstattung-group.ts:76
+#: src/frontends/desktop/views/erstattung-group.ts:78
 msgid "Does this belong to that payment?"
 msgstr "Gehört das zu dieser Zahlung?"
 
-#: src/frontends/desktop/views/erstattung-group.ts:78
+#: src/frontends/desktop/views/erstattung-group.ts:80
 msgid ""
 "\"Yes\" takes over the payment's category and VAT rate and reduces its "
 "expense along with the input VAT."
-msgstr "„Ja“ übernimmt Kategorie und Steuersatz der Zahlung und mindert deren Ausgabe samt Vorsteuer."
+msgstr ""
+"„Ja“ übernimmt Kategorie und Steuersatz der Zahlung und mindert deren "
+"Ausgabe samt Vorsteuer."
 
-#: src/frontends/desktop/views/erstattung-group.ts:92
+#: src/frontends/desktop/views/erstattung-group.ts:94
 msgid "Refund"
 msgstr "Erstattung"
 
-#: src/frontends/desktop/views/erstattung-group.ts:98
+#: src/frontends/desktop/views/erstattung-group.ts:100
 msgid "Refund assigned: {category}"
 msgstr "Erstattung zugeordnet: {category}"
 
-#: src/frontends/desktop/views/erstattung-group.ts:108
+#: src/frontends/desktop/views/erstattung-group.ts:110
 #: src/frontends/desktop/views/setup-assistant.ts:404
 #: src/frontends/desktop/views/setup-assistant.ts:595
 #: src/frontends/desktop/views/setup-assistant.ts:606
 msgid "No"
 msgstr "Nein"
 
-#: src/frontends/desktop/views/erstattung-group.ts:109
+#: src/frontends/desktop/views/erstattung-group.ts:111
 msgid "Does not belong to: {booking}"
 msgstr "Gehört nicht zu: {booking}"
 
-#: src/frontends/desktop/views/erstattung-group.ts:111
+#: src/frontends/desktop/views/erstattung-group.ts:113
 #: src/frontends/desktop/views/setup-assistant.ts:504
 msgid "Not assigned"
 msgstr "Nicht zugeordnet"
 
-#: src/frontends/desktop/views/erstattung-group.ts:113
+#: src/frontends/desktop/views/erstattung-group.ts:116
 #: src/frontends/desktop/views/setup-assistant.ts:595
 #: src/frontends/desktop/views/setup-assistant.ts:606
 msgid "Yes"
 msgstr "Ja"
 
-#: src/frontends/desktop/views/erstattung-group.ts:114
+#: src/frontends/desktop/views/erstattung-group.ts:120
 msgid "Belongs to: {booking}"
 msgstr "Gehört zu: {booking}"
 
-#: src/frontends/desktop/views/erstattung-group.ts:123
+#: src/frontends/desktop/views/erstattung-group.ts:129
 msgid "Pick another payment …"
 msgstr "Andere Zahlung wählen …"
 
-#: src/frontends/desktop/views/erstattung-group.ts:124
+#: src/frontends/desktop/views/erstattung-group.ts:130
 msgid "{n} candidate"
 msgid_plural "{n} candidates"
 msgstr[0] "{n} Kandidat"
@@ -3545,11 +3954,6 @@ msgid "expected refund"
 msgstr "vsl. Erstattung"
 
 #: src/frontends/desktop/views/home-view.ts:186
-#: src/frontends/desktop/views/home-view.ts:196
-msgid "Free to spend"
-msgstr "Frei verfügbar"
-
-#: src/frontends/desktop/views/home-view.ts:186
 #: src/frontends/desktop/views/home-view.ts:197
 #: src/frontends/desktop/views/home-view.ts:209
 msgid "not computable"
@@ -3563,10 +3967,6 @@ msgstr "Stand {date} · eine Rechnung, keine Empfehlung"
 #: src/frontends/desktop/views/home-view.ts:215
 msgid "incomplete — see derivation"
 msgstr "unvollständig — siehe Herleitung"
-
-#: src/frontends/desktop/views/home-view.ts:208
-msgid "Tax reserve {year} (estimate)"
-msgstr "Steuerrücklage {year} (Schätzung)"
 
 #: src/frontends/desktop/views/home-view.ts:214
 msgid "ESt + GewSt − prepayments"

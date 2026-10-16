@@ -125,7 +125,7 @@ export default async () => {
             const q = ustZeitraum(QUARTAL, TODAY);
             // Q3 is due 10 Oct (a Saturday → 12 Oct), still running; Q2's deadline passed in July.
             expect(q.von).toBe('2026-07-01');
-            expect(q.grund).toContain('Keine eingereichte Voranmeldung');
+            expect(q.grund).toContain('No filed advance return');
             // Monthly with Dauerfrist: August is due 10 Oct (→ 12 Oct), July's deadline (10 Sep) passed.
             expect(ustZeitraum({ cadence: 'month', dauerfrist: true, eingereicht: [] }, TODAY).von).toBe('2026-08-01');
         });
@@ -147,7 +147,7 @@ export default async () => {
 
         await it('counts USt minus Vorsteuer only between the last VA and the Stichtag', async () => {
             expect(term('ust-seit-va').betrag).toBe(152);
-            expect(term('ust-seit-va').zeilen[0].label).toBe('Zeitraum 01.07.2026 bis 08.10.2026');
+            expect(term('ust-seit-va').zeilen[0].label).toBe('Period 01.07.2026 to 08.10.2026');
         });
 
         await it(`deducts overdue, undated and ${FAELLIG_FENSTER_TAGE}-day payments, lists the later one without deducting`, async () => {
@@ -155,9 +155,9 @@ export default async () => {
             expect(t.betrag).toBe(280); // 200 overdue + 50 in 12 days + 30 per Bescheid; 70 in 32 days stays out
             const later = t.zeilen.find((z) => z.label.includes('2024'))!;
             expect(later.betrag).toBeNull();
-            expect(later.herkunft).toContain('nicht abgezogen');
-            expect(t.zeilen.find((z) => z.label.includes('Q2/2026'))!.herkunft).toContain('überfällig');
-            expect(t.zeilen.find((z) => z.label.includes('Gewerbesteuer'))!.herkunft).toContain('vorsichtshalber');
+            expect(later.herkunft).toContain('not deducted');
+            expect(t.zeilen.find((z) => z.label.includes('Q2/2026'))!.herkunft).toContain('overdue');
+            expect(t.zeilen.find((z) => z.label.includes('Gewerbesteuer'))!.herkunft).toContain('as a precaution');
         });
 
         await it('deducts the gross amounts of open incoming invoices', async () => {
@@ -167,7 +167,7 @@ export default async () => {
         await it('combines the terms into Frei verfügbar', async () => {
             expect(m.freiVerfuegbar.betrag).toBe(4675.7); // 5250,50 − 152 − 280 − 142,80
             expect(m.freiVerfuegbar.vollstaendig).toBe(true);
-            expect(m.freiVerfuegbar.hinweis).toContain('keine Empfehlung');
+            expect(m.freiVerfuegbar.hinweis).toContain('not a recommendation');
         });
 
         await it('computes the Steuerrücklage as estimate minus prepayments', async () => {
@@ -176,7 +176,7 @@ export default async () => {
             expect(r.terme.find((t) => t.key === 'gewst')!.betrag).toBe(1100);
             expect(r.betrag).toBe(2900);
             expect(r.erstattung).toBe(false);
-            expect(r.label).toContain('Schätzung');
+            expect(r.label).toContain('estimate');
         });
     });
 
@@ -194,7 +194,7 @@ export default async () => {
             expect(m.steuerruecklage.betrag).toBe(-500);
             expect(m.steuerruecklage.erstattung).toBe(true);
             expect(m.steuerruecklage.vollstaendig).toBe(true);
-            expect(m.steuerruecklage.terme[0].zeilen.some((z) => z.label.includes('Erstattung'))).toBe(true);
+            expect(m.steuerruecklage.terme[0].zeilen.some((z) => z.label.includes('refund'))).toBe(true);
         });
 
         await it('a Vorsteuer surplus raises the free amount and says why', async () => {
@@ -216,7 +216,7 @@ export default async () => {
             );
             const t = m.freiVerfuegbar.terme.find((x) => x.key === 'ust-seit-va')!;
             expect(t.betrag).toBe(-95);
-            expect(t.zeilen.some((z) => z.label.startsWith('Vorsteuer-Überhang'))).toBe(true);
+            expect(t.zeilen.some((z) => z.label.startsWith('Input VAT surplus'))).toBe(true);
             expect(m.freiVerfuegbar.betrag).toBe(round(computeFreiVerfuegbar(base).freiVerfuegbar.betrag! + 152 + 95));
         });
     });
@@ -226,7 +226,7 @@ export default async () => {
             const m = computeFreiVerfuegbar(input({ konten: [] }));
             const k = m.freiVerfuegbar.terme[0];
             expect(k.status).toBe('nicht-berechenbar');
-            expect(k.erklaerung.startsWith('Nicht berechenbar, weil')).toBe(true);
+            expect(k.erklaerung.startsWith('Not computable because')).toBe(true);
             expect(m.freiVerfuegbar.betrag).toBeNull();
             expect(m.freiVerfuegbar.vollstaendig).toBe(false);
         });
@@ -238,15 +238,15 @@ export default async () => {
                         status: 'ok',
                         daten: {
                             ...QUARTAL,
-                            buchungen: { status: 'nicht-berechenbar', grund: 'die Buchungen fehlen.' },
+                            buchungen: { status: 'nicht-berechenbar', grund: 'the transactions are missing.' },
                         },
                     },
                 }),
             );
             const t = m.freiVerfuegbar.terme.find((x) => x.key === 'ust-seit-va')!;
             expect(t.status).toBe('nicht-berechenbar');
-            expect(t.erklaerung).toBe('Nicht berechenbar, weil die Buchungen fehlen.');
-            expect(t.zeilen[0].label.startsWith('Zeitraum')).toBe(true); // the window is still shown
+            expect(t.erklaerung).toBe('Not computable because the transactions are missing.');
+            expect(t.zeilen[0].label.startsWith('Period')).toBe(true); // the window is still shown
             expect(m.freiVerfuegbar.vollstaendig).toBe(false);
             expect(m.freiVerfuegbar.betrag).toBe(4827.7); // 5250,50 − 280 − 142,80, USt left out
         });
@@ -265,7 +265,7 @@ export default async () => {
             );
             const t = m.freiVerfuegbar.terme.find((x) => x.key === 'offene-eingangsrechnungen')!;
             expect(t.status).toBe('teilweise');
-            expect(t.zeilen[0].herkunft).toContain('nicht berechenbar');
+            expect(t.zeilen[0].herkunft).toContain('not computable');
             expect(m.freiVerfuegbar.vollstaendig).toBe(false);
         });
 
@@ -312,7 +312,7 @@ export default async () => {
             );
             const t = m.freiVerfuegbar.terme.find((x) => x.key === 'ust-seit-va')!;
             expect(t.betrag).toBe(0);
-            expect(t.erklaerung).toContain('keine Geschäftstätigkeit');
+            expect(t.erklaerung).toContain('no business activity');
         });
     });
 };

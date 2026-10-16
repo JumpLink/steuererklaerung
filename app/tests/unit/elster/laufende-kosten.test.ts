@@ -257,7 +257,7 @@ export default async () => {
             const m = input([]);
             expect(term(m).betrag).toBe(0);
             expect(m.freiVerfuegbar.betrag).toBe(5000);
-            expect(term(m).zeilen.some((z) => z.label.startsWith('3 erkannte Serien noch nicht bestätigt'))).toBe(true);
+            expect(term(m).zeilen.some((z) => z.label.startsWith('3 detected series not confirmed yet'))).toBe(true);
         });
 
         await it(`deducts each expected payment of a confirmed series within ${FAELLIG_FENSTER_TAGE} days`, async () => {
@@ -267,17 +267,17 @@ export default async () => {
                 entscheide('software:monatlich', 'abgelehnt'),
             ]);
             const t = term(m);
-            expect(t.label).toBe(`Laufende Kosten (nächste ${FAELLIG_FENSTER_TAGE} Tage)`);
+            expect(t.label).toBe(`Recurring costs (next ${FAELLIG_FENSTER_TAGE} days)`);
             // Rent 1 Aug (within 30 days of 10 Jul) + insurance 20 Jul; rent 1 Sep is outside.
             expect(t.betrag).toBe(800);
             expect(t.zeilen.filter((z) => z.betrag != null && z.label !== t.zeilen[0].label).length).toBe(2);
             expect(m.freiVerfuegbar.betrag).toBe(4200);
-            expect(m.freiVerfuegbar.formel).toContain('laufende Kosten');
+            expect(m.freiVerfuegbar.formel).toContain('recurring costs');
         });
 
         await it('keeps the first-version figure visible in the derivation', async () => {
             const t = term(input([entscheide('hausverwaltung:monatlich', 'bestaetigt')]));
-            expect(t.zeilen[0].label).toBe('Frei verfügbar ohne laufende Kosten (erste Fassung)');
+            expect(t.zeilen[0].label).toBe('Free to spend without recurring costs (first version)');
             expect(t.zeilen[0].betrag).toBe(5000);
         });
 
@@ -316,10 +316,10 @@ export default async () => {
             expect(t.betrag).toBe(2000);
             expect(
                 t.zeilen.some((x) =>
-                    x.label.startsWith('Umsätze nur bis 15.07.2025 importiert: 3 erwartete Zahlungen'),
+                    x.label.startsWith('Transactions imported only up to 15.07.2025: 3 expected payments'),
                 ),
             ).toBe(true);
-            expect(t.zeilen.some((x) => (x.herkunft ?? '').includes('nach dem letzten Import'))).toBe(true);
+            expect(t.zeilen.some((x) => (x.herkunft ?? '').includes('after the last import'))).toBe(true);
         });
 
         await it('does not deduct a confirmed series that has stopped', async () => {
@@ -343,7 +343,7 @@ export default async () => {
             });
             const t = m.freiVerfuegbar.terme.find((x) => x.key === 'laufende-kosten')!;
             expect(t.betrag).toBe(0);
-            expect(t.zeilen.some((z) => (z.herkunft ?? '').startsWith('beendet?'))).toBe(true);
+            expect(t.zeilen.some((z) => (z.herkunft ?? '').startsWith('ended?'))).toBe(true);
         });
     });
 

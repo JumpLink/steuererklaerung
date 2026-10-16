@@ -21,6 +21,7 @@
  */
 
 import { round2, fmtDe } from '../lib/money.ts';
+import { _, _n, fmt } from '../lib/i18n.ts';
 import { shiftToBusinessDay, type OffeneSteuerzahlung } from './steuerzahlungen.ts';
 import { ustvaDeadline } from './steuertermine.ts';
 import { abstandText, erwarteteZahlungen, type LaufendeKosten } from './laufende-kosten.ts';
@@ -254,7 +255,10 @@ export function ustZeitraum(stand: UstVaStand, stichtag: string): { von: string;
     if (filed.length) {
         const last = filed[0];
         von = addDays(last.p.end, 1);
-        grund = `Letzte Voranmeldung im Register: ${last.p.label}, eingereicht am ${deDate(last.filedAt)}.`;
+        grund = fmt(_('Newest advance return in the register: {period}, filed on {date}.'), {
+            period: last.p.label,
+            date: deDate(last.filedAt),
+        });
     } else if (stand.cadence) {
         let period = periodOf(stichtag, stand.cadence);
         for (let i = 0; i < 24; i++) {
@@ -265,12 +269,15 @@ export function ustZeitraum(stand: UstVaStand, stichtag: string): { von: string;
             period = prev;
         }
         von = ustvaPeriode(period)!.start;
-        grund =
-            'Keine eingereichte Voranmeldung im Register — gerechnet ab dem ersten Zeitraum, dessen Abgabefrist noch läuft ' +
-            `(${ustvaPeriode(period)!.label}). Eingereichte Voranmeldungen unter Fristen eintragen, dann rechnet die App ab der letzten.`;
+        grund = fmt(
+            _(
+                'No filed advance return in the register — counted from the first period whose filing deadline is still running ({period}). Record filed advance returns under Deadlines, then the app counts from the newest one.',
+            ),
+            { period: ustvaPeriode(period)!.label },
+        );
     } else {
         von = `${stichtag.slice(0, 4)}-01-01`;
-        grund = 'Keine Voranmeldungen vorgesehen (nur Jahreserklärung) — gerechnet ab Jahresbeginn.';
+        grund = _('No advance returns required (annual return only) — counted from the start of the year.');
     }
     if (stand.businessStart && von < stand.businessStart) von = stand.businessStart;
     return { von, grund };
@@ -282,33 +289,47 @@ function notComputable(
     op: '+' | '-',
     t: { status: 'entfaellt' | 'nicht-berechenbar'; grund: string },
 ): FreiTerm {
-    const erklaerung = t.status === 'entfaellt' ? `Entfällt, weil ${t.grund}` : `Nicht berechenbar, weil ${t.grund}`;
+    const erklaerung =
+        t.status === 'entfaellt'
+            ? fmt(_('Does not apply because {reason}'), { reason: t.grund })
+            : fmt(_('Not computable because {reason}'), { reason: t.grund });
     return { key, label, op, status: t.status, betrag: 0, erklaerung, zeilen: [] };
 }
 
 function kontostandTerm(konten: KontoSaldo[]): FreiTerm {
     if (!konten.length) {
-        return notComputable('kontostand', 'Kontostand', '+', {
+        return notComputable('kontostand', _('Account balance'), '+', {
             status: 'nicht-berechenbar',
-            grund: 'keine eigenen Konten mit importierten Umsätzen vorliegen.',
+            grund: _('no own accounts with imported transactions exist.'),
         });
     }
     const betrag = round2(konten.reduce((s, k) => s + k.saldo, 0));
     return {
         key: 'kontostand',
-        label: 'Kontostand',
+        label: _('Account balance'),
         op: '+',
         status: 'ok',
         betrag,
-        erklaerung: `Summe der importierten Umsätze auf ${konten.length === 1 ? 'dem eigenen Konto' : `den ${konten.length} eigenen Konten`} — wie in der Liquidität.`,
+        erklaerung: fmt(
+            _n(
+                'Sum of the imported transactions on the one own account — as in the liquidity.',
+                'Sum of the imported transactions on the {n} own accounts — as in the liquidity.',
+                konten.length,
+            ),
+            { n: konten.length },
+        ),
         zeilen: [
             ...konten.map((k) => ({
                 label: k.name,
                 betrag: round2(k.saldo),
-                herkunft: k.letzteBuchung ? `letzte Buchung ${deDate(k.letzteBuchung)}` : 'keine Buchung',
+                herkunft: k.letzteBuchung
+                    ? fmt(_('newest transaction {date}'), { date: deDate(k.letzteBuchung) })
+                    : _('no transactions'),
             })),
             {
-                label: 'Der Saldo ist die Summe der importierten Umsätze; er stimmt nur, wenn die Umsätze ab Kontoeröffnung lückenlos importiert sind.',
+                label: _(
+                    'The balance is the sum of the imported transactions; it is only correct when they are imported without a gap since the account was opened.',
+                ),
                 betrag: null,
             },
         ],
@@ -317,12 +338,12 @@ function kontostandTerm(konten: KontoSaldo[]): FreiTerm {
 
 function ustTerm(ust: Teil<UstSeitVaInput>, stichtag: string): FreiTerm {
     const key = 'ust-seit-va';
-    const label = 'USt seit der letzten Voranmeldung';
+    const label = _('VAT since the last advance return');
     if (ust.status !== 'ok') return notComputable(key, label, '-', ust);
     const { von, grund } = ustZeitraum(ust.daten, stichtag);
     const bis = ust.daten.businessEnd && ust.daten.businessEnd < stichtag ? ust.daten.businessEnd : stichtag;
     const zeitraum: HerleitungsZeile = {
-        label: `Zeitraum ${deDate(von)} bis ${deDate(bis)}`,
+        label: fmt(_('Period {from} to {to}'), { from: deDate(von), to: deDate(bis) }),
         betrag: null,
         herkunft: grund,
     };
@@ -338,7 +359,7 @@ function ustTerm(ust: Teil<UstSeitVaInput>, stichtag: string): FreiTerm {
             op: '-',
             status: 'ok',
             betrag: 0,
-            erklaerung: 'Nach der letzten Voranmeldung lag keine Geschäftstätigkeit mehr.',
+            erklaerung: _('There was no business activity after the last advance return.'),
             zeilen: [zeitraum],
         };
     }
@@ -360,24 +381,26 @@ function ustTerm(ust: Teil<UstSeitVaInput>, stichtag: string): FreiTerm {
     const zeilen: HerleitungsZeile[] = [
         zeitraum,
         {
-            label: `Umsatzsteuer aus ${nEin} Einnahme${nEin === 1 ? '' : 'n'}`,
+            label: fmt(_n('VAT from {n} income', 'VAT from {n} incomes', nEin), { n: nEin }),
             betrag: round2(ustEin),
-            herkunft: 'Buchungen der EÜR im Zeitraum',
+            herkunft: _('transactions of the EÜR in the period'),
         },
         {
-            label: `− Vorsteuer aus ${nAus} Ausgabe${nAus === 1 ? '' : 'n'}`,
+            label: fmt(_n('− input VAT from {n} expense', '− input VAT from {n} expenses', nAus), { n: nAus }),
             betrag: round2(vorsteuer),
-            herkunft: 'Buchungen der EÜR im Zeitraum',
+            herkunft: _('transactions of the EÜR in the period'),
         },
     ];
     if (betrag < 0)
         zeilen.push({
-            label: 'Vorsteuer-Überhang: das Finanzamt erstattet voraussichtlich — erhöht den freien Betrag.',
+            label: _('Input VAT surplus: the Finanzamt will probably refund — this raises the free amount.'),
             betrag: null,
         });
     if (ust.daten.basis === 'soll') {
         zeilen.push({
-            label: 'Soll-Versteuerung: die USt entsteht mit der Rechnung, nicht mit der Zahlung — hier aus den Zahlungen gerechnet, also nur eine Näherung.',
+            label: _(
+                'Accrual taxation: the VAT arises with the invoice, not with the payment — computed from the payments here, so only an approximation.',
+            ),
             betrag: null,
         });
     }
@@ -387,24 +410,31 @@ function ustTerm(ust: Teil<UstSeitVaInput>, stichtag: string): FreiTerm {
         op: '-',
         status: 'ok',
         betrag,
-        erklaerung:
-            'Vereinnahmte Umsatzsteuer minus gezahlte Vorsteuer seit der letzten Voranmeldung — gehört dem Finanzamt.',
+        erklaerung: _(
+            'VAT collected minus input VAT paid since the last advance return — it belongs to the Finanzamt.',
+        ),
         zeilen,
     };
 }
 
 function faelligText(z: OffeneSteuerzahlung): string {
     if (z.dueDate == null || z.daysUntil == null)
-        return 'Fälligkeit laut Bescheid, noch unbekannt — vorsichtshalber abgezogen';
+        return _('due date as per Bescheid, still unknown — deducted as a precaution');
     if (z.daysUntil < 0)
-        return `überfällig seit ${-z.daysUntil} Tag${z.daysUntil === -1 ? '' : 'en'} (${deDate(z.dueDate)})`;
-    if (z.daysUntil === 0) return `heute fällig (${deDate(z.dueDate)})`;
-    return `fällig in ${z.daysUntil} Tag${z.daysUntil === 1 ? '' : 'en'} (${deDate(z.dueDate)})`;
+        return fmt(_n('overdue for {n} day ({date})', 'overdue for {n} days ({date})', -z.daysUntil), {
+            n: -z.daysUntil,
+            date: deDate(z.dueDate),
+        });
+    if (z.daysUntil === 0) return fmt(_('due today ({date})'), { date: deDate(z.dueDate) });
+    return fmt(_n('due in {n} day ({date})', 'due in {n} days ({date})', z.daysUntil), {
+        n: z.daysUntil,
+        date: deDate(z.dueDate),
+    });
 }
 
 function vorauszahlungenTerm(t: Teil<OffeneSteuerzahlung[]>): FreiTerm {
     const key = 'steuerzahlungen-faellig';
-    const label = `Fällige Steuerzahlungen (${FAELLIG_FENSTER_TAGE} Tage)`;
+    const label = fmt(_('Tax payments due ({days} days)'), { days: FAELLIG_FENSTER_TAGE });
     if (t.status !== 'ok') return notComputable(key, label, '-', t);
     const zeilen: HerleitungsZeile[] = [];
     let betrag = 0;
@@ -416,24 +446,30 @@ function vorauszahlungenTerm(t: Teil<OffeneSteuerzahlung[]>): FreiTerm {
             betrag: zaehlt ? round2(z.amount) : null,
             herkunft: zaehlt
                 ? faelligText(z)
-                : `${eur(z.amount)} nicht abgezogen: fällig erst am ${deDate(z.dueDate!)}`,
+                : fmt(_('{amount} not deducted: not due before {date}'), {
+                      amount: eur(z.amount),
+                      date: deDate(z.dueDate!),
+                  }),
         });
     }
-    if (!zeilen.length) zeilen.push({ label: 'Keine eingereichte, unbezahlte Steuer im Register.', betrag: null });
+    if (!zeilen.length) zeilen.push({ label: _('No filed, unpaid tax in the register.'), betrag: null });
     return {
         key,
         label,
         op: '-',
         status: 'ok',
         betrag: round2(betrag),
-        erklaerung: `Eingereicht, aber nicht bezahlt (Fristen-Register): überfällig, ohne bekanntes Datum oder in den nächsten ${FAELLIG_FENSTER_TAGE} Tagen fällig.`,
+        erklaerung: fmt(
+            _('Filed but not paid (deadline register): overdue, without a known date or due in the next {days} days.'),
+            { days: FAELLIG_FENSTER_TAGE },
+        ),
         zeilen,
     };
 }
 
 function eingangsrechnungenTerm(t: Teil<EingangsrechnungenInput>): FreiTerm {
     const key = 'offene-eingangsrechnungen';
-    const label = 'Offene Eingangsrechnungen';
+    const label = _('Open incoming invoices');
     if (t.status !== 'ok') return notComputable(key, label, '-', t);
     let betrag = 0;
     let ohneBetrag = 0;
@@ -446,13 +482,13 @@ function eingangsrechnungenTerm(t: Teil<EingangsrechnungenInput>): FreiTerm {
             betrag: p.betrag,
             herkunft:
                 p.betrag == null
-                    ? 'nicht berechenbar, weil kein Betrag erfasst ist — nicht abgezogen'
+                    ? _('not computable because no amount is recorded — not deducted')
                     : p.dueDate
-                      ? `fällig ${deDate(p.dueDate)}`
+                      ? fmt(_('due {date}'), { date: deDate(p.dueDate) })
                       : undefined,
         });
     }
-    if (!zeilen.length) zeilen.push({ label: 'Keine offene Eingangsrechnung.', betrag: null });
+    if (!zeilen.length) zeilen.push({ label: _('No open incoming invoice.'), betrag: null });
     zeilen.push({ label: t.daten.regel, betrag: null });
     return {
         key,
@@ -461,19 +497,21 @@ function eingangsrechnungenTerm(t: Teil<EingangsrechnungenInput>): FreiTerm {
         status: ohneBetrag ? 'teilweise' : 'ok',
         betrag: round2(betrag),
         erklaerung: ohneBetrag
-            ? `Bruttobeträge offener Rechnungen von Lieferanten; ${ohneBetrag} ohne Betrag — nicht berechenbar, nicht abgezogen.`
-            : 'Bruttobeträge offener Rechnungen von Lieferanten.',
+            ? fmt(_('Gross amounts of open supplier invoices; {n} without an amount — not computable, not deducted.'), {
+                  n: ohneBetrag,
+              })
+            : _('Gross amounts of open supplier invoices.'),
         zeilen,
     };
 }
 
 function laufendeKostenTerm(t: Teil<LaufendeKostenInput>, stichtag: string, ohne: number | null): FreiTerm {
     const key = 'laufende-kosten';
-    const label = `Laufende Kosten (nächste ${FAELLIG_FENSTER_TAGE} Tage)`;
+    const label = fmt(_('Recurring costs (next {days} days)'), { days: FAELLIG_FENSTER_TAGE });
     const v1: HerleitungsZeile = {
-        label: 'Frei verfügbar ohne laufende Kosten (erste Fassung)',
+        label: _('Free to spend without recurring costs (first version)'),
         betrag: ohne,
-        herkunft: 'Kontostand − USt − fällige Steuerzahlungen − offene Eingangsrechnungen',
+        herkunft: _('account balance − VAT − tax payments due − open incoming invoices'),
     };
     if (t.status !== 'ok') {
         const n = notComputable(key, label, '-', t);
@@ -489,7 +527,7 @@ function laufendeKostenTerm(t: Teil<LaufendeKostenInput>, stichtag: string, ohne
             zeilen.push({
                 label: lk.empfaenger,
                 betrag: null,
-                herkunft: `beendet? letzte Zahlung ${deDate(lk.zuletzt)} — nicht abgezogen`,
+                herkunft: fmt(_('ended? newest payment {date} — not deducted'), { date: deDate(lk.zuletzt) }),
             });
             continue;
         }
@@ -500,25 +538,48 @@ function laufendeKostenTerm(t: Teil<LaufendeKostenInput>, stichtag: string, ohne
                 label: z.empfaenger,
                 betrag: z.betrag,
                 herkunft: z.ueberfaellig
-                    ? `erwartet seit ${deDate(z.datum)}, bis zum Datenstand nicht abgebucht · ${abstandText(z.abstand)}`
+                    ? fmt(_('expected since {date}, not debited up to the import date · {interval}'), {
+                          date: deDate(z.datum),
+                          interval: abstandText(z.abstand),
+                      })
                     : z.nachDatenstand
-                      ? `erwartet ${deDate(z.datum)}, nach dem letzten Import · ${abstandText(z.abstand)}`
-                      : `erwartet ${deDate(z.datum)} · ${abstandText(z.abstand)}`,
+                      ? fmt(_('expected {date}, after the last import · {interval}'), {
+                            date: deDate(z.datum),
+                            interval: abstandText(z.abstand),
+                        })
+                      : fmt(_('expected {date} · {interval}'), {
+                            date: deDate(z.datum),
+                            interval: abstandText(z.abstand),
+                        }),
             });
         }
     }
     if (nachImport > 0 && datenstand) {
         zeilen.push({
-            label: `Umsätze nur bis ${deDate(datenstand)} importiert: ${nachImport} erwartete Zahlung${nachImport === 1 ? '' : 'en'} danach ${nachImport === 1 ? 'ist' : 'sind'} im Kontostand nicht enthalten und abgezogen. Nach dem nächsten Import stimmt es genauer.`,
+            label: fmt(
+                _n(
+                    'Transactions imported only up to {date}: {n} expected payment after it is not in the balance and is deducted. The next import makes it more exact.',
+                    'Transactions imported only up to {date}: {n} expected payments after it are not in the balance and are deducted. The next import makes it more exact.',
+                    nachImport,
+                ),
+                { date: deDate(datenstand), n: nachImport },
+            ),
             betrag: null,
         });
     }
     if (!t.daten.bestaetigt.length) {
-        zeilen.push({ label: 'Keine bestätigten laufenden Kosten.', betrag: null });
+        zeilen.push({ label: _('No confirmed recurring costs.'), betrag: null });
     }
     if (t.daten.offen > 0) {
         zeilen.push({
-            label: `${t.daten.offen} erkannte Serie${t.daten.offen === 1 ? '' : 'n'} noch nicht bestätigt — nicht abgezogen (Buchungen → Laufende Kosten).`,
+            label: fmt(
+                _n(
+                    '{n} detected series not confirmed yet — not deducted (Transactions → Recurring costs).',
+                    '{n} detected series not confirmed yet — not deducted (Transactions → Recurring costs).',
+                    t.daten.offen,
+                ),
+                { n: t.daten.offen },
+            ),
             betrag: null,
         });
     }
@@ -528,14 +589,19 @@ function laufendeKostenTerm(t: Teil<LaufendeKostenInput>, stichtag: string, ohne
         op: '-',
         status: 'ok',
         betrag: round2(betrag),
-        erklaerung: `Bestätigte laufende Kosten, deren nächste Zahlung bis ${FAELLIG_FENSTER_TAGE} Tage nach dem Stichtag erwartet wird oder schon fällig war und noch nicht abgebucht ist.`,
+        erklaerung: fmt(
+            _(
+                'Confirmed recurring costs whose next payment is expected up to {days} days after the reference date, or was already due and is not debited yet.',
+            ),
+            { days: FAELLIG_FENSTER_TAGE },
+        ),
         zeilen,
     };
 }
 
 function estTerm(t: Teil<EstSchaetzung>, jahr: number): FreiTerm {
     const key = 'est';
-    const label = `Einkommensteuer ${jahr} (Schätzung)`;
+    const label = fmt(_('Income tax {year} (estimate)'), { year: jahr });
     if (t.status !== 'ok') return notComputable(key, label, '+', t);
     const { soll, einbehalten, vorauszahlungen } = t.daten;
     const betrag = round2(soll - einbehalten - vorauszahlungen);
@@ -545,32 +611,33 @@ function estTerm(t: Teil<EstSchaetzung>, jahr: number): FreiTerm {
         op: '+',
         status: 'ok',
         betrag,
-        erklaerung:
-            'Dieselbe Schätzung wie die Steuer-Prognose: ESt, Soli und Kirchensteuer minus Einbehaltenes und Vorauszahlungen.',
+        erklaerung: _(
+            'The same estimate as the tax forecast: income tax, Soli and church tax minus what was withheld and prepaid.',
+        ),
         zeilen: [
             {
-                label: 'ESt + Soli + Kirchensteuer laut Schätzung',
+                label: _('ESt + Soli + church tax as estimated'),
                 betrag: round2(soll),
-                herkunft: 'ESt-Berechnung (Einstellungen → Privat)',
+                herkunft: _('ESt calculation (Settings → Private)'),
             },
             {
-                label: '− Lohnsteuer, Soli, Kirchensteuer einbehalten',
+                label: _('− wage tax, Soli, church tax withheld'),
                 betrag: round2(einbehalten),
-                herkunft: 'Lohnsteuerbescheinigung',
+                herkunft: _('Lohnsteuerbescheinigung'),
             },
             {
-                label: '− ESt-Vorauszahlungen geleistet',
+                label: _('− ESt prepayments made'),
                 betrag: round2(vorauszahlungen),
-                herkunft: 'Einstellungen → Privat',
+                herkunft: _('Settings → Private'),
             },
-            ...(betrag < 0 ? [{ label: 'Ergebnis negativ: voraussichtlich eine Erstattung.', betrag: null }] : []),
+            ...(betrag < 0 ? [{ label: _('Result negative: probably a refund.'), betrag: null }] : []),
         ],
     };
 }
 
 function gewstTerm(t: Teil<GewstSchaetzung>, jahr: number): FreiTerm {
     const key = 'gewst';
-    const label = `Gewerbesteuer ${jahr} (Schätzung)`;
+    const label = fmt(_('Gewerbesteuer {year} (estimate)'), { year: jahr });
     if (t.status !== 'ok') return notComputable(key, label, '+', t);
     const { gewerbesteuer, messbetrag, hebesatz, zahlungen } = t.daten;
     // Outflows are negative; a refund (positive) reduces what counts as paid.
@@ -582,27 +649,35 @@ function gewstTerm(t: Teil<GewstSchaetzung>, jahr: number): FreiTerm {
         op: '+',
         status: 'ok',
         betrag,
-        erklaerung: 'Dieselbe Schätzung wie die Steuer-Prognose, minus die im Jahr gebuchten Gewerbesteuer-Zahlungen.',
+        erklaerung: _('The same estimate as the tax forecast, minus the Gewerbesteuer payments booked in the year.'),
         zeilen: [
             {
-                label: 'Gewerbesteuer laut Schätzung',
+                label: _('Gewerbesteuer as estimated'),
                 betrag: round2(gewerbesteuer),
-                herkunft: `Messbetrag ${eur(messbetrag)} × Hebesatz ${hebesatz} %${messbetrag === 0 ? ' (unter dem Freibetrag)' : ''}`,
+                herkunft:
+                    messbetrag === 0
+                        ? fmt(_('base amount {base} × Hebesatz {rate} % (below the allowance)'), {
+                              base: eur(messbetrag),
+                              rate: hebesatz,
+                          })
+                        : fmt(_('base amount {base} × Hebesatz {rate} %'), { base: eur(messbetrag), rate: hebesatz }),
             },
             ...zahlungen.map((z) => ({
                 label: `− ${z.text}`,
                 betrag: round2(-z.betrag),
-                herkunft: `gebucht ${deDate(z.datum)}`,
+                herkunft: fmt(_('booked {date}'), { date: deDate(z.datum) }),
             })),
             ...(zahlungen.length
                 ? []
                 : [
                       {
-                          label: `Keine Gewerbesteuer-Zahlung ${jahr} auf den Konten dieser Firma gefunden.`,
+                          label: fmt(_('No Gewerbesteuer payment {year} found on this company’s accounts.'), {
+                              year: jahr,
+                          }),
                           betrag: null,
                       },
                   ]),
-            ...(betrag < 0 ? [{ label: 'Ergebnis negativ: voraussichtlich eine Erstattung.', betrag: null }] : []),
+            ...(betrag < 0 ? [{ label: _('Result negative: probably a refund.'), betrag: null }] : []),
         ],
     };
 }
@@ -641,23 +716,31 @@ export function computeFreiVerfuegbar(input: FreiVerfuegbarInput): FreiVerfuegba
         entityId: input.entityId,
         entityName: input.entityName,
         freiVerfuegbar: {
-            label: 'Frei verfügbar',
+            label: _('Free to spend'),
             betrag: frei[0].status === 'ok' ? combine(frei) : null,
             vollstaendig: vollstaendig(frei),
-            formel: `Kontostand − USt seit der letzten Voranmeldung − fällige Steuerzahlungen − offene Eingangsrechnungen − laufende Kosten (${FAELLIG_FENSTER_TAGE} Tage)`,
+            formel: fmt(
+                _(
+                    'account balance − VAT since the last advance return − tax payments due − open incoming invoices − recurring costs ({days} days)',
+                ),
+                { days: FAELLIG_FENSTER_TAGE },
+            ),
             terme: frei,
-            hinweis: `Eine Rechnung, keine Empfehlung. Stand ${deDate(input.stichtag)}; die Steuerrücklage ist nicht abgezogen.`,
+            hinweis: fmt(_('A calculation, not a recommendation. As of {date}; the tax reserve is not deducted.'), {
+                date: deDate(input.stichtag),
+            }),
         },
         steuerruecklage: {
-            label: `Steuerrücklage ${jahr} (Schätzung)`,
+            label: fmt(_('Tax reserve {year} (estimate)'), { year: jahr }),
             jahr,
             betrag: ruecklageBetrag,
             erstattung: ruecklageBetrag != null && ruecklageBetrag < 0,
             vollstaendig: vollstaendig(ruecklage),
-            formel: 'geschätzte Einkommensteuer + Gewerbesteuer − geleistete Vorauszahlungen',
+            formel: _('estimated income tax + Gewerbesteuer − prepayments made'),
             terme: ruecklage,
-            hinweis:
-                'Nur eine Rechnung, keine Buchung: dieselbe Schätzung wie die Steuer-Prognose. Verbindlich ist allein der Steuerbescheid.',
+            hinweis: _(
+                'Only a calculation, not a booking: the same estimate as the tax forecast. Only the Steuerbescheid is binding.',
+            ),
         },
     };
 }
