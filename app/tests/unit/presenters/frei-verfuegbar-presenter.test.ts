@@ -113,7 +113,7 @@ export default async () => {
         });
 
         await it('names what is missing for the Steuerrücklage', async () => {
-            expect(term('est').erklaerung).toContain('keine ESt-Angaben');
+            expect(term('est').erklaerung).toContain('no ESt details');
             expect(term('gewst').erklaerung).toContain('Hebesatz');
             expect(m.steuerruecklage.betrag).toBeNull();
         });

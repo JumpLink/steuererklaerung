@@ -132,7 +132,7 @@ export default async () => {
             const { session, entity } = await workspace('none');
             const frei = await loadFreiVerfuegbar(session, entity, { year: 2025, today: '2025-07-01' });
             expect(frei.steuerruecklage.terme.every((t) => t.status === 'entfaellt')).toBe(true);
-            expect(frei.steuerruecklage.terme[0].erklaerung).toContain('Steuerfunktionen');
+            expect(frei.steuerruecklage.terme[0].erklaerung).toContain('tax features are switched off');
         });
 
         await it('requireTaxModule refuses a tax-off entity with a clear message', async () => {

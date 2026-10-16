@@ -33,6 +33,7 @@ import { listOpenItems } from '../actions/fristen.ts';
 import { estJahr } from '../config/index.ts';
 import { loadGewst, loadSteuerkonto } from './steuer.ts';
 import { loadLaufendeKosten } from './laufende-kosten.ts';
+import { _, fmt } from '../lib/i18n.ts';
 import type { PresenterSession } from './session.ts';
 import type { EntityModel } from './workspace.ts';
 
@@ -43,8 +44,7 @@ const errText = (err: unknown) => (err instanceof Error ? err.message : String(e
 /** Close a "weil …" clause with exactly one full stop. */
 const satz = (s: string) => (/[.!?]$/.test(s.trim()) ? s.trim() : `${s.trim()}.`);
 
-const STEUER_AUS =
-    'die deutschen Steuerfunktionen für diese Entität ausgeschaltet sind (Einstellungen → Land & Steuern).';
+const steuerAus = () => _('the German tax features are switched off for this entity (Settings → Country & taxes).');
 
 function konten(entity: EntityModel): KontoSaldo[] {
     const byKey = new Map<string, KontoSaldo>();
@@ -67,7 +67,10 @@ function ownFilings(entity: EntityModel): Teil<Filing[]> {
         const ids = new Set(entityIdAliases(entity.id));
         return { status: 'ok', daten: listFilings().filter((f) => ids.has(f.entityId)) };
     } catch (err) {
-        return { status: 'nicht-berechenbar', grund: `das Fristen-Register nicht lesbar ist: ${satz(errText(err))}` };
+        return {
+            status: 'nicht-berechenbar',
+            grund: fmt(_('the deadline register is not readable: {error}'), { error: satz(errText(err)) }),
+        };
     }
 }
 
@@ -77,9 +80,9 @@ async function ust(
     filings: Teil<Filing[]>,
     stichtag: string,
 ): Promise<Teil<UstSeitVaInput>> {
-    if (!entity.capabilities.vatReturn) return { status: 'entfaellt', grund: STEUER_AUS };
+    if (!entity.capabilities.vatReturn) return { status: 'entfaellt', grund: steuerAus() };
     const elster = entity.elster;
-    if (!elster) return { status: 'entfaellt', grund: 'hier keine Umsatzsteuer anfällt (keine ELSTER-Angaben).' };
+    if (!elster) return { status: 'entfaellt', grund: _('no VAT arises here (no ELSTER details).') };
     if (filings.status !== 'ok') return filings;
     const stand: UstVaStand = {
         // Released from Voranmeldungen → no period was declared, the whole year is still open.
@@ -111,14 +114,14 @@ async function ust(
     } catch (err) {
         buchungen = {
             status: 'nicht-berechenbar',
-            grund: `die Buchungen nicht geladen werden konnten: ${satz(errText(err))}`,
+            grund: fmt(_('the transactions could not be loaded: {error}'), { error: satz(errText(err)) }),
         };
     }
     return { status: 'ok', daten: { ...stand, buchungen } };
 }
 
 function steuerzahlungen(entity: EntityModel, filings: Teil<Filing[]>, stichtag: string): Teil<OffeneSteuerzahlung[]> {
-    if (!entity.capabilities.taxDeadlines) return { status: 'entfaellt', grund: STEUER_AUS };
+    if (!entity.capabilities.taxDeadlines) return { status: 'entfaellt', grund: steuerAus() };
     if (filings.status !== 'ok') return filings;
     const self = {
         ids: entityIdAliases(entity.id),
@@ -150,7 +153,12 @@ async function eingangsrechnungen(
             return {
                 status: 'ok',
                 daten: {
-                    regel: `Paperless: Eingangsrechnungen ${year - 1}–${year} mit Zahlungsstatus „offen“ (Betrag: zu zahlen, sonst brutto).`,
+                    regel: fmt(
+                        _(
+                            'Paperless: incoming invoices {from}–{to} with payment status “open” (amount: to pay, else gross).',
+                        ),
+                        { from: year - 1, to: year },
+                    ),
                     posten: open.map((i) => ({
                         id: String(i.id),
                         label: [i.correspondent, i.title].filter(Boolean).join(' — ') || `Dokument ${i.id}`,
@@ -163,21 +171,29 @@ async function eingangsrechnungen(
         return {
             status: 'ok',
             daten: {
-                regel: `Eingebautes DMS: Eingangsrechnungen ${year - 1}–${year} ohne verknüpfte Zahlung. Wer im Beleg-Eingang die Zahlung verknüpft, nimmt die Rechnung hier heraus.`,
+                regel: fmt(
+                    _(
+                        'Built-in DMS: incoming invoices {from}–{to} without a linked payment. Linking the payment in the receipt inbox takes the invoice out of here.',
+                    ),
+                    { from: year - 1, to: year },
+                ),
                 posten: incoming
                     .filter((d) => d.linkedTxIds.length === 0)
                     .map((d) => ({
                         id: d.id,
                         label:
                             [d.correspondent, d.invoiceNumber ?? d.title].filter(Boolean).join(' — ') ||
-                            'Beleg ohne Titel',
+                            _('Receipt without a title'),
                         betrag: d.gross,
                         dueDate: null,
                     })),
             },
         };
     } catch (err) {
-        return { status: 'nicht-berechenbar', grund: `die Belege nicht geladen werden konnten: ${satz(errText(err))}` };
+        return {
+            status: 'nicht-berechenbar',
+            grund: fmt(_('the receipts could not be loaded: {error}'), { error: satz(errText(err)) }),
+        };
     }
 }
 
@@ -192,29 +208,29 @@ function laufendeKosten(session: PresenterSession, entity: EntityModel): Teil<La
     } catch (err) {
         return {
             status: 'nicht-berechenbar',
-            grund: `die laufenden Kosten nicht geladen werden konnten: ${satz(errText(err))}`,
+            grund: fmt(_('the recurring costs could not be loaded: {error}'), { error: satz(errText(err)) }),
         };
     }
 }
 
 function est(entity: EntityModel, year: number): Teil<EstSchaetzung> {
-    if (!entity.capabilities.taxForecast) return { status: 'entfaellt', grund: STEUER_AUS };
+    if (!entity.capabilities.taxForecast) return { status: 'entfaellt', grund: steuerAus() };
     if (!entity.est) {
         if (entity.elster?.gesellschafter.length) {
             return {
                 status: 'entfaellt',
-                grund: 'die Gesellschafter ihre Einkommensteuer persönlich zahlen — wie in der Steuer-Prognose.',
+                grund: _('the partners pay their income tax personally — as in the tax forecast.'),
             };
         }
         return {
             status: 'nicht-berechenbar',
-            grund: 'für diese Entität keine ESt-Angaben hinterlegt sind (Einstellungen → Privat).',
+            grund: _('no ESt details are recorded for this entity (Settings → Private).'),
         };
     }
     if (!estJahr(entity.est, year)) {
         return {
             status: 'nicht-berechenbar',
-            grund: `für ${year} keine ESt-Angaben hinterlegt sind (Einstellungen → Privat).`,
+            grund: fmt(_('no ESt details are recorded for {year} (Settings → Private).'), { year }),
         };
     }
     try {
@@ -230,22 +246,28 @@ function est(entity: EntityModel, year: number): Teil<EstSchaetzung> {
             },
         };
     } catch (err) {
-        return { status: 'nicht-berechenbar', grund: `die ESt-Schätzung fehlschlug: ${satz(errText(err))}` };
+        return {
+            status: 'nicht-berechenbar',
+            grund: fmt(_('the ESt estimate failed: {error}'), { error: satz(errText(err)) }),
+        };
     }
 }
 
 async function gewst(session: PresenterSession, entity: EntityModel, year: number): Promise<Teil<GewstSchaetzung>> {
-    if (!entity.capabilities.tradeTax) return { status: 'entfaellt', grund: STEUER_AUS };
+    if (!entity.capabilities.tradeTax) return { status: 'entfaellt', grund: steuerAus() };
     const elster = entity.elster;
-    if (!elster) return { status: 'entfaellt', grund: 'kein Gewerbebetrieb hinterlegt ist (keine ELSTER-Angaben).' };
+    if (!elster) return { status: 'entfaellt', grund: _('no business is recorded (no ELSTER details).') };
     if (elster.business_end_date && elster.business_end_date < `${year}-01-01`) {
-        return { status: 'entfaellt', grund: `der Betrieb vor ${year} aufgegeben wurde.` };
+        return { status: 'entfaellt', grund: fmt(_('the business was given up before {year}.'), { year }) };
     }
     if (elster.business_start_date && elster.business_start_date > `${year}-12-31`) {
-        return { status: 'entfaellt', grund: `der Betrieb erst nach ${year} begann.` };
+        return { status: 'entfaellt', grund: fmt(_('the business only started after {year}.'), { year }) };
     }
     if (!elster.gewerbe) {
-        return { status: 'nicht-berechenbar', grund: 'Gemeinde und Hebesatz fehlen (Einstellungen → Gewerbesteuer).' };
+        return {
+            status: 'nicht-berechenbar',
+            grund: _('the municipality and the Hebesatz are missing (Settings → Gewerbesteuer).'),
+        };
     }
     try {
         const report = await loadGewst(session, entity, year);
@@ -268,7 +290,10 @@ async function gewst(session: PresenterSession, entity: EntityModel, year: numbe
             },
         };
     } catch (err) {
-        return { status: 'nicht-berechenbar', grund: `die Gewerbesteuer-Schätzung fehlschlug: ${satz(errText(err))}` };
+        return {
+            status: 'nicht-berechenbar',
+            grund: fmt(_('the Gewerbesteuer estimate failed: {error}'), { error: satz(errText(err)) }),
+        };
     }
 }
 
