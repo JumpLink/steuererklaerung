@@ -6,6 +6,7 @@
  * from {@link listOpenItems}.
  */
 
+import { _, _n, fmt } from '../lib/i18n.ts';
 import type { OpenItem } from './fristen.ts';
 import type { IcsEvent } from './ics.ts';
 
@@ -22,7 +23,7 @@ export interface FristenReminder {
     dueSoon: number;
     /** One line: how many, how many of them late. */
     title: string;
-    /** One line per item (capped), then a "… und n weitere" line if needed. */
+    /** One line per item (capped), then a "… and n more" line if needed. */
     lines: string[];
     /** `lines` joined — what most notification APIs want. */
     body: string;
@@ -54,17 +55,16 @@ export function buildFristenReminder(items: OpenItem[], opts: { leadDays?: numbe
 
     const overdue = actionable.filter((i) => i.overdue).length;
     const dueSoon = actionable.length - overdue;
-    const noun = actionable.length === 1 ? 'Frist' : 'Fristen';
-    let title = `${actionable.length} ${noun}`;
-    if (overdue > 0) title += `, ${overdue} überfällig`;
-    if (dueSoon > 0) title += `, ${dueSoon} in ${lead} Tagen oder früher`;
+    let title = fmt(_n('{n} deadline', '{n} deadlines', actionable.length), { n: actionable.length });
+    if (overdue > 0) title += fmt(_(', {n} overdue'), { n: overdue });
+    if (dueSoon > 0) title += fmt(_(', {n} in {days} days or sooner'), { n: dueSoon, days: lead });
 
     const lines = actionable.slice(0, MAX_LINES).map((i) => {
-        const mark = i.overdue ? 'ÜBERFÄLLIG' : 'bald fällig';
+        const mark = i.overdue ? _('OVERDUE') : _('due soon');
         const amount = i.amount != null ? `  ${formatAmount(i.amount)}` : '';
         return `${mark}  ${i.dueDate}${amount}  ${label(i)}`;
     });
-    if (actionable.length > MAX_LINES) lines.push(`… und ${actionable.length - MAX_LINES} weitere`);
+    if (actionable.length > MAX_LINES) lines.push(fmt(_('… and {n} more'), { n: actionable.length - MAX_LINES }));
 
     return { items: actionable, overdue, dueSoon, title, lines, body: lines.join('\n') };
 }
@@ -82,7 +82,7 @@ export function buildFristenIcsEvents(items: OpenItem[]): IcsEvent[] {
         events.push({
             uid: `openitem-${i.id}`,
             date: i.dueDate,
-            summary: `${i.overdue ? 'ÜBERFÄLLIG: ' : ''}[Offen] ${label(i)}${amount}`,
+            summary: `${i.overdue ? `${_('OVERDUE')}: ` : ''}${_('[Open]')} ${label(i)}${amount}`,
             description: i.title ?? undefined,
             alarmDaysBefore: FRISTEN_ALARM_DAYS,
         });

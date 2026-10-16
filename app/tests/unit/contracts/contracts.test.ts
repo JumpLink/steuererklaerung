@@ -22,7 +22,7 @@ import {
     noticeDeadline,
     parseReminderOffsets,
     paymentAccounts,
-    PRICE_INCREASE_HINT,
+    priceIncreaseHint,
     upcomingDeadlines,
 } from '../../../src/core/contracts/contracts.ts';
 import { buildIcs } from '../../../src/core/actions/ics.ts';
@@ -267,7 +267,7 @@ export default async () => {
             );
             const changed = findings.filter((f) => f.kind === 'changed');
             expect(changed.map((f) => f.kind === 'changed' && f.direction).join(',')).toBe('increase,decrease');
-            expect(changed[0].kind === 'changed' && changed[0].hint).toBe(PRICE_INCREASE_HINT);
+            expect(changed[0].kind === 'changed' && changed[0].hint).toBe(priceIncreaseHint());
             expect(changed[1].kind === 'changed' && changed[1].hint).toBe(undefined);
         });
 

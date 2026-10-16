@@ -36,8 +36,8 @@ export default async () => {
             expect(reminder?.items.map((i) => i.id).join(',')).toBe('1,2');
             expect(reminder?.overdue).toBe(1);
             expect(reminder?.dueSoon).toBe(1);
-            expect(reminder?.title).toBe('2 Fristen, 1 überfällig, 1 in 7 Tagen oder früher');
-            expect(reminder?.lines[0].startsWith('ÜBERFÄLLIG  2026-10-01')).toBe(true);
+            expect(reminder?.title).toBe('2 deadlines, 1 overdue, 1 in 7 days or sooner');
+            expect(reminder?.lines[0].startsWith('OVERDUE  2026-10-01')).toBe(true);
             expect(reminder?.body.includes('Beispiel GmbH — Rechnung 2026-001')).toBe(true);
         });
 
@@ -51,7 +51,7 @@ export default async () => {
             const many = Array.from({ length: 8 }, (_, n) => item({ id: n + 1 }));
             const reminder = buildFristenReminder(many);
             expect(reminder?.lines.length).toBe(6);
-            expect(reminder?.lines[5]).toBe('… und 3 weitere');
+            expect(reminder?.lines[5]).toBe('… and 3 more');
         });
     });
 
@@ -64,13 +64,13 @@ export default async () => {
             expect(events.length).toBe(1);
             expect(events[0].uid).toBe('openitem-42');
             expect(events[0].date).toBe('2026-10-01');
-            expect(events[0].summary.startsWith('ÜBERFÄLLIG: ')).toBe(true);
+            expect(events[0].summary.startsWith('OVERDUE: ')).toBe(true);
             expect(events[0].alarmDaysBefore).toBe(3);
         });
 
         await it('markiert nicht überfällige Posten nicht und liefert ein VALARM 3 Tage vorher', () => {
             const events = buildFristenIcsEvents([item({ dueDate: '2026-10-20', daysUntil: 10, overdue: false })]);
-            expect(events[0].summary.startsWith('ÜBERFÄLLIG')).toBe(false);
+            expect(events[0].summary.startsWith('OVERDUE')).toBe(false);
             const ics = buildIcs(events, { dtstamp: '20261010T000000Z' });
             expect(ics.includes('TRIGGER:-P3D')).toBe(true);
             expect(ics.includes('DTSTART;VALUE=DATE:20261020')).toBe(true);

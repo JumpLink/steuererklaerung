@@ -68,7 +68,7 @@ export default async () => {
             expect(z[0].dueDate).toBe('2026-05-11');
             expect(z[0].overdue).toBe(true);
             expect(z[0].amount).toBe(34.41);
-            expect(z[0].label).toBe('USt-VA Q1/2026 — Zahllast');
+            expect(z[0].label).toBe('USt-VA Q1/2026 — VAT payable');
             expect(z[0].key).toBe('jumplink:ustva:2026-Q1:zahlung');
         });
 
@@ -103,7 +103,7 @@ export default async () => {
             // filed 15 Jul → 15 Aug 2026 (Saturday) → Monday 17 Aug.
             expect(z[0].dueDate).toBe('2026-08-17');
             expect(z[0].overdue).toBe(false);
-            expect(z[0].label).toBe('USt-Jahreserklärung 2025 — Abschlusszahlung');
+            expect(z[0].label).toBe('USt-Jahreserklärung 2025 — final payment');
         });
     });
 

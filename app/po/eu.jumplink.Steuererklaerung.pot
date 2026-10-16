@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-16 21:56+0200\n"
+"POT-Creation-Date: 2026-10-16 22:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -150,6 +150,37 @@ msgstr ""
 msgid "This DMS cannot ingest documents."
 msgstr ""
 
+#: src/core/actions/fristen-reminder.ts:58
+msgid "{n} deadline"
+msgid_plural "{n} deadlines"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/fristen-reminder.ts:59
+msgid ", {n} overdue"
+msgstr ""
+
+#: src/core/actions/fristen-reminder.ts:60
+msgid ", {n} in {days} days or sooner"
+msgstr ""
+
+#: src/core/actions/fristen-reminder.ts:63
+#: src/core/actions/fristen-reminder.ts:85
+msgid "OVERDUE"
+msgstr ""
+
+#: src/core/actions/fristen-reminder.ts:63
+msgid "due soon"
+msgstr ""
+
+#: src/core/actions/fristen-reminder.ts:67
+msgid "… and {n} more"
+msgstr ""
+
+#: src/core/actions/fristen-reminder.ts:85
+msgid "[Open]"
+msgstr ""
+
 #: src/core/clients/fints/client.ts:290
 msgid ""
 "The bank does not offer electronic account statements (no HIEKAS in its bank "
@@ -206,6 +237,63 @@ msgstr ""
 
 #: src/core/config/assistant-offered.ts:37
 msgid "This version has no built-in AI assistant."
+msgstr ""
+
+#: src/core/contracts/contracts.ts:34
+msgid ""
+"Price increase: may open a special right to cancel — check the provider’s "
+"notice and its deadline."
+msgstr ""
+
+#: src/core/contracts/contracts.ts:119
+msgid "cancelled, ends {date}"
+msgstr ""
+
+#: src/core/contracts/contracts.ts:119
+msgid "cancelled"
+msgstr ""
+
+#: src/core/contracts/contracts.ts:121 src/core/contracts/contracts.ts:134
+#: src/core/contracts/contracts.ts:143
+msgid "ended"
+msgstr ""
+
+#: src/core/contracts/contracts.ts:122
+msgid "no start date"
+msgstr ""
+
+#: src/core/contracts/contracts.ts:123
+msgid "no notice period"
+msgstr ""
+
+#: src/core/contracts/contracts.ts:133
+msgid "ends {date} without notice"
+msgstr ""
+
+#: src/core/contracts/contracts.ts:142
+msgid "ends {date}, deadline passed"
+msgstr ""
+
+#: src/core/contracts/contracts.ts:175
+msgid "Invalid reminder '{spec}' — allowed: 3m (months), 14d (days)"
+msgstr ""
+
+#: src/core/contracts/contracts.ts:207
+msgid "Notice deadline: {name}"
+msgstr ""
+
+#: src/core/contracts/contracts.ts:209
+msgid ""
+"The notice must reach the provider today at the latest for the contract to "
+"end on {date}."
+msgstr ""
+
+#: src/core/contracts/contracts.ts:212
+msgid "Provider: {name}"
+msgstr ""
+
+#: src/core/contracts/contracts.ts:213
+msgid "Contract number: {number}"
 msgstr ""
 
 #: src/core/elster/anlagegut-kandidat.ts:108
@@ -1525,6 +1613,60 @@ msgid "Split into {n} part"
 msgid_plural "Split into {n} parts"
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/core/elster/steuerzahlungen.ts:128
+msgid "USt-VA Q{quarter}/{year} — VAT payable"
+msgstr ""
+
+#: src/core/elster/steuerzahlungen.ts:130
+msgid "USt-VA {month}/{year} — VAT payable"
+msgstr ""
+
+#: src/core/elster/steuerzahlungen.ts:131
+msgid "USt-VA {period} — VAT payable"
+msgstr ""
+
+#: src/core/elster/steuerzahlungen.ts:133
+msgid "USt-Jahreserklärung {period} — final payment"
+msgstr ""
+
+#: src/core/elster/steuerzahlungen.ts:135
+msgid "Income tax {period}"
+msgstr ""
+
+#: src/core/elster/steuerzahlungen.ts:144
+msgid ""
+"Weekend deadline moved to Monday (§108 Abs. 3 AO); public holidays are not "
+"modelled."
+msgstr ""
+
+#: src/core/elster/steuerzahlungen.ts:147
+msgid ""
+"Due per Bescheid (typically 1 month after Bekanntgabe, §220 AO) — amount "
+"from our own calculation."
+msgstr ""
+
+#: src/core/elster/steuerzahlungen.ts:186
+msgid ""
+"VAT payable due on the statutory deadline of the Voranmeldung (§18 Abs. 1 "
+"UStG, incl. Dauerfristverlängerung)."
+msgstr ""
+
+#: src/core/elster/steuerzahlungen.ts:188
+msgid ""
+"VAT payable due on the statutory deadline of the Voranmeldung (§18 Abs. 1 "
+"UStG)."
+msgstr ""
+
+#: src/core/elster/steuerzahlungen.ts:191
+msgid "Unknown USt-VA period format '{period}' — no due date can be derived."
+msgstr ""
+
+#: src/core/elster/steuerzahlungen.ts:197
+msgid ""
+"Final payment due 1 month after the return reached the Finanzamt (§18 Abs. 4 "
+"UStG)."
+msgstr ""
 
 #: src/core/elster/ust-abweichung.ts:153 src/core/elster/ust-abweichung.ts:172
 msgid "VAT deviation: cannot be checked"
