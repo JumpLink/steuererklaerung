@@ -81,24 +81,31 @@ export interface SetupVerification {
   runtimeDir: string;
   missing: string[];
   pluginCount: number;
+  /** Base names of the plugins found (`checkUStVA_2025`), sorted. */
+  pluginNames: string[];
 }
 
 /** Verify that all required files exist in the runtime directory. */
 export function verifyInstallation(p: EricPlatform | null = ericPlatform()): SetupVerification {
   const paths = getEricPaths(p);
   if (!p) {
-    return { ok: false, runtimeDir: paths.home, missing: ['unsupported platform'], pluginCount: 0 };
+    return { ok: false, runtimeDir: paths.home, missing: ['unsupported platform'], pluginCount: 0, pluginNames: [] };
   }
   const missing = requiredFiles(p).filter((file) => !existsSync(join(paths.home, file)));
-  const pluginCount = existsSync(paths.plugins)
-    ? readdirSync(paths.plugins).filter((f) => pluginBaseName(p, f) !== null).length
-    : 0;
+  const pluginNames = existsSync(paths.plugins)
+    ? readdirSync(paths.plugins)
+        .map((f) => pluginBaseName(p, f))
+        .filter((b): b is string => b !== null)
+        .sort()
+    : [];
+  const pluginCount = pluginNames.length;
 
   return {
     ok: missing.length === 0 && pluginCount > 0,
     runtimeDir: paths.home,
     missing,
     pluginCount,
+    pluginNames,
   };
 }
 
@@ -126,6 +133,7 @@ export function runSetup(): SetupVerification {
       runtimeDir: getEricPaths(p).home,
       missing: ['JAR file not found'],
       pluginCount: 0,
+      pluginNames: [],
     };
   }
 

@@ -7,6 +7,7 @@ import './helpers/isolate-env.ts';
 
 import secretStore from './unit/secrets/store.test.ts';
 import ericPlatform from './unit/elster/eric-platform.test.ts';
+import ericWarnings from './unit/elster/eric-warnings.test.ts';
 import ericRuntime from './unit/elster/eric-runtime.test.ts';
 import ericBinding from './unit/elster/eric-binding.test.ts';
 import ericAsciiPath from './unit/elster/eric-ascii-path.test.ts';
@@ -442,6 +443,7 @@ run({
     finanzierung,
     secretStore,
     ericPlatform,
+    ericWarnings,
     ericRuntime,
     ericAsciiPath,
     ericBinding,
