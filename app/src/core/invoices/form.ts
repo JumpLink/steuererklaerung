@@ -1,9 +1,12 @@
 /**
  * Shared invoice-form helpers for the create/edit dialogs. DEPENDENCY-FREE (imported by the Vite
- * web client AND the native GJS app), so no node:/GJS/Qonto imports. Works on RAW string inputs
- * from the form fields (German decimals allowed) and mirrors the store's totals math so the live
- * preview matches what the back-end will freeze.
+ * web client AND the native GJS app), so no node:/GJS/Qonto imports — `lib/i18n.ts` imports nothing
+ * itself and stays within that rule. Works on RAW string inputs from the form fields (German
+ * decimals allowed) and mirrors the store's totals math so the live preview matches what the
+ * back-end will freeze.
  */
+
+import { _, fmt } from '../lib/i18n.ts';
 
 /** One line-item row as the form holds it (all raw strings). */
 export interface InvoiceItemDraft {
@@ -85,18 +88,18 @@ export function computeFormTotals(items: InvoiceItemDraft[]): {
     return { net: netTotal / 100, vat: vatTotal / 100, gross: (netTotal + vatTotal) / 100, byRate };
 }
 
-/** Validate a form draft before saving. Returns German problems (empty = ok). */
+/** Validate a form draft before saving. Returns the problems to show (empty = ok). */
 export function validateFormDraft(draft: InvoiceFormDraft): string[] {
     const problems: string[] = [];
-    if (!draft.contactId?.trim()) problems.push('Empfänger fehlt — bitte einen Kunden wählen.');
-    if (!draft.issueDate?.trim()) problems.push('Ausstellungsdatum fehlt.');
-    if (!draft.items.length) problems.push('Mindestens eine Position ist erforderlich.');
+    if (!draft.contactId?.trim()) problems.push(_('Recipient missing — please choose a customer.'));
+    if (!draft.issueDate?.trim()) problems.push(_('Issue date missing.'));
+    if (!draft.items.length) problems.push(_('At least one line item is required.'));
     draft.items.forEach((it, i) => {
         const n = i + 1;
-        if (!it.title?.trim()) problems.push(`Position ${n}: Bezeichnung fehlt.`);
-        if (parseGermanDecimal(it.quantity) == null) problems.push(`Position ${n}: ungültige Menge.`);
-        if (parseGermanDecimal(it.unitPrice) == null) problems.push(`Position ${n}: ungültiger Einzelpreis.`);
-        if (parseVatRate(it.vatRate) == null) problems.push(`Position ${n}: ungültiger USt-Satz.`);
+        if (!it.title?.trim()) problems.push(fmt(_('Item {n}: title missing.'), { n }));
+        if (parseGermanDecimal(it.quantity) == null) problems.push(fmt(_('Item {n}: invalid quantity.'), { n }));
+        if (parseGermanDecimal(it.unitPrice) == null) problems.push(fmt(_('Item {n}: invalid unit price.'), { n }));
+        if (parseVatRate(it.vatRate) == null) problems.push(fmt(_('Item {n}: invalid VAT rate.'), { n }));
     });
     return problems;
 }

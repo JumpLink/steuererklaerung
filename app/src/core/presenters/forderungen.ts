@@ -24,4 +24,4 @@ export type {
     Verjaehrung,
     ZahlungsTrend,
 } from '../invoices/forderungen.ts';
-export { MAHNSTUFEN, mahnstufeLabel } from '../invoices/mahnung-text.ts';
+export { mahnstufe, mahnstufeLabel } from '../invoices/mahnung-text.ts';

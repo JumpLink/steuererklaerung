@@ -50,17 +50,17 @@ export default async () => {
             expect(t.net).toBe(200);
         });
 
-        await it('validates a draft (German messages)', async () => {
+        await it('validates a draft (source strings — tests run without a catalogue)', async () => {
             expect(validateFormDraft({ contactId: 'c1', issueDate: '2026-03-01', items: [item()] })).toStrictEqual([]);
             const problems = validateFormDraft({
                 contactId: '',
                 issueDate: '',
                 items: [item({ title: '', quantity: 'x' })],
             });
-            expect(problems.some((p) => p.includes('Empfänger'))).toBe(true);
-            expect(problems.some((p) => p.includes('Ausstellungsdatum'))).toBe(true);
-            expect(problems.some((p) => p.includes('Bezeichnung'))).toBe(true);
-            expect(problems.some((p) => p.includes('Menge'))).toBe(true);
+            expect(problems.some((p) => p.includes('Recipient missing'))).toBe(true);
+            expect(problems.some((p) => p.includes('Issue date missing'))).toBe(true);
+            expect(problems.some((p) => p.includes('title missing'))).toBe(true);
+            expect(problems.some((p) => p.includes('invalid quantity'))).toBe(true);
         });
 
         await it('emptyItem has sensible defaults', async () => {
