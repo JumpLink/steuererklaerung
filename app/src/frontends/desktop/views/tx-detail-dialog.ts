@@ -298,7 +298,7 @@ export class BhTxDetailDialog {
         }
         // A linked Erstattung is undone by lifting the link; the sentence says what applies then.
         const erstattung = istErstattung(r);
-        const title = erstattung ? _('Unlink') : _('Take back transfer');
+        const title = erstattung ? _p('refund', 'Unlink') : _('Take back transfer');
         const row = new Adw.ActionRow({ title, subtitle: danach });
         row.set_subtitle_lines(0);
         const button = new Gtk.Button({

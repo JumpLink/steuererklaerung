@@ -14,6 +14,7 @@
  */
 
 import { keyringNote } from '../data/elster-secret.ts';
+import { _, _p, fmt } from '../i18n.ts';
 import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 
@@ -74,7 +75,7 @@ function promptSend(
         const header = new Adw.HeaderBar();
         header.set_show_start_title_buttons(false);
         header.set_show_end_title_buttons(false);
-        const cancel = new Gtk.Button({ label: 'Abbrechen' });
+        const cancel = new Gtk.Button({ label: _('Cancel') });
         cancel.connect('clicked', () => finish(null));
         header.pack_start(cancel);
         const send = new Gtk.Button({ label: opts.sendLabel, cssClasses: ['suggested-action'], sensitive: false });
@@ -126,15 +127,15 @@ function promptSend(
         }
 
         const group = new Adw.PreferencesGroup();
-        const pathRow = new Adw.EntryRow({ title: 'Keystore-Pfad (.pfx/.p12)' });
+        const pathRow = new Adw.EntryRow({ title: _('Keystore path (.pfx/.p12)') });
         const browse = new Gtk.Button({
             iconName: 'document-open-symbolic',
             cssClasses: ['flat'],
             valign: Gtk.Align.CENTER,
-            tooltipText: 'Datei wählen',
+            tooltipText: _('Choose a file'),
         });
         browse.connect('clicked', () => {
-            const chooser = new Gtk.FileDialog({ title: 'ELSTER-Keystore wählen' });
+            const chooser = new Gtk.FileDialog({ title: _('Choose the ELSTER keystore') });
             chooser.open(parent.get_root() as Gtk.Window | null, null, (_s, res) => {
                 try {
                     const file = chooser.open_finish(res);
@@ -145,7 +146,7 @@ function promptSend(
             });
         });
         pathRow.add_suffix(browse);
-        const pinRow = new Adw.PasswordEntryRow({ title: 'Keystore-PIN' });
+        const pinRow = new Adw.PasswordEntryRow({ title: _('Keystore PIN') });
         group.add(pathRow);
         group.add(pinRow);
 
@@ -158,7 +159,7 @@ function promptSend(
         let saveRow: Adw.SwitchRow | null = null;
         if (opts.defaults?.canSavePin) {
             saveRow = new Adw.SwitchRow({
-                title: 'PIN im Schlüsselbund speichern',
+                title: _('Keep the PIN in the keyring'),
                 subtitle: keyringNote(),
                 active: !!opts.defaults?.pin,
             });
@@ -204,15 +205,18 @@ export function promptTestSend(
     defaults?: SendDefaults,
 ): Promise<SendCredentials | null> {
     return promptSend(parent, {
-        title: 'Test-Übermittlung',
+        title: _('Test transmission'),
         warning: {
             icon: 'dialog-warning-symbolic',
             css: 'warning',
-            text:
-                `Test-Übermittlung von „${formTitle}“ an das ELSTER-Clearing-House — ` +
-                'wird dort verworfen (Testmerker). Es wird nichts verbindlich abgegeben.',
+            text: fmt(
+                _(
+                    'Test transmission of “{form}” to the ELSTER clearing house — it is discarded there (Testmerker). Nothing is filed bindingly.',
+                ),
+                { form: formTitle },
+            ),
         },
-        sendLabel: 'Test senden',
+        sendLabel: _('Send a test'),
         defaults,
     });
 }
@@ -231,16 +235,19 @@ export function promptLiveSend(
     summary?: string,
 ): Promise<SendCredentials | null> {
     return promptSend(parent, {
-        title: 'Verbindlich absenden',
+        title: _('Submit bindingly'),
         warning: {
             icon: 'dialog-error-symbolic',
             css: 'error',
-            text:
-                `„${formTitle}“ wird VERBINDLICH an das Finanzamt übermittelt. ` +
-                'Der Vorgang kann NICHT rückgängig gemacht werden — bitte die Werte im Prüfblatt vorher gegenlesen.',
+            text: fmt(
+                _(
+                    '“{form}” is transmitted BINDINGLY to the Finanzamt. The step can NOT be undone — please read the figures in the check sheet first.',
+                ),
+                { form: formTitle },
+            ),
         },
         summary,
-        sendLabel: 'Jetzt verbindlich senden',
+        sendLabel: _('Send bindingly now'),
         defaults,
     });
 }
@@ -252,18 +259,21 @@ export function promptLiveSend(
 export function promptRelease(parent: Gtk.Widget, formTitle: string): Promise<string | null> {
     return new Promise((resolve) => {
         const dlg = new Adw.AlertDialog({
-            heading: 'Freigeben',
-            body:
-                `„${formTitle}“ für die Übermittlung freigeben. Die Freigabe ist an den aktuellen Snapshot ` +
-                'gebunden und verfällt automatisch, sobald sich die zugrunde liegenden Daten ändern.',
+            heading: _p('button', 'Release'),
+            body: fmt(
+                _(
+                    'Release “{form}” for transmission. The release is bound to the current snapshot and lapses automatically as soon as the underlying data change.',
+                ),
+                { form: formTitle },
+            ),
         });
         const group = new Adw.PreferencesGroup();
-        const noteRow = new Adw.EntryRow({ title: 'Notiz (optional)' });
+        const noteRow = new Adw.EntryRow({ title: _('Note (optional)') });
         group.add(noteRow);
         dlg.set_extra_child(group);
 
-        dlg.add_response('cancel', 'Abbrechen');
-        dlg.add_response('confirm', 'Freigeben');
+        dlg.add_response('cancel', _('Cancel'));
+        dlg.add_response('confirm', _p('button', 'Release'));
         dlg.set_response_appearance('confirm', Adw.ResponseAppearance.SUGGESTED);
         dlg.set_close_response('cancel');
         dlg.set_default_response('confirm');

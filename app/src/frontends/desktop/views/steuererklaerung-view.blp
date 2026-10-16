@@ -19,7 +19,7 @@ template $BhSteuererklaerungView: Adw.Bin {
         }
 
         Gtk.Label {
-          label: "Prüfe Steuererklärung …";
+          label: _("Checking the tax return …");
           styles ["dim-label"]
         }
       };
@@ -29,7 +29,7 @@ template $BhSteuererklaerungView: Adw.Bin {
       name: "error";
       child: Adw.StatusPage error_page {
         icon-name: "dialog-error-symbolic";
-        title: "Konnte nicht laden";
+        title: _("Could not load");
       };
     }
 

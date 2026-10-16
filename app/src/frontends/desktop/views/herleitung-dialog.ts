@@ -59,6 +59,7 @@ import { aufteilungAufheben } from './aufteilen-dialog.ts';
 import { loeseErstattung } from '../../../core/presenters/erstattungen.ts';
 import { showToast } from '../toast.ts';
 import { LoadToken, amountLabel, currentOperator, loadIntoStack, markup } from './util.ts';
+import { _, _n, _p, fmt } from '../i18n.ts';
 
 /** Everything the leaf needs, loaded in one pass (categories + persisted decision/log + Beleg meta). */
 interface LeafData {
@@ -70,10 +71,10 @@ interface LeafData {
 
 /** Provenance source → chip label + style class (the app's caption-badge idiom, see rechnungen-view). */
 const PROVENANCE_META: Record<FigureProvenanceSource, { label: string; css: string }> = {
-    document: { label: 'via Beleg', css: 'success' },
-    rule: { label: 'via Regel', css: 'accent' },
-    manual: { label: 'manuell', css: 'dim-label' },
-    unclassified: { label: 'unklassifiziert', css: 'warning' },
+    document: { label: _('via receipt'), css: 'success' },
+    rule: { label: _('via rule'), css: 'accent' },
+    manual: { label: _('manually'), css: 'dim-label' },
+    unclassified: { label: _('unclassified'), css: 'warning' },
 };
 
 /** A small colored caption chip for a booking's provenance; the rule text becomes its tooltip. */
@@ -86,14 +87,14 @@ function provenanceChip(prov: FigureProvenance): Gtk.Label {
     return chip;
 }
 
-/** One-line trust summary over the provenance mix, e.g. "12 via Beleg · 18 via Regel". */
+/** One-line trust summary over the provenance mix, e.g. "12 via receipts · 18 via rules". */
 function provenanceSummary(mix: FigureExplanation['provenanceMix']): string {
     const parts: string[] = [];
-    if (mix.document) parts.push(`${mix.document} via Beleg`);
-    if (mix.rule) parts.push(`${mix.rule} via Regel`);
-    if (mix.manual) parts.push(`${mix.manual} manuell`);
-    if (mix.unclassified) parts.push(`${mix.unclassified} unklassifiziert`);
-    return parts.length ? parts.join(' · ') : 'keine Buchungen';
+    if (mix.document) parts.push(fmt(_n('{n} via receipt', '{n} via receipts', mix.document), { n: mix.document }));
+    if (mix.rule) parts.push(fmt(_n('{n} via rule', '{n} via rules', mix.rule), { n: mix.rule }));
+    if (mix.manual) parts.push(fmt(_('{n} manually'), { n: mix.manual }));
+    if (mix.unclassified) parts.push(fmt(_('{n} unclassified'), { n: mix.unclassified }));
+    return parts.length ? parts.join(' · ') : _('no bookings');
 }
 
 /** One NavigationPage of the dialog: header bar + loading/error stack; "content" is added once loaded. */
@@ -137,7 +138,7 @@ export class BhHerleitungDialog {
     private readonly reloaders = new Map<Adw.NavigationPage, () => void>();
 
     constructor() {
-        this.dialog.set_title('Herleitung');
+        this.dialog.set_title(_('Derivation'));
         this.dialog.set_content_width(720);
         this.dialog.set_content_height(760);
         this.dialog.set_child(this.navView);
@@ -188,24 +189,22 @@ export class BhHerleitungDialog {
         const head = new Adw.ActionRow({ title: markup(e.label), subtitle: markup(`= ${e.formel}`) });
         head.add_suffix(
             e.betrag == null
-                ? new Gtk.Label({ label: 'nicht berechenbar', cssClasses: ['warning'], valign: Gtk.Align.CENTER })
+                ? new Gtk.Label({ label: _('not computable'), cssClasses: ['warning'], valign: Gtk.Align.CENTER })
                 : amountLabel(eur(e.betrag), { heading: true }),
         );
         summary.add(head);
         if (!e.vollstaendig) {
             summary.add(
                 new Adw.ActionRow({
-                    title: 'Unvollständig',
-                    subtitle: markup(
-                        'Mindestens ein Posten ist nicht berechenbar — er ist nicht enthalten, siehe unten.',
-                    ),
+                    title: _('Incomplete'),
+                    subtitle: markup(_('At least one item is not computable — it is not included, see below.')),
                     cssClasses: ['warning'],
                 }),
             );
         }
         box.append(summary);
 
-        const comp = new Adw.PreferencesGroup({ title: 'Zusammensetzung' });
+        const comp = new Adw.PreferencesGroup({ title: _('Composition') });
         for (const t of e.terme) comp.add(this.termRow(t));
         box.append(comp);
         return this.scrolled(box);
@@ -226,7 +225,7 @@ export class BhHerleitungDialog {
         else
             row.add_suffix(
                 new Gtk.Label({
-                    label: t.status === 'entfaellt' ? 'entfällt' : 'nicht berechenbar',
+                    label: t.status === 'entfaellt' ? _('does not apply') : _('not computable'),
                     cssClasses: ['caption', t.status === 'entfaellt' ? 'dim-label' : 'warning'],
                     valign: Gtk.Align.CENTER,
                 }),
@@ -244,7 +243,7 @@ export class BhHerleitungDialog {
         const head = new Adw.PreferencesGroup();
         head.add(this.termRow({ ...t, zeilen: [] }));
         box.append(head);
-        const lines = new Adw.PreferencesGroup({ title: 'Herleitung' });
+        const lines = new Adw.PreferencesGroup({ title: _('Derivation') });
         for (const z of t.zeilen) {
             const row = new Adw.ActionRow({ title: markup(z.label), subtitle: z.herkunft ? markup(z.herkunft) : '' });
             row.set_title_lines(0);
@@ -266,7 +265,7 @@ export class BhHerleitungDialog {
      * button) automatically inside the NavigationView.
      */
     private buildPage(ref: FigureRef | string): Adw.NavigationPage {
-        const page = new BhHerleitungPage('Herleitung', 'Berechne Herleitung …');
+        const page = new BhHerleitungPage(_('Derivation'), _('Calculating derivation …'));
         const { stack, errorPage } = page;
         const token = new LoadToken();
 
@@ -276,7 +275,7 @@ export class BhHerleitungDialog {
                 stack,
                 errorPage,
                 token,
-                errorContext: 'Herleitung konnte nicht berechnet werden',
+                errorContext: _('Could not calculate the derivation'),
                 load: () => loadFigureExplanation(appSession(), this.entity, this.year, ref),
                 fill: (ex) => {
                     page.set_title(ex.label);
@@ -306,18 +305,18 @@ export class BhHerleitungDialog {
 
         // Zusammensetzung — the child terms of a composite total (drillable when they carry a ref).
         if (ex.children.length > 0) {
-            const comp = new Adw.PreferencesGroup({ title: 'Zusammensetzung' });
+            const comp = new Adw.PreferencesGroup({ title: _('Composition') });
             for (const child of ex.children) comp.add(this.childRow(child));
             box.append(comp);
         }
 
         // Buchungen — the contributing transactions, with a provenance chip each.
         const bookings = new Adw.PreferencesGroup({
-            title: 'Buchungen',
+            title: _('Bookings'),
             description: provenanceSummary(ex.provenanceMix),
         });
         if (ex.contributors.length === 0) {
-            bookings.add(new Adw.ActionRow({ title: 'Keine Buchungen', cssClasses: ['dim-label'] }));
+            bookings.add(new Adw.ActionRow({ title: _('No bookings'), cssClasses: ['dim-label'] }));
         } else {
             for (const row of ex.contributors) bookings.add(this.contributorRow(row, page));
         }
@@ -361,11 +360,14 @@ export class BhHerleitungDialog {
             r.provenance.source === 'rule' && r.provenance.matchedRule
                 ? herkunftText(r.provenance)
                 : r.provenance.source === 'rule' && r.provenance.rule
-                  ? `Regel: ${r.provenance.rule}`
+                  ? fmt(_('Rule: {rule}'), { rule: r.provenance.rule })
                   : undefined,
-            r.provenance.documentId != null ? `Beleg #${r.provenance.documentId}` : undefined,
+            r.provenance.documentId != null ? fmt(_('Receipt #{id}'), { id: r.provenance.documentId }) : undefined,
             r.provenance.aufteilung
-                ? `Teil ${r.provenance.aufteilung.teilNr} von ${r.provenance.aufteilung.teile.length}`
+                ? fmt(_('Part {n} of {total}'), {
+                      n: r.provenance.aufteilung.teilNr,
+                      total: r.provenance.aufteilung.teile.length,
+                  })
                 : undefined,
         ].filter((p): p is string => Boolean(p));
         const row = new Adw.ActionRow({
@@ -390,7 +392,7 @@ export class BhHerleitungDialog {
      * to the (reloaded) Herleitung — `spawningPage` is the page to reload after a decision write.
      */
     private buildLeafPage(r: FigureRow, spawningPage: Adw.NavigationPage): Adw.NavigationPage {
-        const page = new BhHerleitungPage('Buchungs-Detail', 'Lade Buchung …');
+        const page = new BhHerleitungPage(_('Booking detail'), _('Loading booking …'));
         const { stack, errorPage } = page;
         const token = new LoadToken();
 
@@ -398,7 +400,7 @@ export class BhHerleitungDialog {
             stack,
             errorPage,
             token,
-            errorContext: 'Buchungs-Detail konnte nicht geladen werden',
+            errorContext: _('Could not load the booking detail'),
             load: () => this.loadLeaf(r),
             fill: (data) => {
                 const content = this.buildLeafContent(r, data, spawningPage);
@@ -434,54 +436,53 @@ export class BhHerleitungDialog {
         const commit = (input: ClassificationDecisionInput): void => {
             try {
                 saveDecision(this.entity, input);
-                showToast('Buchung aktualisiert');
+                showToast(_('Booking updated'));
                 this.navView.pop();
                 this.reloaders.get(spawningPage)?.();
             } catch (err) {
-                void errorDialog(
-                    this.dialog,
-                    'Konnte nicht speichern',
-                    err instanceof Error ? err.message : String(err),
-                );
+                void errorDialog(this.dialog, _('Could not save'), err instanceof Error ? err.message : String(err));
             }
         };
 
         const box = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 18 });
 
         // Buchung — date · counterparty · purpose · amount (tabular) · current category + provenance chip.
-        const buchung = new Adw.PreferencesGroup({ title: 'Buchung' });
-        buchung.add(this.kvRow('Datum', deDate(r.date)));
-        buchung.add(this.kvRow('Gegenseite', r.counterparty || '—'));
-        if (r.purpose) buchung.add(this.kvRow('Verwendungszweck', r.purpose));
-        const betrag = new Adw.ActionRow({ title: 'Betrag' });
+        const buchung = new Adw.PreferencesGroup({ title: _('Booking') });
+        buchung.add(this.kvRow(_('Date'), deDate(r.date)));
+        buchung.add(this.kvRow(_('Counterparty'), r.counterparty || '—'));
+        if (r.purpose) buchung.add(this.kvRow(_('Purpose'), r.purpose));
+        const betrag = new Adw.ActionRow({ title: _('Amount') });
         betrag.add_suffix(amountLabel(eur(r.amount)));
         buchung.add(betrag);
         if (Math.abs(r.net - r.amount) > 0.005) {
-            const netto = new Adw.ActionRow({ title: 'Netto (Beitrag)' });
+            const netto = new Adw.ActionRow({ title: _('Net (contribution)') });
             netto.add_suffix(amountLabel(eur(r.net)));
             buchung.add(netto);
         }
-        const catRow = new Adw.ActionRow({ title: 'Kategorie', subtitle: markup(r.category) });
+        const catRow = new Adw.ActionRow({ title: _('Category'), subtitle: markup(r.category) });
         catRow.set_subtitle_lines(0);
         catRow.add_suffix(provenanceChip(r.provenance));
         buchung.add(catRow);
-        buchung.add(this.kvRow('Herkunft', herkunftText(r.provenance)));
+        buchung.add(this.kvRow(_('Source'), herkunftText(r.provenance)));
         box.append(buchung);
 
         // Aufteilung — every part of a split booking; the one this figure counts is marked.
         const aufteilung = r.provenance.aufteilung;
         if (aufteilung) {
             const teile = new Adw.PreferencesGroup({
-                title: 'Aufteilung',
-                description: 'Die Buchung ist aufgeteilt; jeder Teil zählt in seiner eigenen Kategorie.',
+                title: _('Split'),
+                description: _('The booking is split; each part counts in its own category.'),
             });
             for (const p of aufteilung.teile) {
-                const hier = p.nr === aufteilung.teilNr ? ' · diese Zahl' : '';
+                // Each flag is its own phrase — a translator cannot place a sub-clause through a placeholder.
+                const titleParts = [fmt(_('Part {n}'), { n: p.nr })];
+                if (p.rest) titleParts.push(_('remainder'));
+                if (p.nr === aufteilung.teilNr) titleParts.push(_('this figure'));
+                const subParts = [p.category, fmt(_('{rate} %'), { rate: Math.round(p.vatRate * 100) })];
+                if (!p.betrieblich) subParts.push(_('private, no input tax'));
                 const row = new Adw.ActionRow({
-                    title: markup(`Teil ${p.nr}${p.rest ? ' · Rest' : ''}${hier}`),
-                    subtitle: markup(
-                        `${p.category} · ${Math.round(p.vatRate * 100)} %${p.betrieblich ? '' : ' · privat, keine Vorsteuer'}`,
-                    ),
+                    title: markup(titleParts.join(' · ')),
+                    subtitle: markup(subParts.join(' · ')),
                 });
                 row.set_subtitle_lines(0);
                 row.add_suffix(amountLabel(eur(p.betrag)));
@@ -495,13 +496,13 @@ export class BhHerleitungDialog {
 
         // Umbuchen — reclassify via a ComboRow over the year's categories (current preselected).
         const umbuchen = new Adw.PreferencesGroup({
-            title: 'Umbuchen',
-            description: 'Bucht diese Transaktion manuell auf eine andere Kategorie (überschreibt Beleg/Regel).',
+            title: _('Reclassify'),
+            description: _('Books this transaction manually to a different category (overrides receipt/rule).'),
         });
         const options = data.categories.includes(r.category) ? data.categories : [r.category, ...data.categories];
         const model = new Gtk.StringList();
         for (const o of options) model.append(o);
-        const combo = new Adw.ComboRow({ title: 'Kategorie', model });
+        const combo = new Adw.ComboRow({ title: _('Category'), model });
         combo.set_selected(Math.max(0, options.indexOf(r.category))); // set before connect → no fill-time write
         combo.connect('notify::selected', () => {
             if (filling) return;
@@ -514,9 +515,9 @@ export class BhHerleitungDialog {
         // applies, computed by the same classification without the override.
         const danach = wasGiltDanach(r.provenance);
         if (danach && istAufteilung(r.provenance)) {
-            const undo = new Adw.ActionRow({ title: 'Aufteilung aufheben', subtitle: markup(danach) });
+            const undo = new Adw.ActionRow({ title: _('Remove split'), subtitle: markup(danach) });
             undo.set_subtitle_lines(0);
-            const button = new Gtk.Button({ label: 'Aufheben', valign: Gtk.Align.CENTER });
+            const button = new Gtk.Button({ label: _p('split', 'Remove'), valign: Gtk.Align.CENTER });
             button.add_css_class('destructive-action');
             button.connect(
                 'clicked',
@@ -532,24 +533,27 @@ export class BhHerleitungDialog {
             // A linked Erstattung is undone by lifting the link, not by removing an Umbuchung.
             const erstattung = istErstattung(r.provenance);
             const undo = new Adw.ActionRow({
-                title: erstattung ? 'Verknüpfung lösen' : 'Umbuchung zurücknehmen',
+                title: erstattung ? _p('refund', 'Unlink') : _('Take back transfer'),
                 subtitle: markup(danach),
             });
             undo.set_subtitle_lines(0);
-            const button = new Gtk.Button({ label: erstattung ? 'Lösen' : 'Zurücknehmen', valign: Gtk.Align.CENTER });
+            const button = new Gtk.Button({
+                label: erstattung ? _p('button', 'Unlink') : _('Take back'),
+                valign: Gtk.Align.CENTER,
+            });
             button.add_css_class('destructive-action');
             button.connect('clicked', () => {
                 try {
                     if (erstattung) loeseErstattung(appSession(), this.entity, r.transactionId);
                     else removeDecision(this.entity, r.transactionId);
                     appSession().invalidate(this.entity.id);
-                    showToast(erstattung ? 'Verknüpfung gelöst' : 'Umbuchung zurückgenommen');
+                    showToast(erstattung ? _('Unlinked') : _('Transfer taken back'));
                     this.navView.pop();
                     this.reloaders.get(spawningPage)?.();
                 } catch (err) {
                     void errorDialog(
                         this.dialog,
-                        'Konnte nicht zurücknehmen',
+                        _('Could not take back'),
                         err instanceof Error ? err.message : String(err),
                     );
                 }
@@ -560,8 +564,8 @@ export class BhHerleitungDialog {
         box.append(umbuchen);
 
         // Begründung — the owner's note (why booked this way).
-        const begruendung = new Adw.PreferencesGroup({ title: 'Begründung' });
-        const noteRow = new Adw.EntryRow({ title: 'Warum so gebucht?' });
+        const begruendung = new Adw.PreferencesGroup({ title: _('Reason') });
+        const noteRow = new Adw.EntryRow({ title: _('Why booked this way?') });
         noteRow.set_show_apply_button(true);
         noteRow.set_text(data.decision?.note ?? r.provenance.note ?? '');
         noteRow.connect('apply', () => {
@@ -573,9 +577,9 @@ export class BhHerleitungDialog {
         box.append(begruendung);
 
         // Entscheidungs-Log — the append-only history (read-only).
-        const logGroup = new Adw.PreferencesGroup({ title: 'Entscheidungs-Log' });
+        const logGroup = new Adw.PreferencesGroup({ title: _('Decision log') });
         if (data.log.length === 0) {
-            logGroup.add(new Adw.ActionRow({ title: 'Noch keine Entscheidung', cssClasses: ['dim-label'] }));
+            logGroup.add(new Adw.ActionRow({ title: _('No decision yet'), cssClasses: ['dim-label'] }));
         } else {
             for (const entry of [...data.log].reverse()) logGroup.add(this.decisionLogRow(entry));
         }
@@ -601,24 +605,24 @@ export class BhHerleitungDialog {
         isFilling: () => boolean,
         commit: (input: ClassificationDecisionInput) => void,
     ): Adw.PreferencesGroup {
-        const group = new Adw.PreferencesGroup({ title: 'Beleg' });
+        const group = new Adw.PreferencesGroup({ title: _('Receipt') });
         const documentId = r.provenance.documentId ?? null;
         if (documentId == null) {
-            group.add(new Adw.ActionRow({ title: 'kein Beleg verknüpft', cssClasses: ['dim-label'] }));
+            group.add(new Adw.ActionRow({ title: _('no receipt linked'), cssClasses: ['dim-label'] }));
             return group;
         }
         group.add(
             new Adw.ActionRow({
-                title: markup(meta?.correspondent || `Beleg #${documentId}`),
+                title: markup(meta?.correspondent || fmt(_('Receipt #{id}'), { id: documentId })),
                 subtitle: markup(meta?.title || `#${documentId}`),
             }),
         );
         const aiNote = meta?.aiNote;
         if (aiNote) {
-            const aiRow = new Adw.ActionRow({ title: 'KI-Hinweis', subtitle: markup(aiNote) });
+            const aiRow = new Adw.ActionRow({ title: _('AI note'), subtitle: markup(aiNote) });
             aiRow.set_subtitle_lines(0);
             aiRow.add_css_class('dim-label');
-            const accept = new Gtk.Button({ label: 'Übernehmen', valign: Gtk.Align.CENTER, cssClasses: ['flat'] });
+            const accept = new Gtk.Button({ label: _('Apply'), valign: Gtk.Align.CENTER, cssClasses: ['flat'] });
             accept.connect('clicked', () => {
                 if (isFilling()) return;
                 commit({
@@ -651,15 +655,18 @@ export class BhHerleitungDialog {
         const who = typeof d.decidedBy === 'string' ? d.decidedBy : null;
         const parts: string[] = [];
         if (entry.action === 'classification.remove') {
-            parts.push(prev ? `Umbuchung «${prev}» zurückgenommen` : 'Zurückgesetzt');
+            parts.push(prev ? fmt(_('Transfer «{category}» taken back'), { category: prev }) : _('Reset'));
         } else {
-            if (cat) parts.push(prev && prev !== cat ? `«${prev}» → «${cat}»` : `Kategorie «${cat}»`);
-            if (d.aiNoteAccepted === true) parts.push('KI-Hinweis übernommen');
-            if (note) parts.push(`Notiz: „${note}“`);
+            if (cat)
+                parts.push(
+                    prev && prev !== cat ? `«${prev}» → «${cat}»` : fmt(_('Category «{category}»'), { category: cat }),
+                );
+            if (d.aiNoteAccepted === true) parts.push(_('AI note applied'));
+            if (note) parts.push(fmt(_('Note: “{note}”'), { note }));
         }
         const sub = [deDateTime(entry.at), who].filter((p): p is string => Boolean(p)).join(' · ');
         const row = new Adw.ActionRow({
-            title: markup(parts.length ? parts.join(' · ') : 'Entscheidung'),
+            title: markup(parts.length ? parts.join(' · ') : _('Decision')),
             subtitle: markup(sub),
         });
         row.set_title_lines(0);

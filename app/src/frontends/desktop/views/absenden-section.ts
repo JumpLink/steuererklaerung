@@ -66,6 +66,7 @@ import { promptLiveSend, promptRelease, promptTestSend } from './absenden-dialog
 import { ensurePrivacyAck } from './datenschutz-dialog.ts';
 import { vorAbgabeGroup } from './vor-abgabe-group.ts';
 import { showToast } from '../toast.ts';
+import { _, _n, _p, fmt } from '../i18n.ts';
 
 /** Per-form Prüf-Datenblatt loader (byte-producing) — the same presenters the Steuer + Wizard views
  * use, so the Absenden section can offer a "Prüf-PDF" for a final read right next to Freigeben. No
@@ -81,11 +82,11 @@ const PRUEF_PDF_LOADERS: Partial<Record<FilingFormType, PruefPdfLoader>> = {
 
 /** Label + accent per immutable-snapshot status. */
 const SNAPSHOT_STATUS: Record<FilingSnapshot['status'], { label: string; css: string }> = {
-    draft: { label: 'Entwurf', css: 'dim-label' },
-    validated: { label: 'validiert (ERiC-Prüfung bestanden)', css: 'accent' },
-    submitting: { label: 'Versand offen', css: 'warning' },
-    submitted: { label: 'übermittelt', css: 'success' },
-    superseded: { label: 'ersetzt', css: 'dim-label' },
+    draft: { label: _('Draft'), css: 'dim-label' },
+    validated: { label: _('validated (passed the ERiC check)'), css: 'accent' },
+    submitting: { label: _('submission open'), css: 'warning' },
+    submitted: { label: _('submitted'), css: 'success' },
+    superseded: { label: _('superseded'), css: 'dim-label' },
 };
 
 function msg(err: unknown): string {
@@ -157,10 +158,10 @@ export class SubmissionSection {
                 if (token !== this.token.current) return;
                 console.error(`[app] Absenden-Übersicht: ${msg(err)}`);
                 this.clear();
-                const group = new Adw.PreferencesGroup({ title: 'Absenden' });
+                const group = new Adw.PreferencesGroup({ title: _('Submit') });
                 group.add(
                     new Adw.ActionRow({
-                        title: 'Übersicht konnte nicht geladen werden',
+                        title: _('Could not load the overview'),
                         subtitle: markup(msg(err)),
                     }),
                 );
@@ -169,8 +170,8 @@ export class SubmissionSection {
     }
 
     private loadingRow(): Gtk.Widget {
-        const group = new Adw.PreferencesGroup({ title: 'Absenden' });
-        const row = new Adw.ActionRow({ title: 'Übermittlungs-Status wird geladen …', cssClasses: ['dim-label'] });
+        const group = new Adw.PreferencesGroup({ title: _('Submit') });
+        const row = new Adw.ActionRow({ title: _('Loading the submission status …'), cssClasses: ['dim-label'] });
         row.add_prefix(new Adw.Spinner({ valign: Gtk.Align.CENTER }));
         group.add(row);
         return group;
@@ -196,18 +197,22 @@ export class SubmissionSection {
     /** ERiC availability + version — a form can't be sent without it (set up in the Konten-Ansicht). */
     private ericGroup(overview: SubmissionOverview): Gtk.Widget {
         const group = new Adw.PreferencesGroup({
-            title: 'Absenden',
-            description:
-                'Pro Formular: Snapshot erfassen → freigeben → testweise an ELSTER senden. Der Echt-Versand ' +
-                'erfolgt separat mit deinem ELSTER-Zertifikat.',
+            title: _('Submit'),
+            description: _(
+                'Per form: capture a snapshot → release it → send it to ELSTER as a test. The live submission happens separately, with your ELSTER certificate.',
+            ),
         });
         const row = new Adw.ActionRow({
             title: 'ERiC (ELSTER Rich Client)',
             subtitle: overview.ericAvailable
-                ? markup(`verfügbar${overview.ericVersion ? ` · ${ericVersionLabel(overview.ericVersion)}` : ''}`)
+                ? markup(
+                      overview.ericVersion
+                          ? `${_('available')} · ${ericVersionLabel(overview.ericVersion)}`
+                          : _('available'),
+                  )
                 : ericPlatformSupported()
-                  ? 'nicht verfügbar — in der Konten-Ansicht einrichten'
-                  : 'für diese Architektur gibt es kein ERiC — XML in Mein ELSTER hochladen',
+                  ? _('not available — set it up in the accounts view')
+                  : _('there is no ERiC for this architecture — upload the XML in Mein ELSTER'),
         });
         row.add_prefix(
             new Gtk.Image({
@@ -218,8 +223,8 @@ export class SubmissionSection {
         );
         row.add_suffix(
             overview.ericAvailable
-                ? statusPill({ icon: 'object-select-symbolic', css: 'success', label: 'verfügbar' })
-                : statusPill({ icon: 'dialog-warning-symbolic', css: 'warning', label: 'nicht verfügbar' }),
+                ? statusPill({ icon: 'object-select-symbolic', css: 'success', label: _('available') })
+                : statusPill({ icon: 'dialog-warning-symbolic', css: 'warning', label: _('not available') }),
         );
         group.add(row);
         for (const warning of overview.ericWarnings) group.add(ericWarningRow(warning, overview.ericBundled));
@@ -231,20 +236,23 @@ export class SubmissionSection {
         const group = new Adw.PreferencesGroup({ title: markup(form.title) });
         group.set_header_suffix(
             form.gate.unlocked
-                ? statusPill({ icon: 'object-select-symbolic', css: 'success', label: '✓ freigeschaltet' })
-                : statusPill({ icon: 'changes-prevent-symbolic', css: 'error', label: '✗ gesperrt' }),
+                ? statusPill({ icon: 'object-select-symbolic', css: 'success', label: _('✓ unlocked') })
+                : statusPill({ icon: 'changes-prevent-symbolic', css: 'error', label: _('✗ locked') }),
         );
 
         // Stand — the immutable snapshot's status + drift.
         const snap = form.snapshot;
+        // Each flag is its own phrase — a translator cannot place a sub-clause through a placeholder.
+        const standParts = snap
+            ? [
+                  SNAPSHOT_STATUS[snap.status].label,
+                  ...(form.stale ? [_('⚠ outdated')] : []),
+                  fmt(_('captured {when}'), { when: deDateTime(snap.createdAt) }),
+              ]
+            : [_('No snapshot captured')];
         const stand = new Adw.ActionRow({
-            title: 'Stand',
-            subtitle: markup(
-                snap
-                    ? `${SNAPSHOT_STATUS[snap.status].label}${form.stale ? ' · ⚠ veraltet' : ''} · ` +
-                          `erfasst ${deDateTime(snap.createdAt)}`
-                    : 'Kein Snapshot erfasst',
-            ),
+            title: _('State'),
+            subtitle: markup(standParts.join(' · ')),
         });
         stand.set_subtitle_lines(0);
         stand.add_suffix(
@@ -260,13 +268,13 @@ export class SubmissionSection {
 
         // Freigabe — the human release (valid ⟺ non-revoked, bound to the latest snapshot, no drift).
         const rel = new Adw.ActionRow({
-            title: 'Freigabe',
-            subtitle: markup(form.signoffValid ? 'freigegeben' : (form.signoffReason ?? 'keine Freigabe')),
+            title: _('Release'),
+            subtitle: markup(form.signoffValid ? _('released') : (form.signoffReason ?? _('no release'))),
         });
         rel.set_subtitle_lines(0);
         rel.add_suffix(
             new Gtk.Label({
-                label: form.signoffValid ? '✓ freigegeben' : '—',
+                label: form.signoffValid ? _('✓ released') : '—',
                 cssClasses: ['caption', form.signoffValid ? 'success' : 'dim-label'],
                 valign: Gtk.Align.CENTER,
             }),
@@ -275,7 +283,7 @@ export class SubmissionSection {
 
         // Gate — unlocked, or the German blockers spelled out (read-first: the reason is visible).
         if (form.gate.unlocked) {
-            const ok = new Adw.ActionRow({ title: 'Absenden freigeschaltet' });
+            const ok = new Adw.ActionRow({ title: _('Submission unlocked') });
             ok.add_prefix(
                 new Gtk.Image({
                     iconName: 'object-select-symbolic',
@@ -308,8 +316,8 @@ export class SubmissionSection {
 
         // Live send — intentionally not offered here; named so its absence is honest, not a gap.
         const live = new Adw.ActionRow({
-            title: 'Echt-Versand',
-            subtitle: 'separat, mit deinem ELSTER-Zertifikat — hier bewusst nicht angeboten.',
+            title: _('Live submission'),
+            subtitle: _('separate, with your ELSTER certificate — deliberately not offered here.'),
             cssClasses: ['dim-label'],
         });
         live.add_prefix(
@@ -340,15 +348,15 @@ export class SubmissionSection {
         // (the same PDF the Steuer/Wizard views export). Shown for every form that has a loader.
         const pdfLoader = PRUEF_PDF_LOADERS[form.form];
         if (pdfLoader) {
-            const pdf = new Gtk.Button({ label: 'Prüf-PDF', cssClasses: ['flat'], valign: Gtk.Align.CENTER });
-            pdf.set_tooltip_text('Prüf-Datenblatt als PDF speichern (vor der Freigabe gegenlesen)');
+            const pdf = new Gtk.Button({ label: _('Check PDF'), cssClasses: ['flat'], valign: Gtk.Align.CENTER });
+            pdf.set_tooltip_text(_('Save the check sheet as a PDF (read it through before the release)'));
             pdf.connect('clicked', () => void this.onExportPdf(form, pdfLoader));
             box.append(pdf);
         }
 
         // Snapshot erfassen — always available (safe local write); re-capture supersedes the old one.
         const capture = new Gtk.Button({
-            label: form.snapshot ? 'Neu erfassen' : 'Snapshot erfassen',
+            label: form.snapshot ? _('Capture again') : _('Capture snapshot'),
             cssClasses: ['flat'],
             valign: Gtk.Align.CENTER,
         });
@@ -359,21 +367,21 @@ export class SubmissionSection {
         // (the test-first gate a real/live artifact needs before a live send). Needs ERiC + a fresh draft.
         const canValidate = ericAvailable && !!form.snapshot && !form.stale && form.snapshot.status === 'draft';
         const validate = new Gtk.Button({
-            label: 'Lokal prüfen',
+            label: _('Check locally'),
             cssClasses: ['flat'],
             valign: Gtk.Align.CENTER,
             sensitive: canValidate,
         });
         validate.set_tooltip_text(
             canValidate
-                ? 'Snapshot lokal gegen ERiC prüfen (kein Versand) — setzt bei Erfolg „validiert"'
+                ? _('Check the snapshot locally against ERiC (no submission) — on success it is set to “validated”')
                 : !ericAvailable
-                  ? 'ERiC nicht verfügbar'
+                  ? _('ERiC not available')
                   : !form.snapshot
-                    ? 'Zuerst einen Snapshot erfassen'
+                    ? _('Capture a snapshot first')
                     : form.stale
-                      ? 'Snapshot veraltet — neu erfassen'
-                      : 'Snapshot ist bereits validiert',
+                      ? _('Snapshot outdated — capture it again')
+                      : _('The snapshot is already validated'),
         );
         validate.connect('clicked', () => void this.onValidate(form));
         box.append(validate);
@@ -381,7 +389,7 @@ export class SubmissionSection {
         // Freigeben — a snapshot must exist and be fresh, and not already validly released.
         const canRelease = !!form.snapshot && !form.stale && !form.signoffValid;
         const release = new Gtk.Button({
-            label: 'Freigeben',
+            label: _p('button', 'Release'),
             cssClasses: ['flat'],
             valign: Gtk.Align.CENTER,
             sensitive: canRelease,
@@ -389,10 +397,10 @@ export class SubmissionSection {
         if (!canRelease) {
             release.set_tooltip_text(
                 !form.snapshot
-                    ? 'Zuerst einen Snapshot erfassen'
+                    ? _('Capture a snapshot first')
                     : form.stale
-                      ? 'Snapshot veraltet — neu erfassen'
-                      : 'Bereits freigegeben',
+                      ? _('Snapshot outdated — capture it again')
+                      : _('Already released'),
             );
         }
         release.connect('clicked', () => void this.onRelease(form));
@@ -401,14 +409,16 @@ export class SubmissionSection {
         // Test senden — needs ERiC available and the structural test guards passed.
         const canTest = ericAvailable && form.testReady;
         const test = new Gtk.Button({
-            label: 'Test senden',
+            label: _('Send a test'),
             cssClasses: ['flat'],
             valign: Gtk.Align.CENTER,
             sensitive: canTest,
         });
         if (!canTest) {
             test.set_tooltip_text(
-                !ericAvailable ? 'ERiC nicht verfügbar' : (form.testBlockers[0] ?? 'Test-Versand noch nicht möglich'),
+                !ericAvailable
+                    ? _('ERiC not available')
+                    : (form.testBlockers[0] ?? _('A test submission is not possible yet')),
             );
         }
         test.connect('clicked', () => void this.onTestSend(form));
@@ -419,19 +429,19 @@ export class SubmissionSection {
         // already submitted); `liveReady` is precomputed with allowLive, so the button IS the opt-in.
         const canLive = ericAvailable && form.liveReady;
         const live = new Gtk.Button({
-            label: 'Verbindlich absenden',
+            label: _('Submit bindingly'),
             cssClasses: ['flat'],
             valign: Gtk.Align.CENTER,
             sensitive: canLive,
         });
         live.set_tooltip_text(
             canLive
-                ? 'Verbindlich ans Finanzamt übermitteln (unwiderruflich)'
+                ? _('Transmit bindingly to the Finanzamt (irreversible)')
                 : !ericAvailable
-                  ? 'ERiC nicht verfügbar'
+                  ? _('ERiC not available')
                   : form.snapshot?.status === 'submitted'
-                    ? 'Bereits verbindlich übermittelt'
-                    : (form.liveBlockers[0] ?? 'Echt-Versand noch nicht möglich'),
+                    ? _('Already submitted bindingly')
+                    : (form.liveBlockers[0] ?? _('A live submission is not possible yet')),
         );
         live.connect('clicked', () => void this.onLiveSend(form));
         box.append(live);
@@ -446,18 +456,18 @@ export class SubmissionSection {
     private async onExportPdf(form: FormSubmissionState, loader: PruefPdfLoader): Promise<void> {
         try {
             const { filename, bytes } = await loader(this.entity, this.year);
-            saveFileViaDialog(this.root, filename, bytes, `${form.title}-Prüfblatt`);
+            saveFileViaDialog(this.root, filename, bytes, fmt(_('{form} check sheet'), { form: form.title }));
         } catch (err) {
-            await errorDialog(this.root, 'Prüf-PDF nicht verfügbar', msg(err));
+            await errorDialog(this.root, _('Check PDF not available'), msg(err));
         }
     }
 
     private async onCapture(form: FormSubmissionState): Promise<void> {
         try {
             await captureSnapshot(this.entity, this.year, form.form, form.period);
-            showToast(`Snapshot erfasst: ${form.title}`);
+            showToast(fmt(_('Snapshot captured: {form}'), { form: form.title }));
         } catch (err) {
-            await errorDialog(this.root, 'Snapshot fehlgeschlagen', msg(err));
+            await errorDialog(this.root, _('Snapshot failed'), msg(err));
         }
         this.reload();
     }
@@ -466,12 +476,13 @@ export class SubmissionSection {
         try {
             const result = await validateSnapshot(this.entity, this.year, form.form, form.period);
             if (result.ok) {
-                showToast(`Lokal validiert: ${form.title}${result.hinweise ? ' (mit ERiC-Hinweisen)' : ''}`);
+                const done = fmt(_('Validated locally: {form}'), { form: form.title });
+                showToast(result.hinweise ? `${done} ${_('(with ERiC notices)')}` : done);
             } else {
-                await errorDialog(this.root, 'ERiC-Validierung', result.message);
+                await errorDialog(this.root, _('ERiC validation'), result.message);
             }
         } catch (err) {
-            await errorDialog(this.root, 'Validierung fehlgeschlagen', msg(err));
+            await errorDialog(this.root, _('Validation failed'), msg(err));
         }
         this.reload();
     }
@@ -487,14 +498,26 @@ export class SubmissionSection {
             });
             const cc = result.crossChecks?.summary;
             if (cc && !cc.clean) {
-                showToast(`Freigegeben — aber ${cc.error} Querprüfung(en) mit Fehler; vor Abgabe klären.`, 6);
+                showToast(
+                    fmt(
+                        _n(
+                            'Released — but {n} cross-check has an error; clear it before filing.',
+                            'Released — but {n} cross-checks have errors; clear them before filing.',
+                            cc.error,
+                        ),
+                        { n: cc.error },
+                    ),
+                    6,
+                );
             } else if (cc) {
-                showToast(`Freigegeben — Querprüfungen sauber (${cc.ok} ok · ${cc.warn} Warnung).`);
+                showToast(
+                    fmt(_('Released — cross-checks clean ({ok} ok · {warn} warning).'), { ok: cc.ok, warn: cc.warn }),
+                );
             } else {
-                showToast(`Freigegeben: ${form.title}`);
+                showToast(fmt(_('Released: {form}'), { form: form.title }));
             }
         } catch (err) {
-            await errorDialog(this.root, 'Freigabe fehlgeschlagen', msg(err));
+            await errorDialog(this.root, _('Release failed'), msg(err));
         }
         this.reload();
     }
@@ -523,10 +546,10 @@ export class SubmissionSection {
                 // the send, so we never store (and later pre-fill) a bad one.
                 if (creds.savePin) storeElsterPin(this.entity.id, creds.pin);
             } else {
-                await errorDialog(this.root, 'Test-Versand', result.message);
+                await errorDialog(this.root, _('Test submission'), result.message);
             }
         } catch (err) {
-            await errorDialog(this.root, 'Test-Versand fehlgeschlagen', msg(err));
+            await errorDialog(this.root, _('Test submission failed'), msg(err));
         }
         this.reload();
     }
@@ -541,7 +564,7 @@ export class SubmissionSection {
         const erstattung = headline?.erstattung;
         const figure =
             typeof erstattung === 'number'
-                ? `${erstattung >= 0 ? 'Erstattung' : 'Nachzahlung'}: ${eur(Math.abs(erstattung))}`
+                ? `${erstattung >= 0 ? _('Refund') : _('Additional payment')}: ${eur(Math.abs(erstattung))}`
                 : undefined;
         // The open double-payment cases and the findings to clear ride along into the final read — a
         // warning, not a block.
@@ -567,10 +590,11 @@ export class SubmissionSection {
                 // Persist the PIN ONLY after a successful send proved it correct.
                 if (creds.savePin) storeElsterPin(this.entity.id, creds.pin);
                 const done = new Adw.AlertDialog({
-                    heading: 'Erfolgreich übermittelt',
+                    heading: _('Successfully submitted'),
                     body:
-                        `„${form.title}“ ist verbindlich beim Finanzamt eingegangen.\n\n` +
-                        `Transferticket: ${result.transferticket || '—'}`,
+                        fmt(_('“{form}” has arrived bindingly at the Finanzamt.'), { form: form.title }) +
+                        '\n\n' +
+                        fmt(_('Transfer ticket: {ticket}'), { ticket: result.transferticket || '—' }),
                 });
                 done.add_response('ok', 'OK');
                 done.set_default_response('ok');
@@ -581,10 +605,10 @@ export class SubmissionSection {
                 });
                 done.present(this.root);
             } else {
-                await errorDialog(this.root, 'Echt-Versand', result.message);
+                await errorDialog(this.root, _('Live submission'), result.message);
             }
         } catch (err) {
-            await errorDialog(this.root, 'Echt-Versand fehlgeschlagen', msg(err));
+            await errorDialog(this.root, _('Live submission failed'), msg(err));
         }
         this.reload();
     }

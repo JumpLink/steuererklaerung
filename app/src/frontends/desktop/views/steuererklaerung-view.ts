@@ -45,7 +45,8 @@ import {
 } from '../../../core/actions/elster/cross-checks.ts';
 import type { EstThemeCard, EstWaterfallRow } from '../../../core/actions/elster/est.ts';
 import type { AppEntity } from '../entities.ts';
-import { fmtDe as fmt } from '../../../core/lib/money.ts';
+import { fmtDe } from '../../../core/lib/money.ts';
+import { _, _n, fmt } from '../i18n.ts';
 import { LoadToken, loadIntoStack, markup, saveFileViaDialog, amountLabel } from './util.ts';
 import { errorDialog } from './dialogs.ts';
 
@@ -108,7 +109,7 @@ export class BhSteuererklaerungView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'Steuererklärung konnte nicht geprüft werden',
+            errorContext: _('The tax return could not be checked'),
             // Plan + machine cross-checks in one load: both derive from the SAME cached EÜR aggregate,
             // so the second call is a cache hit (no extra Paperless fetch) and fill() renders the
             // Gegenprüfung + honest readiness with full knowledge — no post-hoc widget shuffling.
@@ -250,7 +251,7 @@ export class BhSteuererklaerungView extends Adw.Bin {
         const accent = s.primary.kind === 'payment' ? 'warning' : 'success';
         left.append(
             new Gtk.Label({
-                label: `${fmt(s.primary.amount)} €`,
+                label: `${fmtDe(s.primary.amount)} €`,
                 xalign: 0,
                 cssClasses: ['title-1', 'numeric', accent],
             }),
@@ -265,7 +266,7 @@ export class BhSteuererklaerungView extends Adw.Bin {
                 new Gtk.Label({ label: line.label, xalign: 0, hexpand: true, cssClasses: ['dim-label', 'caption'] }),
             );
             row.append(
-                new Gtk.Label({ label: `${fmt(line.amount)} €`, xalign: 1, cssClasses: ['numeric', 'caption'] }),
+                new Gtk.Label({ label: `${fmtDe(line.amount)} €`, xalign: 1, cssClasses: ['numeric', 'caption'] }),
             );
             right.append(row);
         }
@@ -285,14 +286,18 @@ export class BhSteuererklaerungView extends Adw.Bin {
         box.set_margin_start(16);
         box.set_margin_end(16);
         box.append(
-            new Gtk.Label({ label: `Steuererklärung ${plan.year}`, xalign: 0, cssClasses: ['dim-label', 'caption'] }),
+            new Gtk.Label({
+                label: fmt(_('Tax return {year}'), { year: plan.year }),
+                xalign: 0,
+                cssClasses: ['dim-label', 'caption'],
+            }),
         );
         // Not-ready reads as a status, not neutral text: amber for open points, red once a cross-check
         // actually errored (the honest gate) — matching the app's warn/error colour semantics.
         const notReadyAccent = summary.error > 0 ? 'error' : 'warning';
         box.append(
             new Gtk.Label({
-                label: ready ? '✓ Abgabebereit' : '⚠ Noch nicht abgabebereit',
+                label: ready ? `✓ ${_('Ready to file')}` : `⚠ ${_('Not yet ready to file')}`,
                 xalign: 0,
                 cssClasses: ready ? ['title-2', 'success'] : ['title-2', notReadyAccent],
             }),
@@ -302,8 +307,11 @@ export class BhSteuererklaerungView extends Adw.Bin {
         // web form. The annual business forms (EÜR/USt-Jahr/GewSt/Feststellung) have NO Mein-ELSTER XML
         // import — only the USt-VA — there the Prüf-PDF is the template to type off.
         const subtitle = plan.est
-            ? 'Schätzung — Prüf-PDF + E10-XML; Abgabe via ELSTER-Direktversand (Freigabe erforderlich) oder Web-Formular'
-            : `${exportable}/${plan.forms.length} Formulare · Prüf-PDF als Vorlage — Werte in Mein ELSTER eintragen`;
+            ? _('Estimate — check PDF + E10 XML; filing via ELSTER direct submission (release required) or web form')
+            : fmt(_('{done}/{total} forms · check PDF as a template — type the figures into Mein ELSTER'), {
+                  done: exportable,
+                  total: plan.forms.length,
+              });
         box.append(
             new Gtk.Label({
                 label: subtitle,
@@ -316,7 +324,14 @@ export class BhSteuererklaerungView extends Adw.Bin {
         if (summary.error > 0) {
             box.append(
                 new Gtk.Label({
-                    label: `✗ ${summary.error} Querprüfung(en) mit Fehler — vor Abgabe klären.`,
+                    label: `✗ ${fmt(
+                        _n(
+                            '{n} cross-check with an error — resolve before filing.',
+                            '{n} cross-checks with errors — resolve before filing.',
+                            summary.error,
+                        ),
+                        { n: summary.error },
+                    )}`,
                     xalign: 0,
                     wrap: true,
                     cssClasses: ['error', 'caption'],
@@ -330,7 +345,7 @@ export class BhSteuererklaerungView extends Adw.Bin {
 
     /** The Steuer-Themen cards: one expander per theme (amount + refund impact + line items). */
     private estThemesGroup(themes: EstThemeCard[]): Gtk.Widget {
-        const group = new Adw.PreferencesGroup({ title: 'Steuer-Themen', marginTop: 6 });
+        const group = new Adw.PreferencesGroup({ title: _('Tax topics'), marginTop: 6 });
         for (const t of themes) {
             const row = new Adw.ExpanderRow({ title: markup(t.title), subtitle: markup(t.hint) });
             const s = THEME_STATUS[t.status];
@@ -339,14 +354,14 @@ export class BhSteuererklaerungView extends Adw.Bin {
             const suffix = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, valign: Gtk.Align.CENTER });
             suffix.append(
                 new Gtk.Label({
-                    label: `${fmt(t.amount)} €`,
+                    label: `${fmtDe(t.amount)} €`,
                     xalign: 1,
                     cssClasses: ['dim-label', 'caption', 'numeric'],
                 }),
             );
             if (t.impact !== 0) {
                 suffix.append(
-                    amountLabel(`${t.impact >= 0 ? '+' : '−'}${fmt(Math.abs(t.impact))} €`, {
+                    amountLabel(`${t.impact >= 0 ? '+' : '−'}${fmtDe(Math.abs(t.impact))} €`, {
                         accent: t.impact >= 0 ? 'success' : 'error',
                     }),
                 );
@@ -372,7 +387,7 @@ export class BhSteuererklaerungView extends Adw.Bin {
 
     /** The Bruttoarbeitslohn → … → Erstattung waterfall as a read-only group. */
     private estWaterfallGroup(rows: EstWaterfallRow[]): Gtk.Widget {
-        const group = new Adw.PreferencesGroup({ title: 'Berechnung', marginTop: 6 });
+        const group = new Adw.PreferencesGroup({ title: _('Calculation'), marginTop: 6 });
         for (const r of rows) {
             const row = new Adw.ActionRow({ title: markup(r.label) });
             if (r.emphasis) row.add_css_class('heading');
@@ -411,13 +426,13 @@ export class BhSteuererklaerungView extends Adw.Bin {
         // cross-checks (checks == []) and falls through to the plain details rendering.
         if (step.id === 'pruefung' && checks.length > 0) {
             const group = new Adw.PreferencesGroup({
-                title: 'Querprüfungen',
+                title: _('Cross-checks'),
                 description: markup(this.verdictText(summary)),
             });
             for (const r of checks) group.add(this.crossCheckRow(r));
             box.append(group);
             if (step.details.length) {
-                const manual = new Adw.PreferencesGroup({ title: 'Zusätzlich manuell prüfen', marginTop: 6 });
+                const manual = new Adw.PreferencesGroup({ title: _('Also check manually'), marginTop: 6 });
                 for (const d of step.details) manual.add(new Adw.ActionRow({ title: markup(d) }));
                 box.append(manual);
             }
@@ -431,7 +446,7 @@ export class BhSteuererklaerungView extends Adw.Bin {
             for (const d of step.details) group.add(new Adw.ActionRow({ title: markup(d) }));
         } else {
             // A step with nothing to flag is a positive confirmation — mark it with an ok icon.
-            const clear = new Adw.ActionRow({ title: 'Keine offenen Punkte in diesem Schritt.' });
+            const clear = new Adw.ActionRow({ title: _('No open points in this step.') });
             clear.add_prefix(
                 new Gtk.Image({
                     iconName: 'object-select-symbolic',
@@ -471,10 +486,14 @@ export class BhSteuererklaerungView extends Adw.Bin {
 
     /** One-line verdict for the Gegenprüfung group description, derived from the core summary. */
     private verdictText(s: CrossCheckSummary): string {
-        const counts = `${s.ok} ok · ${s.warn} Warnung(en) · ${s.error} Fehler`;
-        if (s.error > 0) return `${counts} — nicht abgabebereit, bis die Fehler geklärt sind.`;
-        if (s.warn > 0) return `${counts} — Warnungen vor der Abgabe prüfen.`;
-        return `${counts} — keine Abweichungen gefunden.`;
+        const counts = fmt(_('{ok} ok · {warn} warning(s) · {error} error(s)'), {
+            ok: s.ok,
+            warn: s.warn,
+            error: s.error,
+        });
+        if (s.error > 0) return `${counts} — ${_('not ready to file until the errors are resolved.')}`;
+        if (s.warn > 0) return `${counts} — ${_('check the warnings before filing.')}`;
+        return `${counts} — ${_('no discrepancies found.')}`;
     }
 
     /**
@@ -487,9 +506,9 @@ export class BhSteuererklaerungView extends Adw.Bin {
         const lines = [r.detail];
         if (r.expected != null || r.actual != null || r.delta != null) {
             const nums: string[] = [];
-            if (r.expected != null) nums.push(`erwartet ${fmt(r.expected)} €`);
-            if (r.actual != null) nums.push(`ist ${fmt(r.actual)} €`);
-            if (r.delta != null) nums.push(`Δ ${fmt(r.delta)} €`);
+            if (r.expected != null) nums.push(fmt(_('expected {amount} €'), { amount: fmtDe(r.expected) }));
+            if (r.actual != null) nums.push(fmt(_('actual {amount} €'), { amount: fmtDe(r.actual) }));
+            if (r.delta != null) nums.push(`Δ ${fmtDe(r.delta)} €`);
             lines.push(nums.join(' · '));
         }
         const row = new Adw.ActionRow({ title: markup(r.label), subtitle: markup(lines.join('\n')) });
@@ -508,7 +527,7 @@ export class BhSteuererklaerungView extends Adw.Bin {
         if (f.canExport) {
             const btn = new Gtk.Button({
                 iconName: 'document-save-symbolic',
-                tooltipText: 'Prüf-Datenblatt als PDF speichern',
+                tooltipText: _('Save check data sheet as PDF'),
                 cssClasses: ['flat'],
                 valign: Gtk.Align.CENTER,
             });
@@ -525,9 +544,9 @@ export class BhSteuererklaerungView extends Adw.Bin {
         if (!loader) return; // no Prüf-PDF for this form (e.g. USt-VA) — the export button isn't shown
         try {
             const { filename, bytes } = await loader(entity, year);
-            saveFileViaDialog(this, filename, bytes, `${f.title}-Prüfblatt`);
+            saveFileViaDialog(this, filename, bytes, fmt(_('{form} check sheet'), { form: f.title }));
         } catch (err) {
-            await errorDialog(this, 'PDF nicht verfügbar', err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('PDF not available'), err instanceof Error ? err.message : String(err));
         }
     }
 }
