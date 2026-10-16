@@ -15,6 +15,7 @@
  */
 
 import { fmtDe as fmt } from '../lib/money.ts';
+import { _, _n, fmt as t } from '../lib/i18n.ts';
 
 export type HinweisLevel = 'warnung' | 'tipp' | 'info';
 
@@ -99,12 +100,19 @@ export interface Hinweis {
 /** List length a hint carries; the remainder is a count, so a 400-booking hint stays readable. */
 export const BETROFFEN_MAX = 20;
 
-/** The generic dismissal every finding with a {@link Hinweis.fingerprint} can offer. */
-export const HANDLUNG_IN_ORDNUNG: HinweisHandlung = {
-    id: 'in-ordnung',
-    label: 'Als in Ordnung markieren',
-    target: { art: 'aktion', aktion: 'hinweis-ok' },
-};
+/**
+ * The generic dismissal every finding with a {@link Hinweis.fingerprint} can offer.
+ *
+ * A function, not a constant: a constant is built when the module is imported, which can be before
+ * the frontend registers its translator — and a label resolved too early stays English for good.
+ */
+export function handlungInOrdnung(): HinweisHandlung {
+    return {
+        id: 'in-ordnung',
+        label: _('Mark as fine'),
+        target: { art: 'aktion', aktion: 'hinweis-ok' },
+    };
+}
 
 /**
  * Stable short fingerprint of a finding's parts (FNV-1a over the sorted parts). Order-independent, so
@@ -138,10 +146,10 @@ export function belegZeile(d: {
     correspondent: string | null;
     invoiceNumber?: string | null;
 }): string {
-    const parts = [d.created ? deDate(d.created) : 'ohne Datum'];
+    const parts = [d.created ? deDate(d.created) : _('no date')];
     if (d.gross != null) parts.push(`${fmt(d.gross)} €`);
     parts.push(d.correspondent?.trim() || '—');
-    if (d.invoiceNumber) parts.push(`Nr. ${d.invoiceNumber}`);
+    if (d.invoiceNumber) parts.push(t(_('no. {number}'), { number: d.invoiceNumber }));
     return parts.join(' · ');
 }
 
@@ -228,32 +236,57 @@ export function computeHinweise(i: HinweiseInput): Hinweis[] {
         h.push({
             key: 'kleinunternehmer',
             level: 'warnung',
-            title: 'Regelbesteuerung verpflichtend',
-            text: `Umsatz ${i.year} ${fmt(i.umsatz)} € über ${fmt(g.laufend)} € — die Kleinunternehmerregelung ist ausgeschlossen.`,
+            title: _('Standard taxation is mandatory'),
+            text: t(_('Revenue {year} {revenue} € above {limit} € — the small business scheme is ruled out.'), {
+                year: i.year,
+                revenue: fmt(i.umsatz),
+                limit: fmt(g.laufend),
+            }),
             ref: KLEIN_REF,
         });
     } else if (regelbesteuerung && i.umsatz <= g.vorjahr) {
         h.push({
             key: 'kleinunternehmer',
             level: 'tipp',
-            title: 'Kleinunternehmerregelung wäre möglich',
-            text: `Umsatz ${i.year} ${fmt(i.umsatz)} € unter ${fmt(g.vorjahr)} € (Vorjahresgrenze). Aktuell Regelbesteuerung (USt ausgewiesen) — ein Wechsel zur Kleinunternehmerregelung wäre möglich (keine USt, aber kein Vorsteuerabzug). Prüfen, ob es sich lohnt.`,
+            title: _('The small business scheme would be possible'),
+            text:
+                t(_('Revenue {year} {revenue} € below {limit} € (previous-year limit).'), {
+                    year: i.year,
+                    revenue: fmt(i.umsatz),
+                    limit: fmt(g.vorjahr),
+                }) +
+                ' ' +
+                _(
+                    'Currently standard taxation (VAT charged) — a switch to the small business scheme would be possible (no VAT, but no input tax deduction). Check whether it pays off.',
+                ),
             ref: KLEIN_REF,
         });
     } else if (!regelbesteuerung && i.umsatz > g.vorjahr) {
         h.push({
             key: 'kleinunternehmer',
             level: 'warnung',
-            title: 'Wechsel zur Regelbesteuerung prüfen',
-            text: `Umsatz ${i.year} ${fmt(i.umsatz)} € über der Vorjahresgrenze ${fmt(g.vorjahr)} € — der Kleinunternehmerstatus kann entfallen.`,
+            title: _('Check the switch to standard taxation'),
+            text: t(
+                _(
+                    'Revenue {year} {revenue} € above the previous-year limit {limit} € — the small business status may lapse.',
+                ),
+                { year: i.year, revenue: fmt(i.umsatz), limit: fmt(g.vorjahr) },
+            ),
             ref: KLEIN_REF,
         });
     } else {
         h.push({
             key: 'kleinunternehmer',
             level: 'info',
-            title: `Besteuerungsart: ${regelbesteuerung ? 'Regelbesteuerung' : 'Kleinunternehmer / keine USt'}`,
-            text: `Umsatz ${i.year} ${fmt(i.umsatz)} €. Kleinunternehmer-Grenzen: ${fmt(g.vorjahr)} € (Vorjahr) · ${fmt(g.laufend)} € (laufendes Jahr).`,
+            title: t(_('Type of taxation: {type}'), {
+                type: regelbesteuerung ? _('standard taxation') : _('small business / no VAT'),
+            }),
+            text: t(
+                _(
+                    'Revenue {year} {revenue} €. Small business limits: {previous} € (previous year) · {current} € (current year).',
+                ),
+                { year: i.year, revenue: fmt(i.umsatz), previous: fmt(g.vorjahr), current: fmt(g.laufend) },
+            ),
             ref: KLEIN_REF,
         });
     }
@@ -263,8 +296,13 @@ export function computeHinweise(i: HinweiseInput): Hinweis[] {
         h.push({
             key: 'ust-vorauszahlungen',
             level: 'warnung',
-            title: 'USt-Vorauszahlungen noch nicht erfasst',
-            text: `Die unterjährigen USt-Voranmeldungen sind nicht eingetragen — die Abschlusszahlung (${fmt(i.uste.closingBalance)} €) verringert sich um die bereits geleisteten Vorauszahlungen.`,
+            title: _('VAT prepayments not recorded yet'),
+            text: t(
+                _(
+                    'The advance VAT returns during the year are not entered — the closing payment ({amount} €) is reduced by the prepayments already made.',
+                ),
+                { amount: fmt(i.uste.closingBalance) },
+            ),
         });
     }
 
@@ -274,8 +312,20 @@ export function computeHinweise(i: HinweiseInput): Hinweis[] {
         h.push({
             key: 'beleg-luecke',
             level: 'warnung',
-            title: 'Vorsteuer ohne verknüpften Beleg',
-            text: `${fmt(i.belegLuecke.sum)} € Vorsteuer in ${i.belegLuecke.count} Buchungen ohne hinterlegte Rechnung. Für den Vorsteuerabzug die Rechnungen aufbewahren und auf Anforderung des Finanzamts vorlegen (nicht an ELSTER zu übermitteln).`,
+            title: _('Input tax without a linked receipt'),
+            text:
+                t(
+                    _n(
+                        '{amount} € input tax in {n} booking without a stored invoice.',
+                        '{amount} € input tax in {n} bookings without a stored invoice.',
+                        i.belegLuecke.count,
+                    ),
+                    { amount: fmt(i.belegLuecke.sum), n: i.belegLuecke.count },
+                ) +
+                ' ' +
+                _(
+                    'To deduct the input tax, keep the invoices and present them on request by the tax office (not to be transmitted to ELSTER).',
+                ),
             status: 'befund',
             ...(rows.length
                 ? {
@@ -284,15 +334,15 @@ export function computeHinweise(i: HinweiseInput): Hinweis[] {
                       handlungen: [
                           {
                               id: 'zuordnen',
-                              label: 'Zuordnen',
+                              label: _('Match'),
                               target: { art: 'dialog', dialog: 'beleg-zuordnen', ref: rows[0].id },
                           },
                           {
                               id: 'offene-belege',
-                              label: 'Offene Belege öffnen',
+                              label: _('Open the receipt inbox'),
                               target: { art: 'ansicht', ansicht: 'beleg-eingang', filter: 'ohne-beleg' },
                           },
-                          HANDLUNG_IN_ORDNUNG,
+                          handlungInOrdnung(),
                       ],
                   }
                 : {}),
@@ -305,8 +355,12 @@ export function computeHinweise(i: HinweiseInput): Hinweis[] {
         h.push({
             key: 'unklassifiziert',
             level: 'warnung',
-            title: `${i.unclassified} unklassifizierte Buchung(en)`,
-            text: 'Diese Buchungen sind weder über einen Beleg noch über eine Regel zugeordnet — vor der Abgabe klären.',
+            title: t(_n('{n} unclassified booking', '{n} unclassified bookings', i.unclassified), {
+                n: i.unclassified,
+            }),
+            text: _(
+                'These bookings are assigned neither through a receipt nor through a rule — clarify before filing.',
+            ),
             status: 'befund',
             ...(rows.length
                 ? {
@@ -315,15 +369,15 @@ export function computeHinweise(i: HinweiseInput): Hinweis[] {
                       handlungen: [
                           {
                               id: 'regel-anlegen',
-                              label: 'Regel anlegen',
+                              label: _('Create a rule'),
                               target: { art: 'dialog', dialog: 'regel-anlegen', ref: rows[0].id },
                           },
                           {
                               id: 'buchungen',
-                              label: 'Buchungen öffnen',
+                              label: _('Open transactions'),
                               target: { art: 'ansicht', ansicht: 'buchungen', filter: 'unklassifiziert' },
                           },
-                          HANDLUNG_IN_ORDNUNG,
+                          handlungInOrdnung(),
                       ],
                   }
                 : {}),
@@ -335,12 +389,15 @@ export function computeHinweise(i: HinweiseInput): Hinweis[] {
         h.push({
             key: 'betriebsaufgabe',
             level: 'info',
-            title: 'Betriebsaufgabe im Jahr',
-            text: `Betrieb zum ${deDate(i.businessEndDate)} beendet.${
-                i.nachtraeglichNet
-                    ? ` Nachträgliche §24-Einkünfte ${fmt(i.nachtraeglichNet)} € sind im Ergebnis enthalten (gewerbesteuerfrei).`
-                    : ''
-            }`,
+            title: _('Business ceased during the year'),
+            text:
+                t(_('Business ceased on {date}.'), { date: deDate(i.businessEndDate) }) +
+                (i.nachtraeglichNet
+                    ? ' ' +
+                      t(_('Subsequent § 24 income of {amount} € is included in the result (exempt from trade tax).'), {
+                          amount: fmt(i.nachtraeglichNet),
+                      })
+                    : ''),
             ref: '§ 16 / § 24 EStG',
         });
     }
@@ -354,15 +411,27 @@ export function computeHinweise(i: HinweiseInput): Hinweis[] {
             {
                 art: 'rechnung' as const,
                 id: v.rechnungId,
-                zeile: `Rechnung ${v.rechnungNummer} · ${fmt(v.zuViel)} € zu viel`,
+                zeile: t(_('Invoice {number} · {amount} € too much'), {
+                    number: v.rechnungNummer,
+                    amount: fmt(v.zuViel),
+                }),
             },
             ...v.txs.map((t) => ({ art: 'buchung' as const, id: t.id, zeile: buchungZeile(t) })),
         ]);
         h.push({
             key: 'doppelzahlung-verdacht',
             level: 'warnung',
-            title: `${i.doppelzahlungVerdacht} Zahlung(en) möglicherweise doppelt erhalten — klären vor der Abgabe`,
-            text: 'Ein Kunde hat eine Rechnung offenbar mehrfach oder zu hoch bezahlt. Der zu viel erhaltene Betrag ist kein Umsatz, sondern eine Rückzahlungspflicht — bestätigen oder als in Ordnung markieren.',
+            title: t(
+                _n(
+                    '{n} payment possibly received twice — clarify before filing',
+                    '{n} payments possibly received twice — clarify before filing',
+                    i.doppelzahlungVerdacht,
+                ),
+                { n: i.doppelzahlungVerdacht },
+            ),
+            text: _(
+                'A customer has apparently paid an invoice more than once or too much. The excess received is not revenue but an obligation to repay — confirm it or mark it as fine.',
+            ),
             status: 'befund',
             ...(liste.length
                 ? {
@@ -370,7 +439,7 @@ export function computeHinweise(i: HinweiseInput): Hinweis[] {
                       handlungen: [
                           {
                               id: 'rechnung',
-                              label: 'Rechnung öffnen',
+                              label: _('Open the invoice'),
                               target: { art: 'dialog', dialog: 'rechnung', ref: liste[0].rechnungId },
                           },
                       ],
@@ -384,8 +453,17 @@ export function computeHinweise(i: HinweiseInput): Hinweis[] {
         h.push({
             key: 'doppelzahlung-rueckzahlung-offen',
             level: 'warnung',
-            title: `${i.rueckzahlungOffen} Doppelzahlung(en) noch nicht an den Kunden zurückgezahlt`,
-            text: 'Sobald die Rückzahlung gebucht ist, die Überweisung mit der Doppelzahlung verknüpfen — sie wird dann ebenfalls als durchlaufender Posten behandelt.',
+            title: t(
+                _n(
+                    '{n} double payment not refunded to the customer yet',
+                    '{n} double payments not refunded to the customer yet',
+                    i.rueckzahlungOffen,
+                ),
+                { n: i.rueckzahlungOffen },
+            ),
+            text: _(
+                'Once the refund is booked, link the transfer to the double payment — it is then treated as a pass-through item as well.',
+            ),
             status: 'befund',
             ...(liste.length
                 ? {
@@ -395,7 +473,7 @@ export function computeHinweise(i: HinweiseInput): Hinweis[] {
                                 handlungen: [
                                     {
                                         id: 'rechnung',
-                                        label: 'Rechnung öffnen',
+                                        label: _('Open the invoice'),
                                         target: {
                                             art: 'dialog' as const,
                                             dialog: 'rechnung' as const,
@@ -415,8 +493,12 @@ export function computeHinweise(i: HinweiseInput): Hinweis[] {
         h.push({
             key: 'doppelzahlungen',
             level: 'info',
-            title: `${i.doppelzahlungen} Doppelzahlung(en) neutralisiert`,
-            text: 'Doppelt bezahlte Rechnungen sind als durchlaufender Posten aus Umsatz und USt herausgerechnet (Rückzahlungsverpflichtung).',
+            title: t(_n('{n} double payment neutralised', '{n} double payments neutralised', i.doppelzahlungen), {
+                n: i.doppelzahlungen,
+            }),
+            text: _(
+                'Invoices paid twice are excluded from revenue and VAT as a pass-through item (obligation to repay).',
+            ),
         });
     }
 
@@ -425,8 +507,18 @@ export function computeHinweise(i: HinweiseInput): Hinweis[] {
         h.push({
             key: 'afa',
             level: 'info',
-            title: 'Abschreibungen berücksichtigt',
-            text: `AfA ${fmt(i.afa)} €${i.afaCount ? ` aus ${i.afaCount} Anlagegut/-gütern` : ''} ist in der EÜR enthalten — das Anlageverzeichnis (Restbuchwerte, Zugänge/Abgänge) aktuell halten.`,
+            title: _('Depreciation taken into account'),
+            text: t(
+                _(
+                    'Depreciation of {amount} €{assets} is included in the EÜR — keep the asset register (residual values, additions/disposals) up to date.',
+                ),
+                {
+                    amount: fmt(i.afa),
+                    assets: i.afaCount
+                        ? t(_n(' from {n} fixed asset', ' from {n} fixed assets', i.afaCount), { n: i.afaCount })
+                        : '',
+                },
+            ),
         });
     }
 
@@ -435,8 +527,13 @@ export function computeHinweise(i: HinweiseInput): Hinweis[] {
         h.push({
             key: 'frist',
             level: 'info',
-            title: 'Nächste Abgabefrist',
-            text: `Die Jahreserklärungen sind bis ${deDate(i.nextDeadline)} abzugeben (Regelfrist ohne Berater; eine gewährte Fristverlängerung verschiebt das).`,
+            title: _('Next filing deadline'),
+            text: t(
+                _(
+                    'The annual returns are due by {date} (regular deadline without an adviser; a granted extension moves it).',
+                ),
+                { date: deDate(i.nextDeadline) },
+            ),
         });
     }
 
@@ -445,8 +542,10 @@ export function computeHinweise(i: HinweiseInput): Hinweis[] {
         h.push({
             key: 'gewst-null',
             level: 'info',
-            title: 'Gewerbesteuer: Messbetrag 0 €',
-            text: 'Der Gewerbeertrag liegt unter dem Freibetrag (24.500 €) — es fällt keine Gewerbesteuer an, die Erklärung ist aber dennoch abzugeben.',
+            title: _('Trade tax: base amount 0 €'),
+            text: _(
+                'The trade income is below the allowance (24,500 €) — no trade tax is due, but the return still has to be filed.',
+            ),
         });
     }
 

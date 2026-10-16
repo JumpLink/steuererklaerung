@@ -60,8 +60,8 @@ export default async () => {
             const [h] = run(konto({ txs: monthly(2025, ALL), statements: statements(2025, ALL) }));
             expect(h.status).toBe('ohne_befund');
             expect(h.key).toBe('kontoauszug:camt:DE00TEST');
-            expect(h.geprueft).toContain('Anfangssaldo + Umsätze = Endsaldo');
-            expect(h.geprueft).toContain('Auszugsnummern fortlaufend');
+            expect(h.geprueft).toContain('opening balance + transactions = closing balance');
+            expect(h.geprueft).toContain('statement numbers consecutive');
             expect(h.handlungen).toBe(undefined);
         });
 
@@ -71,8 +71,8 @@ export default async () => {
             st[4] = { ...st[4], opening: st[4].opening! + 5, closing: st[4].closing! + 5 };
             const [h] = run(konto({ txs: monthly(2025, ALL), statements: st.slice(0, 5) }));
             expect(h.status).toBe('befund');
-            expect(h.text).toContain('≠ Endsaldo');
-            expect(h.text).toContain('Differenz');
+            expect(h.text).toContain('≠ closing balance');
+            expect(h.text).toContain('difference');
             expect(h.handlungen?.map((a) => a.id)).toStrictEqual(['kontoauszug-importieren', 'in-ordnung']);
             expect(typeof h.fingerprint).toBe('string');
         });
@@ -81,16 +81,16 @@ export default async () => {
             const st = statements(2025, ALL).filter((s) => s.seq !== 9);
             const [h] = run(konto({ txs: monthly(2025, ALL), statements: st }));
             expect(h.status).toBe('befund');
-            expect(h.text).toContain('Zwischen 31.08.2025 und 01.10.2025 fehlt vermutlich ein Auszug (Nr. 9)');
-            expect(h.text).toContain('Endsaldo');
-            expect(h.text.split('fehlt vermutlich').length).toBe(2);
+            expect(h.text).toContain('a statement is probably missing between 31.08.2025 and 01.10.2025 (no. 9)');
+            expect(h.text).toContain('closing balance');
+            expect(h.text.split('is probably missing').length).toBe(2);
         });
 
         await it('befund when the statements and the stored bookings disagree', async () => {
             const txs = monthly(2025, ALL).filter((t, n) => n !== 7); // one booking lost in the store
             const [h] = run(konto({ txs, statements: statements(2025, ALL) }));
             expect(h.status).toBe('befund');
-            expect(h.text).toContain('vermutlich fehlen Buchungen');
+            expect(h.text).toContain('bookings are probably missing');
         });
 
         await it('a closed account (last statement ends at 0 €) is no gap after its closing date', async () => {
@@ -98,15 +98,15 @@ export default async () => {
             const st = statements(2025, months, 3, 150); // 150 − 5×30 = 0
             const [h] = run(konto({ txs: monthly(2025, months), statements: st }));
             expect(h.status).toBe('ohne_befund');
-            expect(h.text).toContain('Nach dem 31.05.2025 nicht geprüft');
+            expect(h.text).toContain('Not checked after 31.05.2025');
         });
     });
 
     await describe('Kontoauszug lückenlos? — accounts without balances', async () => {
-        await it('nicht_pruefbar „weil das Konto keine Salden liefert" when no month is empty', async () => {
+        await it('nicht_pruefbar „the account supplies no balances" when no month is empty', async () => {
             const [h] = run(konto({ source: 'qonto', txs: monthly(2025, ALL) }));
             expect(h.status).toBe('nicht_pruefbar');
-            expect(h.weil).toBe('das Konto keine Salden liefert');
+            expect(h.weil).toBe('the account supplies no balances');
             expect(h.handlungen?.[0].id).toBe('kontoauszug-importieren');
         });
 
@@ -121,8 +121,8 @@ export default async () => {
                 }),
             );
             expect(h.status).toBe('befund');
-            expect(h.text).toContain('Keine Umsätze im April bis Mai 2025');
-            expect(h.text).toContain('erst mit importierten Kontoauszügen');
+            expect(h.text).toContain('no transactions in April to May 2025');
+            expect(h.text).toContain('once bank statements (CAMT) are imported');
         });
 
         await it('a quiet account (one booking now and then) is not a gap', async () => {
@@ -135,7 +135,7 @@ export default async () => {
             expect(h.status).toBe('nicht_pruefbar');
             const [open] = run(konto({ txs: monthly(2025, [1, 2, 3, 4, 5, 6]) }));
             expect(open.status).toBe('befund');
-            expect(open.text).toContain('Juli bis Dezember 2025');
+            expect(open.text).toContain('July to December 2025');
         });
 
         await it('the running year: a tail without bookings is „not imported yet", not a gap', async () => {
@@ -158,7 +158,7 @@ export default async () => {
         await it('a whole year missing between data before and after is a finding', async () => {
             const [h] = run(konto({ txs: [...monthly(2024, ALL), ...monthly(2026, [1])] }));
             expect(h.status).toBe('befund');
-            expect(h.text).toContain('weder Umsätze noch Auszug');
+            expect(h.text).toContain('neither transactions nor a statement');
         });
 
         await it('the same finding gives the same fingerprint; a different one a new print', async () => {

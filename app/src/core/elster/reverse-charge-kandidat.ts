@@ -22,9 +22,10 @@
 import { fmtDe as fmt, round2 } from '../lib/money.ts';
 import type { EuerKind } from './euer-aggregate.ts';
 import { impliedRate } from './euer-classify.ts';
-import { buchungZeile, capBetroffen, HANDLUNG_IN_ORDNUNG, hinweisFingerprint, type Hinweis } from './hinweise.ts';
+import { buchungZeile, capBetroffen, handlungInOrdnung, hinweisFingerprint, type Hinweis } from './hinweise.ts';
 import { isEuCountry } from './reverse-charge.ts';
 import { gleichePartei, parteiSchluessel } from './serie.ts';
+import { _, _n, fmt as t } from '../lib/i18n.ts';
 
 export interface RcZeile {
     id: string;
@@ -85,9 +86,11 @@ interface Grund {
 
 function grundFuer(r: RcZeile, zeilen: readonly RcZeile[], parteien: readonly RcPartei[]): Grund | null {
     const ibanLand = landAusIban(r.counterpartyIban);
-    if (auslaendisch(ibanLand)) return { land: ibanLand, satz: `Gegenkonto in ${ibanLand}` };
+    if (auslaendisch(ibanLand))
+        return { land: ibanLand, satz: t(_('counter account in {country}'), { country: ibanLand }) };
     const ustLand = landAusUstId(r.lieferantUstId);
-    if (auslaendisch(ustLand)) return { land: ustLand, satz: `USt-IdNr. auf dem Beleg aus ${ustLand}` };
+    if (auslaendisch(ustLand))
+        return { land: ustLand, satz: t(_('VAT ID on the receipt from {country}'), { country: ustLand }) };
     const iban = (r.counterpartyIban ?? '').replace(/\s+/g, '').toUpperCase();
     for (const p of parteien) {
         const passt =
@@ -95,21 +98,22 @@ function grundFuer(r: RcZeile, zeilen: readonly RcZeile[], parteien: readonly Rc
             (!!iban && (p.iban ?? '').replace(/\s+/g, '').toUpperCase() === iban);
         if (!passt) continue;
         const land = auslaendisch(p.land?.toUpperCase()) ? p.land!.toUpperCase() : landAusUstId(p.ustId);
-        if (auslaendisch(land)) return { land, satz: `Kontakt „${p.name ?? '—'}" mit Sitz in ${land}` };
+        if (auslaendisch(land))
+            return { land, satz: t(_('contact “{name}” based in {country}'), { name: p.name ?? '—', country: land }) };
     }
     const frueher = zeilen.find(
         (x) => x.id !== r.id && x.reverseCharge === 'gebucht' && gleichePartei(x.counterparty, r.counterparty),
     );
     if (frueher) {
         const land = auslaendisch(frueher.lieferantLand) ? frueher.lieferantLand : null;
-        return { land, satz: 'andere Buchungen an diese Gegenseite sind als § 13b eingeordnet' };
+        return { land, satz: _('other bookings to this counterparty are classified as § 13b') };
     }
     return null;
 }
 
 function absatz(land: string | null): string {
-    if (!land) return 'Abs. 1 oder Abs. 2 Nr. 1';
-    return isEuCountry(land) ? 'Abs. 1: Leistung aus der EU' : 'Abs. 2 Nr. 1: Drittland';
+    if (!land) return _('Abs. 1 or Abs. 2 Nr. 1');
+    return isEuCountry(land) ? _('Abs. 1: supply from the EU') : _('Abs. 2 Nr. 1: non-EU country');
 }
 
 export function pruefeReverseChargeKandidaten(i: RcKandidatInput): Hinweis[] {
@@ -165,10 +169,14 @@ export function reverseChargeKandidaten(i: RcKandidatInput): { hinweise: Hinweis
                 hinweise: [
                     {
                         ...basis,
-                        title: '§ 13b-Kandidaten: nicht prüfbar',
-                        text: `Für ${i.year} weiß die App bei keinem Lieferanten, wo er sitzt.`,
+                        title: _('§ 13b candidates: cannot be checked'),
+                        text: t(_('For {year} the app knows where none of the suppliers is based.'), {
+                            year: i.year,
+                        }),
                         status: 'nicht_pruefbar',
-                        weil: 'keine Buchung eine Gegenkonto-IBAN oder ein Lieferantenland trägt und kein Kontakt ein Land nennt',
+                        weil: _(
+                            'no booking carries a counter account IBAN or a supplier country and no contact names a country',
+                        ),
                     },
                 ],
             };
@@ -178,21 +186,33 @@ export function reverseChargeKandidaten(i: RcKandidatInput): { hinweise: Hinweis
             hinweise: [
                 {
                     ...basis,
-                    title: '§ 13b-Kandidaten: keine übersehenen',
-                    text: `${ohneUst} Ausgabe(n) ${i.year} ohne ausgewiesene USt auf ausländische Lieferanten geprüft.`,
+                    title: _('§ 13b candidates: none missed'),
+                    text: t(
+                        _n(
+                            '{n} expense from {year} without declared VAT checked for foreign suppliers.',
+                            '{n} expenses from {year} without declared VAT checked for foreign suppliers.',
+                            ohneUst,
+                        ),
+                        { n: ohneUst, year: i.year },
+                    ),
                     status: 'ohne_befund',
-                    geprueft:
-                        'IBAN-Land, USt-IdNr. am Beleg, Kontakte und frühere § 13b-Buchungen derselben Gegenseite; ' +
-                        `als § 13b eingeordnet: ${gebucht}, zur Prüfung vorgemerkt: ${zurPruefung}`,
+                    geprueft: t(
+                        _(
+                            'IBAN country, VAT ID on the receipt, contacts and earlier § 13b bookings of the same counterparty; classified as § 13b: {booked}, flagged for review: {review}',
+                        ),
+                        { booked: gebucht, review: zurPruefung },
+                    ),
                 },
             ],
         };
     }
 
     const ku = i.kleinunternehmer
-        ? ' Als Kleinunternehmer gilt das auch — nur ohne Vorsteuerabzug, die Steuer ist dann eine echte Last und für ' +
-          'diesen Zeitraum in einer Voranmeldung anzumelden (§ 18 Abs. 4a UStG).'
-        : ' Bei vollem Vorsteuerabzug gleicht die Vorsteuer sie aus, anzumelden ist sie trotzdem.';
+        ? ' ' +
+          _(
+              'As a small business this applies too — only without input tax deduction, so the tax is a real burden and has to be declared for that period in an advance return (§ 18 Abs. 4a UStG).',
+          )
+        : ' ' + _('With a full input tax deduction the input tax offsets it, but it still has to be declared.');
     const out: Hinweis[] = [];
     for (const [key, g] of [...gruppen.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
         g.rows.sort((a, b) => a.bookingDate.localeCompare(b.bookingDate) || a.id.localeCompare(b.id));
@@ -201,27 +221,37 @@ export function reverseChargeKandidaten(i: RcKandidatInput): { hinweise: Hinweis
             ...basis,
             key: `reverse-charge-kandidat:${key}`,
             level: 'warnung',
-            title: `§ 13b nicht erkannt? ${g.name}`,
+            title: t(_('§ 13b not recognised? {name}'), { name: g.name }),
             text:
-                `${g.rows.length === 1 ? 'Eine Ausgabe' : `${g.rows.length} Ausgaben`} an ${g.name} über ` +
-                `${g.rows.length === 1 ? '' : 'zusammen '}${fmt(summe)} € ohne ausgewiesene USt, nicht als Reverse Charge ` +
-                `eingeordnet — ${g.satz}. Vermutlich ein ausländischer Lieferant: dann schuldest du die Umsatzsteuer nach ` +
-                `§ 13b Abs. 5 UStG (${absatz(g.land)}).${ku} Zu klären: ` +
-                'die Rechnung mit Lieferantenland zuordnen, dann ordnet die App § 13b selbst ein.',
+                t(
+                    _n(
+                        'One expense to {name} of {amount} € without declared VAT, not classified as reverse charge — {signal}.',
+                        '{n} expenses to {name} totalling {amount} € without declared VAT, not classified as reverse charge — {signal}.',
+                        g.rows.length,
+                    ),
+                    { n: g.rows.length, name: g.name, amount: fmt(summe), signal: g.satz },
+                ) +
+                ' ' +
+                t(_('Probably a foreign supplier: then you owe the VAT under § 13b Abs. 5 UStG ({paragraph}).'), {
+                    paragraph: absatz(g.land),
+                }) +
+                ku +
+                ' ' +
+                _('To clarify: assign the invoice with a supplier country, then the app classifies § 13b itself.'),
             status: 'befund',
             ...capBetroffen(g.rows.map((r) => ({ art: 'buchung' as const, id: r.id, zeile: buchungZeile(r) }))),
             handlungen: [
                 {
                     id: 'beleg-zuordnen',
-                    label: 'Beleg zuordnen',
+                    label: _('Assign a document'),
                     target: { art: 'dialog', dialog: 'beleg-zuordnen', ref: g.rows[0].id },
                 },
                 {
                     id: 'buchung',
-                    label: 'Buchung öffnen',
+                    label: _('Open the transaction'),
                     target: { art: 'dialog', dialog: 'buchung', ref: g.rows[0].id },
                 },
-                HANDLUNG_IN_ORDNUNG,
+                handlungInOrdnung(),
             ],
             fingerprint: hinweisFingerprint(g.rows.map((r) => r.id)),
         });

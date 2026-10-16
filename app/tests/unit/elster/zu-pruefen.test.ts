@@ -295,7 +295,7 @@ export default async () => {
         await it('replaces the unclassified hint task while the queue is not empty', async () => {
             const m = buildHomeModel({ year: 2025, txs: [], dashboard: null, hinweise, zuPruefen: 5 });
             expect(m.tasks.map((t) => t.kind)).toStrictEqual(['zu-pruefen']);
-            expect(m.tasks[0].title).toBe('5 Buchungen zu prüfen');
+            expect(m.tasks[0].title).toBe('5 bookings to review');
         });
 
         await it('keeps the hint task when there is no queue count', async () => {

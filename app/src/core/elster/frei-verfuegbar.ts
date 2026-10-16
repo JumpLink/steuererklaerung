@@ -23,7 +23,7 @@
 import { round2, fmtDe } from '../lib/money.ts';
 import { shiftToBusinessDay, type OffeneSteuerzahlung } from './steuerzahlungen.ts';
 import { ustvaDeadline } from './steuertermine.ts';
-import { ABSTAND_TEXT, erwarteteZahlungen, type LaufendeKosten } from './laufende-kosten.ts';
+import { abstandText, erwarteteZahlungen, type LaufendeKosten } from './laufende-kosten.ts';
 
 /**
  * How far ahead a filed-but-unpaid tax payment counts as "fällig" and is deducted. NOT a legal
@@ -500,10 +500,10 @@ function laufendeKostenTerm(t: Teil<LaufendeKostenInput>, stichtag: string, ohne
                 label: z.empfaenger,
                 betrag: z.betrag,
                 herkunft: z.ueberfaellig
-                    ? `erwartet seit ${deDate(z.datum)}, bis zum Datenstand nicht abgebucht · ${ABSTAND_TEXT[z.abstand]}`
+                    ? `erwartet seit ${deDate(z.datum)}, bis zum Datenstand nicht abgebucht · ${abstandText(z.abstand)}`
                     : z.nachDatenstand
-                      ? `erwartet ${deDate(z.datum)}, nach dem letzten Import · ${ABSTAND_TEXT[z.abstand]}`
-                      : `erwartet ${deDate(z.datum)} · ${ABSTAND_TEXT[z.abstand]}`,
+                      ? `erwartet ${deDate(z.datum)}, nach dem letzten Import · ${abstandText(z.abstand)}`
+                      : `erwartet ${deDate(z.datum)} · ${abstandText(z.abstand)}`,
             });
         }
     }

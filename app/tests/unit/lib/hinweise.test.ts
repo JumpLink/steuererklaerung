@@ -25,7 +25,7 @@ export default async () => {
         });
         await it('info: shows the current Besteuerungsart when no action is implied', async () => {
             const hs = computeHinweise({ year: 2025, umsatz: 60000, outputVat: 11400 });
-            expect(find(hs, 'kleinunternehmer')?.title.includes('Regelbesteuerung')).toBe(true);
+            expect(find(hs, 'kleinunternehmer')?.title.includes('standard taxation')).toBe(true);
         });
     });
 
@@ -73,7 +73,7 @@ export default async () => {
                 afaCount: 3,
                 nextDeadline: '2026-08-31',
             });
-            expect(find(hs, 'afa')?.text.includes('3 Anlagegut')).toBe(true);
+            expect(find(hs, 'afa')?.text.includes('from 3 fixed assets')).toBe(true);
             expect(find(hs, 'frist')?.text.includes('31.08.2026')).toBe(true);
         });
         await it('sorts warnung before tipp before info', async () => {
@@ -90,17 +90,17 @@ export default async () => {
     });
 
     await describe('computeHinweise — Doppelzahlung', async () => {
-        await it('warnung: unresolved suspicion, German title with the count', async () => {
+        await it('warnung: unresolved suspicion, title with the count', async () => {
             const hs = computeHinweise({ year: 2025, umsatz: 1000, outputVat: 190, doppelzahlungVerdacht: 2 });
             const h = find(hs, 'doppelzahlung-verdacht');
             expect(h?.level).toBe('warnung');
-            expect(h?.title).toBe('2 Zahlung(en) möglicherweise doppelt erhalten — klären vor der Abgabe');
+            expect(h?.title).toBe('2 payments possibly received twice — clarify before filing');
         });
         await it('warnung: open refund', async () => {
             const hs = computeHinweise({ year: 2025, umsatz: 1000, outputVat: 190, rueckzahlungOffen: 1 });
             const h = find(hs, 'doppelzahlung-rueckzahlung-offen');
             expect(h?.level).toBe('warnung');
-            expect(h?.title).toBe('1 Doppelzahlung(en) noch nicht an den Kunden zurückgezahlt');
+            expect(h?.title).toBe('1 double payment not refunded to the customer yet');
         });
         await it('no hint at zero / undefined; the neutralised info hint stays', async () => {
             const hs = computeHinweise({

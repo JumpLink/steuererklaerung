@@ -12,6 +12,7 @@
  */
 
 import type { ClassSource, MatchedRule } from './euer-classify.ts';
+import { _n, fmt } from '../lib/i18n.ts';
 
 /** Why a booking is in the queue. `erstattung`: an incoming payment that may refund an earlier debit (Idee 9). */
 export type ZuPruefenGrund = 'unklassifiziert' | 'auffangregel' | 'erstattung';
@@ -63,9 +64,9 @@ export const GRUND_TEXT: Record<ZuPruefenGrund, string> = {
     erstattung: 'Erstattung? Zahlung zuordnen',
 };
 
-/** „N Buchungen zu prüfen" — singular-aware, for the Übersicht task and the tab. */
+/** "N bookings to review" — the Übersicht task and the tab; the catalogue picks the plural form. */
 export function zuPruefenTitel(n: number): string {
-    return n === 1 ? '1 Buchung zu prüfen' : `${n} Buchungen zu prüfen`;
+    return fmt(_n('{n} booking to review', '{n} bookings to review', n), { n });
 }
 
 /** A classification as {@link herkunftText} needs it. */

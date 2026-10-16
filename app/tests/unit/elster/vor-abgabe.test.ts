@@ -128,8 +128,8 @@ export default async () => {
             expect(hs.length).toBe(1);
             const h = hs[0];
             expect(h.status).toBe('befund');
-            expect(h.title).toBe('USt-Zahllast weicht ab: Q1/2026');
-            expect(h.text).toContain('sonst um 500,00 €');
+            expect(h.title).toBe('VAT payable deviates: Q1/2026');
+            expect(h.text).toContain('otherwise around 500,00 €');
             expect(h.text).not.toContain('Fehler');
             expect(h.betroffen![0].id).toBe(gross.id);
             expect(h.handlungen!.map((a) => a.id)).toStrictEqual(['buchungen', 'in-ordnung']);
@@ -153,12 +153,12 @@ export default async () => {
             const klein = ['2025-02-10', '2025-05-10', '2025-08-10', '2025-11-10'].map((d) => einnahme(d, 100));
             const hs = ust([...klein, einnahme('2026-02-03', 100 + UST_ABWEICHUNG_MIN_EUR)]);
             expect(hs[0].status).toBe('ohne_befund');
-            expect(hs[0].geprueft).toContain('Median');
+            expect(hs[0].geprueft).toContain('median');
         });
         await it('too little history is nicht prüfbar, a running quarter is not checked', async () => {
             const kurz = ust([einnahme('2025-11-10', 500), einnahme('2026-02-03', 3000)]);
             expect(kurz[0].status).toBe('nicht_pruefbar');
-            expect(kurz[0].weil).toContain('weniger als 2');
+            expect(kurz[0].weil).toContain('fewer than 2');
             const laufend = ust([...ruhig2025(), einnahme('2026-02-03', 3000)], { today: '2026-03-15' });
             expect(laufend[0].status).toBe('nicht_pruefbar');
         });
@@ -199,7 +199,7 @@ export default async () => {
             const d = beleg(r.id);
             const [h] = pruefeBuchungenOhneUst({ year: 2026, zeilen: [r], belege: [d] });
             expect(h.status).toBe('befund');
-            expect(h.text).toContain('Untergrenze');
+            expect(h.text).toContain('lower bound');
             expect(h.betroffen!.map((b) => b.id)).toStrictEqual([r.id]);
             expect(h.handlungen![0].target).toStrictEqual({ art: 'dialog', dialog: 'beleg', ref: d.id });
         });
@@ -222,8 +222,8 @@ export default async () => {
                 ausgenommen: new Set([rc.id]),
             });
             expect(h.status).toBe('ohne_befund');
-            expect(h.geprueft).toContain('USt-freie Kategorien (1)');
-            expect(h.geprueft).toContain('§ 13b-Kandidaten (1)');
+            expect(h.geprueft).toContain('VAT-free categories (1)');
+            expect(h.geprueft).toContain('§ 13b candidates (1)');
         });
         await it('without any linked receipt it is nicht prüfbar; a Kleinunternehmer has nothing to miss', async () => {
             const [h] = pruefeBuchungenOhneUst({ year: 2026, zeilen: [ohneUstZeile()], belege: [] });
@@ -258,8 +258,8 @@ export default async () => {
             expect(hs.length).toBe(1);
             expect(hs[0].level).toBe('warnung');
             expect(hs[0].status).toBe('befund');
-            expect(hs[0].text).toContain('§ 13b Abs. 5 UStG (Abs. 1: Leistung aus der EU)');
-            expect(hs[0].text).toContain('Gegenkonto in IE');
+            expect(hs[0].text).toContain('§ 13b Abs. 5 UStG (Abs. 1: supply from the EU)');
+            expect(hs[0].text).toContain('counter account in IE');
             expect(hs[0].handlungen!.map((a) => a.id)).toStrictEqual(['beleg-zuordnen', 'buchung', 'in-ordnung']);
         });
         await it('a contact abroad (third country) and an earlier § 13b booking of the same party are signals too', async () => {
@@ -270,12 +270,12 @@ export default async () => {
                 belege: [],
                 parteien: [{ name: 'Cloud Beispiel Inc', land: 'US' }],
             });
-            expect(h.text).toContain('Abs. 2 Nr. 1: Drittland');
+            expect(h.text).toContain('Abs. 2 Nr. 1: non-EU country');
             const gebucht = rcZeile({ reverseCharge: 'gebucht', lieferantLand: 'NL', bookingDate: '2026-03-08' });
             const vergessen = rcZeile();
             const hs = pruefeReverseChargeKandidaten({ year: 2026, zeilen: [gebucht, vergessen], belege: [] });
             expect(hs[0].betroffen!.map((b) => b.id)).toStrictEqual([vergessen.id]);
-            expect(hs[0].text).toContain('als § 13b eingeordnet');
+            expect(hs[0].text).toContain('classified as § 13b');
         });
         await it('excluded: booked or held § 13b, a receipt with VAT, VAT-exempt categories, Germany on the receipt', async () => {
             const fremd = { counterpartyIban: IBAN_IE };
@@ -293,7 +293,7 @@ export default async () => {
                 belege: [{ id: 'b1', vat: 9.42, linkedTxIds: ['mit-ust'] }],
             });
             expect(h.status).toBe('ohne_befund');
-            expect(h.geprueft).toContain('als § 13b eingeordnet: 1, zur Prüfung vorgemerkt: 1');
+            expect(h.geprueft).toContain('classified as § 13b: 1, flagged for review: 1');
         });
         await it('no country known anywhere is nicht prüfbar', async () => {
             const [h] = pruefeReverseChargeKandidaten({ year: 2026, zeilen: [rcZeile()], belege: [] });
@@ -330,7 +330,7 @@ export default async () => {
             const [h] = gwg([r]);
             expect(h.status).toBe('befund');
             expect(h.key).toBe(`anlagegut-kandidat:${r.id}`);
-            expect(h.title).toBe('Anlagegut? Technikhaus Beispiel GmbH, 1.200,00 €');
+            expect(h.title).toBe('Fixed asset? Technikhaus Beispiel GmbH, 1.200,00 €');
             const ziel = h.handlungen![0].target;
             expect(ziel).toStrictEqual({
                 art: 'dialog',
@@ -338,13 +338,13 @@ export default async () => {
                 ref: r.id,
                 vorbelegung: { bezeichnung: 'Workstation', anschaffung: '2026-05-20', ahk: 1200, buchungIds: [r.id] },
             });
-            expect(h.text).not.toContain('Sammelposten');
+            expect(h.text).not.toContain('collective item');
         });
         await it('exactly at the limit is still a GWG; one cent above is not', async () => {
             expect(gwg([anlage({ net: 800, gross: 952 })])[0].status).toBe('ohne_befund');
             const [h] = gwg([anlage({ net: 800.01, gross: 952.01 })]);
             expect(h.status).toBe('befund');
-            expect(h.text).toContain('Sammelposten');
+            expect(h.text).toContain('collective item');
         });
         await it('instalments to the same dealer are one asset', async () => {
             const raten = ['2026-02-15', '2026-03-15', '2026-04-15'].map((d) =>
@@ -353,7 +353,7 @@ export default async () => {
             const hs = gwg(raten);
             expect(hs.length).toBe(1);
             expect(hs[0].betroffen!.length).toBe(3);
-            expect(hs[0].text).toContain('3 Raten an Technikhaus Beispiel GmbH (monatlich)');
+            expect(hs[0].text).toContain('3 instalments to Technikhaus Beispiel GmbH (monthly)');
             const ziel = hs[0].handlungen![0].target as { vorbelegung?: { ahk: number; buchungIds: string[] } };
             expect(ziel.vorbelegung!.ahk).toBe(1050);
             expect(ziel.vorbelegung!.buchungIds.length).toBe(3);
@@ -371,8 +371,8 @@ export default async () => {
                 ],
             });
             expect(h.status).toBe('ohne_befund');
-            expect(h.geprueft).toContain('im Anlageverzeichnis (2)');
-            expect(h.geprueft).toContain('bestätigte laufende Kosten (1)');
+            expect(h.geprueft).toContain('in the asset register (2)');
+            expect(h.geprueft).toContain('confirmed recurring costs (1)');
             const fern = gwg([anlage()], { anlagen: [{ anschaffung: '2025-01-10', ahk: 1200 }] });
             expect(fern[0].status).toBe('befund');
         });
@@ -381,7 +381,7 @@ export default async () => {
             expect(gwg([r])[0].status).toBe('ohne_befund');
             const [ku] = gwg([r], { kleinunternehmer: true });
             expect(ku.status).toBe('befund');
-            expect(ku.text).toContain('brutto');
+            expect(ku.text).toContain('gross');
         });
         await it('a new instalment changes the fingerprint', async () => {
             const a = anlage({ bookingDate: '2026-02-15', net: 900, gross: 1071 });

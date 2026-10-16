@@ -16,6 +16,7 @@ import { zuPruefenTitel } from './zu-pruefen.ts';
 import { zuBestaetigenTitel } from './laufende-kosten.ts';
 import { erstattungenTitel } from './erstattung.ts';
 import { forderungenTitel } from '../invoices/forderungen.ts';
+import { _, _n, _p, fmt } from '../lib/i18n.ts';
 
 /** Minimal transaction shape the dashboard needs (a structural subset of UnifiedTransaction). */
 export interface HomeTx {
@@ -91,13 +92,25 @@ const EIGENE_AUFGABE: Record<string, (i: HomeModelInput) => boolean> = {
     unklassifiziert: (i) => (i.zuPruefen ?? 0) > 0 || (i.erstattungenOffen ?? 0) > 0,
 };
 
+/**
+ * The tax KPI's caption, by this model's convention: a POSITIVE total is money owed.
+ *
+ * `fristen.ts` carries the same pair under the OPPOSITE sign — there a positive estimate is a refund
+ * — so the two cannot share one function without the sign becoming the bug. Its copy is still
+ * German: that file's deadline labels and notes are German throughout, and one translated word in a
+ * German line reads as a defect rather than as progress (see `docs/app/i18n-status.md`).
+ */
+function taxLabel(total: number): string {
+    return total >= 0 ? _('est. tax due') : _('est. refund');
+}
+
 /** The one „Zu prüfen" task, or none when the queue is empty. */
 export function zuPruefenTask(input: HomeModelInput): HomeTask | null {
     const n = input.zuPruefen ?? 0;
     if (n <= 0) return null;
     return {
         title: zuPruefenTitel(n),
-        sub: 'Unklassifiziert oder nur von einer Auffangregel erfasst — bestätigen oder umbuchen',
+        sub: _('Unclassified or caught only by a catch-all rule — confirm or recategorise'),
         tone: 'warn',
         kind: 'zu-pruefen',
     };
@@ -109,7 +122,7 @@ export function erstattungenTask(input: HomeModelInput): HomeTask | null {
     if (n <= 0) return null;
     return {
         title: erstattungenTitel(n),
-        sub: 'Eingänge, die eine frühere Zahlung erstatten — „Ja" übernimmt deren Kategorie und Vorsteuer',
+        sub: _('Incoming payments that refund an earlier one — “Yes” adopts its category and input tax'),
         tone: 'accent',
         kind: 'erstattungen',
     };
@@ -121,7 +134,7 @@ export function forderungenTask(input: HomeModelInput): HomeTask | null {
     if (n <= 0) return null;
     return {
         title: forderungenTitel(n),
-        sub: 'Offene Ausgangsrechnungen nach Fälligkeit — Mahnung entwerfen, versandt markieren',
+        sub: _('Open outgoing invoices by due date — draft a reminder, mark it sent'),
         tone: 'warn',
         kind: 'forderungen',
     };
@@ -133,7 +146,7 @@ export function laufendeKostenTask(input: HomeModelInput): HomeTask | null {
     if (n <= 0) return null;
     return {
         title: zuBestaetigenTitel(n),
-        sub: 'Regelmäßige Abbuchungen erkannt — bestätigen, korrigieren oder „keine laufenden Kosten"',
+        sub: _('Regular debits detected — confirm, correct, or mark as not recurring'),
         tone: 'accent',
         kind: 'laufende-kosten',
     };
@@ -148,9 +161,10 @@ export function hinweisTasks(input: HomeModelInput): HomeTask[] {
         const handlung = h.handlungen.find((a) => a.target.art !== 'aktion') ?? h.handlungen[0];
         const first = h.betroffen?.[0]?.zeile;
         const more = (h.betroffen?.length ?? 0) - 1 + (h.betroffenWeitere ?? 0);
+        const weitere = more > 0 ? ` · ${fmt(_n('and one more', 'and {n} more', more), { n: more })}` : '';
         tasks.push({
             title: h.title,
-            sub: first ? `${first}${more > 0 ? ` · und ${more} weitere` : ''} — ${handlung.label}` : handlung.label,
+            sub: first ? `${first}${weitere} — ${handlung.label}` : handlung.label,
             tone: h.level === 'warnung' ? 'warn' : 'accent',
             kind: 'hinweis',
             ref: h.key,
@@ -173,7 +187,32 @@ export interface HomeModel {
     tasks: HomeTask[];
 }
 
-const MONTHS_DE = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+/**
+ * The month axis of the income/expense chart, abbreviated.
+ *
+ * One msgid per month with a context, not a `strftime('%b')` run: these sit under narrow bars, where
+ * German wants „Mär" and „Dez" rather than the locale's full-width forms, and a context keeps „Mai"
+ * (May) apart from any other three-letter string a catalogue may hold. The context is the one
+ * `frontends/desktop/views/util.ts` already uses, so both lists are ONE entry per month for a
+ * translator — a second context would be a second place to get „Mär" wrong.
+ */
+function monthLabels(): string[] {
+    // TRANSLATORS: Abbreviated month names for a chart axis — keep them to three or four characters.
+    return [
+        _p('month abbreviation', 'Jan'),
+        _p('month abbreviation', 'Feb'),
+        _p('month abbreviation', 'Mar'),
+        _p('month abbreviation', 'Apr'),
+        _p('month abbreviation', 'May'),
+        _p('month abbreviation', 'Jun'),
+        _p('month abbreviation', 'Jul'),
+        _p('month abbreviation', 'Aug'),
+        _p('month abbreviation', 'Sep'),
+        _p('month abbreviation', 'Oct'),
+        _p('month abbreviation', 'Nov'),
+        _p('month abbreviation', 'Dec'),
+    ];
+}
 
 /** Dashboard fristen that mark a business declaration — their presence means the tax KPI is the
  *  USt+GewSt load; their absence (a `privat` entity with only the `est` frist) means it is
@@ -198,9 +237,9 @@ export function accountName(accountKey: string, source: string, labels?: Record<
         case 'paypal':
             return 'PayPal';
         case 'fints':
-            return 'Bankkonto';
+            return _('Bank account');
         case 'camt':
-            return 'CAMT-Datei';
+            return _('CAMT file');
         default:
             return accountKey;
     }
@@ -223,7 +262,8 @@ export function buildHomeModel(input: HomeModelInput): HomeModel {
         } else {
             const mag = -t.amount;
             expense[mi] += mag;
-            const cat = t.category?.trim() || 'Sonstige';
+            // TRANSLATORS: Chart slice for expenses with no category of their own.
+            const cat = t.category?.trim() || _p('expense category', 'Other');
             categoryTotals.set(cat, (categoryTotals.get(cat) ?? 0) + mag);
         }
     }
@@ -273,8 +313,11 @@ export function buildHomeModel(input: HomeModelInput): HomeModel {
     tasks.push(...hTasks.filter((t) => vorrang.has(t.ref ?? '')));
     for (const v of doppelzahlungVerdacht ?? []) {
         tasks.push({
-            title: `Rechnung ${v.rechnungNummer} doppelt bezahlt?`,
-            sub: `${fmtDe(v.zuViel)} € zu viel eingegangen${v.teilweise ? ' (teilweise zu viel)' : ''} — klären`,
+            title: fmt(_('Invoice {number} paid twice?'), { number: v.rechnungNummer }),
+            sub:
+                fmt(_('{amount} € received too much'), { amount: fmtDe(v.zuViel) }) +
+                (v.teilweise ? ` (${_('partly too much')})` : '') +
+                ` — ${_('clarify')}`,
             tone: 'warn',
             kind: 'doppelzahlung',
             ref: v.rechnungId,
@@ -293,18 +336,18 @@ export function buildHomeModel(input: HomeModelInput): HomeModel {
         const isBusiness = dashboard.fristen.some((f) => BUSINESS_FRIST_KEYS.has(f.key));
         if (isBusiness) {
             const total = round2(dashboard.load.total);
-            tax = { total, label: total >= 0 ? 'vsl. Nachzahlung' : 'vsl. Erstattung' };
+            tax = { total, label: taxLabel(total) };
         } else if (dashboard.estErstattung != null) {
             // Personal ESt entity: the KPI is the ESt result. Convention mirrors the load (+ = Nachzahlung),
             // so negate the estimate (+ Erstattung → − load). A null estimate yields no KPI, never a bogus 0 €.
             const total = round2(-dashboard.estErstattung);
-            tax = { total, label: total >= 0 ? 'vsl. Nachzahlung' : 'vsl. Erstattung' };
+            tax = { total, label: taxLabel(total) };
         }
         for (const f of dashboard.fristen.slice(0, 4)) {
             const amountLabel = f.amount != null && f.amountLabel ? ` · ${f.amountLabel}` : '';
             tasks.push({
                 title: f.label,
-                sub: `fällig ${f.dueDate}${amountLabel}${f.note ? ` · ${f.note}` : ''}`,
+                sub: `${fmt(_('due {date}'), { date: f.dueDate })}${amountLabel}${f.note ? ` · ${f.note}` : ''}`,
                 tone: f.status === 'offen' ? 'warn' : 'accent',
             });
         }
@@ -314,7 +357,7 @@ export function buildHomeModel(input: HomeModelInput): HomeModel {
         year,
         kpis: { income: totalIncome, expense: totalExpense, profit: round2(totalIncome - totalExpense), tax },
         profitSparkline,
-        monthly: { labels: MONTHS_DE, income: income.map(round2), expense: expense.map(round2) },
+        monthly: { labels: monthLabels(), income: income.map(round2), expense: expense.map(round2) },
         categories,
         liquidity: { now, series, accounts },
         tasks,

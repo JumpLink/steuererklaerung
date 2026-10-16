@@ -214,7 +214,7 @@ export default async () => {
             ]);
             const h = preisaenderungHinweise(vorher.bestaetigt, 2025);
             expect(h.length).toBe(1);
-            expect(h[0].title).toBe('Preisänderung bei Muster Software GmbH');
+            expect(h[0].title).toBe('Price change at Muster Software GmbH');
             expect(h[0].status).toBe('befund');
             expect(h[0].handlungen!.map((x) => x.id)).toStrictEqual(['buchung', 'in-ordnung']);
             expect(preisaenderungHinweise(vorher.bestaetigt, 2026).length).toBe(0);
@@ -369,7 +369,7 @@ export default async () => {
             expect(ohne[0].status).toBe('befund');
             const mit = pruefeDoppelteRechnungen({ year: 2025, belege, laufendeKosten: bestaetigt });
             expect(mit[0].status).toBe('ohne_befund');
-            expect(mit[0].geprueft).toContain('bestätigte laufende Kosten: 1 Paar(e)');
+            expect(mit[0].geprueft).toContain('confirmed recurring costs: 1 pair(s)');
         });
 
         await it('a copy a few days later still is a finding', async () => {
@@ -420,7 +420,7 @@ export default async () => {
                 laufendeKostenIds: laufendeKostenIds(lk),
             });
             expect(mit[0].status).toBe('ohne_befund');
-            expect(mit[0].geprueft).toContain('bestätigte laufende Kosten (1)');
+            expect(mit[0].geprueft).toContain('confirmed recurring costs (1)');
         });
     });
 
@@ -429,7 +429,7 @@ export default async () => {
             const m = buildHomeModel({ year: 2025, txs: [], dashboard: null, laufendeKostenOffen: 3 });
             const t = m.tasks.filter((x) => x.kind === 'laufende-kosten');
             expect(t.length).toBe(1);
-            expect(t[0].title).toBe('3 laufende Kosten zu bestätigen');
+            expect(t[0].title).toBe('3 recurring costs to confirm');
             expect(buildHomeModel({ year: 2025, txs: [], dashboard: null, laufendeKostenOffen: 0 }).tasks.length).toBe(
                 0,
             );

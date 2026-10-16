@@ -15,6 +15,7 @@
  */
 
 import { normalizeInvoiceStatus } from './status.ts';
+import { _n, fmt } from '../lib/i18n.ts';
 
 /** The slice of an outgoing invoice the Forderungen need. */
 export interface ForderungRechnung {
@@ -442,14 +443,14 @@ export function altersUebersicht(posten: readonly OffenerPosten[]): AltersUebers
     return { klassen, kunden, gesamt: { anzahl, summe } };
 }
 
-/** The open items that are overdue — what „N Forderungen überfällig" counts. */
+/** The open items that are overdue — what "N receivables overdue" counts. */
 export function ueberfaellige(posten: readonly OffenerPosten[]): OffenerPosten[] {
     return posten.filter((p) => (p.tageUeberfaellig ?? 0) > 0);
 }
 
-/** „1 Forderung überfällig" / „3 Forderungen überfällig". */
+/** "1 receivable overdue" / "3 receivables overdue". */
 export function forderungenTitel(n: number): string {
-    return n === 1 ? '1 Forderung überfällig' : `${n} Forderungen überfällig`;
+    return fmt(_n('{n} receivable overdue', '{n} receivables overdue', n), { n });
 }
 
 /** Whether a Verjährung warning (soon or already passed) applies to the item. */

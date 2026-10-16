@@ -14,7 +14,8 @@
 import { fmtDe as fmt, round2 } from '../lib/money.ts';
 import type { EuerKind } from './euer-aggregate.ts';
 import { impliedRate } from './euer-classify.ts';
-import { buchungZeile, capBetroffen, HANDLUNG_IN_ORDNUNG, hinweisFingerprint, type Hinweis } from './hinweise.ts';
+import { buchungZeile, capBetroffen, handlungInOrdnung, hinweisFingerprint, type Hinweis } from './hinweise.ts';
+import { _, _n, fmt as t } from '../lib/i18n.ts';
 
 export interface OhneUstZeile {
     id: string;
@@ -59,10 +60,12 @@ export function pruefeBuchungenOhneUst(i: OhneUstInput): Hinweis[] {
         return [
             {
                 ...basis,
-                title: 'Buchungen ohne USt-Angabe: entfällt',
-                text: 'Als Kleinunternehmer ziehst du keine Vorsteuer ab — eine fehlende USt-Angabe am Beleg ändert nichts.',
+                title: _('Bookings without a VAT figure: not applicable'),
+                text: _(
+                    'As a small business you deduct no input tax — a missing VAT figure on the receipt changes nothing.',
+                ),
                 status: 'ohne_befund',
-                geprueft: 'entfällt ohne Vorsteuerabzug (§ 15 Abs. 2 Satz 1 Nr. 1 UStG)',
+                geprueft: _('not applicable without input tax deduction (§ 15 Abs. 2 Satz 1 Nr. 1 UStG)'),
             },
         ];
     }
@@ -99,22 +102,32 @@ export function pruefeBuchungenOhneUst(i: OhneUstInput): Hinweis[] {
             return [
                 {
                     ...basis,
-                    title: 'Buchungen ohne USt-Angabe: nicht prüfbar',
-                    text: `Keine Ausgabe ${i.year} hat einen verknüpften Beleg.`,
+                    title: _('Bookings without a VAT figure: cannot be checked'),
+                    text: t(_('No expense in {year} has a linked receipt.'), { year: i.year }),
                     status: 'nicht_pruefbar',
-                    weil: 'keine Ausgabe des Jahres mit einem Beleg verknüpft ist',
+                    weil: _('no expense of the year is linked to a receipt'),
                 },
             ];
         }
         return [
             {
                 ...basis,
-                title: 'Buchungen ohne USt-Angabe: keine',
-                text: `${mitBeleg} Ausgabe(n) ${i.year} mit Beleg geprüft.`,
+                title: _('Bookings without a VAT figure: none'),
+                text: t(
+                    _n(
+                        '{n} expense from {year} with a receipt checked.',
+                        '{n} expenses from {year} with a receipt checked.',
+                        mitBeleg,
+                    ),
+                    { n: mitBeleg, year: i.year },
+                ),
                 status: 'ohne_befund',
-                geprueft:
-                    'jeder verknüpfte Beleg nennt USt-Betrag oder Netto und Brutto; ausgenommen: USt-freie Kategorien ' +
-                    `(${ustFrei}), § 13b-Kandidaten (${anderswo})`,
+                geprueft: t(
+                    _(
+                        'every linked receipt names a VAT amount or net and gross; excluded: VAT-free categories ({free}), § 13b candidates ({elsewhere})',
+                    ),
+                    { free: ustFrei, elsewhere: anderswo },
+                ),
             },
         ];
     }
@@ -125,21 +138,36 @@ export function pruefeBuchungenOhneUst(i: OhneUstInput): Hinweis[] {
         {
             ...basis,
             level: 'tipp',
-            title: `${treffer.length} Buchung(en) ohne USt-Angabe auf dem Beleg`,
+            title: t(
+                _n(
+                    '{n} booking without a VAT figure on the receipt',
+                    '{n} bookings without a VAT figure on the receipt',
+                    treffer.length,
+                ),
+                { n: treffer.length },
+            ),
             text:
-                `Für ${treffer.length === 1 ? 'diese Ausgabe' : 'diese Ausgaben'} über zusammen ${fmt(summe)} € nennt der Beleg weder ` +
-                'USt-Betrag noch Nettobetrag. Die Vorsteuer aus den Belegen ist darum eine Untergrenze: steckt darin ' +
-                'Umsatzsteuer, fehlt ihr Abzug. Zu klären: am Beleg den USt-Betrag eintragen — oder als in Ordnung ' +
-                'markieren, wenn er keine ausweist.',
+                t(
+                    _n(
+                        'For this expense of {amount} € the receipt names neither a VAT amount nor a net amount.',
+                        'For these expenses totalling {amount} € the receipt names neither a VAT amount nor a net amount.',
+                        treffer.length,
+                    ),
+                    { amount: fmt(summe) },
+                ) +
+                ' ' +
+                _(
+                    'The input tax from the receipts is therefore a lower bound: if VAT is included, its deduction is missing. To clarify: enter the VAT amount on the receipt — or mark it as fine if it shows none.',
+                ),
             status: 'befund',
             ...capBetroffen(treffer.map(({ r }) => ({ art: 'buchung' as const, id: r.id, zeile: buchungZeile(r) }))),
             handlungen: [
                 {
                     id: 'beleg',
-                    label: 'Beleg öffnen',
+                    label: _('Open the document'),
                     target: { art: 'dialog', dialog: 'beleg', ref: treffer[0].beleg.id },
                 },
-                HANDLUNG_IN_ORDNUNG,
+                handlungInOrdnung(),
             ],
             fingerprint: hinweisFingerprint(treffer.map(({ r }) => r.id)),
         },

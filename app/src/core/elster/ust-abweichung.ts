@@ -14,10 +14,11 @@
 
 import { fmtDe as fmt, round2 } from '../lib/money.ts';
 import type { EuerKind } from './euer-aggregate.ts';
+import { _, _n, fmt as t } from '../lib/i18n.ts';
 import {
     buchungZeile,
     capBetroffen,
-    HANDLUNG_IN_ORDNUNG,
+    handlungInOrdnung,
     hinweisFingerprint,
     type Hinweis,
     type HinweisBetroffen,
@@ -149,10 +150,10 @@ export function pruefeUstAbweichung(i: UstAbweichungInput): Hinweis[] {
         return [
             {
                 ...basis,
-                title: 'USt-Abweichung: nicht prüfbar',
-                text: 'Die Entität weist keine Umsatzsteuer aus.',
+                title: _('VAT deviation: cannot be checked'),
+                text: _('The entity does not charge VAT.'),
                 status: 'nicht_pruefbar',
-                weil: 'als Kleinunternehmer keine regelmäßigen Voranmeldungen zum Vergleich vorliegen',
+                weil: _('as a small business there are no regular advance returns to compare'),
             },
         ];
     }
@@ -168,12 +169,23 @@ export function pruefeUstAbweichung(i: UstAbweichungInput): Hinweis[] {
         return [
             {
                 ...basis,
-                title: 'USt-Abweichung: nicht prüfbar',
+                title: _('VAT deviation: cannot be checked'),
                 text: zuPruefen.length
-                    ? `${zuPruefen.length} abgeschlossene(r) Zeitraum/Zeiträume ${i.year}, aber zu wenig Verlauf davor.`
-                    : `Kein abgeschlossener Voranmeldungszeitraum ${i.year} mit Buchungen oder Register-Eintrag.`,
+                    ? t(
+                          _n(
+                              '{n} closed period in {year}, but too little history before it.',
+                              '{n} closed periods in {year}, but too little history before them.',
+                              zuPruefen.length,
+                          ),
+                          { n: zuPruefen.length, year: i.year },
+                      )
+                    : t(_('No closed advance return period in {year} with bookings or a register entry.'), {
+                          year: i.year,
+                      }),
                 status: 'nicht_pruefbar',
-                weil: `weniger als ${UST_VERGLEICH_MIN} frühere Voranmeldungszeiträume zum Vergleich vorliegen`,
+                weil: t(_('fewer than {n} earlier advance return periods are available to compare'), {
+                    n: UST_VERGLEICH_MIN,
+                }),
             },
         ];
     }
@@ -186,13 +198,26 @@ export function pruefeUstAbweichung(i: UstAbweichungInput): Hinweis[] {
         return [
             {
                 ...basis,
-                title: 'USt-Abweichung: nichts auffällig',
-                text: `${geprueft.length} Voranmeldungszeitraum/-zeiträume ${i.year} mit den früheren verglichen.`,
+                title: _('VAT deviation: nothing stands out'),
+                text: t(
+                    _n(
+                        '{n} advance return period in {year} compared with the earlier ones.',
+                        '{n} advance return periods in {year} compared with the earlier ones.',
+                        geprueft.length,
+                    ),
+                    { n: geprueft.length, year: i.year },
+                ),
                 status: 'ohne_befund',
-                geprueft:
-                    `Zahllast je Zeitraum gegen den Median der bis zu ${UST_VERGLEICH_PERIODEN} Zeiträume davor; markiert ab ` +
-                    `${UST_ABWEICHUNG_ANTEIL * 100} % und mindestens ${fmt(UST_ABWEICHUNG_MIN_EUR)} € Abweichung; erklärte ` +
-                    'Werte aus dem Register vor berechneten',
+                geprueft: t(
+                    _(
+                        'the payable per period against the median of the up to {periods} periods before it; flagged from {percent} % and at least {amount} € deviation; declared values from the register before computed ones',
+                    ),
+                    {
+                        periods: UST_VERGLEICH_PERIODEN,
+                        percent: UST_ABWEICHUNG_ANTEIL * 100,
+                        amount: fmt(UST_ABWEICHUNG_MIN_EUR),
+                    },
+                ),
             },
         ];
     }
@@ -203,8 +228,19 @@ export function pruefeUstAbweichung(i: UstAbweichungInput): Hinweis[] {
     for (const { z, ref, n } of auffaellig) {
         const abw = round2(z.zahllast - ref);
         zeilen.push(
-            `${zeitraumLabel(z.key)}: ${fmt(z.zahllast)} € (${z.quelle === 'erklaert' ? 'erklärt' : 'berechnet'}), ` +
-                `sonst um ${fmt(ref)} € (Median aus ${n} Zeiträumen davor) — ${abw > 0 ? '+' : ''}${fmt(abw)} €`,
+            t(
+                _(
+                    '{period}: {payable} € ({source}), otherwise around {median} € (median of {n} earlier periods) — {deviation} €',
+                ),
+                {
+                    period: zeitraumLabel(z.key),
+                    payable: fmt(z.zahllast),
+                    source: z.quelle === 'erklaert' ? _('declared') : _('computed'),
+                    median: fmt(ref),
+                    n,
+                    deviation: `${abw > 0 ? '+' : ''}${fmt(abw)}`,
+                },
+            ),
         );
         const posten = z.ids
             .map((id) => byId.get(id))
@@ -212,22 +248,30 @@ export function pruefeUstAbweichung(i: UstAbweichungInput): Hinweis[] {
             .sort((a, b) => Math.abs(b.vat) - Math.abs(a.vat) || a.id.localeCompare(b.id))
             .slice(0, POSTEN_JE_ZEITRAUM);
         for (const r of posten) {
-            betroffen.push({ art: 'buchung', id: r.id, zeile: `${buchungZeile(r)} · USt ${fmt(r.vat)} €` });
+            betroffen.push({
+                art: 'buchung',
+                id: r.id,
+                zeile: t(_('{line} · VAT {amount} €'), { line: buchungZeile(r), amount: fmt(r.vat) }),
+            });
         }
     }
     return [
         {
             ...basis,
             level: 'tipp',
-            title: `USt-Zahllast weicht ab: ${auffaellig.map(({ z }) => zeitraumLabel(z.key)).join(', ')}`,
+            title: t(_('VAT payable deviates: {periods}'), {
+                periods: auffaellig.map(({ z }) => zeitraumLabel(z.key)).join(', '),
+            }),
             text:
-                `${zeilen.join('. ')}. Vermutlich ein großer Auftrag, eine große Anschaffung oder fehlende Buchungen — ` +
-                'zu klären, ob der Zeitraum vollständig ist. Die App bewertet die Abweichung nicht; darunter die größten USt-Posten.',
+                `${zeilen.join('. ')}. ` +
+                _(
+                    'Probably a large order, a large acquisition or missing bookings — to clarify whether the period is complete. The app does not judge the deviation; below are the largest VAT items.',
+                ),
             status: 'befund',
             ...capBetroffen(betroffen),
             handlungen: [
-                { id: 'buchungen', label: 'Buchungen öffnen', target: { art: 'ansicht', ansicht: 'buchungen' } },
-                HANDLUNG_IN_ORDNUNG,
+                { id: 'buchungen', label: _('Open transactions'), target: { art: 'ansicht', ansicht: 'buchungen' } },
+                handlungInOrdnung(),
             ],
             fingerprint: hinweisFingerprint(auffaellig.map(({ z }) => `${z.key}:${Math.round(z.zahllast * 100)}`)),
         },

@@ -24,12 +24,14 @@ import type { EuerKind } from './euer-aggregate.ts';
 import {
     buchungZeile,
     capBetroffen,
-    HANDLUNG_IN_ORDNUNG,
+    handlungInOrdnung,
     hinweisFingerprint,
     type AnlagegutVorbelegung,
     type Hinweis,
 } from './hinweise.ts';
 import { findeSerien, type SerienAbstand } from './serie.ts';
+import { abstandText } from './laufende-kosten.ts';
+import { _, _n, fmt as t } from '../lib/i18n.ts';
 
 /**
  * GWG limit and Sammelposten band for a Wirtschaftsjahr — § 6 Abs. 2 and 2a EStG in the version since
@@ -82,13 +84,6 @@ export interface AnlagegutInput {
     kleinunternehmer?: boolean;
 }
 
-const ABSTAND_TEXT: Record<SerienAbstand, string> = {
-    monatlich: 'monatlich',
-    vierteljaehrlich: 'vierteljährlich',
-    halbjaehrlich: 'halbjährlich',
-    jaehrlich: 'jährlich',
-};
-
 function erfasst(anlagen: readonly AnlageEintrag[], ids: readonly string[], wert: number, datum: string): boolean {
     return anlagen.some(
         (a) =>
@@ -110,14 +105,14 @@ export function pruefeAnlagegutKandidaten(i: AnlagegutInput): Hinweis[] {
         return [
             {
                 ...basis,
-                title: 'Anlagegut-Kandidaten: nicht prüfbar',
-                text: `Für ${i.year} ist keine GWG-Grenze hinterlegt.`,
+                title: _('Fixed-asset candidates: cannot be checked'),
+                text: t(_('No low-value asset threshold on file for {year}.'), { year: i.year }),
                 status: 'nicht_pruefbar',
-                weil: `die GWG-Grenze vor 2018 nicht in der Quellenliste steht`,
+                weil: _('the low-value asset threshold before 2018 is not in the source list'),
             },
         ];
     }
-    const art = i.kleinunternehmer ? 'brutto' : 'netto';
+    const art = i.kleinunternehmer ? _('gross') : _('net');
     let laufend = 0;
     const zeilen = i.zeilen.filter((r) => {
         if (r.kind !== 'expense' || r.amount >= 0 || r.accountKey === 'adjustment') return false;
@@ -154,7 +149,7 @@ export function pruefeAnlagegutKandidaten(i: AnlagegutInput): Hinweis[] {
             imVerzeichnis++;
             continue;
         }
-        const name = erste.counterparty?.trim() || 'Händler';
+        const name = erste.counterparty?.trim() || _('Retailer');
         const vorbelegung: AnlagegutVorbelegung = {
             bezeichnung: erste.purpose?.trim() || name,
             anschaffung: erste.bookingDate.slice(0, 10),
@@ -162,35 +157,60 @@ export function pruefeAnlagegutKandidaten(i: AnlagegutInput): Hinweis[] {
             buchungIds: ids,
         };
         const was = gr.abstand
-            ? `${gr.rows.length} Raten an ${name} (${ABSTAND_TEXT[gr.abstand]}) über zusammen ${fmt(wert)} € ${art}`
-            : `Eine Ausgabe an ${name} über ${fmt(wert)} € ${art}`;
+            ? t(_('{n} instalments to {name} ({interval}) totalling {amount} € {basis}'), {
+                  n: gr.rows.length,
+                  name,
+                  interval: abstandText(gr.abstand),
+                  amount: fmt(wert),
+                  basis: art,
+              })
+            : t(_('One expense to {name} of {amount} € {basis}'), { name, amount: fmt(wert), basis: art });
         const sammel =
             wert <= g.sammelBis
-                ? ` Bis ${fmt(g.sammelBis)} € geht statt dessen ein Sammelposten (§ 6 Abs. 2a EStG: ein Fünftel je Jahr, ` +
-                  `einheitlich für alle Güter des Jahres über ${fmt(g.sammelVon)} €).`
+                ? ' ' +
+                  t(
+                      _(
+                          'Up to {limit} € a collective item is possible instead (§ 6 Abs. 2a EStG: one fifth per year, uniformly for all assets of the year above {from} €).',
+                      ),
+                      { limit: fmt(g.sammelBis), from: fmt(g.sammelVon) },
+                  )
                 : '';
         const ku = i.kleinunternehmer
-            ? ' Brutto, weil ohne Vorsteuerabzug die USt zu den Anschaffungskosten gehört (§ 9b Abs. 1 EStG).'
+            ? ' ' +
+              _(
+                  'Gross, because without input tax deduction the VAT is part of the acquisition cost (§ 9b Abs. 1 EStG).',
+              )
             : '';
         out.push({
             ...basis,
             key: `anlagegut-kandidat:${ids[0]}`,
             level: 'tipp',
-            title: `Anlagegut? ${name}, ${fmt(wert)} €`,
+            title: t(_('Fixed asset? {name}, {amount} €'), { name, amount: fmt(wert) }),
             text:
-                `${was} liegt über der GWG-Grenze von ${fmt(g.gwg)} € und steht nicht im Anlageverzeichnis. Vermutlich ein ` +
-                `Anlagegut: dann wird es über die Nutzungsdauer abgeschrieben statt sofort abgezogen.${sammel}${ku} Zu klären: ` +
-                'ins Anlageverzeichnis aufnehmen — oder als in Ordnung markieren, wenn es Verbrauchsmaterial oder eine Dienstleistung ist.',
+                t(
+                    _(
+                        '{what} is above the low-value asset threshold of {limit} € and is not in the asset register. Probably a fixed asset: it is then depreciated over its useful life instead of deducted at once.',
+                    ),
+                    { what: was, limit: fmt(g.gwg) },
+                ) +
+                sammel +
+                ku +
+                ' ' +
+                _('To clarify: add it to the asset register — or mark it as fine if it is consumables or a service.'),
             status: 'befund',
             ...capBetroffen(gr.rows.map((r) => ({ art: 'buchung' as const, id: r.id, zeile: buchungZeile(r) }))),
             handlungen: [
                 {
                     id: 'anlagegut-erfassen',
-                    label: 'Ins Anlageverzeichnis',
+                    label: _('Add to the asset register'),
                     target: { art: 'dialog', dialog: 'anlagegut-erfassen', ref: ids[0], vorbelegung },
                 },
-                { id: 'buchung', label: 'Buchung öffnen', target: { art: 'dialog', dialog: 'buchung', ref: ids[0] } },
-                HANDLUNG_IN_ORDNUNG,
+                {
+                    id: 'buchung',
+                    label: _('Open the transaction'),
+                    target: { art: 'dialog', dialog: 'buchung', ref: ids[0] },
+                },
+                handlungInOrdnung(),
             ],
             fingerprint: hinweisFingerprint(ids),
         });
@@ -199,13 +219,22 @@ export function pruefeAnlagegutKandidaten(i: AnlagegutInput): Hinweis[] {
     return [
         {
             ...basis,
-            title: 'Anlagegut-Kandidaten: keine',
-            text: `${zeilen.length} Ausgabe(n) ${i.year} in Kategorien für Anschaffungen geprüft.`,
+            title: _('Fixed-asset candidates: none'),
+            text: t(
+                _n(
+                    '{n} expense from {year} checked in categories for acquisitions.',
+                    '{n} expenses from {year} checked in categories for acquisitions.',
+                    zeilen.length,
+                ),
+                { n: zeilen.length, year: i.year },
+            ),
             status: 'ohne_befund',
-            geprueft:
-                `Büroeinrichtung, Bürobedarf, Sonstiges und Unklassifiziertes gegen die GWG-Grenze von ${fmt(g.gwg)} € ${art}, ` +
-                `Raten an denselben Händler als ein Gut; ausgenommen: im Anlageverzeichnis (${imVerzeichnis}), bestätigte ` +
-                `laufende Kosten (${laufend})`,
+            geprueft: t(
+                _(
+                    'office equipment, office supplies, other and unclassified against the low-value asset threshold of {limit} € {basis}, instalments to the same retailer as one asset; excluded: in the asset register ({registered}), confirmed recurring costs ({recurring})',
+                ),
+                { limit: fmt(g.gwg), basis: art, registered: imVerzeichnis, recurring: laufend },
+            ),
         },
     ];
 }

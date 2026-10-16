@@ -18,7 +18,8 @@
  */
 
 import { fmtDe as fmt } from '../lib/money.ts';
-import { HANDLUNG_IN_ORDNUNG, hinweisFingerprint, type Hinweis, type HinweisHandlung } from './hinweise.ts';
+import { handlungInOrdnung, hinweisFingerprint, type Hinweis, type HinweisHandlung } from './hinweise.ts';
+import { _, _n, _p, fmt as t } from '../lib/i18n.ts';
 
 /** Rounding slack when comparing balances: one cent. */
 export const SALDO_TOLERANZ = 0.01;
@@ -62,24 +63,28 @@ export interface KontoauszugInput {
     today: string;
 }
 
-const MONATE = [
-    'Januar',
-    'Februar',
-    'März',
-    'April',
-    'Mai',
-    'Juni',
-    'Juli',
-    'August',
-    'September',
-    'Oktober',
-    'November',
-    'Dezember',
-];
+/** Full month names for the gap wording, 0-based — a function so the translator is already set. */
+function monatsnamen(): string[] {
+    // TRANSLATORS: Full month names, used in a sentence like "no transactions in March 2025".
+    return [
+        _p('month', 'January'),
+        _p('month', 'February'),
+        _p('month', 'March'),
+        _p('month', 'April'),
+        _p('month', 'May'),
+        _p('month', 'June'),
+        _p('month', 'July'),
+        _p('month', 'August'),
+        _p('month', 'September'),
+        _p('month', 'October'),
+        _p('month', 'November'),
+        _p('month', 'December'),
+    ];
+}
 
 const HANDLUNG_IMPORT = (accountKey: string): HinweisHandlung => ({
     id: 'kontoauszug-importieren',
-    label: 'Kontoauszug importieren',
+    label: _('Import a bank statement'),
     target: { art: 'dialog', dialog: 'kontoauszug-import', ref: accountKey },
 });
 
@@ -102,8 +107,13 @@ function firstDayOfMonth(year: number, month: number): string {
 }
 
 function monthRun(year: number, months: number[]): string {
-    if (months.length === 1) return `${MONATE[months[0] - 1]} ${year}`;
-    return `${MONATE[months[0] - 1]} bis ${MONATE[months[months.length - 1] - 1]} ${year}`;
+    const namen = monatsnamen();
+    if (months.length === 1) return t(_('{month} {year}'), { month: namen[months[0] - 1], year });
+    return t(_('{from} to {to} {year}'), {
+        from: namen[months[0] - 1],
+        to: namen[months[months.length - 1] - 1],
+        year,
+    });
 }
 
 /** Group sorted month numbers into consecutive runs. */
@@ -150,7 +160,12 @@ function pruefeKonto(k: KontoauszugKonto, i: KontoauszugInput): Hinweis | null {
     if (inYear.length === 0 && stmtsYear.length === 0) {
         if (!(dataBefore && dataAfter) || (closedAt && closedAt < yearStart)) return null;
         findings.push(
-            `Im ganzen Jahr ${year} weder Umsätze noch Auszug, obwohl das Konto davor und danach Umsätze hat`,
+            t(
+                _(
+                    'in all of {year} neither transactions nor a statement, although the account has transactions before and after',
+                ),
+                { year },
+            ),
         );
         parts.push(`jahr:${year}`);
     }
@@ -162,7 +177,19 @@ function pruefeKonto(k: KontoauszugKonto, i: KontoauszugInput): Hinweis | null {
         const diff = round2(s.opening + s.sum - s.closing);
         if (Math.abs(diff) > SALDO_TOLERANZ) {
             findings.push(
-                `Auszug ${deDate(s.from)}–${deDate(s.to)}: Anfangssaldo ${fmt(s.opening)} € + Umsätze ${fmt(s.sum)} € ≠ Endsaldo ${fmt(s.closing)} € (Differenz ${fmt(diff)} €)`,
+                t(
+                    _(
+                        'statement {from}–{to}: opening balance {opening} € + transactions {sum} € ≠ closing balance {closing} € (difference {diff} €)',
+                    ),
+                    {
+                        from: deDate(s.from),
+                        to: deDate(s.to),
+                        opening: fmt(s.opening),
+                        sum: fmt(s.sum),
+                        closing: fmt(s.closing),
+                        diff: fmt(diff),
+                    },
+                ),
             );
             parts.push(`saldo:${s.from}:${s.to}`);
         }
@@ -175,9 +202,25 @@ function pruefeKonto(k: KontoauszugKonto, i: KontoauszugInput): Hinweis | null {
         const balanceBreak =
             a.closing != null && b.opening != null && Math.abs(round2(a.closing - b.opening)) > SALDO_TOLERANZ;
         if (!seqGap && !balanceBreak) continue;
-        const nr = seqGap ? ` (Nr. ${a.seq! + 1}${b.seq! - a.seq! > 2 ? `–${b.seq! - 1}` : ''})` : '';
-        const saldo = balanceBreak ? ` — Endsaldo ${fmt(a.closing!)} € ≠ Anfangssaldo ${fmt(b.opening!)} €` : '';
-        findings.push(`Zwischen ${deDate(a.to)} und ${deDate(b.from)} fehlt vermutlich ein Auszug${nr}${saldo}`);
+        const nr = seqGap
+            ? t(_(' (no. {numbers})'), {
+                  numbers: `${a.seq! + 1}${b.seq! - a.seq! > 2 ? `–${b.seq! - 1}` : ''}`,
+              })
+            : '';
+        const saldo = balanceBreak
+            ? t(_(' — closing balance {closing} € ≠ opening balance {opening} €'), {
+                  closing: fmt(a.closing!),
+                  opening: fmt(b.opening!),
+              })
+            : '';
+        findings.push(
+            t(_('a statement is probably missing between {from} and {to}{numbers}{balances}'), {
+                from: deDate(a.to),
+                to: deDate(b.from),
+                numbers: nr,
+                balances: saldo,
+            }),
+        );
         parts.push(`luecke:${a.to}:${b.from}`);
     }
     // Statements and stored bookings agree — only meaningful once the chain itself holds.
@@ -191,7 +234,12 @@ function pruefeKonto(k: KontoauszugKonto, i: KontoauszugInput): Hinweis | null {
         );
         if (Math.abs(round2(stmtSum - txSum)) > SALDO_TOLERANZ) {
             findings.push(
-                `Die Auszüge ${deDate(from)}–${deDate(to)} summieren ${fmt(stmtSum)} €, die Buchungen im selben Zeitraum ${fmt(txSum)} € — vermutlich fehlen Buchungen oder sind doppelt`,
+                t(
+                    _(
+                        'the statements {from}–{to} total {statements} €, the bookings in the same period {bookings} € — bookings are probably missing or duplicated',
+                    ),
+                    { from: deDate(from), to: deDate(to), statements: fmt(stmtSum), bookings: fmt(txSum) },
+                ),
             );
             parts.push(`summe:${from}:${to}`);
         }
@@ -228,7 +276,9 @@ function pruefeKonto(k: KontoauszugKonto, i: KontoauszugInput): Hinweis | null {
             const empty = months.filter((m) => !counts.get(m) && !covered(m));
             for (const run of runs(empty)) {
                 findings.push(
-                    `Keine Umsätze im ${monthRun(year, run)}, obwohl das Konto sonst jeden Monat Umsätze hat`,
+                    t(_('no transactions in {period}, although the account otherwise has them every month'), {
+                        period: monthRun(year, run),
+                    }),
                 );
                 for (const m of run) parts.push(`monat:${year}-${String(m).padStart(2, '0')}`);
             }
@@ -236,18 +286,24 @@ function pruefeKonto(k: KontoauszugKonto, i: KontoauszugInput): Hinweis | null {
     }
 
     const nachEnde =
-        end < yearEnd ? ` Nach dem ${deDate(end)} nicht geprüft (Konto aufgelöst oder Betrieb beendet).` : '';
+        end < yearEnd
+            ? ' ' + t(_('Not checked after {date} (account closed or business ceased).'), { date: deDate(end) })
+            : '';
     if (findings.length) {
         return {
             key,
             level: 'warnung',
-            title: `Kontoauszug ${k.label}: vermutlich lückenhaft`,
+            title: t(_('Bank statement {account}: probably incomplete'), { account: k.label }),
             text:
-                `Zu klären: ${findings.join('; ')}. Eine fehlende Auszugsdatei verfälscht die EÜR, ohne dass es auffällt.` +
-                (hasBalances ? '' : ' Die Salden lassen sich erst mit importierten Kontoauszügen (CAMT) prüfen.') +
+                t(_('To clarify: {findings}.'), { findings: findings.join('; ') }) +
+                ' ' +
+                _('A missing statement file skews the EÜR without anyone noticing.') +
+                (hasBalances
+                    ? ''
+                    : ' ' + _('The balances can only be checked once bank statements (CAMT) are imported.')) +
                 nachEnde,
             status: 'befund',
-            handlungen: [HANDLUNG_IMPORT(k.accountKey), HANDLUNG_IN_ORDNUNG],
+            handlungen: [HANDLUNG_IMPORT(k.accountKey), handlungInOrdnung()],
             fingerprint: hinweisFingerprint(parts),
         };
     }
@@ -256,27 +312,41 @@ function pruefeKonto(k: KontoauszugKonto, i: KontoauszugInput): Hinweis | null {
         const lastTo = stmtsYear.reduce((m, s) => (s.to > m ? s.to : m), stmtsYear[0].to);
         const to = lastTo > yearEnd ? yearEnd : lastTo;
         const seq = stmtsYear.every((s) => s.seq != null);
-        const ausserhalb = from > yearStart || to < end ? '; außerhalb der Auszüge nur Monate ohne Umsätze' : '';
+        const ausserhalb =
+            from > yearStart || to < end ? _('; outside the statements only months without transactions') : '';
         return {
             key,
             level: 'info',
-            title: `Kontoauszug ${k.label} lückenlos`,
-            text: `${stmtsYear.length} Auszüge vom ${deDate(from)} bis ${deDate(to)} geprüft.${nachEnde}`,
+            title: t(_('Bank statement {account} complete'), { account: k.label }),
+            text:
+                t(
+                    _n(
+                        '{n} statement from {from} to {to} checked.',
+                        '{n} statements from {from} to {to} checked.',
+                        stmtsYear.length,
+                    ),
+                    { n: stmtsYear.length, from: deDate(from), to: deDate(to) },
+                ) + nachEnde,
             status: 'ohne_befund',
             geprueft:
-                `Anfangssaldo + Umsätze = Endsaldo je Auszug, Endsaldo = nächster Anfangssaldo` +
-                `${seq ? ', Auszugsnummern fortlaufend' : ''}, Summe der Auszüge = Summe der Buchungen${ausserhalb}`,
+                _(
+                    'opening balance + transactions = closing balance per statement, closing balance = next opening balance',
+                ) +
+                (seq ? _(', statement numbers consecutive') : '') +
+                _(', sum of the statements = sum of the bookings') +
+                ausserhalb,
         };
     }
     return {
         key,
         level: 'info',
-        title: `Kontoauszug ${k.label}: Salden nicht prüfbar`,
-        text: dichteOk
-            ? `Geprüft wurde nur, ob ein Monat ${year} ohne Umsätze ist — keiner gefunden.${nachEnde}`
-            : `Zu wenige Umsätze je Monat, um daran eine Lücke zu erkennen.${nachEnde}`,
+        title: t(_('Bank statement {account}: balances cannot be checked'), { account: k.label }),
+        text:
+            (dichteOk
+                ? t(_('Only checked whether a month in {year} has no transactions — none found.'), { year })
+                : _('Too few transactions per month to spot a gap that way.')) + nachEnde,
         status: 'nicht_pruefbar',
-        weil: 'das Konto keine Salden liefert',
+        weil: _('the account supplies no balances'),
         handlungen: [HANDLUNG_IMPORT(k.accountKey)],
     };
 }

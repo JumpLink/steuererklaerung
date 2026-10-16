@@ -35,7 +35,7 @@ export default async () => {
         await it('stays backward compatible: counts alone give the plain hint, without betroffen', async () => {
             const hs = computeHinweise({ year: 2025, umsatz: 1000, outputVat: 190, unclassified: 2 });
             const u = find(hs, 'unklassifiziert')!;
-            expect(u.title).toBe('2 unklassifizierte Buchung(en)');
+            expect(u.title).toBe('2 unclassified bookings');
             expect(u.status).toBe('befund');
             expect(u.betroffen).toBe(undefined);
             expect(u.handlungen).toBe(undefined);
@@ -60,7 +60,7 @@ export default async () => {
             const b = find(hs, 'beleg-luecke')!;
             expect(b.handlungen?.[0]).toStrictEqual({
                 id: 'zuordnen',
-                label: 'Zuordnen',
+                label: 'Match',
                 target: { art: 'dialog', dialog: 'beleg-zuordnen', ref: 'tx-0' },
             });
         });
@@ -92,7 +92,7 @@ export default async () => {
             expect(d.betroffen?.[0]).toStrictEqual({
                 art: 'rechnung',
                 id: 'inv-7',
-                zeile: 'Rechnung RE-7 · 100,00 € zu viel',
+                zeile: 'Invoice RE-7 · 100,00 € too much',
             });
             expect(d.handlungen?.map((a) => a.id)).toStrictEqual(['rechnung']);
         });
@@ -133,7 +133,7 @@ export default async () => {
             expect(tasks.length).toBe(1);
             expect(tasks[0]).toStrictEqual({
                 title: '2 unklassifizierte Buchung(en)',
-                sub: 'Z1 · und 1 weitere — Regel anlegen',
+                sub: 'Z1 · and one more — Regel anlegen',
                 tone: 'warn',
                 kind: 'hinweis',
                 ref: 'unklassifiziert',

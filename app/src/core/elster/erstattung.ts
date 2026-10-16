@@ -21,6 +21,7 @@ import { gleichePartei } from './serie.ts';
 import { dayDiff } from '../lib/transactions/reconcile.ts';
 import { round2 } from '../lib/money.ts';
 import { hauptTeil } from './splitbuchung.ts';
+import { _n, fmt } from '../lib/i18n.ts';
 
 /** How far back a refund looks for its debit — an app threshold, not a legal number
  *  (docs/references/tax-sources.md, „Geld-Prüfungen"). A year covers a refunded annual fee. */
@@ -238,7 +239,7 @@ export function offeneErstattungen<T extends ErstattungBuchung>(
     return out.sort((a, b) => (a.buchung.bookingDate < b.buchung.bookingDate ? 1 : -1));
 }
 
-/** „N Erstattungen zuordnen" — singular-aware, for the Übersicht task. */
+/** "Assign N refunds" — the Übersicht task; the catalogue picks the plural form. */
 export function erstattungenTitel(n: number): string {
-    return n === 1 ? '1 Erstattung zuordnen' : `${n} Erstattungen zuordnen`;
+    return fmt(_n('Assign {n} refund', 'Assign {n} refunds', n), { n });
 }

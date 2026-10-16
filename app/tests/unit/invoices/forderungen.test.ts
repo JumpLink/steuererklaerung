@@ -348,7 +348,7 @@ export default async () => {
             expect(verjaehrung(claim, TODAY)?.tageBis).toBe(83);
         });
 
-        await it('the hint: befund with the invoice, „vermutlich", Hemmung/Neubeginn named, an action', async () => {
+        await it('the hint: befund with the invoice, „probably", Hemmung/Neubeginn named, an action', async () => {
             const { posten } = offenePosten(
                 [
                     inv({ id: 'old', number: 'RE-2023-0004', issueDate: '2023-05-02', dueDate: '2023-05-16' }),
@@ -361,7 +361,7 @@ export default async () => {
             const [h] = verjaehrungHinweise({ posten });
             expect(h.status).toBe('befund');
             expect(h.level).toBe('warnung');
-            expect(h.text).toContain('vermutlich');
+            expect(h.text).toContain('probably');
             expect(h.text).toContain('31.12.2026');
             expect(h.text).toContain('§§ 203 ff., 212 BGB');
             expect(h.betroffen?.length).toBe(1);

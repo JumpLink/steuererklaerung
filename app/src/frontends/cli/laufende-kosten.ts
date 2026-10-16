@@ -14,7 +14,7 @@ import {
     type LaufendeKostenUebersicht,
     type LkEntscheidungInput,
 } from '../../core/presenters/laufende-kosten.ts';
-import { ABSTAND_TEXT, zuBestaetigenTitel, type SerienAbstand } from '../../core/elster/laufende-kosten.ts';
+import { abstandText, zuBestaetigenTitel, type SerienAbstand } from '../../core/elster/laufende-kosten.ts';
 import type { EntityModel } from '../../core/presenters/workspace.ts';
 import { fmtDe } from '../../core/lib/money.ts';
 import { ensureDemoSeeded } from './demo.ts';
@@ -36,7 +36,7 @@ function zeile(k: LaufendeKosten): void {
     const wer = k.empfaenger.slice(0, 32).padEnd(32);
     const naechste = k.aktiv ? `nächste ${k.naechste}` : 'beendet?';
     console.log(
-        `  ${wer}  ${fmtDe(k.betrag).padStart(10)} €  ${ABSTAND_TEXT[k.abstand].padEnd(15)}  zuletzt ${k.zuletzt}  ${naechste}`,
+        `  ${wer}  ${fmtDe(k.betrag).padStart(10)} €  ${abstandText(k.abstand).padEnd(15)}  zuletzt ${k.zuletzt}  ${naechste}`,
     );
     const p = k.preisaenderung;
     const extra = [
