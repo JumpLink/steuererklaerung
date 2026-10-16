@@ -14,6 +14,7 @@ import Gtk from '@girs/gtk-4.0';
 import type { YearHinweis } from '../../../core/presenters/hinweise.ts';
 import { hinweisDetails, type HinweisKontext } from './hinweis-handlung.ts';
 import { markup } from './util.ts';
+import { _ } from '../i18n.ts';
 
 const ICON: Record<YearHinweis['level'], { icon: string; css: string }> = {
     warnung: { icon: 'dialog-warning-symbolic', css: 'warning' },
@@ -65,8 +66,8 @@ export function vorAbgabeGroup(
 ): Gtk.Widget | null {
     if (hinweise.length === 0 && warnungen.length === 0) return null;
     const group = new Adw.PreferencesGroup({
-        title: 'Vor der Abgabe klären',
-        description: 'Hinweise, keine Sperre — geändert wird erst mit einer Handlung.',
+        title: _('Clear before filing'),
+        description: _('Notices, not a block — nothing changes until you act.'),
     });
     for (const text of warnungen) {
         const row = new Adw.ActionRow({ title: markup(text) });

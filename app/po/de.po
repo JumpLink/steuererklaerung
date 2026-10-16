@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-16 22:40+0200\n"
+"POT-Creation-Date: 2026-10-16 23:03+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -546,6 +546,8 @@ msgstr "Erstattung zu {original}"
 #: src/core/elster/euer-transactions.ts:260
 #: src/frontends/desktop/views/beleg-link-dialog.ts:230
 #: src/frontends/desktop/views/beleg-link-dialog.ts:246
+#: src/frontends/desktop/views/herleitung-dialog.ts:369
+#: src/frontends/desktop/views/herleitung-dialog.ts:625
 msgid "Receipt #{id}"
 msgstr "Beleg #{id}"
 
@@ -553,6 +555,7 @@ msgstr "Beleg #{id}"
 #: src/frontends/desktop/views/beleg-eingang-view.ts:344
 #: src/frontends/desktop/views/beleg-eingang-view.ts:622
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:153
+#: src/frontends/desktop/views/herleitung-dialog.ts:617
 #: src/frontends/desktop/views/tx-detail-dialog.ts:36
 msgid "Receipt"
 msgstr "Beleg"
@@ -2182,6 +2185,7 @@ msgstr ""
 "— oder als in Ordnung markieren, wenn er keine ausweist."
 
 #: src/core/elster/zu-pruefen.ts:69 src/core/elster/zu-pruefen.ts:98
+#: src/frontends/desktop/views/herleitung-dialog.ts:77
 #: src/frontends/desktop/views/tx-detail-dialog.ts:39
 msgid "unclassified"
 msgstr "unklassifiziert"
@@ -2201,6 +2205,7 @@ msgstr[0] "{n} Buchung zu prüfen"
 msgstr[1] "{n} Buchungen zu prüfen"
 
 #: src/core/elster/zu-pruefen.ts:100
+#: src/frontends/desktop/views/herleitung-dialog.ts:76
 msgid "manually"
 msgstr "manuell"
 
@@ -2563,7 +2568,9 @@ msgstr "im macOS-Schlüsselbund, nie im Klartext"
 msgid ""
 "encrypted with your Windows account (DPAPI) — every program running under "
 "this account can read them"
-msgstr "mit deinem Windows-Konto verschlüsselt (DPAPI) — jedes Programm unter diesem Konto kann sie lesen"
+msgstr ""
+"mit deinem Windows-Konto verschlüsselt (DPAPI) — jedes Programm unter diesem "
+"Konto kann sie lesen"
 
 #: src/frontends/cli/elster/datenschutz.ts:36
 msgid "Confirmed on {date}."
@@ -2618,7 +2625,7 @@ msgstr "Assistent"
 #: src/frontends/desktop/assistent-panel.blp:40
 #: src/frontends/desktop/lotse-panel.blp:36
 #: src/frontends/desktop/views/beleg-upload.ts:130
-#: src/frontends/desktop/views/konten-view.ts:682
+#: src/frontends/desktop/views/konten-view.ts:680
 #: src/frontends/desktop/window.blp:206
 msgid "Close"
 msgstr "Schließen"
@@ -2685,6 +2692,7 @@ msgid "Suggestion · {title}"
 msgstr "Vorschlag · {title}"
 
 #: src/frontends/desktop/assistent-panel.ts:192
+#: src/frontends/desktop/views/herleitung-dialog.ts:634
 msgid "Apply"
 msgstr "Übernehmen"
 
@@ -2709,13 +2717,15 @@ msgid "No window is open in which the bank could ask."
 msgstr "Kein Fenster offen, in dem die Bank gefragt werden könnte."
 
 #: src/frontends/desktop/fints-interaction.ts:58
+#: src/frontends/desktop/views/absenden-dialog.ts:78
+#: src/frontends/desktop/views/absenden-dialog.ts:275
 #: src/frontends/desktop/views/datenschutz-dialog.ts:73
 #: src/frontends/desktop/views/dialogs.ts:24
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:36
 #: src/frontends/desktop/views/entity-dialogs.ts:42
 #: src/frontends/desktop/views/entity-dialogs.ts:101
-#: src/frontends/desktop/views/konten-view.ts:770
-#: src/frontends/desktop/views/konten-view.ts:851
+#: src/frontends/desktop/views/konten-view.ts:768
+#: src/frontends/desktop/views/konten-view.ts:849
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:465
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:76
 #: src/frontends/desktop/window.ts:258
@@ -2918,7 +2928,7 @@ msgid "Navigation"
 msgstr "Navigation"
 
 #: src/frontends/desktop/sync-controller.ts:35
-#: src/frontends/desktop/views/konten-view.ts:800
+#: src/frontends/desktop/views/konten-view.ts:798
 msgid "just now"
 msgstr "gerade eben"
 
@@ -2974,6 +2984,338 @@ msgstr "Fehler: {source} — {message}"
 msgid "Undo"
 msgstr "Rückgängig"
 
+#: src/frontends/desktop/views/absenden-dialog.ts:130
+msgid "Keystore path (.pfx/.p12)"
+msgstr "Keystore-Pfad (.pfx/.p12)"
+
+#: src/frontends/desktop/views/absenden-dialog.ts:135
+msgid "Choose a file"
+msgstr "Datei wählen"
+
+#: src/frontends/desktop/views/absenden-dialog.ts:138
+msgid "Choose the ELSTER keystore"
+msgstr "ELSTER-Keystore wählen"
+
+#: src/frontends/desktop/views/absenden-dialog.ts:149
+msgid "Keystore PIN"
+msgstr "Keystore-PIN"
+
+#: src/frontends/desktop/views/absenden-dialog.ts:162
+msgid "Keep the PIN in the keyring"
+msgstr "PIN im Schlüsselbund speichern"
+
+#: src/frontends/desktop/views/absenden-dialog.ts:208
+msgid "Test transmission"
+msgstr "Test-Übermittlung"
+
+#: src/frontends/desktop/views/absenden-dialog.ts:214
+msgid ""
+"Test transmission of “{form}” to the ELSTER clearing house — it is discarded "
+"there (Testmerker). Nothing is filed bindingly."
+msgstr "Test-Übermittlung von „{form}“ an das ELSTER-Clearing-House — wird dort verworfen (Testmerker). Es wird nichts verbindlich abgegeben."
+
+#: src/frontends/desktop/views/absenden-dialog.ts:219
+#: src/frontends/desktop/views/absenden-section.ts:412
+msgid "Send a test"
+msgstr "Test senden"
+
+#: src/frontends/desktop/views/absenden-dialog.ts:238
+#: src/frontends/desktop/views/absenden-section.ts:432
+msgid "Submit bindingly"
+msgstr "Verbindlich absenden"
+
+#: src/frontends/desktop/views/absenden-dialog.ts:244
+msgid ""
+"“{form}” is transmitted BINDINGLY to the Finanzamt. The step can NOT be "
+"undone — please read the figures in the check sheet first."
+msgstr "„{form}“ wird VERBINDLICH an das Finanzamt übermittelt. Der Vorgang kann NICHT rückgängig gemacht werden — bitte die Werte im Prüfblatt vorher gegenlesen."
+
+#: src/frontends/desktop/views/absenden-dialog.ts:250
+msgid "Send bindingly now"
+msgstr "Jetzt verbindlich senden"
+
+#: src/frontends/desktop/views/absenden-dialog.ts:262
+#: src/frontends/desktop/views/absenden-dialog.ts:276
+#: src/frontends/desktop/views/absenden-section.ts:392
+msgctxt "button"
+msgid "Release"
+msgstr "Freigeben"
+
+#: src/frontends/desktop/views/absenden-dialog.ts:265
+msgid ""
+"Release “{form}” for transmission. The release is bound to the current "
+"snapshot and lapses automatically as soon as the underlying data change."
+msgstr "„{form}“ für die Übermittlung freigeben. Die Freigabe ist an den aktuellen Snapshot gebunden und verfällt automatisch, sobald sich die zugrunde liegenden Daten ändern."
+
+#: src/frontends/desktop/views/absenden-dialog.ts:271
+msgid "Note (optional)"
+msgstr "Notiz (optional)"
+
+#: src/frontends/desktop/views/absenden-section.ts:85
+#: src/frontends/desktop/views/mahnung-dialog.ts:172
+msgid "Draft"
+msgstr "Entwurf"
+
+#: src/frontends/desktop/views/absenden-section.ts:86
+msgid "validated (passed the ERiC check)"
+msgstr "validiert (ERiC-Prüfung bestanden)"
+
+#: src/frontends/desktop/views/absenden-section.ts:87
+msgid "submission open"
+msgstr "Versand offen"
+
+#: src/frontends/desktop/views/absenden-section.ts:88
+msgid "submitted"
+msgstr "übermittelt"
+
+#: src/frontends/desktop/views/absenden-section.ts:89
+msgid "superseded"
+msgstr "ersetzt"
+
+#: src/frontends/desktop/views/absenden-section.ts:161
+#: src/frontends/desktop/views/absenden-section.ts:173
+#: src/frontends/desktop/views/absenden-section.ts:200
+msgid "Submit"
+msgstr "Absenden"
+
+#: src/frontends/desktop/views/absenden-section.ts:164
+#: src/frontends/desktop/views/home-view.ts:67
+msgid "Could not load the overview"
+msgstr "Übersicht konnte nicht geladen werden"
+
+#: src/frontends/desktop/views/absenden-section.ts:174
+msgid "Loading the submission status …"
+msgstr "Übermittlungs-Status wird geladen …"
+
+#: src/frontends/desktop/views/absenden-section.ts:202
+msgid ""
+"Per form: capture a snapshot → release it → send it to ELSTER as a test. The "
+"live submission happens separately, with your ELSTER certificate."
+msgstr "Pro Formular: Snapshot erfassen → freigeben → testweise an ELSTER senden. Der Echt-Versand erfolgt separat mit deinem ELSTER-Zertifikat."
+
+#: src/frontends/desktop/views/absenden-section.ts:210
+#: src/frontends/desktop/views/absenden-section.ts:211
+#: src/frontends/desktop/views/absenden-section.ts:226
+#: src/frontends/desktop/views/konten-view.ts:156
+msgid "available"
+msgstr "verfügbar"
+
+#: src/frontends/desktop/views/absenden-section.ts:214
+msgid "not available — set it up in the accounts view"
+msgstr "nicht verfügbar — in der Konten-Ansicht einrichten"
+
+#: src/frontends/desktop/views/absenden-section.ts:215
+msgid "there is no ERiC for this architecture — upload the XML in Mein ELSTER"
+msgstr "für diese Architektur gibt es kein ERiC — XML in Mein ELSTER hochladen"
+
+#: src/frontends/desktop/views/absenden-section.ts:227
+msgid "not available"
+msgstr "nicht verfügbar"
+
+#: src/frontends/desktop/views/absenden-section.ts:239
+msgid "✓ unlocked"
+msgstr "✓ freigeschaltet"
+
+#: src/frontends/desktop/views/absenden-section.ts:240
+msgid "✗ locked"
+msgstr "✗ gesperrt"
+
+#: src/frontends/desktop/views/absenden-section.ts:249
+msgid "⚠ outdated"
+msgstr "⚠ veraltet"
+
+#: src/frontends/desktop/views/absenden-section.ts:250
+msgid "captured {when}"
+msgstr "erfasst {when}"
+
+#: src/frontends/desktop/views/absenden-section.ts:252
+msgid "No snapshot captured"
+msgstr "Kein Snapshot erfasst"
+
+#: src/frontends/desktop/views/absenden-section.ts:254
+msgid "State"
+msgstr "Stand"
+
+#: src/frontends/desktop/views/absenden-section.ts:271
+msgid "Release"
+msgstr "Freigeben"
+
+#: src/frontends/desktop/views/absenden-section.ts:272
+msgid "released"
+msgstr "freigegeben"
+
+#: src/frontends/desktop/views/absenden-section.ts:272
+msgid "no release"
+msgstr "keine Freigabe"
+
+#: src/frontends/desktop/views/absenden-section.ts:277
+msgid "✓ released"
+msgstr "✓ freigegeben"
+
+#: src/frontends/desktop/views/absenden-section.ts:286
+msgid "Submission unlocked"
+msgstr "Absenden freigeschaltet"
+
+#: src/frontends/desktop/views/absenden-section.ts:319
+#: src/frontends/desktop/views/absenden-section.ts:608
+msgid "Live submission"
+msgstr "Echt-Versand"
+
+#: src/frontends/desktop/views/absenden-section.ts:320
+msgid "separate, with your ELSTER certificate — deliberately not offered here."
+msgstr "separat, mit deinem ELSTER-Zertifikat — hier bewusst nicht angeboten."
+
+#: src/frontends/desktop/views/absenden-section.ts:351
+msgid "Check PDF"
+msgstr "Prüf-PDF"
+
+#: src/frontends/desktop/views/absenden-section.ts:352
+msgid "Save the check sheet as a PDF (read it through before the release)"
+msgstr "Prüf-Datenblatt als PDF speichern (vor der Freigabe gegenlesen)"
+
+#: src/frontends/desktop/views/absenden-section.ts:359
+msgid "Capture again"
+msgstr "Neu erfassen"
+
+#: src/frontends/desktop/views/absenden-section.ts:359
+msgid "Capture snapshot"
+msgstr "Snapshot erfassen"
+
+#: src/frontends/desktop/views/absenden-section.ts:370
+msgid "Check locally"
+msgstr "Lokal prüfen"
+
+#: src/frontends/desktop/views/absenden-section.ts:377
+msgid ""
+"Check the snapshot locally against ERiC (no submission) — on success it is "
+"set to “validated”"
+msgstr "Snapshot lokal gegen ERiC prüfen (kein Versand) — setzt bei Erfolg „validiert\""
+
+#: src/frontends/desktop/views/absenden-section.ts:379
+#: src/frontends/desktop/views/absenden-section.ts:420
+#: src/frontends/desktop/views/absenden-section.ts:441
+msgid "ERiC not available"
+msgstr "ERiC nicht verfügbar"
+
+#: src/frontends/desktop/views/absenden-section.ts:381
+#: src/frontends/desktop/views/absenden-section.ts:400
+msgid "Capture a snapshot first"
+msgstr "Zuerst einen Snapshot erfassen"
+
+#: src/frontends/desktop/views/absenden-section.ts:383
+#: src/frontends/desktop/views/absenden-section.ts:402
+msgid "Snapshot outdated — capture it again"
+msgstr "Snapshot veraltet — neu erfassen"
+
+#: src/frontends/desktop/views/absenden-section.ts:384
+msgid "The snapshot is already validated"
+msgstr "Snapshot ist bereits validiert"
+
+#: src/frontends/desktop/views/absenden-section.ts:403
+msgid "Already released"
+msgstr "Bereits freigegeben"
+
+#: src/frontends/desktop/views/absenden-section.ts:421
+msgid "A test submission is not possible yet"
+msgstr "Test-Versand noch nicht möglich"
+
+#: src/frontends/desktop/views/absenden-section.ts:439
+msgid "Transmit bindingly to the Finanzamt (irreversible)"
+msgstr "Verbindlich ans Finanzamt übermitteln (unwiderruflich)"
+
+#: src/frontends/desktop/views/absenden-section.ts:443
+msgid "Already submitted bindingly"
+msgstr "Bereits verbindlich übermittelt"
+
+#: src/frontends/desktop/views/absenden-section.ts:444
+msgid "A live submission is not possible yet"
+msgstr "Echt-Versand noch nicht möglich"
+
+#: src/frontends/desktop/views/absenden-section.ts:459
+#: src/frontends/desktop/views/steuererklaerung-view.ts:549
+msgid "{form} check sheet"
+msgstr "{form}-Prüfblatt"
+
+#: src/frontends/desktop/views/absenden-section.ts:461
+msgid "Check PDF not available"
+msgstr "Prüf-PDF nicht verfügbar"
+
+#: src/frontends/desktop/views/absenden-section.ts:468
+msgid "Snapshot captured: {form}"
+msgstr "Snapshot erfasst: {form}"
+
+#: src/frontends/desktop/views/absenden-section.ts:470
+msgid "Snapshot failed"
+msgstr "Snapshot fehlgeschlagen"
+
+#: src/frontends/desktop/views/absenden-section.ts:479
+msgid "Validated locally: {form}"
+msgstr "Lokal validiert: {form}"
+
+#: src/frontends/desktop/views/absenden-section.ts:480
+msgid "(with ERiC notices)"
+msgstr "(mit ERiC-Hinweisen)"
+
+#: src/frontends/desktop/views/absenden-section.ts:482
+msgid "ERiC validation"
+msgstr "ERiC-Validierung"
+
+#: src/frontends/desktop/views/absenden-section.ts:485
+msgid "Validation failed"
+msgstr "Validierung fehlgeschlagen"
+
+#: src/frontends/desktop/views/absenden-section.ts:504
+msgid "Released — but {n} cross-check has an error; clear it before filing."
+msgid_plural ""
+"Released — but {n} cross-checks have errors; clear them before filing."
+msgstr[0] "Freigegeben — aber {n} Querprüfung(en) mit Fehler; vor Abgabe klären."
+msgstr[1] "Freigegeben — aber {n} Querprüfung(en) mit Fehler; vor Abgabe klären."
+
+#: src/frontends/desktop/views/absenden-section.ts:514
+msgid "Released — cross-checks clean ({ok} ok · {warn} warning)."
+msgstr "Freigegeben — Querprüfungen sauber ({ok} ok · {warn} Warnung)."
+
+#: src/frontends/desktop/views/absenden-section.ts:517
+msgid "Released: {form}"
+msgstr "Freigegeben: {form}"
+
+#: src/frontends/desktop/views/absenden-section.ts:520
+msgid "Release failed"
+msgstr "Freigabe fehlgeschlagen"
+
+#: src/frontends/desktop/views/absenden-section.ts:549
+msgid "Test submission"
+msgstr "Test-Versand"
+
+#: src/frontends/desktop/views/absenden-section.ts:552
+msgid "Test submission failed"
+msgstr "Test-Versand fehlgeschlagen"
+
+#: src/frontends/desktop/views/absenden-section.ts:567
+#: src/frontends/desktop/views/erstattung-group.ts:94
+msgid "Refund"
+msgstr "Erstattung"
+
+#: src/frontends/desktop/views/absenden-section.ts:567
+msgid "Additional payment"
+msgstr "Nachzahlung"
+
+#: src/frontends/desktop/views/absenden-section.ts:593
+msgid "Successfully submitted"
+msgstr "Erfolgreich übermittelt"
+
+#: src/frontends/desktop/views/absenden-section.ts:595
+msgid "“{form}” has arrived bindingly at the Finanzamt."
+msgstr "„{form}“ ist verbindlich beim Finanzamt eingegangen."
+
+#: src/frontends/desktop/views/absenden-section.ts:597
+msgid "Transfer ticket: {ticket}"
+msgstr "Transferticket: {ticket}"
+
+#: src/frontends/desktop/views/absenden-section.ts:611
+msgid "Live submission failed"
+msgstr "Echt-Versand fehlgeschlagen"
+
 #: src/frontends/desktop/views/aufteilen-dialog.ts:58
 #: src/frontends/desktop/views/aufteilen-dialog.ts:160
 msgid "Period already filed"
@@ -2988,6 +3330,7 @@ msgid "The parts are deleted, the transaction counts as a whole again."
 msgstr "Die Teile werden gelöscht, die Buchung zählt wieder als Ganzes."
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:80
+#: src/frontends/desktop/views/herleitung-dialog.ts:527
 #: src/frontends/desktop/views/tx-detail-dialog.ts:286
 msgid "Remove split"
 msgstr "Aufteilung aufheben"
@@ -3010,7 +3353,7 @@ msgstr "Teile"
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:111
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:207
-#: src/frontends/desktop/views/konten-view.ts:852
+#: src/frontends/desktop/views/konten-view.ts:850
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:466
 #: src/frontends/desktop/views/umbuchen-dialog.ts:204
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:102
@@ -3023,6 +3366,7 @@ msgid "Split transaction"
 msgstr "Buchung aufteilen"
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:138
+#: src/frontends/desktop/views/herleitung-dialog.ts:482
 #: src/frontends/desktop/views/tx-detail-dialog.ts:140
 msgid "Split"
 msgstr "Aufteilen"
@@ -3043,6 +3387,7 @@ msgstr ""
 "Steuersatz. Ein Teil nimmt den Rest."
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:153
+#: src/frontends/desktop/views/herleitung-dialog.ts:463
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:536
 msgid "Amount"
 msgstr "Betrag"
@@ -3076,6 +3421,7 @@ msgid "Part {n} · Remainder"
 msgstr "Teil {n} · Rest"
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:228
+#: src/frontends/desktop/views/herleitung-dialog.ts:487
 #: src/frontends/desktop/views/tx-detail-dialog.ts:189
 #: src/frontends/desktop/views/tx-detail-dialog.ts:238
 msgid "Part {n}"
@@ -3106,6 +3452,7 @@ msgstr "Lade Beleg-Eingang …"
 #: src/frontends/desktop/views/offene-belege-view.blp:32
 #: src/frontends/desktop/views/rechnung-detail-dialog.blp:41
 #: src/frontends/desktop/views/rechnungen-view.blp:45
+#: src/frontends/desktop/views/steuererklaerung-view.blp:32
 #: src/frontends/desktop/views/transactions-view.blp:32
 #: src/frontends/desktop/views/util.ts:442
 #: src/frontends/desktop/views/util.ts:445
@@ -3171,6 +3518,7 @@ msgid "Choose the matching transaction, then confirm."
 msgstr "Passende Buchung wählen, dann bestätigen."
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:361
+#: src/frontends/desktop/views/herleitung-dialog.ts:460
 msgid "Date"
 msgstr "Datum"
 
@@ -3185,6 +3533,7 @@ msgid "Net"
 msgstr "Netto"
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:379
+#: src/frontends/desktop/views/herleitung-dialog.ts:475
 #: src/frontends/desktop/views/tx-detail-dialog.ts:183
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:144
 msgid "Source"
@@ -3231,6 +3580,8 @@ msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:482
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:119
+#: src/frontends/desktop/views/herleitung-dialog.ts:471
+#: src/frontends/desktop/views/herleitung-dialog.ts:514
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:124
 #: src/frontends/desktop/views/tx-detail-dialog.ts:182
 #: src/frontends/desktop/views/umbuchen-dialog.ts:128
@@ -3686,7 +4037,7 @@ msgid "Add receipts"
 msgstr "Belege hinzufügen"
 
 #: src/frontends/desktop/views/dokumente-view.ts:175
-#: src/frontends/desktop/views/konten-view.ts:612
+#: src/frontends/desktop/views/konten-view.ts:610
 msgid "{n} transaction"
 msgid_plural "{n} transactions"
 msgstr[0] "{n} Buchung"
@@ -4186,7 +4537,7 @@ msgstr ""
 "Abgaben bleiben erhalten — entfernt wird nur der Eintrag, nicht die Daten."
 
 #: src/frontends/desktop/views/entity-dialogs.ts:102
-#: src/frontends/desktop/views/konten-view.ts:429
+#: src/frontends/desktop/views/konten-view.ts:427
 msgid "Remove"
 msgstr "Entfernen"
 
@@ -4234,10 +4585,6 @@ msgstr ""
 "„Ja“ übernimmt Kategorie und Steuersatz der Zahlung und mindert deren "
 "Ausgabe samt Vorsteuer."
 
-#: src/frontends/desktop/views/erstattung-group.ts:94
-msgid "Refund"
-msgstr "Erstattung"
-
 #: src/frontends/desktop/views/erstattung-group.ts:100
 msgid "Refund assigned: {category}"
 msgstr "Erstattung zugeordnet: {category}"
@@ -4279,12 +4626,258 @@ msgstr[0] "{n} Kandidat"
 msgstr[1] "{n} Kandidaten"
 
 #: src/frontends/desktop/views/herleitung-dialog.blp:7
+#: src/frontends/desktop/views/herleitung-dialog.ts:142
+#: src/frontends/desktop/views/herleitung-dialog.ts:249
+#: src/frontends/desktop/views/herleitung-dialog.ts:271
 msgid "Derivation"
 msgstr "Herleitung"
 
 #: src/frontends/desktop/views/herleitung-dialog.blp:29
+#: src/frontends/desktop/views/herleitung-dialog.ts:271
 msgid "Calculating derivation …"
 msgstr "Berechne Herleitung …"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:74
+msgid "via receipt"
+msgstr "via Beleg"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:75
+msgid "via rule"
+msgstr "via Regel"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:94
+msgid "{n} via receipt"
+msgid_plural "{n} via receipts"
+msgstr[0] "{n} via Beleg"
+msgstr[1] "{n} via Beleg"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:95
+msgid "{n} via rule"
+msgid_plural "{n} via rules"
+msgstr[0] "{n} via Regel"
+msgstr[1] "{n} via Regel"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:96
+msgid "{n} manually"
+msgstr "{n} manuell"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:97
+msgid "{n} unclassified"
+msgstr "{n} unklassifiziert"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:98
+msgid "no bookings"
+msgstr "keine Buchungen"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:193
+#: src/frontends/desktop/views/herleitung-dialog.ts:231
+#: src/frontends/desktop/views/home-view.ts:186
+#: src/frontends/desktop/views/home-view.ts:197
+#: src/frontends/desktop/views/home-view.ts:209
+msgid "not computable"
+msgstr "nicht berechenbar"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:200
+msgid "Incomplete"
+msgstr "Unvollständig"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:202
+msgid "At least one item is not computable — it is not included, see below."
+msgstr "Mindestens ein Posten ist nicht berechenbar — er ist nicht enthalten, siehe unten."
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:210
+#: src/frontends/desktop/views/herleitung-dialog.ts:311
+msgid "Composition"
+msgstr "Zusammensetzung"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:231
+msgid "does not apply"
+msgstr "entfällt"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:281
+msgid "Could not calculate the derivation"
+msgstr "Herleitung konnte nicht berechnet werden"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:318
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:257
+msgid "Bookings"
+msgstr "Buchungen"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:322
+msgid "No bookings"
+msgstr "Keine Buchungen"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:366
+msgid "Rule: {rule}"
+msgstr "Regel: {rule}"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:372
+msgid "Part {n} of {total}"
+msgstr "Teil {n} von {total}"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:400
+msgid "Booking detail"
+msgstr "Buchungs-Detail"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:400
+msgid "Loading booking …"
+msgstr "Lade Buchung …"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:408
+msgid "Could not load the booking detail"
+msgstr "Buchungs-Detail konnte nicht geladen werden"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:444
+msgid "Booking updated"
+msgstr "Buchung aktualisiert"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:450
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:432
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:389
+msgid "Could not save"
+msgstr "Konnte nicht speichern"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:459
+msgid "Booking"
+msgstr "Buchung"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:461
+msgid "Counterparty"
+msgstr "Gegenseite"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:462
+#: src/frontends/desktop/views/tx-detail-dialog.ts:126
+#: src/frontends/desktop/views/zu-pruefen-view.ts:307
+msgid "Purpose"
+msgstr "Verwendungszweck"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:467
+msgid "Net (contribution)"
+msgstr "Netto (Beitrag)"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:483
+msgid "The booking is split; each part counts in its own category."
+msgstr "Die Buchung ist aufgeteilt; jeder Teil zählt in seiner eigenen Kategorie."
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:488
+msgid "remainder"
+msgstr "Rest"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:489
+msgid "this figure"
+msgstr "diese Zahl"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:490
+msgid "{rate} %"
+msgstr "{rate} %"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:491
+msgid "private, no input tax"
+msgstr "privat, keine Vorsteuer"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:508
+msgid "Reclassify"
+msgstr "Umbuchen"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:509
+msgid ""
+"Books this transaction manually to a different category (overrides receipt/"
+"rule)."
+msgstr "Bucht diese Transaktion manuell auf eine andere Kategorie (überschreibt Beleg/Regel)."
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:529
+#: src/frontends/desktop/views/tx-detail-dialog.ts:288
+msgctxt "split"
+msgid "Remove"
+msgstr "Aufheben"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:545
+#: src/frontends/desktop/views/tx-detail-dialog.ts:301
+msgctxt "refund"
+msgid "Unlink"
+msgstr "Verknüpfung lösen"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:545
+#: src/frontends/desktop/views/tx-detail-dialog.ts:301
+msgid "Take back transfer"
+msgstr "Umbuchung zurücknehmen"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:550
+#: src/frontends/desktop/views/tx-detail-dialog.ts:305
+msgctxt "button"
+msgid "Unlink"
+msgstr "Lösen"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:550
+#: src/frontends/desktop/views/tx-detail-dialog.ts:252
+#: src/frontends/desktop/views/tx-detail-dialog.ts:305
+msgid "Take back"
+msgstr "Zurücknehmen"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:559
+#: src/frontends/desktop/views/tx-detail-dialog.ts:315
+msgid "Unlinked"
+msgstr "Verknüpfung gelöst"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:559
+#: src/frontends/desktop/views/tx-detail-dialog.ts:315
+msgid "Transfer taken back"
+msgstr "Umbuchung zurückgenommen"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:565
+#: src/frontends/desktop/views/tx-detail-dialog.ts:265
+#: src/frontends/desktop/views/tx-detail-dialog.ts:319
+msgid "Could not take back"
+msgstr "Konnte nicht zurücknehmen"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:576
+#: src/frontends/desktop/views/umbuchen-dialog.ts:140
+msgid "Reason"
+msgstr "Begründung"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:577
+msgid "Why booked this way?"
+msgstr "Warum so gebucht?"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:589
+msgid "Decision log"
+msgstr "Entscheidungs-Log"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:591
+msgid "No decision yet"
+msgstr "Noch keine Entscheidung"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:620
+msgid "no receipt linked"
+msgstr "kein Beleg verknüpft"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:631
+msgid "AI note"
+msgstr "KI-Hinweis"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:667
+msgid "Transfer «{category}» taken back"
+msgstr "Umbuchung «{category}» zurückgenommen"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:667
+msgid "Reset"
+msgstr "Zurückgesetzt"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:673
+msgid "Category «{category}»"
+msgstr "Kategorie «{category}»"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:675
+msgid "AI note applied"
+msgstr "KI-Hinweis übernommen"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:676
+msgid "Note: “{note}”"
+msgstr "Notiz: „{note}“"
+
+#: src/frontends/desktop/views/herleitung-dialog.ts:680
+msgid "Decision"
+msgstr "Entscheidung"
 
 #: src/frontends/desktop/views/hinweis-handlung.ts:68
 msgid "Checked, nothing found: {what}"
@@ -4338,10 +4931,6 @@ msgstr[1] "und {n} weitere"
 msgid "Loading overview …"
 msgstr "Lade Übersicht …"
 
-#: src/frontends/desktop/views/home-view.ts:67
-msgid "Could not load the overview"
-msgstr "Übersicht konnte nicht geladen werden"
-
 #: src/frontends/desktop/views/home-view.ts:152
 msgid "Profit {year}"
 msgstr "Gewinn {year}"
@@ -4383,12 +4972,6 @@ msgstr "vsl. Nachzahlung"
 #: src/frontends/desktop/views/home-view.ts:212
 msgid "expected refund"
 msgstr "vsl. Erstattung"
-
-#: src/frontends/desktop/views/home-view.ts:186
-#: src/frontends/desktop/views/home-view.ts:197
-#: src/frontends/desktop/views/home-view.ts:209
-msgid "not computable"
-msgstr "nicht berechenbar"
 
 #: src/frontends/desktop/views/home-view.ts:199
 msgid "As of {date} · a calculation, not advice"
@@ -4469,10 +5052,6 @@ msgstr ""
 msgid "ERiC status not available: {error}"
 msgstr "ERiC-Status nicht verfügbar: {error}"
 
-#: src/frontends/desktop/views/konten-view.ts:156
-msgid "available"
-msgstr "verfügbar"
-
 #: src/frontends/desktop/views/konten-view.ts:160
 msgid ""
 "The ERiC binding of this installation is broken. Rebuild it with \"gjsify "
@@ -4489,346 +5068,358 @@ msgstr "Bibliothek nicht ladbar: {error}"
 msgid "not found — expected at {path}"
 msgstr "nicht gefunden — erwartet unter {path}"
 
-#: src/frontends/desktop/views/konten-view.ts:166
+#: src/frontends/desktop/views/konten-view.ts:165
 msgid " · missing: {names}"
 msgstr " · fehlend: {names}"
 
-#: src/frontends/desktop/views/konten-view.ts:168
+#: src/frontends/desktop/views/konten-view.ts:166
 msgid " · {n} plugin"
 msgid_plural " · {n} plugins"
 msgstr[0] " · {n} Plugin(s)"
 msgstr[1] " · {n} Plugin(s)"
 
-#: src/frontends/desktop/views/konten-view.ts:170
+#: src/frontends/desktop/views/konten-view.ts:168
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:522
 msgid "Error"
 msgstr "Fehler"
 
-#: src/frontends/desktop/views/konten-view.ts:170
+#: src/frontends/desktop/views/konten-view.ts:168
 msgid "not found"
 msgstr "nicht gefunden"
 
-#: src/frontends/desktop/views/konten-view.ts:177
+#: src/frontends/desktop/views/konten-view.ts:175
 msgid "ERiC log files"
 msgstr "ERiC-Protokolldateien"
 
-#: src/frontends/desktop/views/konten-view.ts:181
+#: src/frontends/desktop/views/konten-view.ts:179
 msgid ""
 "ERiC writes its log files locally to {path}. They stay on this computer and "
 "are passed on only in a support case and only with your explicit permission."
-msgstr "ERiC legt Protokolldateien lokal in {path} ab. Sie bleiben auf diesem Rechner und werden nur im Supportfall und nur mit deiner ausdrücklichen Erlaubnis weitergegeben."
+msgstr ""
+"ERiC legt Protokolldateien lokal in {path} ab. Sie bleiben auf diesem "
+"Rechner und werden nur im Supportfall und nur mit deiner ausdrücklichen "
+"Erlaubnis weitergegeben."
 
-#: src/frontends/desktop/views/konten-view.ts:193
+#: src/frontends/desktop/views/konten-view.ts:191
 msgid "there is no ERiC for this architecture"
 msgstr "für diese Architektur gibt es kein ERiC"
 
-#: src/frontends/desktop/views/konten-view.ts:195
+#: src/frontends/desktop/views/konten-view.ts:193
 msgid "Sending to ELSTER is not possible"
 msgstr "Absenden an ELSTER nicht möglich"
 
-#: src/frontends/desktop/views/konten-view.ts:198
+#: src/frontends/desktop/views/konten-view.ts:196
 msgid ""
 "Generating and checking the XML still works; to send, upload the XML to Mein "
 "ELSTER or start the app on an x86_64 system."
-msgstr "XML erzeugen und prüfen funktioniert weiter; zum Absenden das XML in Mein ELSTER hochladen oder die App auf einem x86_64-System starten."
+msgstr ""
+"XML erzeugen und prüfen funktioniert weiter; zum Absenden das XML in Mein "
+"ELSTER hochladen oder die App auf einem x86_64-System starten."
 
-#: src/frontends/desktop/views/konten-view.ts:208
+#: src/frontends/desktop/views/konten-view.ts:206
 msgid "Own ERiC folder (overrides ERIC_HOME and the bundled one)"
 msgstr "Eigener ERiC-Ordner (hat Vorrang vor ERIC_HOME und dem mitgelieferten)"
 
-#: src/frontends/desktop/views/konten-view.ts:223
+#: src/frontends/desktop/views/konten-view.ts:221
 msgid "Choose ERiC folder (contains lib/libericapi.so)"
 msgstr "ERiC-Ordner wählen (enthält lib/libericapi.so)"
 
 #
-#: src/frontends/desktop/views/konten-view.ts:226
+#: src/frontends/desktop/views/konten-view.ts:224
 msgid "Choose ERiC folder"
 msgstr "ERiC-Ordner wählen"
 
-#: src/frontends/desktop/views/konten-view.ts:246
+#: src/frontends/desktop/views/konten-view.ts:244
 msgid "Reset to the bundled or detected ERiC"
 msgstr "Auf mitgeliefertes oder erkanntes ERiC zurücksetzen"
 
-#: src/frontends/desktop/views/konten-view.ts:259
+#: src/frontends/desktop/views/konten-view.ts:257
 msgid "Download ERiC yourself"
 msgstr "ERiC selbst herunterladen"
 
-#: src/frontends/desktop/views/konten-view.ts:262
+#: src/frontends/desktop/views/konten-view.ts:260
 msgid ""
 "This build does not bring ERiC with it (the licence allows redistribution "
 "only in the official release). After unpacking, choose the folder here that "
 "contains lib/libericapi.so (Windows: dll/ericapi.dll). Without ERiC "
 "everything works except sending directly — generating the XML and uploading "
 "it to Mein ELSTER still does."
-msgstr "Dieser Build bringt ERiC nicht mit (die Lizenz erlaubt die Weitergabe nur im offiziellen Release). Nach dem Entpacken hier den Ordner wählen, der lib/libericapi.so (Windows: dll/ericapi.dll) enthält. Ohne ERiC funktioniert alles außer dem direkten Absenden — XML erzeugen und in Mein ELSTER hochladen geht."
+msgstr ""
+"Dieser Build bringt ERiC nicht mit (die Lizenz erlaubt die Weitergabe nur im "
+"offiziellen Release). Nach dem Entpacken hier den Ordner wählen, der lib/"
+"libericapi.so (Windows: dll/ericapi.dll) enthält. Ohne ERiC funktioniert "
+"alles außer dem direkten Absenden — XML erzeugen und in Mein ELSTER "
+"hochladen geht."
 
 #
-#: src/frontends/desktop/views/konten-view.ts:269
+#: src/frontends/desktop/views/konten-view.ts:267
 msgid "Open elster.de"
 msgstr "elster.de öffnen"
 
-#: src/frontends/desktop/views/konten-view.ts:280
+#: src/frontends/desktop/views/konten-view.ts:278
 msgid "ELSTER certificate (.pfx)"
 msgstr "ELSTER-Zertifikat (.pfx)"
 
-#: src/frontends/desktop/views/konten-view.ts:286
+#: src/frontends/desktop/views/konten-view.ts:284
 msgid "Choose certificate file"
 msgstr "Zertifikatsdatei wählen"
 
-#: src/frontends/desktop/views/konten-view.ts:289
+#: src/frontends/desktop/views/konten-view.ts:287
 msgid "Choose ELSTER certificate"
 msgstr "ELSTER-Zertifikat wählen"
 
-#: src/frontends/desktop/views/konten-view.ts:323
+#: src/frontends/desktop/views/konten-view.ts:321
 msgid "ELSTER Hersteller-ID (bundled with the app, enter your own to override)"
 msgstr ""
 "ELSTER-Hersteller-ID (mitgeliefert; eigene eintragen zum Überschreiben)"
 
-#: src/frontends/desktop/views/konten-view.ts:324
+#: src/frontends/desktop/views/konten-view.ts:322
 msgid "ELSTER Hersteller-ID (elster.de)"
 msgstr "ELSTER-Hersteller-ID (elster.de)"
 
-#: src/frontends/desktop/views/konten-view.ts:327
+#: src/frontends/desktop/views/konten-view.ts:325
 msgid "bundled"
 msgstr "mitgeliefert"
 
-#: src/frontends/desktop/views/konten-view.ts:337
+#: src/frontends/desktop/views/konten-view.ts:335
 msgid "DatenLieferant (name)"
 msgstr "DatenLieferant (Name)"
 
-#: src/frontends/desktop/views/konten-view.ts:352
+#: src/frontends/desktop/views/konten-view.ts:350
 msgid "Check"
 msgstr "Prüfen"
 
-#: src/frontends/desktop/views/konten-view.ts:362
+#: src/frontends/desktop/views/konten-view.ts:360
 msgid "Certificate path could not be saved: {error}"
 msgstr "Zertifikat-Pfad konnte nicht gespeichert werden: {error}"
 
-#: src/frontends/desktop/views/konten-view.ts:365
+#: src/frontends/desktop/views/konten-view.ts:363
 msgid "Certificate path saved"
 msgstr "Zertifikat-Pfad gespeichert"
 
-#: src/frontends/desktop/views/konten-view.ts:365
+#: src/frontends/desktop/views/konten-view.ts:363
 msgid "Certificate path removed"
 msgstr "Zertifikat-Pfad entfernt"
 
-#: src/frontends/desktop/views/konten-view.ts:377
+#: src/frontends/desktop/views/konten-view.ts:375
 msgid "{label} could not be saved: {error}"
 msgstr "{label} konnte nicht gespeichert werden: {error}"
 
-#: src/frontends/desktop/views/konten-view.ts:380
+#: src/frontends/desktop/views/konten-view.ts:378
 msgid "{label} saved"
 msgstr "{label} gespeichert"
 
-#: src/frontends/desktop/views/konten-view.ts:392
-#: src/frontends/desktop/views/konten-view.ts:409
-#: src/frontends/desktop/views/konten-view.ts:847
+#: src/frontends/desktop/views/konten-view.ts:390
+#: src/frontends/desktop/views/konten-view.ts:407
+#: src/frontends/desktop/views/konten-view.ts:845
 msgid "Certificate PIN"
 msgstr "Zertifikat-PIN"
 
-#: src/frontends/desktop/views/konten-view.ts:393
+#: src/frontends/desktop/views/konten-view.ts:391
 msgid "Keyring not available — the PIN is asked for when sending."
 msgstr "Schlüsselbund nicht verfügbar — die PIN wird beim Senden abgefragt."
 
-#: src/frontends/desktop/views/konten-view.ts:410
+#: src/frontends/desktop/views/konten-view.ts:408
 msgid "stored in the keyring"
 msgstr "im Schlüsselbund hinterlegt"
 
-#: src/frontends/desktop/views/konten-view.ts:410
+#: src/frontends/desktop/views/konten-view.ts:408
 msgid "no PIN stored"
 msgstr "keine PIN hinterlegt"
 
-#: src/frontends/desktop/views/konten-view.ts:421
+#: src/frontends/desktop/views/konten-view.ts:419
 msgid "Change"
 msgstr "Ändern"
 
-#: src/frontends/desktop/views/konten-view.ts:421
+#: src/frontends/desktop/views/konten-view.ts:419
 msgid "Store"
 msgstr "Hinterlegen"
 
-#: src/frontends/desktop/views/konten-view.ts:446
+#: src/frontends/desktop/views/konten-view.ts:444
 msgid "Certificate PIN stored in the keyring"
 msgstr "Zertifikat-PIN im Schlüsselbund hinterlegt"
 
-#: src/frontends/desktop/views/konten-view.ts:447
+#: src/frontends/desktop/views/konten-view.ts:445
 msgid "Certificate PIN could not be saved."
 msgstr "Zertifikat-PIN konnte nicht gespeichert werden."
 
-#: src/frontends/desktop/views/konten-view.ts:456
+#: src/frontends/desktop/views/konten-view.ts:454
 msgid "Certificate PIN removed"
 msgstr "Zertifikat-PIN entfernt"
 
-#: src/frontends/desktop/views/konten-view.ts:465
+#: src/frontends/desktop/views/konten-view.ts:463
 msgid "ERiC path could not be saved: {error}"
 msgstr "ERiC-Pfad konnte nicht gespeichert werden: {error}"
 
-#: src/frontends/desktop/views/konten-view.ts:468
+#: src/frontends/desktop/views/konten-view.ts:466
 msgid "ERiC path saved"
 msgstr "ERiC-Pfad gespeichert"
 
 #
-#: src/frontends/desktop/views/konten-view.ts:488
+#: src/frontends/desktop/views/konten-view.ts:486
 msgid "Active connections"
 msgstr "Aktive Verbindungen"
 
-#: src/frontends/desktop/views/konten-view.ts:494
+#: src/frontends/desktop/views/konten-view.ts:491
 msgid "{total} account · {live} live"
 msgid_plural "{total} accounts · {live} live"
 msgstr[0] "{total} Konto · {live} live"
 msgstr[1] "{total} Konten · {live} live"
 
 #
-#: src/frontends/desktop/views/konten-view.ts:505
+#: src/frontends/desktop/views/konten-view.ts:503
 msgid "Check connections"
 msgstr "Anbindungen prüfen"
 
-#: src/frontends/desktop/views/konten-view.ts:514
-#: src/frontends/desktop/views/konten-view.ts:533
+#: src/frontends/desktop/views/konten-view.ts:512
+#: src/frontends/desktop/views/konten-view.ts:531
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.blp:7
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:244
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:517
 msgid "Add account"
 msgstr "Konto hinzufügen"
 
-#: src/frontends/desktop/views/konten-view.ts:526
+#: src/frontends/desktop/views/konten-view.ts:524
 msgid "No accounts yet"
 msgstr "Noch keine Konten"
 
-#: src/frontends/desktop/views/konten-view.ts:529
+#: src/frontends/desktop/views/konten-view.ts:527
 msgid ""
 "Import a bank statement (CAMT, PayPal) or connect Qonto or your bank via "
 "FinTS — then the app calculates from your transactions."
-msgstr "Importiere einen Kontoauszug (CAMT, PayPal) oder verbinde Qonto bzw. deine Bank über FinTS — danach rechnet die App aus deinen Buchungen."
+msgstr ""
+"Importiere einen Kontoauszug (CAMT, PayPal) oder verbinde Qonto bzw. deine "
+"Bank über FinTS — danach rechnet die App aus deinen Buchungen."
 
-#: src/frontends/desktop/views/konten-view.ts:563
+#: src/frontends/desktop/views/konten-view.ts:561
 msgid "Accounts could not be reloaded: {error}"
 msgstr "Konten konnten nicht neu geladen werden: {error}"
 
-#: src/frontends/desktop/views/konten-view.ts:599
+#: src/frontends/desktop/views/konten-view.ts:597
 msgctxt "account source"
 msgid "live"
 msgstr "live"
 
-#: src/frontends/desktop/views/konten-view.ts:599
+#: src/frontends/desktop/views/konten-view.ts:597
 msgctxt "account source"
 msgid "File"
 msgstr "Datei"
 
-#: src/frontends/desktop/views/konten-view.ts:609
+#: src/frontends/desktop/views/konten-view.ts:607
 msgid "Synced {when}"
 msgstr "Synchronisiert {when}"
 
-#: src/frontends/desktop/views/konten-view.ts:611
+#: src/frontends/desktop/views/konten-view.ts:609
 msgid "Imported {range}"
 msgstr "Importiert {range}"
 
 #. TRANSLATORS: Tooltip on the headerbar button that syncs Qonto and Paperless
-#: src/frontends/desktop/views/konten-view.ts:629
-#: src/frontends/desktop/views/konten-view.ts:718
+#: src/frontends/desktop/views/konten-view.ts:627
+#: src/frontends/desktop/views/konten-view.ts:716
 #: src/frontends/desktop/window.blp:152
 msgid "Sync"
 msgstr "Abgleichen"
 
-#: src/frontends/desktop/views/konten-view.ts:640
-#: src/frontends/desktop/views/konten-view.ts:760
+#: src/frontends/desktop/views/konten-view.ts:638
+#: src/frontends/desktop/views/konten-view.ts:758
 msgid "Disconnect"
 msgstr "Verbindung trennen"
 
 #
-#: src/frontends/desktop/views/konten-view.ts:679
+#: src/frontends/desktop/views/konten-view.ts:677
 msgid "All connections reachable"
 msgstr "Alle Anbindungen erreichbar"
 
 #
-#: src/frontends/desktop/views/konten-view.ts:679
+#: src/frontends/desktop/views/konten-view.ts:677
 msgid "Not all connections reachable"
 msgstr "Nicht alle Anbindungen erreichbar"
 
 #
-#: src/frontends/desktop/views/konten-view.ts:685
+#: src/frontends/desktop/views/konten-view.ts:683
 msgid "Check failed: {error}"
 msgstr "Prüfung fehlgeschlagen: {error}"
 
-#: src/frontends/desktop/views/konten-view.ts:709
+#: src/frontends/desktop/views/konten-view.ts:707
 msgid "Syncing …"
 msgstr "Synchronisiere …"
 
-#: src/frontends/desktop/views/konten-view.ts:719
+#: src/frontends/desktop/views/konten-view.ts:717
 msgid "Sync failed: {error}"
 msgstr "Sync fehlgeschlagen: {error}"
 
-#: src/frontends/desktop/views/konten-view.ts:737
+#: src/frontends/desktop/views/konten-view.ts:735
 msgid "Disconnected · {n} transaction deleted"
 msgid_plural "Disconnected · {n} transactions deleted"
 msgstr[0] "Getrennt · {n} Buchung gelöscht"
 msgstr[1] "Getrennt · {n} Buchungen gelöscht"
 
-#: src/frontends/desktop/views/konten-view.ts:743
+#: src/frontends/desktop/views/konten-view.ts:741
 msgid "Sync stopped — data kept"
 msgstr "Sync gestoppt — Daten behalten"
 
-#: src/frontends/desktop/views/konten-view.ts:747
+#: src/frontends/desktop/views/konten-view.ts:745
 msgid "Disconnect failed"
 msgstr "Trennen fehlgeschlagen"
 
-#: src/frontends/desktop/views/konten-view.ts:763
+#: src/frontends/desktop/views/konten-view.ts:761
 msgid "{source} · {ref} — {n} transaction. What should happen?"
 msgid_plural "{source} · {ref} — {n} transactions. What should happen?"
 msgstr[0] "{source} · {ref} — {n} Buchung. Was soll passieren?"
 msgstr[1] "{source} · {ref} — {n} Buchungen. Was soll passieren?"
 
-#: src/frontends/desktop/views/konten-view.ts:771
+#: src/frontends/desktop/views/konten-view.ts:769
 msgid "Only stop syncing"
 msgstr "Nur Sync stoppen"
 
-#: src/frontends/desktop/views/konten-view.ts:772
+#: src/frontends/desktop/views/konten-view.ts:770
 msgid "Delete everything"
 msgstr "Alles löschen"
 
 #
-#: src/frontends/desktop/views/konten-view.ts:796
+#: src/frontends/desktop/views/konten-view.ts:794
 msgid "never"
 msgstr "noch nie"
 
-#: src/frontends/desktop/views/konten-view.ts:802
+#: src/frontends/desktop/views/konten-view.ts:800
 msgid "{n} minute ago"
 msgid_plural "{n} minutes ago"
 msgstr[0] "vor {n} Minute"
 msgstr[1] "vor {n} Minuten"
 
-#: src/frontends/desktop/views/konten-view.ts:804
+#: src/frontends/desktop/views/konten-view.ts:802
 msgid "{n} hour ago"
 msgid_plural "{n} hours ago"
 msgstr[0] "vor {n} Stunde"
 msgstr[1] "vor {n} Stunden"
 
-#: src/frontends/desktop/views/konten-view.ts:806
+#: src/frontends/desktop/views/konten-view.ts:804
 msgid "{n} day ago"
 msgid_plural "{n} days ago"
 msgstr[0] "vor {n} Tag"
 msgstr[1] "vor {n} Tagen"
 
-#: src/frontends/desktop/views/konten-view.ts:807
+#: src/frontends/desktop/views/konten-view.ts:805
 msgid "on {date}"
 msgstr "am {date}"
 
-#: src/frontends/desktop/views/konten-view.ts:813
+#: src/frontends/desktop/views/konten-view.ts:811
 msgid "{label}: nothing to sync"
 msgstr "{label}: nichts zu synchronisieren"
 
-#: src/frontends/desktop/views/konten-view.ts:816
+#: src/frontends/desktop/views/konten-view.ts:814
 msgid "{label}: error — {errors}"
 msgstr "{label}: Fehler — {errors}"
 
-#: src/frontends/desktop/views/konten-view.ts:819
+#: src/frontends/desktop/views/konten-view.ts:817
 msgid "{label}: +{added} new · {updated} updated"
 msgstr "{label}: +{added} neu · {updated} aktualisiert"
 
-#: src/frontends/desktop/views/konten-view.ts:843
+#: src/frontends/desktop/views/konten-view.ts:841
 msgid "Store certificate PIN"
 msgstr "Zertifikat-PIN hinterlegen"
 
-#: src/frontends/desktop/views/konten-view.ts:844
+#: src/frontends/desktop/views/konten-view.ts:842
 msgid "{note} Never in clear text in the configuration."
 msgstr "{note} Nie im Klartext in der Konfiguration."
 
@@ -5209,10 +5800,6 @@ msgstr "diese Stufe ist schon als versandt vermerkt"
 #: src/frontends/desktop/views/mahnung-dialog.ts:165
 msgid "Draft copied to the clipboard"
 msgstr "Entwurf in die Zwischenablage kopiert"
-
-#: src/frontends/desktop/views/mahnung-dialog.ts:172
-msgid "Draft"
-msgstr "Entwurf"
 
 #: src/frontends/desktop/views/mahnung-dialog.ts:194
 msgid "Mark level {level} as sent?"
@@ -5729,6 +6316,7 @@ msgid "Invoice saved"
 msgstr "Rechnung gespeichert"
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:751
+#: src/frontends/desktop/views/steuererklaerung-view.ts:551
 msgid "PDF not available"
 msgstr "PDF nicht verfügbar"
 
@@ -6660,6 +7248,92 @@ msgstr "Bitte einen Namen eingeben."
 msgid "Optional. The tax office is already part of the tax number."
 msgstr "Optional. Das Finanzamt steckt schon in der Steuernummer."
 
+#: src/frontends/desktop/views/steuererklaerung-view.blp:22
+msgid "Checking the tax return …"
+msgstr "Prüfe Steuererklärung …"
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:112
+msgid "The tax return could not be checked"
+msgstr "Steuererklärung konnte nicht geprüft werden"
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:290
+msgid "Tax return {year}"
+msgstr "Steuererklärung {year}"
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:300
+msgid "Ready to file"
+msgstr "Abgabebereit"
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:300
+msgid "Not yet ready to file"
+msgstr "Noch nicht abgabebereit"
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:311
+msgid ""
+"Estimate — check PDF + E10 XML; filing via ELSTER direct submission (release "
+"required) or web form"
+msgstr "Schätzung — Prüf-PDF + E10-XML; Abgabe via ELSTER-Direktversand (Freigabe erforderlich) oder Web-Formular"
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:313
+msgid ""
+"{done}/{total} forms · check PDF as a template — type the figures into Mein "
+"ELSTER"
+msgstr "{done}/{total} Formulare · Prüf-PDF als Vorlage — Werte in Mein ELSTER eintragen"
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:331
+msgid "{n} cross-check with an error — resolve before filing."
+msgid_plural "{n} cross-checks with errors — resolve before filing."
+msgstr[0] "{n} Querprüfung(en) mit Fehler — vor Abgabe klären."
+msgstr[1] "{n} Querprüfung(en) mit Fehler — vor Abgabe klären."
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:350
+msgid "Tax topics"
+msgstr "Steuer-Themen"
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:392
+msgid "Calculation"
+msgstr "Berechnung"
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:431
+msgid "Cross-checks"
+msgstr "Querprüfungen"
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:437
+msgid "Also check manually"
+msgstr "Zusätzlich manuell prüfen"
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:451
+msgid "No open points in this step."
+msgstr "Keine offenen Punkte in diesem Schritt."
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:491
+msgid "{ok} ok · {warn} warning(s) · {error} error(s)"
+msgstr "{ok} ok · {warn} Warnung(en) · {error} Fehler"
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:496
+msgid "not ready to file until the errors are resolved."
+msgstr "nicht abgabebereit, bis die Fehler geklärt sind."
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:497
+msgid "check the warnings before filing."
+msgstr "Warnungen vor der Abgabe prüfen."
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:498
+msgid "no discrepancies found."
+msgstr "keine Abweichungen gefunden."
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:511
+msgid "expected {amount} €"
+msgstr "erwartet {amount} €"
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:512
+msgid "actual {amount} €"
+msgstr "ist {amount} €"
+
+#: src/frontends/desktop/views/steuererklaerung-view.ts:532
+msgid "Save check data sheet as PDF"
+msgstr "Prüf-Datenblatt als PDF speichern"
+
 #: src/frontends/desktop/views/support-dialog.ts:25
 msgid "Thank you for using Steuererklärung"
 msgstr "Danke, dass du Steuererklärung nutzt"
@@ -6831,11 +7505,6 @@ msgstr "Ausgabe"
 msgid "Value date"
 msgstr "Wertstellung"
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:126
-#: src/frontends/desktop/views/zu-pruefen-view.ts:307
-msgid "Purpose"
-msgstr "Verwendungszweck"
-
 #: src/frontends/desktop/views/tx-detail-dialog.ts:136
 msgid "Classification (EÜR)"
 msgstr "Klassifizierung (EÜR)"
@@ -6891,46 +7560,9 @@ msgstr "Keine Zuordnung und keine Regel"
 msgid "Take back assignment"
 msgstr "Zuordnung zurücknehmen"
 
-#: src/frontends/desktop/views/tx-detail-dialog.ts:252
-#: src/frontends/desktop/views/tx-detail-dialog.ts:305
-msgid "Take back"
-msgstr "Zurücknehmen"
-
 #: src/frontends/desktop/views/tx-detail-dialog.ts:255
 msgid "Take back assignment: {what}"
 msgstr "Zuordnung zurücknehmen: {what}"
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:265
-#: src/frontends/desktop/views/tx-detail-dialog.ts:319
-msgid "Could not take back"
-msgstr "Konnte nicht zurücknehmen"
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:288
-msgctxt "split"
-msgid "Remove"
-msgstr "Aufheben"
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:301
-#: src/frontends/desktop/views/vertrag-detail-dialog.ts:309
-msgid "Unlink"
-msgstr "Zuordnung lösen"
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:301
-msgid "Take back transfer"
-msgstr "Umbuchung zurücknehmen"
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:305
-msgctxt "button"
-msgid "Unlink"
-msgstr "Lösen"
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:315
-msgid "Unlinked"
-msgstr "Verknüpfung gelöst"
-
-#: src/frontends/desktop/views/tx-detail-dialog.ts:315
-msgid "Transfer taken back"
-msgstr "Umbuchung zurückgenommen"
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:328
 msgid "Receipt (Paperless)"
@@ -7024,10 +7656,6 @@ msgstr "Lade Kategorien …"
 #: src/frontends/desktop/views/umbuchen-dialog.ts:129
 msgid "A manual classification wins over receipt and rule."
 msgstr "Eine manuelle Buchung gewinnt über Beleg und Regel."
-
-#: src/frontends/desktop/views/umbuchen-dialog.ts:140
-msgid "Reason"
-msgstr "Begründung"
 
 #: src/frontends/desktop/views/umbuchen-dialog.ts:156
 msgid "Remember"
@@ -7420,10 +8048,6 @@ msgstr "Nichts fällt auf"
 msgid "Every expected debit is there and the amount matches."
 msgstr "Jede erwartete Abbuchung ist da und der Betrag stimmt."
 
-#: src/frontends/desktop/views/vertrag-detail-dialog.ts:257
-msgid "Bookings"
-msgstr "Buchungen"
-
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:259
 msgid ""
 "Debits that match this contract. Linking one is a decision — the matching "
@@ -7464,6 +8088,10 @@ msgstr "Betrag abweichend"
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:307
 msgid "linked"
 msgstr "zugeordnet"
+
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:309
+msgid "Unlink"
+msgstr "Zuordnung lösen"
 
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:309
 msgid "Drop the decision — the booking stays a candidate"
@@ -7540,11 +8168,6 @@ msgstr "Dokument verknüpfen (Referenz)"
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:428
 msgid "Contract updated from the document"
 msgstr "Vertrag aus dem Dokument aktualisiert"
-
-#: src/frontends/desktop/views/vertrag-detail-dialog.ts:432
-#: src/frontends/desktop/views/vertrag-form-dialog.ts:389
-msgid "Could not save"
-msgstr "Konnte nicht speichern"
 
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:441
 msgid "Document attached"
@@ -8014,6 +8637,14 @@ msgstr "{old} → {new}"
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:205
 msgid "{value} — already recorded that way"
 msgstr "{value} — schon so eingetragen"
+
+#: src/frontends/desktop/views/vor-abgabe-group.ts:69
+msgid "Clear before filing"
+msgstr "Vor der Abgabe klären"
+
+#: src/frontends/desktop/views/vor-abgabe-group.ts:70
+msgid "Notices, not a block — nothing changes until you act."
+msgstr "Hinweise, keine Sperre — geändert wird erst mit einer Handlung."
 
 #
 #: src/frontends/desktop/views/welcome.ts:123
