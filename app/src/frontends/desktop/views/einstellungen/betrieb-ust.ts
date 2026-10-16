@@ -22,7 +22,7 @@ import type { AppEntity } from '../../entities.ts';
 import { comboRow, entryRow, spinRow, toggleRow, type SettingsHost } from './rows.ts';
 import { validateSteuernummer } from '../../../../core/actions/validate-steuernummer.ts';
 import { helpFor } from '../../widgets/glossary-help.ts';
-import { _ } from '../../i18n.ts';
+import { _, fmt } from '../../i18n.ts';
 
 // ── Betrieb (Stammdaten) ────────────────────────────────────────────────────────────────────────
 
@@ -44,37 +44,43 @@ interface BetriebWidgets {
 export function buildBetriebGroup(host: SettingsHost, entity: AppEntity, elster: ElsterConfig): Adw.PreferencesGroup {
     const b = elster.betrieb;
     const group = new Adw.PreferencesGroup({
-        title: 'Betrieb (Stammdaten)',
-        description: 'Angaben für die Anlage-EÜR / Steuererklärung.',
+        title: _('Business (master data)'),
+        description: _('Details for the Anlage EÜR / tax return.'),
     });
 
     const save = () => saveBetriebFromRows(host, entity, w);
     const mk = (title: string, text: string | undefined) => entryRow(host, title, text ?? '', save);
-    const name = mk('Name', b?.name);
-    const strasse = mk('Straße', b?.strasse);
-    const hausnummer = mk('Hausnummer', b?.hausnummer);
-    const plz = mk('PLZ', b?.plz);
-    const ort = mk('Ort', b?.ort);
-    const art = mk('Art der Tätigkeit', b?.art);
+    const name = mk(_('Name'), b?.name);
+    const strasse = mk(_('Street'), b?.strasse);
+    const hausnummer = mk(_('House number'), b?.hausnummer);
+    const plz = mk(_('Postcode'), b?.plz);
+    const ort = mk(_('City'), b?.ort);
+    const art = mk(_('Type of activity'), b?.art);
     // Two identifiers that usually carry the SAME value (see elster-config.ts): ELSTER's W-IdNr
     // fields take the 11-character core `DE`+9 digits — never the -00001 Unterscheidungsmerkmal.
-    const widnr = mk('W-IdNr, 11-stellig ohne -00001 (DE123456789)', b?.widnr);
-    const ustIdnr = mk('USt-IdNr (DE123456789)', b?.ust_idnr);
+    const widnr = mk(_('W-IdNr, 11 characters without -00001 (DE123456789)'), b?.widnr);
+    const ustIdnr = mk(_('USt-IdNr (DE123456789)'), b?.ust_idnr);
     // Two ELSTER code fields the form REQUIRES and nobody knows by heart. They are stored as the
     // codes ELSTER wants and shown as what they mean; the defaults (GbR / Gewerbebetrieb) are what
     // the config falls back to, so an untouched combo files the same value it always did.
-    const rechtsform = codeRow(host, 'Rechtsform', RECHTSFORMEN, b?.rechtsform ?? DEFAULT_RECHTSFORM, save);
-    const einkunftsart = codeRow(host, 'Einkunftsart', EINKUNFTSARTEN, b?.einkunftsart ?? DEFAULT_EINKUNFTSART, save);
+    const rechtsform = codeRow(host, _('Legal form'), RECHTSFORMEN, b?.rechtsform ?? DEFAULT_RECHTSFORM, save);
+    const einkunftsart = codeRow(
+        host,
+        _('Type of income'),
+        EINKUNFTSARTEN,
+        b?.einkunftsart ?? DEFAULT_EINKUNFTSART,
+        save,
+    );
     const w: BetriebWidgets = { name, strasse, hausnummer, plz, ort, art, widnr, ustIdnr, rechtsform, einkunftsart };
     for (const r of [name, strasse, hausnummer, plz, ort, art, widnr, ustIdnr, rechtsform, einkunftsart]) group.add(r);
     group.add(steuernummerRow(host, entity, elster));
     // The Unternehmereigenschaft window. The END date already had a row (it drives the closing
     // year); the START date decides which years the program may file at all and had none.
     group.add(
-        entryRow(host, 'Betrieb eröffnet am (JJJJ-MM-TT)', elster.business_start_date ?? '', (t) => {
+        entryRow(host, _('Business opened on (YYYY-MM-DD)'), elster.business_start_date ?? '', (t) => {
             const date = t.trim();
             if (date && !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-                host.banner('Das Eröffnungsdatum muss JJJJ-MM-TT sein, z. B. 2019-04-01.');
+                host.banner(_('The opening date must be YYYY-MM-DD, e.g. 2019-04-01.'));
                 return;
             }
             host.saveWith(
@@ -95,7 +101,7 @@ const RECHTSFORMEN: ReadonlyArray<readonly [code: string, label: string]> = [
     // Short forms on purpose: the row renders `label (code)` in a ComboRow whose value column
     // ellipsises, and „Gesellschaft bürgerlichen Rechts (270)" came out as „Gesellschaft
     // bürgerlich…" — the code, the part that decides the filing, was the half that got cut.
-    ['110', 'Einzelunternehmen'],
+    ['110', _('Sole proprietorship')],
     ['270', 'GbR'],
     ['271', 'OHG'],
     ['280', 'KG'],
@@ -106,9 +112,9 @@ const DEFAULT_RECHTSFORM = '270';
 
 /** ELSTER Einkunftsart codes (E6000603). */
 const EINKUNFTSARTEN: ReadonlyArray<readonly [code: string, label: string]> = [
-    ['1', 'Land- und Forstwirtschaft'],
-    ['2', 'Gewerbebetrieb'],
-    ['3', 'Selbständige Arbeit'],
+    ['1', _('Agriculture and forestry')],
+    ['2', _('Trade or business')],
+    ['3', _('Self-employment')],
 ];
 const DEFAULT_EINKUNFTSART = '2';
 
@@ -127,7 +133,7 @@ function codeRow(
     onChange: () => void,
 ): Adw.ComboRow {
     const known = codes.some(([code]) => code === current);
-    const all = known ? [...codes] : [...codes, [current, `Code ${current}`] as const];
+    const all = known ? [...codes] : [...codes, [current, fmt(_('Code {code}'), { code: current })] as const];
     const row = comboRow(
         host,
         title,
@@ -163,7 +169,7 @@ function selectedCode(row: Adw.ComboRow, fallback: string): string {
  * is a shape check. Calling the latter "valid" would be a promise it cannot keep.
  */
 function steuernummerRow(host: SettingsHost, entity: AppEntity, elster: ElsterConfig): Adw.EntryRow {
-    const row = new Adw.EntryRow({ title: 'Steuernummer' });
+    const row = new Adw.EntryRow({ title: _('Tax number') });
     row.set_show_apply_button(true);
     row.set_text(elster.tax_number ?? '');
     row.connect('apply', () => {
@@ -173,7 +179,7 @@ function steuernummerRow(host: SettingsHost, entity: AppEntity, elster: ElsterCo
             if (!check.ok) {
                 // NOT saved on a failed check: an unusable Steuernummer in the manifest is worse
                 // than the old one, because everything downstream keeps believing it.
-                host.banner(`Steuernummer nicht übernommen — ${check.message}`);
+                host.banner(fmt(_('Tax number not applied — {reason}'), { reason: check.message }));
                 return;
             }
             host.saveWith(() => saveTaxNumber(entity, value), { clearCache: true });
@@ -186,20 +192,18 @@ function steuernummerRow(host: SettingsHost, entity: AppEntity, elster: ElsterCo
 function saveBetriebFromRows(host: SettingsHost, entity: AppEntity, w: BetriebWidgets): void {
     const plz = (w.plz.get_text() ?? '').trim();
     if (!/^\d{5}$/.test(plz)) {
-        host.banner('PLZ muss 5-stellig sein.');
+        host.banner(_('The postcode must have 5 digits.'));
         return;
     }
     const hausnummer = (w.hausnummer.get_text() ?? '').trim();
     const widnr = (w.widnr.get_text() ?? '').trim();
     const ustIdnr = (w.ustIdnr.get_text() ?? '').trim();
     if (widnr && !/^DE\d{9}$/.test(widnr)) {
-        host.banner(
-            'W-IdNr muss DE + 9 Ziffern sein (11 Zeichen) — ELSTER nimmt das Unterscheidungsmerkmal „-00001" nicht.',
-        );
+        host.banner(_('The W-IdNr must be DE + 9 digits (11 characters) — ELSTER does not take the “-00001” suffix.'));
         return;
     }
     if (ustIdnr && !/^DE\d{9}$/.test(ustIdnr)) {
-        host.banner('USt-IdNr muss DE + 9 Ziffern sein.');
+        host.banner(_('The USt-IdNr must be DE + 9 digits.'));
         return;
     }
     const betrieb: ElsterBetrieb = {
@@ -221,18 +225,18 @@ function saveBetriebFromRows(host: SettingsHost, entity: AppEntity, w: BetriebWi
 
 /** The Umsatzsteuer flags/values: prepaid VAT, taxation basis, test mode, Dauerfristverlängerung. */
 export function buildUstGroup(host: SettingsHost, entity: AppEntity, elster: ElsterConfig): Adw.PreferencesGroup {
-    const group = helpFor(new Adw.PreferencesGroup({ title: 'Umsatzsteuer' }), 'ust-zahllast');
+    const group = helpFor(new Adw.PreferencesGroup({ title: _('VAT') }), 'ust-zahllast');
     const prepaid = spinRow(
         host,
-        'Bereits gezahlte USt-Vorauszahlungen (€)',
+        _('VAT prepayments already made (€)'),
         elster.uste?.prepaid_vat ?? 0,
         { digits: 2, lower: -100_000_000, upper: 100_000_000 },
         (v) => host.saveWith(() => saveUste(entity, { prepaid_vat: v }), { clearCache: true }),
     );
     const basis = comboRow(
         host,
-        'Versteuerungsart',
-        ['Ist-Versteuerung', 'Soll-Versteuerung'],
+        _('Taxation basis'),
+        [_('Cash accounting (Ist)'), _('Accrual accounting (Soll)')],
         elster.taxation_basis === 'soll' ? 1 : 0,
         (i) =>
             host.saveWith(() => saveFlags(entity, { taxation_basis: i === 1 ? 'soll' : 'ist' }), {
@@ -241,12 +245,12 @@ export function buildUstGroup(host: SettingsHost, entity: AppEntity, elster: Els
     );
     const testMode = toggleRow(
         host,
-        'Test-Modus (ELSTER Testmerker)',
-        'Übermittlungen gehen an den ELSTER-Testserver.',
+        _('Test mode (ELSTER Testmerker)'),
+        _('Transmissions go to the ELSTER test server.'),
         elster.test_mode,
         (on) => host.saveWith(() => saveFlags(entity, { test_mode: on }), { clearCache: true }),
     );
-    const dfv = toggleRow(host, 'USt-Dauerfristverlängerung', null, elster.ust_dauerfristverlaengerung, (on) =>
+    const dfv = toggleRow(host, _('VAT permanent deadline extension'), null, elster.ust_dauerfristverlaengerung, (on) =>
         host.saveWith(() => saveFlags(entity, { ust_dauerfristverlaengerung: on }), { clearCache: true }),
     );
     const befreit = toggleRow(
@@ -258,7 +262,7 @@ export function buildUstGroup(host: SettingsHost, entity: AppEntity, elster: Els
     );
     const months = spinRow(
         host,
-        'Fristverlängerung (Monate)',
+        _('Deadline extension (months)'),
         elster.deadline_extension_months ?? 0,
         { digits: 0, lower: 0, upper: 12 },
         (v) =>
