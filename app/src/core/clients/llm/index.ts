@@ -12,6 +12,7 @@
 
 import { extractJsonCandidate, parseJsonLeniently } from '@steuererklaerung/shared';
 
+import { assistantNotOfferedMessage, assistantOffered } from '../../config/assistant-offered.ts';
 import { ClaudeAgentProvider } from './claude-agent-provider.ts';
 import { AiJobError } from './job-error.ts';
 import { OpencodeProvider } from './opencode-provider.ts';
@@ -57,9 +58,15 @@ export function setLLMProviderOverride(provider: LLMProvider | null): void {
  * Build the configured LLM provider. Defaults to the Claude Agent SDK
  * (subscription auth). Throws on an unknown provider name, and with
  * {@link AI_NOT_CONFIGURED_MESSAGE} when AI is switched off (`LLM_PROVIDER=none`).
+ *
+ * This is the one place every AI job passes through, so it is also where a build without the
+ * assistant ({@link assistantOffered}) stops: no job that would talk to a provider can start,
+ * whatever `LLM_PROVIDER` says. The test seam above it is checked first — a test that injects
+ * its own provider never reaches a real one anyway.
  */
 export function getLLMProvider(opts: GetLLMProviderOptions = {}): LLMProvider {
     if (providerOverride) return providerOverride;
+    if (!assistantOffered()) throw new Error(assistantNotOfferedMessage());
     const name = (opts.provider ?? process.env.LLM_PROVIDER ?? 'claude').trim().toLowerCase();
     if (AI_OFF_NAMES.has(name)) throw new Error(AI_NOT_CONFIGURED_MESSAGE);
     switch (name) {

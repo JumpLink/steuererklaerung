@@ -79,7 +79,8 @@ export interface DocumentFilters {
     direction?: 'incoming' | 'outgoing';
     linked?: 'yes' | 'no';
 }
-export type Meta = MetaInfo & { assistant: boolean };
+/** `assistantOffered` false = this build has no built-in assistant at all; `assistant` is then always false. */
+export type Meta = MetaInfo & { assistant: boolean; assistantOffered: boolean };
 export interface TransactionsResponse {
     year: number;
     rows: TxRow[];

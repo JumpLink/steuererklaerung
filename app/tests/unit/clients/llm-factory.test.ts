@@ -1,8 +1,14 @@
-import { describe, it, expect } from '@gjsify/unit';
+import { describe, it, expect, beforeEach, afterEach } from '@gjsify/unit';
+import { setAssistantOfferedOverride } from '../../../src/core/config/assistant-offered.ts';
 import { getLLMProvider, ClaudeAgentProvider } from '../../../src/core/clients/llm/index.ts';
 
 export default async () => {
     await describe('getLLMProvider', async () => {
+        // Which provider gets built is only a question in a build that offers the assistant; that
+        // a build without one builds none is assistant-offered.test.ts.
+        beforeEach(() => setAssistantOfferedOverride(true));
+        afterEach(() => setAssistantOfferedOverride(null));
+
         await it('defaults to the Claude Agent provider', async () => {
             const p = getLLMProvider({ provider: 'claude' });
             expect(p).toBeInstanceOf(ClaudeAgentProvider);

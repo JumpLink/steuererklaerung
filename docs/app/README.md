@@ -8,6 +8,9 @@ Rundgang zeigt jeden Bildschirm und erklärt, wofür er da ist.
 - **App-Id:** `eu.jumplink.Steuererklaerung` · **Untertitel:** „Native Vorschau" — sie ist eine.
 - **Stand heute:** **lesen und prüfen zuerst.** Jede Ansicht zeigt und prüft; geschrieben wird nur
   an wenigen Stellen (Einstellungen, Beleg-Eingang, Anlageverzeichnis). Die Abgabe läuft über die CLI.
+- **Ohne eingebauten Assistenten.** 0.1.0 bietet ihn nicht an — kein Stern, kein Panel, kein
+  Schalter; der MCP-Server für selbst betriebene Assistenten bleibt. Wo unten vom Assistenten die
+  Rede ist, beschreibt das den Stand ab 0.2: [ki-und-mcp.md](ki-und-mcp.md).
 - Quellen und Architektur: [`app/src/frontends/desktop/README.md`](../../app/src/frontends/desktop/README.md).
 
 > **Alle Bilder stammen aus der Demo-Entität.** Erfundene Firma (*Fischer & Weber GbR*),

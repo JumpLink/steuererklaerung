@@ -1,5 +1,12 @@
 # KI-Assistent und MCP-Server — zwei Schalter
 
+> **In 0.1.0 gibt es nur den zweiten Schalter.** Der eingebaute KI-Assistent wird in dieser
+> Version **nicht angeboten**: kein Panel, kein Stern, kein Schalter in den Einstellungen, und
+> keine Aufgabe ruft im Hintergrund ein LLM. Entschieden wird das an einer Stelle,
+> `ASSISTANT_OFFERED` in `app/src/core/config/assistant-offered.ts`. Der **MCP-Server** bleibt:
+> Ein Assistent, den die Person selbst betreibt, darf sich weiterhin verbinden. Alles Weitere auf
+> dieser Seite beschreibt den Stand, der mit 0.2 zurückkommt.
+
 Die App kennt zwei voneinander unabhängige Wege, eine KI an die eigenen Zahlen zu lassen. Jeder hat
 genau einen Schalter.
 

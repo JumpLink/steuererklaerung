@@ -41,6 +41,7 @@ import {
 } from '@steuererklaerung/store';
 
 import { completeJson, getLLMProvider } from '../clients/llm/index.ts';
+import { assistantNotOfferedMessage, assistantOffered } from '../config/assistant-offered.ts';
 import { isAssistantEnabled } from '../config/assistant-preference.ts';
 import { absent } from '../lib/ai-schema.ts';
 import { _ } from '../lib/i18n.ts';
@@ -299,7 +300,9 @@ export function contractExtractionAvailable(): boolean {
 
 /** The person switched the assistant off; same wording as every other AI-off refusal. */
 const assistantOffMessage = () =>
-    _('The AI assistant is switched off. Switch it on under Settings → General, or enter the values by hand.');
+    assistantOffered()
+        ? _('The AI assistant is switched off. Switch it on under Settings → General, or enter the values by hand.')
+        : `${assistantNotOfferedMessage()} ${_('Enter the values by hand.')}`;
 
 /**
  * Translate a contract document ref (`paperless:<id>`, or a built-in id) into the id the resolved

@@ -35,6 +35,8 @@ export class BhSettingsView extends HTMLElement {
     private entityName = '';
     private dms: EntityDms | null = null;
     private invoicing: EntityInvoicing | null = null;
+    /** Whether this build offers the built-in assistant at all; false drops its whole section. */
+    private assistantOffered = false;
 
     async connectedCallback() {
         this.entity = this.getAttribute('entity') ?? '';
@@ -52,6 +54,7 @@ export class BhSettingsView extends HTMLElement {
             this.dms = dms;
             this.invoicing = invoicing;
             this.entityName = meta?.entities.find((e) => e.id === this.entity)?.name ?? this.entity;
+            this.assistantOffered = meta?.assistantOffered ?? false;
             this.render();
         } catch (err) {
             this.innerHTML = `<adw-card class="bh-error">Fehler: ${esc(err instanceof Error ? err.message : err)}</adw-card>`;
@@ -149,13 +152,17 @@ export class BhSettingsView extends HTMLElement {
             .join('');
         const total = this.catalog.reduce((n, c) => n + c.tools.length, 0);
 
-        this.innerHTML = `
-
+        const assistantSection = this.assistantOffered
+            ? `
       <div class="bh-subhead">Integrierter Assistent</div>
       <adw-preferences-group>
         ${this.row('Eingebauter KI-Assistent', 'Fragen zu deinen Zahlen, persönliche Einstellung. Aus = Tab ausgeblendet, /api/chat gesperrt. Unabhängig vom MCP-Server.', s.assistant.enabled, 'assistant.enabled')}
       </adw-preferences-group>
+`
+            : '';
 
+        this.innerHTML = `
+      ${assistantSection}
       ${this.dmsSection()}
 
       ${this.invoicingSection()}
@@ -163,7 +170,7 @@ export class BhSettingsView extends HTMLElement {
       <div class="bh-subhead">MCP-Server für externe Agenten <bh-help term="mcp"></bh-help></div>
       <p class="bh-muted bh-set-note">Steuert, welche Tools der MCP-Server für externe Assistenten (ChatGPT, Claude Code, eigene Clients) offenlegt — per stdio oder HTTP. Externe Änderungen wirken beim nächsten Start des MCP-Servers.</p>
       <adw-preferences-group>
-        ${this.row('MCP-Server für externe Agenten', 'Aus = keine Tools nach außen. Der eingebaute Assistent braucht ihn nicht.', s.mcp.enabled, 'mcp.enabled')}
+        ${this.row('MCP-Server für externe Agenten', 'Aus = keine Tools nach außen.', s.mcp.enabled, 'mcp.enabled')}
         ${this.row('Schreibzugriff erlauben', 'Mutierende Tools (update · link · push · sync · lock). Standard: aus — read-only.', s.mcp.allowWrite, 'mcp.allowWrite')}
       </adw-preferences-group>
 
@@ -264,7 +271,10 @@ export class BhSettingsView extends HTMLElement {
             false;
         const groups = Object.fromEntries(Object.keys(GROUP_LABELS).map((g) => [g, cb(`mcp.groups.${g}`)]));
         return {
-            assistant: { enabled: cb('assistant.enabled') },
+            // No section, no answer: send back what the server told us rather than a missing row's `false`.
+            assistant: {
+                enabled: this.assistantOffered ? cb('assistant.enabled') : (this.s?.assistant.enabled ?? false),
+            },
             mcp: {
                 enabled: cb('mcp.enabled'),
                 allowWrite: cb('mcp.allowWrite'),

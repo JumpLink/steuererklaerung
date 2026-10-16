@@ -9,9 +9,14 @@
  * assistant off there keeps it off, and nothing is migrated or written.
  *
  * Independent of the MCP server switch: the built-in assistant gets its tools in-process.
+ *
+ * The BUILD decides before the person does ({@link assistantOffered}): a build that does not
+ * offer the assistant answers `false` whatever the settings say — and writes nothing, so an
+ * existing `aiAssistant: true` survives untouched.
  */
 
 import { loadAppSettings } from './accessors.ts';
+import { assistantOffered } from './assistant-offered.ts';
 import { getManifestPath } from './manifest.ts';
 import { loadUserSettings, type UserSettings } from './user-settings.ts';
 
@@ -19,6 +24,7 @@ export function isAssistantEnabled(
     user: UserSettings = loadUserSettings(),
     manifestPath: string = getManifestPath(),
 ): boolean {
+    if (!assistantOffered()) return false;
     if (user.aiAssistant !== undefined) return user.aiAssistant;
     try {
         return loadAppSettings(manifestPath).assistant.enabled;

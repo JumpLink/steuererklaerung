@@ -49,8 +49,8 @@ use shares, business cessation, reverse charge (§ 13b) and cross-checks between
 
 **Receipts.** A built-in document store or **Paperless-ngx**, chosen per entity. Receipts
 are linked to transactions, and missing receipts for claimed input VAT show up as a to-do
-list. An LLM can optionally extract invoice fields from OCR text; every AI decision writes
-its rationale back to the document.
+list. Invoice fields are read straight out of an e-invoice (ZUGFeRD/XRechnung), without any
+AI call.
 
 **Banking.** Qonto API (optional), FinTS/HBCI, CAMT.052/053 files from any bank, PayPal and
 Amazon exports for enrichment. Everything lands in a local store (NDJSON + SQLite).

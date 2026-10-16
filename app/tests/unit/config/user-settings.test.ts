@@ -29,6 +29,7 @@ import {
     updateUserSettings,
     userSettingsPath,
 } from '../../../src/core/config/user-settings.ts';
+import { setAssistantOfferedOverride } from '../../../src/core/config/assistant-offered.ts';
 import { isAssistantEnabled } from '../../../src/core/config/assistant-preference.ts';
 
 function v1Manifest(): string {
@@ -193,11 +194,15 @@ export default async () => {
             );
             return path;
         };
+        // This suite is about the PER-USER switch, which only has a say in a build that offers the
+        // assistant at all; 0.1.0 does not. See assistant-offered.test.ts for the layer above.
         beforeEach(() => {
             dir = mkdtempSync(join(tmpdir(), 'assistant-pref-'));
             vi.stubEnv('XDG_CONFIG_HOME', join(dir, 'config'));
+            setAssistantOfferedOverride(true);
         });
         afterEach(() => {
+            setAssistantOfferedOverride(null);
             vi.unstubAllEnvs();
             rmSync(dir, { recursive: true, force: true });
         });

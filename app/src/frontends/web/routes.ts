@@ -6,7 +6,13 @@
 
 import type { Context, Hono } from 'hono';
 import type { Cache, YearCache } from '../../core/presenters/year-snapshot.ts';
-import { type AppSettings, isAssistantEnabled, saveAppSettings, parseAppSettings } from '../../core/config/index.ts';
+import {
+    type AppSettings,
+    assistantOffered,
+    isAssistantEnabled,
+    saveAppSettings,
+    parseAppSettings,
+} from '../../core/config/index.ts';
 import { updateUserSettings } from '../../core/config/user-settings.ts';
 import { applyProposal, type EstIntakeProposal } from '../../core/actions/elster/est-intake-topics.ts';
 import type { McpGroupTools } from '../mcp/server.ts';
@@ -113,8 +119,11 @@ export function registerApiRoutes(
     mcpCatalog: McpGroupTools[] = [],
     cacheReady?: Map<string, Promise<void>>,
 ): void {
-    // `assistant` is dynamic (the settings UI can toggle it at runtime).
-    app.get('/api/meta', (c) => c.json({ ...meta, assistant: isAssistantEnabled() }));
+    // `assistant` is dynamic (the settings UI can toggle it at runtime); `assistantOffered` is the
+    // build constant above it, so the client can drop the switch instead of showing a dead one.
+    app.get('/api/meta', (c) =>
+        c.json({ ...meta, assistant: isAssistantEnabled(), assistantOffered: assistantOffered() }),
+    );
 
     // The full MCP tool catalogue (every group's tools + descriptions) for the settings UI.
     app.get('/api/mcp-tools', (c) => c.json(mcpCatalog));
@@ -141,7 +150,9 @@ export function registerApiRoutes(
         try {
             // The manifest keeps its own (legacy) assistant flag; the decision goes to the user.
             saveAppSettings({ ...next, assistant: settings.assistant });
-            if (next.assistant.enabled !== isAssistantEnabled())
+            // A build without the assistant never writes the preference — the person's own value
+            // stays as they left it, whatever a client posts.
+            if (assistantOffered() && next.assistant.enabled !== isAssistantEnabled())
                 updateUserSettings((s) => {
                     s.aiAssistant = next.assistant.enabled;
                 });

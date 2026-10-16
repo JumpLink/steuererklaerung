@@ -22,6 +22,7 @@ import {
     privacyNoticeText,
 } from '../../../core/actions/elster/privacy-ack.ts';
 import { fmt } from '../../../core/lib/i18n.ts';
+import { displayPath } from '../../../core/paths.ts';
 import { _ } from '../i18n.ts';
 
 /** The official page the same letter is published on (fallback when no `lizenz.pdf` is on disk). */
@@ -43,7 +44,7 @@ export async function ensurePrivacyAck(parent: Gtk.Widget): Promise<boolean> {
     const box = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 12, margin_top: 6 });
 
     const logNote = new Gtk.Label({
-        label: fmt(logFileNoticeText(), { path: status.logPath }),
+        label: fmt(logFileNoticeText(), { path: displayPath(status.logPath) }),
         wrap: true,
         xalign: 0,
         selectable: true,

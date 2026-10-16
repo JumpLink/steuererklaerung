@@ -26,6 +26,7 @@ import {
     applyPathEnv,
     defaultDataDir,
     defaultManifestPath,
+    displayPath,
     userConfigDir,
     userDataDir,
     xdgConfigHome,
@@ -132,6 +133,30 @@ export default async () => {
             stub({ XDG_CONFIG_HOME: '/xdg/cfg', XDG_DATA_HOME: '/xdg/data' });
             expect(defaultManifestPath()).toBe('/xdg/cfg/steuererklaerung/steuererklaerung.json');
             expect(defaultDataDir()).toBe('/xdg/data/steuererklaerung/transactions-data');
+        });
+    });
+
+    await describe('displayPath — no user name on screen', async () => {
+        const linux = { platform: 'linux' as const, home: '/home/u' };
+
+        await it('collapses the home directory to ~', async () => {
+            expect(displayPath('/home/u/.local/share/eric', linux)).toBe('~/.local/share/eric');
+            expect(displayPath('/home/u', linux)).toBe('~');
+        });
+
+        await it('leaves a path outside the home directory alone', async () => {
+            expect(displayPath('/usr/lib/eric', linux)).toBe('/usr/lib/eric');
+            // Same prefix, different directory — collapsing this one would name the wrong place.
+            expect(displayPath('/home/users/shared', linux)).toBe('/home/users/shared');
+        });
+
+        await it('uses the separator of the platform being described', async () => {
+            const win = { platform: 'win32' as const, home: 'C:\\Users\\u' };
+            expect(displayPath('C:\\Users\\u\\AppData\\ERiC', win)).toBe('~\\AppData\\ERiC');
+        });
+
+        await it('does not touch anything when home is / (a container without one)', async () => {
+            expect(displayPath('/etc/eric', { platform: 'linux' as const, home: '/' })).toBe('/etc/eric');
         });
     });
 
