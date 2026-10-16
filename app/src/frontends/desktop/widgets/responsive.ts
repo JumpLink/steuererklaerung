@@ -54,6 +54,43 @@ export function rowActions(children: Gtk.Widget[]): Adw.WrapBox {
 }
 
 /**
+ * Bound a row's title and subtitle to a fixed number of lines, so the text column can always give
+ * the suffixes their room.
+ *
+ * An `Adw.ActionRow` whose subtitle wraps freely (`subtitle-lines: 0`, the default) can push its own
+ * suffixes out of the card: the recurring-invoice rows drew "Entwurf erstellen" past the right edge
+ * of the window at 1000 px while the row beside them, with a LONGER subtitle, laid out fine (#76).
+ *
+ * The mechanism is the two-step request of a horizontal `GtkBox`. The row's height is settled first,
+ * from the children's NATURAL widths — a subtitle that fits on one unwrapped line therefore gets a
+ * one-line row. `gtk_box_layout_allocate` then measures each child's width FOR THAT HEIGHT, and a
+ * wrapping label that may not wrap has no width below its full single line: the text column reports
+ * 509 px as its MINIMUM, the box hands it that, and the 298 px of suffixes go over the edge. The
+ * neighbouring row escaped because its subtitle was long enough to wrap even at natural width, which
+ * bought the row a second line and with it a way down.
+ *
+ * `title-lines`/`subtitle-lines` > 0 switch the labels to `ellipsize: END`, and an ellipsizing label
+ * has a small minimum at ANY height — so the column gives way instead of overflowing.
+ *
+ * Only while there IS room, though: giving way is how the column survives a desktop row, and how it
+ * starves on a phone, where the same ellipsis turned a 360 px row's title into a bare "…". So this
+ * returns a switch, like {@link pinnableCluster}, and a narrow view hands the lines back: free
+ * wrapping makes the column unshrinkable again, which leaves the cluster below it as the row's only
+ * way down — exactly the layout wrapping was introduced for.
+ */
+export function boundRowText(
+    row: Adw.ActionRow | Adw.ExpanderRow,
+    opts: { titleLines?: number; subtitleLines?: number } = {},
+): (narrow: boolean) => void {
+    const apply = (narrow: boolean): void => {
+        row.set_title_lines(narrow ? 0 : (opts.titleLines ?? 1));
+        row.set_subtitle_lines(narrow ? 0 : (opts.subtitleLines ?? 1));
+    };
+    apply(false);
+    return apply;
+}
+
+/**
  * Keep a {@link rowActions} cluster on ONE line as long as the view is wide, and let it wrap below
  * that. Returns the switch; call it with `true` when the view is narrow.
  *

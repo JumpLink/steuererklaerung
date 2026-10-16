@@ -4,85 +4,99 @@ using Adw 1;
 // Rechnungen view body. Static chrome in Blueprint; the recurring reminders + the issued-invoice
 // rows are filled programmatically (see rechnungen-view.ts).
 template $BhRechnungenView: Adw.Bin {
-  Gtk.Stack stack {
-    Gtk.StackPage {
-      name: "loading";
-      child: Gtk.Box {
-        orientation: vertical;
-        valign: center;
-        halign: center;
-        spacing: 12;
+  // A breakpoint with no setters, like the one in laufende-kosten-view.blp: what it switches is a
+  // pair of measurements, not a property. Above 450 px the list rows ellipsize their title and
+  // subtitle so the action cluster always fits (#76); below it the lines come back, because an
+  // ellipsizing column keeps shrinking and a phone-width row would show nothing but "…".
+  // rechnungen-view.ts listens on `current-breakpoint`.
+  Adw.BreakpointBin breakpoint_bin {
+    width-request: 300;
+    height-request: 200;
 
-        Adw.Spinner {
-          width-request: 32;
-          height-request: 32;
-        }
-
-        Gtk.Label {
-          label: _("Loading invoices …");
-          styles ["dim-label"]
-        }
-      };
+    Adw.Breakpoint {
+      condition ("max-width: 450px")
     }
 
-    Gtk.StackPage {
-      name: "error";
-      child: Adw.StatusPage error_page {
-        icon-name: "dialog-error-symbolic";
-        title: _("Could not load");
-      };
-    }
+    child: Gtk.Stack stack {
+      Gtk.StackPage {
+        name: "loading";
+        child: Gtk.Box {
+          orientation: vertical;
+          valign: center;
+          halign: center;
+          spacing: 12;
 
-    Gtk.StackPage {
-      name: "notice";
-      child: Adw.StatusPage notice_page {
-        icon-name: "dialog-information-symbolic";
-        title: _("No Qonto account");
-      };
-    }
+          Adw.Spinner {
+            width-request: 32;
+            height-request: 32;
+          }
 
-    Gtk.StackPage {
-      name: "content";
-      child: Gtk.ScrolledWindow {
-        hscrollbar-policy: never;
-        vexpand: true;
+          Gtk.Label {
+            label: _("Loading invoices …");
+            styles ["dim-label"]
+          }
+        };
+      }
 
-        child: Adw.Clamp {
-          maximum-size: 900;
-          tightening-threshold: 900;
-          margin-top: 18;
-          margin-bottom: 18;
-          margin-start: 12;
-          margin-end: 12;
+      Gtk.StackPage {
+        name: "error";
+        child: Adw.StatusPage error_page {
+          icon-name: "dialog-error-symbolic";
+          title: _("Could not load");
+        };
+      }
 
-          child: Gtk.Box {
-            orientation: vertical;
-            spacing: 18;
+      Gtk.StackPage {
+        name: "notice";
+        child: Adw.StatusPage notice_page {
+          icon-name: "dialog-information-symbolic";
+          title: _("No Qonto account");
+        };
+      }
 
-            Gtk.Box kpi_box {
+      Gtk.StackPage {
+        name: "content";
+        child: Gtk.ScrolledWindow {
+          hscrollbar-policy: never;
+          vexpand: true;
+
+          child: Adw.Clamp {
+            maximum-size: 900;
+            tightening-threshold: 900;
+            margin-top: 18;
+            margin-bottom: 18;
+            margin-start: 12;
+            margin-end: 12;
+
+            child: Gtk.Box {
               orientation: vertical;
-            }
+              spacing: 18;
 
-            Adw.PreferencesGroup recurring_group {
-              title: _("Recurring invoices");
-            }
+              Gtk.Box kpi_box {
+                orientation: vertical;
+              }
 
-            // The filter chips + "Neue Rechnung" used to be this group's header_suffix. At 1280 px
-            // with the assistant docked they ask for more width than the header has, and GTK takes
-            // it out of the TITLE and DESCRIPTION: the title became a bare "…" and "7 gesamt"
-            // wrapped to one character per line. Above the group they simply have the full width.
-            Gtk.Box invoices_toolbar {
-              orientation: horizontal;
-              spacing: 8;
-              margin-bottom: 6;
-            }
+              Adw.PreferencesGroup recurring_group {
+                title: _("Recurring invoices");
+              }
 
-            Adw.PreferencesGroup invoices_group {
-              title: _("All invoices");
-            }
+              // The filter chips + "Neue Rechnung" used to be this group's header_suffix. At 1280 px
+              // with the assistant docked they ask for more width than the header has, and GTK takes
+              // it out of the TITLE and DESCRIPTION: the title became a bare "…" and "7 gesamt"
+              // wrapped to one character per line. Above the group they simply have the full width.
+              Gtk.Box invoices_toolbar {
+                orientation: horizontal;
+                spacing: 8;
+                margin-bottom: 6;
+              }
+
+              Adw.PreferencesGroup invoices_group {
+                title: _("All invoices");
+              }
+            };
           };
         };
-      };
-    }
+      }
+    };
   }
 }
