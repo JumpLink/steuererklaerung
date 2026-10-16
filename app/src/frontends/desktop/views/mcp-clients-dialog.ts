@@ -10,14 +10,14 @@ import Gtk from '@girs/gtk-4.0';
 import Pango from '@girs/pango-1.0';
 
 import { mcpClientSnippets, resolveMcpLaunch, type McpClientSnippet } from '../../../core/actions/mcp-clients.ts';
-import { currentMcpInstallation } from '../self-launch.ts';
+import { currentMcpInstallation, currentMcpPlatform } from '../self-launch.ts';
 import { showToast } from '../toast.ts';
 import { _, fmt } from '../i18n.ts';
 
 export function currentMcpSnippets(): McpClientSnippet[] {
     // Deliberately WITHOUT `readOnly`: the person registered this client themselves, so
     // `mcp.allowWrite` is their decision about it (core/config/mcp-readonly.ts).
-    return mcpClientSnippets(resolveMcpLaunch(currentMcpInstallation()));
+    return mcpClientSnippets(resolveMcpLaunch(currentMcpInstallation()), currentMcpPlatform());
 }
 
 function snippetGroup(s: McpClientSnippet): Adw.PreferencesGroup {

@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 
 import GLib from '@girs/glib-2.0';
 
-import type { McpInstallation } from '../../core/actions/mcp-clients.ts';
+import { packageLauncher, type McpInstallation, type McpPlatform } from '../../core/actions/mcp-clients.ts';
 import { isDemoMode } from '../../core/config/demo.ts';
 import { getManifestPath } from '../../core/config/manifest.ts';
 
@@ -61,15 +61,25 @@ function isGjsRuntime(): boolean {
     return typeof (globalThis as { imports?: unknown }).imports !== 'undefined';
 }
 
+/** The one place `process.platform` is read for the MCP guide; everything below takes it as input. */
+export function currentMcpPlatform(): McpPlatform {
+    return process.platform === 'win32' || process.platform === 'darwin' ? process.platform : 'linux';
+}
+
 /**
  * How THIS installation's MCP server is started — the facts `resolveMcpLaunch` turns into a
  * command. One answer for both callers: the snippets an external client is handed, and the
  * read-only server the assistant pane starts for its own agent.
  */
 export function currentMcpInstallation(): McpInstallation {
+    const platform = currentMcpPlatform();
+    const onPath = platform === 'linux' ? GLib.find_program_in_path('steuererklaerung') : null;
     return {
+        platform,
         flatpakId: process.env.FLATPAK_ID || undefined,
-        installedBinary: GLib.find_program_in_path('steuererklaerung') ?? undefined,
+        appImage: process.env.APPIMAGE || undefined,
+        installedBinary: packageLauncher(platform, process.execPath, existsSync) ?? onPath ?? undefined,
+        nodeBin: platform === 'linux' ? undefined : process.execPath,
         bundlePath: bundlePath(),
         gjsifyBin: checkoutGjsify(bundlePath()),
         manifestPath: getManifestPath(),
