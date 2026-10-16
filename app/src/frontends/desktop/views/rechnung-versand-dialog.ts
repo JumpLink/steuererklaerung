@@ -23,7 +23,7 @@ import { smtpAccountFor } from '../../../core/mail/mail-sender.ts';
 import {
     BUILTIN_TEMPLATE_ID,
     BUILTIN_TEMPLATE_NAME,
-    MAIL_PLACEHOLDERS,
+    mailPlaceholderHelp,
     unknownMailPlaceholders,
     type MailPlaceholder,
 } from '../../../core/mail/invoice-mail.ts';
@@ -190,7 +190,7 @@ export class BhRechnungVersandDialog {
             title: _('Placeholders'),
             subtitle: _('A click inserts the placeholder at the cursor'),
         });
-        for (const [name, what] of Object.entries(MAIL_PLACEHOLDERS)) {
+        for (const [name, what] of Object.entries(mailPlaceholderHelp())) {
             const row = new Adw.ActionRow({ title: `{${name}}`, subtitle: what, activatable: true });
             row.connect('activated', () => this.insertPlaceholder(name as MailPlaceholder));
             expander.add_row(row);

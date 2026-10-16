@@ -19,7 +19,7 @@ import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 
 import {
-    NEEDLE_LIST_META,
+    needleListMeta,
     loadClassificationRules,
     saveAufwandRegeln,
     saveNeedleList,
@@ -30,6 +30,7 @@ import {
 import { loadDokumentRegeln, saveDokumentRegeln } from '../../../../core/actions/dokumentregeln.ts';
 import type { DokumentRegel } from '../../../../core/dokumentregeln/regeln.ts';
 import type { AppEntity } from '../../entities.ts';
+import { _, _n, _p, fmt } from '../../i18n.ts';
 import { markup } from '../util.ts';
 import type { SettingsHost } from './rows.ts';
 import { helpFor } from '../../widgets/glossary-help.ts';
@@ -42,10 +43,11 @@ export function buildKlassifizierungGroup(
 ): Adw.PreferencesGroup {
     const group = helpFor(
         new Adw.PreferencesGroup({
-            title: 'Klassifizierung',
-            description:
-                'Wer deine Kunden sind, was für dich privat ist, welcher Lieferant wohin gebucht wird. ' +
-                'Buchungen ohne Beleg werden hiernach eingeordnet — das ist der Teil, der die KI ersetzt.',
+            title: _('Classification'),
+            description: _(
+                'Who your customers are, what is private for you, which supplier is booked where. ' +
+                    'Bookings without a receipt are classified by this — the part that replaces the AI.',
+            ),
         }),
         'klassifizierung',
     );
@@ -54,7 +56,11 @@ export function buildKlassifizierungGroup(
     try {
         rules = loadClassificationRules(entity.id);
     } catch (err) {
-        host.banner(`Klassifizierungsregeln konnten nicht gelesen werden: ${err instanceof Error ? err.message : err}`);
+        host.banner(
+            fmt(_('Could not read the classification rules: {error}'), {
+                error: err instanceof Error ? err.message : String(err),
+            }),
+        );
         return group;
     }
 
@@ -64,14 +70,15 @@ export function buildKlassifizierungGroup(
         host.reloadEntityGroups();
     };
 
-    for (const key of Object.keys(NEEDLE_LIST_META) as NeedleList[]) {
-        const meta = NEEDLE_LIST_META[key];
+    const listMeta = needleListMeta();
+    for (const key of Object.keys(listMeta) as NeedleList[]) {
+        const meta = listMeta[key];
         const entries = rules.lists[key];
         const row = new Adw.ActionRow({
             title: markup(meta.title),
             subtitle: markup(entries.length > 0 ? `${entries.length} × · ${preview(entries)}` : meta.description),
         });
-        const button = new Gtk.Button({ label: 'Bearbeiten', valign: Gtk.Align.CENTER });
+        const button = new Gtk.Button({ label: _('Edit'), valign: Gtk.Align.CENTER });
         button.connect('clicked', () => {
             presentNeedleEditor(parent, meta.title, meta.description, entries, (next) => {
                 host.saveWith(() => saveNeedleList(entity.id, key, next), { clearCache: true });
@@ -84,17 +91,17 @@ export function buildKlassifizierungGroup(
     }
 
     const rulesRow = new Adw.ActionRow({
-        title: 'Lieferant → Kategorie',
+        title: _('Supplier → category'),
         subtitle: markup(
             rules.aufwandRegeln.length > 0
                 ? `${rules.aufwandRegeln.length} × · ${rules.aufwandRegeln
                       .slice(0, 2)
                       .map((r) => `${r.muster} → ${r.kategorie}`)
                       .join(' · ')}`
-                : 'Eigene Regeln, die vor der eingebauten Stichwortliste greifen.',
+                : _('Your own rules, which take effect before the built-in keyword list.'),
         ),
     });
-    const rulesButton = new Gtk.Button({ label: 'Bearbeiten', valign: Gtk.Align.CENTER });
+    const rulesButton = new Gtk.Button({ label: _('Edit'), valign: Gtk.Align.CENTER });
     rulesButton.connect('clicked', () => {
         presentRuleEditor(parent, rules.aufwandRegeln, (next) => {
             host.saveWith(() => saveAufwandRegeln(entity.id, next), { clearCache: true });
@@ -111,20 +118,26 @@ export function buildKlassifizierungGroup(
         try {
             belegRegeln = loadDokumentRegeln(entity.id);
         } catch (err) {
-            host.banner(`Dokumentregeln konnten nicht gelesen werden: ${err instanceof Error ? err.message : err}`);
+            host.banner(
+                fmt(_('Could not read the document rules: {error}'), {
+                    error: err instanceof Error ? err.message : String(err),
+                }),
+            );
         }
         const belegRow = new Adw.ActionRow({
-            title: 'Beleg → Dokumenttyp, Kategorie',
+            title: _('Receipt → document type, category'),
             subtitle: markup(
                 belegRegeln.length > 0
                     ? `${belegRegeln.length} × · ${belegRegeln
                           .slice(0, 2)
                           .map((r) => r.muster)
                           .join(' · ')}`
-                    : 'Entstehen mit „Als Regel merken" im Beleg-Dialog; greifen beim Hinzufügen eines Belegs, vor jeder KI.',
+                    : _(
+                          'Created with „Als Regel merken" in the receipt dialog; they take effect when a receipt is added, before any AI.',
+                      ),
             ),
         });
-        const belegButton = new Gtk.Button({ label: 'Bearbeiten', valign: Gtk.Align.CENTER });
+        const belegButton = new Gtk.Button({ label: _('Edit'), valign: Gtk.Align.CENTER });
         belegButton.connect('clicked', () => {
             presentBelegRegelEditor(parent, belegRegeln, (next) => {
                 host.saveWith(() => saveDokumentRegeln(entity.id, next), { clearCache: false });
@@ -162,11 +175,11 @@ function presentNeedleEditor(
     const rows: Adw.EntryRow[] = [];
 
     const addRow = (text: string): Adw.EntryRow => {
-        const row = new Adw.EntryRow({ title: 'Text im Buchungstext' });
+        const row = new Adw.EntryRow({ title: _('Text in the payment reference') });
         row.set_text(text);
         const remove = new Gtk.Button({ iconName: 'user-trash-symbolic', valign: Gtk.Align.CENTER });
         remove.add_css_class('flat');
-        remove.set_tooltip_text('Eintrag entfernen — ändert die Einordnung bereits gebuchter Jahre');
+        remove.set_tooltip_text(_('Remove entry — changes the classification of years already booked'));
         remove.connect('clicked', () => {
             row.set_text('');
             row.set_visible(false);
@@ -191,9 +204,9 @@ function presentNeedleEditor(
     toolbar.set_content(scroller);
     toolbar.add_bottom_bar(
         bottomBar([
-            { label: 'Zeile hinzufügen', run: () => addRow('').grab_focus() },
+            { label: _('Add line'), run: () => addRow('').grab_focus() },
             {
-                label: 'Speichern',
+                label: _('Save'),
                 suggested: true,
                 run: () => {
                     done(rows.map((r) => r.get_text() ?? ''));
@@ -213,26 +226,28 @@ function presentRuleEditor(
     done: (next: ElsterKlassifizierungRegel[]) => void,
 ): void {
     const dialog = new Adw.Dialog();
-    dialog.set_title('Lieferant → Kategorie');
+    dialog.set_title(_('Supplier → category'));
     dialog.set_content_width(620);
     dialog.set_content_height(640);
 
     const group = new Adw.PreferencesGroup({
         description: markup(
-            'Diese Regeln greifen VOR der eingebauten Stichwortliste — eine eigene Regel gewinnt also ' +
-                'über ein allgemeines Stichwort, das denselben Text fangen würde.',
+            _(
+                'These rules take effect BEFORE the built-in keyword list — so your own rule wins ' +
+                    'over a general keyword that would catch the same text.',
+            ),
         ),
     });
     const pairs: Array<{ muster: Adw.EntryRow; kategorie: Adw.EntryRow; ausnahmen: string[] }> = [];
 
     const addPair = (rule: ElsterKlassifizierungRegel | null): Adw.EntryRow => {
-        const muster = new Adw.EntryRow({ title: 'Text im Buchungstext' });
+        const muster = new Adw.EntryRow({ title: _('Text in the payment reference') });
         muster.set_text(rule?.muster ?? '');
-        const kategorie = new Adw.EntryRow({ title: 'Kategorie (SKR03, wie in der EÜR)' });
+        const kategorie = new Adw.EntryRow({ title: _('Category (SKR03, as in the EÜR)') });
         kategorie.set_text(rule?.kategorie ?? '');
         const remove = new Gtk.Button({ iconName: 'user-trash-symbolic', valign: Gtk.Align.CENTER });
         remove.add_css_class('flat');
-        remove.set_tooltip_text('Regel entfernen — ändert die Einordnung bereits gebuchter Jahre');
+        remove.set_tooltip_text(_('Remove rule — changes the classification of years already booked'));
         remove.connect('clicked', () => {
             muster.set_text('');
             kategorie.set_text('');
@@ -247,11 +262,17 @@ function presentRuleEditor(
         // exception list is never a field only a text editor can reach.
         if (pair.ausnahmen.length > 0) {
             const row = new Adw.ActionRow({
-                title: `${pair.ausnahmen.length} Ausnahme(n)`,
-                subtitle: 'Buchungen, die beim Anlegen abgewählt wurden — die Regel lässt sie aus.',
+                title: fmt(_n('{count} exception', '{count} exceptions', pair.ausnahmen.length), {
+                    count: pair.ausnahmen.length,
+                }),
+                subtitle: _('Bookings deselected when the rule was created — the rule leaves them out.'),
             });
-            const clear = new Gtk.Button({ label: 'Aufheben', valign: Gtk.Align.CENTER, cssClasses: ['flat'] });
-            clear.set_tooltip_text('Ausnahmen aufheben — die Regel erfasst diese Buchungen dann wieder');
+            const clear = new Gtk.Button({
+                label: _p('exceptions', 'Clear'),
+                valign: Gtk.Align.CENTER,
+                cssClasses: ['flat'],
+            });
+            clear.set_tooltip_text(_('Clear exceptions — the rule then catches these bookings again'));
             clear.connect('clicked', () => {
                 pair.ausnahmen = [];
                 row.set_visible(false);
@@ -276,9 +297,9 @@ function presentRuleEditor(
     toolbar.set_content(scroller);
     toolbar.add_bottom_bar(
         bottomBar([
-            { label: 'Regel hinzufügen', run: () => addPair(null).grab_focus() },
+            { label: _('Add rule'), run: () => addPair(null).grab_focus() },
             {
-                label: 'Speichern',
+                label: _('Save'),
                 suggested: true,
                 run: () => {
                     done(
@@ -299,8 +320,8 @@ function presentRuleEditor(
 
 const RICHTUNG_CHOICES: Array<{ id: DokumentRegel['richtung'] | null; label: string }> = [
     { id: null, label: '—' },
-    { id: 'incoming', label: 'Eingang (Ausgabe)' },
-    { id: 'outgoing', label: 'Ausgang (Einnahme)' },
+    { id: 'incoming', label: _('Incoming (expense)') },
+    { id: 'outgoing', label: _('Outgoing (revenue)') },
 ];
 
 /**
@@ -314,14 +335,16 @@ function presentBelegRegelEditor(
     done: (next: DokumentRegel[]) => void,
 ): void {
     const dialog = new Adw.Dialog();
-    dialog.set_title('Beleg → Dokumenttyp, Kategorie');
+    dialog.set_title(_('Receipt → document type, category'));
     dialog.set_content_width(620);
     dialog.set_content_height(680);
 
     const group = new Adw.PreferencesGroup({
         description: markup(
-            'Beim Hinzufügen eines Belegs setzt die erste passende Regel, was noch leer ist — vor der KI. ' +
-                'Eine Regel zu entfernen ändert keinen vorhandenen Beleg.',
+            _(
+                'When a receipt is added, the first matching rule fills what is still empty — before the AI. ' +
+                    'Removing a rule changes no existing receipt.',
+            ),
         ),
     });
     const sets: Array<{
@@ -334,16 +357,16 @@ function presentBelegRegelEditor(
     }> = [];
 
     const addSet = (rule: DokumentRegel | null): Adw.EntryRow => {
-        const muster = new Adw.EntryRow({ title: 'Text im Beleg (Absender, Titel, Dateiname)' });
+        const muster = new Adw.EntryRow({ title: _('Text in the receipt (sender, title, file name)') });
         muster.set_text(rule?.muster ?? '');
-        const korrespondent = new Adw.EntryRow({ title: 'Korrespondent' });
+        const korrespondent = new Adw.EntryRow({ title: _('Correspondent') });
         korrespondent.set_text(rule?.korrespondent ?? '');
-        const dokumenttyp = new Adw.EntryRow({ title: 'Dokumenttyp' });
+        const dokumenttyp = new Adw.EntryRow({ title: _('Document type') });
         dokumenttyp.set_text(rule?.dokumenttyp ?? '');
-        const kategorie = new Adw.EntryRow({ title: 'Kategorie (SKR03, wie in der EÜR)' });
+        const kategorie = new Adw.EntryRow({ title: _('Category (SKR03, as in the EÜR)') });
         kategorie.set_text(rule?.kategorie ?? '');
         const richtung = new Adw.ComboRow({
-            title: 'Richtung',
+            title: _('Direction'),
             model: Gtk.StringList.new(RICHTUNG_CHOICES.map((c) => c.label)),
         });
         richtung.set_selected(
@@ -355,7 +378,7 @@ function presentBelegRegelEditor(
         const all: Gtk.Widget[] = [muster, korrespondent, dokumenttyp, kategorie, richtung];
         const remove = new Gtk.Button({ iconName: 'user-trash-symbolic', valign: Gtk.Align.CENTER });
         remove.add_css_class('flat');
-        remove.set_tooltip_text('Regel entfernen — vorhandene Belege behalten ihre Werte');
+        remove.set_tooltip_text(_('Remove rule — existing receipts keep their values'));
         remove.connect('clicked', () => {
             muster.set_text('');
             for (const w of all) w.set_visible(false);
@@ -379,9 +402,9 @@ function presentBelegRegelEditor(
     toolbar.set_content(scroller);
     toolbar.add_bottom_bar(
         bottomBar([
-            { label: 'Regel hinzufügen', run: () => addSet(null).grab_focus() },
+            { label: _('Add rule'), run: () => addSet(null).grab_focus() },
             {
-                label: 'Speichern',
+                label: _('Save'),
                 suggested: true,
                 run: () => {
                     const text = (row: Adw.EntryRow): string | undefined => row.get_text()?.trim() || undefined;

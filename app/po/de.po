@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-16 23:36+0200\n"
+"POT-Creation-Date: 2026-10-17 00:03+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -11,6 +11,55 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/core/actions/classification-rules.ts:42
+msgid "Own accounts"
+msgstr "Eigene Konten"
+
+#: src/core/actions/classification-rules.ts:44
+msgid ""
+"Names of your own accounts and former company names — bookings there are "
+"transfers, not payments."
+msgstr "Namen eigener Konten und früherer Firmierungen — Buchungen dorthin sind Umbuchungen, keine Zahlungen."
+
+#: src/core/actions/classification-rules.ts:48
+#: src/frontends/desktop/views/setup-assistant.ts:63
+#: src/frontends/desktop/views/setup-assistant.ts:468
+#: src/frontends/desktop/window.ts:722
+msgid "Private"
+msgstr "Privat"
+
+#: src/core/actions/classification-rules.ts:49
+msgid ""
+"Merchants and payment references that are private for you — they become a "
+"private withdrawal."
+msgstr "Händler und Verwendungszwecke, die für dich privat sind — sie werden zur Privatentnahme."
+
+#: src/core/actions/classification-rules.ts:52
+msgid "Partners"
+msgstr "Gesellschafter"
+
+#: src/core/actions/classification-rules.ts:53
+msgid ""
+"Names of the partners — without an invoice number a capital movement, not an "
+"expense."
+msgstr "Namen der Gesellschafter — ohne Rechnungsnummer eine Kapitalbewegung, keine Ausgabe."
+
+#: src/core/actions/classification-rules.ts:56
+msgid "KSK identifiers"
+msgstr "KSK-Kennungen"
+
+#: src/core/actions/classification-rules.ts:57
+msgid "Additional marks of a KSK membership, e.g. the membership number."
+msgstr "Zusätzliche Kennzeichen einer KSK-Mitgliedschaft, z. B. die Mitgliedsnummer."
+
+#: src/core/actions/classification-rules.ts:60
+msgid "Customers (revenue)"
+msgstr "Kunden (Erlöse)"
+
+#: src/core/actions/classification-rules.ts:61
+msgid "Customer names that mark an incoming payment as revenue."
+msgstr "Kundennamen, die einen Zahlungseingang als Erlös kennzeichnen."
 
 #: src/core/actions/contracts-extract.ts:275
 msgid "The document states none of the contract fields — enter them by hand."
@@ -211,6 +260,75 @@ msgstr "… und {n} weitere"
 #: src/core/actions/fristen-reminder.ts:85
 msgid "[Open]"
 msgstr "[Offen]"
+
+#: src/core/actions/mail-eingang.ts:62
+msgid ""
+"With Paperless-ngx, Paperless fetches the receipts from the mailbox itself: "
+"in Paperless under „Mail“ add an account and a rule (action „Dokument "
+"verarbeiten“). There is nothing to set up here."
+msgstr "Mit Paperless-ngx holt Paperless die Belege selbst aus dem Postfach: in Paperless unter „Mail“ ein Konto und eine Regel anlegen (Aktion „Dokument verarbeiten“). Hier ist nichts einzurichten."
+
+#: src/core/actions/mail-eingang.ts:137
+msgid "Folder renumbered, no messages"
+msgstr "Ordner neu nummeriert, keine Nachrichten"
+
+#: src/core/actions/mail-eingang.ts:137
+msgid "No new messages"
+msgstr "Keine neuen Nachrichten"
+
+#: src/core/actions/mail-eingang.ts:139
+msgid "{count} message checked"
+msgid_plural "{count} messages checked"
+msgstr[0] "{count} Nachricht geprüft"
+msgstr[1] "{count} Nachrichten geprüft"
+
+#: src/core/actions/mail-eingang.ts:141
+msgid "{count} new receipt would be imported"
+msgid_plural "{count} new receipts would be imported"
+msgstr[0] "{count} neuer Beleg würde importiert"
+msgstr[1] "{count} neue Belege würden importiert"
+
+#: src/core/actions/mail-eingang.ts:144
+msgid "{count} new receipt"
+msgid_plural "{count} new receipts"
+msgstr[0] "{count} neuer Beleg"
+msgstr[1] "{count} neue Belege"
+
+#: src/core/actions/mail-eingang.ts:146
+msgid "{count} already there"
+msgstr "{count} schon vorhanden"
+
+#: src/core/actions/mail-eingang.ts:147
+msgid "{count} more waiting"
+msgstr "{count} weitere warten"
+
+#: src/core/actions/mail-eingang.ts:148
+msgid "Folder renumbered, everything checked again"
+msgstr "Ordner neu nummeriert, alles neu geprüft"
+
+#: src/core/actions/mail-eingang.ts:161
+msgid "No mailbox set up (Settings → Receipts from mail)."
+msgstr "Kein Postfach eingerichtet (Einstellungen → Belege aus Mail)."
+
+#: src/core/actions/mail-eingang.ts:168
+msgid ""
+"No password for the mailbox in the keyring (Settings → Receipts from mail → "
+"Save mailbox)."
+msgstr "Kein Passwort für das Postfach im Schlüsselbund (Einstellungen → Belege aus Mail → Passwort speichern)."
+
+#: src/core/actions/mail-eingang.ts:216
+msgid "„{file}“ is too large."
+msgstr "„{file}“ ist zu groß."
+
+#: src/core/actions/mail-eingang.ts:268
+msgid "{count} error"
+msgid_plural "{count} errors"
+msgstr[0] "{count} Fehler"
+msgstr[1] "{count} Fehler"
+
+#: src/core/actions/mail-eingang.ts:288
+msgid "Error: {message}"
+msgstr "Fehler: {message}"
 
 #: src/core/clients/fints/client.ts:290
 msgid ""
@@ -2433,6 +2551,71 @@ msgid "You supported this open source project by buying the app. Thank you!"
 msgstr ""
 "Mit dem Kauf der App hast du dieses Open-Source-Projekt unterstützt. Danke!"
 
+#: src/core/mail-eingang/abruf-plan.ts:44
+msgid ""
+"Without encryption only a server on this machine works — otherwise the "
+"password would travel the network in the clear."
+msgstr "Ohne Verschlüsselung geht es nur zu einem Server auf diesem Rechner — sonst liefe das Passwort offen durchs Netz."
+
+#: src/core/mail/invoice-mail.ts:44
+msgid ""
+"the full salutation line for du/Sie, with the name from the salutation field "
+"if there is one"
+msgstr "komplette Anredezeile nach Du/Sie, mit dem Namen aus der Anrede-Angabe, wenn es eine gibt"
+
+#: src/core/mail/invoice-mail.ts:45
+msgid "customer name"
+msgstr "Kundenname"
+
+#: src/core/mail/invoice-mail.ts:46
+msgid "invoice number"
+msgstr "Rechnungsnummer"
+
+#: src/core/mail/invoice-mail.ts:47
+msgid "gross amount, e.g. 119,00 €"
+msgstr "Bruttobetrag, z. B. 119,00 €"
+
+#: src/core/mail/invoice-mail.ts:48
+msgid "net amount, e.g. 100,00 €"
+msgstr "Nettobetrag, z. B. 100,00 €"
+
+#: src/core/mail/invoice-mail.ts:49
+msgid "invoice date, e.g. 01.03.2026"
+msgstr "Rechnungsdatum, z. B. 01.03.2026"
+
+#: src/core/mail/invoice-mail.ts:50
+msgid "due date, e.g. 15.03.2026"
+msgstr "Fälligkeitsdatum, z. B. 15.03.2026"
+
+#: src/core/mail/invoice-mail.ts:51
+msgid "service period, e.g. 01.01.2026 – 31.12.2026"
+msgstr "Leistungszeitraum, z. B. 01.01.2026 – 31.12.2026"
+
+#: src/core/mail/invoice-mail.ts:52
+msgid "titles of the line items, joined with „und\""
+msgstr "Titel der Positionen, mit „und\" verbunden"
+
+#: src/core/mail/invoice-mail.ts:53
+msgid ""
+"domains of the contract, joined with „und\"; without domains the description"
+msgstr "Domains des Vertrags, mit „und\" verbunden; ohne Domains die Bezeichnung"
+
+#: src/core/mail/invoice-mail.ts:54
+msgid "name of the project"
+msgstr "Name des Projekts"
+
+#: src/core/mail/invoice-mail.ts:55
+msgid "public link to view and pay (Qonto)"
+msgstr "öffentlicher Link zum Ansehen und Bezahlen (Qonto)"
+
+#: src/core/mail/invoice-mail.ts:56
+msgid "closing line for du/Sie"
+msgstr "Grußformel nach Du/Sie"
+
+#: src/core/mail/invoice-mail.ts:57
+msgid "name of the issuer"
+msgstr "Name des Ausstellers"
+
 #: src/core/presenters/erstattungen.ts:153
 msgid "booking {id}"
 msgstr "Buchung {id}"
@@ -2693,6 +2876,7 @@ msgstr "Vorschlag · {title}"
 
 #: src/frontends/desktop/assistent-panel.ts:192
 #: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:211
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:124
 #: src/frontends/desktop/views/herleitung-dialog.ts:625
 msgid "Apply"
 msgstr "Übernehmen"
@@ -3368,7 +3552,10 @@ msgstr "Teile"
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:111
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:207
-#: src/frontends/desktop/views/einstellungen/kinder.ts:169
+#: src/frontends/desktop/views/einstellungen/kinder.ts:171
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:209
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:302
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:407
 #: src/frontends/desktop/views/konten-view.ts:850
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:466
 #: src/frontends/desktop/views/umbuchen-dialog.ts:204
@@ -3785,6 +3972,7 @@ msgid "Linking failed"
 msgstr "Verknüpfen fehlgeschlagen"
 
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:55
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:323
 msgid "Incoming (expense)"
 msgstr "Eingang (Ausgabe)"
 
@@ -3798,6 +3986,7 @@ msgid "Title"
 msgstr "Titel"
 
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:85
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:362
 msgid "Correspondent"
 msgstr "Korrespondent"
 
@@ -3811,6 +4000,7 @@ msgid "Date (YYYY-MM-DD)"
 msgstr "Datum (JJJJ-MM-TT)"
 
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:89
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:364
 msgid "Document type"
 msgstr "Dokumenttyp"
 
@@ -3832,6 +4022,7 @@ msgid "Gross"
 msgstr "Brutto"
 
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:113
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:369
 msgid "Direction"
 msgstr "Richtung"
 
@@ -4089,8 +4280,8 @@ msgstr "＋ Anlagegut hinzufügen"
 
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:92
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:106
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:178
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:180
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:182
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:184
 msgid "New asset"
 msgstr "Neues Anlagegut"
 
@@ -4172,7 +4363,8 @@ msgstr "Sonderbetriebsausgaben"
 
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:235
 msgid "Expenses of individual partners (e.g. a home office)."
-msgstr "Aufwendungen einzelner Gesellschafter (z. B. häusliches Arbeitszimmer)."
+msgstr ""
+"Aufwendungen einzelner Gesellschafter (z. B. häusliches Arbeitszimmer)."
 
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:241
 msgid "＋ Add special partner expense"
@@ -4182,7 +4374,9 @@ msgstr "＋ Sonderbetriebsausgabe hinzufügen"
 msgid ""
 "Expenses of individual partners — create the partners in the configuration "
 "first."
-msgstr "Aufwendungen einzelner Gesellschafter — erst Gesellschafter in der Konfiguration anlegen."
+msgstr ""
+"Aufwendungen einzelner Gesellschafter — erst Gesellschafter in der "
+"Konfiguration anlegen."
 
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:264
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:283
@@ -4347,6 +4541,138 @@ msgstr "Sicherungen behalten"
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:233
 msgid "Older ones are deleted after each new backup"
 msgstr "Ältere werden nach jeder neuen Sicherung gelöscht"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:31
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:25
+msgid "None (local only)"
+msgstr "Keine (nur lokal)"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:38
+msgid "Receipts from mail"
+msgstr "Belege aus Mail"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:40
+msgid ""
+"PDF and e-invoice attachments of new messages in a folder land in the "
+"receipt inbox. It only reads — nothing is marked, moved or deleted. The "
+"password lives in the keyring."
+msgstr "PDF- und E-Rechnungs-Anhänge neuer Nachrichten eines Ordners landen im Beleg-Eingang. Es wird nur gelesen — nichts wird markiert, verschoben oder gelöscht. Das Passwort liegt im Schlüsselbund."
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:46
+msgid "Set up with Paperless"
+msgstr "Mit Paperless einrichten"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:53
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:52
+msgid "Server"
+msgstr "Server"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:54
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:53
+msgid "Port"
+msgstr "Port"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:55
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:54
+msgid "Encryption"
+msgstr "Verschlüsselung"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:56
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:55
+msgid "User"
+msgstr "Benutzer"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:57
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:118
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:56
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:102
+msgid "Password (saved)"
+msgstr "Passwort (gespeichert)"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:57
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:161
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:56
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:141
+msgid "Password"
+msgstr "Passwort"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:58
+msgid "Folder (e.g. INBOX or Belege)"
+msgstr "Ordner (z. B. INBOX oder Belege)"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:59
+msgid "Only from senders containing … (optional)"
+msgstr "Nur von Absendern mit … (optional)"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:61
+msgid "Fetch when the app starts"
+msgstr "Beim Start der App abrufen"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:62
+msgid "Otherwise only on „Jetzt abrufen“."
+msgstr "Sonst nur auf „Jetzt abrufen“."
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:85
+msgid "Server and user are required."
+msgstr "Server und Benutzer sind nötig."
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:86
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:79
+msgid "The port is invalid."
+msgstr "Der Port ist ungültig."
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:99
+msgid "Save mailbox"
+msgstr "Postfach speichern"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:107
+msgid "Mailbox not saved"
+msgstr "Postfach nicht gespeichert"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:115
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:99
+msgid "The password could not be saved in the keyring."
+msgstr "Das Passwort ließ sich nicht im Schlüsselbund speichern."
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:123
+msgid "Last fetch"
+msgstr "Letzter Abruf"
+
+#
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:128
+msgid "Fetch now"
+msgstr "Jetzt abrufen"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:137
+msgid "Fetch not possible"
+msgstr "Abruf nicht möglich"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:140
+msgid "Fetch failed"
+msgstr "Abruf fehlgeschlagen"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:152
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:129
+msgid "Delete the saved password"
+msgstr "Gespeichertes Passwort löschen"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:156
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:133
+msgid "No password is saved"
+msgstr "Es ist kein Passwort gespeichert"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:162
+msgid "The password could not be deleted"
+msgstr "Passwort ließ sich nicht löschen"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:162
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:142
+msgid "Password deleted"
+msgstr "Passwort gelöscht"
+
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:170
+msgid "Never fetched yet."
+msgstr "Noch nie abgerufen."
 
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:47
 msgid "Business (master data)"
@@ -4713,7 +5039,9 @@ msgstr "Amtlicher Gemeindeschlüssel (AGS)"
 #: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:78
 msgid ""
 "The AGS has 8 digits (e.g. 03459015). Leave it empty if it is not known."
-msgstr "Der AGS ist 8-stellig (z. B. 03459015). Leer lassen, wenn er nicht bekannt ist."
+msgstr ""
+"Der AGS ist 8-stellig (z. B. 03459015). Leer lassen, wenn er nicht bekannt "
+"ist."
 
 #: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:85
 msgid "Hebesatz (%)"
@@ -4772,7 +5100,9 @@ msgstr "Betriebsaufgabe"
 msgid ""
 "Only when the business ceases: the remaining fixed assets move into private "
 "assets at their fair value."
-msgstr "Nur bei Aufgabe des Betriebs: das restliche Anlagevermögen geht zum gemeinen Wert ins Privatvermögen."
+msgstr ""
+"Nur bei Aufgabe des Betriebs: das restliche Anlagevermögen geht zum gemeinen "
+"Wert ins Privatvermögen."
 
 #: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:153
 msgid "Cessation date (YYYY-MM-DD)"
@@ -4782,25 +5112,25 @@ msgstr "Aufgabedatum (JJJJ-MM-TT)"
 msgid "The cessation date must be YYYY-MM-DD, e.g. 2025-12-31."
 msgstr "Das Aufgabedatum muss JJJJ-MM-TT sein, z. B. 2025-12-31."
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:163
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:165
 msgid "Cessation costs (€)"
 msgstr "Aufgabekosten (€)"
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:179
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:183
 msgid "Asset ID"
 msgstr "Anlagegut-ID"
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:183
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:187
 msgid "Fair value (€)"
 msgstr "Gemeiner Wert (€)"
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:187
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:191
 #: src/frontends/desktop/views/entity-dialogs.ts:102
 #: src/frontends/desktop/views/konten-view.ts:427
 msgid "Remove"
 msgstr "Entfernen"
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:197
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:201
 msgid "＋ Add fair value"
 msgstr "＋ Gemeinen Wert hinzufügen"
 
@@ -4825,110 +5155,232 @@ msgstr "Kinder"
 msgid ""
 "One Anlage Kind block per child. The Kinderfreibetrag and the Kindergeld "
 "claim act directly on the assessed tax."
-msgstr "Je Kind ein Block der Anlage Kind. Kinderfreibetrag und Kindergeld-Anspruch wirken unmittelbar auf die festzusetzende Steuer."
+msgstr ""
+"Je Kind ein Block der Anlage Kind. Kinderfreibetrag und Kindergeld-Anspruch "
+"wirken unmittelbar auf die festzusetzende Steuer."
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:49
+#: src/frontends/desktop/views/einstellungen/kinder.ts:50
 msgid "Children not readable: {error}"
 msgstr "Kinder nicht lesbar: {error}"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:57
+#: src/frontends/desktop/views/einstellungen/kinder.ts:59
 msgid "IdNr {id}"
 msgstr "IdNr {id}"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:57
+#: src/frontends/desktop/views/einstellungen/kinder.ts:59
 msgid "no IdNr"
 msgstr "ohne IdNr"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:59
+#: src/frontends/desktop/views/einstellungen/kinder.ts:61
 msgid "Kindergeld {year}: {amount} €"
 msgstr "Kindergeld {year}: {amount} €"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:60
+#: src/frontends/desktop/views/einstellungen/kinder.ts:62
 msgid "no details for {year}"
 msgstr "keine Angaben für {year}"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:68
-#: src/frontends/desktop/views/einstellungen/kinder.ts:100
+#: src/frontends/desktop/views/einstellungen/kinder.ts:70
+#: src/frontends/desktop/views/einstellungen/kinder.ts:102
 msgid "Edit child"
 msgstr "Kind bearbeiten"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:74
+#: src/frontends/desktop/views/einstellungen/kinder.ts:76
 msgid "Remove child — changes the tax calculation for the year"
 msgstr "Kind entfernen — ändert die Steuerberechnung des Jahres"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:84
+#: src/frontends/desktop/views/einstellungen/kinder.ts:86
 msgid "+ Add child"
 msgstr "+ Kind hinzufügen"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:100
+#: src/frontends/desktop/views/einstellungen/kinder.ts:102
 msgid "Add child"
 msgstr "Kind hinzufügen"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:110
+#: src/frontends/desktop/views/einstellungen/kinder.ts:112
 msgid "First name"
 msgstr "Vorname"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:111
+#: src/frontends/desktop/views/einstellungen/kinder.ts:113
 msgid "Surname (only if different)"
 msgstr "Nachname (nur falls abweichend)"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:112
+#: src/frontends/desktop/views/einstellungen/kinder.ts:114
 msgid "Date of birth (YYYY-MM-DD)"
 msgstr "Geburtsdatum (JJJJ-MM-TT)"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:113
+#: src/frontends/desktop/views/einstellungen/kinder.ts:115
 msgid "The child’s Steuer-IdNr (11 digits)"
 msgstr "Steuer-IdNr des Kindes (11-stellig)"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:114
+#: src/frontends/desktop/views/einstellungen/kinder.ts:116
 msgid "Familienkasse"
 msgstr "Familienkasse"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:116
+#: src/frontends/desktop/views/einstellungen/kinder.ts:118
 msgid "Relationship to the child"
 msgstr "Kindschaftsverhältnis"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:119
+#: src/frontends/desktop/views/einstellungen/kinder.ts:121
 msgid "Kindergeld claim {year} (€ per year)"
 msgstr "Kindergeld-Anspruch {year} (€ im Jahr)"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:142
+#: src/frontends/desktop/views/einstellungen/kinder.ts:144
 msgid "Child"
 msgstr "Kind"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:147
+#: src/frontends/desktop/views/einstellungen/kinder.ts:149
 msgid "Details {year}"
 msgstr "Angaben {year}"
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:149
+#: src/frontends/desktop/views/einstellungen/kinder.ts:151
 msgid ""
 "The yearly Kindergeld claim — with a halved Kinderfreibetrag the HALF claim, "
 "exactly as in the previous year’s filed return."
-msgstr "Der Jahresanspruch auf Kindergeld — bei hälftigem Kinderfreibetrag der HALBE Anspruch, so wie in der eingereichten Vorjahreserklärung."
+msgstr ""
+"Der Jahresanspruch auf Kindergeld — bei hälftigem Kinderfreibetrag der HALBE "
+"Anspruch, so wie in der eingereichten Vorjahreserklärung."
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:174
+#: src/frontends/desktop/views/einstellungen/kinder.ts:176
 msgid "The first name is missing."
 msgstr "Der Vorname fehlt."
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:176
+#: src/frontends/desktop/views/einstellungen/kinder.ts:178
 msgid "The date of birth must be in YYYY-MM-DD format."
 msgstr "Geburtsdatum muss im Format JJJJ-MM-TT stehen."
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:181
+#: src/frontends/desktop/views/einstellungen/kinder.ts:183
 msgid "The child’s Steuer-IdNr has exactly 11 digits."
 msgstr "Die Steuer-IdNr des Kindes hat genau 11 Ziffern."
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:184
+#: src/frontends/desktop/views/einstellungen/kinder.ts:186
 msgid "The Kindergeld claim is not a number."
 msgstr "Der Kindergeld-Anspruch ist keine Zahl."
 
-#: src/frontends/desktop/views/einstellungen/kinder.ts:214
+#: src/frontends/desktop/views/einstellungen/kinder.ts:216
 #: src/frontends/desktop/views/einstellungen-view.ts:314
 #: src/frontends/desktop/views/einstellungen-view.ts:430
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:254
 #: src/frontends/desktop/views/umbuchen-dialog.ts:251
 msgid "Could not save: {error}"
 msgstr "Konnte nicht speichern: {error}"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:46
+msgid "Classification"
+msgstr "Klassifizierung"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:48
+msgid ""
+"Who your customers are, what is private for you, which supplier is booked "
+"where. Bookings without a receipt are classified by this — the part that "
+"replaces the AI."
+msgstr "Wer deine Kunden sind, was für dich privat ist, welcher Lieferant wohin gebucht wird. Buchungen ohne Beleg werden hiernach eingeordnet — das ist der Teil, der die KI ersetzt."
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:60
+msgid "Could not read the classification rules: {error}"
+msgstr "Klassifizierungsregeln konnten nicht gelesen werden: {error}"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:81
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:104
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:140
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:550
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:73
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:94
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:229
+msgid "Supplier → category"
+msgstr "Lieferant → Kategorie"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:101
+msgid "Your own rules, which take effect before the built-in keyword list."
+msgstr "Eigene Regeln, die vor der eingebauten Stichwortliste greifen."
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:122
+msgid "Could not read the document rules: {error}"
+msgstr "Dokumentregeln konnten nicht gelesen werden: {error}"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:128
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:338
+msgid "Receipt → document type, category"
+msgstr "Beleg → Dokumenttyp, Kategorie"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:136
+msgid ""
+"Created with „Als Regel merken\" in the receipt dialog; they take effect "
+"when a receipt is added, before any AI."
+msgstr "Entstehen mit „Als Regel merken\" im Beleg-Dialog; greifen beim Hinzufügen eines Belegs, vor jeder KI."
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:178
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:244
+msgid "Text in the payment reference"
+msgstr "Text im Buchungstext"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:182
+msgid "Remove entry — changes the classification of years already booked"
+msgstr "Eintrag entfernen — ändert die Einordnung bereits gebuchter Jahre"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:207
+msgid "Add line"
+msgstr "Zeile hinzufügen"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:236
+msgid ""
+"These rules take effect BEFORE the built-in keyword list — so your own rule "
+"wins over a general keyword that would catch the same text."
+msgstr "Diese Regeln greifen VOR der eingebauten Stichwortliste — eine eigene Regel gewinnt also über ein allgemeines Stichwort, das denselben Text fangen würde."
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:246
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:366
+msgid "Category (SKR03, as in the EÜR)"
+msgstr "Kategorie (SKR03, wie in der EÜR)"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:250
+msgid "Remove rule — changes the classification of years already booked"
+msgstr "Regel entfernen — ändert die Einordnung bereits gebuchter Jahre"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:265
+msgid "{count} exception"
+msgid_plural "{count} exceptions"
+msgstr[0] "{count} Ausnahme(n)"
+msgstr[1] "{count} Ausnahme(n)"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:268
+msgid ""
+"Bookings deselected when the rule was created — the rule leaves them out."
+msgstr "Buchungen, die beim Anlegen abgewählt wurden — die Regel lässt sie aus."
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:271
+msgctxt "exceptions"
+msgid "Clear"
+msgstr "Aufheben"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:275
+msgid "Clear exceptions — the rule then catches these bookings again"
+msgstr "Ausnahmen aufheben — die Regel erfasst diese Buchungen dann wieder"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:300
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:405
+msgid "Add rule"
+msgstr "Regel hinzufügen"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:324
+msgid "Outgoing (revenue)"
+msgstr "Ausgang (Einnahme)"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:345
+msgid ""
+"When a receipt is added, the first matching rule fills what is still empty — "
+"before the AI. Removing a rule changes no existing receipt."
+msgstr "Beim Hinzufügen eines Belegs setzt die erste passende Regel, was noch leer ist — vor der KI. Eine Regel zu entfernen ändert keinen vorhandenen Beleg."
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:360
+msgid "Text in the receipt (sender, title, file name)"
+msgstr "Text im Beleg (Absender, Titel, Dateiname)"
+
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:381
+msgid "Remove rule — existing receipts keep their values"
+msgstr "Regel entfernen — vorhandene Belege behalten ihre Werte"
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:30
 msgid "Turn off German tax features?"
@@ -4990,6 +5442,164 @@ msgstr "Deutsche Steuerfunktionen"
 msgid "ELSTER returns, tax forecast, tax deadlines and the Tax area"
 msgstr ""
 "ELSTER-Erklärungen, Steuerprognose, Steuertermine und der Bereich Steuer"
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:35
+msgid "Mail sending"
+msgstr "E-Mail-Versand"
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:37
+msgid ""
+"The account that invoices are mailed through. The password lives in the "
+"keyring, not in the configuration."
+msgstr "Das Konto, über das Rechnungen per E-Mail rausgehen. Das Passwort liegt im Schlüsselbund, nicht in der Konfiguration."
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:40
+msgid "Own account (SMTP)"
+msgstr "Eigenes Konto (SMTP)"
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:45
+msgid "System account (GNOME Online Accounts)"
+msgstr "Systemkonto (GNOME Online-Konten)"
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:46
+msgid "follows with @gjsify/system-accounts"
+msgstr "folgt mit @gjsify/system-accounts"
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:57
+msgid "Sender address"
+msgstr "Absenderadresse"
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:78
+msgid "Server, user and sender address are required."
+msgstr "Server, Benutzer und Absenderadresse sind nötig."
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:83
+msgid "Save account"
+msgstr "Konto speichern"
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:91
+msgid "Account not saved"
+msgstr "Konto nicht gespeichert"
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:108
+msgid "Test the connection"
+msgstr "Verbindung testen"
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:116
+msgid "The password is missing."
+msgstr "Das Passwort fehlt."
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:119
+msgid "Signed in to the mail server"
+msgstr "Anmeldung am Mailserver erfolgreich"
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:121
+msgid "Connection failed"
+msgstr "Verbindung fehlgeschlagen"
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:137
+msgid "Password not deleted"
+msgstr "Passwort nicht gelöscht"
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:137
+msgid "The keyring could not be reached."
+msgstr "Der Schlüsselbund ließ sich nicht erreichen."
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:22
+msgid "— Built-in text —"
+msgstr "— Standardtext —"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:70
+msgid "Edit template"
+msgstr "Vorlage bearbeiten"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:70
+msgid "New template"
+msgstr "Neue Vorlage"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:82
+msgid "Name (e.g. Hosting)"
+msgstr "Name (z. B. Hosting)"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:87
+msgid "Subject (du)"
+msgstr "Betreff (Du)"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:89
+msgid "Du variant"
+msgstr "Du-Variante"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:94
+msgid "Subject (Sie)"
+msgstr "Betreff (Sie)"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:97
+msgid "Sie variant"
+msgstr "Sie-Variante"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:98
+msgid "Empty = the du variant applies to Sie as well."
+msgstr "Leer = die Du-Variante gilt auch für Sie."
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:111
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:190
+msgid "Placeholders"
+msgstr "Platzhalter"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:112
+msgid "A click inserts the placeholder in the text field edited last"
+msgstr "Klick fügt den Platzhalter im zuletzt bearbeiteten Textfeld ein"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:135
+msgid "Template incomplete"
+msgstr "Vorlage unvollständig"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:135
+msgid "Name, subject and text (du) are required."
+msgstr "Name, Betreff und Text (Du) sind nötig."
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:142
+msgid "Unknown placeholders"
+msgstr "Unbekannte Platzhalter"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:143
+msgid "{names} do not exist. Such a template cannot be sent."
+msgstr "{names} gibt es nicht. Eine solche Vorlage lässt sich nicht senden."
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:178
+msgid "Mail templates"
+msgstr "E-Mail-Vorlagen"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:180
+msgid ""
+"Named texts for sending invoices. Without a template the built-in text "
+"applies. A contract or project may pick another one."
+msgstr "Benannte Texte für den Rechnungsversand. Ohne Vorlage gilt der eingebaute Text. Ein Vertrag oder Projekt kann eine andere wählen."
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:196
+msgid "Default of the entity"
+msgstr "Standard der Entität"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:211
+msgid "Delete template"
+msgstr "Vorlage löschen"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:215
+msgid "Delete the template „{name}“?"
+msgstr "Vorlage „{name}“ löschen?"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:216
+msgid "Contracts and projects naming it fall back to the next level."
+msgstr "Verträge und Projekte, die sie nennen, fallen auf die nächste Stufe zurück."
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:217
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:623
+msgid "Delete"
+msgstr "Löschen"
+
+#: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:241
+msgid "Add template …"
+msgstr "Vorlage hinzufügen …"
 
 #: src/frontends/desktop/views/einstellungen/privat.ts:25
 msgid "None / not liable for church tax"
@@ -5073,7 +5683,9 @@ msgstr "Gibt selbst ab"
 msgid ""
 "This person files their income tax return themselves — then no income tax "
 "deadline is reminded here. The calculation stays usable."
-msgstr "Diese Person übermittelt ihre Einkommensteuererklärung selbst — dann wird hier kein ESt-Termin erinnert. Die Berechnung bleibt nutzbar."
+msgstr ""
+"Diese Person übermittelt ihre Einkommensteuererklärung selbst — dann wird "
+"hier kein ESt-Termin erinnert. Die Berechnung bleibt nutzbar."
 
 #: src/frontends/desktop/views/einstellungen/privat.ts:109
 msgid "Church tax rate"
@@ -5103,208 +5715,217 @@ msgstr "Solidaritätszuschlag (€)"
 msgid "Church tax (€)"
 msgstr "Kirchensteuer (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:173
+#: src/frontends/desktop/views/einstellungen/privat.ts:171
 msgid "Income from a trade or business (EÜR profit) (€)"
 msgstr "Einkünfte aus Gewerbebetrieb (EÜR-Gewinn) (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:183
+#: src/frontends/desktop/views/einstellungen/privat.ts:181
 msgid "Tax class"
 msgstr "Steuerklasse"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:184
+#: src/frontends/desktop/views/einstellungen/privat.ts:182
 msgid "(not specified)"
 msgstr "(keine Angabe)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:188
+#: src/frontends/desktop/views/einstellungen/privat.ts:186
 msgid "Income tax prepayments made (€)"
 msgstr "Geleistete ESt-Vorauszahlungen (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:191
+#: src/frontends/desktop/views/einstellungen/privat.ts:189
 msgid "Name of the trade or business"
 msgstr "Bezeichnung des Gewerbes"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:198
+#: src/frontends/desktop/views/einstellungen/privat.ts:196
 msgid "Source of the EÜR profit (entity ID)"
 msgstr "Quelle des EÜR-Gewinns (Entitäts-ID)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:218
+#: src/frontends/desktop/views/einstellungen/privat.ts:216
 msgid "Insurance contributions {year}"
 msgstr "Vorsorgeaufwendungen {year}"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:223
+#: src/frontends/desktop/views/einstellungen/privat.ts:221
 msgid "Pension insurance (employee) (€)"
 msgstr "Rentenversicherung (Arbeitnehmer) (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:224
+#: src/frontends/desktop/views/einstellungen/privat.ts:222
 msgid "Health insurance (basic) (€)"
 msgstr "Krankenversicherung (Basis) (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:225
+#: src/frontends/desktop/views/einstellungen/privat.ts:223
 msgid "Long-term care insurance (basic) (€)"
 msgstr "Pflegeversicherung (Basis) (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:227
+#: src/frontends/desktop/views/einstellungen/privat.ts:225
 msgid "Pension insurance (tax-free employer share) (€)"
 msgstr "Rentenversicherung (steuerfreier Arbeitgeberanteil) (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:231
+#: src/frontends/desktop/views/einstellungen/privat.ts:229
 msgid "Unemployment insurance (employee) (€)"
 msgstr "Arbeitslosenversicherung (Arbeitnehmer) (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:232
+#: src/frontends/desktop/views/einstellungen/privat.ts:230
 msgid "Other insurance contributions (€)"
 msgstr "Sonstige Vorsorge (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:233
+#: src/frontends/desktop/views/einstellungen/privat.ts:231
 msgid "Employer subsidy"
 msgstr "Arbeitgeberzuschuss"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:250
+#: src/frontends/desktop/views/einstellungen/privat.ts:248
 msgid "Work-related expenses {year}"
 msgstr "Werbungskosten {year}"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:252
+#: src/frontends/desktop/views/einstellungen/privat.ts:250
 msgid ""
 "Individual work-expense items and the commuting allowance are currently "
 "maintained through the configuration / the assistant."
-msgstr "Einzelne Werbungskosten-Posten und die Pendelpauschale werden aktuell über die Konfiguration/den Assistenten gepflegt."
+msgstr ""
+"Einzelne Werbungskosten-Posten und die Pendelpauschale werden aktuell über "
+"die Konfiguration/den Assistenten gepflegt."
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:257
+#: src/frontends/desktop/views/einstellungen/privat.ts:255
 msgid "Home-office days"
 msgstr "Homeoffice-Tage"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:268
+#: src/frontends/desktop/views/einstellungen/privat.ts:266
 msgid "Another workplace was available"
 msgstr "Anderer Arbeitsplatz stand zur Verfügung"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:269
+#: src/frontends/desktop/views/einstellungen/privat.ts:267
 msgid ""
 "Off for “permanently no other workplace” — that is a line of its own on the "
 "form."
-msgstr "Aus für „dauerhaft kein anderer Arbeitsplatz\" — das ist im Formular eine eigene Zeile."
+msgstr ""
+"Aus für „dauerhaft kein anderer Arbeitsplatz\" — das ist im Formular eine "
+"eigene Zeile."
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:278
+#: src/frontends/desktop/views/einstellungen/privat.ts:276
 msgid "{days} days × {km} km"
 msgstr "{days} Tage × {km} km"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:279
+#: src/frontends/desktop/views/einstellungen/privat.ts:277
 msgid "not set"
 msgstr "nicht gesetzt"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:282
+#: src/frontends/desktop/views/einstellungen/privat.ts:280
 msgid "Further items"
 msgstr "Weitere Posten"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:285
+#: src/frontends/desktop/views/einstellungen/privat.ts:283
 msgid "{n} individual item"
 msgid_plural "{n} individual items"
 msgstr[0] "{n} Einzelposten"
 msgstr[1] "{n} Einzelposten"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:286
+#: src/frontends/desktop/views/einstellungen/privat.ts:284
 msgid "Commuting allowance: {pendel}"
 msgstr "Pendelpauschale: {pendel}"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:314
+#: src/frontends/desktop/views/einstellungen/privat.ts:312
 msgid "Special expenses and burdens {year}"
 msgstr "Sonderausgaben und Belastungen {year}"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:315
+#: src/frontends/desktop/views/einstellungen/privat.ts:313
 msgid ""
 "Amounts nobody reports — donations, medical costs, tradespeople, school fees."
-msgstr "Beträge, die niemand meldet — Spenden, Krankheitskosten, Handwerker, Schulgeld."
+msgstr ""
+"Beträge, die niemand meldet — Spenden, Krankheitskosten, Handwerker, "
+"Schulgeld."
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:334
+#: src/frontends/desktop/views/einstellungen/privat.ts:331
 msgid "Church tax paid (§10 (1) no. 4) (€)"
 msgstr "Gezahlte Kirchensteuer (§10 Abs. 1 Nr. 4) (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:336
+#: src/frontends/desktop/views/einstellungen/privat.ts:332
 msgid "Donations (in addition to detected bookings) (€)"
 msgstr "Spenden (zusätzlich zu erkannten Buchungen) (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:337
+#: src/frontends/desktop/views/einstellungen/privat.ts:333
 msgid "Party dues and donations (§34g) (€)"
 msgstr "Parteibeiträge und -spenden (§34g) (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:338
+#: src/frontends/desktop/views/einstellungen/privat.ts:334
 msgid "School fees (§10 (1) no. 9, the tuition share only) (€)"
 msgstr "Schulgeld (§10 Abs. 1 Nr. 9, nur der Schulgeldanteil) (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:339
+#: src/frontends/desktop/views/einstellungen/privat.ts:335
 msgid "Childcare costs (§10 (1) no. 5) (€)"
 msgstr "Kinderbetreuungskosten (§10 Abs. 1 Nr. 5) (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:342
+#: src/frontends/desktop/views/einstellungen/privat.ts:338
 msgid ""
 "Medical costs (extraordinary burden, in addition to detected bookings) (€)"
 msgstr "Krankheitskosten (agB, zusätzlich zu erkannten Buchungen) (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:351
+#: src/frontends/desktop/views/einstellungen/privat.ts:347
 msgid "Household-related services (§35a) without a booking of their own"
 msgstr "Haushaltsnahe Leistungen (§35a) ohne eigene Buchung"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:352
+#: src/frontends/desktop/views/einstellungen/privat.ts:348
 msgid "For example the service shares from a service-charge statement."
 msgstr "Zum Beispiel die Dienstleistungsanteile aus der Nebenkostenabrechnung."
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:356
+#: src/frontends/desktop/views/einstellungen/privat.ts:352
 msgid "Tradesperson services (labour share) (€)"
 msgstr "Handwerkerleistungen (Lohnanteil) (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:357
+#: src/frontends/desktop/views/einstellungen/privat.ts:353
 msgid "Household-related services (€)"
 msgstr "Haushaltsnahe Dienstleistungen (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:358
+#: src/frontends/desktop/views/einstellungen/privat.ts:354
 msgid "Household-related mini-jobs (€)"
 msgstr "Haushaltsnahe Minijobs (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:371
+#: src/frontends/desktop/views/einstellungen/privat.ts:367
 msgid "Wage replacement benefits (§32b)"
 msgstr "Lohnersatzleistungen (§32b)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:372
+#: src/frontends/desktop/views/einstellungen/privat.ts:368
 msgid ""
 "Parental, unemployment, sickness and maternity benefits — they change the "
 "tax rate."
-msgstr "Eltern-, Arbeitslosen-, Kranken-, Mutterschaftsgeld — ändern den Steuersatz."
+msgstr ""
+"Eltern-, Arbeitslosen-, Kranken-, Mutterschaftsgeld — ändern den Steuersatz."
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:375
+#: src/frontends/desktop/views/einstellungen/privat.ts:371
 msgid "Received during the year (€)"
 msgstr "Im Jahr erhalten (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:376
+#: src/frontends/desktop/views/einstellungen/privat.ts:372
 msgid "Repaid during the year (€)"
 msgstr "Im Jahr zurückgezahlt (€)"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:400
+#: src/frontends/desktop/views/einstellungen/privat.ts:396
 msgid "Single-parent allowance (§24b) {year}"
 msgstr "Entlastungsbetrag für Alleinerziehende (§24b) {year}"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:402
+#: src/frontends/desktop/views/einstellungen/privat.ts:398
 msgid ""
 "For single people with at least one child in the household (no second "
 "adult): 4,260 € + 240 € per further child, pro rata per month."
-msgstr "Für Alleinstehende mit mindestens einem Kind im Haushalt (kein weiterer Erwachsener): 4.260 € + 240 € je weiterem Kind, anteilig je Monat."
+msgstr ""
+"Für Alleinstehende mit mindestens einem Kind im Haushalt (kein weiterer "
+"Erwachsener): 4.260 € + 240 € je weiterem Kind, anteilig je Monat."
 
 #
-#: src/frontends/desktop/views/einstellungen/privat.ts:409
+#: src/frontends/desktop/views/einstellungen/privat.ts:405
 msgid "Expected allowance"
 msgstr "Voraussichtlicher Entlastungsbetrag"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:414
+#: src/frontends/desktop/views/einstellungen/privat.ts:410
 msgid "Months as a single parent"
 msgstr "Monate alleinerziehend"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:419
+#: src/frontends/desktop/views/einstellungen/privat.ts:415
 msgid "e.g. from when the other parent moved out; 0 = no entitlement"
 msgstr "z. B. ab dem Auszug des anderen Elternteils; 0 = kein Anspruch"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:422
+#: src/frontends/desktop/views/einstellungen/privat.ts:418
 msgid "Further children in the household"
 msgstr "Weitere Kinder im Haushalt"
 
-#: src/frontends/desktop/views/einstellungen/privat.ts:433
+#: src/frontends/desktop/views/einstellungen/privat.ts:429
 msgid "Child (base amount)"
 msgstr "Kind (Grundbetrag)"
 
@@ -7204,11 +7825,6 @@ msgstr "an {recipients}"
 msgid "Actions"
 msgstr "Aktionen"
 
-#: src/frontends/desktop/views/rechnung-detail-dialog.ts:550
-#: src/frontends/desktop/views/vertrag-detail-dialog.ts:73
-msgid "Edit"
-msgstr "Bearbeiten"
-
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:552
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:605
 msgid "Finalize"
@@ -7275,10 +7891,6 @@ msgstr "Entwurf löschen?"
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:622
 msgid "The invoice draft is removed permanently."
 msgstr "Der Rechnungsentwurf wird endgültig entfernt."
-
-#: src/frontends/desktop/views/rechnung-detail-dialog.ts:623
-msgid "Delete"
-msgstr "Löschen"
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:629
 msgid "Draft deleted"
@@ -7777,10 +8389,6 @@ msgstr ""
 "Rechnung {number} wird als PDF angehängt. Betreff und Text lassen sich "
 "ändern."
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:190
-msgid "Placeholders"
-msgstr "Platzhalter"
-
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:191
 msgid "A click inserts the placeholder at the cursor"
 msgstr "Klick fügt den Platzhalter an der Cursor-Stelle ein"
@@ -7949,12 +8557,6 @@ msgstr "Regel gespeichert: „{pattern}“ → {category}"
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:244
 msgid "Rule already existed: “{pattern}” → {category}"
 msgstr "Regel bestand bereits: „{pattern}“ → {category}"
-
-#: src/frontends/desktop/views/setup-assistant.ts:63
-#: src/frontends/desktop/views/setup-assistant.ts:468
-#: src/frontends/desktop/window.ts:722
-msgid "Private"
-msgstr "Privat"
 
 #: src/frontends/desktop/views/setup-assistant.ts:63
 msgid "No business: wages, work expenses, household services"

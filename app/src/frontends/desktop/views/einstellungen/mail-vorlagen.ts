@@ -12,13 +12,14 @@ import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 
 import type { MailTemplate } from '../../../../core/config/index.ts';
-import { MAIL_PLACEHOLDERS, unknownMailPlaceholders } from '../../../../core/mail/invoice-mail.ts';
+import { mailPlaceholderHelp, unknownMailPlaceholders } from '../../../../core/mail/invoice-mail.ts';
 import { loadInvoicing, saveInvoicing } from '../../data/settings.ts';
 import type { AppEntity } from '../../entities.ts';
+import { _, fmt } from '../../i18n.ts';
 import { confirmDialog, errorDialog } from '../dialogs.ts';
 import type { SettingsHost } from './rows.ts';
 
-const NONE = '— Standardtext —';
+const none = (): string => _('— Built-in text —');
 
 const slug = (name: string, taken: readonly string[]): string => {
     const base =
@@ -66,7 +67,7 @@ function frame(view: Gtk.TextView): Gtk.Frame {
 /** Edit one template in a dialog; resolves with the result, or null when cancelled. */
 function editTemplate(parent: Gtk.Widget, existing: MailTemplate | null): Promise<Omit<MailTemplate, 'id'> | null> {
     return new Promise((resolve) => {
-        const dialog = new Adw.Dialog({ title: existing ? 'Vorlage bearbeiten' : 'Neue Vorlage' });
+        const dialog = new Adw.Dialog({ title: existing ? _('Edit template') : _('New template') });
         dialog.set_content_width(560);
         dialog.set_content_height(860);
         let done = false;
@@ -78,23 +79,23 @@ function editTemplate(parent: Gtk.Widget, existing: MailTemplate | null): Promis
         dialog.connect('closed', () => finish(null));
 
         const page = new Adw.PreferencesPage();
-        const name = new Adw.EntryRow({ title: 'Name (z. B. Hosting)', text: existing?.name ?? '' });
+        const name = new Adw.EntryRow({ title: _('Name (e.g. Hosting)'), text: existing?.name ?? '' });
         const head = new Adw.PreferencesGroup();
         head.add(name);
         page.add(head);
 
-        const duSubject = new Adw.EntryRow({ title: 'Betreff (Du)', text: existing?.subject ?? '' });
+        const duSubject = new Adw.EntryRow({ title: _('Subject (du)'), text: existing?.subject ?? '' });
         const duBody = textArea(existing?.body ?? '');
-        const du = new Adw.PreferencesGroup({ title: 'Du-Variante' });
+        const du = new Adw.PreferencesGroup({ title: _('Du variant') });
         du.add(duSubject);
         du.add(frame(duBody));
         page.add(du);
 
-        const sieSubject = new Adw.EntryRow({ title: 'Betreff (Sie)', text: existing?.subjectSie ?? '' });
+        const sieSubject = new Adw.EntryRow({ title: _('Subject (Sie)'), text: existing?.subjectSie ?? '' });
         const sieBody = textArea(existing?.bodySie ?? '');
         const sie = new Adw.PreferencesGroup({
-            title: 'Sie-Variante',
-            description: 'Leer = die Du-Variante gilt auch für Sie.',
+            title: _('Sie variant'),
+            description: _('Empty = the du variant applies to Sie as well.'),
         });
         sie.add(sieSubject);
         sie.add(frame(sieBody));
@@ -107,10 +108,10 @@ function editTemplate(parent: Gtk.Widget, existing: MailTemplate | null): Promis
             view.add_controller(ctrl);
         }
         const holders = new Adw.ExpanderRow({
-            title: 'Platzhalter',
-            subtitle: 'Klick fügt den Platzhalter im zuletzt bearbeiteten Textfeld ein',
+            title: _('Placeholders'),
+            subtitle: _('A click inserts the placeholder in the text field edited last'),
         });
-        for (const [key, what] of Object.entries(MAIL_PLACEHOLDERS)) {
+        for (const [key, what] of Object.entries(mailPlaceholderHelp())) {
             const row = new Adw.ActionRow({ title: `{${key}}`, subtitle: what, activatable: true });
             row.connect('activated', () => focus?.get_buffer().insert_at_cursor(`{${key}}`, -1));
             holders.add_row(row);
@@ -120,7 +121,7 @@ function editTemplate(parent: Gtk.Widget, existing: MailTemplate | null): Promis
         page.add(hg);
 
         const actions = new Adw.PreferencesGroup();
-        const save = new Adw.ButtonRow({ title: 'Übernehmen' });
+        const save = new Adw.ButtonRow({ title: _('Apply') });
         save.add_css_class('suggested-action');
         save.connect('activated', () => {
             const fields = {
@@ -131,15 +132,17 @@ function editTemplate(parent: Gtk.Widget, existing: MailTemplate | null): Promis
                 bodySie: readArea(sieBody),
             };
             if (!fields.name || !fields.subject || !fields.body) {
-                void errorDialog(dialog, 'Vorlage unvollständig', 'Name, Betreff und Text (Du) sind nötig.');
+                void errorDialog(dialog, _('Template incomplete'), _('Name, subject and text (du) are required.'));
                 return;
             }
             const unknown = unknownMailPlaceholders(Object.values(fields).join('\n'));
             if (unknown.length) {
                 void errorDialog(
                     dialog,
-                    'Unbekannte Platzhalter',
-                    `${unknown.map((u) => `{${u}}`).join(', ')} gibt es nicht. Eine solche Vorlage lässt sich nicht senden.`,
+                    _('Unknown placeholders'),
+                    fmt(_('{names} do not exist. Such a template cannot be sent.'), {
+                        names: unknown.map((u) => `{${u}}`).join(', '),
+                    }),
                 );
                 return;
             }
@@ -172,9 +175,10 @@ export function buildMailTemplatesGroup(
     const templates = [...inv.mailTemplates];
 
     const group = new Adw.PreferencesGroup({
-        title: 'E-Mail-Vorlagen',
-        description:
-            'Benannte Texte für den Rechnungsversand. Ohne Vorlage gilt der eingebaute Text. Ein Vertrag oder Projekt kann eine andere wählen.',
+        title: _('Mail templates'),
+        description: _(
+            'Named texts for sending invoices. Without a template the built-in text applies. A contract or project may pick another one.',
+        ),
     });
 
     const persist = (next: MailTemplate[], defaultId: string): void => {
@@ -189,8 +193,8 @@ export function buildMailTemplatesGroup(
     };
 
     const defaultRow = new Adw.ComboRow({
-        title: 'Standard der Entität',
-        model: Gtk.StringList.new([NONE, ...templates.map((t) => t.name)]),
+        title: _('Default of the entity'),
+        model: Gtk.StringList.new([none(), ...templates.map((t) => t.name)]),
     });
     defaultRow.set_selected(Math.max(0, templates.findIndex((t) => t.id === inv.defaultMailTemplate) + 1));
     defaultRow.connect('notify::selected', () => {
@@ -204,13 +208,13 @@ export function buildMailTemplatesGroup(
         const row = new Adw.ActionRow({ title: t.name, subtitle: t.subject, activatable: true });
         const del = new Gtk.Button({ iconName: 'user-trash-symbolic', valign: Gtk.Align.CENTER });
         del.add_css_class('flat');
-        del.set_tooltip_text('Vorlage löschen');
+        del.set_tooltip_text(_('Delete template'));
         del.connect('clicked', () => {
             void (async () => {
                 const ok = await confirmDialog(parent, {
-                    heading: `Vorlage „${t.name}“ löschen?`,
-                    body: 'Verträge und Projekte, die sie nennen, fallen auf die nächste Stufe zurück.',
-                    confirmLabel: 'Löschen',
+                    heading: fmt(_('Delete the template „{name}“?'), { name: t.name }),
+                    body: _('Contracts and projects naming it fall back to the next level.'),
+                    confirmLabel: _('Delete'),
                     destructive: true,
                 });
                 if (ok)
@@ -234,7 +238,7 @@ export function buildMailTemplatesGroup(
         group.add(row);
     }
 
-    const add = new Adw.ButtonRow({ title: 'Vorlage hinzufügen …' });
+    const add = new Adw.ButtonRow({ title: _('Add template …') });
     add.connect('activated', () => {
         void (async () => {
             const created = await editTemplate(parent, null);
