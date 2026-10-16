@@ -21,7 +21,7 @@ import { gleichePartei } from './serie.ts';
 import { dayDiff } from '../lib/transactions/reconcile.ts';
 import { round2 } from '../lib/money.ts';
 import { hauptTeil } from './splitbuchung.ts';
-import { _n, fmt } from '../lib/i18n.ts';
+import { _, _n, fmt } from '../lib/i18n.ts';
 
 /** How far back a refund looks for its debit — an app threshold, not a legal number
  *  (docs/references/tax-sources.md, „Geld-Prüfungen"). A year covers a refunded annual fee. */
@@ -204,10 +204,13 @@ export function erbeVonUrsprung(original: ErstattungBuchung): {
 
 const deDate = (iso: string) => `${iso.slice(8, 10)}.${iso.slice(5, 7)}.${iso.slice(0, 4)}`;
 
-/** How an original reads after „via Erstattung zu …": „Buchung vom 10.03.2026 (Büromöbel Kranich GmbH)". */
+/** How an original reads after „via Erstattung zu …": "booking of 10.03.2026 (Büromöbel Kranich GmbH)". */
 export function ursprungLabel(original: Pick<ErstattungBuchung, 'bookingDate' | 'counterparty'>): string {
     const who = original.counterparty?.trim();
-    return `Buchung vom ${deDate(original.bookingDate)}${who ? ` (${who})` : ''}`;
+    const datum = deDate(original.bookingDate);
+    return who
+        ? fmt(_('booking of {date} ({who})'), { date: datum, who })
+        : fmt(_('booking of {date}'), { date: datum });
 }
 
 /** One incoming payment with its candidates — a row of „N Erstattungen zuordnen". */

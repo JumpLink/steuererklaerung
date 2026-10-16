@@ -22,11 +22,14 @@ import type { AppEntity } from '../entities.ts';
 import { showToast } from '../toast.ts';
 import { errorDialog } from './dialogs.ts';
 import { markup } from './util.ts';
+import { _, _n, fmt } from '../i18n.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 
 function kandidatSub(k: ErstattungKandidatView): string {
-    const art = k.exakt ? 'gleicher Betrag' : `Teilerstattung — offen ${fmtDe(k.offen)} €`;
-    return `${k.category} · ${art}${k.zweckTreffer ? ' · Verwendungszweck passt' : ''}`;
+    const art = k.exakt
+        ? _('same amount')
+        : fmt(_('partial refund — {amount} € still open'), { amount: fmtDe(k.offen) });
+    return `${k.category} · ${art}${k.zweckTreffer ? ` · ${_('reference matches')}` : ''}`;
 }
 
 /** A list of the candidates; picking one links it. */
@@ -37,7 +40,9 @@ function pickKandidat(
 ) {
     const dlg = new Adw.Dialog({ contentWidth: 520, contentHeight: 480 });
     const header = new Adw.HeaderBar();
-    header.set_title_widget(new Adw.WindowTitle({ title: 'Zu welcher Zahlung gehört die Erstattung?', subtitle: '' }));
+    header.set_title_widget(
+        new Adw.WindowTitle({ title: _('Which payment does the refund belong to?'), subtitle: '' }),
+    );
     const page = new Adw.PreferencesPage();
     const group = new Adw.PreferencesGroup();
     for (const k of kandidaten) {
@@ -70,8 +75,10 @@ export function erstattungGroup(
     onChanged: (what: string) => void,
 ): Adw.PreferencesGroup {
     const group = new Adw.PreferencesGroup({
-        title: 'Gehört das zu dieser Zahlung?',
-        description: '„Ja" übernimmt Kategorie und Steuersatz der Zahlung und mindert deren Ausgabe samt Vorsteuer.',
+        title: _('Does this belong to that payment?'),
+        description: _(
+            '"Yes" takes over the payment\'s category and VAT rate and reduces its expense along with the input VAT.',
+        ),
         visible: false,
     });
     group.set_header_suffix(new BhGlossaryHelp('erstattung', lernmodusOn()));
@@ -84,13 +91,15 @@ export function erstattungGroup(
                 showToast(what);
                 onChanged(what);
             })
-            .catch((err) => errorDialog(parent, 'Erstattung', err instanceof Error ? err.message : String(err)))
+            .catch((err) => errorDialog(parent, _('Refund'), err instanceof Error ? err.message : String(err)))
             .finally(() => {
                 busy = false;
             });
     };
     const ja = (k: ErstattungKandidatView) =>
-        run(`Erstattung zugeordnet: ${k.category}`, () => verknuepfeErstattung(appSession(), entity, year, txId, k.id));
+        run(fmt(_('Refund assigned: {category}'), { category: k.category }), () =>
+            verknuepfeErstattung(appSession(), entity, year, txId, k.id),
+        );
 
     erstattungFrage(appSession(), entity, year, txId)
         .then((frage) => {
@@ -98,13 +107,17 @@ export function erstattungGroup(
             if (!best) return;
             const row = new Adw.ActionRow({ title: markup(best.zeile), subtitle: markup(kandidatSub(best)) });
             row.set_subtitle_lines(0);
-            const nein = new Gtk.Button({ label: 'Nein', valign: Gtk.Align.CENTER });
-            nein.set_tooltip_text(`Gehört nicht zu: ${best.zeile}`);
+            const nein = new Gtk.Button({ label: _('No'), valign: Gtk.Align.CENTER });
+            nein.set_tooltip_text(fmt(_('Does not belong to: {booking}'), { booking: best.zeile }));
             nein.connect('clicked', () =>
-                run('Nicht zugeordnet', () => lehneErstattungAb(appSession(), entity, year, txId, best.id)),
+                run(_('Not assigned'), () => lehneErstattungAb(appSession(), entity, year, txId, best.id)),
             );
-            const jaBtn = new Gtk.Button({ label: 'Ja', valign: Gtk.Align.CENTER, cssClasses: ['suggested-action'] });
-            jaBtn.set_tooltip_text(`Gehört zu: ${best.zeile}`);
+            const jaBtn = new Gtk.Button({
+                label: _('Yes'),
+                valign: Gtk.Align.CENTER,
+                cssClasses: ['suggested-action'],
+            });
+            jaBtn.set_tooltip_text(fmt(_('Belongs to: {booking}'), { booking: best.zeile }));
             jaBtn.connect('clicked', () => ja(best));
             const box = new Gtk.Box({ spacing: 6, valign: Gtk.Align.CENTER });
             box.append(nein);
@@ -113,8 +126,10 @@ export function erstattungGroup(
             group.add(row);
             if (frage.kandidaten.length > 1) {
                 const andere = new Adw.ActionRow({
-                    title: 'Andere Zahlung wählen …',
-                    subtitle: `${frage.kandidaten.length} Kandidaten`,
+                    title: _('Pick another payment …'),
+                    subtitle: fmt(_n('{n} candidate', '{n} candidates', frage.kandidaten.length), {
+                        n: frage.kandidaten.length,
+                    }),
                     activatable: true,
                 });
                 andere.add_suffix(new Gtk.Image({ iconName: 'go-next-symbolic', cssClasses: ['dim-label'] }));

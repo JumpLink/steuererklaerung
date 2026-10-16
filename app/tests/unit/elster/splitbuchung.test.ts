@@ -240,7 +240,7 @@ export default async () => {
             expect(row.aufteilung!.map((p) => `${p.category}:${p.gross}`).join('|')).toBe(
                 `${BUERO}:59.5|${PRIVAT_KATEGORIE}:59.5`,
             );
-            expect(wasGiltDanach(row)).toBe(`Danach gilt wieder: via Beleg #7 → ${BUERO}.`);
+            expect(wasGiltDanach(row)).toBe(`Then this applies again: via Receipt #7 → ${BUERO}.`);
             const beitraege = beitragsZeilen(mit.detail!);
             expect(beitraege.map((r) => `${r.id}:${r.category}:${r.net}:${r.teilNr}`).join('|')).toBe(
                 `kauf:${BUERO}:50:1|kauf:${PRIVAT_KATEGORIE}:0:2`,

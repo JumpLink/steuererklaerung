@@ -10,6 +10,7 @@
  */
 
 import { zuPruefenQueue, herkunftText, type ZuPruefenGrund } from '../elster/zu-pruefen.ts';
+import { _, fmt } from '../lib/i18n.ts';
 import { regelAusBeispielen, type RegelBuchung, type RegelVorschau } from '../elster/regel-aus-beispielen.ts';
 import { buchungZeile } from '../elster/hinweise.ts';
 import { confirmClassification, loadConfirmedClassifications } from '../actions/classifications.ts';
@@ -70,14 +71,15 @@ export async function confirmZuPruefen(
 ): Promise<{ ok: true; id: string; category: string }> {
     const { rows } = await loadZuPruefen(session, entity, year);
     const row = rows.find((r) => r.id === txId);
-    if (!row) throw new Error(`Die Buchung ${txId} ist für ${entity.name} ${year} nicht zu prüfen.`);
+    if (!row)
+        throw new Error(
+            fmt(_('Booking {id} is not up for review in {entity} {year}.'), { id: txId, entity: entity.name, year }),
+        );
     if (row.grund === 'unklassifiziert') {
-        throw new Error('Eine unklassifizierte Buchung hat nichts zu bestätigen — bitte umbuchen.');
+        throw new Error(_('An unclassified booking has nothing to confirm — change its category instead.'));
     }
     if (row.grund === 'erstattung') {
-        throw new Error(
-            'Die Zahlung ist vermutlich eine Erstattung — erst „Gehört das zu dieser Zahlung?" beantworten.',
-        );
+        throw new Error(_('The payment is probably a refund — answer "Does this belong to that payment?" first.'));
     }
     confirmClassification({ transactionId: txId, category: row.category, decidedBy });
     return { ok: true, id: txId, category: row.category };
@@ -131,7 +133,7 @@ export async function regelAusAuswahl(
     const { rows } = await loadEnrichedTransactions(session, entity, year);
     const byId = new Map(rows.map((r) => [r.id, r]));
     const beispiele = ids.map((id) => byId.get(id)).filter((r): r is EnrichedTxRow => r != null);
-    if (beispiele.length === 0) throw new Error('Keine der gewählten Buchungen gehört zu diesem Jahr.');
+    if (beispiele.length === 0) throw new Error(_('None of the chosen bookings belongs to this year.'));
     const rules = toClassifyRules(loadClassificationRules(entity.id));
     const vorschau: RegelVorschau = regelAusBeispielen(beispiele.map(toRegelBuchung), rows.map(toRegelBuchung), rules, {
         muster: opts.muster,

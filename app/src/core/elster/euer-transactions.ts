@@ -15,6 +15,7 @@
 
 import type { UnifiedTransaction } from '@steuererklaerung/store';
 import { round2 } from '../lib/money.ts';
+import { _, fmt } from '../lib/i18n.ts';
 import { NEUTRAL_MIT_VORSTEUER, SKR03_TO_EUER, type EuerKind, type EuerCategoryTotal } from './euer-aggregate.ts';
 import { aufteilungTitel, berechneTeile, hauptTeil, type Teil, type TeilEingabe } from './splitbuchung.ts';
 import {
@@ -243,7 +244,7 @@ export function classifyTransaction(
             rule: 'Erstattung',
             matchedRule: {
                 id: `erstattung:${erstattung.originalTxId}`,
-                label: `Erstattung zu ${erstattung.originalLabel}`,
+                label: fmt(_('refund for {original}'), { original: erstattung.originalLabel }),
                 art: 'erstattung',
             },
             vatRate: erstattung.vatRate,
@@ -256,7 +257,7 @@ export function classifyTransaction(
             rule: 'Beleg',
             matchedRule: {
                 id: doc.documentId != null ? `beleg:${doc.documentId}` : 'beleg',
-                label: doc.documentId != null ? `Beleg #${doc.documentId}` : 'Beleg',
+                label: doc.documentId != null ? fmt(_('Receipt #{id}'), { id: doc.documentId }) : _('Receipt'),
                 art: 'beleg',
             },
         };

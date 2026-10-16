@@ -28,6 +28,7 @@ import {
     saveErstattungLink,
 } from '../actions/erstattungen.ts';
 import { buchungZeile } from '../elster/hinweise.ts';
+import { _, fmt } from '../lib/i18n.ts';
 import { loadEnrichedTransactions, type EnrichedTxRow } from './buchungen.ts';
 import type { PresenterSession } from './session.ts';
 import type { EntityModel } from './workspace.ts';
@@ -149,7 +150,7 @@ export async function loadErstattungen(
             return {
                 buchung: b as EnrichedTxRow,
                 zeile: buchungZeile(b),
-                ursprung: o ? ursprungLabel(o) : `Buchung ${e.originalTxId}`,
+                ursprung: o ? ursprungLabel(o) : fmt(_('booking {id}'), { id: e.originalTxId }),
                 ursprungId: e.originalTxId,
             };
         });
@@ -211,12 +212,17 @@ export async function verknuepfeErstattung(
 ): Promise<{ ok: true; id: string; original: string; category: string; vatRate: number }> {
     const { rows, byId, entscheidungen } = await load(session, entity, year);
     const refund = byId.get(txId);
-    if (!refund) throw new Error(`Die Buchung ${txId} gehört nicht zu ${entity.name} ${year}.`);
+    if (!refund)
+        throw new Error(
+            fmt(_('Booking {id} does not belong to {entity} {year}.'), { id: txId, entity: entity.name, year }),
+        );
     const kandidaten = erstattungKandidaten(refund, rows, entscheidungen);
     const k = kandidaten.find((c) => c.original.id === originalId);
     if (!k) {
         const known = kandidaten.map((c) => c.original.id).join(', ') || '—';
-        throw new Error(`${originalId} ist für diese Erstattung kein Kandidat. Kandidaten: ${known}`);
+        throw new Error(
+            fmt(_('{id} is not a candidate for this refund. Candidates: {known}'), { id: originalId, known }),
+        );
     }
     const erbe = erbeVonUrsprung(k.original);
     saveErstattungLink({ refundTxId: txId, originalTxId: originalId, ...erbe, decidedBy });
@@ -234,7 +240,10 @@ export async function lehneErstattungAb(
     decidedBy = 'app',
 ): Promise<{ ok: true; id: string; original: string }> {
     const { byId } = await load(session, entity, year);
-    if (!byId.has(txId)) throw new Error(`Die Buchung ${txId} gehört nicht zu ${entity.name} ${year}.`);
+    if (!byId.has(txId))
+        throw new Error(
+            fmt(_('Booking {id} does not belong to {entity} {year}.'), { id: txId, entity: entity.name, year }),
+        );
     saveErstattungAbgelehnt(txId, originalId, decidedBy);
     session.invalidate(entity.id);
     return { ok: true, id: txId, original: originalId };

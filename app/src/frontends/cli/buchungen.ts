@@ -15,7 +15,7 @@
 import type { CommandModule } from 'yargs';
 import { createPresenterSession } from '../../core/presenters/session.ts';
 import { confirmZuPruefen, loadZuPruefen, type ZuPruefenRow } from '../../core/presenters/zu-pruefen.ts';
-import { GRUND_TEXT, zuPruefenTitel } from '../../core/elster/zu-pruefen.ts';
+import { grundText, zuPruefenTitel } from '../../core/elster/zu-pruefen.ts';
 import {
     erstattungenTitel,
     lehneErstattungAb,
@@ -59,7 +59,7 @@ function print(rows: ZuPruefenRow[]): void {
     console.log(`${zuPruefenTitel(rows.length)}\n`);
     for (const r of rows) {
         const who = (r.counterparty?.trim() || r.purpose?.trim() || '—').slice(0, 32).padEnd(32);
-        console.log(`  ${r.bookingDate}  ${fmtDe(r.amount).padStart(11)} €  ${who}  ${GRUND_TEXT[r.grund]}`);
+        console.log(`  ${r.bookingDate}  ${fmtDe(r.amount).padStart(11)} €  ${who}  ${grundText(r.grund)}`);
         const was = r.grund === 'unklassifiziert' ? 'weder Beleg noch Regel' : `${r.category} · ${r.herkunft}`;
         console.log(`      ${was}   [${r.id}]`);
     }
