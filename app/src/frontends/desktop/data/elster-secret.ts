@@ -11,6 +11,7 @@
  * certificate can carry its own PIN.
  */
 
+import { _, fmt } from '../i18n.ts';
 import { secretStore, type SecretRef } from '../../../core/secrets/store.ts';
 import { entitySchema, secret, type SecretApi, type SecretSchema } from './libsecret.ts';
 
@@ -43,9 +44,9 @@ export function keyringAvailable(): boolean {
 
 /** One sentence for the UI: where a saved PIN goes and how it is protected. Empty when nowhere. */
 export function keyringNote(): string {
-    if (secret()) return 'Verschlüsselt im GNOME-Schlüsselbund, nie im Klartext.';
+    if (secret()) return _('Encrypted in the GNOME keyring, never in clear text.');
     const store = secretStore();
-    return store ? `Gespeichert ${store.description}.` : '';
+    return store ? fmt(_('Stored {where}.'), { where: store.description }) : '';
 }
 
 /** Store (or overwrite) the ELSTER PIN for an entity in the keyring. Returns false if unavailable. */
