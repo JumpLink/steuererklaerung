@@ -27,7 +27,7 @@ import GObject from '@girs/gobject-2.0';
 import Gtk from '@girs/gtk-4.0';
 
 import { demoAvailable, isDemoMode } from '../../../core/config/demo.ts';
-import { getManifestPath } from '../../../core/config/index.ts';
+import { assistantOffered, getManifestPath } from '../../../core/config/index.ts';
 import { loadUserSettings, updateUserSettings } from '../../../core/config/user-settings.ts';
 import { defaultManifestPath } from '../../../core/paths.ts';
 import { _, fmt } from '../i18n.ts';
@@ -67,7 +67,7 @@ export class BhWelcome extends Adw.Dialog {
         if (page === 'notice') this.nav.push(this.pageNotice());
         else if (page === 'data') this.nav.push(this.pageData());
         else if (page === 'connections') this.nav.push(this.pageConnections());
-        else if (page === 'ai') this.nav.push(this.pageAi());
+        else if (page === 'ai' && assistantOffered()) this.nav.push(this.pageAi());
     }
 
     // ── Page shell ────────────────────────────────────────────────────────────────────────────
@@ -265,15 +265,23 @@ export class BhWelcome extends Adw.Dialog {
             this.infoRow('folder-documents-symbolic', 'Paperless-ngx', _('Use receipts from your document archive')),
         );
         group.add(this.infoRow('network-server-symbolic', 'FinTS', _('Online banking with German banks')));
-        group.add(this.infoRow('starred-symbolic', _('AI assistant'), _('Answers questions and proposes bookings')));
+        if (assistantOffered())
+            group.add(
+                this.infoRow('starred-symbolic', _('AI assistant'), _('Answers questions and proposes bookings')),
+            );
         group.add(
             this.infoRow('object-select-symbolic', 'ERiC', _('Validate returns with the official ELSTER library')),
         );
         box.append(group);
-        return this.page('connections', _('Connections'), box, {
-            label: _('Next'),
-            run: () => this.nav.push(this.pageAi()),
-        });
+        // Without the AI page this is the last step, so its button is the one that finishes.
+        return this.page(
+            'connections',
+            _('Connections'),
+            box,
+            assistantOffered()
+                ? { label: _('Next'), run: () => this.nav.push(this.pageAi()) }
+                : { label: this.finishLabel(), run: () => this.finish() },
+        );
     }
 
     // ── 5 · AI ────────────────────────────────────────────────────────────────────────────────
@@ -295,9 +303,13 @@ export class BhWelcome extends Adw.Dialog {
         group.add(toggle);
         box.append(group);
         return this.page('ai', _('AI assistant'), box, {
-            label: this.choice === 'demo' ? _('Start the demo') : _('Set up my data'),
+            label: this.finishLabel(),
             run: () => this.finish(),
         });
+    }
+
+    private finishLabel(): string {
+        return this.choice === 'demo' ? _('Start the demo') : _('Set up my data');
     }
 
     // ── Finishing ─────────────────────────────────────────────────────────────────────────────
@@ -305,7 +317,9 @@ export class BhWelcome extends Adw.Dialog {
     private finish(): void {
         updateUserSettings((settings) => {
             settings.welcomeCompleted = true;
-            if (this.choice !== 'existing') settings.aiAssistant = this.ai;
+            // Never written when the build does not offer the assistant: an existing `true` stays
+            // as the person left it and takes effect again the day it is offered.
+            if (assistantOffered() && this.choice !== 'existing') settings.aiAssistant = this.ai;
         });
         this.close();
         this.onFinish(this.choice);

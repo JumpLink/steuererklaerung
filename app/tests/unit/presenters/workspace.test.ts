@@ -84,9 +84,10 @@ export default async () => {
             expect(test?.years).toStrictEqual([2024, 2025]);
             expect(test?.defaultYear).toBe(2025);
             expect(test?.accountKeys).toStrictEqual(['camt:test']);
-            // First entity with data is the default; the assistant defaults on.
+            // First entity with data is the default.
             expect(ws.defaultEntity).toBe('test');
-            expect(ws.assistant).toBe(true);
+            // The model carries the assistant answer; this build does not offer one.
+            expect(ws.assistant).toBe(false);
         });
 
         await it('honours an explicit years override (like the web --years)', async () => {

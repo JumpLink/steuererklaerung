@@ -22,6 +22,7 @@ import {
     resolveAiEngine,
 } from '../../../../core/actions/assistant/lotse-embed.ts';
 import { configuredBackupRoot } from '../../../../core/actions/backup.ts';
+import { assistantOffered } from '../../../../core/config/assistant-offered.ts';
 import { isAssistantEnabled } from '../../../../core/config/assistant-preference.ts';
 import { demoAvailable, isDemoMode } from '../../../../core/config/demo.ts';
 import { loadUserSettings, updateUserSettings } from '../../../../core/config/user-settings.ts';
@@ -54,6 +55,10 @@ export function buildGeneralGroup(group: Adw.PreferencesGroup): void {
     const welcome = new Adw.ButtonRow({ title: _('Show welcome again') });
     welcome.connect('activated', () => welcome.activate_action('win.welcome', null));
     group.add(welcome);
+
+    // A build without the assistant offers no switch for it: an off switch is still an offer, and
+    // the engine rows below it would promise two assistants that cannot run.
+    if (!assistantOffered()) return;
 
     const ai = new Adw.SwitchRow({
         title: _('AI assistant'),

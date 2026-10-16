@@ -34,6 +34,7 @@ import {
     type AppSettings,
     type McpGroup,
 } from '../data/settings.ts';
+import { assistantOffered } from '../../../core/config/index.ts';
 import { isManifestMissing } from '../../../core/lib/errors.ts';
 import { appSession } from '../data/session.ts';
 import type { AppEntity } from '../entities.ts';
@@ -237,11 +238,14 @@ export class BhEinstellungenView extends Adw.Bin {
             this._sync_group.add(this.minutesRow(title, subtitle, s.sync[key], (n) => (s.sync[key] = n)));
         }
         // The on/off switch of the built-in assistant is per user (General); only the engine is here.
-        this._assistant_group.add(this.engineRow());
+        // A build that does not offer the assistant shows neither — naming an engine would promise
+        // one. The MCP group below stays: that is other people's clients, not a built-in assistant.
+        if (assistantOffered()) this._assistant_group.add(this.engineRow());
+        else this._assistant_group.set_visible(false);
         this._mcp_group.add(
             this.switchRow(
                 _('MCP server for external agents'),
-                _('Claude, Cursor, VS Code … — the built-in assistant does not need it'),
+                _('Claude, Cursor, VS Code … — your own client, connected to this app'),
                 s.mcp.enabled,
                 (on) => {
                     s.mcp.enabled = on;

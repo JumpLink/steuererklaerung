@@ -1,5 +1,6 @@
-import { describe, it, expect } from '@gjsify/unit';
+import { describe, it, expect, beforeEach, afterEach } from '@gjsify/unit';
 import { z } from 'zod';
+import { setAssistantOfferedOverride } from '../../../src/core/config/assistant-offered.ts';
 import {
     AiJobError,
     completeJson,
@@ -207,6 +208,10 @@ export default async () => {
     });
 
     await describe('getLLMProvider("opencode")', async () => {
+        // Builds only in a build that offers the assistant; the refusal is assistant-offered.test.ts.
+        beforeEach(() => setAssistantOfferedOverride(true));
+        afterEach(() => setAssistantOfferedOverride(null));
+
         await it('builds the opencode provider without starting an agent', async () => {
             const p = getLLMProvider({ provider: 'opencode', model: 'anthropic/claude-sonnet-5-5' });
             expect(p).toBeInstanceOf(OpencodeProvider);

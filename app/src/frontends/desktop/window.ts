@@ -275,7 +275,10 @@ export class MainWindow extends Adw.ApplicationWindow {
         restartInMode(app, mode);
     }
 
-    /** The assistant switched off hides the panel toggle ({@link isAssistantEnabled}). */
+    /**
+     * The assistant switched off hides the panel toggle ({@link isAssistantEnabled}) — which a
+     * build that does not offer the assistant always is, so the star never appears there.
+     */
     private applyAssistantPreference(): void {
         const visible = isAssistantEnabled();
         this._assistant_toggle.set_visible(visible);
@@ -504,8 +507,9 @@ export class MainWindow extends Adw.ApplicationWindow {
         // est snapshot, so the visible view is reloaded.
         this._assistant_panel.onClose = () => this._assistant_split.set_show_sidebar(false);
         this._assistant_panel.onApplied = () => this.refreshEstAfterApply();
-        // Dev/testing hook: open the panel on launch (pairs with STEUER_APP_ASSIST_DEMO's seeded chat).
-        if (process.env.STEUER_APP_ASSIST_DEMO) this._assistant_split.set_show_sidebar(true);
+        // Dev/testing hook: open the panel on launch (pairs with STEUER_APP_ASSIST_DEMO's seeded
+        // chat). Not even for a screenshot in a build that does not offer the assistant.
+        if (process.env.STEUER_APP_ASSIST_DEMO && isAssistantEnabled()) this._assistant_split.set_show_sidebar(true);
         this.applyAssistantPreference();
         this.buildLotsePane();
         this._banner.connect('button-clicked', () => this.confirmSwitchMode('own'));
@@ -542,7 +546,7 @@ export class MainWindow extends Adw.ApplicationWindow {
                     },
                 ],
                 defaultEntity: 'default',
-                assistant: true,
+                assistant: isAssistantEnabled(),
             };
         }
 

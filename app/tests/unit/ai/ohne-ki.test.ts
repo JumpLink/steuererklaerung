@@ -16,6 +16,7 @@ import {
     setLLMProviderOverride,
     type LLMProvider,
 } from '../../../src/core/clients/llm/index.ts';
+import { setAssistantOfferedOverride } from '../../../src/core/config/assistant-offered.ts';
 import { probeEngine } from '../../../src/core/actions/assistant/engine-status.ts';
 import { extractInvoiceFieldsFromContent } from '../../../src/core/actions/paperless/extract-invoice.ts';
 import { linkDocumentToTransaction } from '../../../src/core/actions/link-candidates.ts';
@@ -231,11 +232,15 @@ export default async () => {
 
     await describe('ohne KI — die KI-Stellen sagen es', async () => {
         let prev: string | undefined;
+        // This is the "configured nothing" wording, which a build offering the assistant shows.
+        // A build without one says so in its own sentence — assistant-offered.test.ts.
         beforeEach(() => {
             prev = process.env.LLM_PROVIDER;
             process.env.LLM_PROVIDER = 'off';
+            setAssistantOfferedOverride(true);
         });
         afterEach(() => {
+            setAssistantOfferedOverride(null);
             if (prev === undefined) delete process.env.LLM_PROVIDER;
             else process.env.LLM_PROVIDER = prev;
         });

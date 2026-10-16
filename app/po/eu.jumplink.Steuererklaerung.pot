@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-16 08:57+0200\n"
+"POT-Creation-Date: 2026-10-16 13:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,35 +18,39 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: src/core/actions/contracts-extract.ts:274
+#: src/core/actions/contracts-extract.ts:275
 msgid "The document states none of the contract fields — enter them by hand."
 msgstr ""
 
-#: src/core/actions/contracts-extract.ts:302
+#: src/core/actions/contracts-extract.ts:304
 msgid ""
 "The AI assistant is switched off. Switch it on under Settings → General, or "
 "enter the values by hand."
 msgstr ""
 
-#: src/core/actions/contracts-extract.ts:311
+#: src/core/actions/contracts-extract.ts:305
+msgid "Enter the values by hand."
+msgstr ""
+
+#: src/core/actions/contracts-extract.ts:314
 msgid "No document given."
 msgstr ""
 
-#: src/core/actions/contracts-extract.ts:316
+#: src/core/actions/contracts-extract.ts:319
 msgid ""
 "This document belongs to a different document store than the contract — "
 "nothing was read."
 msgstr ""
 
-#: src/core/actions/contracts-extract.ts:349
+#: src/core/actions/contracts-extract.ts:352
 msgid "Without a contract the workspace entity is needed to find the document."
 msgstr ""
 
-#: src/core/actions/contracts-extract.ts:359
+#: src/core/actions/contracts-extract.ts:362
 msgid "The document has no readable text — enter the contract data by hand."
 msgstr ""
 
-#: src/core/actions/contracts-extract.ts:382
+#: src/core/actions/contracts-extract.ts:385
 msgid ""
 "Only the beginning of the document was read — check the fields against the "
 "original."
@@ -198,6 +202,10 @@ msgstr ""
 
 #: src/core/clients/llm/job-error.ts:63
 msgid "No AI agent is installed. Install opencode or choose another AI engine."
+msgstr ""
+
+#: src/core/config/assistant-offered.ts:37
+msgid "This version has no built-in AI assistant."
 msgstr ""
 
 #: src/core/lib/edition-badges.ts:29
@@ -449,7 +457,7 @@ msgid "timer & unbilled hours"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:59
-#: src/frontends/desktop/views/einstellungen-view.ts:75
+#: src/frontends/desktop/views/einstellungen-view.ts:76
 msgid "Contacts"
 msgstr ""
 
@@ -491,7 +499,7 @@ msgid "customer · costs · result"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:79
-#: src/frontends/desktop/views/einstellungen-view.ts:76
+#: src/frontends/desktop/views/einstellungen-view.ts:77
 #: src/frontends/desktop/views/vertraege-view.blp:90
 msgid "Contracts"
 msgstr ""
@@ -1340,135 +1348,135 @@ msgstr ""
 msgid "Paperless assignment not available"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:37
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:38
 msgid "Data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:38
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:39
 msgid "Demo data — fictional examples"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:38
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:39
 msgid "Your own data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:41
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:42
 #: src/frontends/desktop/views/welcome.ts:201
 #: src/frontends/desktop/window.ts:651
 msgid "Use my own data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:41
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:42
 #: src/frontends/desktop/views/welcome.ts:187
 msgid "Try the demo"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:49
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:50
 msgid "Your own data — this installation ships no demo data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:54
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:55
 msgid "Show welcome again"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:59
-#: src/frontends/desktop/views/welcome.ts:268
-#: src/frontends/desktop/views/welcome.ts:284
-#: src/frontends/desktop/views/welcome.ts:297
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:64
+#: src/frontends/desktop/views/welcome.ts:270
+#: src/frontends/desktop/views/welcome.ts:292
+#: src/frontends/desktop/views/welcome.ts:305
 msgid "AI assistant"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:61
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:66
 msgid ""
 "Questions and the data needed to answer them go to the configured AI "
 "provider. Independent of the MCP server."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:90
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:95
 msgid "Coding agent"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:92
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:97
 msgid ""
 "Your own opencode uses your login and models from its global configuration. "
 "Takes effect the next time the app starts."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:95
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:100
 msgid "Bundled opencode (recommended)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:95
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:100
 msgid "Own opencode (global configuration)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:99
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:104
 msgid ""
 "The Flatpak sandbox cannot reach your own opencode, so the bundled one is "
 "always used."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:122
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:127
 msgid "Assistant engine"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:123
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:128
 msgid "Takes effect the next time the app starts."
 msgstr ""
 
 #. TRANSLATORS: The assistant that is part of the app and answers in-process
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:126
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:131
 msgid "Built in"
 msgstr ""
 
 #. TRANSLATORS: lotse is a program name — it starts a coding agent as a separate process
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:128
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:133
 msgid "Coding agent (lotse)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:144
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:149
 msgid "Last backup"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:146
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:205
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:151
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:210
 msgid "Backup folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:154
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:159
 msgid "{time} in {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:159
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:164
 msgid "Never"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:165
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:173
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:170
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:178
 msgid "Back up now"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:173
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:178
 msgid "Backing up …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:181
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:186
 msgid "Backup saved: {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:184
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:189
 msgid "Backup failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:199
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:204
 msgid "Choose folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:227
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:232
 msgid "Keep backups"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:228
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:233
 msgid "Older ones are deleted after each new backup"
 msgstr ""
 
@@ -1579,150 +1587,150 @@ msgstr ""
 msgid "Which groups are visible to the outside."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:66
+#: src/frontends/desktop/views/einstellungen-view.ts:67
 msgid "Documents (DMS)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:69
+#: src/frontends/desktop/views/einstellungen-view.ts:70
 msgctxt "MCP tool group"
 msgid "Transactions"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:70
+#: src/frontends/desktop/views/einstellungen-view.ts:71
 msgctxt "auto-matching"
 msgid "Matching"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:71
+#: src/frontends/desktop/views/einstellungen-view.ts:72
 msgid "Document workflow"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:74
+#: src/frontends/desktop/views/einstellungen-view.ts:75
 msgid "Invoices (self)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:168
+#: src/frontends/desktop/views/einstellungen-view.ts:169
 msgid "AI engine"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:172
+#: src/frontends/desktop/views/einstellungen-view.ts:173
 msgid "set via LLM_PROVIDER"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:172
+#: src/frontends/desktop/views/einstellungen-view.ts:173
 msgid "default"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:173
+#: src/frontends/desktop/views/einstellungen-view.ts:174
 msgid "Not configured — check LLM_PROVIDER."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:178
-#: src/frontends/desktop/views/einstellungen-view.ts:191
+#: src/frontends/desktop/views/einstellungen-view.ts:179
+#: src/frontends/desktop/views/einstellungen-view.ts:192
 msgid "Test connection"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:179
+#: src/frontends/desktop/views/einstellungen-view.ts:180
 msgid "Asks the model a tiny question — costs a few tokens."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:182
+#: src/frontends/desktop/views/einstellungen-view.ts:183
 msgid "Testing …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:187
+#: src/frontends/desktop/views/einstellungen-view.ts:188
 msgid "AI engine does not respond: {message}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:206
+#: src/frontends/desktop/views/einstellungen-view.ts:207
 msgid "Settings not available: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:213
+#: src/frontends/desktop/views/einstellungen-view.ts:214
 msgid "Learning mode"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:214
+#: src/frontends/desktop/views/einstellungen-view.ts:215
 msgid ""
 "Shows a “?” next to technical terms — Overview, Reports, USt-VA (VAT return) "
 "and the master data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:223
+#: src/frontends/desktop/views/einstellungen-view.ts:224
 msgid "Sync automatically"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:224
+#: src/frontends/desktop/views/einstellungen-view.ts:225
 msgid "At start-up and then at fixed intervals, without blocking the view"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:232
+#: src/frontends/desktop/views/einstellungen-view.ts:233
 msgid "Invoices (Qonto)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:232
-#: src/frontends/desktop/views/einstellungen-view.ts:234
+#: src/frontends/desktop/views/einstellungen-view.ts:233
+#: src/frontends/desktop/views/einstellungen-view.ts:235
 msgid "Minutes, at least 5; 0 = off"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:233
+#: src/frontends/desktop/views/einstellungen-view.ts:234
 msgid "Transactions (Qonto)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:233
+#: src/frontends/desktop/views/einstellungen-view.ts:234
 msgid "Minutes, at least 15 (rate limit); 0 = off"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:234
+#: src/frontends/desktop/views/einstellungen-view.ts:235
 msgid "Receipts (Paperless)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:243
+#: src/frontends/desktop/views/einstellungen-view.ts:247
 msgid "MCP server for external agents"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:244
-msgid "Claude, Cursor, VS Code … — the built-in assistant does not need it"
+#: src/frontends/desktop/views/einstellungen-view.ts:248
+msgid "Claude, Cursor, VS Code … — your own client, connected to this app"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:253
+#: src/frontends/desktop/views/einstellungen-view.ts:257
 msgid "Allow writing tools"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:254
+#: src/frontends/desktop/views/einstellungen-view.ts:258
 msgid "Expose mutating MCP tools (default: read-only)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:261
+#: src/frontends/desktop/views/einstellungen-view.ts:265
 msgid "Connect an external agent …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:310
-#: src/frontends/desktop/views/einstellungen-view.ts:426
+#: src/frontends/desktop/views/einstellungen-view.ts:314
+#: src/frontends/desktop/views/einstellungen-view.ts:430
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:254
 #: src/frontends/desktop/views/umbuchen-dialog.ts:251
 msgid "Could not save: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:338
+#: src/frontends/desktop/views/einstellungen-view.ts:342
 msgid "Could not read connections: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:360
+#: src/frontends/desktop/views/einstellungen-view.ts:364
 msgid "Could not read the ELSTER configuration: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:384
+#: src/frontends/desktop/views/einstellungen-view.ts:388
 msgid "Could not read the ESt (income tax) configuration: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:411
+#: src/frontends/desktop/views/einstellungen-view.ts:415
 msgid ""
 "The configuration was changed from outside in the meantime (CLI, MCP or a "
 "second window). The view is reloaded — please repeat the input."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:424
+#: src/frontends/desktop/views/einstellungen-view.ts:428
 msgid "Saved"
 msgstr ""
 
@@ -2151,7 +2159,7 @@ msgstr ""
 #: src/frontends/desktop/views/setup-assistant.ts:521
 #: src/frontends/desktop/views/setup-assistant.ts:581
 #: src/frontends/desktop/views/welcome.ts:149
-#: src/frontends/desktop/views/welcome.ts:274
+#: src/frontends/desktop/views/welcome.ts:282
 msgid "Next"
 msgstr ""
 
@@ -5306,38 +5314,38 @@ msgstr ""
 msgid "Online banking with German banks"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:268
+#: src/frontends/desktop/views/welcome.ts:270
 msgid "Answers questions and proposes bookings"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:270
+#: src/frontends/desktop/views/welcome.ts:273
 msgid "Validate returns with the official ELSTER library"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:273
+#: src/frontends/desktop/views/welcome.ts:279
 msgid "Connections"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:286
+#: src/frontends/desktop/views/welcome.ts:294
 msgid ""
 "When you use the assistant, your question and the data it needs to answer go "
 "to the AI provider you configure. Nothing is sent unless you ask. Without "
 "it, every feature of the app still works."
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:291
+#: src/frontends/desktop/views/welcome.ts:299
 msgid "Built-in AI assistant"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:298
+#: src/frontends/desktop/views/welcome.ts:312
 msgid "Start the demo"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:298
+#: src/frontends/desktop/views/welcome.ts:312
 msgid "Set up my data"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:336
+#: src/frontends/desktop/views/welcome.ts:350
 msgid "Could not open {dir}"
 msgstr ""
 
@@ -5590,8 +5598,8 @@ msgstr ""
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:12
 msgid ""
-"It works fully without AI: you write your own classification rules instead "
-"of letting a model guess. An assistant is optional and off by default."
+"It works without AI: you write your own classification rules instead of "
+"letting a model guess, and no figure depends on a model."
 msgstr ""
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:13
