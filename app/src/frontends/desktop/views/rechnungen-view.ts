@@ -47,7 +47,7 @@ import { BhRechnungVersandDialog } from './rechnung-versand-dialog.ts';
 import { BhRechnungFormDialog } from './rechnung-form-dialog.ts';
 import { errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
-import { chipScroller, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
+import { boundRowText, chipScroller, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
 
 /** Status label + colour class for a recurring reminder. */
@@ -79,6 +79,7 @@ const FILTERS: { key: 'all' | DisplayInvoiceStatus; label: string }[] = [
 ];
 
 export class BhRechnungenView extends Adw.Bin {
+    declare private _breakpoint_bin: Adw.BreakpointBin;
     declare private _stack: Gtk.Stack;
     declare private _error_page: Adw.StatusPage;
     declare private _notice_page: Adw.StatusPage;
@@ -93,6 +94,7 @@ export class BhRechnungenView extends Adw.Bin {
                 GTypeName: 'BhRechnungenView',
                 Template,
                 InternalChildren: [
+                    'breakpoint_bin',
                     'stack',
                     'error_page',
                     'notice_page',
@@ -127,10 +129,36 @@ export class BhRechnungenView extends Adw.Bin {
         return new Date().toISOString().slice(0, 10);
     }
 
+    /**
+     * One per visible row, kept per list because the two lists are cleared independently — the
+     * breakpoint flips them all, see boundRowText().
+     */
+    private readonly textPins: Record<'recurring' | 'invoices', ((narrow: boolean) => void)[]> = {
+        recurring: [],
+        invoices: [],
+    };
+
     constructor() {
         super();
         this.recurring = new GroupRows(this._recurring_group);
         this.invoices = new GroupRows(this._invoices_group);
+        // Both lists are rebuilt on every reload, so the switch is re-applied per row rather than
+        // connected once: `current-breakpoint` fires only when the width crosses 450 px, and a row
+        // built afterwards would never hear it (same reasoning as laufende-kosten-view).
+        this._breakpoint_bin.connect('notify::current-breakpoint', () => {
+            for (const list of Object.values(this.textPins)) for (const pin of list) pin(this.narrow);
+        });
+    }
+
+    private get narrow(): boolean {
+        return this._breakpoint_bin.get_current_breakpoint() !== null;
+    }
+
+    /** Bound a row's text and register the switch, in the view's current width state. */
+    private pinRowText(list: 'recurring' | 'invoices', row: Adw.ActionRow): void {
+        const pin = boundRowText(row);
+        pin(this.narrow);
+        this.textPins[list].push(pin);
     }
 
     reload(entity: AppEntity, year: number): void {
@@ -172,6 +200,8 @@ export class BhRechnungenView extends Adw.Bin {
 
     private fillRecurring(entries: RecurringDueEntry[]): void {
         this.recurring.clear();
+        // The rows are gone, so are their pins — recurringRow() registers the new ones.
+        this.textPins.recurring.length = 0;
         const overdue = entries.filter((e) => e.status === 'overdue').length;
         const soon = entries.filter((e) => e.status === 'due-soon').length;
         this._recurring_group.set_description(
@@ -241,6 +271,7 @@ export class BhRechnungenView extends Adw.Bin {
             e.lastInvoiceNumber ? fmt(_('last {number}'), { number: e.lastInvoiceNumber }) : null,
         ].filter(Boolean);
         const row = new Adw.ActionRow({ title: markup(e.customer), subtitle: markup(sub.join(' · ')) });
+        this.pinRowText('recurring', row);
         // Amount, badge and the two buttons as one wrapping cluster — see rowActions().
         const actions = rowActions([amountLabel(eur(e.totals.gross)), this.badge(meta.label, meta.css)]);
         row.add_suffix(actions);
@@ -464,6 +495,7 @@ export class BhRechnungenView extends Adw.Bin {
     /** Render the invoice rows for the active filter. */
     private renderInvoices(): void {
         this.invoices.clear();
+        this.textPins.invoices.length = 0;
         const shown = this.allInvoices.filter((i) => this.filter === 'all' || this.dispStatus(i) === this.filter);
         this._invoices_group.set_description(fmt(_('{n} total'), { n: this.allInvoices.length }));
         if (shown.length === 0) {
@@ -529,6 +561,9 @@ export class BhRechnungenView extends Adw.Bin {
             inv.dueDate ? fmt(_('due {date}'), { date: deDate(inv.dueDate) }) : null,
         ].filter(Boolean);
         const row = new Adw.ActionRow({ title: markup(who), subtitle: markup(sub.join(' · ')), activatable: true });
+        // Amount, two badges and the chevron are a wide suffix block for a free-wrapping subtitle to
+        // push over the edge — the same trap as the recurring rows above, see boundRowText().
+        this.pinRowText('invoices', row);
         if (inv.total != null) row.add_suffix(amountLabel(eur(inv.total)));
         if (disp !== 'draft' && disp !== 'cancelled') {
             const mail = this.mailStatus.get(inv.id);
