@@ -46,8 +46,8 @@ Formularen.
 
 **Belege und Dokumente.** Ein eingebautes DMS oder **Paperless-ngx**, pro Entität wählbar.
 Belege werden mit Buchungen verknüpft, fehlende Belege für gezogene Vorsteuer werden als
-Arbeitsliste ausgewiesen. Rechnungsfelder zieht wahlweise ein LLM aus dem OCR-Text; jede
-KI-Entscheidung schreibt ihre Begründung in ein Feld am Dokument zurück.
+Arbeitsliste ausgewiesen. Rechnungsfelder liest die App ohne KI direkt aus der E-Rechnung
+(ZUGFeRD/XRechnung).
 
 **Bank und Buchungen.** Qonto-API · FinTS/HBCI · CAMT.052/053-Dateien jeder Bank ·
 PayPal- und Amazon-Exporte zur Anreicherung. Alles landet in einem lokalen Store
