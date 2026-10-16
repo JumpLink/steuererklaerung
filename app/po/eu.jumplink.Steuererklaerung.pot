@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-16 23:03+0200\n"
+"POT-Creation-Date: 2026-10-16 23:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -476,8 +476,8 @@ msgstr ""
 #: src/core/elster/euer-transactions.ts:260
 #: src/frontends/desktop/views/beleg-link-dialog.ts:230
 #: src/frontends/desktop/views/beleg-link-dialog.ts:246
-#: src/frontends/desktop/views/herleitung-dialog.ts:369
-#: src/frontends/desktop/views/herleitung-dialog.ts:625
+#: src/frontends/desktop/views/herleitung-dialog.ts:365
+#: src/frontends/desktop/views/herleitung-dialog.ts:616
 msgid "Receipt #{id}"
 msgstr ""
 
@@ -485,7 +485,7 @@ msgstr ""
 #: src/frontends/desktop/views/beleg-eingang-view.ts:344
 #: src/frontends/desktop/views/beleg-eingang-view.ts:622
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:153
-#: src/frontends/desktop/views/herleitung-dialog.ts:617
+#: src/frontends/desktop/views/herleitung-dialog.ts:608
 #: src/frontends/desktop/views/tx-detail-dialog.ts:36
 msgid "Receipt"
 msgstr ""
@@ -2398,7 +2398,8 @@ msgid "Suggestion · {title}"
 msgstr ""
 
 #: src/frontends/desktop/assistent-panel.ts:192
-#: src/frontends/desktop/views/herleitung-dialog.ts:634
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:209
+#: src/frontends/desktop/views/herleitung-dialog.ts:625
 msgid "Apply"
 msgstr ""
 
@@ -2934,7 +2935,7 @@ msgid "A live submission is not possible yet"
 msgstr ""
 
 #: src/frontends/desktop/views/absenden-section.ts:459
-#: src/frontends/desktop/views/steuererklaerung-view.ts:549
+#: src/frontends/desktop/views/steuererklaerung-view.ts:547
 msgid "{form} check sheet"
 msgstr ""
 
@@ -3032,7 +3033,7 @@ msgid "The parts are deleted, the transaction counts as a whole again."
 msgstr ""
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:80
-#: src/frontends/desktop/views/herleitung-dialog.ts:527
+#: src/frontends/desktop/views/herleitung-dialog.ts:518
 #: src/frontends/desktop/views/tx-detail-dialog.ts:286
 msgid "Remove split"
 msgstr ""
@@ -3068,7 +3069,7 @@ msgid "Split transaction"
 msgstr ""
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:138
-#: src/frontends/desktop/views/herleitung-dialog.ts:482
+#: src/frontends/desktop/views/herleitung-dialog.ts:473
 #: src/frontends/desktop/views/tx-detail-dialog.ts:140
 msgid "Split"
 msgstr ""
@@ -3087,7 +3088,7 @@ msgid ""
 msgstr ""
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:153
-#: src/frontends/desktop/views/herleitung-dialog.ts:463
+#: src/frontends/desktop/views/herleitung-dialog.ts:454
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:536
 msgid "Amount"
 msgstr ""
@@ -3119,7 +3120,7 @@ msgid "Part {n} · Remainder"
 msgstr ""
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:228
-#: src/frontends/desktop/views/herleitung-dialog.ts:487
+#: src/frontends/desktop/views/herleitung-dialog.ts:478
 #: src/frontends/desktop/views/tx-detail-dialog.ts:189
 #: src/frontends/desktop/views/tx-detail-dialog.ts:238
 msgid "Part {n}"
@@ -3216,7 +3217,7 @@ msgid "Choose the matching transaction, then confirm."
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:361
-#: src/frontends/desktop/views/herleitung-dialog.ts:460
+#: src/frontends/desktop/views/herleitung-dialog.ts:451
 msgid "Date"
 msgstr ""
 
@@ -3231,7 +3232,7 @@ msgid "Net"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:379
-#: src/frontends/desktop/views/herleitung-dialog.ts:475
+#: src/frontends/desktop/views/herleitung-dialog.ts:466
 #: src/frontends/desktop/views/tx-detail-dialog.ts:183
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:144
 msgid "Source"
@@ -3275,8 +3276,8 @@ msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:482
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:119
-#: src/frontends/desktop/views/herleitung-dialog.ts:471
-#: src/frontends/desktop/views/herleitung-dialog.ts:514
+#: src/frontends/desktop/views/herleitung-dialog.ts:462
+#: src/frontends/desktop/views/herleitung-dialog.ts:505
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:124
 #: src/frontends/desktop/views/tx-detail-dialog.ts:182
 #: src/frontends/desktop/views/umbuchen-dialog.ts:128
@@ -3874,14 +3875,340 @@ msgstr ""
 msgid "Older ones are deleted after each new backup"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:254
-msgid "Released from VAT returns"
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:47
+msgid "Business (master data)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:48
+msgid "Details for the Anlage EÜR / tax return."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:53
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:248
+#: src/frontends/desktop/views/entity-dialogs.ts:37
+#: src/frontends/desktop/views/setup-assistant.ts:258
+#: src/frontends/desktop/views/setup-assistant.ts:334
+#: src/frontends/desktop/views/setup-assistant.ts:591
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:166
+msgid "Name"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:54
+msgid "Street"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:55
+msgid "House number"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:56
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:251
+msgid "Postcode"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:57
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:252
+msgid "City"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:58
+msgid "Type of activity"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:61
+msgid "W-IdNr, 11 characters without -00001 (DE123456789)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:62
+msgid "USt-IdNr (DE123456789)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:66
+msgid "Legal form"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:69
+msgid "Type of income"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:80
+msgid "Business opened on (YYYY-MM-DD)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:83
+msgid "The opening date must be YYYY-MM-DD, e.g. 2019-04-01."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:104
+#: src/frontends/desktop/views/setup-assistant.ts:66
+msgid "Sole proprietorship"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:115
+msgid "Agriculture and forestry"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:116
+msgid "Trade or business"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:117
+msgid "Self-employment"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:136
+msgid "Code {code}"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:172
+#: src/frontends/desktop/views/setup-assistant.ts:288
+#: src/frontends/desktop/views/setup-assistant.ts:593
+#: src/frontends/desktop/views/setup-assistant.ts:675
+#: src/frontends/desktop/views/setup-assistant.ts:678
+msgid "Tax number"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:182
+msgid "Tax number not applied — {reason}"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:195
+msgid "The postcode must have 5 digits."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:203
+msgid ""
+"The W-IdNr must be DE + 9 digits (11 characters) — ELSTER does not take the "
+"“-00001” suffix."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:208
+msgid "The USt-IdNr must be DE + 9 digits."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:230
+#: src/frontends/desktop/views/setup-assistant.ts:386
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:68
+msgid "VAT"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:233
+msgid "VAT prepayments already made (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:240
+msgid "Taxation basis"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:241
+msgid "Cash accounting (Ist)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:241
+msgid "Accrual accounting (Soll)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:250
+msgid "Test mode (ELSTER Testmerker)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:251
+msgid "Transmissions go to the ELSTER test server."
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:255
+msgid "VAT permanent deadline extension"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:260
+msgid "Released from VAT returns"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:261
 msgid ""
 "The tax office released you (§ 18 (2) UStG): annual VAT return only, no VAT "
 "return deadlines."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:267
+msgid "Deadline extension (months)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:24
+msgid "Receipt management"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:25
+msgid "Where this entity’s receipts come from."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:29
+msgid "Paperless token (stored — leave empty to keep)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:29
+msgid "Paperless token"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:42
+msgctxt "dms"
+msgid "Type"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:43
+msgid "Built-in DMS"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:47
+msgid "Paperless URL"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:85
+msgid "Create the fields in Paperless"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:86
+msgid ""
+"Creates the document types, custom fields and tags that receipts and the USt-"
+"VA need."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:88
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:113
+msgid "Set up"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:91
+msgid "Setting up …"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:99
+msgid "Paperless set up: {n} field created."
+msgid_plural "Paperless set up: {n} fields created."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:105
+msgid "Paperless was already fully set up."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:109
+#: src/frontends/desktop/views/setup-assistant.ts:648
+msgid "Setup failed: {error}"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:126
+msgid "Invoicing"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:127
+msgid "How this entity’s outgoing invoices are created."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:153
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:144
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:168
+#: src/frontends/desktop/views/vertrag-labels.ts:158
+msgid "Provider"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:153
+msgid "Self"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:154
+msgid "IBAN (for incoming payments)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:157
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:172
+msgid "Payment term (days)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:162
+msgid "Invoice number prefix"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:163
+msgid "Default sign-off (e.g. “Beste Grüße”)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:166
+msgid "Default sign-off, formal (e.g. “Mit freundlichen Grüßen”)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:192
+msgid "Default cover letter"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:193
+msgid "Default cover letter, formal"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:204
+msgid ""
+"Text above the line items for invoices without their own. Placeholders: "
+"{anrede} {kunde} {domain} {periode} {vorperiode} {paket} {gruss} {aussteller}"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:237
+msgid "Issuer (§ 14 UStG)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:238
+msgid "Name, address and Steuernummer/USt-IdNr printed on the invoice."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:249
+msgid "Signature under the cover letter (empty = name)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:250
+msgid "Street and house number"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:253
+msgid "Country code (DE)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:254
+msgid "Email"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:255
+msgid "Phone"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:256
+msgid "Website"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:257
+msgid "Steuernummer (display format)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:258
+msgid "USt-IdNr"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:259
+msgid "Bank"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:260
+msgid "Account holder"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:261
+msgid "IBAN (on the invoice)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:266
+msgid "Small business (§ 19 UStG)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:267
+msgid "Invoices show no VAT and carry the § 19 notice."
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:30
@@ -4136,14 +4463,6 @@ msgstr ""
 msgid "New display name for “{name}”."
 msgstr ""
 
-#: src/frontends/desktop/views/entity-dialogs.ts:37
-#: src/frontends/desktop/views/setup-assistant.ts:258
-#: src/frontends/desktop/views/setup-assistant.ts:334
-#: src/frontends/desktop/views/setup-assistant.ts:591
-#: src/frontends/desktop/views/vertrag-form-dialog.ts:166
-msgid "Name"
-msgstr ""
-
 #: src/frontends/desktop/views/entity-dialogs.ts:43
 msgid "Rename"
 msgstr ""
@@ -4268,14 +4587,14 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/frontends/desktop/views/herleitung-dialog.blp:7
-#: src/frontends/desktop/views/herleitung-dialog.ts:142
-#: src/frontends/desktop/views/herleitung-dialog.ts:249
-#: src/frontends/desktop/views/herleitung-dialog.ts:271
+#: src/frontends/desktop/views/herleitung-dialog.ts:141
+#: src/frontends/desktop/views/herleitung-dialog.ts:246
+#: src/frontends/desktop/views/herleitung-dialog.ts:268
 msgid "Derivation"
 msgstr ""
 
 #: src/frontends/desktop/views/herleitung-dialog.blp:29
-#: src/frontends/desktop/views/herleitung-dialog.ts:271
+#: src/frontends/desktop/views/herleitung-dialog.ts:268
 msgid "Calculating derivation …"
 msgstr ""
 
@@ -4287,237 +4606,237 @@ msgstr ""
 msgid "via rule"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:94
+#: src/frontends/desktop/views/herleitung-dialog.ts:93
 msgid "{n} via receipt"
 msgid_plural "{n} via receipts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:95
+#: src/frontends/desktop/views/herleitung-dialog.ts:94
 msgid "{n} via rule"
 msgid_plural "{n} via rules"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:96
+#: src/frontends/desktop/views/herleitung-dialog.ts:95
 msgid "{n} manually"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:97
+#: src/frontends/desktop/views/herleitung-dialog.ts:96
 msgid "{n} unclassified"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:98
+#: src/frontends/desktop/views/herleitung-dialog.ts:97
 msgid "no bookings"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:193
-#: src/frontends/desktop/views/herleitung-dialog.ts:231
+#: src/frontends/desktop/views/herleitung-dialog.ts:192
+#: src/frontends/desktop/views/herleitung-dialog.ts:228
 #: src/frontends/desktop/views/home-view.ts:186
 #: src/frontends/desktop/views/home-view.ts:197
 #: src/frontends/desktop/views/home-view.ts:209
 msgid "not computable"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:200
+#: src/frontends/desktop/views/herleitung-dialog.ts:199
 msgid "Incomplete"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:202
+#: src/frontends/desktop/views/herleitung-dialog.ts:200
 msgid "At least one item is not computable — it is not included, see below."
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:210
-#: src/frontends/desktop/views/herleitung-dialog.ts:311
+#: src/frontends/desktop/views/herleitung-dialog.ts:207
+#: src/frontends/desktop/views/herleitung-dialog.ts:308
 msgid "Composition"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:231
+#: src/frontends/desktop/views/herleitung-dialog.ts:228
 msgid "does not apply"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:281
+#: src/frontends/desktop/views/herleitung-dialog.ts:278
 msgid "Could not calculate the derivation"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:318
+#: src/frontends/desktop/views/herleitung-dialog.ts:315
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:257
 msgid "Bookings"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:322
+#: src/frontends/desktop/views/herleitung-dialog.ts:319
 msgid "No bookings"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:366
+#: src/frontends/desktop/views/herleitung-dialog.ts:363
 msgid "Rule: {rule}"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:372
+#: src/frontends/desktop/views/herleitung-dialog.ts:367
 msgid "Part {n} of {total}"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:400
+#: src/frontends/desktop/views/herleitung-dialog.ts:395
 msgid "Booking detail"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:400
+#: src/frontends/desktop/views/herleitung-dialog.ts:395
 msgid "Loading booking …"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:408
+#: src/frontends/desktop/views/herleitung-dialog.ts:403
 msgid "Could not load the booking detail"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:444
+#: src/frontends/desktop/views/herleitung-dialog.ts:439
 msgid "Booking updated"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:450
+#: src/frontends/desktop/views/herleitung-dialog.ts:443
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:432
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:389
 msgid "Could not save"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:459
+#: src/frontends/desktop/views/herleitung-dialog.ts:450
 msgid "Booking"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:461
+#: src/frontends/desktop/views/herleitung-dialog.ts:452
 msgid "Counterparty"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:462
+#: src/frontends/desktop/views/herleitung-dialog.ts:453
 #: src/frontends/desktop/views/tx-detail-dialog.ts:126
 #: src/frontends/desktop/views/zu-pruefen-view.ts:307
 msgid "Purpose"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:467
+#: src/frontends/desktop/views/herleitung-dialog.ts:458
 msgid "Net (contribution)"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:483
+#: src/frontends/desktop/views/herleitung-dialog.ts:474
 msgid "The booking is split; each part counts in its own category."
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:488
+#: src/frontends/desktop/views/herleitung-dialog.ts:479
 msgid "remainder"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:489
+#: src/frontends/desktop/views/herleitung-dialog.ts:480
 msgid "this figure"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:490
+#: src/frontends/desktop/views/herleitung-dialog.ts:481
 msgid "{rate} %"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:491
+#: src/frontends/desktop/views/herleitung-dialog.ts:482
 msgid "private, no input tax"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:508
+#: src/frontends/desktop/views/herleitung-dialog.ts:499
 msgid "Reclassify"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:509
+#: src/frontends/desktop/views/herleitung-dialog.ts:500
 msgid ""
 "Books this transaction manually to a different category (overrides receipt/"
 "rule)."
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:529
+#: src/frontends/desktop/views/herleitung-dialog.ts:520
 #: src/frontends/desktop/views/tx-detail-dialog.ts:288
 msgctxt "split"
 msgid "Remove"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:545
+#: src/frontends/desktop/views/herleitung-dialog.ts:536
 #: src/frontends/desktop/views/tx-detail-dialog.ts:301
 msgctxt "refund"
 msgid "Unlink"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:545
+#: src/frontends/desktop/views/herleitung-dialog.ts:536
 #: src/frontends/desktop/views/tx-detail-dialog.ts:301
 msgid "Take back transfer"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:550
+#: src/frontends/desktop/views/herleitung-dialog.ts:541
 #: src/frontends/desktop/views/tx-detail-dialog.ts:305
 msgctxt "button"
 msgid "Unlink"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:550
+#: src/frontends/desktop/views/herleitung-dialog.ts:541
 #: src/frontends/desktop/views/tx-detail-dialog.ts:252
 #: src/frontends/desktop/views/tx-detail-dialog.ts:305
 msgid "Take back"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:559
+#: src/frontends/desktop/views/herleitung-dialog.ts:550
 #: src/frontends/desktop/views/tx-detail-dialog.ts:315
 msgid "Unlinked"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:559
+#: src/frontends/desktop/views/herleitung-dialog.ts:550
 #: src/frontends/desktop/views/tx-detail-dialog.ts:315
 msgid "Transfer taken back"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:565
+#: src/frontends/desktop/views/herleitung-dialog.ts:556
 #: src/frontends/desktop/views/tx-detail-dialog.ts:265
 #: src/frontends/desktop/views/tx-detail-dialog.ts:319
 msgid "Could not take back"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:576
+#: src/frontends/desktop/views/herleitung-dialog.ts:567
 #: src/frontends/desktop/views/umbuchen-dialog.ts:140
 msgid "Reason"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:577
+#: src/frontends/desktop/views/herleitung-dialog.ts:568
 msgid "Why booked this way?"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:589
+#: src/frontends/desktop/views/herleitung-dialog.ts:580
 msgid "Decision log"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:591
+#: src/frontends/desktop/views/herleitung-dialog.ts:582
 msgid "No decision yet"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:620
+#: src/frontends/desktop/views/herleitung-dialog.ts:611
 msgid "no receipt linked"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:631
+#: src/frontends/desktop/views/herleitung-dialog.ts:622
 msgid "AI note"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:667
+#: src/frontends/desktop/views/herleitung-dialog.ts:658
 msgid "Transfer «{category}» taken back"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:667
+#: src/frontends/desktop/views/herleitung-dialog.ts:658
 msgid "Reset"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:673
+#: src/frontends/desktop/views/herleitung-dialog.ts:662
 msgid "Category «{category}»"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:675
+#: src/frontends/desktop/views/herleitung-dialog.ts:664
 msgid "AI note applied"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:676
+#: src/frontends/desktop/views/herleitung-dialog.ts:665
 msgid "Note: “{note}”"
 msgstr ""
 
-#: src/frontends/desktop/views/herleitung-dialog.ts:680
+#: src/frontends/desktop/views/herleitung-dialog.ts:669
 msgid "Decision"
 msgstr ""
 
@@ -5896,7 +6215,7 @@ msgid "Invoice saved"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:751
-#: src/frontends/desktop/views/steuererklaerung-view.ts:551
+#: src/frontends/desktop/views/steuererklaerung-view.ts:549
 msgid "PDF not available"
 msgstr ""
 
@@ -6159,10 +6478,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:167
 msgid "Issue date (YYYY-MM-DD)"
-msgstr ""
-
-#: src/frontends/desktop/views/rechnung-form-dialog.ts:172
-msgid "Payment term (days)"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:174
@@ -6506,10 +6821,6 @@ msgstr ""
 msgid "No business: wages, work expenses, household services"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:66
-msgid "Sole proprietorship"
-msgstr ""
-
 #: src/frontends/desktop/views/setup-assistant.ts:67
 msgid "Trade or freelance work in your own name"
 msgstr ""
@@ -6586,24 +6897,12 @@ msgid ""
 "part of the tax number and is not asked for separately."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:288
-#: src/frontends/desktop/views/setup-assistant.ts:593
-#: src/frontends/desktop/views/setup-assistant.ts:675
-#: src/frontends/desktop/views/setup-assistant.ts:678
-msgid "Tax number"
-msgstr ""
-
 #: src/frontends/desktop/views/setup-assistant.ts:311
 msgid "Private or business?"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:312
 msgid "This decides which questions follow. Everything can be changed later."
-msgstr ""
-
-#: src/frontends/desktop/views/setup-assistant.ts:386
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:68
-msgid "VAT"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:387
@@ -6780,10 +7079,6 @@ msgstr ""
 msgid "Add entity"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:648
-msgid "Setup failed: {error}"
-msgstr ""
-
 #: src/frontends/desktop/views/setup-assistant.ts:665
 msgid "Please enter a name."
 msgstr ""
@@ -6812,69 +7107,69 @@ msgstr ""
 msgid "Not yet ready to file"
 msgstr ""
 
-#: src/frontends/desktop/views/steuererklaerung-view.ts:311
+#: src/frontends/desktop/views/steuererklaerung-view.ts:310
 msgid ""
 "Estimate — check PDF + E10 XML; filing via ELSTER direct submission (release "
 "required) or web form"
 msgstr ""
 
-#: src/frontends/desktop/views/steuererklaerung-view.ts:313
+#: src/frontends/desktop/views/steuererklaerung-view.ts:311
 msgid ""
 "{done}/{total} forms · check PDF as a template — type the figures into Mein "
 "ELSTER"
 msgstr ""
 
-#: src/frontends/desktop/views/steuererklaerung-view.ts:331
+#: src/frontends/desktop/views/steuererklaerung-view.ts:329
 msgid "{n} cross-check with an error — resolve before filing."
 msgid_plural "{n} cross-checks with errors — resolve before filing."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/steuererklaerung-view.ts:350
+#: src/frontends/desktop/views/steuererklaerung-view.ts:348
 msgid "Tax topics"
 msgstr ""
 
-#: src/frontends/desktop/views/steuererklaerung-view.ts:392
+#: src/frontends/desktop/views/steuererklaerung-view.ts:390
 msgid "Calculation"
 msgstr ""
 
-#: src/frontends/desktop/views/steuererklaerung-view.ts:431
+#: src/frontends/desktop/views/steuererklaerung-view.ts:429
 msgid "Cross-checks"
 msgstr ""
 
-#: src/frontends/desktop/views/steuererklaerung-view.ts:437
+#: src/frontends/desktop/views/steuererklaerung-view.ts:435
 msgid "Also check manually"
 msgstr ""
 
-#: src/frontends/desktop/views/steuererklaerung-view.ts:451
+#: src/frontends/desktop/views/steuererklaerung-view.ts:449
 msgid "No open points in this step."
 msgstr ""
 
-#: src/frontends/desktop/views/steuererklaerung-view.ts:491
+#: src/frontends/desktop/views/steuererklaerung-view.ts:489
 msgid "{ok} ok · {warn} warning(s) · {error} error(s)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuererklaerung-view.ts:496
+#: src/frontends/desktop/views/steuererklaerung-view.ts:494
 msgid "not ready to file until the errors are resolved."
 msgstr ""
 
-#: src/frontends/desktop/views/steuererklaerung-view.ts:497
+#: src/frontends/desktop/views/steuererklaerung-view.ts:495
 msgid "check the warnings before filing."
 msgstr ""
 
-#: src/frontends/desktop/views/steuererklaerung-view.ts:498
+#: src/frontends/desktop/views/steuererklaerung-view.ts:496
 msgid "no discrepancies found."
 msgstr ""
 
-#: src/frontends/desktop/views/steuererklaerung-view.ts:511
+#: src/frontends/desktop/views/steuererklaerung-view.ts:509
 msgid "expected {amount} €"
 msgstr ""
 
-#: src/frontends/desktop/views/steuererklaerung-view.ts:512
+#: src/frontends/desktop/views/steuererklaerung-view.ts:510
 msgid "actual {amount} €"
 msgstr ""
 
-#: src/frontends/desktop/views/steuererklaerung-view.ts:532
+#: src/frontends/desktop/views/steuererklaerung-view.ts:530
 msgid "Save check data sheet as PDF"
 msgstr ""
 
@@ -7464,12 +7759,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:135
 msgid "no amount recorded"
-msgstr ""
-
-#: src/frontends/desktop/views/vertrag-detail-dialog.ts:144
-#: src/frontends/desktop/views/vertrag-form-dialog.ts:168
-#: src/frontends/desktop/views/vertrag-labels.ts:158
-msgid "Provider"
 msgstr ""
 
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:145

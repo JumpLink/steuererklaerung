@@ -12,6 +12,7 @@ import Gtk from '@girs/gtk-4.0';
 import { setupPaperlessFields } from '../../../../core/actions/paperless/setup.ts';
 import { loadDms, saveDms, loadInvoicing, saveInvoicing, type IssuerConfig } from '../../data/settings.ts';
 import type { AppEntity } from '../../entities.ts';
+import { _, _n, _p, fmt } from '../../i18n.ts';
 import { comboRow, entryRow, spinRow, toggleRow, type SettingsHost } from './rows.ts';
 
 // ── Beleg-Verwaltung (DMS) ────────────────────────────────────────────────────────────────────────
@@ -20,12 +21,12 @@ import { comboRow, entryRow, spinRow, toggleRow, type SettingsHost } from './row
 export function buildDmsGroup(host: SettingsHost, entity: AppEntity): Adw.PreferencesGroup {
     const dms = loadDms(entity);
     const group = new Adw.PreferencesGroup({
-        title: 'Beleg-Verwaltung',
-        description: 'Woher die Belege dieser Entität stammen.',
+        title: _('Receipt management'),
+        description: _('Where this entity’s receipts come from.'),
     });
 
     const tokenRow = new Adw.PasswordEntryRow({
-        title: dms.hasToken ? 'Paperless-Token (hinterlegt — leer lassen zum Beibehalten)' : 'Paperless-Token',
+        title: dms.hasToken ? _('Paperless token (stored — leave empty to keep)') : _('Paperless token'),
     });
     const save = () => {
         const type = typeCombo.get_selected() === 1 ? 'paperless' : 'builtin';
@@ -38,12 +39,12 @@ export function buildDmsGroup(host: SettingsHost, entity: AppEntity): Adw.Prefer
 
     const typeCombo = comboRow(
         host,
-        'Typ',
-        ['Integriertes DMS', 'Paperless-ngx'],
+        _p('dms', 'Type'),
+        [_('Built-in DMS'), 'Paperless-ngx'],
         dms.type === 'paperless' ? 1 : 0,
         save,
     );
-    const urlRow = entryRow(host, 'Paperless-URL', dms.paperlessUrl ?? '', save);
+    const urlRow = entryRow(host, _('Paperless URL'), dms.paperlessUrl ?? '', save);
     tokenRow.set_show_apply_button(true);
     tokenRow.connect('apply', () => {
         if (!host.isFilling()) save();
@@ -81,27 +82,37 @@ export function buildDmsGroup(host: SettingsHost, entity: AppEntity): Adw.Prefer
  */
 function buildSetupRow(host: SettingsHost): Adw.ActionRow {
     const row = new Adw.ActionRow({
-        title: 'Felder in Paperless anlegen',
-        subtitle: 'Legt Dokumenttypen, Zusatzfelder und Tags an, die für Belege und USt-VA gebraucht werden.',
+        title: _('Create the fields in Paperless'),
+        subtitle: _('Creates the document types, custom fields and tags that receipts and the USt-VA need.'),
     });
-    const button = new Gtk.Button({ label: 'Einrichten', valign: Gtk.Align.CENTER });
+    const button = new Gtk.Button({ label: _('Set up'), valign: Gtk.Align.CENTER });
     button.connect('clicked', () => {
         button.set_sensitive(false);
-        button.set_label('Richte ein …');
+        button.set_label(_('Setting up …'));
         setupPaperlessFields()
             .then((result) => {
+                const created = result.lines.filter((l) => l.startsWith('Created')).length;
                 host.banner(
                     result.updated
-                        ? `Paperless eingerichtet: ${result.lines.filter((l) => l.startsWith('Created')).length} Felder angelegt.`
-                        : 'Paperless war bereits vollständig eingerichtet.',
+                        ? fmt(
+                              _n(
+                                  'Paperless set up: {n} field created.',
+                                  'Paperless set up: {n} fields created.',
+                                  created,
+                              ),
+                              { n: created },
+                          )
+                        : _('Paperless was already fully set up.'),
                 );
             })
             .catch((err: unknown) => {
-                host.banner(`Einrichten fehlgeschlagen: ${err instanceof Error ? err.message : String(err)}`);
+                host.banner(
+                    fmt(_('Setup failed: {error}'), { error: err instanceof Error ? err.message : String(err) }),
+                );
             })
             .finally(() => {
                 button.set_sensitive(true);
-                button.set_label('Einrichten');
+                button.set_label(_('Set up'));
             });
     });
     row.add_suffix(button);
@@ -114,8 +125,8 @@ function buildSetupRow(host: SettingsHost): Adw.ActionRow {
 export function buildInvoicingGroup(host: SettingsHost, entity: AppEntity): Adw.PreferencesGroup {
     const inv = loadInvoicing(entity);
     const group = new Adw.PreferencesGroup({
-        title: 'Rechnungsstellung',
-        description: 'Wie ausgehende Rechnungen dieser Entität erzeugt werden.',
+        title: _('Invoicing'),
+        description: _('How this entity’s outgoing invoices are created.'),
     });
     const save = () => {
         const type = typeCombo.get_selected() === 1 ? 'self' : 'qonto';
@@ -141,20 +152,20 @@ export function buildInvoicingGroup(host: SettingsHost, entity: AppEntity): Adw.
             }),
         );
     };
-    const typeCombo = comboRow(host, 'Anbieter', ['Qonto', 'Selbst'], inv.type === 'self' ? 1 : 0, save);
-    const ibanRow = entryRow(host, 'IBAN (Zahlungsempfang)', inv.iban ?? '', save);
+    const typeCombo = comboRow(host, _('Provider'), ['Qonto', _('Self')], inv.type === 'self' ? 1 : 0, save);
+    const ibanRow = entryRow(host, _('IBAN (for incoming payments)'), inv.iban ?? '', save);
     const termRow = spinRow(
         host,
-        'Zahlungsziel (Tage)',
+        _('Payment term (days)'),
         inv.paymentTermsDays ?? 14,
         { digits: 0, lower: 0, upper: 365 },
         save,
     );
-    const prefixRow = entryRow(host, 'Rechnungsnummer-Präfix', inv.selfNumberPrefix ?? '', save);
-    const closingRow = entryRow(host, 'Standard-Gruß (z. B. „Beste Grüße")', inv.defaultClosing ?? '', save);
+    const prefixRow = entryRow(host, _('Invoice number prefix'), inv.selfNumberPrefix ?? '', save);
+    const closingRow = entryRow(host, _('Default sign-off (e.g. “Beste Grüße”)'), inv.defaultClosing ?? '', save);
     const closingSieRow = entryRow(
         host,
-        'Standard-Gruß (Sie) (z. B. „Mit freundlichen Grüßen")',
+        _('Default sign-off, formal (e.g. “Mit freundlichen Grüßen”)'),
         inv.defaultClosingSie ?? '',
         save,
     );
@@ -180,8 +191,8 @@ export function buildInvoicingGroup(host: SettingsHost, entity: AppEntity): Adw.
     const apply = () => {
         if (!host.isFilling()) save();
     };
-    group.add(headerRow('Standard-Anschreiben', headerView, apply));
-    group.add(headerRow('Standard-Anschreiben (Sie)', headerSieView, apply));
+    group.add(headerRow(_('Default cover letter'), headerView, apply));
+    group.add(headerRow(_('Default cover letter, formal'), headerSieView, apply));
     for (const r of [typeCombo, ibanRow, termRow, prefixRow, closingRow, closingSieRow]) group.add(r);
     group.add(issuerRow(host, entity, inv.selfIssuer, () => save()));
     return group;
@@ -191,12 +202,13 @@ export function buildInvoicingGroup(host: SettingsHost, entity: AppEntity): Adw.
 function headerRow(title: string, view: Gtk.TextView, onApply: () => void): Adw.ExpanderRow {
     const row = new Adw.ExpanderRow({
         title,
-        subtitle:
-            'Text über den Positionen für Rechnungen ohne eigenen Text. Platzhalter: {anrede} {kunde} {domain} {periode} {vorperiode} {paket} {gruss} {aussteller}',
+        subtitle: _(
+            'Text above the line items for invoices without their own. Placeholders: {anrede} {kunde} {domain} {periode} {vorperiode} {paket} {gruss} {aussteller}',
+        ),
     });
     const scroller = new Gtk.ScrolledWindow({ minContentHeight: 160, hasFrame: true, marginTop: 6, marginBottom: 6 });
     scroller.set_child(view);
-    const apply = new Gtk.Button({ label: 'Übernehmen', halign: Gtk.Align.END, marginBottom: 6 });
+    const apply = new Gtk.Button({ label: _('Apply'), halign: Gtk.Align.END, marginBottom: 6 });
     apply.add_css_class('suggested-action');
     apply.connect('clicked', onApply);
     const box = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, marginStart: 12, marginEnd: 12 });
@@ -224,8 +236,8 @@ function issuerRow(
     onChange: () => void,
 ): Adw.ExpanderRow {
     const row = new Adw.ExpanderRow({
-        title: 'Aussteller (§ 14 UStG)',
-        subtitle: 'Name, Anschrift und Steuernummer/USt-IdNr, die auf der Rechnung stehen.',
+        title: _('Issuer (§ 14 UStG)'),
+        subtitle: _('Name, address and Steuernummer/USt-IdNr printed on the invoice.'),
     });
     const i = issuer ?? {};
     const bank = i.bank ?? {};
@@ -235,26 +247,26 @@ function issuerRow(
         text[key] = r;
         row.add_row(r);
     };
-    mk('name', 'Name', i.name);
-    mk('signature', 'Signatur unter Anschreiben (leer = Name)', i.signature);
-    mk('address', 'Straße und Hausnummer', i.address);
-    mk('zip', 'PLZ', i.zip);
-    mk('city', 'Ort', i.city);
-    mk('countryCode', 'Ländercode (DE)', i.countryCode);
-    mk('email', 'E-Mail', i.email);
-    mk('phone', 'Telefon', i.phone);
-    mk('website', 'Website', i.website);
-    mk('taxNumber', 'Steuernummer (Anzeigeformat)', i.taxNumber);
-    mk('vatId', 'USt-IdNr', i.vatId);
-    mk('bankName', 'Bank', bank.bankName);
-    mk('accountHolder', 'Kontoinhaber', bank.accountHolder);
-    mk('bankIban', 'IBAN (auf der Rechnung)', bank.iban);
+    mk('name', _('Name'), i.name);
+    mk('signature', _('Signature under the cover letter (empty = name)'), i.signature);
+    mk('address', _('Street and house number'), i.address);
+    mk('zip', _('Postcode'), i.zip);
+    mk('city', _('City'), i.city);
+    mk('countryCode', _('Country code (DE)'), i.countryCode);
+    mk('email', _('Email'), i.email);
+    mk('phone', _('Phone'), i.phone);
+    mk('website', _('Website'), i.website);
+    mk('taxNumber', _('Steuernummer (display format)'), i.taxNumber);
+    mk('vatId', _('USt-IdNr'), i.vatId);
+    mk('bankName', _('Bank'), bank.bankName);
+    mk('accountHolder', _('Account holder'), bank.accountHolder);
+    mk('bankIban', _('IBAN (on the invoice)'), bank.iban);
     mk('bic', 'BIC', bank.bic);
 
     const klein = toggleRow(
         host,
-        'Kleinunternehmer (§ 19 UStG)',
-        'Rechnungen weisen keine Umsatzsteuer aus und tragen den § 19-Hinweis.',
+        _('Small business (§ 19 UStG)'),
+        _('Invoices show no VAT and carry the § 19 notice.'),
         i.kleinunternehmer ?? false,
         onChange,
     );
