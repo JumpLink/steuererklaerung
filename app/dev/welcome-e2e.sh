@@ -227,7 +227,7 @@ await "$L_MCP"
 step "Settings show the assistant and the MCP server as separate groups"
 shot_as ai-mcp-settings
 click "$L_CONNECT" AdwButtonRow
-await "Claude Desktop"
+await "Claude Code"
 await "STEUER_WORKSPACE"
 step "„$L_CONNECT“ shows a ready-to-copy config per client"
 shot_as mcp-clients
