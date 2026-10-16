@@ -1,6 +1,6 @@
 import { describe, it, expect } from '@gjsify/unit';
 import {
-    ALTER_KLASSEN,
+    alterKlassen,
     alterKlasse,
     altersUebersicht,
     type ForderungMahnung,
@@ -132,7 +132,7 @@ export default async () => {
             expect(alterKlasse(61)).toBe('tage_61_90');
             expect(alterKlasse(90)).toBe('tage_61_90');
             expect(alterKlasse(91)).toBe('ueber_90');
-            expect(ALTER_KLASSEN.length).toBe(5);
+            expect(alterKlassen().length).toBe(5);
         });
 
         await it('sums per bucket, per customer and in total; most overdue first', async () => {

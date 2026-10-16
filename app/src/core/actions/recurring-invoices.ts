@@ -37,6 +37,7 @@ import { draftInvoiceMail, mailSetupFor } from './send-invoice-email.ts';
 import { requireInvoicingBackend } from '../invoices/backend-gate.ts';
 import { ensureQontoClientForContact, getContactQontoClientId, resolveOrCreateContactForCustomer } from './contacts.ts';
 import { resolveScheduleProject } from './projects.ts';
+import { _, fmt } from '../lib/i18n.ts';
 
 /** Default Rechnungsfuß: the Ist-Versteuerung notice (§ 20 UStG) for an entity taxed that way. */
 export const DEFAULT_INVOICE_FOOTER = 'Es gilt die Besteuerung nach vereinnahmten Entgelten (§ 20 UStG).';
@@ -346,7 +347,10 @@ export function recurringEmail(id: string, path?: string, templateId?: string): 
     const last = inv.lastInvoice;
     if (!last) {
         throw new Error(
-            `Zu "${id}" gibt es noch keine ausgestellte Rechnung. Erst erstellen: steuer invoices recurring create ${id}`,
+            fmt(
+                _('There is no issued invoice for “{id}” yet. Create one first: steuer invoices recurring create {id}'),
+                { id },
+            ),
         );
     }
     // A broken project link throws here instead of drafting a stranger's greeting.

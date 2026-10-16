@@ -15,7 +15,7 @@
  */
 
 import { normalizeInvoiceStatus } from './status.ts';
-import { _n, fmt } from '../lib/i18n.ts';
+import { _, _n, fmt } from '../lib/i18n.ts';
 
 /** The slice of an outgoing invoice the Forderungen need. */
 export interface ForderungRechnung {
@@ -269,13 +269,15 @@ export function verjaehrung(
 
 export type AlterKlasse = 'nicht_faellig' | 'tage_1_30' | 'tage_31_60' | 'tage_61_90' | 'ueber_90';
 
-export const ALTER_KLASSEN: { key: AlterKlasse; label: string }[] = [
-    { key: 'nicht_faellig', label: 'Noch nicht fällig' },
-    { key: 'tage_1_30', label: '1–30 Tage überfällig' },
-    { key: 'tage_31_60', label: '31–60 Tage überfällig' },
-    { key: 'tage_61_90', label: '61–90 Tage überfällig' },
-    { key: 'ueber_90', label: 'Über 90 Tage überfällig' },
-];
+export function alterKlassen(): { key: AlterKlasse; label: string }[] {
+    return [
+        { key: 'nicht_faellig', label: _('Not due yet') },
+        { key: 'tage_1_30', label: _('1–30 days overdue') },
+        { key: 'tage_31_60', label: _('31–60 days overdue') },
+        { key: 'tage_61_90', label: _('61–90 days overdue') },
+        { key: 'ueber_90', label: _('More than 90 days overdue') },
+    ];
+}
 
 /** `tage` = days past the due date; ≤ 0 (or no due date at all) is „noch nicht fällig". */
 export function alterKlasse(tage: number | null): AlterKlasse {
@@ -424,7 +426,7 @@ const leereSummen = (): Record<AlterKlasse, number> => ({
 
 /** Sums per age bucket, per customer within each bucket, and in total. Customers by what they owe, most first. */
 export function altersUebersicht(posten: readonly OffenerPosten[]): AltersUebersicht {
-    const klassen: AlterSumme[] = ALTER_KLASSEN.map((k) => ({ ...k, anzahl: 0, summe: 0 }));
+    const klassen: AlterSumme[] = alterKlassen().map((k) => ({ ...k, anzahl: 0, summe: 0 }));
     const jeKunde = new Map<string, AlterJeKunde>();
     let anzahl = 0;
     let summe = 0;

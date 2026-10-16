@@ -9,7 +9,7 @@
 export { entwerfeMahnung, loadForderungen, markiereMahnungVersandt } from '../actions/forderungen.ts';
 export type { ForderungenUebersicht, MahnungEntwurfErgebnis } from '../actions/forderungen.ts';
 export {
-    ALTER_KLASSEN,
+    alterKlassen,
     MAHNUNG_ABSTAND_TAGE,
     MAHNUNG_FRIST_TAGE,
     VERJAEHRUNG_WARNFENSTER_TAGE,

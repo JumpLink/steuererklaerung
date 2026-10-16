@@ -39,13 +39,14 @@ import { loadInvoicing } from '../data/settings.ts';
 import { parseGermanInput } from '../../../core/lib/parsing.ts';
 import type { AppEntity } from '../entities.ts';
 import { markup } from './util.ts';
+import { _, _p, fmt } from '../i18n.ts';
 
 /** Intervals a person actually bills in, in months. */
 const INTERVALS: Array<{ label: string; months: number }> = [
-    { label: 'monatlich', months: 1 },
-    { label: 'vierteljährlich', months: 3 },
-    { label: 'halbjährlich', months: 6 },
-    { label: 'jährlich', months: 12 },
+    { label: _('monthly'), months: 1 },
+    { label: _('quarterly'), months: 3 },
+    { label: _('half-yearly'), months: 6 },
+    { label: _('yearly'), months: 12 },
 ];
 
 export type ScheduleResult = (message: string, changed: boolean) => void;
@@ -59,25 +60,25 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
     private readonly existing: RecurringInvoice | null;
     private readonly done: ScheduleResult;
 
-    private readonly customer = new Adw.EntryRow({ title: 'Kunde' });
-    private readonly contact = new Adw.ComboRow({ title: 'Kunden-Kontakt' });
-    private readonly project = new Adw.ComboRow({ title: 'Projekt' });
-    private readonly mailTemplate = new Adw.ComboRow({ title: 'Mail-Vorlage' });
+    private readonly customer = new Adw.EntryRow({ title: _('Customer') });
+    private readonly contact = new Adw.ComboRow({ title: _('Customer contact') });
+    private readonly project = new Adw.ComboRow({ title: _('Project') });
+    private readonly mailTemplate = new Adw.ComboRow({ title: _('Mail template') });
     private mailTemplates: MailTemplate[] = [];
-    private readonly email = new Adw.EntryRow({ title: 'E-Mail (für die Erinnerung)' });
-    private readonly description = new Adw.EntryRow({ title: 'Bezeichnung' });
-    private readonly notes = new Adw.EntryRow({ title: 'Notiz (nur intern)' });
-    private readonly interval = new Adw.ComboRow({ title: 'Rhythmus' });
-    private readonly start = new Adw.EntryRow({ title: 'Nächster Zeitraum ab (JJJJ-MM-TT)' });
-    private readonly end = new Adw.EntryRow({ title: 'bis (JJJJ-MM-TT)' });
+    private readonly email = new Adw.EntryRow({ title: _('Email (for the reminder)') });
+    private readonly description = new Adw.EntryRow({ title: _('Designation') });
+    private readonly notes = new Adw.EntryRow({ title: _('Note (internal only)') });
+    private readonly interval = new Adw.ComboRow({ title: _('Rhythm') });
+    private readonly start = new Adw.EntryRow({ title: _('Next period from (YYYY-MM-DD)') });
+    private readonly end = new Adw.EntryRow({ title: _('until (YYYY-MM-DD)') });
     private readonly formality = new Adw.ComboRow({
-        title: 'Anrede-Form',
+        title: _('Form of address'),
         model: Gtk.StringList.new(['Du', 'Sie']),
     });
     private readonly greeting = new Adw.EntryRow({
-        title: 'Anrede im Vertrag (z. B. „Silke"; das Projekt geht vor)',
+        title: _('Salutation in the contract (e.g. “Silke”; the project takes precedence)'),
     });
-    private readonly closing = new Adw.EntryRow({ title: 'Gruß (leer = Standard der Entität)' });
+    private readonly closing = new Adw.EntryRow({ title: _('Sign-off (empty = the entity’s default)') });
     private readonly headerView = new Gtk.TextView({
         wrapMode: Gtk.WrapMode.WORD_CHAR,
         topMargin: 8,
@@ -99,8 +100,8 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
     private projectChoices: Project[] = [];
     private readonly banner = new Adw.Banner({ revealed: false });
     private readonly itemsGroup = new Adw.PreferencesGroup({
-        title: 'Positionen',
-        description: 'Netto je Einheit; die Umsatzsteuer kommt beim Erzeugen der Rechnung dazu.',
+        title: _('Line items'),
+        description: _('Net per unit; VAT is added when the invoice is issued.'),
     });
     private readonly itemRows: Array<{
         title: Adw.EntryRow;
@@ -117,7 +118,7 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
         this.allProjects = loadEntityProjects(entity.id);
         this.loadContactChoices();
 
-        this.set_title(existing ? 'Wiederkehrend bearbeiten' : 'Wiederkehrend anlegen');
+        this.set_title(existing ? _('Edit recurring schedule') : _('New recurring schedule'));
         this.set_content_width(640);
         this.set_content_height(720);
         this.set_child(this.build());
@@ -131,16 +132,16 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
         bannerGroup.add(this.banner);
         page.add(bannerGroup);
 
-        const who = new Adw.PreferencesGroup({ title: 'Kunde' });
+        const who = new Adw.PreferencesGroup({ title: _('Customer') });
         who.add(this.customer);
         who.add(this.contact);
         who.add(this.project);
         this.mailTemplates = loadInvoicing(this.entity).mailTemplates;
         this.mailTemplate.set_subtitle(
-            'Wählt den Text für den Rechnungsversand; leer = Projekt bzw. Standard der Entität',
+            _('Picks the text used when the invoice is mailed; empty = the project’s or the entity’s default'),
         );
         this.mailTemplate.set_model(
-            Gtk.StringList.new(['wie Projekt/Standard', ...this.mailTemplates.map((t) => t.name)]),
+            Gtk.StringList.new([_('as project/default'), ...this.mailTemplates.map((t) => t.name)]),
         );
         this.mailTemplate.set_selected(
             Math.max(0, this.mailTemplates.findIndex((t) => t.id === this.existing?.mailTemplateId) + 1),
@@ -153,8 +154,8 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
         page.add(who);
 
         const when = new Adw.PreferencesGroup({
-            title: 'Zeitraum',
-            description: 'Der Zeitraum, den die NÄCHSTE Rechnung abdeckt. Danach rückt er automatisch weiter.',
+            title: _('Period'),
+            description: _('The period the NEXT invoice covers. After that it moves on automatically.'),
         });
         this.interval.set_model(Gtk.StringList.new(INTERVALS.map((i) => i.label)));
         when.add(this.interval);
@@ -185,11 +186,11 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
             marginStart: 12,
             marginEnd: 12,
         });
-        const add = new Gtk.Button({ label: 'Position hinzufügen' });
+        const add = new Gtk.Button({ label: _('Add line item') });
         add.add_css_class('pill');
         add.connect('clicked', () => this.addItemRow(null).title.grab_focus());
         bottom.append(add);
-        const save = new Gtk.Button({ label: 'Speichern' });
+        const save = new Gtk.Button({ label: _('Save') });
         save.add_css_class('suggested-action');
         save.add_css_class('pill');
         save.connect('clicked', () => this.onSave());
@@ -201,13 +202,17 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
     /** Cover letter: salutation, sign-off, the template and a live preview of what the customer will read. */
     private buildLetterGroup(): Adw.PreferencesGroup {
         const group = new Adw.PreferencesGroup({
-            title: 'Anschreiben',
-            description:
-                'Text über den Positionen. Platzhalter: ' +
-                Object.keys(HEADER_PLACEHOLDERS)
-                    .map((k) => `{${k}}`)
-                    .join(' ') +
-                '. Leer = Standardtext der Entität (Einstellungen → Rechnungsstellung).',
+            title: _('Cover letter'),
+            description: fmt(
+                _(
+                    'Text above the line items. Placeholders: {list}. Empty = the entity’s default text (Settings → Invoicing).',
+                ),
+                {
+                    list: Object.keys(HEADER_PLACEHOLDERS)
+                        .map((k) => `{${k}}`)
+                        .join(' '),
+                },
+            ),
         });
         group.add(this.formality);
         group.add(this.greeting);
@@ -219,7 +224,7 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
 
         this.preview.add_css_class('dim-label');
         const previewBox = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 4, marginTop: 12 });
-        const caption = new Gtk.Label({ label: 'Vorschau', xalign: 0 });
+        const caption = new Gtk.Label({ label: _('Preview'), xalign: 0 });
         caption.add_css_class('heading');
         previewBox.append(caption);
         this.addressed.add_css_class('caption');
@@ -241,9 +246,11 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
         for (const c of contacts) this.contactChoices.push({ id: c.id, label: contactDisplayName(c) });
         // A contact that no longer exists stays selectable, so saving does not drop the link unasked.
         if (current && !this.contactChoices.some((c) => c.id === current)) {
-            this.contactChoices.push({ id: current, label: `Unbekannter Kontakt (${current})` });
+            this.contactChoices.push({ id: current, label: fmt(_('Unknown contact ({id})'), { id: current }) });
         }
-        this.contact.set_model(Gtk.StringList.new(['— keiner —', ...this.contactChoices.map((c) => c.label)]));
+        this.contact.set_model(
+            Gtk.StringList.new([_p('contact', '— none —'), ...this.contactChoices.map((c) => c.label)]),
+        );
         this.contact.set_selected(Math.max(0, this.contactChoices.findIndex((c) => c.id === current) + 1));
         this.contact.connect('notify::selected', () => {
             const picked = this.selectedContactId();
@@ -269,14 +276,16 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
     private refreshProjects(keep: string | null): void {
         const contactId = this.selectedContactId();
         this.projectChoices = contactId ? this.allProjects.filter((p) => p.contactId === contactId) : [];
-        this.project.set_model(Gtk.StringList.new(['— keins —', ...this.projectChoices.map((p) => p.name)]));
+        this.project.set_model(
+            Gtk.StringList.new([_p('project', '— none —'), ...this.projectChoices.map((p) => p.name)]),
+        );
         this.project.set_selected(Math.max(0, this.projectChoices.findIndex((p) => p.id === keep) + 1));
         this.project.set_sensitive(this.projectChoices.length > 0);
         this.project.set_subtitle(
             !contactId
-                ? 'Zuerst einen Kunden-Kontakt wählen'
+                ? _('Pick a customer contact first')
                 : this.projectChoices.length === 0
-                  ? 'Dieser Kunde hat noch kein Projekt (Ansicht Projekte)'
+                  ? _('This customer has no project yet (Projects view)')
                   : '',
         );
     }
@@ -292,7 +301,7 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
 
     /** Render the template against the form as it stands; a bad placeholder shows its error instead. */
     private updatePreview(): void {
-        const customer = (this.customer.get_text() ?? '').trim() || 'Kunde';
+        const customer = (this.customer.get_text() ?? '').trim() || _('Customer');
         const project = this.selectedProject();
         const draft = {
             ...this.existing,
@@ -324,19 +333,25 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
                 project,
             );
             const { greeting, formality, greetingFrom } = resolveAddressing(draft, project);
-            const from = { project: 'aus dem Projekt', contract: 'aus dem Vertrag', none: 'nicht gesetzt' }[
-                greetingFrom
-            ];
+            const from = {
+                project: _('from the project'),
+                contract: _('from the contract'),
+                none: _('not set'),
+            }[greetingFrom];
             this.addressed.set_label(
-                `Angesprochen wird: ${greeting || '—'} (${from}), ${formality === 'sie' ? 'Sie' : 'du'}`,
+                fmt(_('Addressed: {name} ({source}), {formality}'), {
+                    name: greeting || '—',
+                    source: from,
+                    formality: formality === 'sie' ? 'Sie' : 'du',
+                }),
             );
             const missing = rendered?.warnings.includes(GREETING_MISSING)
-                ? '\n\n⚠ Anrede fehlt – Kontaktperson am Projekt oder im Vertrag eintragen'
+                ? `\n\n⚠ ${_('Salutation missing – add a contact person to the project or the contract')}`
                 : '';
             this.preview.set_label(
                 rendered
                     ? rendered.text + missing
-                    : 'Kein Anschreiben (weder hier noch als Standard der Entität gesetzt).',
+                    : _('No cover letter (set neither here nor as the entity’s default).'),
             );
         } catch (err) {
             this.preview.set_label(err instanceof Error ? err.message : String(err));
@@ -386,10 +401,10 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
     }
 
     private addItemRow(item: RecurringItem | null): { title: Adw.EntryRow } {
-        const title = new Adw.EntryRow({ title: 'Position (max. 40 Zeichen)' });
-        const quantity = new Adw.EntryRow({ title: 'Menge' });
-        const price = new Adw.EntryRow({ title: 'Netto je Einheit (€)' });
-        const vat = new Adw.EntryRow({ title: 'USt-Satz (%)' });
+        const title = new Adw.EntryRow({ title: _('Line item (max. 40 characters)') });
+        const quantity = new Adw.EntryRow({ title: _('Quantity') });
+        const price = new Adw.EntryRow({ title: _('Net per unit (€)') });
+        const vat = new Adw.EntryRow({ title: _('VAT rate (%)') });
         title.set_text(item?.title ?? '');
         quantity.set_text(String(item?.quantity ?? 1));
         price.set_text(item ? String(item.unitPrice) : '');
@@ -397,7 +412,7 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
 
         const remove = new Gtk.Button({ iconName: 'user-trash-symbolic', valign: Gtk.Align.CENTER });
         remove.add_css_class('flat');
-        remove.set_tooltip_text('Position entfernen');
+        remove.set_tooltip_text(_('Remove line item'));
         remove.connect('clicked', () => {
             for (const row of [title, quantity, price, vat]) {
                 row.set_text('');
@@ -413,26 +428,26 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
 
     private onSave(): void {
         const customer = (this.customer.get_text() ?? '').trim();
-        if (!customer) return this.warn('Der Kundenname fehlt.');
+        if (!customer) return this.warn(_('The customer name is missing.'));
 
         const start = (this.start.get_text() ?? '').trim();
         const end = (this.end.get_text() ?? '').trim();
         if (!/^\d{4}-\d{2}-\d{2}$/.test(start) || !/^\d{4}-\d{2}-\d{2}$/.test(end)) {
-            return this.warn('Zeitraum muss im Format JJJJ-MM-TT stehen.');
+            return this.warn(_('The period must be in YYYY-MM-DD format.'));
         }
-        if (end < start) return this.warn('Das Ende des Zeitraums liegt vor seinem Anfang.');
+        if (end < start) return this.warn(_('The period ends before it begins.'));
 
         const items: RecurringItem[] = [];
         for (const row of this.itemRows) {
             const label = (row.title.get_text() ?? '').trim();
             if (!label) continue; // a removed or never-filled row
             const price = parseGermanInput(row.price.get_text() ?? '');
-            if (price == null) return this.warn(`„${label}": der Nettobetrag ist keine Zahl.`);
+            if (price == null) return this.warn(fmt(_('“{item}”: the net amount is not a number.'), { item: label }));
             const quantity = parseGermanInput(row.quantity.get_text() ?? '') ?? 1;
             const vat = parseGermanInput(row.vat.get_text() ?? '') ?? 19;
             items.push({ title: label.slice(0, 40), quantity, unitPrice: price, vatRate: vat });
         }
-        if (items.length === 0) return this.warn('Mindestens eine Position mit Bezeichnung und Betrag.');
+        if (items.length === 0) return this.warn(_('At least one line item with a designation and an amount.'));
 
         const months = INTERVALS[this.interval.get_selected()]?.months ?? 12;
         const description = (this.description.get_text() ?? '').trim();
@@ -491,10 +506,15 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
                 currency: this.existing?.currency ?? 'EUR',
                 items,
             } as RecurringInvoice);
-            this.done(this.existing ? `„${customer}" gespeichert` : `„${customer}" angelegt`, true);
+            this.done(
+                this.existing
+                    ? fmt(_('“{name}” saved'), { name: customer })
+                    : fmt(_('“{name}” created'), { name: customer }),
+                true,
+            );
             this.close();
         } catch (err) {
-            this.warn(`Konnte nicht speichern: ${err instanceof Error ? err.message : String(err)}`);
+            this.warn(fmt(_('Could not save: {error}'), { error: err instanceof Error ? err.message : String(err) }));
         }
     }
 

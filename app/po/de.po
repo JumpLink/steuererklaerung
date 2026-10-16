@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-17 00:03+0200\n"
+"POT-Creation-Date: 2026-10-17 00:18+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -20,7 +20,9 @@ msgstr "Eigene Konten"
 msgid ""
 "Names of your own accounts and former company names — bookings there are "
 "transfers, not payments."
-msgstr "Namen eigener Konten und früherer Firmierungen — Buchungen dorthin sind Umbuchungen, keine Zahlungen."
+msgstr ""
+"Namen eigener Konten und früherer Firmierungen — Buchungen dorthin sind "
+"Umbuchungen, keine Zahlungen."
 
 #: src/core/actions/classification-rules.ts:48
 #: src/frontends/desktop/views/setup-assistant.ts:63
@@ -29,35 +31,40 @@ msgstr "Namen eigener Konten und früherer Firmierungen — Buchungen dorthin si
 msgid "Private"
 msgstr "Privat"
 
-#: src/core/actions/classification-rules.ts:49
+#: src/core/actions/classification-rules.ts:50
 msgid ""
 "Merchants and payment references that are private for you — they become a "
 "private withdrawal."
-msgstr "Händler und Verwendungszwecke, die für dich privat sind — sie werden zur Privatentnahme."
+msgstr ""
+"Händler und Verwendungszwecke, die für dich privat sind — sie werden zur "
+"Privatentnahme."
 
-#: src/core/actions/classification-rules.ts:52
+#: src/core/actions/classification-rules.ts:54
 msgid "Partners"
 msgstr "Gesellschafter"
 
-#: src/core/actions/classification-rules.ts:53
+#: src/core/actions/classification-rules.ts:55
 msgid ""
 "Names of the partners — without an invoice number a capital movement, not an "
 "expense."
-msgstr "Namen der Gesellschafter — ohne Rechnungsnummer eine Kapitalbewegung, keine Ausgabe."
+msgstr ""
+"Namen der Gesellschafter — ohne Rechnungsnummer eine Kapitalbewegung, keine "
+"Ausgabe."
 
-#: src/core/actions/classification-rules.ts:56
+#: src/core/actions/classification-rules.ts:58
 msgid "KSK identifiers"
 msgstr "KSK-Kennungen"
 
-#: src/core/actions/classification-rules.ts:57
+#: src/core/actions/classification-rules.ts:59
 msgid "Additional marks of a KSK membership, e.g. the membership number."
-msgstr "Zusätzliche Kennzeichen einer KSK-Mitgliedschaft, z. B. die Mitgliedsnummer."
+msgstr ""
+"Zusätzliche Kennzeichen einer KSK-Mitgliedschaft, z. B. die Mitgliedsnummer."
 
-#: src/core/actions/classification-rules.ts:60
+#: src/core/actions/classification-rules.ts:62
 msgid "Customers (revenue)"
 msgstr "Kunden (Erlöse)"
 
-#: src/core/actions/classification-rules.ts:61
+#: src/core/actions/classification-rules.ts:63
 msgid "Customer names that mark an incoming payment as revenue."
 msgstr "Kundennamen, die einen Zahlungseingang als Erlös kennzeichnen."
 
@@ -266,61 +273,66 @@ msgid ""
 "With Paperless-ngx, Paperless fetches the receipts from the mailbox itself: "
 "in Paperless under „Mail“ add an account and a rule (action „Dokument "
 "verarbeiten“). There is nothing to set up here."
-msgstr "Mit Paperless-ngx holt Paperless die Belege selbst aus dem Postfach: in Paperless unter „Mail“ ein Konto und eine Regel anlegen (Aktion „Dokument verarbeiten“). Hier ist nichts einzurichten."
+msgstr ""
+"Mit Paperless-ngx holt Paperless die Belege selbst aus dem Postfach: in "
+"Paperless unter „Mail“ ein Konto und eine Regel anlegen (Aktion „Dokument "
+"verarbeiten“). Hier ist nichts einzurichten."
 
-#: src/core/actions/mail-eingang.ts:137
+#: src/core/actions/mail-eingang.ts:136
 msgid "Folder renumbered, no messages"
 msgstr "Ordner neu nummeriert, keine Nachrichten"
 
-#: src/core/actions/mail-eingang.ts:137
+#: src/core/actions/mail-eingang.ts:136
 msgid "No new messages"
 msgstr "Keine neuen Nachrichten"
 
-#: src/core/actions/mail-eingang.ts:139
+#: src/core/actions/mail-eingang.ts:138
 msgid "{count} message checked"
 msgid_plural "{count} messages checked"
 msgstr[0] "{count} Nachricht geprüft"
 msgstr[1] "{count} Nachrichten geprüft"
 
-#: src/core/actions/mail-eingang.ts:141
+#: src/core/actions/mail-eingang.ts:140
 msgid "{count} new receipt would be imported"
 msgid_plural "{count} new receipts would be imported"
 msgstr[0] "{count} neuer Beleg würde importiert"
 msgstr[1] "{count} neue Belege würden importiert"
 
-#: src/core/actions/mail-eingang.ts:144
+#: src/core/actions/mail-eingang.ts:143
 msgid "{count} new receipt"
 msgid_plural "{count} new receipts"
 msgstr[0] "{count} neuer Beleg"
 msgstr[1] "{count} neue Belege"
 
-#: src/core/actions/mail-eingang.ts:146
+#: src/core/actions/mail-eingang.ts:145
 msgid "{count} already there"
 msgstr "{count} schon vorhanden"
 
-#: src/core/actions/mail-eingang.ts:147
+#: src/core/actions/mail-eingang.ts:146
 msgid "{count} more waiting"
 msgstr "{count} weitere warten"
 
-#: src/core/actions/mail-eingang.ts:148
+#: src/core/actions/mail-eingang.ts:147
 msgid "Folder renumbered, everything checked again"
 msgstr "Ordner neu nummeriert, alles neu geprüft"
 
-#: src/core/actions/mail-eingang.ts:161
+#: src/core/actions/mail-eingang.ts:160
 msgid "No mailbox set up (Settings → Receipts from mail)."
 msgstr "Kein Postfach eingerichtet (Einstellungen → Belege aus Mail)."
 
-#: src/core/actions/mail-eingang.ts:168
+#: src/core/actions/mail-eingang.ts:167
 msgid ""
 "No password for the mailbox in the keyring (Settings → Receipts from mail → "
 "Save mailbox)."
-msgstr "Kein Passwort für das Postfach im Schlüsselbund (Einstellungen → Belege aus Mail → Passwort speichern)."
+msgstr ""
+"Kein Passwort für das Postfach im Schlüsselbund (Einstellungen → Belege aus "
+"Mail → Passwort speichern)."
 
-#: src/core/actions/mail-eingang.ts:216
+#: src/core/actions/mail-eingang.ts:215
 msgid "„{file}“ is too large."
 msgstr "„{file}“ ist zu groß."
 
-#: src/core/actions/mail-eingang.ts:268
+#: src/core/actions/mail-eingang.ts:267
 msgid "{count} error"
 msgid_plural "{count} errors"
 msgstr[0] "{count} Fehler"
@@ -329,6 +341,21 @@ msgstr[1] "{count} Fehler"
 #: src/core/actions/mail-eingang.ts:288
 msgid "Error: {message}"
 msgstr "Fehler: {message}"
+
+#: src/core/actions/recurring-invoices.ts:351
+msgid ""
+"There is no issued invoice for “{id}” yet. Create one first: steuer invoices "
+"recurring create {id}"
+msgstr "Zu „{id}“ gibt es noch keine ausgestellte Rechnung. Erst erstellen: steuer invoices recurring create {id}"
+
+#: src/core/actions/recurring-schedules.ts:40
+msgid "No free id found for “{base}”."
+msgstr "Keine freie Id für „{base}“ gefunden."
+
+#: src/core/actions/recurring-schedules.ts:112
+#: src/core/actions/recurring-schedules.ts:123
+msgid "No recurring item “{id}” for {entity}."
+msgstr "Kein wiederkehrender Posten „{id}“ für {entity}."
 
 #: src/core/clients/fints/client.ts:290
 msgid ""
@@ -848,6 +875,7 @@ msgid "not computable because no amount is recorded — not deducted"
 msgstr "nicht berechenbar, weil kein Betrag erfasst ist — nicht abgezogen"
 
 #: src/core/elster/frei-verfuegbar.ts:487 src/core/elster/home.ts:350
+#: src/frontends/desktop/views/forderungen-view.ts:216
 #: src/frontends/desktop/views/rechnungen-view.ts:561
 msgid "due {date}"
 msgstr "fällig {date}"
@@ -1686,10 +1714,12 @@ msgid "the account supplies no balances"
 msgstr "das Konto keine Salden liefert"
 
 #: src/core/elster/laufende-kosten.ts:66
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:46
 msgid "monthly"
 msgstr "monatlich"
 
 #: src/core/elster/laufende-kosten.ts:68
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:47
 msgid "quarterly"
 msgstr "vierteljährlich"
 
@@ -1698,6 +1728,7 @@ msgid "twice a year"
 msgstr "halbjährlich"
 
 #: src/core/elster/laufende-kosten.ts:72
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:49
 msgid "yearly"
 msgstr "jährlich"
 
@@ -2382,6 +2413,7 @@ msgid "probably time-barred since {date}"
 msgstr "vermutlich verjährt seit {date}"
 
 #: src/core/invoices/forderungen-hinweis.ts:42
+#: src/frontends/desktop/views/forderungen-view.ts:47
 msgid "act by {date}"
 msgstr "Handeln bis {date}"
 
@@ -2458,7 +2490,27 @@ msgstr "Das ist keine Rechtsberatung."
 msgid "View receivables"
 msgstr "Forderungen ansehen"
 
-#: src/core/invoices/forderungen.ts:453
+#: src/core/invoices/forderungen.ts:274
+msgid "Not due yet"
+msgstr "Noch nicht fällig"
+
+#: src/core/invoices/forderungen.ts:275
+msgid "1–30 days overdue"
+msgstr "1–30 Tage überfällig"
+
+#: src/core/invoices/forderungen.ts:276
+msgid "31–60 days overdue"
+msgstr "31–60 Tage überfällig"
+
+#: src/core/invoices/forderungen.ts:277
+msgid "61–90 days overdue"
+msgstr "61–90 Tage überfällig"
+
+#: src/core/invoices/forderungen.ts:278
+msgid "More than 90 days overdue"
+msgstr "Über 90 Tage überfällig"
+
+#: src/core/invoices/forderungen.ts:455
 msgid "{n} receivable overdue"
 msgid_plural "{n} receivables overdue"
 msgstr[0] "{n} Forderung überfällig"
@@ -2555,13 +2607,17 @@ msgstr ""
 msgid ""
 "Without encryption only a server on this machine works — otherwise the "
 "password would travel the network in the clear."
-msgstr "Ohne Verschlüsselung geht es nur zu einem Server auf diesem Rechner — sonst liefe das Passwort offen durchs Netz."
+msgstr ""
+"Ohne Verschlüsselung geht es nur zu einem Server auf diesem Rechner — sonst "
+"liefe das Passwort offen durchs Netz."
 
 #: src/core/mail/invoice-mail.ts:44
 msgid ""
 "the full salutation line for du/Sie, with the name from the salutation field "
 "if there is one"
-msgstr "komplette Anredezeile nach Du/Sie, mit dem Namen aus der Anrede-Angabe, wenn es eine gibt"
+msgstr ""
+"komplette Anredezeile nach Du/Sie, mit dem Namen aus der Anrede-Angabe, wenn "
+"es eine gibt"
 
 #: src/core/mail/invoice-mail.ts:45
 msgid "customer name"
@@ -2598,7 +2654,8 @@ msgstr "Titel der Positionen, mit „und\" verbunden"
 #: src/core/mail/invoice-mail.ts:53
 msgid ""
 "domains of the contract, joined with „und\"; without domains the description"
-msgstr "Domains des Vertrags, mit „und\" verbunden; ohne Domains die Bezeichnung"
+msgstr ""
+"Domains des Vertrags, mit „und\" verbunden; ohne Domains die Bezeichnung"
 
 #: src/core/mail/invoice-mail.ts:54
 msgid "name of the project"
@@ -3561,6 +3618,7 @@ msgstr "Teile"
 #: src/frontends/desktop/views/umbuchen-dialog.ts:204
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:102
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:383
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:193
 msgid "Save"
 msgstr "Speichern"
 
@@ -4292,6 +4350,7 @@ msgstr "Kennung (id)"
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:99
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:197
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:279
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:69
 msgid "Designation"
 msgstr "Bezeichnung"
 
@@ -4542,135 +4601,138 @@ msgstr "Sicherungen behalten"
 msgid "Older ones are deleted after each new backup"
 msgstr "Ältere werden nach jeder neuen Sicherung gelöscht"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:31
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:35
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:25
 msgid "None (local only)"
 msgstr "Keine (nur lokal)"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:38
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:42
 msgid "Receipts from mail"
 msgstr "Belege aus Mail"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:40
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:44
 msgid ""
 "PDF and e-invoice attachments of new messages in a folder land in the "
 "receipt inbox. It only reads — nothing is marked, moved or deleted. The "
 "password lives in the keyring."
-msgstr "PDF- und E-Rechnungs-Anhänge neuer Nachrichten eines Ordners landen im Beleg-Eingang. Es wird nur gelesen — nichts wird markiert, verschoben oder gelöscht. Das Passwort liegt im Schlüsselbund."
+msgstr ""
+"PDF- und E-Rechnungs-Anhänge neuer Nachrichten eines Ordners landen im Beleg-"
+"Eingang. Es wird nur gelesen — nichts wird markiert, verschoben oder "
+"gelöscht. Das Passwort liegt im Schlüsselbund."
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:46
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:50
 msgid "Set up with Paperless"
 msgstr "Mit Paperless einrichten"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:53
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:57
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:52
 msgid "Server"
 msgstr "Server"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:54
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:58
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:53
 msgid "Port"
 msgstr "Port"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:55
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:59
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:54
 msgid "Encryption"
 msgstr "Verschlüsselung"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:56
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:60
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:55
 msgid "User"
 msgstr "Benutzer"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:57
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:118
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:61
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:122
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:56
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:102
 msgid "Password (saved)"
 msgstr "Passwort (gespeichert)"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:57
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:161
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:61
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:165
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:56
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:141
 msgid "Password"
 msgstr "Passwort"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:58
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:62
 msgid "Folder (e.g. INBOX or Belege)"
 msgstr "Ordner (z. B. INBOX oder Belege)"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:59
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:63
 msgid "Only from senders containing … (optional)"
 msgstr "Nur von Absendern mit … (optional)"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:61
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:65
 msgid "Fetch when the app starts"
 msgstr "Beim Start der App abrufen"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:62
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:66
 msgid "Otherwise only on „Jetzt abrufen“."
 msgstr "Sonst nur auf „Jetzt abrufen“."
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:85
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:89
 msgid "Server and user are required."
 msgstr "Server und Benutzer sind nötig."
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:86
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:90
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:79
 msgid "The port is invalid."
 msgstr "Der Port ist ungültig."
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:99
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:103
 msgid "Save mailbox"
 msgstr "Postfach speichern"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:107
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:111
 msgid "Mailbox not saved"
 msgstr "Postfach nicht gespeichert"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:115
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:119
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:99
 msgid "The password could not be saved in the keyring."
 msgstr "Das Passwort ließ sich nicht im Schlüsselbund speichern."
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:123
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:127
 msgid "Last fetch"
 msgstr "Letzter Abruf"
 
 #
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:128
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:132
 msgid "Fetch now"
 msgstr "Jetzt abrufen"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:137
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:141
 msgid "Fetch not possible"
 msgstr "Abruf nicht möglich"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:140
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:144
 msgid "Fetch failed"
 msgstr "Abruf fehlgeschlagen"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:152
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:156
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:129
 msgid "Delete the saved password"
 msgstr "Gespeichertes Passwort löschen"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:156
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:160
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:133
 msgid "No password is saved"
 msgstr "Es ist kein Passwort gespeichert"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:162
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:166
 msgid "The password could not be deleted"
 msgstr "Passwort ließ sich nicht löschen"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:162
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:166
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:142
 msgid "Password deleted"
 msgstr "Passwort gelöscht"
 
-#: src/frontends/desktop/views/einstellungen/belege-mail.ts:170
+#: src/frontends/desktop/views/einstellungen/belege-mail.ts:174
 msgid "Never fetched yet."
 msgstr "Noch nie abgerufen."
 
@@ -5261,6 +5323,7 @@ msgstr "Der Kindergeld-Anspruch ist keine Zahl."
 #: src/frontends/desktop/views/einstellungen-view.ts:430
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:254
 #: src/frontends/desktop/views/umbuchen-dialog.ts:251
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:511
 msgid "Could not save: {error}"
 msgstr "Konnte nicht speichern: {error}"
 
@@ -5273,7 +5336,10 @@ msgid ""
 "Who your customers are, what is private for you, which supplier is booked "
 "where. Bookings without a receipt are classified by this — the part that "
 "replaces the AI."
-msgstr "Wer deine Kunden sind, was für dich privat ist, welcher Lieferant wohin gebucht wird. Buchungen ohne Beleg werden hiernach eingeordnet — das ist der Teil, der die KI ersetzt."
+msgstr ""
+"Wer deine Kunden sind, was für dich privat ist, welcher Lieferant wohin "
+"gebucht wird. Buchungen ohne Beleg werden hiernach eingeordnet — das ist der "
+"Teil, der die KI ersetzt."
 
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:60
 msgid "Could not read the classification rules: {error}"
@@ -5309,7 +5375,9 @@ msgstr "Beleg → Dokumenttyp, Kategorie"
 msgid ""
 "Created with „Als Regel merken\" in the receipt dialog; they take effect "
 "when a receipt is added, before any AI."
-msgstr "Entstehen mit „Als Regel merken\" im Beleg-Dialog; greifen beim Hinzufügen eines Belegs, vor jeder KI."
+msgstr ""
+"Entstehen mit „Als Regel merken\" im Beleg-Dialog; greifen beim Hinzufügen "
+"eines Belegs, vor jeder KI."
 
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:178
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:244
@@ -5328,7 +5396,9 @@ msgstr "Zeile hinzufügen"
 msgid ""
 "These rules take effect BEFORE the built-in keyword list — so your own rule "
 "wins over a general keyword that would catch the same text."
-msgstr "Diese Regeln greifen VOR der eingebauten Stichwortliste — eine eigene Regel gewinnt also über ein allgemeines Stichwort, das denselben Text fangen würde."
+msgstr ""
+"Diese Regeln greifen VOR der eingebauten Stichwortliste — eine eigene Regel "
+"gewinnt also über ein allgemeines Stichwort, das denselben Text fangen würde."
 
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:246
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:366
@@ -5348,7 +5418,8 @@ msgstr[1] "{count} Ausnahme(n)"
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:268
 msgid ""
 "Bookings deselected when the rule was created — the rule leaves them out."
-msgstr "Buchungen, die beim Anlegen abgewählt wurden — die Regel lässt sie aus."
+msgstr ""
+"Buchungen, die beim Anlegen abgewählt wurden — die Regel lässt sie aus."
 
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:271
 msgctxt "exceptions"
@@ -5372,7 +5443,9 @@ msgstr "Ausgang (Einnahme)"
 msgid ""
 "When a receipt is added, the first matching rule fills what is still empty — "
 "before the AI. Removing a rule changes no existing receipt."
-msgstr "Beim Hinzufügen eines Belegs setzt die erste passende Regel, was noch leer ist — vor der KI. Eine Regel zu entfernen ändert keinen vorhandenen Beleg."
+msgstr ""
+"Beim Hinzufügen eines Belegs setzt die erste passende Regel, was noch leer "
+"ist — vor der KI. Eine Regel zu entfernen ändert keinen vorhandenen Beleg."
 
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:360
 msgid "Text in the receipt (sender, title, file name)"
@@ -5451,7 +5524,9 @@ msgstr "E-Mail-Versand"
 msgid ""
 "The account that invoices are mailed through. The password lives in the "
 "keyring, not in the configuration."
-msgstr "Das Konto, über das Rechnungen per E-Mail rausgehen. Das Passwort liegt im Schlüsselbund, nicht in der Konfiguration."
+msgstr ""
+"Das Konto, über das Rechnungen per E-Mail rausgehen. Das Passwort liegt im "
+"Schlüsselbund, nicht in der Konfiguration."
 
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:40
 msgid "Own account (SMTP)"
@@ -5574,7 +5649,9 @@ msgstr "E-Mail-Vorlagen"
 msgid ""
 "Named texts for sending invoices. Without a template the built-in text "
 "applies. A contract or project may pick another one."
-msgstr "Benannte Texte für den Rechnungsversand. Ohne Vorlage gilt der eingebaute Text. Ein Vertrag oder Projekt kann eine andere wählen."
+msgstr ""
+"Benannte Texte für den Rechnungsversand. Ohne Vorlage gilt der eingebaute "
+"Text. Ein Vertrag oder Projekt kann eine andere wählen."
 
 #: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:196
 msgid "Default of the entity"
@@ -5590,7 +5667,8 @@ msgstr "Vorlage „{name}“ löschen?"
 
 #: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:216
 msgid "Contracts and projects naming it fall back to the next level."
-msgstr "Verträge und Projekte, die sie nennen, fallen auf die nächste Stufe zurück."
+msgstr ""
+"Verträge und Projekte, die sie nennen, fallen auf die nächste Stufe zurück."
 
 #: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:217
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:623
@@ -5804,6 +5882,7 @@ msgid "{days} days × {km} km"
 msgstr "{days} Tage × {km} km"
 
 #: src/frontends/desktop/views/einstellungen/privat.ts:277
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:333
 msgid "not set"
 msgstr "nicht gesetzt"
 
@@ -6257,6 +6336,200 @@ msgid "{n} candidate"
 msgid_plural "{n} candidates"
 msgstr[0] "{n} Kandidat"
 msgstr[1] "{n} Kandidaten"
+
+#: src/frontends/desktop/views/forderungen-view.ts:34
+msgid "pays later and later"
+msgstr "zahlt zunehmend später"
+
+#: src/frontends/desktop/views/forderungen-view.ts:35
+msgid "pays earlier and earlier"
+msgstr "zahlt zunehmend früher"
+
+#: src/frontends/desktop/views/forderungen-view.ts:36
+msgid "steady"
+msgstr "gleichbleibend"
+
+#: src/frontends/desktop/views/forderungen-view.ts:40
+msgid "{days} day"
+msgid_plural "{days} days"
+msgstr[0] "{days} Tag"
+msgstr[1] "{days} Tage"
+
+#: src/frontends/desktop/views/forderungen-view.ts:46
+msgid "presumably time-barred since {date}"
+msgstr "vermutlich verjährt seit {date}"
+
+#: src/frontends/desktop/views/forderungen-view.ts:48
+msgid "(soon)"
+msgstr "(bald)"
+
+#: src/frontends/desktop/views/forderungen-view.ts:54
+msgid "{days} after the due date"
+msgstr "{days} nach Fälligkeit"
+
+#: src/frontends/desktop/views/forderungen-view.ts:55
+msgid "{days} before the due date"
+msgstr "{days} vor Fälligkeit"
+
+#: src/frontends/desktop/views/forderungen-view.ts:85
+msgid "No outgoing invoices"
+msgstr "Keine Ausgangsrechnungen"
+
+#: src/frontends/desktop/views/forderungen-view.ts:94
+msgid "Open receivables could not be loaded"
+msgstr "Offene Forderungen konnten nicht geladen werden"
+
+#: src/frontends/desktop/views/forderungen-view.ts:114
+msgid "No open receivables"
+msgstr "Keine offenen Forderungen"
+
+#: src/frontends/desktop/views/forderungen-view.ts:116
+msgid ""
+"As soon as an outgoing invoice is finalised and not yet paid, it appears "
+"here."
+msgstr "Sobald eine Ausgangsrechnung festgeschrieben ist und noch nicht bezahlt, steht sie hier."
+
+#: src/frontends/desktop/views/forderungen-view.ts:127
+#: src/frontends/desktop/views/zeiten-view.ts:51
+msgid "Open"
+msgstr "Offen"
+
+#: src/frontends/desktop/views/forderungen-view.ts:129
+#: src/frontends/desktop/views/forderungen-view.ts:158
+#: src/frontends/desktop/views/rechnungen-view.ts:443
+#: src/frontends/desktop/views/rechnungen-view.ts:449
+#: src/frontends/desktop/views/rechnungen-view.ts:455
+msgid "{n} invoice"
+msgid_plural "{n} invoices"
+msgstr[0] "{n} Rechnung"
+msgstr[1] "{n} Rechnungen"
+
+#: src/frontends/desktop/views/forderungen-view.ts:132
+msgid "Overdue"
+msgstr "Überfällig"
+
+#: src/frontends/desktop/views/forderungen-view.ts:137
+msgid "Reminder due"
+msgstr "Mahnung fällig"
+
+#: src/frontends/desktop/views/forderungen-view.ts:137
+msgid "next stage due"
+msgstr "nächste Stufe fällig"
+
+#: src/frontends/desktop/views/forderungen-view.ts:149
+msgid "Open items by age"
+msgstr "Offene Posten nach Alter"
+
+#: src/frontends/desktop/views/forderungen-view.ts:150
+msgid ""
+"Days past the due date; calculated on the balance left after partial "
+"payments."
+msgstr "Tage nach der Fälligkeit; gerechnet auf den offenen Rest nach Teilzahlungen."
+
+#: src/frontends/desktop/views/forderungen-view.ts:159
+msgid "none"
+msgstr "keine"
+
+#: src/frontends/desktop/views/forderungen-view.ts:176
+msgctxt "receivables"
+msgid "Total"
+msgstr "Gesamt"
+
+#: src/frontends/desktop/views/forderungen-view.ts:186
+msgid "Open invoices"
+msgstr "Offene Rechnungen"
+
+#: src/frontends/desktop/views/forderungen-view.ts:188
+msgid ""
+"Reminder stage and limitation period per invoice. “Draft a reminder” only "
+"produces a text — you send it yourself."
+msgstr "Mahnstufe und Verjährung je Rechnung. „Mahnung entwerfen“ erzeugt nur einen Text — versendet wird er von dir."
+
+#: src/frontends/desktop/views/forderungen-view.ts:199
+msgid "Nothing open"
+msgstr "Nichts offen"
+
+#: src/frontends/desktop/views/forderungen-view.ts:200
+msgid "All invoices are paid."
+msgstr "Alle Rechnungen sind bezahlt."
+
+#: src/frontends/desktop/views/forderungen-view.ts:211
+msgid "{days} overdue"
+msgstr "{days} überfällig"
+
+#: src/frontends/desktop/views/forderungen-view.ts:213
+msgid "not due yet"
+msgstr "noch nicht fällig"
+
+#: src/frontends/desktop/views/forderungen-view.ts:214
+msgid "no due date"
+msgstr "ohne Fälligkeit"
+
+#: src/frontends/desktop/views/forderungen-view.ts:217
+msgid "{paid} of {total} received"
+msgstr "{paid} von {total} eingegangen"
+
+#: src/frontends/desktop/views/forderungen-view.ts:220
+msgid "(sent {date})"
+msgstr "(versandt {date})"
+
+#: src/frontends/desktop/views/forderungen-view.ts:222
+msgid "stage {n} drafted, not marked as sent"
+msgstr "Stufe {n} entworfen, nicht als versandt markiert"
+
+#: src/frontends/desktop/views/forderungen-view.ts:224
+msgid "stage {n} is due"
+msgstr "Stufe {n} ist fällig"
+
+#: src/frontends/desktop/views/forderungen-view.ts:238
+msgid "Draft a reminder"
+msgstr "Mahnung entwerfen"
+
+#: src/frontends/desktop/views/forderungen-view.ts:240
+msgid "Draft a reminder: {invoice}"
+msgstr "Mahnung entwerfen: {invoice}"
+
+#: src/frontends/desktop/views/forderungen-view.ts:255
+msgid "Presumably already paid"
+msgstr "Vermutlich schon bezahlt"
+
+#: src/frontends/desktop/views/forderungen-view.ts:257
+msgid ""
+"Incoming payments carrying the invoice number cover the full amount, but the "
+"invoice is not marked as paid — no reminder is sent for it."
+msgstr "Zahlungseingänge mit der Rechnungsnummer decken den ganzen Betrag, die Rechnung ist aber nicht als bezahlt markiert — sie wird nicht gemahnt."
+
+#: src/frontends/desktop/views/forderungen-view.ts:270
+msgid "Payment behaviour per customer"
+msgstr "Zahlungsverhalten je Kunde"
+
+#: src/frontends/desktop/views/forderungen-view.ts:272
+msgid ""
+"Payment date minus due date, across the paid invoices. The trend compares "
+"the last two with the earlier ones, from four paid invoices on."
+msgstr "Zahlungsdatum minus Fälligkeit, über die bezahlten Rechnungen. Der Trend vergleicht die letzten zwei mit den früheren, ab vier bezahlten Rechnungen."
+
+#: src/frontends/desktop/views/forderungen-view.ts:279
+msgid "No paid invoices yet"
+msgstr "Noch keine bezahlten Rechnungen"
+
+#: src/frontends/desktop/views/forderungen-view.ts:281
+msgid ""
+"As soon as invoices with a due date and a payment date are paid, this shows "
+"how quickly each customer pays."
+msgstr "Sobald Rechnungen mit Fälligkeit und Zahlungsdatum bezahlt sind, steht hier, wie schnell jeder Kunde zahlt."
+
+#: src/frontends/desktop/views/forderungen-view.ts:289
+msgid "worst case {value}"
+msgstr "schlimmster Fall {value}"
+
+#: src/frontends/desktop/views/forderungen-view.ts:290
+msgid "{n} paid"
+msgstr "{n} bezahlt"
+
+#: src/frontends/desktop/views/forderungen-view.ts:291
+msgid "Trend: {trend}"
+msgstr "Trend: {trend}"
 
 #: src/frontends/desktop/views/herleitung-dialog.blp:7
 #: src/frontends/desktop/views/herleitung-dialog.ts:141
@@ -7587,6 +7860,7 @@ msgstr "Rechnung"
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:196
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:185
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:103
 msgid "Line items"
 msgstr "Positionen"
 
@@ -7654,6 +7928,7 @@ msgstr "Storniert durch"
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:137
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:141
 #: src/frontends/desktop/views/tx-detail-dialog.ts:224
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:65
 msgid "Project"
 msgstr "Projekt"
 
@@ -8125,14 +8400,6 @@ msgstr "Lade Rechnungen aus dem Back-End …"
 msgid "Invoices not available"
 msgstr "Rechnungen nicht verfügbar"
 
-#: src/frontends/desktop/views/rechnungen-view.ts:443
-#: src/frontends/desktop/views/rechnungen-view.ts:449
-#: src/frontends/desktop/views/rechnungen-view.ts:455
-msgid "{n} invoice"
-msgid_plural "{n} invoices"
-msgstr[0] "{n} Rechnung"
-msgstr[1] "{n} Rechnungen"
-
 #: src/frontends/desktop/views/rechnungen-view.ts:467
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:116
 msgid "New invoice"
@@ -8187,6 +8454,9 @@ msgid "Edit invoice"
 msgstr "Rechnung bearbeiten"
 
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:125
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:63
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:135
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:298
 msgid "Customer"
 msgstr "Kunde"
 
@@ -8250,6 +8520,7 @@ msgid "Description (optional)"
 msgstr "Beschreibung (optional)"
 
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:230
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:399
 msgid "Quantity"
 msgstr "Menge"
 
@@ -8262,6 +8533,7 @@ msgid "Net unit price (€)"
 msgstr "Einzelpreis netto (€)"
 
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:236
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:409
 msgid "Remove line item"
 msgstr "Position entfernen"
 
@@ -10411,9 +10683,181 @@ msgstr "Meine Daten einrichten"
 msgid "Could not open {dir}"
 msgstr "{dir} konnte nicht geöffnet werden"
 
-#: src/frontends/desktop/views/zeiten-view.ts:51
-msgid "Open"
-msgstr "Offen"
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:48
+msgid "half-yearly"
+msgstr "halbjährlich"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:64
+msgid "Customer contact"
+msgstr "Kunden-Kontakt"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:66
+msgid "Mail template"
+msgstr "Mail-Vorlage"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:68
+msgid "Email (for the reminder)"
+msgstr "E-Mail (für die Erinnerung)"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:70
+msgid "Note (internal only)"
+msgstr "Notiz (nur intern)"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:71
+msgid "Rhythm"
+msgstr "Rhythmus"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:72
+msgid "Next period from (YYYY-MM-DD)"
+msgstr "Nächster Zeitraum ab (JJJJ-MM-TT)"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:73
+msgid "until (YYYY-MM-DD)"
+msgstr "bis (JJJJ-MM-TT)"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:75
+msgid "Form of address"
+msgstr "Anrede-Form"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:79
+msgid "Salutation in the contract (e.g. “Silke”; the project takes precedence)"
+msgstr "Anrede im Vertrag (z. B. „Silke“; das Projekt geht vor)"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:81
+msgid "Sign-off (empty = the entity’s default)"
+msgstr "Gruß (leer = Standard der Entität)"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:104
+msgid "Net per unit; VAT is added when the invoice is issued."
+msgstr "Netto je Einheit; die Umsatzsteuer kommt beim Erzeugen der Rechnung dazu."
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:121
+msgid "Edit recurring schedule"
+msgstr "Wiederkehrend bearbeiten"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:121
+msgid "New recurring schedule"
+msgstr "Wiederkehrend anlegen"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:141
+msgid ""
+"Picks the text used when the invoice is mailed; empty = the project’s or the "
+"entity’s default"
+msgstr "Wählt den Text für den Rechnungsversand; leer = Projekt bzw. Standard der Entität"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:144
+msgid "as project/default"
+msgstr "wie Projekt/Standard"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:157
+msgid "Period"
+msgstr "Zeitraum"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:158
+msgid ""
+"The period the NEXT invoice covers. After that it moves on automatically."
+msgstr "Der Zeitraum, den die NÄCHSTE Rechnung abdeckt. Danach rückt er automatisch weiter."
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:189
+msgid "Add line item"
+msgstr "Position hinzufügen"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:205
+msgid "Cover letter"
+msgstr "Anschreiben"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:207
+msgid ""
+"Text above the line items. Placeholders: {list}. Empty = the entity’s "
+"default text (Settings → Invoicing)."
+msgstr "Text über den Positionen. Platzhalter: {list}. Leer = Standardtext der Entität (Einstellungen → Rechnungsstellung)."
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:225
+msgid "Preview"
+msgstr "Vorschau"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:247
+msgid "Unknown contact ({id})"
+msgstr "Unbekannter Kontakt ({id})"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:249
+msgctxt "contact"
+msgid "— none —"
+msgstr "— keiner —"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:275
+msgctxt "project"
+msgid "— none —"
+msgstr "— keins —"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:280
+msgid "Pick a customer contact first"
+msgstr "Zuerst einen Kunden-Kontakt wählen"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:282
+msgid "This customer has no project yet (Projects view)"
+msgstr "Dieser Kunde hat noch kein Projekt (Ansicht Projekte)"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:331
+msgid "from the project"
+msgstr "aus dem Projekt"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:332
+msgid "from the contract"
+msgstr "aus dem Vertrag"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:336
+msgid "Addressed: {name} ({source}), {formality}"
+msgstr "Angesprochen wird: {name} ({source}), {formality}"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:343
+msgid ""
+"Salutation missing – add a contact person to the project or the contract"
+msgstr "Anrede fehlt – Kontaktperson am Projekt oder im Vertrag eintragen"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:348
+msgid "No cover letter (set neither here nor as the entity’s default)."
+msgstr "Kein Anschreiben (weder hier noch als Standard der Entität gesetzt)."
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:398
+msgid "Line item (max. 40 characters)"
+msgstr "Position (max. 40 Zeichen)"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:400
+msgid "Net per unit (€)"
+msgstr "Netto je Einheit (€)"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:401
+msgid "VAT rate (%)"
+msgstr "USt-Satz (%)"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:425
+msgid "The customer name is missing."
+msgstr "Der Kundenname fehlt."
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:430
+msgid "The period must be in YYYY-MM-DD format."
+msgstr "Zeitraum muss im Format JJJJ-MM-TT stehen."
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:432
+msgid "The period ends before it begins."
+msgstr "Das Ende des Zeitraums liegt vor seinem Anfang."
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:439
+msgid "“{item}”: the net amount is not a number."
+msgstr "„{item}“: der Nettobetrag ist keine Zahl."
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:444
+msgid "At least one line item with a designation and an amount."
+msgstr "Mindestens eine Position mit Bezeichnung und Betrag."
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:505
+msgid "“{name}” saved"
+msgstr "„{name}“ gespeichert"
+
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:506
+msgid "“{name}” created"
+msgstr "„{name}“ angelegt"
 
 #: src/frontends/desktop/views/zeiten-view.ts:52
 msgid "Invoiced"
