@@ -14,7 +14,7 @@ import { contactDisplayName } from '@steuererklaerung/store';
 
 import {
     entwerfeMahnung,
-    MAHNSTUFEN,
+    mahnstufe,
     markiereMahnungVersandt,
     type MahnungEntwurfErgebnis,
     type OffenerPosten,
@@ -48,7 +48,10 @@ export class BhMahnungDialog {
 
     open(parent: Gtk.Widget, entity: AppEntity, posten: OffenerPosten): void {
         const model = new Gtk.StringList();
-        for (const s of STUFEN) model.append(`${s} · ${MAHNSTUFEN[s].name} (${MAHNSTUFEN[s].ton})`);
+        for (const s of STUFEN) {
+            const m = mahnstufe(s);
+            model.append(`${s} · ${m.name} (${m.ton})`);
+        }
         this.stufeRow.set_model(model);
         this.stufeRow.set_selected(STUFEN.indexOf(posten.naechsteStufe ?? 3));
 
@@ -194,7 +197,7 @@ export class BhMahnungDialog {
                     'The app sends nothing. Mark the {name} for invoice {number} only once you have sent it to the ' +
                         'customer yourself — then this level applies and the next one is due only after 14 days.',
                 ),
-                { name: MAHNSTUFEN[e.stufe].name, number: e.nummer ?? e.rechnungId },
+                { name: mahnstufe(e.stufe).name, number: e.nummer ?? e.rechnungId },
             ),
             confirmLabel: _('Yes, I sent it'),
             cancelLabel: _('Not yet'),

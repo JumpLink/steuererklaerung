@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-16 21:43+0200\n"
+"POT-Creation-Date: 2026-10-16 21:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1812,6 +1812,75 @@ msgid "{n} receivable overdue"
 msgid_plural "{n} receivables overdue"
 msgstr[0] ""
 msgstr[1] ""
+
+#: src/core/invoices/form.ts:94
+msgid "Recipient missing — please choose a customer."
+msgstr ""
+
+#: src/core/invoices/form.ts:95
+msgid "Issue date missing."
+msgstr ""
+
+#: src/core/invoices/form.ts:96
+msgid "At least one line item is required."
+msgstr ""
+
+#: src/core/invoices/form.ts:99
+msgid "Item {n}: title missing."
+msgstr ""
+
+#: src/core/invoices/form.ts:100
+msgid "Item {n}: invalid quantity."
+msgstr ""
+
+#: src/core/invoices/form.ts:101
+msgid "Item {n}: invalid unit price."
+msgstr ""
+
+#: src/core/invoices/form.ts:102
+msgid "Item {n}: invalid VAT rate."
+msgstr ""
+
+#: src/core/invoices/mahnung-text.ts:21
+msgid "Payment reminder"
+msgstr ""
+
+#: src/core/invoices/mahnung-text.ts:21
+msgid "friendly"
+msgstr ""
+
+#: src/core/invoices/mahnung-text.ts:22
+msgid "Reminder"
+msgstr ""
+
+#: src/core/invoices/mahnung-text.ts:22
+msgid "firm"
+msgstr ""
+
+#: src/core/invoices/mahnung-text.ts:23
+msgid "Final reminder"
+msgstr ""
+
+#: src/core/invoices/mahnung-text.ts:23
+msgid "formal"
+msgstr ""
+
+#: src/core/invoices/mahnung-text.ts:29
+msgid "no reminder sent"
+msgstr ""
+
+#: src/core/invoices/mahnung-text.ts:30
+msgid "Stage {n} · {name}"
+msgstr ""
+
+#: src/core/invoices/mahnung-text.ts:67
+msgid ""
+"The invoice has no due date — without one there is nothing to remind about."
+msgstr ""
+
+#: src/core/invoices/mahnung-text.ts:68
+msgid "The invoice is not due yet."
+msgstr ""
 
 #: src/core/lib/edition-badges.ts:29
 msgid "Open Source"
@@ -4094,83 +4163,83 @@ msgstr ""
 msgid "Level"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:56
+#: src/frontends/desktop/views/mahnung-dialog.ts:59
 msgid "Invoice {number} · {customer}"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:61
+#: src/frontends/desktop/views/mahnung-dialog.ts:64
 msgid ""
 "This is a draft. The app sends nothing — you copy the text or open it in "
 "your mail program. Only once you have sent it yourself do you mark the level "
 "as sent."
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:90
+#: src/frontends/desktop/views/mahnung-dialog.ts:93
 #: src/frontends/desktop/views/mcp-clients-dialog.ts:28
 msgid "Copy"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:91
+#: src/frontends/desktop/views/mahnung-dialog.ts:94
 msgid "Save as text file"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:92
+#: src/frontends/desktop/views/mahnung-dialog.ts:95
 msgid "Open mail draft"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:94
+#: src/frontends/desktop/views/mahnung-dialog.ts:97
 msgid "Mark as sent"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:132
+#: src/frontends/desktop/views/mahnung-dialog.ts:135
 msgid "Drafting …"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:137
+#: src/frontends/desktop/views/mahnung-dialog.ts:140
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:357
 msgid "Subject: {value}"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:140
+#: src/frontends/desktop/views/mahnung-dialog.ts:143
 msgid "Draft level {level} · payment deadline {date} · not sent"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:143
+#: src/frontends/desktop/views/mahnung-dialog.ts:146
 msgid "this level is already recorded as sent"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:162
+#: src/frontends/desktop/views/mahnung-dialog.ts:165
 msgid "Draft copied to the clipboard"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:169
+#: src/frontends/desktop/views/mahnung-dialog.ts:172
 msgid "Draft"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:191
+#: src/frontends/desktop/views/mahnung-dialog.ts:194
 msgid "Mark level {level} as sent?"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:194
+#: src/frontends/desktop/views/mahnung-dialog.ts:197
 msgid ""
 "The app sends nothing. Mark the {name} for invoice {number} only once you "
 "have sent it to the customer yourself — then this level applies and the next "
 "one is due only after 14 days."
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:199
+#: src/frontends/desktop/views/mahnung-dialog.ts:202
 msgid "Yes, I sent it"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:200
+#: src/frontends/desktop/views/mahnung-dialog.ts:203
 msgid "Not yet"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:206
+#: src/frontends/desktop/views/mahnung-dialog.ts:209
 msgid "Level {level} for {number} recorded as sent"
 msgstr ""
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:214
+#: src/frontends/desktop/views/mahnung-dialog.ts:217
 msgid "Not saved"
 msgstr ""
 

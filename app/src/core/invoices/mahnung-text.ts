@@ -9,17 +9,25 @@
 
 import { deDate } from '../lib/format.ts';
 import { fmtDe } from '../lib/money.ts';
+import { _, fmt } from '../lib/i18n.ts';
 import { MAHNUNG_FRIST_TAGE, type Mahnstufe, tageZwischen } from './forderungen.ts';
 
-export const MAHNSTUFEN: Record<1 | 2 | 3, { name: string; ton: string }> = {
-    1: { name: 'Zahlungserinnerung', ton: 'freundlich' },
-    2: { name: 'Mahnung', ton: 'bestimmt' },
-    3: { name: 'Letzte Mahnung', ton: 'förmlich' },
-};
+/**
+ * Name and tone of one stage. A FUNCTION, not a constant: a module-level constant is evaluated
+ * before a frontend can register its translator, which would freeze the English text into the
+ * German build.
+ */
+export function mahnstufe(stufe: 1 | 2 | 3): { name: string; ton: string } {
+    if (stufe === 1) return { name: _('Payment reminder'), ton: _('friendly') };
+    if (stufe === 2) return { name: _('Reminder'), ton: _('firm') };
+    return { name: _('Final reminder'), ton: _('formal') };
+}
 
-/** „keine" · „1 · Zahlungserinnerung" … for lists. */
+/** „nicht gemahnt" · „Stufe 1 · Zahlungserinnerung" … for lists. */
 export function mahnstufeLabel(stufe: Mahnstufe): string {
-    return stufe === 0 ? 'nicht gemahnt' : `Stufe ${stufe} · ${MAHNSTUFEN[stufe].name}`;
+    return stufe === 0
+        ? _('no reminder sent')
+        : fmt(_('Stage {n} · {name}'), { n: stufe, name: mahnstufe(stufe).name });
 }
 
 export interface MahnungEingabe {
@@ -56,8 +64,8 @@ function addDays(iso: string, days: number): string {
 
 /** The draft for one stage. Throws on an invoice that is not overdue — a reminder before the due date is no reminder. */
 export function mahnungEntwurf(e: MahnungEingabe): MahnungEntwurf {
-    if (!e.dueDate) throw new Error('Die Rechnung hat kein Fälligkeitsdatum — ohne das lässt sich nicht mahnen.');
-    if (tageZwischen(e.dueDate, e.heute) <= 0) throw new Error('Die Rechnung ist noch nicht fällig.');
+    if (!e.dueDate) throw new Error(_('The invoice has no due date — without one there is nothing to remind about.'));
+    if (tageZwischen(e.dueDate, e.heute) <= 0) throw new Error(_('The invoice is not due yet.'));
     const offen = Math.round((e.brutto - e.bezahlt) * 100) / 100;
     const frist = addDays(e.heute, MAHNUNG_FRIST_TAGE);
     const nr = e.nummer ?? 'ohne Nummer';

@@ -321,7 +321,7 @@ export default async () => {
             } catch (err) {
                 message = err instanceof Error ? err.message : String(err);
             }
-            expect(message).toBe('Die Rechnung ist noch nicht fällig.');
+            expect(message).toBe('The invoice is not due yet.');
         });
     });
 

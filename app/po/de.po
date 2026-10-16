@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-16 21:43+0200\n"
+"POT-Creation-Date: 2026-10-16 21:56+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -474,13 +474,18 @@ msgid ""
 "No filed advance return in the register — counted from the first period "
 "whose filing deadline is still running ({period}). Record filed advance "
 "returns under Deadlines, then the app counts from the newest one."
-msgstr "Keine eingereichte Voranmeldung im Register — gerechnet ab dem ersten Zeitraum, dessen Abgabefrist noch läuft ({period}). Eingereichte Voranmeldungen unter Fristen eintragen, dann rechnet die App ab der letzten."
+msgstr ""
+"Keine eingereichte Voranmeldung im Register — gerechnet ab dem ersten "
+"Zeitraum, dessen Abgabefrist noch läuft ({period}). Eingereichte "
+"Voranmeldungen unter Fristen eintragen, dann rechnet die App ab der letzten."
 
 #: src/core/elster/frei-verfuegbar.ts:280
 msgid ""
 "No advance returns required (annual return only) — counted from the start of "
 "the year."
-msgstr "Keine Voranmeldungen vorgesehen (nur Jahreserklärung) — gerechnet ab Jahresbeginn."
+msgstr ""
+"Keine Voranmeldungen vorgesehen (nur Jahreserklärung) — gerechnet ab "
+"Jahresbeginn."
 
 #: src/core/elster/frei-verfuegbar.ts:294
 msgid "Does not apply because {reason}"
@@ -506,8 +511,11 @@ msgid ""
 msgid_plural ""
 "Sum of the imported transactions on the {n} own accounts — as in the "
 "liquidity."
-msgstr[0] "Summe der importierten Umsätze auf dem eigenen Konto — wie in der Liquidität."
-msgstr[1] "Summe der importierten Umsätze auf den {n} eigenen Konten — wie in der Liquidität."
+msgstr[0] ""
+"Summe der importierten Umsätze auf dem eigenen Konto — wie in der Liquidität."
+msgstr[1] ""
+"Summe der importierten Umsätze auf den {n} eigenen Konten — wie in der "
+"Liquidität."
 
 #: src/core/elster/frei-verfuegbar.ts:326
 msgid "newest transaction {date}"
@@ -521,7 +529,9 @@ msgstr "keine Buchung"
 msgid ""
 "The balance is the sum of the imported transactions; it is only correct when "
 "they are imported without a gap since the account was opened."
-msgstr "Der Saldo ist die Summe der importierten Umsätze; er stimmt nur, wenn die Umsätze ab Kontoeröffnung lückenlos importiert sind."
+msgstr ""
+"Der Saldo ist die Summe der importierten Umsätze; er stimmt nur, wenn die "
+"Umsätze ab Kontoeröffnung lückenlos importiert sind."
 
 #: src/core/elster/frei-verfuegbar.ts:341
 msgid "VAT since the last advance return"
@@ -556,19 +566,25 @@ msgstr[1] "− Vorsteuer aus {n} Ausgaben"
 msgid ""
 "Input VAT surplus: the Finanzamt will probably refund — this raises the free "
 "amount."
-msgstr "Vorsteuer-Überhang: das Finanzamt erstattet voraussichtlich — erhöht den freien Betrag."
+msgstr ""
+"Vorsteuer-Überhang: das Finanzamt erstattet voraussichtlich — erhöht den "
+"freien Betrag."
 
 #: src/core/elster/frei-verfuegbar.ts:402
 msgid ""
 "Accrual taxation: the VAT arises with the invoice, not with the payment — "
 "computed from the payments here, so only an approximation."
-msgstr "Soll-Versteuerung: die USt entsteht mit der Rechnung, nicht mit der Zahlung — hier aus den Zahlungen gerechnet, also nur eine Näherung."
+msgstr ""
+"Soll-Versteuerung: die USt entsteht mit der Rechnung, nicht mit der Zahlung "
+"— hier aus den Zahlungen gerechnet, also nur eine Näherung."
 
 #: src/core/elster/frei-verfuegbar.ts:414
 msgid ""
 "VAT collected minus input VAT paid since the last advance return — it "
 "belongs to the Finanzamt."
-msgstr "Vereinnahmte Umsatzsteuer minus gezahlte Vorsteuer seit der letzten Voranmeldung — gehört dem Finanzamt."
+msgstr ""
+"Vereinnahmte Umsatzsteuer minus gezahlte Vorsteuer seit der letzten "
+"Voranmeldung — gehört dem Finanzamt."
 
 #: src/core/elster/frei-verfuegbar.ts:422
 msgid "due date as per Bescheid, still unknown — deducted as a precaution"
@@ -606,7 +622,9 @@ msgstr "Keine eingereichte, unbezahlte Steuer im Register."
 msgid ""
 "Filed but not paid (deadline register): overdue, without a known date or due "
 "in the next {days} days."
-msgstr "Eingereicht, aber nicht bezahlt (Fristen-Register): überfällig, ohne bekanntes Datum oder in den nächsten {days} Tagen fällig."
+msgstr ""
+"Eingereicht, aber nicht bezahlt (Fristen-Register): überfällig, ohne "
+"bekanntes Datum oder in den nächsten {days} Tagen fällig."
 
 #: src/core/elster/frei-verfuegbar.ts:472
 msgid "Open incoming invoices"
@@ -629,7 +647,9 @@ msgstr "Keine offene Eingangsrechnung."
 msgid ""
 "Gross amounts of open supplier invoices; {n} without an amount — not "
 "computable, not deducted."
-msgstr "Bruttobeträge offener Rechnungen von Lieferanten; {n} ohne Betrag — nicht berechenbar, nicht abgezogen."
+msgstr ""
+"Bruttobeträge offener Rechnungen von Lieferanten; {n} ohne Betrag — nicht "
+"berechenbar, nicht abgezogen."
 
 #: src/core/elster/frei-verfuegbar.ts:503
 msgid "Gross amounts of open supplier invoices."
@@ -670,8 +690,14 @@ msgid ""
 msgid_plural ""
 "Transactions imported only up to {date}: {n} expected payments after it are "
 "not in the balance and are deducted. The next import makes it more exact."
-msgstr[0] "Umsätze nur bis {date} importiert: {n} erwartete Zahlung danach ist im Kontostand nicht enthalten und abgezogen. Nach dem nächsten Import stimmt es genauer."
-msgstr[1] "Umsätze nur bis {date} importiert: {n} erwartete Zahlungen danach sind im Kontostand nicht enthalten und abgezogen. Nach dem nächsten Import stimmt es genauer."
+msgstr[0] ""
+"Umsätze nur bis {date} importiert: {n} erwartete Zahlung danach ist im "
+"Kontostand nicht enthalten und abgezogen. Nach dem nächsten Import stimmt es "
+"genauer."
+msgstr[1] ""
+"Umsätze nur bis {date} importiert: {n} erwartete Zahlungen danach sind im "
+"Kontostand nicht enthalten und abgezogen. Nach dem nächsten Import stimmt es "
+"genauer."
 
 #: src/core/elster/frei-verfuegbar.ts:571
 msgid "No confirmed recurring costs."
@@ -684,14 +710,20 @@ msgid ""
 msgid_plural ""
 "{n} detected series not confirmed yet — not deducted (Transactions → "
 "Recurring costs)."
-msgstr[0] "{n} erkannte Serie noch nicht bestätigt — nicht abgezogen (Buchungen → Laufende Kosten)."
-msgstr[1] "{n} erkannte Serien noch nicht bestätigt — nicht abgezogen (Buchungen → Laufende Kosten)."
+msgstr[0] ""
+"{n} erkannte Serie noch nicht bestätigt — nicht abgezogen (Buchungen → "
+"Laufende Kosten)."
+msgstr[1] ""
+"{n} erkannte Serien noch nicht bestätigt — nicht abgezogen (Buchungen → "
+"Laufende Kosten)."
 
 #: src/core/elster/frei-verfuegbar.ts:594
 msgid ""
 "Confirmed recurring costs whose next payment is expected up to {days} days "
 "after the reference date, or was already due and is not debited yet."
-msgstr "Bestätigte laufende Kosten, deren nächste Zahlung bis {days} Tage nach dem Stichtag erwartet wird oder schon fällig war und noch nicht abgebucht ist."
+msgstr ""
+"Bestätigte laufende Kosten, deren nächste Zahlung bis {days} Tage nach dem "
+"Stichtag erwartet wird oder schon fällig war und noch nicht abgebucht ist."
 
 #: src/core/elster/frei-verfuegbar.ts:604
 msgid "Income tax {year} (estimate)"
@@ -701,7 +733,9 @@ msgstr "Einkommensteuer {year} (Schätzung)"
 msgid ""
 "The same estimate as the tax forecast: income tax, Soli and church tax minus "
 "what was withheld and prepaid."
-msgstr "Dieselbe Schätzung wie die Steuer-Prognose: ESt, Soli und Kirchensteuer minus Einbehaltenes und Vorauszahlungen."
+msgstr ""
+"Dieselbe Schätzung wie die Steuer-Prognose: ESt, Soli und Kirchensteuer "
+"minus Einbehaltenes und Vorauszahlungen."
 
 #: src/core/elster/frei-verfuegbar.ts:619
 msgid "ESt + Soli + church tax as estimated"
@@ -740,7 +774,9 @@ msgstr "Gewerbesteuer {year} (Schätzung)"
 msgid ""
 "The same estimate as the tax forecast, minus the Gewerbesteuer payments "
 "booked in the year."
-msgstr "Dieselbe Schätzung wie die Steuer-Prognose, minus die im Jahr gebuchten Gewerbesteuer-Zahlungen."
+msgstr ""
+"Dieselbe Schätzung wie die Steuer-Prognose, minus die im Jahr gebuchten "
+"Gewerbesteuer-Zahlungen."
 
 #: src/core/elster/frei-verfuegbar.ts:655
 msgid "Gewerbesteuer as estimated"
@@ -760,7 +796,8 @@ msgstr "gebucht {date}"
 
 #: src/core/elster/frei-verfuegbar.ts:674
 msgid "No Gewerbesteuer payment {year} found on this company’s accounts."
-msgstr "Keine Gewerbesteuer-Zahlung {year} auf den Konten dieser Firma gefunden."
+msgstr ""
+"Keine Gewerbesteuer-Zahlung {year} auf den Konten dieser Firma gefunden."
 
 #: src/core/elster/frei-verfuegbar.ts:719
 #: src/frontends/desktop/views/home-view.ts:186
@@ -772,13 +809,17 @@ msgstr "Frei verfügbar"
 msgid ""
 "account balance − VAT since the last advance return − tax payments due − "
 "open incoming invoices − recurring costs ({days} days)"
-msgstr "Kontostand − USt seit der letzten Voranmeldung − fällige Steuerzahlungen − offene Eingangsrechnungen − laufende Kosten ({days} Tage)"
+msgstr ""
+"Kontostand − USt seit der letzten Voranmeldung − fällige Steuerzahlungen − "
+"offene Eingangsrechnungen − laufende Kosten ({days} Tage)"
 
 #: src/core/elster/frei-verfuegbar.ts:729
 msgid ""
 "A calculation, not a recommendation. As of {date}; the tax reserve is not "
 "deducted."
-msgstr "Eine Rechnung, keine Empfehlung. Stand {date}; die Steuerrücklage ist nicht abgezogen."
+msgstr ""
+"Eine Rechnung, keine Empfehlung. Stand {date}; die Steuerrücklage ist nicht "
+"abgezogen."
 
 #: src/core/elster/frei-verfuegbar.ts:734
 #: src/frontends/desktop/views/home-view.ts:208
@@ -787,13 +828,16 @@ msgstr "Steuerrücklage {year} (Schätzung)"
 
 #: src/core/elster/frei-verfuegbar.ts:739
 msgid "estimated income tax + Gewerbesteuer − prepayments made"
-msgstr "geschätzte Einkommensteuer + Gewerbesteuer − geleistete Vorauszahlungen"
+msgstr ""
+"geschätzte Einkommensteuer + Gewerbesteuer − geleistete Vorauszahlungen"
 
 #: src/core/elster/frei-verfuegbar.ts:742
 msgid ""
 "Only a calculation, not a booking: the same estimate as the tax forecast. "
 "Only the Steuerbescheid is binding."
-msgstr "Nur eine Rechnung, keine Buchung: dieselbe Schätzung wie die Steuer-Prognose. Verbindlich ist allein der Steuerbescheid."
+msgstr ""
+"Nur eine Rechnung, keine Buchung: dieselbe Schätzung wie die Steuer-"
+"Prognose. Verbindlich ist allein der Steuerbescheid."
 
 #: src/core/elster/hinweise.ts:112
 msgid "Mark as fine"
@@ -2019,6 +2063,75 @@ msgid_plural "{n} receivables overdue"
 msgstr[0] "{n} Forderung überfällig"
 msgstr[1] "{n} Forderungen überfällig"
 
+#: src/core/invoices/form.ts:94
+msgid "Recipient missing — please choose a customer."
+msgstr "Empfänger fehlt — bitte einen Kunden wählen."
+
+#: src/core/invoices/form.ts:95
+msgid "Issue date missing."
+msgstr "Ausstellungsdatum fehlt."
+
+#: src/core/invoices/form.ts:96
+msgid "At least one line item is required."
+msgstr "Mindestens eine Position ist erforderlich."
+
+#: src/core/invoices/form.ts:99
+msgid "Item {n}: title missing."
+msgstr "Position {n}: Bezeichnung fehlt."
+
+#: src/core/invoices/form.ts:100
+msgid "Item {n}: invalid quantity."
+msgstr "Position {n}: ungültige Menge."
+
+#: src/core/invoices/form.ts:101
+msgid "Item {n}: invalid unit price."
+msgstr "Position {n}: ungültiger Einzelpreis."
+
+#: src/core/invoices/form.ts:102
+msgid "Item {n}: invalid VAT rate."
+msgstr "Position {n}: ungültiger USt-Satz."
+
+#: src/core/invoices/mahnung-text.ts:21
+msgid "Payment reminder"
+msgstr "Zahlungserinnerung"
+
+#: src/core/invoices/mahnung-text.ts:21
+msgid "friendly"
+msgstr "freundlich"
+
+#: src/core/invoices/mahnung-text.ts:22
+msgid "Reminder"
+msgstr "Mahnung"
+
+#: src/core/invoices/mahnung-text.ts:22
+msgid "firm"
+msgstr "bestimmt"
+
+#: src/core/invoices/mahnung-text.ts:23
+msgid "Final reminder"
+msgstr "Letzte Mahnung"
+
+#: src/core/invoices/mahnung-text.ts:23
+msgid "formal"
+msgstr "förmlich"
+
+#: src/core/invoices/mahnung-text.ts:29
+msgid "no reminder sent"
+msgstr "nicht gemahnt"
+
+#: src/core/invoices/mahnung-text.ts:30
+msgid "Stage {n} · {name}"
+msgstr "Stufe {n} · {name}"
+
+#: src/core/invoices/mahnung-text.ts:67
+msgid ""
+"The invoice has no due date — without one there is nothing to remind about."
+msgstr "Die Rechnung hat kein Fälligkeitsdatum — ohne das lässt sich nicht mahnen."
+
+#: src/core/invoices/mahnung-text.ts:68
+msgid "The invoice is not due yet."
+msgstr "Die Rechnung ist noch nicht fällig."
+
 #: src/core/lib/edition-badges.ts:29
 msgid "Open Source"
 msgstr "Open Source"
@@ -2053,7 +2166,9 @@ msgstr "{id} ist für diese Erstattung kein Kandidat. Kandidaten: {known}"
 msgid ""
 "the German tax features are switched off for this entity (Settings → Country "
 "& taxes)."
-msgstr "die deutschen Steuerfunktionen für diese Entität ausgeschaltet sind (Einstellungen → Land & Steuern)."
+msgstr ""
+"die deutschen Steuerfunktionen für diese Entität ausgeschaltet sind "
+"(Einstellungen → Land & Steuern)."
 
 #: src/core/presenters/frei-verfuegbar.ts:72
 msgid "the deadline register is not readable: {error}"
@@ -2071,13 +2186,17 @@ msgstr "die Buchungen nicht geladen werden konnten: {error}"
 msgid ""
 "Paperless: incoming invoices {from}–{to} with payment status “open” (amount: "
 "to pay, else gross)."
-msgstr "Paperless: Eingangsrechnungen {from}–{to} mit Zahlungsstatus „offen“ (Betrag: zu zahlen, sonst brutto)."
+msgstr ""
+"Paperless: Eingangsrechnungen {from}–{to} mit Zahlungsstatus „offen“ "
+"(Betrag: zu zahlen, sonst brutto)."
 
 #: src/core/presenters/frei-verfuegbar.ts:176
 msgid ""
 "Built-in DMS: incoming invoices {from}–{to} without a linked payment. "
 "Linking the payment in the receipt inbox takes the invoice out of here."
-msgstr "Eingebautes DMS: Eingangsrechnungen {from}–{to} ohne verknüpfte Zahlung. Wer im Beleg-Eingang die Zahlung verknüpft, nimmt die Rechnung hier heraus."
+msgstr ""
+"Eingebautes DMS: Eingangsrechnungen {from}–{to} ohne verknüpfte Zahlung. Wer "
+"im Beleg-Eingang die Zahlung verknüpft, nimmt die Rechnung hier heraus."
 
 #: src/core/presenters/frei-verfuegbar.ts:186
 msgid "Receipt without a title"
@@ -2093,11 +2212,14 @@ msgstr "die laufenden Kosten nicht geladen werden konnten: {error}"
 
 #: src/core/presenters/frei-verfuegbar.ts:222
 msgid "the partners pay their income tax personally — as in the tax forecast."
-msgstr "die Gesellschafter ihre Einkommensteuer persönlich zahlen — wie in der Steuer-Prognose."
+msgstr ""
+"die Gesellschafter ihre Einkommensteuer persönlich zahlen — wie in der "
+"Steuer-Prognose."
 
 #: src/core/presenters/frei-verfuegbar.ts:227
 msgid "no ESt details are recorded for this entity (Settings → Private)."
-msgstr "für diese Entität keine ESt-Angaben hinterlegt sind (Einstellungen → Privat)."
+msgstr ""
+"für diese Entität keine ESt-Angaben hinterlegt sind (Einstellungen → Privat)."
 
 #: src/core/presenters/frei-verfuegbar.ts:233
 msgid "no ESt details are recorded for {year} (Settings → Private)."
@@ -4396,11 +4518,11 @@ msgstr "Mahnung entwerfen"
 msgid "Level"
 msgstr "Stufe"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:56
+#: src/frontends/desktop/views/mahnung-dialog.ts:59
 msgid "Invoice {number} · {customer}"
 msgstr "Rechnung {number} · {customer}"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:61
+#: src/frontends/desktop/views/mahnung-dialog.ts:64
 msgid ""
 "This is a draft. The app sends nothing — you copy the text or open it in "
 "your mail program. Only once you have sent it yourself do you mark the level "
@@ -4410,53 +4532,53 @@ msgstr ""
 "öffnest ihn im Mailprogramm. Erst wenn du ihn selbst verschickt hast, merkst "
 "du die Stufe als versandt."
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:90
+#: src/frontends/desktop/views/mahnung-dialog.ts:93
 #: src/frontends/desktop/views/mcp-clients-dialog.ts:28
 msgid "Copy"
 msgstr "Kopieren"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:91
+#: src/frontends/desktop/views/mahnung-dialog.ts:94
 msgid "Save as text file"
 msgstr "Als Textdatei speichern"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:92
+#: src/frontends/desktop/views/mahnung-dialog.ts:95
 msgid "Open mail draft"
 msgstr "Mailentwurf öffnen"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:94
+#: src/frontends/desktop/views/mahnung-dialog.ts:97
 msgid "Mark as sent"
 msgstr "Als versandt markieren"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:132
+#: src/frontends/desktop/views/mahnung-dialog.ts:135
 msgid "Drafting …"
 msgstr "Entwurf wird erstellt …"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:137
+#: src/frontends/desktop/views/mahnung-dialog.ts:140
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:357
 msgid "Subject: {value}"
 msgstr "Betreff: {value}"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:140
+#: src/frontends/desktop/views/mahnung-dialog.ts:143
 msgid "Draft level {level} · payment deadline {date} · not sent"
 msgstr "Entwurf Stufe {level} · Zahlungsfrist {date} · nicht versendet"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:143
+#: src/frontends/desktop/views/mahnung-dialog.ts:146
 msgid "this level is already recorded as sent"
 msgstr "diese Stufe ist schon als versandt vermerkt"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:162
+#: src/frontends/desktop/views/mahnung-dialog.ts:165
 msgid "Draft copied to the clipboard"
 msgstr "Entwurf in die Zwischenablage kopiert"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:169
+#: src/frontends/desktop/views/mahnung-dialog.ts:172
 msgid "Draft"
 msgstr "Entwurf"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:191
+#: src/frontends/desktop/views/mahnung-dialog.ts:194
 msgid "Mark level {level} as sent?"
 msgstr "Stufe {level} als versandt markieren?"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:194
+#: src/frontends/desktop/views/mahnung-dialog.ts:197
 msgid ""
 "The app sends nothing. Mark the {name} for invoice {number} only once you "
 "have sent it to the customer yourself — then this level applies and the next "
@@ -4466,19 +4588,19 @@ msgstr ""
 "du sie selbst an den Kunden geschickt hast — danach gilt diese Stufe und die "
 "nächste wird erst nach 14 Tagen fällig."
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:199
+#: src/frontends/desktop/views/mahnung-dialog.ts:202
 msgid "Yes, I sent it"
 msgstr "Ja, ich habe sie versendet"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:200
+#: src/frontends/desktop/views/mahnung-dialog.ts:203
 msgid "Not yet"
 msgstr "Noch nicht"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:206
+#: src/frontends/desktop/views/mahnung-dialog.ts:209
 msgid "Level {level} for {number} recorded as sent"
 msgstr "Stufe {level} zu {number} als versandt vermerkt"
 
-#: src/frontends/desktop/views/mahnung-dialog.ts:214
+#: src/frontends/desktop/views/mahnung-dialog.ts:217
 msgid "Not saved"
 msgstr "Nicht gespeichert"
 
