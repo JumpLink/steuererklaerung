@@ -15,13 +15,13 @@
  */
 
 import { normalizeInvoiceStatus } from './status.ts';
-import { _, _n, fmt } from '../lib/i18n.ts';
+import { _, _n, _p, fmt } from '../lib/i18n.ts';
 
 /** The slice of an outgoing invoice the Forderungen need. */
 export interface ForderungRechnung {
     id: string;
     number: string | null;
-    /** Customer display name; invoices without one are grouped under „Ohne Kunde". */
+    /** Customer display name; invoices without one are grouped under a “no customer” bucket. */
     customer: string | null;
     gross: number;
     currency: string;
@@ -111,10 +111,12 @@ export interface KundenVerhalten {
     mittelFrueher: number | null;
 }
 
-const OHNE_KUNDE = 'Ohne Kunde';
+// A FUNCTION, not a constant: a module-level constant is evaluated before a frontend can register
+// its translator, which would freeze the English text into the German build.
+const ohneKunde = (): string => _p('receivables', 'No customer');
 
 function kundenName(customer: string | null): string {
-    return customer?.trim() || OHNE_KUNDE;
+    return customer?.trim() || ohneKunde();
 }
 
 function kundenSchluessel(customer: string | null): string {

@@ -1,18 +1,24 @@
 /**
- * German display texts + the refund-candidate ranking for the Doppelzahlung surfaces. Pure, so the
+ * Display texts + the refund-candidate ranking for the Doppelzahlung surfaces. Pure, so the
  * desktop dialog, the Absenden warning and the tests share one wording. Plain strings only — the
  * counterparty is bank data, so a UI must escape it before it reaches a markup label.
  */
 
+import { _, _n, fmt } from '../lib/i18n.ts';
 import { fmtDe } from '../lib/money.ts';
 import { deDate } from '../lib/format.ts';
 
-/** Headline of one suspicion: "2 Zahlungen eingegangen" is not shown, the surplus is. */
+/** Headline of one suspicion: "2 payments received" is not shown, the surplus is. */
 export function verdachtTitel(v: { txIds: string[]; zuViel: number; teilweise: boolean }): string {
     const n = v.txIds.length;
-    return `${n} Zahlung${n === 1 ? '' : 'en'} zu viel eingegangen — ${fmtDe(v.zuViel)} €${
-        v.teilweise ? ' (teilweise zu viel)' : ''
-    }`;
+    const titel = fmt(
+        _n('{n} payment too many received — {amount} €', '{n} payments too many received — {amount} €', n),
+        {
+            n,
+            amount: fmtDe(v.zuViel),
+        },
+    );
+    return v.teilweise ? `${titel} ${_('(partly too much)')}` : titel;
 }
 
 /** One credit as a row: date · amount on top, the payer underneath (empty when unknown). */
@@ -27,9 +33,27 @@ export function zahlungZeile(t: { bookingDate: string; amount: number; counterpa
 export function abgabeWarnungen(counts: { verdacht: number; rueckzahlungOffen: number }): string[] {
     const out: string[] = [];
     if (counts.verdacht > 0)
-        out.push(`${counts.verdacht} Zahlung(en) möglicherweise doppelt erhalten — vor der Abgabe klären`);
+        out.push(
+            fmt(
+                _n(
+                    '{n} payment possibly received twice — settle before filing',
+                    '{n} payments possibly received twice — settle before filing',
+                    counts.verdacht,
+                ),
+                { n: counts.verdacht },
+            ),
+        );
     if (counts.rueckzahlungOffen > 0)
-        out.push(`${counts.rueckzahlungOffen} Doppelzahlung(en) noch nicht zurückgezahlt`);
+        out.push(
+            fmt(
+                _n(
+                    '{n} double payment not refunded yet',
+                    '{n} double payments not refunded yet',
+                    counts.rueckzahlungOffen,
+                ),
+                { n: counts.rueckzahlungOffen },
+            ),
+        );
     return out;
 }
 

@@ -6,6 +6,7 @@
  */
 
 import { shiftDate } from '@steuererklaerung/shared';
+import { _n, _p, fmt } from '../lib/i18n.ts';
 import { round2 } from '../lib/money.ts';
 import { dueDateOf, type LastInvoice, type RecurringInvoice, type RecurringItem } from '../config/index.ts';
 
@@ -214,14 +215,25 @@ export function buildReminder(entries: RecurringDueEntry[]): RecurringReminder |
     const overdue = actionable.filter((e) => e.status === 'overdue');
     const oldestOverdueDays = overdue.length ? Math.abs(Math.min(...overdue.map((e) => e.daysUntilDue))) : 0;
 
-    const plural = actionable.length === 1 ? 'Rechnung' : 'Rechnungen';
-    let title = `${actionable.length} ${plural} offen, ${formatAmount(totalGross, currency)}`;
-    if (oldestOverdueDays > 0) title += ` — älteste seit ${oldestOverdueDays} Tagen`;
+    let title = fmt(_n('{n} invoice open, {amount}', '{n} invoices open, {amount}', actionable.length), {
+        n: actionable.length,
+        amount: formatAmount(totalGross, currency),
+    });
+    if (oldestOverdueDays > 0)
+        title += fmt(_n(' — the oldest for {n} day', ' — the oldest for {n} days', oldestOverdueDays), {
+            n: oldestOverdueDays,
+        });
+
+    // The two marks are padded to a common width so the columns line up whatever the catalogue
+    // makes of them — the German originals happened to be equally long, English ones are not.
+    const overdueMark = _p('reminder', 'OVERDUE');
+    const soonMark = _p('reminder', 'due soon');
+    const markWidth = Math.max(overdueMark.length, soonMark.length);
 
     const lines = [...actionable]
         .sort((a, b) => a.daysUntilDue - b.daysUntilDue)
         .map((e) => {
-            const mark = e.status === 'overdue' ? 'ÜBERFÄLLIG ' : 'bald fällig';
+            const mark = (e.status === 'overdue' ? overdueMark : soonMark).padEnd(markWidth);
             const what = e.description ?? e.customer;
             return `${mark}  ${e.dueDate}  ${formatAmount(e.totals.gross, e.currency)}  ${what}`;
         });

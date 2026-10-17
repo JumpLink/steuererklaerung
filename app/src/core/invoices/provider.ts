@@ -20,6 +20,7 @@ import type { ClientInvoice } from '../clients/qonto/types.ts';
 import type { EntityInvoicingConfig } from '../config/index.ts';
 import { requireInvoicingBackend } from './backend-gate.ts';
 import { buildSelfProvider } from './self-provider.ts';
+import { _, fmt } from '../lib/i18n.ts';
 
 /** A created invoice as returned by any back-end (after a draft/create call). */
 export interface OutgoingInvoiceDraft {
@@ -253,29 +254,29 @@ export const MAX_QONTO_ITEM_TITLE_LENGTH = 40;
  */
 export function commonInvoiceProblems(input: CreateInvoiceInput): string[] {
     const problems: string[] = [];
-    if (!input.issueDate) problems.push('Ausstellungsdatum (issueDate) fehlt.');
-    if (!input.dueDate) problems.push('Fälligkeitsdatum (dueDate) fehlt.');
-    if (!input.currency) problems.push('Währung (currency) fehlt.');
+    if (!input.issueDate) problems.push(_('Issue date (issueDate) is missing.'));
+    if (!input.dueDate) problems.push(_('Due date (dueDate) is missing.'));
+    if (!input.currency) problems.push(_('Currency (currency) is missing.'));
     if (!input.items?.length) {
-        problems.push('Mindestens eine Rechnungsposition ist erforderlich.');
+        problems.push(_('At least one invoice item is required.'));
         return problems;
     }
     input.items.forEach((it, i) => {
         const n = i + 1;
-        if (!it.title?.trim()) problems.push(`Position ${n}: Titel fehlt.`);
+        if (!it.title?.trim()) problems.push(fmt(_('Item {n}: the title is missing.'), { n }));
         const quantity = Number(String(it.quantity).replace(',', '.'));
         if (!Number.isFinite(quantity) || quantity <= 0) {
-            problems.push(`Position ${n}: ungültige Menge "${String(it.quantity)}".`);
+            problems.push(fmt(_('Item {n}: invalid quantity “{value}”.'), { n, value: String(it.quantity) }));
         }
         try {
             normalizeAmount(it.unit_price);
         } catch {
-            problems.push(`Position ${n}: ungültiger Einzelpreis "${String(it.unit_price)}".`);
+            problems.push(fmt(_('Item {n}: invalid unit price “{value}”.'), { n, value: String(it.unit_price) }));
         }
         try {
             normalizeVatRate(it.vat_rate);
         } catch {
-            problems.push(`Position ${n}: ungültiger USt-Satz "${String(it.vat_rate)}".`);
+            problems.push(fmt(_('Item {n}: invalid VAT rate “{value}”.'), { n, value: String(it.vat_rate) }));
         }
     });
     return problems;
@@ -305,12 +306,15 @@ export class QontoOutgoingInvoiceProvider implements OutgoingInvoiceProvider {
     validate(input: CreateInvoiceInput): string[] {
         const problems = commonInvoiceProblems(input);
         if (!input.iban) {
-            problems.push('Qonto-Provider: keine Zahlungs-IBAN konfiguriert (invoicing.iban bzw. QONTO_IBAN).');
+            problems.push(_('Qonto back-end: no payment IBAN configured (invoicing.iban or QONTO_IBAN).'));
         }
         input.items?.forEach((it, i) => {
             if (it.title && it.title.length > MAX_QONTO_ITEM_TITLE_LENGTH) {
                 problems.push(
-                    `Position ${i + 1}: Titel länger als ${MAX_QONTO_ITEM_TITLE_LENGTH} Zeichen (Qonto-Limit).`,
+                    fmt(_('Item {n}: title longer than {max} characters (Qonto limit).'), {
+                        n: i + 1,
+                        max: MAX_QONTO_ITEM_TITLE_LENGTH,
+                    }),
                 );
             }
         });
@@ -320,12 +324,14 @@ export class QontoOutgoingInvoiceProvider implements OutgoingInvoiceProvider {
     async createDraft(input: CreateInvoiceInput): Promise<OutgoingInvoiceDraft> {
         if (!input.clientId) {
             throw new Error(
-                'Qonto-Provider: customer.qontoClientId fehlt. Lege den Kunden in Qonto an (oder hinterlege die Client-ID in recurring-invoices.json), bevor du die Rechnung erstellst.',
+                _(
+                    'Qonto back-end: customer.qontoClientId is missing. Create the customer in Qonto (or put the client id into recurring-invoices.json) before you create the invoice.',
+                ),
             );
         }
         const problems = this.validate(input);
         if (problems.length) {
-            throw new Error(`Rechnung ungültig:\n- ${problems.join('\n- ')}`);
+            throw new Error(fmt(_('Invoice invalid:\n- {problems}'), { problems: problems.join('\n- ') }));
         }
         const body = buildClientInvoiceBody(input.clientId, {
             issue_date: input.issueDate,
@@ -380,18 +386,20 @@ export class QontoOutgoingInvoiceProvider implements OutgoingInvoiceProvider {
     async downloadPdf(id: string): Promise<OutgoingInvoiceFile | null> {
         const inv = await getClientInvoice(id);
         if (inv.status === 'draft') {
-            throw new Error(
-                'Ein Entwurf hat noch kein endgültiges PDF. Die Rechnung muss erst in Qonto abgeschlossen werden.',
-            );
+            throw new Error(_('A draft has no final PDF yet. The invoice has to be finalised in Qonto first.'));
         }
         if (!inv.attachment_id) {
             throw new Error(
-                'Qonto hat das PDF dieser Rechnung noch nicht erzeugt (das dauert nach dem Abschließen einige Sekunden). Bitte gleich noch einmal versuchen.',
+                _(
+                    'Qonto has not generated the PDF for this invoice yet (that takes a few seconds after finalising). Please try again in a moment.',
+                ),
             );
         }
         const attachment = await getAttachment(inv.attachment_id);
         if (attachment.file_content_type && attachment.file_content_type !== 'application/pdf') {
-            throw new Error(`Die Rechnungsdatei bei Qonto ist kein PDF (${attachment.file_content_type}).`);
+            throw new Error(
+                fmt(_('The invoice file at Qonto is not a PDF ({type}).'), { type: attachment.file_content_type }),
+            );
         }
         const bytes = await downloadAttachmentContent(attachment);
         // The number may hold a slash ("2026/001"), which a file name must not.

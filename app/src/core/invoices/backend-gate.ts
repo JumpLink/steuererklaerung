@@ -8,14 +8,18 @@
  */
 
 import { type EntityInvoicingView, loadEntityInvoicing } from '../config/index.ts';
+import { _, fmt } from '../lib/i18n.ts';
 
-/** The German explanation shown (desktop notice page, CLI/MCP error) when Qonto is not usable. */
+/** The explanation shown (desktop notice page, CLI/MCP error) when Qonto is not usable. */
 export function qontoUnavailableMessage(entityId: string): string {
-    return (
-        `Für „${entityId}" ist kein Qonto-Konto hinterlegt, Rechnungen über Qonto sind deshalb gesperrt ` +
-        '(die Qonto-Zugangsdaten gelten für die ganze Installation und würden sonst die Rechnungen ' +
-        'einer anderen Entität zeigen). Unter Einstellungen → Anbindungen ein Qonto-Konto zuordnen ' +
-        'oder die Rechnungsstellung auf „Selbst" umstellen.'
+    return fmt(
+        _(
+            'No Qonto account is assigned to “{entity}”, so invoicing through Qonto is blocked (the Qonto ' +
+                'credentials apply to the whole installation and would otherwise show another entity’s ' +
+                'invoices). Assign a Qonto account under Settings → Connections, or switch invoicing to ' +
+                '“Built in”.',
+        ),
+        { entity: entityId },
     );
 }
 

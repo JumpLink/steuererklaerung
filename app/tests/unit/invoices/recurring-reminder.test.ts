@@ -49,18 +49,18 @@ export default async () => {
                 entry({ daysUntilDue: -14, totals: { net: 122, vat: 23.18, gross: 145.18 } }),
                 entry({ status: 'due-soon', daysUntilDue: 28, totals: { net: 36, vat: 6.84, gross: 42.84 } }),
             ]);
-            expect(reminder?.title).toBe('3 Rechnungen offen, 316,54 EUR — älteste seit 260 Tagen');
+            expect(reminder?.title).toBe('3 invoices open, 316,54 EUR — the oldest for 260 days');
             expect(reminder?.oldestOverdueDays).toBe(260);
         });
 
-        await it('sagt "1 Rechnung", nicht "1 Rechnungen"', () => {
+        await it('sagt "1 invoice", nicht "1 invoices"', () => {
             const reminder = buildReminder([entry()]);
-            expect(reminder?.title.startsWith('1 Rechnung offen,')).toBe(true);
+            expect(reminder?.title.startsWith('1 invoice open,')).toBe(true);
         });
 
         await it('laesst den Nachsatz weg, wenn nichts ueberfaellig ist — nur bald faellig', () => {
             const reminder = buildReminder([entry({ status: 'due-soon', daysUntilDue: 20 })]);
-            expect(reminder?.title.includes('älteste')).toBe(false);
+            expect(reminder?.title.includes('the oldest')).toBe(false);
             expect(reminder?.oldestOverdueDays).toBe(0);
         });
 
@@ -76,8 +76,8 @@ export default async () => {
                 entry({ daysUntilDue: -14, description: 'neulich' }),
             ]);
             expect(reminder?.lines[0].includes('ganz alt')).toBe(true);
-            expect(reminder?.lines[0].includes('ÜBERFÄLLIG')).toBe(true);
-            expect(reminder?.lines[2].includes('bald fällig')).toBe(true);
+            expect(reminder?.lines[0].includes('OVERDUE')).toBe(true);
+            expect(reminder?.lines[2].includes('due soon')).toBe(true);
         });
 
         await it('faellt auf den Kundennamen zurueck, wenn keine Beschreibung da ist', () => {

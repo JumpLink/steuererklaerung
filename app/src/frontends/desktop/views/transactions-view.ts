@@ -38,6 +38,7 @@ import { loadDms } from '../data/settings.ts';
 import { loadEntityProjects } from '../data/projects.ts';
 import type { AppEntity } from '../entities.ts';
 import { deDate, eur } from '../../../core/lib/format.ts';
+import { UNKLASSIFIZIERT } from '../../../core/elster/euer-classify.ts';
 import { showToast, showUndoToast } from '../toast.ts';
 import { BhProjektZuordnenDialog } from './projekt-zuordnen-dialog.ts';
 import { BhTxDetailDialog } from './tx-detail-dialog.ts';
@@ -333,10 +334,13 @@ export class BhTransactionsView extends Adw.Bin {
 
     /** One booking row: counterparty + date·purpose·category, an "ohne Beleg" badge, the signed amount, → detail. */
     private buildRow(r: EnrichedTxRow): Adw.ActionRow {
-        const title = r.counterparty?.trim() || r.purpose?.trim() || r.category;
+        const title =
+            r.counterparty?.trim() ||
+            r.purpose?.trim() ||
+            (r.category === UNKLASSIFIZIERT ? _('(unclassified)') : r.category);
         const sub = [deDate(r.bookingDate)];
         if (r.purpose && r.counterparty) sub.push(r.purpose.trim());
-        if (r.category && r.category !== '(unklassifiziert)') sub.push(r.category);
+        if (r.category && r.category !== UNKLASSIFIZIERT) sub.push(r.category);
         const projekt = this.projekte?.buchungen[r.id]?.projekte;
         if (projekt?.length)
             sub.push(fmt(_('Project {names}'), { names: [...new Set(projekt.map((p) => p.projektName))].join(', ') }));

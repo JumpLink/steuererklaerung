@@ -211,7 +211,7 @@ export default async () => {
             });
             expect(v.valid).toBe(false);
             expect(v.stale).toBe(true);
-            expect(v.reason?.includes('Drift')).toBe(true);
+            expect(v.reason?.includes('drift')).toBe(true);
         });
 
         await it('is invalidated by a revoke', async () => {
@@ -221,7 +221,7 @@ export default async () => {
                 signoff: signoffCore({ fingerprint: 'v1:a', revoked: true }),
             });
             expect(v.valid).toBe(false);
-            expect(v.reason?.includes('widerrufen')).toBe(true);
+            expect(v.reason?.includes('revoked')).toBe(true);
         });
 
         await it("is invalid when a frozen snapshot's fingerprint no longer matches the copy", async () => {
@@ -234,13 +234,13 @@ export default async () => {
                 signoff: signoffCore({ fingerprint: 'v1:old' }),
             });
             expect(v.valid).toBe(false);
-            expect(v.reason?.includes('Snapshot-Stand')).toBe(true);
+            expect(v.reason?.includes('outdated snapshot state')).toBe(true);
         });
 
         await it('reports no snapshot / no sign-off distinctly', async () => {
             const noSnap = evaluateSignoffValidity({ snapshot: null, currentFingerprint: null, signoff: null });
             expect(noSnap.valid).toBe(false);
-            expect(noSnap.reason?.includes('Snapshot')).toBe(true);
+            expect(noSnap.reason?.includes('snapshot')).toBe(true);
 
             const noSignoff = evaluateSignoffValidity({
                 snapshot: snapCore({ fingerprint: 'v1:a' }),
@@ -248,7 +248,7 @@ export default async () => {
                 signoff: null,
             });
             expect(noSignoff.valid).toBe(false);
-            expect(noSignoff.reason?.includes('Freigabe')).toBe(true);
+            expect(noSignoff.reason?.includes('release')).toBe(true);
         });
 
         await it('stays valid but flags dirty cross-checks in the reason', async () => {
@@ -258,7 +258,7 @@ export default async () => {
                 signoff: signoffCore({ fingerprint: 'v1:a', crossChecksClean: false }),
             });
             expect(v.valid).toBe(true);
-            expect(v.reason?.includes('Querprüfungen')).toBe(true);
+            expect(v.reason?.includes('cross-checks')).toBe(true);
         });
     });
 
@@ -280,13 +280,13 @@ export default async () => {
                 signoff: signoffCore({ fingerprint: 'v1:a', crossChecksClean: false }),
             });
             expect(gate.unlocked).toBe(false);
-            expect(gate.blockers.some((b) => b.includes('Querprüfungen'))).toBe(true);
+            expect(gate.blockers.some((b) => b.includes('cross-checks'))).toBe(true);
         });
 
         await it('blocks with "no snapshot" when nothing is captured', async () => {
             const gate = computeSubmissionGate({ snapshot: null, currentFingerprint: null, signoff: null });
             expect(gate.unlocked).toBe(false);
-            expect(gate.blockers.some((b) => b.includes('Kein Filing-Snapshot'))).toBe(true);
+            expect(gate.blockers.some((b) => b.includes('No filing snapshot'))).toBe(true);
         });
 
         await it('blocks with "no sign-off" when a fresh snapshot is unsigned', async () => {
@@ -296,7 +296,7 @@ export default async () => {
                 signoff: null,
             });
             expect(gate.unlocked).toBe(false);
-            expect(gate.blockers.some((b) => b.includes('Keine Freigabe'))).toBe(true);
+            expect(gate.blockers.some((b) => b.includes('No release'))).toBe(true);
         });
 
         await it('blocks with "snapshot stale" once the data drifted (not double-listing the sign-off)', async () => {
@@ -306,7 +306,7 @@ export default async () => {
                 signoff: signoffCore({ fingerprint: 'v1:a', crossChecksClean: true }),
             });
             expect(gate.unlocked).toBe(false);
-            expect(gate.blockers.some((b) => b.includes('veraltet'))).toBe(true);
+            expect(gate.blockers.some((b) => b.includes('outdated'))).toBe(true);
         });
 
         await it('blocks a revoked sign-off', async () => {
@@ -316,7 +316,7 @@ export default async () => {
                 signoff: signoffCore({ fingerprint: 'v1:a', revoked: true, crossChecksClean: true }),
             });
             expect(gate.unlocked).toBe(false);
-            expect(gate.blockers.some((b) => b.includes('widerrufen'))).toBe(true);
+            expect(gate.blockers.some((b) => b.includes('revoked'))).toBe(true);
         });
     });
 
@@ -351,7 +351,7 @@ export default async () => {
             expect(drifted.stale).toBe(true);
             const gate = computeSubmissionGate({ snapshot, currentFingerprint: changedFp, signoff });
             expect(gate.unlocked).toBe(false);
-            expect(gate.blockers.some((b) => b.includes('veraltet'))).toBe(true);
+            expect(gate.blockers.some((b) => b.includes('outdated'))).toBe(true);
         });
     });
 
@@ -375,7 +375,7 @@ export default async () => {
                 signoff: signedOld,
             });
             expect(gate.unlocked).toBe(false);
-            expect(gate.blockers.some((b) => b.includes('veralteten Snapshot-Stand'))).toBe(true);
+            expect(gate.blockers.some((b) => b.includes('outdated snapshot state'))).toBe(true);
         });
 
         await it('reports the sign-off as invalid for that snapshot', async () => {

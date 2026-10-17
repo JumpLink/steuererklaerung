@@ -13,7 +13,7 @@
 
 import { fmtDe as fmt, round2 } from '../lib/money.ts';
 import type { EuerKind } from './euer-aggregate.ts';
-import { impliedRate } from './euer-classify.ts';
+import { impliedRate, UNKLASSIFIZIERT } from './euer-classify.ts';
 import { buchungZeile, capBetroffen, handlungInOrdnung, hinweisFingerprint, type Hinweis } from './hinweise.ts';
 import { _, _n, fmt as t } from '../lib/i18n.ts';
 
@@ -46,8 +46,6 @@ export interface OhneUstInput {
     /** Without Vorsteuerabzug there is no Vorsteuer to miss. */
     kleinunternehmer?: boolean;
 }
-
-const UNKLASSIFIZIERT = '(unklassifiziert)';
 
 /** Whether a receipt says something about its VAT: an amount, or net and gross to derive it from. */
 export function belegNenntUst(d: Pick<OhneUstBeleg, 'net' | 'gross' | 'vat'>): boolean {

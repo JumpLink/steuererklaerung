@@ -10,10 +10,10 @@ export default async () => {
     await describe('doppelzahlung-text', async () => {
         await it('names count and surplus, flags a partial surplus', async () => {
             expect(verdachtTitel({ txIds: ['a', 'b'], zuViel: 119, teilweise: false })).toContain(
-                '2 Zahlungen zu viel',
+                '2 payments too many',
             );
-            expect(verdachtTitel({ txIds: ['a'], zuViel: 20, teilweise: true })).toContain('1 Zahlung zu viel');
-            expect(verdachtTitel({ txIds: ['a'], zuViel: 20, teilweise: true })).toContain('(teilweise zu viel)');
+            expect(verdachtTitel({ txIds: ['a'], zuViel: 20, teilweise: true })).toContain('1 payment too many');
+            expect(verdachtTitel({ txIds: ['a'], zuViel: 20, teilweise: true })).toContain('(partly too much)');
             expect(verdachtTitel({ txIds: ['a'], zuViel: 20, teilweise: false })).not.toContain('teilweise');
         });
 
@@ -29,7 +29,7 @@ export default async () => {
             expect(abgabeWarnungen({ verdacht: 2, rueckzahlungOffen: 0 }).length).toBe(1);
             const both = abgabeWarnungen({ verdacht: 1, rueckzahlungOffen: 3 });
             expect(both.length).toBe(2);
-            expect(both[1]).toContain('3 Doppelzahlung(en) noch nicht zurückgezahlt');
+            expect(both[1]).toContain('3 double payments not refunded yet');
         });
 
         await it('ranks the equal-amount debit first, then newest; drops credits', async () => {

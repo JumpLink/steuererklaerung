@@ -18,6 +18,7 @@
 
 import type { DmsDocument } from '@steuererklaerung/dms';
 import type { EuerTxDetailRow } from '../elster/euer-transactions.ts';
+import { _, fmt } from '../lib/i18n.ts';
 import type { PresenterSession } from './session.ts';
 import type { EntityModel } from './workspace.ts';
 
@@ -167,9 +168,9 @@ export function groupBelegGap(detail: EuerTxDetailRow[], linkedTxIds: Set<string
  * land. Shared here so the stepping/clamping rules are unit-tested once, not re-derived per frontend.
  */
 
-/** "X von N geprüft" — the progress caption over the queue list. */
+/** "X of N checked" — the progress caption over the queue list. */
 export function reviewProgressLabel(total: number, done: number): string {
-    return `${done} von ${total} geprüft`;
+    return fmt(_('{done} of {total} checked'), { done, total });
 }
 
 /** The queue's open (not yet confirmed) document ids, in list order. */

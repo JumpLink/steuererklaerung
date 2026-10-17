@@ -207,7 +207,7 @@ export default async () => {
             } catch (err) {
                 message = (err as Error).message;
             }
-            expect(message).toContain('noch nicht erzeugt');
+            expect(message).toContain('has not generated the PDF');
             expect(smtp.messages).toHaveLength(0);
         });
 
@@ -220,7 +220,7 @@ export default async () => {
             } catch (err) {
                 message = (err as Error).message;
             }
-            expect(message).toContain('Entwurf');
+            expect(message).toContain('A draft has no final PDF');
         });
     });
 };

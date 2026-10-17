@@ -27,21 +27,12 @@ import { deDate, eur } from '../../../core/lib/format.ts';
 import { loadRecurringInvoices } from '../../../core/config/index.ts';
 import { loadEntityMailStatus, withLegacySent } from '../../../core/actions/send-invoice-email.ts';
 import type { InvoiceMailRecord } from '@steuererklaerung/store';
-import { type DisplayInvoiceStatus, displayInvoiceStatus } from '../../../core/invoices/status.ts';
+import { type DisplayInvoiceStatus, displayInvoiceStatus, invoiceStatusLabel } from '../../../core/invoices/status.ts';
 import { createRecurringInvoiceDraft, reconcileRecurringInvoices } from '../../../core/actions/recurring-invoices.ts';
 import { listSchedules } from '../../../core/actions/recurring-schedules.ts';
 import type { RecurringInvoice } from '../../../core/config/schema/recurring.ts';
 import { BhWiederkehrendDialog } from './wiederkehrend-dialog.ts';
-import {
-    GroupRows,
-    INVOICE_STATUS_LABEL,
-    LoadToken,
-    amountLabel,
-    emptyState,
-    kpiFlow,
-    loadIntoStack,
-    markup,
-} from './util.ts';
+import { GroupRows, LoadToken, amountLabel, emptyState, kpiFlow, loadIntoStack, markup } from './util.ts';
 import { BhRechnungDetailDialog } from './rechnung-detail-dialog.ts';
 import { BhRechnungVersandDialog } from './rechnung-versand-dialog.ts';
 import { BhRechnungFormDialog } from './rechnung-form-dialog.ts';
@@ -571,7 +562,7 @@ export class BhRechnungenView extends Adw.Bin {
             else if (mail) row.add_suffix(this.badge(_('Sending failed'), 'error'));
             else row.add_suffix(this.badge(_('not sent'), 'dim-label'));
         }
-        row.add_suffix(this.badge(INVOICE_STATUS_LABEL[disp], STATUS_CSS[disp]));
+        row.add_suffix(this.badge(invoiceStatusLabel(disp), STATUS_CSS[disp]));
         row.add_suffix(new Gtk.Image({ iconName: 'go-next-symbolic', cssClasses: ['dim-label'] }));
         row.connect('activated', () => this.openDetail(inv));
         return row;

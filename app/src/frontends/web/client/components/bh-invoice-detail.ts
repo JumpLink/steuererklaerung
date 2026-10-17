@@ -8,11 +8,7 @@ import { api, type InvoiceCapabilities, type OutgoingInvoiceDetail, type Outgoin
 import { deDate, esc, eur } from '../lib/format.ts';
 import { alertDialog, confirmDialog } from '../lib/dialogs.ts';
 
-import {
-    displayInvoiceStatus,
-    INVOICE_STATUS_LABEL,
-    normalizeInvoiceStatus,
-} from '../../../../core/invoices/status.ts';
+import { displayInvoiceStatus, invoiceStatusLabel, normalizeInvoiceStatus } from '../../../../core/invoices/status.ts';
 import './bh-invoice-form.ts';
 import type { BhInvoiceForm } from './bh-invoice-form.ts';
 import { q } from '../lib/dom.ts';
@@ -74,7 +70,7 @@ export class BhInvoiceDetail extends HTMLElement {
           <header class="bh-modal-head">
             <div class="bh-modal-title">
               <h2>${esc(who)}</h2>
-              <div class="bh-modal-sub"><span class="bh-due-badge ${TONE_CLASS[disp] ?? 'muted'}">${esc(INVOICE_STATUS_LABEL[disp])}</span> ${inv.number ? `Nr. ${esc(inv.number)}` : 'ohne Nummer'}</div>
+              <div class="bh-modal-sub"><span class="bh-due-badge ${TONE_CLASS[disp] ?? 'muted'}">${esc(invoiceStatusLabel(disp))}</span> ${inv.number ? `Nr. ${esc(inv.number)}` : 'ohne Nummer'}</div>
             </div>
             <div class="bh-modal-amt pos">${eur(inv.total)}</div>
             <button class="bh-modal-x" data-close aria-label="Schließen">✕</button>

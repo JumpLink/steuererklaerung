@@ -87,7 +87,7 @@ export default async () => {
             expect(byDoc?.provenance.documentId).toBe(502);
             expect(byRule?.provenance.rule).toContain('Keyword');
             expect(ex.provenanceMix).toStrictEqual({ document: 1, rule: 1, manual: 0, unclassified: 0 });
-            expect(ex.formula).toContain('Buchungen');
+            expect(ex.formula).toContain('bookings');
         });
 
         await it('resolves an income category by its SKR03 token', async () => {

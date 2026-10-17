@@ -24,6 +24,7 @@ import {
     type MatchedRule,
     type TxClassifyRule,
     type TxClassifyRules,
+    UNKLASSIFIZIERT,
 } from './euer-classify.ts';
 
 /**
@@ -110,7 +111,7 @@ export function musterAusBeispielen(beispiele: readonly RegelBuchung[]): string 
 export function kategorieAusBeispielen(beispiele: readonly RegelBuchung[]): string {
     const counts = new Map<string, number>();
     for (const b of beispiele) {
-        if (b.source === 'unclassified' || !b.category || b.category === '(unklassifiziert)') continue;
+        if (b.source === 'unclassified' || !b.category || b.category === UNKLASSIFIZIERT) continue;
         counts.set(b.category, (counts.get(b.category) ?? 0) + 1);
     }
     return [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? '';

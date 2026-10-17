@@ -362,7 +362,7 @@ export class BhBelegEingangView extends Adw.Bin {
         fact(_('Invoice no.'), doc.invoiceNumber);
         if (doc.net != null && doc.vat != null) {
             fact(_('Net'), eur(doc.net));
-            fact('USt', eur(doc.vat));
+            fact(_p('receipt', 'VAT'), eur(doc.vat));
         }
 
         const art = rechnungsartRow(doc);

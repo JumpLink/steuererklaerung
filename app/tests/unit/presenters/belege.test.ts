@@ -160,9 +160,9 @@ export default async () => {
         const queue = [{ id: 'a' }, { id: 'b' }, { id: 'c' }, { id: 'd' }];
         const none = new Set<string>();
 
-        await it('reviewProgressLabel formats "X von N geprüft"', async () => {
-            expect(reviewProgressLabel(8, 0)).toBe('0 von 8 geprüft');
-            expect(reviewProgressLabel(8, 3)).toBe('3 von 8 geprüft');
+        await it('reviewProgressLabel formats "X of N checked"', async () => {
+            expect(reviewProgressLabel(8, 0)).toBe('0 of 8 checked');
+            expect(reviewProgressLabel(8, 3)).toBe('3 of 8 checked');
         });
 
         await it('openDocIds keeps list order and drops confirmed ids', async () => {

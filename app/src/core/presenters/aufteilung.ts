@@ -27,6 +27,7 @@ import {
     type TeilEingabe,
 } from '../elster/splitbuchung.ts';
 import { istErstattung, wasGiltDanach } from '../elster/zu-pruefen.ts';
+import { _, fmt } from '../lib/i18n.ts';
 import { loadEnrichedTransactions, type EnrichedTxRow } from './buchungen.ts';
 import type { PresenterSession } from './session.ts';
 import type { EntityModel } from './workspace.ts';
@@ -69,7 +70,10 @@ export type AufteilungAufhebenErgebnis = { ok: boolean; id: string; danach: stri
 
 async function findRow(session: PresenterSession, entity: EntityModel, year: number, txId: string) {
     const row = (await loadEnrichedTransactions(session, entity, year)).rows.find((r) => r.id === txId);
-    if (!row) throw new AufteilungFehler(`Die Buchung ${txId} gehört nicht zu ${entity.name} ${year}.`);
+    if (!row)
+        throw new AufteilungFehler(
+            fmt(_('Booking {id} does not belong to {entity} {year}.'), { id: txId, entity: entity.name, year }),
+        );
     return row;
 }
 
@@ -116,9 +120,7 @@ export async function aufteilungAnsicht(
         belegSatz: belegSatzVon(row),
         kategorieOhne: teile ? (row.ohneUmbuchung?.category ?? row.category) : row.category,
         abgaben: betroffeneAbgaben(row.bookingDate, registerFuer(session, entity, row.bookingDate)),
-        gesperrt: istErstattung(row)
-            ? 'Die Buchung ist als Erstattung verknüpft. Zum Aufteilen erst die Verknüpfung lösen.'
-            : null,
+        gesperrt: istErstattung(row) ? _('The booking is linked as a refund. Unlink it before splitting.') : null,
         danach: teile ? wasGiltDanach(row) : null,
         doppelzaehlung: teile ? doppelzaehlungHinweis(teile, privatanteile(session, entity)) : null,
         privatanteile: privatanteile(session, entity).map((p) => ({ bezeichnung: p.bezeichnung })),
@@ -140,9 +142,7 @@ export async function speichereAufteilung(
 ): Promise<AufteilungSpeichernErgebnis> {
     const row = await findRow(session, entity, year, txId);
     if (istErstattung(row)) {
-        throw new AufteilungFehler(
-            'Die Buchung ist als Erstattung verknüpft. Zum Aufteilen erst die Verknüpfung lösen.',
-        );
+        throw new AufteilungFehler(_('The booking is linked as a refund. Unlink it before splitting.'));
     }
     const teile = berechneTeile(row.amount, eingaben, { belegSatz: belegSatzVon(row) });
     const r = schreibeAufteilung(txId, row.bookingDate, teile, {

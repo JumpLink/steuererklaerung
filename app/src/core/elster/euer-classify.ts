@@ -28,6 +28,12 @@ import type { UnifiedTransaction } from '@steuererklaerung/store';
 import type { EuerKind } from './euer-aggregate.ts';
 
 /**
+ * The category of a transaction no rule matched. Stays German in every language: it is compared
+ * with `===`, persisted, and used as the drill-down id — a frontend translates it for display only.
+ */
+export const UNKLASSIFIZIERT = '(unklassifiziert)';
+
+/**
  * How a transaction got its category. `manual` = a persisted owner override (from the store's
  * `classifications` table) — it wins over both the linked document and the rule chain (S2).
  */
@@ -340,7 +346,7 @@ export function classifyNoDocTransaction(t: UnifiedTransaction, rules: TxClassif
         }
     }
     // Unknown — the real gap. Kind defaults by direction.
-    return { category: '(unklassifiziert)', kind: t.amount > 0 ? 'income' : 'expense', source: 'unclassified' };
+    return { category: UNKLASSIFIZIERT, kind: t.amount > 0 ? 'income' : 'expense', source: 'unclassified' };
 }
 
 /**

@@ -17,55 +17,69 @@ German entry, or placeholders that differ between msgid and msgstr.
 
 ## What stays German
 
-- **Core, CLI and MCP output.** Everything the core computes as text (tax logic, the CLI, the MCP
-  tools) is unchanged and German.
 - **Documents.** Tax forms, ELSTER XML, return PDFs and customer invoice PDFs are not translated.
-- **Strings the core hands to the UI.** Some texts are built in core presenters and shown as is,
-  so they stay German in the English UI for now: the "Up next" task titles and their subtitles on
-  the Overview, Hinweise subtitles, the reasons and origin texts of review items (`GRUND_TEXT`,
-  `herkunft`), the formula and hints of "Free to spend", payment-reminder levels and letter text,
-  form validation messages, the refund-group descriptions, and the reason a contract has no
-  notice deadline (`NoticeDeadline.reason`, see [ADR 0004](../adr/0004-contracts.md)).
-- **Official tax terms**, also in the English UI (see the table below).
+  That includes the invoice header/footer templates and the payment-reminder letter bodies
+  ([`core/invoices/mahnung-text.ts`](../../app/src/core/invoices/mahnung-text.ts)): they go to a
+  customer, not to the person running the app.
+- **Persisted text.** Strings that are written into a config or a register and compared later —
+  the filing-register note in `actions/elster/submit.ts`, the ESt intake topic titles, mail
+  template placeholder names (`{betrag}`, `{kunde}`, …) — stay German wherever a translated copy
+  would break an existing file.
+- **Official tax terms**, also in the English UI (see the table below). Where the term is the
+  official name it stays inside the English msgid: *USt-VA*, *EÜR*, *Steuerkonto*, *Zahllast*,
+  *Vorsteuer*, *Feststellung*, *Säumniszuschlag*, *Sonderausgaben* and the rest of the table.
+- **Developer output.** German `console.error` / `[app]` debug lines are not user-facing.
+- **CLI and MCP** keep their own German literals, but they now read the core through the same
+  seam as the desktop app. Neither binds a catalogue
+  ([`core/lib/i18n.ts`](../../app/src/core/lib/i18n.ts) returns the msgid then), so a core string
+  reaches them in English — their output is mixed until they call `setCoreTranslator`. That is
+  the remaining gap, see below.
+
+The core strings the UI used to show in German are translated now: Hinweis subtitles, "Up next"
+task titles and subtitles, the reasons and origin texts of review items, the formula and hints of
+"Free to spend", payment-reminder levels, form validation messages, the refund-group descriptions
+and `NoticeDeadline.reason` (see [ADR 0004](../adr/0004-contracts.md)).
 
 ## Done
 
-47 TypeScript files and 15 Blueprint files, 1123 msgids (23 with plurals, 65 with a context).
+The desktop UI is fully English: every view, dialog and Blueprint template, plus the core strings
+they display. 188 source files (162 TypeScript, 26 Blueprint), 3019 msgids — 118 with plurals, 96
+with a context.
 
-| Area | Views |
+| Area | What |
 |---|---|
 | Shell | window, navigation, keyboard shortcuts, sync, toasts, entity switcher, glossary help, FinTS prompts, assistant panel |
-| Overview | home (KPIs, Hinweise list), Hinweis actions |
-| Transactions | transactions list, transaction detail, review queue ("To review"), mark as transfer, split, rule from selection |
-| Receipts | receipt inbox, open receipts, documents, receipt upload, link receipt, receipt metadata, document rules |
-| Invoices | invoice list, invoice detail, invoice form, send invoice, payment reminder |
-| Contracts | contract list, contract detail, contract form, shared contract wording |
-| Settings | settings top level |
-| Common | shared dialogs, entity dialogs, tab hub, view utilities |
+| Overview | home (KPIs, Hinweise list, "Up next"), Hinweis actions, Free to spend |
+| Transactions | list, detail, review queue, mark as transfer, split, rule from selection |
+| Receipts | receipt inbox, open receipts, documents, upload, link receipt, metadata, document rules |
+| Invoices | list, detail, form, send, payment reminder, e-invoice, recurring, receivables, double payments |
+| Contracts | list, detail, form, notice deadlines, shared wording |
+| Tax | EÜR, USt-VA, tax account, annexes, tax return, ESt intake wizard, cross-checks, submission arc, reports |
+| Settings | top level and every subpage, accounts, ERiC, keyring, mail, classification rules |
+| Projects | contacts, projects, time tracking, running costs, assets |
+| Core | presenters, invoice/ELSTER actions, validation and error messages the UI shows |
 
 The glossary ([`core/lib/glossary.ts`](../../app/src/core/lib/glossary.ts)) has an English
 twin, `GLOSSARY_EN`, with the same keys; `check:glossary` enforces the parity.
 
-Plural handling fixed a few German grammar slips along the way: "1 Belege" is now "1 Beleg",
-"seit 1 Tagen" is "seit 1 Tag", and "Rechnung(en)", "Buchung(en)" and "Ausnahme(n)" now pick the
-right form.
+A core string goes through [`core/lib/i18n.ts`](../../app/src/core/lib/i18n.ts), which a frontend
+fills with its own gettext at startup. Its `_`/`_n`/`_p` must be called when the string is BUILT,
+not at module level — a module-level `Record` of labels evaluates before any translator is
+registered and then stays English forever. Several such constants became functions for that
+reason (`invoiceStatusLabel()`, `monate()`, `mahnstufe()`, …).
+
+Plural handling fixed a number of German grammar slips along the way: "1 Belege" is now "1 Beleg",
+"seit 1 Tagen" is "seit 1 Tag", and "Rechnung(en)", "Buchung(en)", "Zahlung(en)" and "Ausnahme(n)"
+now pick the right form.
 
 ## Remaining
 
-40 files, still with German literals (zeiten-view, herleitung-dialog and
-konto-hinzufuegen-dialog are partly done):
-
-- **Accounts and tax:** konten-view, konto-hinzufuegen-dialog, absenden-section,
-  absenden-dialog, herleitung-dialog, steuer-view, ustva-view, steuererklaerung-view,
-  steuer-assistent-view, steuerkonto-view, auswertungen-view
-- **Settings subpages:** privat, klassifizierung, dms-invoicing, betrieb-ust, abschluss, kinder,
-  gewerbe-aufgabe, belege-mail, mail-versand, mail-vorlagen
-- **Invoices, adjacent:** wiederkehrend-dialog, forderungen-view, laufende-kosten-view,
-  kontakte-view, kontakt-form-dialog, zeit-rechnung-dialog, mail-sender
-- **Projects, time, deadlines:** projekt-detail-dialog, projekt-form-dialog,
-  projekt-zuordnen-dialog, projekte-view, zeiten-view, zeit-projekt-dialog, fristen-view,
-  frist-erledigen-dialog
-- **Other:** anlagen-view, setup-assistant, erstattung-group
+- **CLI and MCP** still hold German literals of their own and bind no catalogue, so their output
+  mixes German and English core strings. Fixing it means calling `setCoreTranslator` there and
+  routing their own strings through the seam.
+- **The web frontend** (`frontends/web`) has German literals outside the shared core modules.
+- **Dates and numbers** are formatted German everywhere (`deDate`, `dd.mm.yyyy`, `1.234,56 €`),
+  independent of the locale.
 
 ## Terminology
 
@@ -86,11 +100,29 @@ konto-hinzufuegen-dialog are partly done):
 | Mahnung | Payment reminder |
 | Vorsteuer / USt | Input VAT / VAT |
 | Kennzahl | Form line (Kz) |
+| Querprüfung | Cross-check |
+| Freigabe / Freigeben | Release |
+| Prüfblatt / Prüf-PDF | Check sheet / Check PDF |
+| Echt-Versand / Test-Versand | Live submission / Test submission |
+| Zusammensetzung | Composition |
+| Nachzahlung / Abschlusszahlung | Additional payment / final payment |
+| Anlagegut / Anlageverzeichnis | Asset / asset register |
+| Werbungskosten / Vorsorgeaufwendungen | Work-related expenses / Insurance contributions |
+| Sonderbetriebsausgaben / Gesellschafter | Special partner expenses / Partner(s) |
+| Privatanteil | Private share |
+| zu versteuerndes Einkommen | Taxable income (zvE) |
 
 Kept in German, glossed where the UI explains them: **EÜR** (cash-basis profit statement),
 **USt-VA / Umsatzsteuer-Voranmeldung** (advance VAT return), **Gewerbesteuer** (trade tax),
 **Kz** numbers (form line numbers), **Anlage EÜR** (EÜR form), **Steuernummer** (tax number),
-**Finanzamt** (tax office).
+**Finanzamt** (tax office), **Steuerkonto** (tax account at the Finanzamt), **Zahllast** (VAT
+payable), **Säumniszuschlag** (late-payment surcharge), **Feststellung** (partnership assessment),
+**Testmerker** (ELSTER test flag), **E-Rechnung** (structured e-invoice, § 14 UStG),
+**Sonderausgaben** / **außergewöhnliche Belastungen** (special / extraordinary expenses).
+
+The SKR03 account group labels and the BWA metric names (`Gesamtleistung`, `Rohertrag`,
+`Betriebsergebnis`) are German labels of a German chart of accounts and stay as they are;
+`GLOSSARY_EN` explains them.
 
 ## Screenshots
 
