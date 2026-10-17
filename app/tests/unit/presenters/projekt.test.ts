@@ -99,7 +99,7 @@ export default async () => {
             const r = await weiseProjektZu(session, entity, 2026, ['b1', 'b3', 'b4', 'nirgends'], 'hafenlicht');
             expect(r.zugeordnet.join()).toBe('b1,b3');
             expect(r.uebersprungen.map((u) => `${u.id}:${u.warum}`).join('|')).toBe(
-                'b4:ist keine Ausgabe|nirgends:gehört nicht zu Beispiel GbR 2026',
+                'b4:is not an expense|nirgends:does not belong to Beispiel GbR 2026',
             );
             const a = await loadProjektAnsicht(session, entity, 2026);
             const hafen = a.projekte.find((p) => p.projectId === 'hafenlicht')!;
@@ -108,7 +108,7 @@ export default async () => {
             expect(hafen.ergebnis).toBe(-130);
             expect(hafen.ausgaben.map((z) => z.txId).join()).toBe('b3,b1'); // newest first, like the rows
             expect(a.projekte.find((p) => p.projectId === 'leuchtturm')!.kosten).toBe(0);
-            expect(a.buchungen.b1.projekte[0].herkunft).toBe('manuell');
+            expect(a.buchungen.b1.projekte[0].herkunft).toBe('by hand');
             expect(a.buchungen.b2).toBe(undefined);
         });
 
@@ -126,7 +126,7 @@ export default async () => {
             } catch (e) {
                 msg = e instanceof Error ? e.message : String(e);
             }
-            expect(msg).toContain('keine Ausgabe');
+            expect(msg).toContain('not an expense');
         });
 
         await it('previews a rule before saving, remembers it with the exceptions, and a decision wins', async () => {
@@ -140,7 +140,7 @@ export default async () => {
             const nach = await projektRegelVorschau(session, entity, 2026, ['b1', 'b2'], 'hafenlicht');
             expect(nach.treffer.map((t) => t.id).join()).toBe('b1');
             expect(nach.nichtErfasst.map((n) => `${n.id}:${n.warum}`).join()).toBe(
-                'b2:hat eine eigene Zuordnung — die gewinnt',
+                'b2:has an assignment of its own — that wins',
             );
 
             const r = await weiseProjektZu(session, entity, 2026, ['b1'], 'hafenlicht', {
@@ -154,7 +154,7 @@ export default async () => {
             expect(a.regeln.length).toBe(1);
             expect(a.regeln[0].ausnahmen?.join()).toBe('b9');
             expect(a.regeln[0].treffer).toBe(1);
-            expect(a.buchungen.b1.projekte[0].herkunft).toBe('via Regel „Küstenlicht Bildagentur“');
+            expect(a.buchungen.b1.projekte[0].herkunft).toBe('via rule “Küstenlicht Bildagentur”');
             expect(a.buchungen.b1.hatEntscheidung).toBe(false);
             expect(a.projekte.find((p) => p.projectId === 'leuchtturm')!.kosten).toBe(50);
         });
@@ -162,7 +162,7 @@ export default async () => {
         await it('a rule assigns later bookings without a decision and says so', async () => {
             legeProjektRegelAn(session, entity, 'nordtype', 'leuchtturm');
             const a = await loadProjektAnsicht(session, entity, 2026);
-            expect(a.buchungen.b3.projekte[0].herkunft).toBe('via Regel „nordtype“');
+            expect(a.buchungen.b3.projekte[0].herkunft).toBe('via rule “nordtype”');
             expect(a.buchungen.b3.projekte[0].art).toBe('regel');
             expect(a.buchungen.b3.hatEntscheidung).toBe(false);
             expect(a.projekte.find((p) => p.projectId === 'leuchtturm')!.kosten).toBe(30);
@@ -178,7 +178,7 @@ export default async () => {
 
             const zurueck = await nimmProjektZuordnungZurueck(session, entity, 2026, ['b3']);
             expect(zurueck.zurueckgenommen[0].danach).toBe(
-                'Danach gilt: via Regel „nordtype“ → Projekt „Leuchtturm Shop“.',
+                'Then this applies: via rule “nordtype” → project “Leuchtturm Shop”.',
             );
             a = await loadProjektAnsicht(session, entity, 2026);
             expect(a.buchungen.b3.projekte[0].art).toBe('regel');
@@ -189,7 +189,7 @@ export default async () => {
             await weiseProjektZu(session, entity, 2026, ['b1', 'b5'], 'hafenlicht');
             const zurueck = await nimmProjektZuordnungZurueck(session, entity, 2026, ['b1', 'b5', 'b2']);
             expect(zurueck.zurueckgenommen.map((z) => z.id).join()).toBe('b1,b5');
-            expect(zurueck.zurueckgenommen[0].danach).toBe('Danach gilt: kein Projekt.');
+            expect(zurueck.zurueckgenommen[0].danach).toBe('Then this applies: no project.');
             const a = await loadProjektAnsicht(session, entity, 2026);
             expect(Object.keys(a.buchungen).length).toBe(0);
             expect(a.projekte.every((p) => p.kosten === 0)).toBe(true);

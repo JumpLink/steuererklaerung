@@ -15,12 +15,13 @@ import { type Contact, type ContactInput, saveContact } from '../data/contacts.t
 import type { AppEntity } from '../entities.ts';
 import { errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
+import { _ } from '../i18n.ts';
 
 /** Contact kinds in combo-row order; the combo's selected index maps back to these. */
 const KINDS: ContactInput['kind'][] = ['company', 'individual', 'freelancer', 'organization'];
 
-/** German combo labels, parallel to KINDS. */
-const KIND_LABELS = ['Firma', 'Person', 'Freiberuflich', 'Organisation'];
+/** Combo labels, parallel to KINDS. */
+const KIND_LABELS = [_('Company'), _('Individual'), _('Freelancer'), _('Organisation')];
 
 export class BhKontaktFormDialog {
     private readonly dialog = new Adw.PreferencesDialog();
@@ -48,30 +49,30 @@ export class BhKontaktFormDialog {
 
     private build(parent: Gtk.Widget): void {
         const c = this.existing;
-        this.dialog.set_title(c ? 'Kontakt bearbeiten' : 'Neuer Kontakt');
+        this.dialog.set_title(c ? _('Edit contact') : _('New contact'));
 
         const page = new Adw.PreferencesPage();
 
         // Stammdaten.
-        const master = new Adw.PreferencesGroup({ title: 'Stammdaten' });
-        this.nameRow = new Adw.EntryRow({ title: 'Anzeigename / Firma', text: c?.name ?? '' });
-        this.firstNameRow = new Adw.EntryRow({ title: 'Vorname', text: c?.firstName ?? '' });
-        this.lastNameRow = new Adw.EntryRow({ title: 'Nachname', text: c?.lastName ?? '' });
-        this.emailRow = new Adw.EntryRow({ title: 'E-Mail', text: c?.email ?? '' });
-        this.vatRow = new Adw.EntryRow({ title: 'USt-IdNr.', text: c?.vatNumber ?? '' });
+        const master = new Adw.PreferencesGroup({ title: _('Master data') });
+        this.nameRow = new Adw.EntryRow({ title: _('Display name / company'), text: c?.name ?? '' });
+        this.firstNameRow = new Adw.EntryRow({ title: _('First name'), text: c?.firstName ?? '' });
+        this.lastNameRow = new Adw.EntryRow({ title: _('Last name'), text: c?.lastName ?? '' });
+        this.emailRow = new Adw.EntryRow({ title: _('Email'), text: c?.email ?? '' });
+        this.vatRow = new Adw.EntryRow({ title: _('VAT ID'), text: c?.vatNumber ?? '' });
         const kinds = new Gtk.StringList();
         for (const l of KIND_LABELS) kinds.append(l);
-        this.kindRow = new Adw.ComboRow({ title: 'Art', model: kinds });
+        this.kindRow = new Adw.ComboRow({ title: _('Type'), model: kinds });
         this.kindRow.set_selected(Math.max(0, KINDS.indexOf(c?.kind ?? 'company')));
         for (const r of [this.nameRow, this.firstNameRow, this.lastNameRow, this.emailRow, this.vatRow, this.kindRow])
             master.add(r);
         page.add(master);
 
         // Rollen.
-        const roles = new Adw.PreferencesGroup({ title: 'Rollen' });
-        this.customerRow = new Adw.SwitchRow({ title: 'Kunde', subtitle: 'Rechnungen → Qonto' });
+        const roles = new Adw.PreferencesGroup({ title: _('Roles') });
+        this.customerRow = new Adw.SwitchRow({ title: _('Customer'), subtitle: _('Invoices → Qonto') });
         this.customerRow.set_active(c?.isCustomer ?? false);
-        this.supplierRow = new Adw.SwitchRow({ title: 'Lieferant', subtitle: 'Belege → Paperless' });
+        this.supplierRow = new Adw.SwitchRow({ title: _('Supplier'), subtitle: _('Receipts → Paperless') });
         this.supplierRow.set_active(c?.isSupplier ?? false);
         roles.add(this.customerRow);
         roles.add(this.supplierRow);
@@ -79,7 +80,7 @@ export class BhKontaktFormDialog {
 
         // Speichern.
         const actions = new Adw.PreferencesGroup();
-        this.saveButton = new Adw.ButtonRow({ title: 'Speichern' });
+        this.saveButton = new Adw.ButtonRow({ title: _('Save') });
         this.saveButton.add_css_class('suggested-action');
         this.saveButton.connect('activated', () => void this.save());
         actions.add(this.saveButton);
@@ -105,22 +106,18 @@ export class BhKontaktFormDialog {
             isSupplier: this.supplierRow.get_active(),
         };
         this.saveButton.set_sensitive(false);
-        this.saveButton.set_title('Speichere …');
+        this.saveButton.set_title(_('Saving …'));
         try {
             // saveContact is a synchronous store write; awaiting a plain value is harmless and keeps
             // the shape identical to the invoice form should this ever move off the store.
             saveContact(input);
             this.dialog.close();
-            showToast(this.existing ? 'Kontakt aktualisiert' : 'Kontakt angelegt');
+            showToast(this.existing ? _('Contact updated') : _('Contact created'));
             this.onSaved?.();
         } catch (err) {
             this.saveButton.set_sensitive(true);
-            this.saveButton.set_title('Speichern');
-            await errorDialog(
-                this.dialog,
-                'Speichern fehlgeschlagen',
-                err instanceof Error ? err.message : String(err),
-            );
+            this.saveButton.set_title(_('Save'));
+            await errorDialog(this.dialog, _('Saving failed'), err instanceof Error ? err.message : String(err));
         }
     }
 }

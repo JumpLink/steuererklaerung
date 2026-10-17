@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-17 00:18+0200\n"
+"POT-Creation-Date: 2026-10-17 08:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -65,6 +65,22 @@ msgstr ""
 
 #: src/core/actions/classification-rules.ts:63
 msgid "Customer names that mark an incoming payment as revenue."
+msgstr ""
+
+#: src/core/actions/contacts.ts:83 src/core/actions/contacts.ts:95
+msgid "The contact belongs to another company."
+msgstr ""
+
+#: src/core/actions/contacts.ts:151
+msgid "Contact {id} not found."
+msgstr ""
+
+#: src/core/actions/contacts.ts:294
+msgid "Paperless: {error}"
+msgstr ""
+
+#: src/core/actions/contacts.ts:294
+msgid "no configuration"
 msgstr ""
 
 #: src/core/actions/contracts-extract.ts:275
@@ -299,6 +315,55 @@ msgstr[1] ""
 msgid "Error: {message}"
 msgstr ""
 
+#: src/core/actions/projects.ts:164
+msgid "There is no contact “{id}” for {entity} (see `contacts list`)."
+msgstr ""
+
+#: src/core/actions/projects.ts:191
+msgid "(none)"
+msgstr ""
+
+#: src/core/actions/projects.ts:193
+msgid "There is no project “{id}” for {entity}. Known: {known}."
+msgstr ""
+
+#: src/core/actions/projects.ts:202 src/core/actions/projects.ts:237
+msgid "A project needs a name."
+msgstr ""
+
+#: src/core/actions/projects.ts:207
+msgid "The project id “{id}” is already taken."
+msgstr ""
+
+#: src/core/actions/projects.ts:233 src/core/actions/projects.ts:264
+#: src/core/actions/projekt-zuordnung.ts:149 src/core/presenters/projekt.ts:235
+msgid "There is no project “{id}” for {entity}."
+msgstr ""
+
+#: src/core/actions/projects.ts:268
+msgid ""
+"The project “{id}” is still used by {by} — detach the project there first."
+msgstr ""
+
+#: src/core/actions/projects.ts:295 src/core/actions/recurring-schedules.ts:112
+#: src/core/actions/recurring-schedules.ts:123
+msgid "No recurring item “{id}” for {entity}."
+msgstr ""
+
+#: src/core/actions/projects.ts:349
+msgid "no customer contact (customer.contactId)"
+msgstr ""
+
+#: src/core/actions/projekt-zuordnung.ts:147
+msgid "A rule pattern must not be empty."
+msgstr ""
+
+#: src/core/actions/projekt-zuordnung.ts:182
+msgid ""
+"The pattern “{pattern}” exists for several projects ({projects}) — name the "
+"project."
+msgstr ""
+
 #: src/core/actions/recurring-invoices.ts:351
 msgid ""
 "There is no issued invoice for “{id}” yet. Create one first: steuer invoices "
@@ -307,11 +372,6 @@ msgstr ""
 
 #: src/core/actions/recurring-schedules.ts:40
 msgid "No free id found for “{base}”."
-msgstr ""
-
-#: src/core/actions/recurring-schedules.ts:112
-#: src/core/actions/recurring-schedules.ts:123
-msgid "No recurring item “{id}” for {entity}."
 msgstr ""
 
 #: src/core/clients/fints/client.ts:290
@@ -370,6 +430,26 @@ msgstr ""
 
 #: src/core/config/assistant-offered.ts:37
 msgid "This version has no built-in AI assistant."
+msgstr ""
+
+#: src/core/config/schema/project.ts:62
+msgid "Recurring item “{id}”: project “{project}” does not exist."
+msgstr ""
+
+#: src/core/config/schema/project.ts:70
+msgid ""
+"Recurring item “{id}” belongs to project “{project}” but has no customer "
+"contact (customer.contactId) — customer not comparable."
+msgstr ""
+
+#: src/core/config/schema/project.ts:76
+msgid ""
+"Recurring item “{id}” has a different customer ({customer}) than project "
+"“{project}” ({projectCustomer})."
+msgstr ""
+
+#: src/core/config/schema/project.ts:98
+msgid "The project id “{id}” is given twice."
 msgstr ""
 
 #: src/core/contracts/contracts.ts:34
@@ -775,7 +855,7 @@ msgid "not computable because no amount is recorded — not deducted"
 msgstr ""
 
 #: src/core/elster/frei-verfuegbar.ts:487 src/core/elster/home.ts:350
-#: src/frontends/desktop/views/forderungen-view.ts:216
+#: src/frontends/desktop/views/forderungen-view.ts:214
 #: src/frontends/desktop/views/rechnungen-view.ts:561
 msgid "due {date}"
 msgstr ""
@@ -1573,6 +1653,8 @@ msgid "To clarify whether the change was agreed."
 msgstr ""
 
 #: src/core/elster/lieferant-doppelt-bezahlt.ts:105
+#: src/frontends/desktop/views/kontakte-view.ts:263
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:75
 msgid "Supplier"
 msgstr ""
 
@@ -1641,6 +1723,31 @@ msgid ""
 "the gross amount; excluded: part payments as well as deposit + remainder "
 "({part}), refunded later ({refunded}), series such as subscriptions "
 "({series}), confirmed recurring costs ({recurring})"
+msgstr ""
+
+#: src/core/elster/projekt-ergebnis.ts:103
+msgid "by hand: no project"
+msgstr ""
+
+#: src/core/elster/projekt-ergebnis.ts:108
+#: src/core/elster/projekt-ergebnis.ts:152
+msgid "by hand"
+msgstr ""
+
+#: src/core/elster/projekt-ergebnis.ts:131 src/core/elster/zu-pruefen.ts:113
+msgid "via rule “{rule}”"
+msgstr ""
+
+#: src/core/elster/projekt-ergebnis.ts:147
+msgid "Then this applies: by hand no project."
+msgstr ""
+
+#: src/core/elster/projekt-ergebnis.ts:148 src/core/presenters/projekt.ts:320
+msgid "Then this applies: no project."
+msgstr ""
+
+#: src/core/elster/projekt-ergebnis.ts:151
+msgid "Then this applies: {origin} → project “{name}”."
 msgstr ""
 
 #: src/core/elster/reverse-charge-kandidat.ts:90
@@ -2109,10 +2216,6 @@ msgstr ""
 msgid "via rule {rule} (catch-all)"
 msgstr ""
 
-#: src/core/elster/zu-pruefen.ts:113
-msgid "via rule “{rule}”"
-msgstr ""
-
 #: src/core/elster/zu-pruefen.ts:114
 #: src/frontends/desktop/views/dokumente-view.ts:182
 msgid "via rule {rule}"
@@ -2471,6 +2574,50 @@ msgstr ""
 msgid "the Gewerbesteuer estimate failed: {error}"
 msgstr ""
 
+#: src/core/presenters/projekt.ts:157
+msgid "(unknown project {id})"
+msgstr ""
+
+#: src/core/presenters/projekt.ts:238
+msgid "No booking selected."
+msgstr ""
+
+#: src/core/presenters/projekt.ts:247
+msgid "does not belong to {entity} {year}"
+msgstr ""
+
+#: src/core/presenters/projekt.ts:249 src/core/presenters/projekt.ts:391
+msgid "is not an expense"
+msgstr ""
+
+#: src/core/presenters/projekt.ts:251
+msgid "has no part {n}"
+msgstr ""
+
+#: src/core/presenters/projekt.ts:256
+msgid "None of the bookings is an expense of this year ({reasons})."
+msgstr ""
+
+#: src/core/presenters/projekt.ts:268
+msgid "A rule applies to the whole booking, not to one part."
+msgstr ""
+
+#: src/core/presenters/projekt.ts:390
+msgid "no common pattern"
+msgstr ""
+
+#: src/core/presenters/projekt.ts:392
+msgid "has an assignment of its own — that wins"
+msgstr ""
+
+#: src/core/presenters/projekt.ts:398
+msgid "does not contain “{pattern}”"
+msgstr ""
+
+#: src/core/presenters/projekt.ts:399
+msgid "an earlier rule claims it first"
+msgstr ""
+
 #: src/core/presenters/zu-pruefen.ts:76
 msgid "Booking {id} is not up for review in {entity} {year}."
 msgstr ""
@@ -2736,7 +2883,9 @@ msgstr ""
 msgid "all accounts"
 msgstr ""
 
-#: src/frontends/desktop/nav.ts:57 src/frontends/desktop/views/tab-hub.ts:205
+#: src/frontends/desktop/nav.ts:57
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:176
+#: src/frontends/desktop/views/tab-hub.ts:205
 msgid "Invoices"
 msgstr ""
 
@@ -2754,6 +2903,7 @@ msgstr ""
 
 #: src/frontends/desktop/nav.ts:59
 #: src/frontends/desktop/views/einstellungen-view.ts:76
+#: src/frontends/desktop/views/kontakte-view.ts:164
 msgid "Contacts"
 msgstr ""
 
@@ -2787,6 +2937,7 @@ msgid "Return · EÜR · USt-VA · account"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:74
+#: src/frontends/desktop/views/projekte-view.ts:104
 msgid "Projects"
 msgstr ""
 
@@ -3284,7 +3435,11 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:209
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:302
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:407
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:83
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:119
 #: src/frontends/desktop/views/konten-view.ts:850
+#: src/frontends/desktop/views/projekt-form-dialog.ts:135
+#: src/frontends/desktop/views/projekt-form-dialog.ts:173
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:466
 #: src/frontends/desktop/views/umbuchen-dialog.ts:204
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:102
@@ -3350,6 +3505,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:228
 #: src/frontends/desktop/views/herleitung-dialog.ts:478
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:151
 #: src/frontends/desktop/views/tx-detail-dialog.ts:189
 #: src/frontends/desktop/views/tx-detail-dialog.ts:238
 msgid "Part {n}"
@@ -3376,8 +3532,10 @@ msgstr ""
 #: src/frontends/desktop/views/dokumente-view.blp:32
 #: src/frontends/desktop/views/herleitung-dialog.blp:40
 #: src/frontends/desktop/views/home-view.blp:32
+#: src/frontends/desktop/views/kontakte-view.blp:53
 #: src/frontends/desktop/views/konten-view.blp:32
 #: src/frontends/desktop/views/offene-belege-view.blp:32
+#: src/frontends/desktop/views/projekte-view.blp:32
 #: src/frontends/desktop/views/rechnung-detail-dialog.blp:41
 #: src/frontends/desktop/views/rechnungen-view.blp:45
 #: src/frontends/desktop/views/steuererklaerung-view.blp:32
@@ -3774,6 +3932,7 @@ msgid "Complete"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:222
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:98
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:106
 #: src/frontends/desktop/views/tx-detail-dialog.ts:37
 #: src/frontends/desktop/views/tx-detail-dialog.ts:184
@@ -4023,6 +4182,7 @@ msgid "Residual book value at 01.01. (€)"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:104
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:65
 #: src/frontends/desktop/views/tx-detail-dialog.ts:201
 msgid "Type"
 msgstr ""
@@ -4381,6 +4541,7 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:250
 #: src/frontends/desktop/views/einstellungen/privat.ts:51
 #: src/frontends/desktop/views/entity-dialogs.ts:37
+#: src/frontends/desktop/views/projekt-form-dialog.ts:73
 #: src/frontends/desktop/views/setup-assistant.ts:258
 #: src/frontends/desktop/views/setup-assistant.ts:334
 #: src/frontends/desktop/views/setup-assistant.ts:591
@@ -4667,6 +4828,7 @@ msgid "Country code (DE)"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:256
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:61
 msgid "Email"
 msgstr ""
 
@@ -4809,6 +4971,7 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:191
 #: src/frontends/desktop/views/entity-dialogs.ts:102
 #: src/frontends/desktop/views/konten-view.ts:427
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:160
 msgid "Remove"
 msgstr ""
 
@@ -4877,6 +5040,8 @@ msgid "Add child"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/kinder.ts:112
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:59
+#: src/frontends/desktop/views/projekt-form-dialog.ts:105
 msgid "First name"
 msgstr ""
 
@@ -4937,9 +5102,10 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/kinder.ts:216
 #: src/frontends/desktop/views/einstellungen-view.ts:314
 #: src/frontends/desktop/views/einstellungen-view.ts:430
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:231
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:254
 #: src/frontends/desktop/views/umbuchen-dialog.ts:251
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:511
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:517
 msgid "Could not save: {error}"
 msgstr ""
 
@@ -4961,6 +5127,7 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:81
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:104
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:140
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:56
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:550
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:73
 msgid "Edit"
@@ -5265,6 +5432,10 @@ msgid "Contracts and projects naming it fall back to the next level."
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:217
+#: src/frontends/desktop/views/kontakte-view.ts:266
+#: src/frontends/desktop/views/kontakte-view.ts:294
+#: src/frontends/desktop/views/projekte-view.ts:173
+#: src/frontends/desktop/views/projekte-view.ts:200
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:623
 msgid "Delete"
 msgstr ""
@@ -5470,7 +5641,7 @@ msgid "{days} days × {km} km"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/privat.ts:277
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:333
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:339
 msgid "not set"
 msgstr ""
 
@@ -5945,19 +6116,21 @@ msgstr ""
 msgid "No open receivables"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:116
+#: src/frontends/desktop/views/forderungen-view.ts:115
 msgid ""
 "As soon as an outgoing invoice is finalised and not yet paid, it appears "
 "here."
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:127
+#: src/frontends/desktop/views/forderungen-view.ts:125
 #: src/frontends/desktop/views/zeiten-view.ts:51
 msgid "Open"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:129
-#: src/frontends/desktop/views/forderungen-view.ts:158
+#: src/frontends/desktop/views/forderungen-view.ts:127
+#: src/frontends/desktop/views/forderungen-view.ts:156
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:113
+#: src/frontends/desktop/views/projekte-view.ts:153
 #: src/frontends/desktop/views/rechnungen-view.ts:443
 #: src/frontends/desktop/views/rechnungen-view.ts:449
 #: src/frontends/desktop/views/rechnungen-view.ts:455
@@ -5966,130 +6139,130 @@ msgid_plural "{n} invoices"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:132
+#: src/frontends/desktop/views/forderungen-view.ts:130
 msgid "Overdue"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:137
+#: src/frontends/desktop/views/forderungen-view.ts:135
 msgid "Reminder due"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:137
+#: src/frontends/desktop/views/forderungen-view.ts:135
 msgid "next stage due"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:149
+#: src/frontends/desktop/views/forderungen-view.ts:147
 msgid "Open items by age"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:150
+#: src/frontends/desktop/views/forderungen-view.ts:148
 msgid ""
 "Days past the due date; calculated on the balance left after partial "
 "payments."
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:159
+#: src/frontends/desktop/views/forderungen-view.ts:157
 msgid "none"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:176
+#: src/frontends/desktop/views/forderungen-view.ts:174
 msgctxt "receivables"
 msgid "Total"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:186
+#: src/frontends/desktop/views/forderungen-view.ts:184
 msgid "Open invoices"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:188
+#: src/frontends/desktop/views/forderungen-view.ts:186
 msgid ""
 "Reminder stage and limitation period per invoice. “Draft a reminder” only "
 "produces a text — you send it yourself."
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:199
+#: src/frontends/desktop/views/forderungen-view.ts:197
 msgid "Nothing open"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:200
+#: src/frontends/desktop/views/forderungen-view.ts:198
 msgid "All invoices are paid."
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:211
+#: src/frontends/desktop/views/forderungen-view.ts:209
 msgid "{days} overdue"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:213
+#: src/frontends/desktop/views/forderungen-view.ts:211
 msgid "not due yet"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:214
+#: src/frontends/desktop/views/forderungen-view.ts:212
 msgid "no due date"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:217
+#: src/frontends/desktop/views/forderungen-view.ts:215
 msgid "{paid} of {total} received"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:220
+#: src/frontends/desktop/views/forderungen-view.ts:218
 msgid "(sent {date})"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:222
+#: src/frontends/desktop/views/forderungen-view.ts:219
 msgid "stage {n} drafted, not marked as sent"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:224
+#: src/frontends/desktop/views/forderungen-view.ts:220
 msgid "stage {n} is due"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:238
+#: src/frontends/desktop/views/forderungen-view.ts:234
 msgid "Draft a reminder"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:240
+#: src/frontends/desktop/views/forderungen-view.ts:236
 msgid "Draft a reminder: {invoice}"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:255
+#: src/frontends/desktop/views/forderungen-view.ts:251
 msgid "Presumably already paid"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:257
+#: src/frontends/desktop/views/forderungen-view.ts:253
 msgid ""
 "Incoming payments carrying the invoice number cover the full amount, but the "
 "invoice is not marked as paid — no reminder is sent for it."
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:270
+#: src/frontends/desktop/views/forderungen-view.ts:266
 msgid "Payment behaviour per customer"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:272
+#: src/frontends/desktop/views/forderungen-view.ts:268
 msgid ""
 "Payment date minus due date, across the paid invoices. The trend compares "
 "the last two with the earlier ones, from four paid invoices on."
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:279
+#: src/frontends/desktop/views/forderungen-view.ts:275
 msgid "No paid invoices yet"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:281
+#: src/frontends/desktop/views/forderungen-view.ts:277
 msgid ""
 "As soon as invoices with a due date and a payment date are paid, this shows "
 "how quickly each customer pays."
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:289
+#: src/frontends/desktop/views/forderungen-view.ts:285
 msgid "worst case {value}"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:290
+#: src/frontends/desktop/views/forderungen-view.ts:286
 msgid "{n} paid"
 msgstr ""
 
-#: src/frontends/desktop/views/forderungen-view.ts:291
+#: src/frontends/desktop/views/forderungen-view.ts:287
 msgid "Trend: {trend}"
 msgstr ""
 
@@ -6200,6 +6373,7 @@ msgid "Booking updated"
 msgstr ""
 
 #: src/frontends/desktop/views/herleitung-dialog.ts:443
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:284
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:432
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:389
 msgid "Could not save"
@@ -6277,6 +6451,7 @@ msgid "Unlink"
 msgstr ""
 
 #: src/frontends/desktop/views/herleitung-dialog.ts:541
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:160
 #: src/frontends/desktop/views/tx-detail-dialog.ts:252
 #: src/frontends/desktop/views/tx-detail-dialog.ts:305
 msgid "Take back"
@@ -6492,6 +6667,220 @@ msgstr ""
 
 #: src/frontends/desktop/views/home-view.ts:414
 msgid "Liquidity"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.blp:43
+msgid "Loading contacts …"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.blp:92
+msgid "All contacts"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:37
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:24
+msgid "Company"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:38
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:24
+msgid "Individual"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:39
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:24
+msgid "Freelancer"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:40
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:24
+msgid "Organisation"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:48
+#: src/frontends/desktop/views/rechnungen-view.ts:73
+#: src/frontends/desktop/views/tab-hub.ts:198
+#: src/frontends/desktop/views/transactions-view.ts:53
+#: src/frontends/desktop/views/vertraege-view.ts:61
+msgid "All"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:49
+msgid "Customers"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:50
+msgid "Suppliers"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:118
+msgid "Contacts could not be loaded"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:167
+msgid ""
+"The shared master data for customers (invoices → Qonto) and suppliers/"
+"correspondents (receipts → Paperless). “Import” pulls existing records from "
+"the connected services and links them."
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:174
+#: src/frontends/desktop/views/projekte-view.ts:113
+msgid "{n} in total"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:175
+msgid "{customers} customers · {suppliers} suppliers"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:192
+msgid "No contacts yet"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:194
+msgid ""
+"Customers and suppliers live here — they fill in invoices and match receipts."
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:196
+msgid "Create a contact"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:200
+#: src/frontends/desktop/views/transactions-view.ts:268
+msgid "Nothing found"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:201
+msgid "No contact matches the search and the filter."
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:213
+msgid "＋ Add a contact"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:218
+#: src/frontends/desktop/views/kontakte-view.ts:319
+msgid "Import"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:219
+msgid "Import and link customers from Qonto and correspondents from Paperless"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:233
+msgid "VAT ID {number}"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:256
+msgid "{amount} open"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:262
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:73
+#: src/frontends/desktop/views/projekt-form-dialog.ts:75
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:125
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:63
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:135
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:304
+msgid "Customer"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:289
+msgid "Delete contact"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:291
+msgid ""
+"Really delete “{name}”? The links to Qonto/Paperless are lost locally only."
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:300
+msgid "Contact deleted"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:303
+#: src/frontends/desktop/views/projekte-view.ts:209
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:633
+msgid "Deleting failed"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:311
+msgid "Importing …"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:321
+#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:321
+msgid "Import failed: {error}"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:328
+msgid "No connected services — nothing to import."
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:332
+msgid "{source}: error"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakte-view.ts:333
+msgid "{source}: {imported} new · {linked} linked · {matched} known"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:52
+msgid "Edit contact"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:52
+msgid "New contact"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:57
+msgid "Master data"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:58
+msgid "Display name / company"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:60
+msgid "Last name"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:62
+msgid "VAT ID"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:72
+msgid "Roles"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:73
+msgid "Invoices → Qonto"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:75
+msgid "Receipts → Paperless"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:109
+#: src/frontends/desktop/views/projekt-form-dialog.ts:164
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:424
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:375
+msgid "Saving …"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:115
+msgid "Contact updated"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:115
+msgid "Contact created"
+msgstr ""
+
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:122
+#: src/frontends/desktop/views/projekt-form-dialog.ts:179
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:436
+msgid "Saving failed"
 msgstr ""
 
 #: src/frontends/desktop/views/konten-view.blp:22
@@ -7005,10 +7394,6 @@ msgstr ""
 msgid "Cannot tell the format of “{file}” — please choose one above."
 msgstr ""
 
-#: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:321
-msgid "Import failed: {error}"
-msgstr ""
-
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:336
 msgid "Choose a statement or export"
 msgstr ""
@@ -7351,6 +7736,429 @@ msgstr ""
 msgid "Matching failed"
 msgstr ""
 
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:52
+#: src/frontends/desktop/views/projekt-form-dialog.ts:72
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:91
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:261
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:269
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:137
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:141
+#: src/frontends/desktop/views/tx-detail-dialog.ts:224
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:65
+msgid "Project"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:57
+msgid "Change the name, customer, domains and contact person of the project"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:79
+msgid "The project could not be loaded"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:102
+msgid "Project result {year}"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:103
+msgid "Internal evaluation, not a tax figure. Net, without VAT."
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:112
+msgid "Revenue"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:117
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:137
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:131
+msgid "Costs"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:118
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:88
+msgid "{n} expense"
+msgid_plural "{n} expenses"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:121
+msgid "Result"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:121
+msgid "Revenue − costs"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:124
+msgid "Hours"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:125
+msgid "{hours} h recorded"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:138
+msgid "Assigned expenses, net. Private and neutral parts do not count."
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:143
+msgid "No expenses assigned yet"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:144
+msgid "In “Bookings”, mark them with “Select” and choose “Assign to project”."
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:165
+msgid "Take the assignment back: {what}"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:165
+msgid "Take out of the project: {what}"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:182
+msgid ""
+"{n} invoice of this customer without a project — assign it in the invoice "
+"under “Project”."
+msgid_plural ""
+"{n} invoices of this customer without a project — assign them in the invoice "
+"under “Project”."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:194
+msgid "{percent} % of the hours"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:197
+msgid "(draft)"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:199
+msgid "assigned directly"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:199
+msgid "via time entries"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:217
+#: src/frontends/desktop/views/transactions-view.ts:327
+#: src/frontends/desktop/views/tx-detail-dialog.ts:260
+msgid "Assignment taken back"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:220
+msgid "Taken out of the project — the rule now leaves this expense alone"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:225
+msgid "Could not change"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:231
+msgid "Project rules"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:234
+msgid ""
+"An expense whose counterparty, purpose or reference contains the pattern "
+"belongs to this project. An assignment by hand wins."
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:241
+msgid "{n} exception"
+msgid_plural "{n} exceptions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:244
+msgid "“{pattern}”"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:246
+msgid "assigns {n} expense"
+msgid_plural "assigns {n} expenses"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:249
+msgid "Remove rule"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:250
+msgid "Remove rule: {pattern}"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:254
+msgid "Rule removed — assignments by hand stay"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:260
+msgctxt "rule"
+msgid "Could not remove"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:268
+msgid "New rule: pattern"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:276
+msgid "Rule remembered: “{pattern}”"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:277
+msgid "This rule already existed"
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.blp:22
+msgid "Loading projects …"
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.blp:57
+msgid "All projects"
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.ts:75
+msgid "Projects could not be loaded"
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.ts:107
+msgid ""
+"A project bundles a customer, their domains and the contact person for the "
+"cover letter. Several recurring invoices can belong to the same project. "
+"Projects are optional."
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.ts:114
+msgid "{n} assigned recurring invoices"
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.ts:122
+msgid "＋ Add a project"
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.ts:132
+msgid "No projects yet"
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.ts:134
+msgid ""
+"A project belongs to a customer and sets who the cover letter addresses."
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.ts:136
+msgid "Create a project"
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.ts:150
+msgid "Contact {id} is missing"
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.ts:155
+msgid "Result {year}: {amount}"
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.ts:167
+msgid "Salutation: {name}"
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.ts:198
+msgid "Delete project"
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.ts:199
+msgid "Really delete “{name}”? Times already recorded keep their name."
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.ts:206
+msgid "Project deleted"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:25
+msgid "as in the contract"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:69
+msgid "Edit project"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:69
+msgid "New project"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:85
+msgid "Create a customer under Contacts first"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:89
+msgid "Domains (comma separated)"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:96
+msgid "Contact person"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:98
+msgid ""
+"Who the cover letter addresses. Empty fields fall back to what the recurring "
+"contract says."
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:102
+msgid "Salutation (e.g. “Silke”; empty = from the contract)"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:107
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:75
+msgid "Form of address"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:121
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:66
+msgid "Mail template"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:122
+msgid "For the contracts of this project; a contract can pick its own"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:123
+msgid "as the entity’s default"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:129
+#: src/frontends/desktop/views/projekt-form-dialog.ts:130
+msgctxt "project"
+msgid "Note"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:148
+msgid "The project name is missing."
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:149
+msgid "Please pick a customer."
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:169
+msgid "Project updated"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-form-dialog.ts:169
+msgid "Project created"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:58
+#: src/frontends/desktop/views/transactions-view.ts:293
+#: src/frontends/desktop/views/transactions-view.ts:312
+#: src/frontends/desktop/views/tx-detail-dialog.ts:225
+msgid "Assign to project"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:61
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:268
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:139
+#: src/frontends/desktop/views/tx-detail-dialog.ts:244
+msgid "No project"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:72
+msgid "No project yet"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:73
+msgid "First create a project under “Projects” for the expenses to belong to."
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:89
+msgid "The assignment changes no figure of the EÜR, only the project result."
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:101
+msgid ""
+"Future expenses with the same text then go into the project by themselves. "
+"An assignment by hand always wins over a rule."
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:106
+msgid "Remember as a rule"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:107
+msgid "The pattern the bookings share is saved as a project rule"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:111
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:118
+msgid "Pattern"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:132
+msgid "Assign"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:185
+msgid "Hits {n} expense"
+msgid_plural "Hits {n} expenses"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:189
+msgid ""
+"Deselected expenses become exceptions of the rule and stay without a project."
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:191
+msgid "With this pattern the rule claims no existing expense."
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:192
+msgid "No common pattern — type one in."
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:197
+#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:156
+msgid "Include: {line}"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:200
+msgid "marked"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:200
+msgid "another expense with this pattern"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:215
+msgid "not included: {reason}"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:250
+msgid "{n} expense: no project"
+msgid_plural "{n} expenses: no project"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:251
+msgid "{n} expense → project “{name}”"
+msgid_plural "{n} expenses → project “{name}”"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:256
+msgid "rule “{pattern}” remembered"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:256
+msgid "rule “{pattern}” already existed"
+msgstr ""
+
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:259
+msgid "{n} skipped"
+msgstr ""
+
 #: src/frontends/desktop/views/rechnung-detail-dialog.blp:30
 msgid "Loading details …"
 msgstr ""
@@ -7426,27 +8234,12 @@ msgstr ""
 msgid "Cancelled by"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnung-detail-dialog.ts:261
-#: src/frontends/desktop/views/rechnung-detail-dialog.ts:269
-#: src/frontends/desktop/views/rechnung-form-dialog.ts:137
-#: src/frontends/desktop/views/rechnung-form-dialog.ts:141
-#: src/frontends/desktop/views/tx-detail-dialog.ts:224
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:65
-msgid "Project"
-msgstr ""
-
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:265
 msgid "{name} · assigned directly"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:267
 msgid "{names} · via time entries"
-msgstr ""
-
-#: src/frontends/desktop/views/rechnung-detail-dialog.ts:268
-#: src/frontends/desktop/views/rechnung-form-dialog.ts:139
-#: src/frontends/desktop/views/tx-detail-dialog.ts:244
-msgid "No project"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:271
@@ -7668,10 +8461,6 @@ msgstr ""
 msgid "Draft deleted"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnung-detail-dialog.ts:633
-msgid "Deleting failed"
-msgstr ""
-
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:647
 msgid "Paid on (YYYY-MM-DD)"
 msgstr ""
@@ -7766,13 +8555,6 @@ msgstr ""
 #: src/frontends/desktop/views/rechnungen-view.ts:59
 msgctxt "recurring status"
 msgid "cancelled"
-msgstr ""
-
-#: src/frontends/desktop/views/rechnungen-view.ts:73
-#: src/frontends/desktop/views/tab-hub.ts:198
-#: src/frontends/desktop/views/transactions-view.ts:53
-#: src/frontends/desktop/views/vertraege-view.ts:61
-msgid "All"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnungen-view.ts:74
@@ -7945,13 +8727,6 @@ msgstr ""
 msgid "Edit invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnung-form-dialog.ts:125
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:63
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:135
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:298
-msgid "Customer"
-msgstr ""
-
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:131
 msgid "No customer yet — create one under Contacts first."
 msgstr ""
@@ -8010,7 +8785,7 @@ msgid "Description (optional)"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:230
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:399
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:405
 msgid "Quantity"
 msgstr ""
 
@@ -8023,7 +8798,7 @@ msgid "Net unit price (€)"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:236
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:409
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:415
 msgid "Remove line item"
 msgstr ""
 
@@ -8073,17 +8848,8 @@ msgstr ""
 msgid "Please check"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnung-form-dialog.ts:424
-#: src/frontends/desktop/views/vertrag-form-dialog.ts:375
-msgid "Saving …"
-msgstr ""
-
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:431
 msgid "Draft saved"
-msgstr ""
-
-#: src/frontends/desktop/views/rechnung-form-dialog.ts:436
-msgid "Saving failed"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:46
@@ -8244,10 +9010,6 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:118
-msgid "Pattern"
-msgstr ""
-
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:135
 msgid ""
 "{n} of the marked transactions are incoming — own rules book as expense. "
@@ -8268,10 +9030,6 @@ msgstr ""
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:152
 msgid ""
 "With this pattern and this category the rule matches no existing transaction."
-msgstr ""
-
-#: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:156
-msgid "Include: {line}"
 msgstr ""
 
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:160
@@ -8721,10 +9479,6 @@ msgstr ""
 msgid "Balance"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:268
-msgid "Nothing found"
-msgstr ""
-
 #: src/frontends/desktop/views/transactions-view.ts:269
 msgid "No transaction matches the search and filter."
 msgstr ""
@@ -8745,12 +9499,6 @@ msgstr ""
 msgid "Connect account"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:293
-#: src/frontends/desktop/views/transactions-view.ts:312
-#: src/frontends/desktop/views/tx-detail-dialog.ts:225
-msgid "Assign to project"
-msgstr ""
-
 #: src/frontends/desktop/views/transactions-view.ts:294
 msgid "Assign the marked expenses to a project"
 msgstr ""
@@ -8769,11 +9517,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/transactions-view.ts:312
 msgid "Assign to project ({n})"
-msgstr ""
-
-#: src/frontends/desktop/views/transactions-view.ts:327
-#: src/frontends/desktop/views/tx-detail-dialog.ts:260
-msgid "Assignment taken back"
 msgstr ""
 
 #: src/frontends/desktop/views/transactions-view.ts:342
@@ -9219,10 +9962,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:102
 msgid "Contract could not be loaded"
-msgstr ""
-
-#: src/frontends/desktop/views/vertrag-detail-dialog.ts:131
-msgid "Costs"
 msgstr ""
 
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:135
@@ -10069,10 +10808,6 @@ msgstr ""
 msgid "Customer contact"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:66
-msgid "Mail template"
-msgstr ""
-
 #: src/frontends/desktop/views/wiederkehrend-dialog.ts:68
 msgid "Email (for the reminder)"
 msgstr ""
@@ -10091,10 +10826,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/wiederkehrend-dialog.ts:73
 msgid "until (YYYY-MM-DD)"
-msgstr ""
-
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:75
-msgid "Form of address"
 msgstr ""
 
 #: src/frontends/desktop/views/wiederkehrend-dialog.ts:79
@@ -10144,96 +10875,96 @@ msgstr ""
 msgid "Cover letter"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:207
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:208
 msgid ""
 "Text above the line items. Placeholders: {list}. Empty = the entity’s "
 "default text (Settings → Invoicing)."
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:225
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:227
 msgid "Preview"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:247
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:249
 msgid "Unknown contact ({id})"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:249
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:252
 msgctxt "contact"
 msgid "— none —"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:275
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:280
 msgctxt "project"
 msgid "— none —"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:280
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:286
 msgid "Pick a customer contact first"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:282
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:288
 msgid "This customer has no project yet (Projects view)"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:331
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:337
 msgid "from the project"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:332
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:338
 msgid "from the contract"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:336
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:342
 msgid "Addressed: {name} ({source}), {formality}"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:343
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:349
 msgid ""
 "Salutation missing – add a contact person to the project or the contract"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:348
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:354
 msgid "No cover letter (set neither here nor as the entity’s default)."
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:398
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:404
 msgid "Line item (max. 40 characters)"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:400
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:406
 msgid "Net per unit (€)"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:401
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:407
 msgid "VAT rate (%)"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:425
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:431
 msgid "The customer name is missing."
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:430
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:436
 msgid "The period must be in YYYY-MM-DD format."
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:432
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:438
 msgid "The period ends before it begins."
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:439
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:445
 msgid "“{item}”: the net amount is not a number."
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:444
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:450
 msgid "At least one line item with a designation and an amount."
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:505
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:511
 msgid "“{name}” saved"
 msgstr ""
 
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:506
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:512
 msgid "“{name}” created"
 msgstr ""
 

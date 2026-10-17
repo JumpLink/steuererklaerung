@@ -31,12 +31,13 @@ import { showToast } from '../toast.ts';
 import { rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
 import { BhKontaktFormDialog } from './kontakt-form-dialog.ts';
 import { GroupRows, LoadToken, emptyState, loadIntoStack, markup } from './util.ts';
+import { _, fmt } from '../i18n.ts';
 
 const KIND_LABEL: Record<string, string> = {
-    company: 'Firma',
-    individual: 'Person',
-    freelancer: 'Freiberuflich',
-    organization: 'Organisation',
+    company: _('Company'),
+    individual: _('Individual'),
+    freelancer: _('Freelancer'),
+    organization: _('Organisation'),
 };
 
 /** Human labels for the external back-ends a contact can be linked to (chip text). */
@@ -44,9 +45,9 @@ const SYSTEM_LABEL: Record<string, string> = { qonto: 'Qonto', paperless: 'Paper
 
 type ContactFilter = 'all' | 'customer' | 'supplier';
 const FILTERS: { id: ContactFilter; label: string }[] = [
-    { id: 'all', label: 'Alle' },
-    { id: 'customer', label: 'Kunden' },
-    { id: 'supplier', label: 'Lieferanten' },
+    { id: 'all', label: _('All') },
+    { id: 'customer', label: _('Customers') },
+    { id: 'supplier', label: _('Suppliers') },
 ];
 
 export class BhKontakteView extends Adw.Bin {
@@ -114,7 +115,7 @@ export class BhKontakteView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'Kontakte konnten nicht geladen werden',
+            errorContext: _('Contacts could not be loaded'),
             load: () => loadContacts(entity.id),
             fill: (contacts) => this.fill(contacts),
         });
@@ -160,18 +161,21 @@ export class BhKontakteView extends Adw.Bin {
 
     private fillSummary(contacts: Contact[]): void {
         this.summary.clear();
-        this._summary_group.set_title('Kontakte');
+        this._summary_group.set_title(_('Contacts'));
         this._summary_group.set_description(
-            'Der gemeinsame Stamm für Kunden (Rechnungen → Qonto) und Lieferanten/Korrespondenten ' +
-                '(Belege → Paperless). „Importieren" holt vorhandene Datensätze aus den verbundenen Diensten ' +
-                'und verknüpft sie.',
+            _(
+                'The shared master data for customers (invoices → Qonto) and suppliers/correspondents (receipts → Paperless). “Import” pulls existing records from the connected services and links them.',
+            ),
         );
         const kunden = contacts.filter((c) => c.isCustomer).length;
         const lieferanten = contacts.filter((c) => c.isSupplier).length;
         this.summary.add(
             new Adw.ActionRow({
-                title: `${contacts.length} gesamt`,
-                subtitle: `${kunden} Kunden · ${lieferanten} Lieferanten`,
+                title: fmt(_('{n} in total'), { n: contacts.length }),
+                subtitle: fmt(_('{customers} customers · {suppliers} suppliers'), {
+                    customers: kunden,
+                    suppliers: lieferanten,
+                }),
             }),
         );
     }
@@ -185,15 +189,16 @@ export class BhKontakteView extends Adw.Bin {
                 this.contacts.length === 0
                     ? emptyState({
                           icon: 'system-users-symbolic',
-                          title: 'Noch keine Kontakte',
-                          description:
-                              'Kunden und Lieferanten stehen hier — sie füllen Rechnungen aus und ordnen Belege zu.',
-                          action: { label: 'Kontakt anlegen', run: () => this.openForm(null) },
+                          title: _('No contacts yet'),
+                          description: _(
+                              'Customers and suppliers live here — they fill in invoices and match receipts.',
+                          ),
+                          action: { label: _('Create a contact'), run: () => this.openForm(null) },
                       })
                     : emptyState({
                           icon: 'edit-find-symbolic',
-                          title: 'Nichts gefunden',
-                          description: 'Kein Kontakt passt auf Suche und Filter.',
+                          title: _('Nothing found'),
+                          description: _('No contact matches the search and the filter.'),
                       }),
             );
             return;
@@ -205,13 +210,13 @@ export class BhKontakteView extends Adw.Bin {
     private buildListActions(): Gtk.Box {
         const box = new Gtk.Box({ spacing: 8, valign: Gtk.Align.CENTER });
         const add = new Gtk.Button({
-            label: '＋ Kontakt hinzufügen',
+            label: _('＋ Add a contact'),
             cssClasses: ['suggested-action'],
             valign: Gtk.Align.CENTER,
         });
         add.connect('clicked', () => this.openForm(null));
-        const importBtn = new Gtk.Button({ label: 'Importieren', valign: Gtk.Align.CENTER });
-        importBtn.set_tooltip_text('Kunden aus Qonto und Korrespondenten aus Paperless importieren und verknüpfen');
+        const importBtn = new Gtk.Button({ label: _('Import'), valign: Gtk.Align.CENTER });
+        importBtn.set_tooltip_text(_('Import and link customers from Qonto and correspondents from Paperless'));
         importBtn.connect('clicked', () => void this.runImport(importBtn));
         // A header suffix takes its width from the group's TITLE (see the README's "header_suffix
         // width theft"): unwrapped, these two captions squeezed "Alle Kontakte" down to "A…".
@@ -225,7 +230,7 @@ export class BhKontakteView extends Adw.Bin {
         const sub = [
             KIND_LABEL[c.kind] ?? humanizeKey(c.kind),
             c.email,
-            c.vatNumber ? `USt-IdNr. ${c.vatNumber}` : null,
+            c.vatNumber ? fmt(_('VAT ID {number}'), { number: c.vatNumber }) : null,
             [c.zip, c.city].filter(Boolean).join(' ') || null,
         ].filter(Boolean);
         const row = new Adw.ActionRow({
@@ -248,17 +253,17 @@ export class BhKontakteView extends Adw.Bin {
         if (open && open > 0.005) {
             actions.append(
                 new Gtk.Label({
-                    label: `${eur(open)} offen`,
+                    label: fmt(_('{amount} open'), { amount: eur(open) }),
                     cssClasses: ['caption', 'warning'],
                     valign: Gtk.Align.CENTER,
                 }),
             );
         }
-        if (c.isCustomer) actions.append(this.badge('Kunde', 'accent'));
-        if (c.isSupplier) actions.append(this.badge('Lieferant', 'accent'));
+        if (c.isCustomer) actions.append(this.badge(_('Customer'), 'accent'));
+        if (c.isSupplier) actions.append(this.badge(_('Supplier'), 'accent'));
         for (const l of c.links) actions.append(this.badge(SYSTEM_LABEL[l.system] ?? l.system, 'dim-label'));
 
-        const del = new Gtk.Button({ label: 'Löschen', cssClasses: ['flat'], valign: Gtk.Align.CENTER });
+        const del = new Gtk.Button({ label: _('Delete'), cssClasses: ['flat'], valign: Gtk.Align.CENTER });
         del.connect('clicked', () => void this.askDelete(c)); // the button consumes the click → no row activation
         actions.append(del);
 
@@ -281,18 +286,20 @@ export class BhKontakteView extends Adw.Bin {
     private async askDelete(c: Contact): Promise<void> {
         if (!this.entity) return;
         const ok = await confirmDialog(this, {
-            heading: 'Kontakt löschen',
-            body: `„${contactDisplayName(c)}" wirklich löschen? Verknüpfungen zu Qonto/Paperless gehen dabei nur lokal verloren.`,
-            confirmLabel: 'Löschen',
+            heading: _('Delete contact'),
+            body: fmt(_('Really delete “{name}”? The links to Qonto/Paperless are lost locally only.'), {
+                name: contactDisplayName(c),
+            }),
+            confirmLabel: _('Delete'),
             destructive: true,
         });
         if (!ok) return;
         try {
             removeContact(this.entity.id, c.id);
-            showToast('Kontakt gelöscht');
+            showToast(_('Contact deleted'));
             this.refresh();
         } catch (err) {
-            await errorDialog(this, 'Löschen fehlgeschlagen', err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Deleting failed'), err instanceof Error ? err.message : String(err));
         }
     }
 
@@ -300,7 +307,7 @@ export class BhKontakteView extends Adw.Bin {
     private async runImport(btn: Gtk.Button): Promise<void> {
         if (!this.entity) return;
         btn.set_sensitive(false);
-        btn.set_label('Importiere …');
+        btn.set_label(_('Importing …'));
         try {
             const res = await importContacts(this.entity.id);
             showToast(this.importSummary(res), 5);
@@ -308,18 +315,23 @@ export class BhKontakteView extends Adw.Bin {
             this.refresh();
         } catch (err) {
             btn.set_sensitive(true);
-            btn.set_label('Importieren');
-            showToast(`Import fehlgeschlagen: ${err instanceof Error ? err.message : String(err)}`, 5);
+            btn.set_label(_('Import'));
+            showToast(fmt(_('Import failed: {error}'), { error: err instanceof Error ? err.message : String(err) }), 5);
         }
     }
 
     private importSummary(res: ImportContactsResult): string {
-        if (!res.sources.length) return 'Keine verbundenen Dienste — nichts zu importieren.';
+        if (!res.sources.length) return _('No connected services — nothing to import.');
         return res.sources
             .map((s) => {
                 const label = SYSTEM_LABEL[s.source] ?? s.source;
-                if (s.error) return `${label}: Fehler`;
-                return `${label}: ${s.imported} neu · ${s.linked} verknüpft · ${s.matched} bekannt`;
+                if (s.error) return fmt(_('{source}: error'), { source: label });
+                return fmt(_('{source}: {imported} new · {linked} linked · {matched} known'), {
+                    source: label,
+                    imported: s.imported,
+                    linked: s.linked,
+                    matched: s.matched,
+                });
             })
             .join('  ·  ');
     }

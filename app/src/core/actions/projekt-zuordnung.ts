@@ -29,6 +29,7 @@ import {
 } from '@steuererklaerung/store';
 import { ensureElsterSection, mutateElsterConfig, resolveEntityElster } from '../config/accessors.ts';
 import { loadProjects, type ElsterKlassifizierungProjektRegel } from '../config/index.ts';
+import { _, fmt } from '../lib/i18n.ts';
 import {
     GANZE_BUCHUNG,
     type ProjektEntscheidung,
@@ -143,9 +144,9 @@ export function merkeProjektRegel(
     opts: { ausnahmen?: readonly string[] } = {},
 ): MerkeProjektRegelErgebnis {
     const pattern = muster.trim();
-    if (!pattern) throw new Error('Ein Regel-Muster darf nicht leer sein.');
+    if (!pattern) throw new Error(_('A rule pattern must not be empty.'));
     if (!loadProjects(entityId).some((p) => p.id === projekt)) {
-        throw new Error(`Projekt „${projekt}" gibt es für ${entityId} nicht.`);
+        throw new Error(fmt(_('There is no project “{id}” for {entity}.'), { id: projekt, entity: entityId }));
     }
     const ausnahmen = [...new Set((opts.ausnahmen ?? []).map((a) => a.trim()).filter(Boolean))];
     const rule: ProjektRegel = ausnahmen.length
@@ -178,7 +179,10 @@ export function entferneProjektRegel(entityId: string, muster: string, projekt?:
     if (hits.length === 0) return false;
     if (hits.length > 1) {
         throw new Error(
-            `Das Muster „${muster.trim()}" gibt es für mehrere Projekte (${hits.map((h) => h.projekt).join(', ')}) — Projekt angeben.`,
+            fmt(_('The pattern “{pattern}” exists for several projects ({projects}) — name the project.'), {
+                pattern: muster.trim(),
+                projects: hits.map((h) => h.projekt).join(', '),
+            }),
         );
     }
     const [hit] = hits;

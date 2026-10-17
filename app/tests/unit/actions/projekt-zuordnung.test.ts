@@ -131,7 +131,7 @@ export default async () => {
             expect(nimmProjektEntscheidungZurueck(['a', 'nie-entschieden']).join()).toBe('a');
             expect(loadProjektEntscheidungen().size).toBe(0);
             expect(danachGilt(buchung, vorher, regeln, namen)).toBe(
-                'Danach gilt: via Regel „küstenlicht“ → Projekt „Hafenlicht Relaunch“.',
+                'Then this applies: via rule “küstenlicht” → project “Hafenlicht Relaunch”.',
             );
             expect(
                 getDecisionLog('a')
@@ -199,7 +199,7 @@ export default async () => {
             } catch (err) {
                 msg = err instanceof Error ? err.message : String(err);
             }
-            expect(msg).toContain('Muster');
+            expect(msg).toContain('pattern');
             expect(loadProjektRegeln('firma').length).toBe(0);
         });
 
@@ -241,7 +241,7 @@ export default async () => {
             } catch (err) {
                 msg = err instanceof Error ? err.message : String(err);
             }
-            expect(msg).toContain('Projekt angeben');
+            expect(msg).toContain('name the project');
             expect(entferneProjektRegel('firma', 'küstenlicht', 'leuchtturm')).toBe(true);
             expect(
                 loadProjektRegeln('firma')

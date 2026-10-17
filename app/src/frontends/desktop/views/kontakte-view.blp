@@ -40,7 +40,7 @@ template $BhKontakteView: Adw.Bin {
           }
 
           Gtk.Label {
-            label: "Lade Kontakte …";
+            label: _("Loading contacts …");
             styles ["dim-label"]
           }
         };
@@ -50,7 +50,7 @@ template $BhKontakteView: Adw.Bin {
         name: "error";
         child: Adw.StatusPage error_page {
           icon-name: "dialog-error-symbolic";
-          title: "Konnte nicht laden";
+          title: _("Could not load");
         };
       }
 
@@ -89,7 +89,7 @@ template $BhKontakteView: Adw.Bin {
               }
 
               Adw.PreferencesGroup list_group {
-                title: "Alle Kontakte";
+                title: _("All contacts");
               }
             };
           };
