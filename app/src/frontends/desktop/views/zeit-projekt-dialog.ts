@@ -9,6 +9,7 @@
 import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 import type { Project } from '../../../core/config/index.ts';
+import { _ } from '../i18n.ts';
 
 export interface ZeitProjektDialogInit {
     /** What the entry says now, for the heading. */
@@ -25,18 +26,18 @@ export class BhZeitProjektDialog {
     private readonly row: Adw.ComboRow;
 
     constructor(private readonly init: ZeitProjektDialogInit) {
-        this.dialog.set_title('Projekt zuordnen');
+        this.dialog.set_title(_('Assign project'));
 
         const group = new Adw.PreferencesGroup({ title: init.title });
         this.row = new Adw.ComboRow({
-            title: 'Projekt',
-            subtitle: init.projects.length ? '' : 'Noch kein Projekt für diesen Kunden (Ansicht Projekte)',
-            model: Gtk.StringList.new(['— kein Projekt —', ...init.projects.map((p) => p.name)]),
+            title: _('Project'),
+            subtitle: init.projects.length ? '' : _('No project for this customer yet (Projects view)'),
+            model: Gtk.StringList.new([_('— no project —'), ...init.projects.map((p) => p.name)]),
         });
         this.row.set_selected(Math.max(0, init.projects.findIndex((p) => p.id === init.current) + 1));
         group.add(this.row);
 
-        const confirm = new Adw.ButtonRow({ title: 'Speichern' });
+        const confirm = new Adw.ButtonRow({ title: _('Save') });
         confirm.add_css_class('suggested-action');
         confirm.connect('activated', () => this.confirm());
         group.add(confirm);

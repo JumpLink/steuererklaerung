@@ -13,6 +13,7 @@
 import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 import { parseGermanInput } from '../../../core/lib/parsing.ts';
+import { _, _p, fmt } from '../i18n.ts';
 
 export interface ZeitRechnungOptions {
     hourlyRate: number;
@@ -29,7 +30,12 @@ export interface ZeitRechnungDialogInit {
 
 /** Rounding choices in combo order; the selected index maps back to these. */
 const ROUNDING = [0, 15, 30, 60];
-const ROUNDING_LABELS = ['exakt', 'auf 15 min', 'auf 30 min', 'auf volle Stunde'];
+
+/** The labels for {@link ROUNDING}. A function, not a constant: a constant is built at import time,
+ *  before the frontend registers its translator. */
+function roundingLabels(): string[] {
+    return [_('exact'), _('to 15 min'), _('to 30 min'), _('to the full hour')];
+}
 
 /** VAT choices in combo order. 19 % is the normal case; 0 % covers Kleinunternehmer/§13b. */
 const VAT_RATES = [0.19, 0.07, 0];
@@ -37,25 +43,25 @@ const VAT_LABELS = ['19 %', '7 %', '0 %'];
 
 export class BhZeitRechnungDialog {
     private readonly dialog = new Adw.PreferencesDialog();
-    private readonly rateRow = new Adw.EntryRow({ title: 'Stundensatz netto (€)' });
+    private readonly rateRow = new Adw.EntryRow({ title: _('Hourly rate net (€)') });
     private readonly vatRow = new Adw.ComboRow({
-        title: 'Umsatzsteuer',
+        title: _('VAT'),
         model: Gtk.StringList.new(VAT_LABELS),
     });
     private readonly roundRow = new Adw.ComboRow({
-        title: 'Runden',
-        subtitle: 'je Projekt, nicht je Eintrag',
-        model: Gtk.StringList.new(ROUNDING_LABELS),
+        title: _('Rounding'),
+        subtitle: _('per project, not per entry'),
+        model: Gtk.StringList.new(roundingLabels()),
     });
-    private readonly previewRow = new Adw.ActionRow({ title: 'Ergebnis' });
+    private readonly previewRow = new Adw.ActionRow({ title: _('Result') });
 
     constructor(private readonly init: ZeitRechnungDialogInit) {
-        this.dialog.set_title('Rechnung aus Zeiten');
+        this.dialog.set_title(_('Invoice from time entries'));
 
         const page = new Adw.PreferencesPage();
         const group = new Adw.PreferencesGroup({
             title: init.project,
-            description: `${init.hours} h für ${init.customer}`,
+            description: fmt(_('{hours} h for {customer}'), { hours: init.hours, customer: init.customer }),
         });
 
         this.rateRow.set_text('');
@@ -68,7 +74,7 @@ export class BhZeitRechnungDialog {
         group.add(this.roundRow);
         group.add(this.previewRow);
 
-        const confirm = new Adw.ButtonRow({ title: 'Entwurf erzeugen' });
+        const confirm = new Adw.ButtonRow({ title: _p('time invoice', 'Create draft') });
         confirm.add_css_class('suggested-action');
         confirm.connect('activated', () => this.confirm());
         group.add(confirm);
@@ -99,14 +105,16 @@ export class BhZeitRechnungDialog {
     private updatePreview(): void {
         const rate = this.rate();
         if (rate <= 0) {
-            this.previewRow.set_subtitle('Stundensatz eingeben');
+            this.previewRow.set_subtitle(_('Enter an hourly rate'));
             return;
         }
         const hours = this.roundedHours();
         const vat = VAT_RATES[this.vatRow.get_selected()] ?? 0.19;
         const net = Math.round(hours * rate * 100) / 100;
         const gross = Math.round(net * (1 + vat) * 100) / 100;
-        this.previewRow.set_subtitle(`${hours} h × ${rate} € = ${net} € netto · ${gross} € brutto`);
+        this.previewRow.set_subtitle(
+            fmt(_('{hours} h × {rate} € = {net} € net · {gross} € gross'), { hours, rate, net, gross }),
+        );
     }
 
     private confirm(): void {

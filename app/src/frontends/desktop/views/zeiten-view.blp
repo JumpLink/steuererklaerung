@@ -34,7 +34,7 @@ template $BhZeitenView: Adw.Bin {
           }
 
           Gtk.Label {
-            label: "Lade Zeiten …";
+            label: _("Loading time entries …");
             styles ["dim-label"]
           }
         };
@@ -44,7 +44,7 @@ template $BhZeitenView: Adw.Bin {
         name: "error";
         child: Adw.StatusPage error_page {
           icon-name: "dialog-error-symbolic";
-          title: "Konnte nicht laden";
+          title: _("Could not load");
         };
       }
 
@@ -78,7 +78,7 @@ template $BhZeitenView: Adw.Bin {
                   }
 
                   Gtk.Label running_label {
-                    label: "Kein Timer aktiv";
+                    label: _("No timer running");
                     wrap: true;
                     justify: center;
                     styles ["dim-label"]
@@ -94,33 +94,33 @@ template $BhZeitenView: Adw.Bin {
                     justify: fill;
 
                     Gtk.DropDown project_dropdown {
-                      tooltip-text: "Projekt aus der Projektliste wählen";
+                      tooltip-text: _("Pick a project from the project list");
                       valign: center;
                     }
 
                     // width-chars is the MINIMUM width; max-width-chars keeps the roomy desktop size.
                     Gtk.Entry project_entry {
-                      placeholder-text: "Projekt / Label";
+                      placeholder-text: _("Project / label");
                       width-chars: 8;
                       max-width-chars: 14;
                     }
 
                     Gtk.Entry description_entry {
-                      placeholder-text: "Woran arbeitest du?";
+                      placeholder-text: _("What are you working on?");
                       width-chars: 10;
                       max-width-chars: 28;
                       hexpand: true;
                     }
 
                     Gtk.Button start_button {
-                      tooltip-text: "Timer starten";
+                      tooltip-text: _("Start the timer");
                       icon-name: "media-playback-start-symbolic";
                       styles ["suggested-action", "circular"]
                     }
                   }
 
                   Gtk.Button stop_button {
-                    label: "Timer beenden";
+                    label: _("Stop the timer");
                     halign: center;
                     visible: false;
                     styles ["destructive-action", "pill"]
@@ -129,11 +129,11 @@ template $BhZeitenView: Adw.Bin {
               }
 
               Adw.PreferencesGroup unbilled_group {
-                title: "Noch nicht abgerechnet";
+                title: _("Not yet invoiced");
               }
 
               Adw.PreferencesGroup entries_group {
-                title: "Erfasste Zeiten";
+                title: _("Tracked time");
               }
             };
           };

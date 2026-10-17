@@ -29,6 +29,7 @@ import { appSession } from '../data/session.ts';
 import { loadDms } from '../data/settings.ts';
 import type { AppEntity } from '../entities.ts';
 import { deDate, eur } from '../../../core/lib/format.ts';
+import { _, _n, _p, fmt } from '../i18n.ts';
 import { LoadToken, amountLabel, applyScrollHook, emptyState, loadIntoStack, markup } from './util.ts';
 import { showToast } from '../toast.ts';
 import { errorDialog } from './dialogs.ts';
@@ -38,12 +39,24 @@ import { pinnableCluster, rowActions } from '../widgets/responsive.ts';
 
 const ABSTAENDE: SerienAbstand[] = ['monatlich', 'vierteljaehrlich', 'halbjaehrlich', 'jaehrlich'];
 
-const GESPEICHERT: Record<LkEntscheidungInput['status'], string> = {
-    bestaetigt: 'Als laufende Kosten bestätigt',
-    abgelehnt: 'Als „keine laufenden Kosten" gemerkt',
-    beendet: 'Als beendet gemerkt',
-    vorschlag: 'Entscheidung zurückgenommen',
-};
+/**
+ * What the toast says after a decision.
+ *
+ * A function, not a `Record` constant: a constant is built at import time, and a label resolved
+ * before the frontend registers its translator stays English for good.
+ */
+function gespeichertText(status: LkEntscheidungInput['status']): string {
+    switch (status) {
+        case 'bestaetigt':
+            return _('Confirmed as a recurring cost');
+        case 'abgelehnt':
+            return _('Remembered as “no recurring cost”');
+        case 'beendet':
+            return _('Remembered as ended');
+        case 'vorschlag':
+            return _('Decision taken back');
+    }
+}
 
 export class BhLaufendeKostenView extends Adw.Bin {
     declare private _breakpoint_bin: Adw.BreakpointBin;
@@ -91,7 +104,7 @@ export class BhLaufendeKostenView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'Laufende Kosten konnten nicht geladen werden',
+            errorContext: _('Recurring costs could not be loaded'),
             load: () => loadLaufendeKosten(appSession(), entity),
             fill: (u) => {
                 this.render(u);
@@ -114,21 +127,23 @@ export class BhLaufendeKostenView extends Adw.Bin {
         const lernmodus = lernmodusOn();
 
         const offen = new Adw.PreferencesGroup({
-            title: u.vorschlaege.length ? zuBestaetigenTitel(u.vorschlaege.length) : 'Laufende Kosten',
+            title: u.vorschlaege.length ? zuBestaetigenTitel(u.vorschlaege.length) : _('Recurring costs'),
             description:
-                'Regelmäßige Abbuchungen an denselben Empfänger, aus allen Buchungen erkannt. Erst bestätigte zählen in ' +
-                'Frei verfügbar und fallen aus den Geld-Prüfungen.' +
-                (u.datenstand ? ` Datenstand: ${deDate(u.datenstand)}.` : ''),
+                _(
+                    'Regular debits to the same recipient, detected from all bookings. Only confirmed ones count in Free to spend and drop out of the money checks.',
+                ) + (u.datenstand ? ' ' + fmt(_('Data as of {date}.'), { date: deDate(u.datenstand) }) : ''),
         });
         offen.set_header_suffix(new BhGlossaryHelp('laufende-kosten', lernmodus));
         if (u.vorschlaege.length === 0) {
             offen.add(
                 emptyState({
                     icon: 'object-select-symbolic',
-                    title: 'Nichts zu bestätigen',
+                    title: _('Nothing to confirm'),
                     description: u.bestaetigt.length
-                        ? 'Jede erkannte Serie ist entschieden.'
-                        : 'Keine Abbuchungen im festen Abstand gefunden — monatlich und vierteljährlich ab drei, halb- und jährlich ab zwei Zahlungen.',
+                        ? _('Every detected series is decided.')
+                        : _(
+                              'No debits at a fixed interval found — monthly and quarterly need three payments, twice a year and yearly need two.',
+                          ),
                 }),
             );
         }
@@ -137,16 +152,17 @@ export class BhLaufendeKostenView extends Adw.Bin {
 
         if (u.bestaetigt.length) {
             const group = new Adw.PreferencesGroup({
-                title: 'Bestätigt',
-                description:
-                    'Die nächste erwartete Zahlung je Serie — Frei verfügbar zieht die der nächsten 30 Tage ab.',
+                title: _('Confirmed'),
+                description: _(
+                    'The next expected payment per series — Free to spend subtracts those of the next 30 days.',
+                ),
             });
             for (const k of u.bestaetigt) group.add(this.serieRow(k, 'bestaetigt'));
             this._content_box.append(group);
         }
         for (const [titel, liste, art] of [
-            ['Keine laufenden Kosten', u.abgelehnt, 'abgelehnt'],
-            ['Beendet', u.beendet, 'beendet'],
+            [_('No recurring cost'), u.abgelehnt, 'abgelehnt'],
+            [_('Ended'), u.beendet, 'beendet'],
         ] as const) {
             if (!liste.length) continue;
             const group = new Adw.PreferencesGroup({ title: titel });
@@ -156,15 +172,31 @@ export class BhLaufendeKostenView extends Adw.Bin {
     }
 
     private untertitel(k: LaufendeKosten, art: LaufendeKosten['status']): string {
-        const teile = [abstandText(k.abstand), `zuletzt ${deDate(k.zuletzt)}`];
+        const teile = [abstandText(k.abstand), fmt(_('last {date}'), { date: deDate(k.zuletzt) })];
         if (art === 'bestaetigt' || art === 'vorschlag') {
-            teile.push(k.aktiv ? `nächste ${deDate(k.naechste)}` : 'beendet? — seit über 1,5 Abständen keine Zahlung');
+            teile.push(
+                k.aktiv
+                    ? fmt(_('next {date}'), { date: deDate(k.naechste) })
+                    : _('ended? — no payment for more than 1.5 intervals'),
+            );
         }
-        teile.push(`${k.zahlungen.length} Zahlungen`);
+        teile.push(fmt(_n('{n} payment', '{n} payments', k.zahlungen.length), { n: k.zahlungen.length }));
         const p = k.preisaenderung;
-        if (p) teile.push(`Preisänderung am ${deDate(p.datum)}: ${eur(p.von)} → ${eur(p.auf)}`);
+        if (p)
+            teile.push(
+                fmt(_('price change on {date}: {from} → {to}'), {
+                    date: deDate(p.datum),
+                    from: eur(p.von),
+                    to: eur(p.auf),
+                }),
+            );
         if (k.korrigiert)
-            teile.push(`korrigiert (erkannt: ${abstandText(k.erkannterAbstand)}, ${eur(k.letzterBetrag)})`);
+            teile.push(
+                fmt(_('corrected (detected: {interval}, {amount})'), {
+                    interval: abstandText(k.erkannterAbstand),
+                    amount: eur(k.letzterBetrag),
+                }),
+            );
         return teile.join(' · ');
     }
 
@@ -193,18 +225,23 @@ export class BhLaufendeKostenView extends Adw.Bin {
         };
         if (art === 'vorschlag') {
             knopf(
-                'Bestätigen',
-                'Bestätigen',
+                _('Confirm'),
+                _('Confirm'),
                 () => void this.entscheide(k, { status: 'bestaetigt' }),
                 'suggested-action',
             );
-            knopf('document-edit-symbolic', 'Korrigieren', () => void this.korrigieren(k));
-            if (!k.aktiv) knopf('Beendet', 'Beendet', () => void this.entscheide(k, { status: 'beendet' }));
-            knopf('Keine', 'Keine laufenden Kosten', () => void this.entscheide(k, { status: 'abgelehnt' }), 'flat');
+            knopf('document-edit-symbolic', _('Correct'), () => void this.korrigieren(k));
+            if (!k.aktiv) knopf(_('Ended'), _('Ended'), () => void this.entscheide(k, { status: 'beendet' }));
+            knopf(
+                _p('button', 'None'),
+                _('No recurring cost'),
+                () => void this.entscheide(k, { status: 'abgelehnt' }),
+                'flat',
+            );
         } else {
             if (art === 'bestaetigt')
-                knopf('document-edit-symbolic', 'Korrigieren', () => void this.korrigieren(k), 'flat');
-            knopf('Zurücknehmen', 'Zurücknehmen', () => void this.entscheide(k, { status: 'vorschlag' }), 'flat');
+                knopf('document-edit-symbolic', _('Correct'), () => void this.korrigieren(k), 'flat');
+            knopf(_('Take back'), _('Take back'), () => void this.entscheide(k, { status: 'vorschlag' }), 'flat');
         }
         for (const z of [...k.zahlungen].reverse()) {
             const r = new Adw.ActionRow({ title: deDate(z.datum), subtitle: markup(k.empfaenger), activatable: true });
@@ -221,25 +258,32 @@ export class BhLaufendeKostenView extends Adw.Bin {
         if (!entity) return;
         try {
             entscheideLaufendeKosten(appSession(), entity, k.key, e);
-            showToast(`${GESPEICHERT[e.status]}: ${k.empfaenger}`);
+            showToast(`${gespeichertText(e.status)}: ${k.empfaenger}`);
             this.reload(entity, this.year);
         } catch (err) {
-            await errorDialog(this, 'Entscheidung nicht gespeichert', err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Decision not saved'), err instanceof Error ? err.message : String(err));
         }
     }
 
     /** Confirm with a corrected interval and/or amount. */
     private korrigieren(k: LaufendeKosten): Promise<void> {
         const dlg = new Adw.AlertDialog({
-            heading: `Laufende Kosten korrigieren`,
-            body: `${k.empfaenger}: erkannt ${abstandText(k.erkannterAbstand)}, zuletzt ${eur(k.letzterBetrag)}. Die Korrektur gilt für die nächste erwartete Zahlung.`,
+            heading: _('Correct the recurring cost'),
+            body: fmt(
+                _('{name}: detected {interval}, last {amount}. The correction applies to the next expected payment.'),
+                { name: k.empfaenger, interval: abstandText(k.erkannterAbstand), amount: eur(k.letzterBetrag) },
+            ),
         });
         const group = new Adw.PreferencesGroup();
         const model = new Gtk.StringList();
         for (const a of ABSTAENDE) model.append(abstandText(a));
-        const abstand = new Adw.ComboRow({ title: 'Abstand', model, selected: ABSTAENDE.indexOf(k.abstand) });
+        const abstand = new Adw.ComboRow({
+            title: _p('series', 'Interval'),
+            model,
+            selected: ABSTAENDE.indexOf(k.abstand),
+        });
         const betrag = new Adw.SpinRow({
-            title: 'Betrag (€)',
+            title: _('Amount (€)'),
             adjustment: new Gtk.Adjustment({ lower: 0.01, upper: 10_000_000, stepIncrement: 0.01, pageIncrement: 10 }),
             digits: 2,
         });
@@ -247,8 +291,8 @@ export class BhLaufendeKostenView extends Adw.Bin {
         group.add(abstand);
         group.add(betrag);
         dlg.set_extra_child(group);
-        dlg.add_response('cancel', 'Abbrechen');
-        dlg.add_response('confirm', 'Bestätigen');
+        dlg.add_response('cancel', _('Cancel'));
+        dlg.add_response('confirm', _('Confirm'));
         dlg.set_response_appearance('confirm', Adw.ResponseAppearance.SUGGESTED);
         dlg.set_close_response('cancel');
         dlg.set_default_response('confirm');
@@ -270,7 +314,7 @@ export class BhLaufendeKostenView extends Adw.Bin {
         const year = Number(datum.slice(0, 4));
         try {
             const row = (await loadEnrichedTransactions(appSession(), entity, year)).rows.find((r) => r.id === id);
-            if (!row) throw new Error('Die Buchung wurde nicht gefunden.');
+            if (!row) throw new Error(_('The booking was not found.'));
             let paperlessBase: string | null = null;
             try {
                 paperlessBase = loadDms(entity).paperlessUrl ?? null;
@@ -286,7 +330,7 @@ export class BhLaufendeKostenView extends Adw.Bin {
                 },
             });
         } catch (err) {
-            await errorDialog(this, 'Buchung nicht geöffnet', err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Booking not opened'), err instanceof Error ? err.message : String(err));
         }
     }
 }

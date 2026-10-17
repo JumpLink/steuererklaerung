@@ -603,7 +603,7 @@ export default async () => {
             } catch (err) {
                 message = err instanceof Error ? err.message : String(err);
             }
-            expect(message.includes('gehört zu Kontakt c_muster')).toBe(true);
+            expect(message.includes('belongs to contact c_muster')).toBe(true);
         });
 
         await it('bietet je Kunde nur dessen Projekte an, ohne Kunden alle', () => {
@@ -642,12 +642,10 @@ export default async () => {
                 return '';
             };
             const owned = entry({ contactId: 'c_beispiel' });
-            expect(messageOf(() => assignTimeProject(owned.id, 'beta-shop')).includes('nicht zu c_beispiel')).toBe(
-                true,
-            );
-            expect(messageOf(() => assignTimeProject(owned.id, 'gibt-es-nicht')).includes('gibt es')).toBe(true);
+            expect(messageOf(() => assignTimeProject(owned.id, 'beta-shop')).includes('not to c_beispiel')).toBe(true);
+            expect(messageOf(() => assignTimeProject(owned.id, 'gibt-es-nicht')).includes('no project')).toBe(true);
             const billed = entry({ invoiceId: 'inv-1' });
-            expect(messageOf(() => assignTimeProject(billed.id, 'alpha-site')).includes('Rechnung')).toBe(true);
+            expect(messageOf(() => assignTimeProject(billed.id, 'alpha-site')).includes('invoice')).toBe(true);
             expect(listTime({ entityId: 'muster' }).find((x) => x.id === owned.id)?.projectId).toBe(null);
         });
     });

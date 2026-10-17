@@ -35,7 +35,7 @@ template $BhLaufendeKostenView: Adw.Bin {
           }
 
           Gtk.Label {
-            label: "Lade laufende Kosten …";
+            label: _("Loading recurring costs …");
             styles ["dim-label"]
           }
         };
@@ -45,7 +45,7 @@ template $BhLaufendeKostenView: Adw.Bin {
         name: "error";
         child: Adw.StatusPage error_page {
           icon-name: "dialog-error-symbolic";
-          title: "Konnte nicht laden";
+          title: _("Could not load");
         };
       }
 
