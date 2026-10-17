@@ -22,6 +22,7 @@ import {
     type ProjektAnsicht,
 } from '../../../core/presenters/projekt.ts';
 import { appSession } from '../data/session.ts';
+import { _, _n, _p, fmt } from '../i18n.ts';
 import type { AppEntity } from '../entities.ts';
 import { showToast } from '../toast.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
@@ -48,12 +49,12 @@ export class BhProjektDetailDialog {
         this.year = year;
         this.projectId = projectId;
         this.onChanged = hooks.onChanged;
-        this.dialog = new Adw.Dialog({ title: 'Projekt', contentWidth: 600, contentHeight: 720 });
+        this.dialog = new Adw.Dialog({ title: _('Project'), contentWidth: 600, contentHeight: 720 });
 
         const toolbar = new Adw.ToolbarView();
         const header = new Adw.HeaderBar();
-        const edit = new Gtk.Button({ label: 'Bearbeiten' });
-        edit.set_tooltip_text('Name, Kunde, Domains und Kontaktperson des Projekts ändern');
+        const edit = new Gtk.Button({ label: _('Edit') });
+        edit.set_tooltip_text(_('Change the name, customer, domains and contact person of the project'));
         edit.connect('clicked', () => {
             this.dialog.close();
             hooks.onEdit();
@@ -75,7 +76,7 @@ export class BhProjektDetailDialog {
         } catch (err) {
             void errorDialog(
                 this.dialog,
-                'Projekt konnte nicht geladen werden',
+                _('The project could not be loaded'),
                 err instanceof Error ? err.message : String(err),
             );
         }
@@ -98,8 +99,8 @@ export class BhProjektDetailDialog {
         this.dialog.set_title(p.name);
 
         const ergebnis = new Adw.PreferencesGroup({
-            title: `Projektergebnis ${a.year}`,
-            description: markup('Interne Auswertung, keine Steuerzahl. Netto, ohne Umsatzsteuer.'),
+            title: fmt(_('Project result {year}'), { year: a.year }),
+            description: markup(_('Internal evaluation, not a tax figure. Net, without VAT.')),
         });
         ergebnis.set_header_suffix(new BhGlossaryHelp('projektergebnis', lernmodusOn()));
         const zeile = (title: string, subtitle: string, value: number, accent?: 'success' | 'error') => {
@@ -107,17 +108,21 @@ export class BhProjektDetailDialog {
             row.add_suffix(amountLabel(eur(value), { accent }));
             ergebnis.add(row);
         };
-        zeile('Umsatz', p.rechnungen.length === 1 ? '1 Rechnung' : `${p.rechnungen.length} Rechnungen`, p.umsatz);
         zeile(
-            'Kosten',
-            p.ausgaben.length === 1 ? '1 Ausgabe' : `${p.ausgaben.length} Ausgaben`,
+            _('Revenue'),
+            fmt(_n('{n} invoice', '{n} invoices', p.rechnungen.length), { n: p.rechnungen.length }),
+            p.umsatz,
+        );
+        zeile(
+            _('Costs'),
+            fmt(_n('{n} expense', '{n} expenses', p.ausgaben.length), { n: p.ausgaben.length }),
             p.kosten === 0 ? 0 : -p.kosten,
         );
-        zeile('Ergebnis', 'Umsatz − Kosten', p.ergebnis, p.ergebnis >= 0 ? 'success' : 'error');
+        zeile(_('Result'), _('Revenue − costs'), p.ergebnis, p.ergebnis >= 0 ? 'success' : 'error');
         if (p.stunden != null) {
             const h = new Adw.ActionRow({
-                title: 'Stunden',
-                subtitle: markup(`${fmtDe(p.stunden)} h erfasst`),
+                title: _('Hours'),
+                subtitle: markup(fmt(_('{hours} h recorded'), { hours: fmtDe(p.stunden) })),
             });
             h.add_suffix(
                 amountLabel(`${eur(p.ergebnisProStunde ?? 0)} / h`, {
@@ -129,21 +134,21 @@ export class BhProjektDetailDialog {
         add(ergebnis);
 
         const kosten = new Adw.PreferencesGroup({
-            title: 'Kosten',
-            description: markup('Zugeordnete Ausgaben, netto. Private und neutrale Teile zählen nicht.'),
+            title: _('Costs'),
+            description: markup(_('Assigned expenses, net. Private and neutral parts do not count.')),
         });
         if (p.ausgaben.length === 0) {
             kosten.add(
                 new Adw.ActionRow({
-                    title: 'Noch keine Ausgaben zugeordnet',
-                    subtitle: markup('In „Buchungen“ mit „Auswählen“ markieren und „Projekt zuordnen“ wählen.'),
+                    title: _('No expenses assigned yet'),
+                    subtitle: markup(_('In “Bookings”, mark them with “Select” and choose “Assign to project”.')),
                 }),
             );
         }
         const sorted = [...p.ausgaben].sort((x, y) => y.bookingDate.localeCompare(x.bookingDate));
         for (const k of sorted) {
             const wer = k.counterparty?.trim() || k.purpose?.trim() || k.category;
-            const teil = k.teilNr != null ? ` · Teil ${k.teilNr}` : '';
+            const teil = k.teilNr != null ? ` · ${fmt(_('Part {n}'), { n: k.teilNr })}` : '';
             const row = new Adw.ActionRow({
                 title: markup(wer),
                 subtitle: markup(`${deDate(k.bookingDate)} · ${k.category}${teil} · ${k.herkunft.label}`),
@@ -152,12 +157,14 @@ export class BhProjektDetailDialog {
             row.add_suffix(amountLabel(eur(-k.net), { accent: 'error' }));
             const manuell = k.herkunft.art === 'manuell';
             const button = new Gtk.Button({
-                label: manuell ? 'Zurücknehmen' : 'Entfernen',
+                label: manuell ? _('Take back') : _('Remove'),
                 valign: Gtk.Align.CENTER,
                 cssClasses: ['flat'],
             });
             button.set_tooltip_text(
-                `${manuell ? 'Zuordnung zurücknehmen' : 'Aus dem Projekt nehmen'}: ${k.counterparty?.trim() || k.purpose?.trim() || k.txId}`,
+                fmt(manuell ? _('Take the assignment back: {what}') : _('Take out of the project: {what}'), {
+                    what: k.counterparty?.trim() || k.purpose?.trim() || k.txId,
+                }),
             );
             button.connect('clicked', () => void this.nimmHeraus(k.txId, k.teilNr, manuell));
             row.add_suffix(button);
@@ -166,20 +173,30 @@ export class BhProjektDetailDialog {
         add(kosten);
 
         if (p.rechnungen.length > 0 || p.rechnungenOhneProjekt > 0) {
-            const rechnungen = new Adw.PreferencesGroup({ title: 'Rechnungen' });
+            const rechnungen = new Adw.PreferencesGroup({ title: _('Invoices') });
             if (p.rechnungenOhneProjekt > 0) {
                 rechnungen.set_description(
                     markup(
-                        `${p.rechnungenOhneProjekt === 1 ? '1 Rechnung' : `${p.rechnungenOhneProjekt} Rechnungen`} ohne Projekt dieses Kunden — in der Rechnung unter „Projekt“ zuordnen.`,
+                        fmt(
+                            _n(
+                                '{n} invoice of this customer without a project — assign it in the invoice under “Project”.',
+                                '{n} invoices of this customer without a project — assign them in the invoice under “Project”.',
+                                p.rechnungenOhneProjekt,
+                            ),
+                            { n: p.rechnungenOhneProjekt },
+                        ),
                     ),
                 );
             }
             for (const r of p.rechnungen) {
-                const anteil = r.anteil < 1 ? ` · ${Math.round(r.anteil * 100)} % der Stunden` : '';
+                const anteil =
+                    r.anteil < 1
+                        ? ` · ${fmt(_('{percent} % of the hours'), { percent: Math.round(r.anteil * 100) })}`
+                        : '';
                 const row = new Adw.ActionRow({
-                    title: markup(r.nummer ?? '(Entwurf)'),
+                    title: markup(r.nummer ?? _('(draft)')),
                     subtitle: markup(
-                        `${deDate(r.datum)} · ${r.herkunft === 'direkt' ? 'direkt zugeordnet' : 'über Zeiten'}${anteil}`,
+                        `${deDate(r.datum)} · ${r.herkunft === 'direkt' ? _('assigned directly') : _('via time entries')}${anteil}`,
                     ),
                 });
                 row.add_suffix(amountLabel(eur(r.netto)));
@@ -197,45 +214,50 @@ export class BhProjektDetailDialog {
             const session = appSession();
             if (manuell) {
                 const r = await nimmProjektZuordnungZurueck(session, this.entity, this.year, [txId], { teilNr });
-                showToast(r.zurueckgenommen[0]?.danach ?? 'Zuordnung zurückgenommen');
+                showToast(r.zurueckgenommen[0]?.danach ?? _('Assignment taken back'));
             } else {
                 await weiseProjektZu(session, this.entity, this.year, [txId], null, { decidedBy: 'app' });
-                showToast('Aus dem Projekt genommen — die Regel lässt diese Ausgabe jetzt aus');
+                showToast(_('Taken out of the project — the rule now leaves this expense alone'));
             }
             this.onChanged();
             await this.refresh();
         } catch (err) {
-            void errorDialog(this.dialog, 'Konnte nicht ändern', err instanceof Error ? err.message : String(err));
+            void errorDialog(this.dialog, _('Could not change'), err instanceof Error ? err.message : String(err));
         }
     }
 
     private regelGroup(a: ProjektAnsicht, projectId: string): Adw.PreferencesGroup {
         const group = new Adw.PreferencesGroup({
-            title: 'Projektregeln',
+            title: _('Project rules'),
             description: markup(
-                'Eine Ausgabe, deren Gegenseite, Zweck oder Referenz das Muster enthält, gehört zu diesem Projekt. ' +
-                    'Eine Zuordnung von Hand gewinnt.',
+                _(
+                    'An expense whose counterparty, purpose or reference contains the pattern belongs to this project. An assignment by hand wins.',
+                ),
             ),
         });
         const eigene = a.regeln.filter((r) => r.projekt === projectId);
         for (const r of eigene) {
-            const aus = r.ausnahmen?.length ? ` · ${r.ausnahmen.length} Ausnahme(n)` : '';
+            const aus = r.ausnahmen?.length
+                ? ` · ${fmt(_n('{n} exception', '{n} exceptions', r.ausnahmen.length), { n: r.ausnahmen.length })}`
+                : '';
             const row = new Adw.ActionRow({
-                title: markup(`„${r.muster}“`),
-                subtitle: markup(`ordnet ${r.treffer} Ausgabe(n) zu${aus}`),
+                title: markup(fmt(_('“{pattern}”'), { pattern: r.muster })),
+                subtitle: markup(
+                    `${fmt(_n('assigns {n} expense', 'assigns {n} expenses', r.treffer), { n: r.treffer })}${aus}`,
+                ),
             });
-            const button = new Gtk.Button({ label: 'Regel entfernen', valign: Gtk.Align.CENTER, cssClasses: ['flat'] });
-            button.set_tooltip_text(`Regel entfernen: ${r.muster}`);
+            const button = new Gtk.Button({ label: _('Remove rule'), valign: Gtk.Align.CENTER, cssClasses: ['flat'] });
+            button.set_tooltip_text(fmt(_('Remove rule: {pattern}'), { pattern: r.muster }));
             button.connect('clicked', () => {
                 try {
                     loeseProjektRegel(appSession(), this.entity, r.muster, projectId);
-                    showToast('Regel entfernt — Zuordnungen von Hand bleiben');
+                    showToast(_('Rule removed — assignments by hand stay'));
                     this.onChanged();
                     void this.refresh();
                 } catch (err) {
                     void errorDialog(
                         this.dialog,
-                        'Konnte nicht entfernen',
+                        _p('rule', 'Could not remove'),
                         err instanceof Error ? err.message : String(err),
                     );
                 }
@@ -243,21 +265,21 @@ export class BhProjektDetailDialog {
             row.add_suffix(button);
             group.add(row);
         }
-        const neu = new Adw.EntryRow({ title: 'Neue Regel: Muster', showApplyButton: true });
+        const neu = new Adw.EntryRow({ title: _('New rule: pattern'), showApplyButton: true });
         neu.connect('apply', () => {
             const muster = neu.get_text().trim();
             if (!muster) return;
             try {
                 const r = legeProjektRegelAn(appSession(), this.entity, muster, projectId);
-                showToast(r.added ? `Regel gemerkt: „${markup(muster)}“` : 'Diese Regel gab es schon');
+                showToast(
+                    r.added
+                        ? fmt(_('Rule remembered: “{pattern}”'), { pattern: markup(muster) })
+                        : _('This rule already existed'),
+                );
                 this.onChanged();
                 void this.refresh();
             } catch (err) {
-                void errorDialog(
-                    this.dialog,
-                    'Konnte nicht speichern',
-                    err instanceof Error ? err.message : String(err),
-                );
+                void errorDialog(this.dialog, _('Could not save'), err instanceof Error ? err.message : String(err));
             }
         });
         group.add(neu);

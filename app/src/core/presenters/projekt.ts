@@ -38,6 +38,7 @@ import {
     type ProjektRegel,
 } from '../elster/projekt-ergebnis.ts';
 import { musterAusBeispielen, type RegelBuchung } from '../elster/regel-aus-beispielen.ts';
+import { _, fmt } from '../lib/i18n.ts';
 import { loadEnrichedTransactions, type EnrichedTxRow } from './buchungen.ts';
 import type { PresenterSession } from './session.ts';
 import type { EntityModel } from './workspace.ts';
@@ -153,7 +154,7 @@ export async function loadProjektAnsicht(
         })),
         regeln: regeln.map((r) => ({
             ...r,
-            projektName: namen.get(r.projekt) ?? `(unbekanntes Projekt ${r.projekt})`,
+            projektName: namen.get(r.projekt) ?? fmt(_('(unknown project {id})'), { id: r.projekt }),
             treffer: treffer.get(regelSchluessel(r)) ?? 0,
         })),
         buchungen,
@@ -231,24 +232,30 @@ export async function weiseProjektZu(
     } = {},
 ): Promise<ProjektZuordnenErgebnis> {
     if (projectId != null && !listProjects(entity.id).some((p) => p.id === projectId)) {
-        throw new Error(`Projekt „${projectId}" gibt es für ${entity.name} nicht.`);
+        throw new Error(fmt(_('There is no project “{id}” for {entity}.'), { id: projectId, entity: entity.name }));
     }
     const ids = [...new Set(txIds)];
-    if (ids.length === 0) throw new Error('Keine Buchung gewählt.');
+    if (ids.length === 0) throw new Error(_('No booking selected.'));
     const rows = new Map((await loadEnrichedTransactions(session, entity, year)).rows.map((r) => [r.id, r]));
     const gueltig: string[] = [];
     const uebersprungen: ProjektZuordnenErgebnis['uebersprungen'] = [];
     for (const id of ids) {
         const row = rows.get(id);
-        if (!row) uebersprungen.push({ id, warum: `gehört nicht zu ${entity.name} ${year}` });
-        else if (row.amount >= 0) uebersprungen.push({ id, warum: 'ist keine Ausgabe' });
+        if (!row)
+            uebersprungen.push({
+                id,
+                warum: fmt(_('does not belong to {entity} {year}'), { entity: entity.name, year }),
+            });
+        else if (row.amount >= 0) uebersprungen.push({ id, warum: _('is not an expense') });
         else if (opts.teilNr && !row.aufteilung?.some((t) => t.nr === opts.teilNr)) {
-            uebersprungen.push({ id, warum: `hat keinen Teil ${opts.teilNr}` });
+            uebersprungen.push({ id, warum: fmt(_('has no part {n}'), { n: opts.teilNr }) });
         } else gueltig.push(id);
     }
     if (gueltig.length === 0) {
         throw new Error(
-            `Keine der Buchungen ist eine Ausgabe dieses Jahres (${uebersprungen.map((u) => u.warum).join('; ')}).`,
+            fmt(_('None of the bookings is an expense of this year ({reasons}).'), {
+                reasons: uebersprungen.map((u) => u.warum).join('; '),
+            }),
         );
     }
     // With a rule, the bookings it claims need no decision of their own — they follow the rule, and show
@@ -258,7 +265,7 @@ export async function weiseProjektZu(
     let viaRegel: string[] = [];
     let zuEntscheiden = gueltig;
     if (opts.regel && projectId != null) {
-        if (opts.teilNr) throw new Error('Eine Regel gilt für die ganze Buchung, nicht für einen Teil.');
+        if (opts.teilNr) throw new Error(_('A rule applies to the whole booking, not to one part.'));
         regel = merkeProjektRegel(entity.id, opts.regel.muster, projectId, { ausnahmen: opts.regel.ausnahmen });
         const regeln = loadProjektRegeln(entity.id);
         const bekannt = new Set(listProjects(entity.id).map((p) => p.id));
@@ -310,7 +317,7 @@ export async function nimmProjektZuordnungZurueck(
             id,
             danach: row
                 ? danachGilt(quelle(row), vorher.get(id) ?? [], regeln, namen, opts.teilNr)
-                : 'Danach gilt: kein Projekt.',
+                : _('Then this applies: no project.'),
         };
     });
     session.invalidate(entity.id);
@@ -380,16 +387,16 @@ export async function projektRegelVorschau(
     for (const b of beispiele) {
         if (hit.has(b.id)) continue;
         let warum: string;
-        if (!muster) warum = 'kein gemeinsames Muster';
-        else if (b.amount >= 0) warum = 'ist keine Ausgabe';
-        else if (entscheidungen.has(b.id)) warum = 'hat eine eigene Zuordnung — die gewinnt';
+        if (!muster) warum = _('no common pattern');
+        else if (b.amount >= 0) warum = _('is not an expense');
+        else if (entscheidungen.has(b.id)) warum = _('has an assignment of its own — that wins');
         else if (
             !`${b.counterparty ?? ''} ${b.purpose ?? ''} ${b.raw?.reference ?? ''} ${b.raw?.type ?? ''}`
                 .toLowerCase()
                 .includes(muster.toLowerCase())
         )
-            warum = `enthält „${muster}“ nicht`;
-        else warum = 'eine frühere Regel greift zuerst';
+            warum = fmt(_('does not contain “{pattern}”'), { pattern: muster });
+        else warum = _('an earlier rule claims it first');
         nichtErfasst.push({ id: b.id, zeile: buchungZeile(b), warum });
     }
     return { muster, projectId, treffer, nichtErfasst };

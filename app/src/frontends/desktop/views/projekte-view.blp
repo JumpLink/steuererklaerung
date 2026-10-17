@@ -19,7 +19,7 @@ template $BhProjekteView: Adw.Bin {
         }
 
         Gtk.Label {
-          label: "Lade Projekte …";
+          label: _("Loading projects …");
           styles ["dim-label"]
         }
       };
@@ -29,7 +29,7 @@ template $BhProjekteView: Adw.Bin {
       name: "error";
       child: Adw.StatusPage error_page {
         icon-name: "dialog-error-symbolic";
-        title: "Konnte nicht laden";
+        title: _("Could not load");
       };
     }
 
@@ -54,7 +54,7 @@ template $BhProjekteView: Adw.Bin {
             Adw.PreferencesGroup summary_group {}
 
             Adw.PreferencesGroup list_group {
-              title: "Alle Projekte";
+              title: _("All projects");
             }
           };
         };

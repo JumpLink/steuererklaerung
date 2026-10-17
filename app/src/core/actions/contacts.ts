@@ -29,6 +29,7 @@ import type { Client, CreateClientBody } from '../clients/qonto/types.ts';
 import { type Correspondent, listCorrespondents, resolvePaperlessConfig } from '@steuererklaerung/paperless';
 import { findEntity, hasQontoAccount, loadManifest, resolveInvoicingType } from '../config/index.ts';
 import { requireInvoicingBackend } from '../invoices/backend-gate.ts';
+import { _, fmt } from '../lib/i18n.ts';
 
 /** Today's instant as an ISO timestamp (single place so callers can reason about it). */
 function nowIso(): string {
@@ -79,7 +80,7 @@ export function saveContact(input: ContactInput): Contact {
         if (input.id) {
             const existing = getContact(db, input.id);
             if (existing && existing.entityId !== input.entityId) {
-                throw new Error('Kontakt gehört zu einer anderen Firma.');
+                throw new Error(_('The contact belongs to another company.'));
             }
         }
         return upsertContact(db, input, nowIso());
@@ -91,7 +92,7 @@ export function removeContact(entityId: string, id: string): void {
     withLedger((db) => {
         const existing = getContact(db, id);
         if (existing && existing.entityId !== entityId) {
-            throw new Error('Kontakt gehört zu einer anderen Firma.');
+            throw new Error(_('The contact belongs to another company.'));
         }
         deleteContact(db, id);
     });
@@ -147,7 +148,7 @@ export function getContactQontoClientId(contactId: string): string | undefined {
  */
 export async function ensureQontoClientForContact(contactId: string): Promise<{ clientId: string; created: boolean }> {
     const contact = getContactById(contactId);
-    if (!contact) throw new Error(`Kontakt ${contactId} nicht gefunden.`);
+    if (!contact) throw new Error(fmt(_('Contact {id} not found.'), { id: contactId }));
     const linked = contact.links.find((l) => l.system === 'qonto');
     if (linked) return { clientId: linked.externalId, created: false };
     requireInvoicingBackend(contact.entityId);
@@ -289,7 +290,8 @@ function applyCorrespondents(
 /** Fetch every Paperless correspondent (paginated) for the given creds (or env default). */
 async function fetchAllCorrespondents(creds?: { url?: string; token?: string }): Promise<Correspondent[]> {
     const resolved = resolvePaperlessConfig(creds);
-    if (resolved.error || !resolved.config) throw new Error(`Paperless: ${resolved.error ?? 'keine Konfiguration'}`);
+    if (resolved.error || !resolved.config)
+        throw new Error(fmt(_('Paperless: {error}'), { error: resolved.error ?? _('no configuration') }));
     const out: Correspondent[] = [];
     for (let page = 1; page <= 100; page++) {
         const resp = await listCorrespondents({ page, page_size: 100 }, resolved.config);

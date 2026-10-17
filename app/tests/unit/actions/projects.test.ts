@@ -85,7 +85,7 @@ export default async () => {
                 message = err instanceof Error ? err.message : String(err);
             }
             expect(message.includes('gibt-es-nicht')).toBe(true);
-            expect(message.includes('existiert nicht')).toBe(true);
+            expect(message.includes('does not exist')).toBe(true);
         });
 
         await it('lehnt ein Projekt eines anderen Kunden ab', () => {
@@ -99,7 +99,7 @@ export default async () => {
             } catch (err) {
                 message = err instanceof Error ? err.message : String(err);
             }
-            expect(message.includes('anderen Kunden')).toBe(true);
+            expect(message.includes('a different customer')).toBe(true);
         });
 
         await it('verlangt für einen Vertrag mit Projekt einen Kunden-Kontakt', () => {
@@ -190,7 +190,7 @@ export default async () => {
             } catch (err) {
                 dup = (err as Error).message;
             }
-            expect(dup.includes('vergeben')).toBe(true);
+            expect(dup.includes('already taken')).toBe(true);
         });
 
         await it('schreibt bei --dry-run nichts', () => {
@@ -270,7 +270,7 @@ export default async () => {
             } catch (err) {
                 message = (err as Error).message;
             }
-            expect(message.includes('anderen Kunden')).toBe(true);
+            expect(message.includes('a different customer')).toBe(true);
             expect(readFileSync(path, 'utf8')).toBe(before);
             let unknown = '';
             try {
@@ -278,7 +278,7 @@ export default async () => {
             } catch (err) {
                 unknown = (err as Error).message;
             }
-            expect(unknown.includes('existiert nicht')).toBe(true);
+            expect(unknown.includes('does not exist')).toBe(true);
         });
 
         await it('verweigert das Löschen, solange ein Vertrag am Projekt hängt', () => {
@@ -305,7 +305,7 @@ export default async () => {
             } catch (err) {
                 message = (err as Error).message;
             }
-            expect(message.includes('anderen Kunden')).toBe(true);
+            expect(message.includes('a different customer')).toBe(true);
             expect(getProject('muster', 'p1', { path }).contactId).toBe('c_beispiel');
         });
     });
@@ -402,7 +402,7 @@ export default async () => {
             } catch (err) {
                 message = (err as Error).message;
             }
-            expect(message.includes('anderen Kunden')).toBe(true);
+            expect(message.includes('a different customer')).toBe(true);
         });
     });
 

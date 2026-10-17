@@ -18,10 +18,11 @@ import { loadInvoicing } from '../data/settings.ts';
 import type { AppEntity } from '../entities.ts';
 import { showToast } from '../toast.ts';
 import { errorDialog } from './dialogs.ts';
+import { _, _p } from '../i18n.ts';
 
 /** Anredeform options in combo order: unset falls through to the contract, then to `du`. */
 const FORMALITY_OPTIONS: Array<{ label: string; value: 'du' | 'sie' | null }> = [
-    { label: 'wie im Vertrag', value: null },
+    { label: _('as in the contract'), value: null },
     { label: 'Du', value: 'du' },
     { label: 'Sie', value: 'sie' },
 ];
@@ -65,13 +66,13 @@ export class BhProjektFormDialog {
 
     private build(parent: Gtk.Widget): void {
         const p = this.existing;
-        this.dialog.set_title(p ? 'Projekt bearbeiten' : 'Neues Projekt');
+        this.dialog.set_title(p ? _('Edit project') : _('New project'));
         const page = new Adw.PreferencesPage();
 
-        const master = new Adw.PreferencesGroup({ title: 'Projekt' });
-        this.nameRow = new Adw.EntryRow({ title: 'Name', text: p?.name ?? '' });
+        const master = new Adw.PreferencesGroup({ title: _('Project') });
+        this.nameRow = new Adw.EntryRow({ title: _('Name'), text: p?.name ?? '' });
         this.customerRow = new Adw.ComboRow({
-            title: 'Kunde',
+            title: _('Customer'),
             model: Gtk.StringList.new(this.customers.map((c) => contactDisplayName(c))),
         });
         this.customerRow.set_selected(
@@ -81,28 +82,29 @@ export class BhProjektFormDialog {
             ),
         );
         if (this.customers.length === 0) {
-            this.customerRow.set_subtitle('Zuerst unter Kontakte einen Kunden anlegen');
+            this.customerRow.set_subtitle(_('Create a customer under Contacts first'));
             this.customerRow.set_sensitive(false);
         }
         this.domainsRow = new Adw.EntryRow({
-            title: 'Domains (mit Komma getrennt)',
+            title: _('Domains (comma separated)'),
             text: (p?.domains ?? []).join(', '),
         });
         for (const row of [this.nameRow, this.customerRow, this.domainsRow]) master.add(row);
         page.add(master);
 
         const person = new Adw.PreferencesGroup({
-            title: 'Kontaktperson',
-            description:
-                'Wer im Anschreiben angesprochen wird. Leere Felder fallen auf die Angaben im wiederkehrenden Vertrag zurück.',
+            title: _('Contact person'),
+            description: _(
+                'Who the cover letter addresses. Empty fields fall back to what the recurring contract says.',
+            ),
         });
         this.greetingRow = new Adw.EntryRow({
-            title: 'Anrede (z. B. „Silke"; leer = vom Vertrag)',
+            title: _('Salutation (e.g. “Silke”; empty = from the contract)'),
             text: p?.contactPerson?.greeting ?? '',
         });
-        this.firstNameRow = new Adw.EntryRow({ title: 'Vorname', text: p?.contactPerson?.firstName ?? '' });
+        this.firstNameRow = new Adw.EntryRow({ title: _('First name'), text: p?.contactPerson?.firstName ?? '' });
         this.formalityRow = new Adw.ComboRow({
-            title: 'Anredeform',
+            title: _('Form of address'),
             model: Gtk.StringList.new(FORMALITY_OPTIONS.map((o) => o.label)),
         });
         this.formalityRow.set_selected(
@@ -116,21 +118,21 @@ export class BhProjektFormDialog {
 
         this.templates = loadInvoicing(this.entity).mailTemplates;
         this.templateRow = new Adw.ComboRow({
-            title: 'Mail-Vorlage',
-            subtitle: 'Für die Verträge dieses Projekts; ein Vertrag kann eine eigene wählen',
-            model: Gtk.StringList.new(['wie Standard der Entität', ...this.templates.map((t) => t.name)]),
+            title: _('Mail template'),
+            subtitle: _('For the contracts of this project; a contract can pick its own'),
+            model: Gtk.StringList.new([_('as the entity’s default'), ...this.templates.map((t) => t.name)]),
         });
         this.templateRow.set_selected(Math.max(0, this.templates.findIndex((t) => t.id === p?.mailTemplateId) + 1));
         this.templateRow.set_sensitive(this.templates.length > 0);
         person.add(this.templateRow);
 
-        const extra = new Adw.PreferencesGroup({ title: 'Notiz' });
-        this.notesRow = new Adw.EntryRow({ title: 'Notiz', text: p?.notes ?? '' });
+        const extra = new Adw.PreferencesGroup({ title: _p('project', 'Note') });
+        this.notesRow = new Adw.EntryRow({ title: _p('project', 'Note'), text: p?.notes ?? '' });
         extra.add(this.notesRow);
         page.add(extra);
 
         const actions = new Adw.PreferencesGroup();
-        this.saveButton = new Adw.ButtonRow({ title: 'Speichern' });
+        this.saveButton = new Adw.ButtonRow({ title: _('Save') });
         this.saveButton.add_css_class('suggested-action');
         this.saveButton.connect('activated', () => void this.save());
         actions.add(this.saveButton);
@@ -143,8 +145,8 @@ export class BhProjektFormDialog {
     private async save(): Promise<void> {
         const text = (row: Adw.EntryRow): string => row.get_text()?.trim() ?? '';
         const customer = this.customers[this.customerRow.get_selected()];
-        if (!text(this.nameRow)) return void (await this.fail('Der Projektname fehlt.'));
-        if (!customer) return void (await this.fail('Bitte einen Kunden wählen.'));
+        if (!text(this.nameRow)) return void (await this.fail(_('The project name is missing.')));
+        if (!customer) return void (await this.fail(_('Please pick a customer.')));
         const contactPerson = {
             greeting: text(this.greetingRow) || null,
             firstName: text(this.firstNameRow) || null,
@@ -159,21 +161,21 @@ export class BhProjektFormDialog {
             mailTemplateId: this.templates[this.templateRow.get_selected() - 1]?.id ?? null,
         };
         this.saveButton.set_sensitive(false);
-        this.saveButton.set_title('Speichere …');
+        this.saveButton.set_title(_('Saving …'));
         try {
             if (this.existing) updateProject(this.entity.id, this.existing.id, common);
             else addProject(this.entity.id, common);
             this.dialog.close();
-            showToast(this.existing ? 'Projekt aktualisiert' : 'Projekt angelegt');
+            showToast(this.existing ? _('Project updated') : _('Project created'));
             this.onSaved?.();
         } catch (err) {
             this.saveButton.set_sensitive(true);
-            this.saveButton.set_title('Speichern');
+            this.saveButton.set_title(_('Save'));
             await this.fail(err instanceof Error ? err.message : String(err));
         }
     }
 
     private fail(message: string): Promise<void> {
-        return errorDialog(this.dialog, 'Speichern fehlgeschlagen', message);
+        return errorDialog(this.dialog, _('Saving failed'), message);
     }
 }

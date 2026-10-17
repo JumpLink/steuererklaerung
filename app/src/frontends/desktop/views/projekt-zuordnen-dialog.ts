@@ -14,6 +14,7 @@ import Gtk from '@girs/gtk-4.0';
 
 import { projektRegelVorschau, weiseProjektZu, type ProjektRegelVorschau } from '../../../core/presenters/projekt.ts';
 import { appSession } from '../data/session.ts';
+import { _, _n, fmt } from '../i18n.ts';
 import type { AppEntity } from '../entities.ts';
 import { markup } from './util.ts';
 
@@ -21,8 +22,6 @@ export interface ProjektOption {
     id: string;
     name: string;
 }
-
-const KEIN_PROJEKT = 'Kein Projekt';
 
 export class BhProjektZuordnenDialog extends Adw.Dialog {
     static {
@@ -56,10 +55,10 @@ export class BhProjektZuordnenDialog extends Adw.Dialog {
         private readonly saved: (message: string, ids: string[]) => void,
     ) {
         super();
-        this.set_title('Projekt zuordnen');
+        this.set_title(_('Assign to project'));
         this.set_content_width(560);
         this.set_content_height(640);
-        this.options = [...projekte.map((p) => p.name), ...(erlaubeKein ? [KEIN_PROJEKT] : [])];
+        this.options = [...projekte.map((p) => p.name), ...(erlaubeKein ? [_('No project')] : [])];
 
         const toolbar = new Adw.ToolbarView();
         toolbar.add_top_bar(new Adw.HeaderBar());
@@ -70,8 +69,8 @@ export class BhProjektZuordnenDialog extends Adw.Dialog {
     private leer(): Gtk.Widget {
         return new Adw.StatusPage({
             iconName: 'folder-symbolic',
-            title: 'Noch kein Projekt',
-            description: markup('Lege zuerst unter „Projekte“ ein Projekt an, dem die Ausgaben gehören sollen.'),
+            title: _('No project yet'),
+            description: markup(_('First create a project under “Projects” for the expenses to belong to.')),
         });
     }
 
@@ -86,29 +85,30 @@ export class BhProjektZuordnenDialog extends Adw.Dialog {
         });
 
         const ziel = new Adw.PreferencesGroup({
-            title: this.ids.length === 1 ? '1 Ausgabe' : `${this.ids.length} Ausgaben`,
-            description: markup('Die Zuordnung ändert keine Zahl der EÜR, nur das Projektergebnis.'),
+            title: fmt(_n('{n} expense', '{n} expenses', this.ids.length), { n: this.ids.length }),
+            description: markup(_('The assignment changes no figure of the EÜR, only the project result.')),
         });
-        this.combo = new Adw.ComboRow({ title: 'Projekt', model: Gtk.StringList.new(this.options) });
+        this.combo = new Adw.ComboRow({ title: _('Project'), model: Gtk.StringList.new(this.options) });
         this.combo.set_selected(0);
         this.combo.connect('notify::selected', () => this.projektGeaendert());
         ziel.add(this.combo);
         box.append(ziel);
 
         const regel = new Adw.PreferencesGroup({
-            title: 'Regel',
+            title: _('Rule'),
             description: markup(
-                'Künftige Ausgaben mit demselben Text kommen dann von selbst in das Projekt. ' +
-                    'Eine Zuordnung von Hand gewinnt immer gegen eine Regel.',
+                _(
+                    'Future expenses with the same text then go into the project by themselves. An assignment by hand always wins over a rule.',
+                ),
             ),
         });
         this.ruleSwitch = new Adw.SwitchRow({
-            title: 'Als Regel merken',
-            subtitle: markup('Das gemeinsame Muster der Buchungen wird als Projektregel gespeichert'),
+            title: _('Remember as a rule'),
+            subtitle: markup(_('The pattern the bookings share is saved as a project rule')),
         });
         this.ruleSwitch.connect('notify::active', () => this.regelUmgeschaltet());
         regel.add(this.ruleSwitch);
-        this.musterRow = new Adw.EntryRow({ title: 'Muster', showApplyButton: true, visible: false });
+        this.musterRow = new Adw.EntryRow({ title: _('Pattern'), showApplyButton: true, visible: false });
         this.musterRow.connect('apply', () => void this.ladeVorschau(this.musterRow?.get_text().trim()));
         regel.add(this.musterRow);
         box.append(regel);
@@ -129,7 +129,7 @@ export class BhProjektZuordnenDialog extends Adw.Dialog {
             marginStart: 12,
             marginEnd: 12,
         });
-        this.saveButton = new Gtk.Button({ label: 'Zuordnen', cssClasses: ['suggested-action', 'pill'] });
+        this.saveButton = new Gtk.Button({ label: _('Assign'), cssClasses: ['suggested-action', 'pill'] });
         this.saveButton.connect('clicked', () => void this.onSave());
         bottom.append(this.saveButton);
         wrapper.append(bottom);
@@ -182,22 +182,22 @@ export class BhProjektZuordnenDialog extends Adw.Dialog {
         if (!group) return;
         for (const r of this.trefferRows) group.remove(r);
         this.trefferRows = [];
-        group.set_title(`Trifft ${v.treffer.length} Ausgabe(n)`);
+        group.set_title(fmt(_n('Hits {n} expense', 'Hits {n} expenses', v.treffer.length), { n: v.treffer.length }));
         group.set_description(
             markup(
                 v.treffer.length > 0
-                    ? 'Abgewählte Ausgaben werden Ausnahmen der Regel und bleiben ohne Projekt.'
+                    ? _('Deselected expenses become exceptions of the rule and stay without a project.')
                     : v.muster
-                      ? 'Mit diesem Muster erfasst die Regel keine vorhandene Ausgabe.'
-                      : 'Kein gemeinsames Muster — tippe eines ein.',
+                      ? _('With this pattern the rule claims no existing expense.')
+                      : _('No common pattern — type one in.'),
             ),
         );
         for (const t of v.treffer) {
             const check = new Gtk.CheckButton({ active: true, valign: Gtk.Align.CENTER });
-            check.set_tooltip_text(`Erfassen: ${t.zeile}`);
+            check.set_tooltip_text(fmt(_('Include: {line}'), { line: t.zeile }));
             const row = new Adw.ActionRow({
                 title: markup(t.zeile),
-                subtitle: t.beispiel ? 'markiert' : 'weitere Ausgabe mit diesem Muster',
+                subtitle: t.beispiel ? _('marked') : _('another expense with this pattern'),
             });
             row.set_title_lines(1);
             row.add_prefix(check);
@@ -210,7 +210,10 @@ export class BhProjektZuordnenDialog extends Adw.Dialog {
             this.trefferRows.push(row);
         }
         for (const n of v.nichtErfasst) {
-            const row = new Adw.ActionRow({ title: markup(n.zeile), subtitle: markup(`nicht erfasst: ${n.warum}`) });
+            const row = new Adw.ActionRow({
+                title: markup(n.zeile),
+                subtitle: markup(fmt(_('not included: {reason}'), { reason: n.warum })),
+            });
             row.set_title_lines(1);
             row.add_prefix(new Gtk.Image({ iconName: 'dialog-information-symbolic', cssClasses: ['dim-label'] }));
             group.add(row);
@@ -224,7 +227,9 @@ export class BhProjektZuordnenDialog extends Adw.Dialog {
     }
 
     private zeigeFehler(err: unknown): void {
-        this.banner.set_title(markup(`Konnte nicht speichern: ${err instanceof Error ? err.message : String(err)}`));
+        this.banner.set_title(
+            markup(fmt(_('Could not save: {error}'), { error: err instanceof Error ? err.message : String(err) })),
+        );
         this.banner.set_revealed(true);
     }
 
@@ -242,12 +247,15 @@ export class BhProjektZuordnenDialog extends Adw.Dialog {
             const n = r.zugeordnet.length + r.unveraendert.length + r.viaRegel.length;
             const was =
                 projectId == null
-                    ? `${n} Ausgabe(n): kein Projekt`
-                    : `${n} Ausgabe(n) → Projekt „${markup(name ?? projectId)}“`;
+                    ? fmt(_n('{n} expense: no project', '{n} expenses: no project', n), { n })
+                    : fmt(_n('{n} expense → project “{name}”', '{n} expenses → project “{name}”', n), {
+                          n,
+                          name: markup(name ?? projectId),
+                      });
             const regelText = r.regel
-                ? ` · Regel „${markup(muster)}“ ${r.regel.added ? 'gemerkt' : 'gab es schon'}`
+                ? ` · ${fmt(r.regel.added ? _('rule “{pattern}” remembered') : _('rule “{pattern}” already existed'), { pattern: markup(muster) })}`
                 : '';
-            const skip = r.uebersprungen.length ? ` · ${r.uebersprungen.length} übersprungen` : '';
+            const skip = r.uebersprungen.length ? ` · ${fmt(_('{n} skipped'), { n: r.uebersprungen.length })}` : '';
             this.saved(`${was}${regelText}${skip}`, [...r.zugeordnet, ...r.viaRegel]);
             this.close();
         } catch (err) {

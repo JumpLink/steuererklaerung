@@ -28,6 +28,7 @@ import { confirmDialog, errorDialog } from './dialogs.ts';
 import { BhProjektDetailDialog } from './projekt-detail-dialog.ts';
 import { BhProjektFormDialog } from './projekt-form-dialog.ts';
 import { GroupRows, LoadToken, emptyState, loadIntoStack, markup } from './util.ts';
+import { _, _n, fmt } from '../i18n.ts';
 
 export class BhProjekteView extends Adw.Bin {
     declare private _stack: Gtk.Stack;
@@ -71,7 +72,7 @@ export class BhProjekteView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'Projekte konnten nicht geladen werden',
+            errorContext: _('Projects could not be loaded'),
             load: async () => ({
                 data: loadProjectsData(entity.id),
                 // The result needs the year's EÜR; a project list must not fail with it.
@@ -100,16 +101,17 @@ export class BhProjekteView extends Adw.Bin {
 
     private fillSummary(data: ProjectsData): void {
         this.summary.clear();
-        this._summary_group.set_title('Projekte');
+        this._summary_group.set_title(_('Projects'));
         this._summary_group.set_description(
-            'Ein Projekt bündelt einen Kunden, seine Domains und die Kontaktperson fürs Anschreiben. ' +
-                'Mehrere wiederkehrende Rechnungen können zum selben Projekt gehören. Projekte sind freiwillig.',
+            _(
+                'A project bundles a customer, their domains and the contact person for the cover letter. Several recurring invoices can belong to the same project. Projects are optional.',
+            ),
         );
         const contracts = [...data.schedulesByProject.values()].reduce((sum, ids) => sum + ids.length, 0);
         this.summary.add(
             new Adw.ActionRow({
-                title: `${data.projects.length} gesamt`,
-                subtitle: `${contracts} zugeordnete wiederkehrende Rechnungen`,
+                title: fmt(_('{n} in total'), { n: data.projects.length }),
+                subtitle: fmt(_('{n} assigned recurring invoices'), { n: contracts }),
             }),
         );
     }
@@ -117,7 +119,7 @@ export class BhProjekteView extends Adw.Bin {
     private fillList(data: ProjectsData): void {
         this.list.clear();
         const add = new Gtk.Button({
-            label: '＋ Projekt hinzufügen',
+            label: _('＋ Add a project'),
             cssClasses: ['suggested-action'],
             valign: Gtk.Align.CENTER,
         });
@@ -127,10 +129,9 @@ export class BhProjekteView extends Adw.Bin {
             this.list.add(
                 emptyState({
                     icon: 'folder-symbolic',
-                    title: 'Noch keine Projekte',
-                    description:
-                        'Ein Projekt gehört zu einem Kunden und legt fest, wer im Anschreiben angesprochen wird.',
-                    action: { label: 'Projekt anlegen', run: () => this.openForm(null) },
+                    title: _('No projects yet'),
+                    description: _('A project belongs to a customer and sets who the cover letter addresses.'),
+                    action: { label: _('Create a project'), run: () => this.openForm(null) },
                 }),
             );
             return;
@@ -144,10 +145,10 @@ export class BhProjekteView extends Adw.Bin {
         const ergebnis = this.ansicht?.projekte.find((x) => x.projectId === p.id);
         const hatErgebnis = ergebnis && (ergebnis.umsatz !== 0 || ergebnis.kosten !== 0);
         const sub = [
-            customer ? contactDisplayName(customer) : `Kontakt ${p.contactId} fehlt`,
+            customer ? contactDisplayName(customer) : fmt(_('Contact {id} is missing'), { id: p.contactId }),
             p.domains.length ? p.domains.join(', ') : null,
-            contracts.length ? `${contracts.length} ${contracts.length === 1 ? 'Rechnung' : 'Rechnungen'}` : null,
-            hatErgebnis ? `Ergebnis ${this.year}: ${eur(ergebnis.ergebnis)}` : null,
+            contracts.length ? fmt(_n('{n} invoice', '{n} invoices', contracts.length), { n: contracts.length }) : null,
+            hatErgebnis ? fmt(_('Result {year}: {amount}'), { year: this.year, amount: eur(ergebnis.ergebnis) }) : null,
         ].filter(Boolean);
         const row = new Adw.ActionRow({
             title: markup(p.name),
@@ -159,13 +160,13 @@ export class BhProjekteView extends Adw.Bin {
         if (greeting) {
             row.add_suffix(
                 new Gtk.Label({
-                    label: `Anrede: ${greeting}`,
+                    label: fmt(_('Salutation: {name}'), { name: greeting }),
                     cssClasses: ['caption', 'dim-label'],
                     valign: Gtk.Align.CENTER,
                 }),
             );
         }
-        const del = new Gtk.Button({ label: 'Löschen', cssClasses: ['flat'], valign: Gtk.Align.CENTER });
+        const del = new Gtk.Button({ label: _('Delete'), cssClasses: ['flat'], valign: Gtk.Align.CENTER });
         del.connect('clicked', () => void this.askDelete(p)); // the button consumes the click → no row activation
         row.add_suffix(del);
         row.connect('activated', () => this.openDetail(p));
@@ -190,18 +191,18 @@ export class BhProjekteView extends Adw.Bin {
     private async askDelete(p: Project): Promise<void> {
         if (!this.entity) return;
         const ok = await confirmDialog(this, {
-            heading: 'Projekt löschen',
-            body: `„${p.name}" wirklich löschen? Bereits erfasste Zeiten behalten ihren Namen.`,
-            confirmLabel: 'Löschen',
+            heading: _('Delete project'),
+            body: fmt(_('Really delete “{name}”? Times already recorded keep their name.'), { name: p.name }),
+            confirmLabel: _('Delete'),
             destructive: true,
         });
         if (!ok) return;
         try {
             removeProject(this.entity.id, p.id);
-            showToast('Projekt gelöscht');
+            showToast(_('Project deleted'));
             this.refresh();
         } catch (err) {
-            await errorDialog(this, 'Löschen fehlgeschlagen', err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Deleting failed'), err instanceof Error ? err.message : String(err));
         }
     }
 }

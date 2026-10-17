@@ -94,10 +94,10 @@ export default async () => {
             expect(passendeProjektRegel(andere, rules, BEKANNT)?.projekt).toBe('leuchtturm-shop');
         });
 
-        await it('names its origin: via Regel, manuell, manuell: kein Projekt', () => {
+        await it('names its origin: via rule, by hand, by hand: no project', () => {
             const viaRegel = projektFuerBuchung(kuesten, [], [regel('küstenlicht')], BEKANNT);
             expect(viaRegel.herkunft?.art).toBe('regel');
-            expect(viaRegel.herkunft?.label).toBe('via Regel „küstenlicht“');
+            expect(viaRegel.herkunft?.label).toBe('via rule “küstenlicht”');
             const manuell = projektFuerBuchung(
                 kuesten,
                 [entscheidung('leuchtturm-shop')],
@@ -105,7 +105,7 @@ export default async () => {
                 BEKANNT,
             );
             expect(manuell.projectId).toBe('leuchtturm-shop');
-            expect(manuell.herkunft?.label).toBe('manuell');
+            expect(manuell.herkunft?.label).toBe('by hand');
             const keins = projektFuerBuchung(kuesten, [entscheidung(null)], [regel('küstenlicht')], BEKANNT);
             expect(keins.projectId).toBe(null);
             expect(keins.herkunft?.art).toBe('keine');
@@ -121,13 +121,13 @@ export default async () => {
         await it('says what applies once the decision is taken back', () => {
             const rules = [regel('küstenlicht')];
             expect(danachGilt(kuesten, [entscheidung('leuchtturm-shop')], rules, PROJEKTE)).toBe(
-                'Danach gilt: via Regel „küstenlicht“ → Projekt „Hafenlicht Relaunch“.',
+                'Then this applies: via rule “küstenlicht” → project “Hafenlicht Relaunch”.',
             );
             expect(danachGilt(kuesten, [entscheidung('leuchtturm-shop')], [], PROJEKTE)).toBe(
-                'Danach gilt: kein Projekt.',
+                'Then this applies: no project.',
             );
             expect(danachGilt(kuesten, [entscheidung(null)], rules, PROJEKTE)).toBe(
-                'Danach gilt: via Regel „küstenlicht“ → Projekt „Hafenlicht Relaunch“.',
+                'Then this applies: via rule “küstenlicht” → project “Hafenlicht Relaunch”.',
             );
         });
     });
@@ -150,7 +150,7 @@ export default async () => {
             const liste = kosten.get('hafenlicht-relaunch') ?? [];
             expect(liste.length).toBe(1);
             expect(liste[0].net).toBe(100);
-            expect(liste[0].herkunft.label).toBe('manuell');
+            expect(liste[0].herkunft.label).toBe('by hand');
         });
 
         await it('ignores income, bookings outside the period and unassigned bookings', () => {

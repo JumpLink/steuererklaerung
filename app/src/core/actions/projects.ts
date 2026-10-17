@@ -22,6 +22,7 @@ import {
     saveRecurringInvoices,
 } from '../config/index.ts';
 import { ConfigError } from '../lib/errors.ts';
+import { _, fmt } from '../lib/i18n.ts';
 import { listEntityContacts } from './contacts.ts';
 import { uniqueScheduleId } from './recurring-schedules.ts';
 
@@ -159,7 +160,12 @@ function knownContactIds(entityId: string, opts: ProjectActionOptions): Readonly
 
 function assertContact(entityId: string, contactId: string, opts: ProjectActionOptions): void {
     if (!knownContactIds(entityId, opts).has(contactId)) {
-        throw new Error(`Kontakt „${contactId}" gibt es für ${entityId} nicht (siehe \`contacts list\`).`);
+        throw new Error(
+            fmt(_('There is no contact “{id}” for {entity} (see `contacts list`).'), {
+                id: contactId,
+                entity: entityId,
+            }),
+        );
     }
 }
 
@@ -185,8 +191,10 @@ export function getProject(entityId: string, id: string, opts: ProjectActionOpti
     const all = loadProjects(entityId, opts.path);
     const found = all.find((p) => p.id === id);
     if (!found) {
-        const known = all.map((p) => p.id).join(', ') || '(keine)';
-        throw new Error(`Projekt „${id}" gibt es für ${entityId} nicht. Bekannt: ${known}.`);
+        const known = all.map((p) => p.id).join(', ') || _('(none)');
+        throw new Error(
+            fmt(_('There is no project “{id}” for {entity}. Known: {known}.'), { id, entity: entityId, known }),
+        );
     }
     return found;
 }
@@ -194,11 +202,12 @@ export function getProject(entityId: string, id: string, opts: ProjectActionOpti
 /** Create a project. An explicit `id` that is taken is an error; a derived one gets a numeric suffix. */
 export function addProject(entityId: string, input: ProjectInput, opts: ProjectActionOptions = {}): Project {
     const name = text(input.name);
-    if (!name) throw new Error('Ein Projekt braucht einen Namen.');
+    if (!name) throw new Error(_('A project needs a name.'));
     assertContact(entityId, input.contactId, opts);
     const all = loadProjects(entityId, opts.path);
     const ids = all.map((p) => p.id);
-    if (input.id && ids.includes(input.id)) throw new Error(`Projekt-Id „${input.id}" ist schon vergeben.`);
+    if (input.id && ids.includes(input.id))
+        throw new Error(fmt(_('The project id “{id}” is already taken.'), { id: input.id }));
     const project: Project = {
         id: input.id ?? uniqueScheduleId(slugForProject(name), ids),
         name,
@@ -224,11 +233,11 @@ export function updateProject(
 ): Project {
     const all = loadProjects(entityId, opts.path);
     const index = all.findIndex((p) => p.id === id);
-    if (index < 0) throw new Error(`Projekt „${id}" gibt es für ${entityId} nicht.`);
+    if (index < 0) throw new Error(fmt(_('There is no project “{id}” for {entity}.'), { id, entity: entityId }));
     const current = all[index];
     if (patch.contactId && patch.contactId !== current.contactId) assertContact(entityId, patch.contactId, opts);
     const name = patch.name === undefined ? current.name : text(patch.name);
-    if (!name) throw new Error('Ein Projekt braucht einen Namen.');
+    if (!name) throw new Error(_('A project needs a name.'));
     const next: Project = {
         id: current.id,
         name,
@@ -254,11 +263,15 @@ export function updateProject(
  */
 export function removeProject(entityId: string, id: string, opts: ProjectActionOptions = {}): void {
     const all = loadProjects(entityId, opts.path);
-    if (!all.some((p) => p.id === id)) throw new Error(`Projekt „${id}" gibt es für ${entityId} nicht.`);
+    if (!all.some((p) => p.id === id))
+        throw new Error(fmt(_('There is no project “{id}” for {entity}.'), { id, entity: entityId }));
     const using = loadRecurringInvoices(opts.path).filter((s) => s.entityId === entityId && s.projectId === id);
     if (using.length) {
         throw new Error(
-            `Projekt „${id}" wird noch von ${using.map((s) => `„${s.id}"`).join(', ')} verwendet — dort zuerst das Projekt lösen.`,
+            fmt(_('The project “{id}” is still used by {by} — detach the project there first.'), {
+                id,
+                by: using.map((s) => `“${s.id}”`).join(', '),
+            }),
         );
     }
     persist(
@@ -281,7 +294,10 @@ export function setScheduleProject(
     const all = loadRecurringInvoices(opts.path);
     const schedule = all.find((s) => s.id === scheduleId && s.entityId === entityId);
     if (!schedule)
-        throw new ConfigError(`Kein wiederkehrender Posten „${scheduleId}" für ${entityId}.`, opts.path ?? '');
+        throw new ConfigError(
+            fmt(_('No recurring item “{id}” for {entity}.'), { id: scheduleId, entity: entityId }),
+            opts.path ?? '',
+        );
     if (projectId === null) delete schedule.projectId;
     else schedule.projectId = projectId;
     const errors = findProjectLinkErrors(
@@ -333,7 +349,7 @@ export function suggestProjects(
     for (const s of open) {
         const contactId = s.customer.contactId;
         if (!contactId) {
-            skipped.push({ scheduleId: s.id, reason: 'kein Kunden-Kontakt (customer.contactId)' });
+            skipped.push({ scheduleId: s.id, reason: _('no customer contact (customer.contactId)') });
             continue;
         }
         byCustomer.set(contactId, [...(byCustomer.get(contactId) ?? []), s]);

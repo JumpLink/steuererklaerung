@@ -14,6 +14,7 @@
  */
 
 import { z } from 'zod';
+import { _, fmt } from '../../lib/i18n.ts';
 import type { RecurringEntry } from './recurring.ts';
 
 /** The person a project's cover letters address. Text only: we never guess a gender from a name. */
@@ -58,13 +59,31 @@ export function projectLinkError(
     if (!schedule.projectId) return undefined;
     const project = projects.find((p) => p.id === schedule.projectId);
     if (!project) {
-        return `Wiederkehrender Posten „${schedule.id}": Projekt „${schedule.projectId}" existiert nicht.`;
+        return fmt(_('Recurring item “{id}”: project “{project}” does not exist.'), {
+            id: schedule.id,
+            project: schedule.projectId,
+        });
     }
     if (!schedule.customer.contactId) {
-        return `Wiederkehrender Posten „${schedule.id}" gehört zu Projekt „${project.name}", hat aber keinen Kunden-Kontakt (customer.contactId) — Kunde nicht vergleichbar.`;
+        return fmt(
+            _(
+                'Recurring item “{id}” belongs to project “{project}” but has no customer contact (customer.contactId) — customer not comparable.',
+            ),
+            { id: schedule.id, project: project.name },
+        );
     }
     if (schedule.customer.contactId !== project.contactId) {
-        return `Wiederkehrender Posten „${schedule.id}" hat einen anderen Kunden (${schedule.customer.contactId}) als Projekt „${project.name}" (${project.contactId}).`;
+        return fmt(
+            _(
+                'Recurring item “{id}” has a different customer ({customer}) than project “{project}” ({projectCustomer}).',
+            ),
+            {
+                id: schedule.id,
+                customer: schedule.customer.contactId,
+                project: project.name,
+                projectCustomer: project.contactId,
+            },
+        );
     }
     return undefined;
 }
@@ -81,7 +100,7 @@ export function findProjectLinkErrors(
     const errors: string[] = [];
     const seen = new Set<string>();
     for (const p of projects) {
-        if (seen.has(p.id)) errors.push(`Projekt-Id „${p.id}" ist doppelt vergeben.`);
+        if (seen.has(p.id)) errors.push(fmt(_('The project id “{id}” is given twice.'), { id: p.id }));
         seen.add(p.id);
     }
     for (const s of schedules) {

@@ -17,6 +17,7 @@
  * Pure: bookings, decisions, rules and invoices come in, nothing is read or written.
  */
 
+import { _, fmt } from '../lib/i18n.ts';
 import { round2 } from '../lib/money.ts';
 import type { EuerKind } from './euer-aggregate.ts';
 
@@ -99,12 +100,12 @@ export function passendeProjektRegel(
 function aus(entscheidung: ProjektEntscheidung | undefined, bekannt: ReadonlySet<string>): ProjektZuordnung | null {
     if (!entscheidung) return null;
     if (entscheidung.projectId == null) {
-        return { projectId: null, herkunft: { art: 'keine', label: 'manuell: kein Projekt' } };
+        return { projectId: null, herkunft: { art: 'keine', label: _('by hand: no project') } };
     }
     // A project that was deleted since: the decision no longer assigns anything, and it does not fall
     // back to a rule either — the person decided, and what they decided no longer exists.
     if (!bekannt.has(entscheidung.projectId)) return NIE;
-    return { projectId: entscheidung.projectId, herkunft: { art: 'manuell', label: 'manuell' } };
+    return { projectId: entscheidung.projectId, herkunft: { art: 'manuell', label: _('by hand') } };
 }
 
 /**
@@ -127,7 +128,7 @@ export function projektFuerBuchung(
     if (!regel) return NIE;
     return {
         projectId: regel.projekt,
-        herkunft: { art: 'regel', label: `via Regel „${regel.muster.trim()}“`, regel },
+        herkunft: { art: 'regel', label: fmt(_('via rule “{rule}”'), { rule: regel.muster.trim() }), regel },
     };
 }
 
@@ -142,10 +143,15 @@ export function danachGilt(
     const rest = entscheidungen.filter((e) => e.teilNr !== teilNr);
     const z = projektFuerBuchung(buchung, rest, regeln, new Set(projekte.keys()), teilNr);
     if (z.projectId == null) {
-        return z.herkunft?.art === 'keine' ? 'Danach gilt: manuell kein Projekt.' : 'Danach gilt: kein Projekt.';
+        return z.herkunft?.art === 'keine'
+            ? _('Then this applies: by hand no project.')
+            : _('Then this applies: no project.');
     }
     const name = projekte.get(z.projectId) ?? z.projectId;
-    return `Danach gilt: ${z.herkunft?.label ?? 'manuell'} → Projekt „${name}“.`;
+    return fmt(_('Then this applies: {origin} → project “{name}”.'), {
+        origin: z.herkunft?.label ?? _('by hand'),
+        name,
+    });
 }
 
 // --- Kosten ---------------------------------------------------------------------------------
