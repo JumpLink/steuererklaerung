@@ -21,7 +21,7 @@
 
 import { fmtDe as fmt, round2 } from '../lib/money.ts';
 import type { EuerKind } from './euer-aggregate.ts';
-import { impliedRate } from './euer-classify.ts';
+import { impliedRate, UNKLASSIFIZIERT } from './euer-classify.ts';
 import { buchungZeile, capBetroffen, handlungInOrdnung, hinweisFingerprint, type Hinweis } from './hinweise.ts';
 import { isEuCountry } from './reverse-charge.ts';
 import { gleichePartei, parteiSchluessel } from './serie.ts';
@@ -76,7 +76,6 @@ export function landAusUstId(id: string | null | undefined): string | null {
     return /^[A-Z]{2}[A-Z0-9]{2,13}$/.test(s) ? s.slice(0, 2) : null;
 }
 
-const UNKLASSIFIZIERT = '(unklassifiziert)';
 const auslaendisch = (land: string | null | undefined): land is string => !!land && land !== 'DE';
 
 interface Grund {

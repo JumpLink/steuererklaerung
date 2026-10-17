@@ -21,6 +21,7 @@
 import { fmtDe as fmt, round2 } from '../lib/money.ts';
 import { dayDiff } from '../lib/transactions/reconcile.ts';
 import type { EuerKind } from './euer-aggregate.ts';
+import { UNKLASSIFIZIERT } from './euer-classify.ts';
 import {
     buchungZeile,
     capBetroffen,
@@ -46,7 +47,7 @@ export const ANLAGE_KATEGORIEN: ReadonlySet<string> = new Set([
     '0420 Büroeinrichtung/GWG',
     '4930 Bürobedarf',
     '4650 Sonstige Betriebsausgaben',
-    '(unklassifiziert)',
+    UNKLASSIFIZIERT,
 ]);
 /** An asset matches an expense by cost when it is within 1 % (at least 1 €)… App choice. */
 export const ANLAGE_ABGLEICH_ANTEIL = 0.01;

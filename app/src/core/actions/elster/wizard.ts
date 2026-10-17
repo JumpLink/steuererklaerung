@@ -15,6 +15,7 @@
 import type { SyncConfig } from '../../config/index.ts';
 import type { ElsterConfig } from '../../config/index.ts';
 import { fmtDe as fmt } from '../../lib/money.ts';
+import { _, _n, fmt as tfmt } from '../../lib/i18n.ts';
 import type { EuerTxAggregate } from '../../elster/euer-transactions.ts';
 import type { UsteAggregate } from '../../elster/uste-aggregate.ts';
 import { euerReportByTransactions } from './euer.ts';
@@ -133,19 +134,22 @@ export interface TaxReturnPlanInputs {
 function businessSummary(inp: TaxReturnPlanInputs): TaxReturnSummary {
     const bal = inp.uste.closingBalance; // ≥ 0 = Abschlusszahlung (owed) · < 0 = Erstattung (back)
     const secondary: TaxReturnSummaryLine[] = [
-        { label: 'Gewinn (EÜR)', amount: inp.euer.totals.profit },
-        { label: 'USt-Zahllast', amount: inp.euer.totals.vatPayable },
+        { label: _('Profit (EÜR)'), amount: inp.euer.totals.profit },
+        { label: _('USt-Zahllast'), amount: inp.euer.totals.vatPayable },
     ];
-    if (inp.gewst) secondary.push({ label: 'GewSt-Messbetrag', amount: inp.gewst.result.messbetrag });
+    if (inp.gewst) secondary.push({ label: _('GewSt-Messbetrag'), amount: inp.gewst.result.messbetrag });
     if (inp.feststellung)
-        secondary.push({ label: 'Festgestellte Einkünfte', amount: inp.feststellung.result.festgestellteEinkuenfte });
+        secondary.push({
+            label: _('Festgestellte Einkünfte'),
+            amount: inp.feststellung.result.festgestellteEinkuenfte,
+        });
     return {
         primary: {
-            label: bal >= 0 ? 'Voraussichtliche Nachzahlung' : 'Voraussichtliche Erstattung',
+            label: bal >= 0 ? _('Expected additional payment') : _('Expected refund'),
             amount: Math.abs(bal),
             kind: bal >= 0 ? 'payment' : 'refund',
         },
-        context: `USt-Abschluss ${inp.year}`,
+        context: tfmt(_('USt closing balance {year}'), { year: inp.year }),
         secondary,
     };
 }
@@ -156,47 +160,47 @@ function estSummary(report: EstReport): TaxReturnSummary {
     // r.erstattung: ≥ 0 = Erstattung (refund/green) · < 0 = Nachzahlung (payment/amber).
     return {
         primary: {
-            label: r.erstattung >= 0 ? 'Voraussichtliche Erstattung' : 'Voraussichtliche Nachzahlung',
+            label: r.erstattung >= 0 ? _('Expected refund') : _('Expected additional payment'),
             amount: Math.abs(r.erstattung),
             kind: r.erstattung >= 0 ? 'refund' : 'payment',
         },
-        context: `Einkommensteuer ${report.year}`,
+        context: tfmt(_('Income tax {year}'), { year: report.year }),
         secondary: [
-            { label: 'zu versteuerndes Einkommen', amount: r.zvE },
-            { label: 'Festzusetzende ESt', amount: r.festzusetzendeESt },
+            { label: _('Taxable income (zvE)'), amount: r.zvE },
+            { label: _('Income tax assessed'), amount: r.festzusetzendeESt },
         ],
     };
 }
 
 /** Build the form previews from the computed reports. */
 function buildFormPreviews(inp: TaxReturnPlanInputs): WizardFormPreview[] {
-    const blockedReason = inp.hasBetrieb ? undefined : 'Kein `betrieb`-Block in der ELSTER-Config.';
+    const blockedReason = inp.hasBetrieb ? undefined : _('No `betrieb` block in the ELSTER configuration.');
     const canExport = inp.hasBetrieb;
     const forms: WizardFormPreview[] = [];
 
     forms.push({
         form: 'euer',
-        title: 'Anlage EÜR',
+        title: _('Anlage EÜR'),
         canExport,
         blockedReason,
         figures: [
-            { label: 'Gewinn (laufend)', value: eur(inp.euer.totals.profit) },
-            { label: 'USt-Zahllast (Jahr)', value: eur(inp.euer.totals.vatPayable) },
+            { label: _('Profit (current)'), value: eur(inp.euer.totals.profit) },
+            { label: _('USt-Zahllast (year)'), value: eur(inp.euer.totals.vatPayable) },
         ],
     });
 
     const u = inp.uste;
     forms.push({
         form: 'uste',
-        title: 'USt-Jahreserklärung',
+        title: _('USt-Jahreserklärung'),
         canExport,
         blockedReason,
         figures: [
-            { label: 'Umsätze 19 %', value: eur(u.net_19) },
-            { label: 'Vereinnahmte USt', value: eur(u.vat_out) },
-            { label: 'Vorsteuer', value: eur(u.vat_in) },
+            { label: _('Revenue 19 %'), value: eur(u.net_19) },
+            { label: _('USt collected'), value: eur(u.vat_out) },
+            { label: _('Vorsteuer'), value: eur(u.vat_in) },
             {
-                label: u.closingBalance >= 0 ? 'Abschlusszahlung' : 'Erstattung',
+                label: u.closingBalance >= 0 ? _('Abschlusszahlung') : _('Refund'),
                 value: eur(Math.abs(u.closingBalance)),
             },
         ],
@@ -206,12 +210,12 @@ function buildFormPreviews(inp: TaxReturnPlanInputs): WizardFormPreview[] {
         const r = inp.gewst.result;
         forms.push({
             form: 'gewst',
-            title: 'Gewerbesteuer',
+            title: _('Gewerbesteuer'),
             canExport,
             blockedReason,
             figures: [
-                { label: 'Gewerbeertrag', value: eur(r.gewerbeertrag) },
-                { label: 'Steuermessbetrag', value: eur(r.messbetrag) },
+                { label: _('Gewerbeertrag'), value: eur(r.gewerbeertrag) },
+                { label: _('Steuermessbetrag'), value: eur(r.messbetrag) },
             ],
         });
     }
@@ -220,13 +224,13 @@ function buildFormPreviews(inp: TaxReturnPlanInputs): WizardFormPreview[] {
         const res = inp.feststellung.result;
         forms.push({
             form: 'feststellung',
-            title: 'Feststellung (GbR)',
+            title: _('Feststellung (GbR)'),
             canExport,
             blockedReason,
             // Names + Anteile only — never the partners' Steuer-IdNr.
             figures: [
-                { label: 'Festgestellte Einkünfte', value: eur(res.festgestellteEinkuenfte) },
-                { label: 'Einkünfte gesamt', value: eur(res.einkuenfteGesamt) },
+                { label: _('Festgestellte Einkünfte'), value: eur(res.festgestellteEinkuenfte) },
+                { label: _('Total income'), value: eur(res.einkuenfteGesamt) },
                 ...res.allocations.map((a) => ({ label: a.gesellschafter.name, value: eur(a.gesamtAnteil) })),
             ],
         });
@@ -249,85 +253,116 @@ export function assembleTaxReturnPlan(inp: TaxReturnPlanInputs): TaxReturnPlan {
     if (!inp.euer.adjustmentsApplied) {
         steps.push({
             id: 'vollstaendigkeit',
-            title: 'Vollständigkeit',
-            tab: 'Vollständig',
+            title: _('Completeness'),
+            tab: _('Complete'),
             status: 'blocked',
-            headline: 'Ohne Jahresabschluss-Anpassungen — ELSTER-Config fehlt.',
-            details: ['Die Zahlen sind eine rohe Kassensicht (ohne AfA/§24/Privatanteil).'],
-            actions: [{ label: 'Einstellungen öffnen', view: 'settings' }],
+            headline: _('Without the year-end adjustments — the ELSTER configuration is missing.'),
+            details: [_('The figures are a raw cash view (no AfA/§24/private share).')],
+            actions: [{ label: _('Open settings'), view: 'settings' }],
         });
     } else {
         const uncl = cov.unclassified.length;
         steps.push({
             id: 'vollstaendigkeit',
-            title: 'Vollständigkeit',
-            tab: 'Vollständig',
+            title: _('Completeness'),
+            tab: _('Complete'),
             status: uncl === 0 ? 'ok' : 'blocked',
             headline:
                 uncl === 0
-                    ? `Alle ${cov.transactions} Buchungen klassifiziert.`
-                    : `${uncl} von ${cov.transactions} Buchungen unklassifiziert — vor Abgabe klären.`,
+                    ? tfmt(_n('All {n} booking classified.', 'All {n} bookings classified.', cov.transactions), {
+                          n: cov.transactions,
+                      })
+                    : tfmt(_('{n} of {total} bookings unclassified — settle before filing.'), {
+                          n: uncl,
+                          total: cov.transactions,
+                      }),
             details: [
-                `via Beleg: ${cov.classifiedByDocument} · via Regel: ${cov.classifiedByRule}`,
-                ...cov.unclassified
-                    .slice(0, 5)
-                    .map((u) => `unklar: ${u.bookingDate} ${fmt(u.amount)} € ${u.counterparty ?? ''}`.trim()),
+                tfmt(_('via receipt: {byDoc} · via rule: {byRule}'), {
+                    byDoc: cov.classifiedByDocument,
+                    byRule: cov.classifiedByRule,
+                }),
+                ...cov.unclassified.slice(0, 5).map((u) =>
+                    tfmt(_('unclear: {date} {amount} € {counterparty}'), {
+                        date: u.bookingDate,
+                        amount: fmt(u.amount),
+                        counterparty: u.counterparty ?? '',
+                    }).trim(),
+                ),
             ],
             // Open bookings are fixed in the Buchungen view — deep-link straight there.
-            actions: uncl === 0 ? undefined : [{ label: 'Buchungen öffnen', view: 'transactions' }],
+            actions: uncl === 0 ? undefined : [{ label: _('Open bookings'), view: 'transactions' }],
         });
     }
 
     // 2 · Anpassungen: the non-cash year-end items that were folded in.
     const anp: string[] = [];
     const afa = inp.euer.expenses.find((c) => c.category.startsWith('4830'));
-    if (afa) anp.push(`AfA: ${eur(afa.net)}`);
+    if (afa) anp.push(tfmt(_('AfA: {amount}'), { amount: eur(afa.net) }));
     const priv = inp.euer.income.find((c) => c.category.startsWith('8924'));
-    if (priv) anp.push(`Privatanteil (unentgeltl. Wertabgabe): ${eur(priv.net)}`);
+    if (priv) anp.push(tfmt(_('Private share (unentgeltliche Wertabgabe): {amount}'), { amount: eur(priv.net) }));
     if (inp.euer.totals.nachtraeglichNet !== 0)
-        anp.push(`§24 nachträglich (netto): ${eur(inp.euer.totals.nachtraeglichNet)}`);
-    if (inp.betriebsaufgabeSchaetzung) anp.push('Betriebsaufgabe: gemeine Werte konfiguriert (Schätzung — prüfen).');
+        anp.push(tfmt(_('§24 subsequent (net): {amount}'), { amount: eur(inp.euer.totals.nachtraeglichNet) }));
+    if (inp.betriebsaufgabeSchaetzung)
+        anp.push(_('Betriebsaufgabe: gemeine Werte configured (an estimate — please check).'));
     steps.push({
         id: 'anpassungen',
-        title: 'Jahresabschluss-Anpassungen',
-        tab: 'Anpassung',
+        title: _('Year-end adjustments'),
+        tab: _('Adjustments'),
         status: inp.betriebsaufgabeSchaetzung ? 'warn' : anp.length ? 'ok' : 'info',
-        headline: anp.length ? `${anp.length} Anpassung(en) berücksichtigt.` : 'Keine Anpassungen konfiguriert.',
-        details: anp.length ? anp : ['AfA/Privatanteil/§24/Betriebsaufgabe via `adjustments` in der ELSTER-Config.'],
+        headline: anp.length
+            ? tfmt(_n('{n} adjustment taken into account.', '{n} adjustments taken into account.', anp.length), {
+                  n: anp.length,
+              })
+            : _('No adjustments configured.'),
+        details: anp.length
+            ? anp
+            : [_('AfA/private share/§24/Betriebsaufgabe via `adjustments` in the ELSTER configuration.')],
     });
 
     // 3 · Formulare: previews + exportability.
     const exportable = forms.filter((f) => f.canExport).length;
     steps.push({
         id: 'formulare',
-        title: 'Formular-Vorschauen',
-        tab: 'Formulare',
+        title: _('Form previews'),
+        tab: _('Forms'),
         status: exportable === forms.length ? 'ok' : 'blocked',
         headline:
             exportable === forms.length
-                ? `${forms.length} Formulare bereit (Prüf-PDF + ERiC-XML).`
-                : `${forms.length - exportable} von ${forms.length} Formularen nicht exportierbar.`,
+                ? tfmt(
+                      _n(
+                          '{n} form ready (check PDF + ERiC XML).',
+                          '{n} forms ready (check PDF + ERiC XML).',
+                          forms.length,
+                      ),
+                      { n: forms.length },
+                  )
+                : tfmt(_('{n} of {total} forms cannot be exported.'), {
+                      n: forms.length - exportable,
+                      total: forms.length,
+                  }),
         details: forms.map(
             (f) => `${f.title}: ${f.figures[0]?.value ?? '—'}${f.canExport ? '' : ` (${f.blockedReason})`}`,
         ),
         // Not exportable = the `betrieb`-Block is missing → the Einstellungen (ELSTER config) is where it's added.
-        actions: exportable === forms.length ? undefined : [{ label: 'Einstellungen öffnen', view: 'settings' }],
+        actions: exportable === forms.length ? undefined : [{ label: _('Open settings'), view: 'settings' }],
     });
 
     // 4 · Prüfung: the human-judgment items to confirm before filing.
     const checks: string[] = [];
     if (inp.betriebsaufgabeSchaetzung)
-        checks.push('Gemeine Werte der Betriebsaufgabe bestätigen (§16/§34 — Schätzung).');
-    checks.push('Klassifikation stichprobenartig prüfen (`elster euer report --detail`).');
-    checks.push('Zahlen gegen Vorjahr / Steuerberater-Referenz abgleichen.');
+        checks.push(_('Confirm the gemeine Werte of the Betriebsaufgabe (§16/§34 — an estimate).'));
+    checks.push(_('Spot-check the classification (`elster euer report --detail`).'));
+    checks.push(_('Reconcile the figures against the prior year / the tax adviser’s reference.'));
     if (inp.gewst?.result.messbetrag === 0)
-        checks.push('GewSt-Messbetrag 0 € (unter Freibetrag) — Erklärung wird dennoch abgegeben.');
+        checks.push(_('GewSt-Messbetrag 0 € (below the Freibetrag) — the return is filed all the same.'));
     steps.push({
         id: 'pruefung',
-        title: 'Gegenprüfung',
-        tab: 'Prüfung',
+        title: _('Cross-check'),
+        tab: _('Check'),
         status: inp.betriebsaufgabeSchaetzung ? 'warn' : 'info',
-        headline: `${checks.length} Punkt(e) vor Abgabe prüfen.`,
+        headline: tfmt(_n('{n} point to check before filing.', '{n} points to check before filing.', checks.length), {
+            n: checks.length,
+        }),
         details: checks,
     });
 
@@ -335,23 +370,37 @@ export function assembleTaxReturnPlan(inp: TaxReturnPlanInputs): TaxReturnPlan {
     const blocked = steps.some((s) => s.status === 'blocked');
     const ready = !blocked && exportable === forms.length;
     const summary: string[] = [
-        `Gewinn (laufend): ${eur(inp.euer.totals.profit)}`,
-        `USt-Abschluss: ${eur(inp.uste.closingBalance)} (${inp.uste.closingBalance >= 0 ? 'Zahlung' : 'Erstattung'})`,
+        tfmt(_('Profit (current): {amount}'), { amount: eur(inp.euer.totals.profit) }),
+        tfmt(_('USt closing balance: {amount} ({kind})'), {
+            amount: eur(inp.uste.closingBalance),
+            kind: inp.uste.closingBalance >= 0 ? _('payment') : _('refund'),
+        }),
     ];
     if (inp.feststellung)
-        summary.push(`Festgestellte Einkünfte: ${eur(inp.feststellung.result.festgestellteEinkuenfte)}`);
-    if (inp.gewst) summary.push(`GewSt-Messbetrag: ${eur(inp.gewst.result.messbetrag)}`);
+        summary.push(
+            tfmt(_('Festgestellte Einkünfte: {amount}'), {
+                amount: eur(inp.feststellung.result.festgestellteEinkuenfte),
+            }),
+        );
+    if (inp.gewst) summary.push(tfmt(_('GewSt-Messbetrag: {amount}'), { amount: eur(inp.gewst.result.messbetrag) }));
     summary.push(
         ready
-            ? `${exportable} Formulare als ERiC-XML exportierbar → in Mein ELSTER hochladen.`
-            : 'Noch nicht abgabebereit — offene Schritte oben.',
+            ? tfmt(
+                  _n(
+                      '{n} form exportable as ERiC XML → upload it in Mein ELSTER.',
+                      '{n} forms exportable as ERiC XML → upload them in Mein ELSTER.',
+                      exportable,
+                  ),
+                  { n: exportable },
+              )
+            : _('Not ready to file yet — open steps above.'),
     );
     steps.push({
         id: 'zusammenfassung',
-        title: 'Zusammenfassung & Abgabe',
-        tab: 'Abgabe',
+        title: _('Summary & filing'),
+        tab: _('Filing'),
         status: ready ? 'ok' : 'blocked',
-        headline: ready ? 'Abgabebereit — XML für Mein ELSTER exportieren.' : 'Noch nicht abgabebereit.',
+        headline: ready ? _('Ready to file — export the XML for Mein ELSTER.') : _('Not ready to file yet.'),
         details: summary,
     });
 
@@ -427,76 +476,131 @@ export function assembleEstPlan(report: EstReport): TaxReturnPlan {
 
     // 1 · Einkünfte & Lohnsteuerbescheinigung.
     const complete: string[] = [
-        `Bruttoarbeitslohn: ${eur(r.bruttoarbeitslohn)} · einbehaltene LSt: ${eur(r.abrechnung.est.einbehalten)}`,
+        tfmt(_('Gross wages: {gross} · Lohnsteuer withheld: {withheld}'), {
+            gross: eur(r.bruttoarbeitslohn),
+            withheld: eur(r.abrechnung.est.einbehalten),
+        }),
     ];
-    if (r.einkuenfteGewerbe > 0) complete.push(`Einkünfte aus Gewerbebetrieb: ${eur(r.einkuenfteGewerbe)}`);
+    if (r.einkuenfteGewerbe > 0)
+        complete.push(tfmt(_('Einkünfte aus Gewerbebetrieb: {amount}'), { amount: eur(r.einkuenfteGewerbe) }));
     if (report.gehaltPlausibilitaet) {
         const g = report.gehaltPlausibilitaet;
         complete.push(
-            `Netto-Plausibilität: erkannt ${eur(g.gehaltNettoSumme)} vs. erwartet ${eur(g.netUngefaehr)} (${signedEur(g.gehaltNettoSumme - g.netUngefaehr)}, ${g.abweichungProzent} %)`,
+            tfmt(_('Net plausibility: detected {detected} vs. expected {expected} ({delta}, {percent} %)'), {
+                detected: eur(g.gehaltNettoSumme),
+                expected: eur(g.netUngefaehr),
+                delta: signedEur(g.gehaltNettoSumme - g.netUngefaehr),
+                percent: g.abweichungProzent,
+            }),
         );
     }
     const unclassified = report.aggregate.coverage.unclassified.length;
     if (unclassified > 0)
-        complete.push(`${unclassified} Buchung(en) unklassifiziert — als Thema einordnen oder ignorieren.`);
+        complete.push(
+            tfmt(
+                _n(
+                    '{n} booking unclassified — assign it to a topic or ignore it.',
+                    '{n} bookings unclassified — assign them to a topic or ignore them.',
+                    unclassified,
+                ),
+                { n: unclassified },
+            ),
+        );
     const plausibilityOff =
         (report.gehaltPlausibilitaet?.abweichungProzent ?? 0) < -10 ||
         (report.gehaltPlausibilitaet?.abweichungProzent ?? 0) > 10;
     steps.push({
         id: 'vollstaendigkeit',
-        title: 'Einkünfte & Lohnsteuerbescheinigung',
-        tab: 'Einkünfte',
+        title: _('Income & Lohnsteuerbescheinigung'),
+        tab: _('Income'),
         status: !report.hasBescheinigung ? 'blocked' : plausibilityOff ? 'warn' : 'ok',
         headline: !report.hasBescheinigung
-            ? `Keine Lohnsteuerbescheinigung für ${report.year} in der ESt-Config.`
-            : `Bruttoarbeitslohn ${eur(r.bruttoarbeitslohn)} erfasst.`,
+            ? tfmt(_('No Lohnsteuerbescheinigung for {year} in the ESt configuration.'), { year: report.year })
+            : tfmt(_('Gross wages {amount} recorded.'), { amount: eur(r.bruttoarbeitslohn) }),
         details: report.hasBescheinigung
             ? complete
-            : ['jahre[].bruttoarbeitslohn/lohnsteuer/soli/kirchensteuer in der est-config.json eintragen.'],
+            : [_('Enter jahre[].bruttoarbeitslohn/lohnsteuer/soli/kirchensteuer in est-config.json.')],
         // No Lohnsteuerbescheinigung → it's entered in the ESt config (Einstellungen); otherwise open
         // bookings to classify are fixed in the Buchungen view.
         actions: !report.hasBescheinigung
-            ? [{ label: 'Einstellungen öffnen', view: 'settings' }]
+            ? [{ label: _('Open settings'), view: 'settings' }]
             : unclassified > 0
-              ? [{ label: 'Buchungen öffnen', view: 'transactions' }]
+              ? [{ label: _('Open bookings'), view: 'transactions' }]
               : undefined,
     });
 
     // 2 · Abzüge (Werbungskosten, Vorsorge, Sonderausgaben, agB, §35a).
     const abz: string[] = [
         r.werbungskosten.pauschbetragGewonnen
-            ? `Werbungskosten: Arbeitnehmer-Pauschbetrag ${eur(r.werbungskosten.pauschbetrag)} (höher als der Einzelnachweis).`
-            : `Werbungskosten: Einzelnachweis ${eur(r.werbungskosten.angesetzt)} (über der Pauschale ${eur(r.werbungskosten.pauschbetrag)}).`,
-        `Vorsorge abziehbar: ${eur(r.vorsorge.abziehbar)} (Altersvorsorge ${eur(r.vorsorge.altersvorsorgeAbziehbar)} + KV/PV/sonstige ${eur(r.vorsorge.sonstigeAbziehbar)}).`,
-        `Sonderausgaben (KiSt/Spenden): ${eur(r.sonderausgaben.nichtVorsorgeAngesetzt)}.`,
+            ? tfmt(_('Work-related expenses: employee lump sum {amount} (higher than the itemised proof).'), {
+                  amount: eur(r.werbungskosten.pauschbetrag),
+              })
+            : tfmt(_('Work-related expenses: itemised {amount} (above the lump sum {lump}).'), {
+                  amount: eur(r.werbungskosten.angesetzt),
+                  lump: eur(r.werbungskosten.pauschbetrag),
+              }),
+        tfmt(_('Insurance contributions deductible: {amount} (retirement {retirement} + health/care/other {other}).'), {
+            amount: eur(r.vorsorge.abziehbar),
+            retirement: eur(r.vorsorge.altersvorsorgeAbziehbar),
+            other: eur(r.vorsorge.sonstigeAbziehbar),
+        }),
+        tfmt(_('Sonderausgaben (church tax/donations): {amount}.'), {
+            amount: eur(r.sonderausgaben.nichtVorsorgeAngesetzt),
+        }),
     ];
     if (r.agb.krankheitskosten > 0) {
         abz.push(
             r.agb.abziehbar > 0
-                ? `agB: ${eur(r.agb.abziehbar)} über der zumutbaren Belastung (${eur(r.agb.zumutbareBelastung)}).`
-                : `agB: ${eur(r.agb.krankheitskosten)} vollständig von der zumutbaren Belastung (${eur(r.agb.zumutbareBelastung)}) aufgezehrt.`,
+                ? tfmt(_('agB: {amount} above the zumutbare Belastung ({limit}).'), {
+                      amount: eur(r.agb.abziehbar),
+                      limit: eur(r.agb.zumutbareBelastung),
+                  })
+                : tfmt(_('agB: {amount} entirely absorbed by the zumutbare Belastung ({limit}).'), {
+                      amount: eur(r.agb.krankheitskosten),
+                      limit: eur(r.agb.zumutbareBelastung),
+                  }),
         );
     }
     const par35aOffen = report.aggregate.par35aOhneArbeitskosten;
     if (par35aOffen > 0) {
         abz.push(
-            `§35a: ${par35aOffen} Handwerker-/DL-Buchung(en) ohne Arbeitskostenanteil — nur der Arbeitslohn (nicht Material) zählt; aus der Rechnung eintragen (Zahlung ist unbar ✓).`,
+            tfmt(
+                _n(
+                    '§35a: {n} trade/service booking without a labour-cost share — only the labour (not the material) counts; enter it from the invoice (the payment is cashless ✓).',
+                    '§35a: {n} trade/service bookings without a labour-cost share — only the labour (not the material) counts; enter it from the invoice (the payment is cashless ✓).',
+                    par35aOffen,
+                ),
+                { n: par35aOffen },
+            ),
         );
     } else if (r.ermaessigung35a.berechnet > 0) {
         abz.push(
-            `§35a-Ermäßigung: ${eur(r.ermaessigung35a.angesetzt)}${r.ermaessigung35a.verfallen > 0 ? ` (${eur(r.ermaessigung35a.verfallen)} verfallen)` : ''}.`,
+            r.ermaessigung35a.verfallen > 0
+                ? tfmt(_('§35a reduction: {amount} ({expired} expired).'), {
+                      amount: eur(r.ermaessigung35a.angesetzt),
+                      expired: eur(r.ermaessigung35a.verfallen),
+                  })
+                : tfmt(_('§35a reduction: {amount}.'), { amount: eur(r.ermaessigung35a.angesetzt) }),
         );
     }
     if (report.aggregate.vorsorgeKandidat > 0) {
         abz.push(
-            `Versicherungs-Kandidaten aus Buchungen: ${eur(report.aggregate.vorsorgeKandidat)} — in Basis-KV/PV vs. sonstige sortieren (Config).`,
+            tfmt(
+                _(
+                    'Insurance candidates from bookings: {amount} — sort into basic health/care vs. other (configuration).',
+                ),
+                { amount: eur(report.aggregate.vorsorgeKandidat) },
+            ),
         );
     }
     steps.push({
         id: 'anpassungen',
-        title: 'Abzüge',
+        title: _('Deductions'),
         status: par35aOffen > 0 ? 'warn' : 'ok',
-        headline: `Gesamtbetrag der Einkünfte ${eur(r.gesamtbetragEinkuenfte)} → zvE ${eur(r.zvE)}.`,
+        headline: tfmt(_('Total amount of income {total} → zvE {zve}.'), {
+            total: eur(r.gesamtbetragEinkuenfte),
+            zve: eur(r.zvE),
+        }),
         details: abz,
     });
 
@@ -504,38 +608,43 @@ export function assembleEstPlan(report: EstReport): TaxReturnPlan {
     const forms: WizardFormPreview[] = [
         {
             form: 'est',
-            title: 'ESt 1 A + Anlage N (Schätzung)',
+            title: _('ESt 1 A + Anlage N (estimate)'),
             canExport: true,
             figures: [
-                { label: 'zu versteuerndes Einkommen', value: eur(r.zvE) },
-                { label: 'tarifliche ESt', value: eur(r.tariflicheESt) },
-                { label: 'Steuerermäßigung §35a', value: eur(r.ermaessigung35a.angesetzt) },
-                { label: 'festzusetzende ESt', value: eur(r.festzusetzendeESt) },
-                { label: r.erstattung >= 0 ? 'Erstattung' : 'Nachzahlung', value: signedEur(r.erstattung) },
+                { label: _('Taxable income (zvE)'), value: eur(r.zvE) },
+                { label: _('Tariff income tax'), value: eur(r.tariflicheESt) },
+                { label: _('Tax reduction §35a'), value: eur(r.ermaessigung35a.angesetzt) },
+                { label: _('Income tax assessed'), value: eur(r.festzusetzendeESt) },
+                { label: r.erstattung >= 0 ? _('Refund') : _('Additional payment'), value: signedEur(r.erstattung) },
             ],
         },
     ];
     steps.push({
         id: 'formulare',
-        title: 'Formular-Vorschau',
-        tab: 'Formulare',
+        title: _('Form preview'),
+        tab: _('Forms'),
         status: 'info',
-        headline:
-            'ESt 1 A + Anlage N (Schätzung) — Prüf-PDF + E10-XML exportierbar; Abgabe via ELSTER-Direktversand (Freigabe) oder Web-Formular.',
+        headline: _(
+            'ESt 1 A + Anlage N (estimate) — check PDF + E10 XML exportable; file via ELSTER direct submission (release) or the web form.',
+        ),
         details: forms[0].figures.map((f) => `${f.label}: ${f.value}`),
     });
 
     // 4 · Gegenprüfung (the Günstigerprüfungen the Finanzamt runs, the duty to keep receipts).
     steps.push({
         id: 'pruefung',
-        title: 'Gegenprüfung',
-        tab: 'Prüfung',
+        title: _('Cross-check'),
+        tab: _('Check'),
         status: 'info',
-        headline: 'Punkte, die den Bescheid von der Schätzung abweichen lassen können.',
+        headline: _('Points that can make the assessment differ from the estimate.'),
         details: [
-            'Günstigerprüfungen macht das Finanzamt: Kindergeld/Kinderfreibetrag (§31), Kapitalerträge (§32d Abs. 6) + Sparer-Pauschbetrag, Vorsorge-Altregelung (§10 Abs. 4a).',
-            '§35a: Rechnung + unbare Zahlung erforderlich (Bankzahlung erfüllt das) — Belege aufbewahren.',
-            'Der Steuerbescheid ist verbindlich; diese Zahlen sind eine Schätzung.',
+            _(
+                'The Finanzamt runs the Günstigerprüfungen: Kindergeld/Kinderfreibetrag (§31), capital income (§32d (6)) + Sparer-Pauschbetrag, the old insurance rule (§10 (4a)).',
+            ),
+            _(
+                '§35a: an invoice + a cashless payment are required (a bank payment satisfies that) — keep the receipts.',
+            ),
+            _('The tax assessment is what binds; these figures are an estimate.'),
         ],
     });
 
@@ -544,16 +653,30 @@ export function assembleEstPlan(report: EstReport): TaxReturnPlan {
     const ready = !blocked;
     steps.push({
         id: 'zusammenfassung',
-        title: 'Zusammenfassung',
-        tab: 'Abgabe',
+        title: _('Summary'),
+        tab: _('Filing'),
         status: ready ? 'ok' : 'blocked',
         headline: ready
-            ? `Voraussichtliche ${r.erstattung >= 0 ? 'Erstattung' : 'Nachzahlung'}: ${signedEur(r.erstattung)}`
-            : 'Noch unvollständig — Lohnsteuerbescheinigung fehlt.',
+            ? r.erstattung >= 0
+                ? tfmt(_('Expected refund: {amount}'), { amount: signedEur(r.erstattung) })
+                : tfmt(_('Expected additional payment: {amount}'), { amount: signedEur(r.erstattung) })
+            : _('Still incomplete — the Lohnsteuerbescheinigung is missing.'),
         details: [
-            `festzusetzende ESt ${eur(r.festzusetzendeESt)} − einbehaltene LSt ${eur(r.abrechnung.est.einbehalten)} = ${signedEur(r.abrechnung.est.erstattung)}`,
-            `Soli ${eur(r.abrechnung.soli.soll)} − einbehalten ${eur(r.abrechnung.soli.einbehalten)} = ${signedEur(r.abrechnung.soli.erstattung)}`,
-            `KiSt ${eur(r.abrechnung.kirchensteuer.soll)} − einbehalten ${eur(r.abrechnung.kirchensteuer.einbehalten)} = ${signedEur(r.abrechnung.kirchensteuer.erstattung)}`,
+            tfmt(_('income tax assessed {assessed} − Lohnsteuer withheld {withheld} = {result}'), {
+                assessed: eur(r.festzusetzendeESt),
+                withheld: eur(r.abrechnung.est.einbehalten),
+                result: signedEur(r.abrechnung.est.erstattung),
+            }),
+            tfmt(_('Soli {owed} − withheld {withheld} = {result}'), {
+                owed: eur(r.abrechnung.soli.soll),
+                withheld: eur(r.abrechnung.soli.einbehalten),
+                result: signedEur(r.abrechnung.soli.erstattung),
+            }),
+            tfmt(_('KiSt {owed} − withheld {withheld} = {result}'), {
+                owed: eur(r.abrechnung.kirchensteuer.soll),
+                withheld: eur(r.abrechnung.kirchensteuer.einbehalten),
+                result: signedEur(r.abrechnung.kirchensteuer.erstattung),
+            }),
         ],
     });
 
@@ -588,12 +711,17 @@ export function buildEstPlan(
             steps: [
                 {
                     id: 'vollstaendigkeit',
-                    title: 'Einkommensteuer',
-                    tab: 'Einkünfte',
+                    title: _('Income tax'),
+                    tab: _('Income'),
                     status: 'blocked',
-                    headline: `Kein Einkommensteuertarif für ${year} hinterlegt.`,
+                    headline: tfmt(_('No income tax tariff on file for {year}.'), { year }),
                     details: [
-                        `Die Schätzung gibt es nur für belegte Veranlagungsjahre (aktuell 2025). Tarif + Konstanten für ${year} in docs/references/tax-sources.md ergänzen.`,
+                        tfmt(
+                            _(
+                                'The estimate exists only for documented assessment years (2025 at the moment). Add the tariff + constants for {year} to docs/references/tax-sources.md.',
+                            ),
+                            { year },
+                        ),
                     ],
                 },
             ],

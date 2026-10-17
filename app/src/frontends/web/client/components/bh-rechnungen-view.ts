@@ -14,7 +14,7 @@ import type { BhInvoiceForm } from './bh-invoice-form.ts';
 import {
     type DisplayInvoiceStatus,
     displayInvoiceStatus,
-    INVOICE_STATUS_LABEL,
+    invoiceStatusLabel,
 } from '../../../../core/invoices/status.ts';
 
 /** Status label + CSS modifier for a recurring reminder row. */
@@ -178,7 +178,7 @@ export class BhRechnungenView extends HTMLElement {
         ].filter(Boolean);
         return `<div class="bh-setrow bh-setrow-click" data-open="${esc(inv.id)}" role="button" tabindex="0">
         <div class="bh-setrow-text">
-          <strong><span class="bh-due-badge ${STATUS_CLASS[disp]}">${esc(INVOICE_STATUS_LABEL[disp])}</span> ${esc(who)}</strong>
+          <strong><span class="bh-due-badge ${STATUS_CLASS[disp]}">${esc(invoiceStatusLabel(disp))}</span> ${esc(who)}</strong>
           <small>${parts.join(' · ')}</small>
         </div>
         <span class="bh-set-chevron">›</span>

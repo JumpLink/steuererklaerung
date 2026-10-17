@@ -18,6 +18,7 @@ import {
     type LaufendeKostenUebersicht,
     type SerienAbstand,
 } from '../elster/laufende-kosten.ts';
+import { _ } from '../lib/i18n.ts';
 import type { PresenterSession } from './session.ts';
 import type { EntityModel } from './workspace.ts';
 
@@ -64,7 +65,7 @@ export function entscheideLaufendeKosten(
         saveLaufendeKostenEntscheidung(entity.id, key, null);
     } else {
         if (e.status === 'bestaetigt' && e.betrag != null && !(e.betrag > 0)) {
-            throw new Error('Der Betrag muss größer als 0 sein.');
+            throw new Error(_('The amount has to be greater than 0.'));
         }
         const abstand = e.status === 'bestaetigt' && e.abstand !== serie.erkannterAbstand ? e.abstand : undefined;
         const betrag =

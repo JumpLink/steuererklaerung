@@ -227,14 +227,14 @@ export default async () => {
             expect(starved.expected).toBe(130);
             expect(starved.actual).toBe(150);
             expect(starved.delta).toBe(20);
-            expect(starved.detail).toContain('belegbasiert');
+            expect(starved.detail).toContain('receipt-based');
             expect(starved.detail).toContain('Steuerkonto');
 
             // Discriminator: the SAME drift with a complete document basis stays a hard error,
             // so this downgrade cannot swallow a real register defect.
             const complete = checkUstvaVsUste({ ...reconciling, ustvaQuarters: quarters([40, 40, 30, 20]) });
             expect(complete.status).toBe('error');
-            expect(complete.detail).not.toContain('belegbasiert');
+            expect(complete.detail).not.toContain('receipt-based');
         });
 
         await it('keeps a clean reconciliation clean even when the Beleglage is thin', async () => {
@@ -324,7 +324,7 @@ export default async () => {
             expect(r.expected).toBe(837.56);
             expect(r.actual).toBe(811.53);
             expect(r.delta).toBe(-26.03);
-            expect(r.detail.includes('Vor der Abgabe')).toBe(true);
+            expect(r.detail.includes('Bring the ESt configuration in line')).toBe(true);
         });
 
         await it('warns instead of blocking once that ESt is transmitted', async () => {
@@ -334,7 +334,7 @@ export default async () => {
             const r = checkEuerVsEst(withEst(837.56, 811.53, true));
             expect(r.status).toBe('warn');
             expect(r.delta).toBe(-26.03);
-            expect(r.detail.includes('§153 AO')).toBe(true);
+            expect(r.detail.includes('§ 153 AO')).toBe(true);
         });
 
         await it('is ok when the copy matches', async () => {

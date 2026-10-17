@@ -45,9 +45,9 @@ import type { AppEntity } from '../entities.ts';
 import { deDate, deDateTime, eur, pct } from '../../../core/lib/format.ts';
 import { loadRecurringInvoices } from '../../../core/config/index.ts';
 import { loadInvoiceMailHistory, withLegacySent } from '../../../core/actions/send-invoice-email.ts';
-import { displayInvoiceStatus, normalizeInvoiceStatus } from '../../../core/invoices/status.ts';
+import { displayInvoiceStatus, invoiceStatusLabel, normalizeInvoiceStatus } from '../../../core/invoices/status.ts';
 import { verdachtTitel, zahlungZeile } from '../../../core/invoices/doppelzahlung-text.ts';
-import { GroupRows, INVOICE_STATUS_LABEL, LoadToken, amountLabel, markup } from './util.ts';
+import { GroupRows, LoadToken, amountLabel, markup } from './util.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { BhRechnungFormDialog } from './rechnung-form-dialog.ts';
 import { BhRechnungVersandDialog } from './rechnung-versand-dialog.ts';
@@ -148,7 +148,7 @@ export class BhRechnungDetailDialog {
         const disp = displayInvoiceStatus(summary.status, summary.dueDate, today);
         this.body.setTitles(
             summary.customerName || summary.number || _('Invoice'),
-            `${summary.number ? `${fmt(_('No. {number}'), { number: summary.number })} · ` : ''}${INVOICE_STATUS_LABEL[disp]}`,
+            `${summary.number ? `${fmt(_('No. {number}'), { number: summary.number })} · ` : ''}${invoiceStatusLabel(disp)}`,
         );
         this.dialog.set_child(this.body);
         this.dialog.present(parent);

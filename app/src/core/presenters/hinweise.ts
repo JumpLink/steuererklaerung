@@ -22,6 +22,7 @@ import type { ForderungenHinweisDaten } from '../invoices/forderungen-hinweis.ts
 import { vorAbgabeHinweise } from '../elster/vor-abgabe.ts';
 import type { PresenterSession } from './session.ts';
 import type { EntityModel } from './workspace.ts';
+import { _, fmt } from '../lib/i18n.ts';
 
 export type { YearHinweis } from '../actions/elster/hinweise.ts';
 
@@ -123,7 +124,14 @@ export async function markHinweisInOrdnung(
     const h = hints.find((x) => x.key === key);
     if (!h) {
         const known = hints.map((x) => x.key).join(', ') || '—';
-        throw new Error(`Kein Hinweis „${key}" für ${entity.name} ${year}. Vorhanden: ${known}`);
+        throw new Error(
+            fmt(_('No insight “{key}” for {entity} {year}. Available: {known}'), {
+                key,
+                entity: entity.name,
+                year,
+                known,
+            }),
+        );
     }
     markHinweisOk(entity.id, h, year, { today: opts.today });
     return { ok: true, hinweis: h.key, jahr: year, fingerprint: h.fingerprint! };

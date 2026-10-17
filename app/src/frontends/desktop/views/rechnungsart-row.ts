@@ -10,7 +10,7 @@
 import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 
-import { INVOICE_KIND_LABEL } from '../../../core/invoices/e-rechnung/index.ts';
+import { invoiceKindLabel } from '../../../core/invoices/e-rechnung/index.ts';
 import type { DmsDocument } from '../../../core/presenters/belege.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 import { markup } from './util.ts';
@@ -22,7 +22,7 @@ export function rechnungsartRow(
     if (!doc.invoiceKind || doc.direction === 'outgoing') return null;
     const eRechnung = doc.invoiceKind === 'e-rechnung';
     const row = new Adw.ActionRow({
-        title: INVOICE_KIND_LABEL[doc.invoiceKind],
+        title: invoiceKindLabel(doc.invoiceKind),
         subtitle: markup(doc.invoiceKindReason ?? ''),
     });
     row.set_subtitle_lines(0);
@@ -40,5 +40,5 @@ export function rechnungsartRow(
 /** Short label for a list row's subtitle, or null. */
 export function rechnungsartLabel(doc: Pick<DmsDocument, 'invoiceKind' | 'direction'>): string | null {
     if (!doc.invoiceKind || doc.direction === 'outgoing') return null;
-    return INVOICE_KIND_LABEL[doc.invoiceKind];
+    return invoiceKindLabel(doc.invoiceKind);
 }

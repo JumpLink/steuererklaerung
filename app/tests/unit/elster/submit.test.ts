@@ -64,7 +64,7 @@ export default async function () {
         it('blocks when no snapshot exists', () => {
             const r = computeSubmitReadiness(base({ snapshot: null }));
             expect(r.ready).toBe(false);
-            expect(r.blockers[0]).toContain('Kein Filing-Snapshot');
+            expect(r.blockers[0]).toContain('No filing snapshot');
         });
         it('blocks a leftover submitting latch (no blind retry)', () => {
             const r = computeSubmitReadiness(base({ snapshot: snap('submitting', TEST_XML) }));
@@ -74,7 +74,7 @@ export default async function () {
         it('blocks a stale snapshot', () => {
             const r = computeSubmitReadiness(base({ stale: true }));
             expect(r.ready).toBe(false);
-            expect(r.blockers.join(' ')).toContain('veraltet');
+            expect(r.blockers.join(' ')).toContain('outdated');
         });
         it('blocks a superseded snapshot', () => {
             const r = computeSubmitReadiness(base({ snapshot: snap('superseded', TEST_XML) }));
@@ -96,7 +96,7 @@ export default async function () {
         it('refuses a test send of a LIVE artifact (no Testmerker)', () => {
             const r = computeSubmitReadiness(base({ isTestArtifact: false, snapshot: snap('validated', LIVE_XML) }));
             expect(r.ready).toBe(false);
-            expect(r.blockers.join(' ')).toContain('keinen Testmerker');
+            expect(r.blockers.join(' ')).toContain('carries no Testmerker');
         });
         it('blocks when the snapshot has no valid Hersteller-ID (both modes)', () => {
             const r = computeSubmitReadiness(base({ herstellerIdMissing: true }));
@@ -134,7 +134,7 @@ export default async function () {
         it('refuses a live send of a TEST artifact (would be discarded)', () => {
             const r = computeSubmitReadiness(live({ isTestArtifact: true, snapshot: snap('validated', TEST_XML) }));
             expect(r.ready).toBe(false);
-            expect(r.blockers.join(' ')).toContain('würde verworfen');
+            expect(r.blockers.join(' ')).toContain('it would be discarded');
         });
         it('propagates the closed release gate blockers', () => {
             const r = computeSubmitReadiness(live({ gate: CLOSED_GATE }));
@@ -144,12 +144,12 @@ export default async function () {
         it('blocks a live send of a draft (test-first)', () => {
             const r = computeSubmitReadiness(live({ snapshot: snap('draft', LIVE_XML) }));
             expect(r.ready).toBe(false);
-            expect(r.blockers.join(' ')).toContain('test-first');
+            expect(r.blockers.join(' ')).toContain('test first');
         });
         it('blocks a double live send (already submitted)', () => {
             const r = computeSubmitReadiness(live({ alreadyFiled: true }));
             expect(r.ready).toBe(false);
-            expect(r.blockers.join(' ')).toContain('doppelter');
+            expect(r.blockers.join(' ')).toContain('second live submission');
         });
         it('requires the explicit allowLive opt-in', () => {
             const r = computeSubmitReadiness(live({ allowLive: false }));
@@ -201,7 +201,7 @@ export default async function () {
                 // Otherwise the flag silently does nothing and the sender believes it was honoured.
                 const r = computeSubmitReadiness(live({ alreadyFiled: false, isCorrection: true }));
                 expect(r.ready).toBe(false);
-                expect(r.blockers.join(' ')).toContain('nichts zu berichtigen');
+                expect(r.blockers.join(' ')).toContain('nothing to correct');
             });
         });
     });
@@ -316,7 +316,7 @@ export default async function () {
 
     describe('snapshotValidationBlocker — local ERiC validation pre-flight', () => {
         it('blocks when no snapshot exists', () => {
-            expect(snapshotValidationBlocker(null, false)).toContain('Kein Filing-Snapshot');
+            expect(snapshotValidationBlocker(null, false)).toContain('No filing snapshot');
         });
         it('allows a fresh draft (the draft → validated case the live ladder needs)', () => {
             expect(snapshotValidationBlocker(snap('draft', LIVE_XML), false)).toBe(null);
@@ -325,7 +325,7 @@ export default async function () {
             expect(snapshotValidationBlocker(snap('validated', LIVE_XML), false)).toBe(null);
         });
         it('blocks a stale snapshot (re-capture first)', () => {
-            expect(snapshotValidationBlocker(snap('draft', LIVE_XML), true)).toContain('veraltet');
+            expect(snapshotValidationBlocker(snap('draft', LIVE_XML), true)).toContain('outdated');
         });
         it('refuses an already-submitted snapshot', () => {
             expect(snapshotValidationBlocker(snap('submitted', LIVE_XML), false)).toContain('submitted');

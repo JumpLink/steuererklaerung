@@ -4,6 +4,8 @@
  * last invoice. A suggestion, never a decision — the person confirms or overwrites every value.
  */
 
+import { _, fmt } from '../../lib/i18n.ts';
+
 /** What the helper needs from an earlier document; the DMS shapes map onto it field by field. */
 export interface PrefillRecord {
     id: string;
@@ -110,8 +112,10 @@ export function prefillFromLastInvoice(
     return null;
 }
 
-/** One German line saying where a suggestion came from, e.g. for a row subtitle. */
+/** One line saying where a suggestion came from, e.g. for a row subtitle. */
 export function prefillReason(prefill: InvoicePrefill, correspondent: string): string {
-    const when = prefill.sourceDate ? ` vom ${prefill.sourceDate.split('-').reverse().join('.')}` : '';
-    return `Vorbelegt aus der letzten Rechnung von ${correspondent}${when}.`;
+    const date = prefill.sourceDate ? prefill.sourceDate.split('-').reverse().join('.') : null;
+    return date
+        ? fmt(_('Prefilled from the last invoice from {correspondent} of {date}.'), { correspondent, date })
+        : fmt(_('Prefilled from the last invoice from {correspondent}.'), { correspondent });
 }

@@ -14,6 +14,7 @@
 
 import { inflateSync } from 'node:zlib';
 import { EInvoiceError } from './types.ts';
+import { _, fmt } from '../../lib/i18n.ts';
 
 /** Attachment names the e-invoice formats prescribe, best first (compared case-insensitively). */
 const KNOWN_NAMES = ['factur-x.xml', 'zugferd-invoice.xml', 'xrechnung.xml'];
@@ -139,7 +140,7 @@ function decodeStream(bytes: Uint8Array, obj: PdfObject): Uint8Array {
     if (/^\[?\s*\/FlateDecode\s*\]?$/.test(filter) || filter === '/Fl') {
         return new Uint8Array(inflateSync(data));
     }
-    throw new EInvoiceError(`Die eingebettete Datei nutzt einen nicht unterstützten PDF-Filter (${filter}).`, 'pdf');
+    throw new EInvoiceError(fmt(_('The embedded file uses an unsupported PDF filter ({filter}).'), { filter }), 'pdf');
 }
 
 /**
@@ -149,10 +150,7 @@ function decodeStream(bytes: Uint8Array, obj: PdfObject): Uint8Array {
 export function extractEmbeddedXml(pdf: Uint8Array): EmbeddedXml | null {
     const text = latin1(pdf);
     if (/\/Encrypt\s+\d+\s+\d+\s+R|\/Encrypt\s*<</.test(text)) {
-        throw new EInvoiceError(
-            'Das PDF ist verschlüsselt — ein eingebetteter Datensatz lässt sich nicht lesen.',
-            'encrypted',
-        );
+        throw new EInvoiceError(_('The PDF is encrypted — an embedded data set cannot be read.'), 'encrypted');
     }
     const objects = readObjects(pdf, text);
 
@@ -180,6 +178,6 @@ export function extractEmbeddedXml(pdf: Uint8Array): EmbeddedXml | null {
         return { name: best.name, bytes: decodeStream(pdf, best.obj) };
     } catch (err) {
         if (err instanceof EInvoiceError) throw err;
-        throw new EInvoiceError(`Die eingebettete Datei „${best.name}“ lässt sich nicht entpacken.`, 'pdf');
+        throw new EInvoiceError(fmt(_('The embedded file “{name}” cannot be unpacked.'), { name: best.name }), 'pdf');
     }
 }

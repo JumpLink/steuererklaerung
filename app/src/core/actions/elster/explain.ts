@@ -30,6 +30,7 @@ import {
 } from '../../elster/euer-transactions.ts';
 import type { EuerCategoryTotal } from '../../elster/euer-aggregate.ts';
 import { herkunftText } from '../../elster/zu-pruefen.ts';
+import { _, _n, fmt as tfmt } from '../../lib/i18n.ts';
 
 /** Which family of figures a ref addresses. Only `euer` for now; extensible (ustva/bwa/steuerkonto). */
 export type FigureDomain = 'euer';
@@ -112,7 +113,7 @@ export interface FigureExplanation {
     label: string;
     value: number;
     unit: 'EUR';
-    /** Short human formula, e.g. "Σ 30 Buchungen, netto" or "Betriebseinnahmen − Betriebsausgaben". */
+    /** Short human formula, e.g. "Σ 30 bookings, net" or "Business income − business expenses". */
     formula: string;
     /** Sub-figures this figure composes from (for totals); empty for a leaf category. */
     children: FigureChild[];
@@ -256,17 +257,17 @@ function provenanceMix(rows: FigureRow[]): FigureExplanation['provenanceMix'] {
     return mix;
 }
 
-/** German label for a total id. */
+/** Human label for a total id. */
 function totalLabel(id: EuerTotalId): string {
     switch (id) {
         case 'betriebseinnahmen':
-            return 'Betriebseinnahmen (netto)';
+            return _('Business income (net)');
         case 'betriebsausgaben':
-            return 'Betriebsausgaben (netto)';
+            return _('Business expenses (net)');
         case 'gewinn':
-            return 'Gewinn (Einnahmen − Ausgaben)';
+            return _('Profit (income − expenses)');
         case 'ust-zahllast':
-            return 'USt-Zahllast (USt − Vorsteuer)';
+            return _('USt-Zahllast (VAT − Vorsteuer)');
     }
 }
 
@@ -298,19 +299,35 @@ export function resolveEuerFigure(
         const cats = (ref.kind === 'income' ? agg.income : agg.expenses).filter((c) => categoryMatchesId(c, ref.id));
         if (cats.length === 0) {
             throw new Error(
-                `Keine ${ref.kind === 'income' ? 'Einnahmen' : 'Ausgaben'}-Kategorie für '${ref.id}' in ${agg.year} gefunden. ` +
-                    `Verfügbare Refs: elster explain --year ${agg.year} --list.`,
+                tfmt(
+                    ref.kind === 'income'
+                        ? _(
+                              'No income category for “{id}” in {year}. Available refs: elster explain --year {year} --list.',
+                          )
+                        : _(
+                              'No expense category for “{id}” in {year}. Available refs: elster explain --year {year} --list.',
+                          ),
+                    { id: ref.id, year: agg.year },
+                ),
             );
         }
         const catKeys = new Set(cats.map((c) => c.category));
         const contributors = rows.filter((r) => r.kind === ref.kind && catKeys.has(r.category)).map(toFigureRow);
         const value = round2(cats.reduce((s, c) => s + c.net, 0));
-        const label = cats.length === 1 ? cats[0].category : `${cats.length} Kategorien (${ref.id})`;
+        const label =
+            cats.length === 1
+                ? cats[0].category
+                : tfmt(_n('{n} category ({id})', '{n} categories ({id})', cats.length), {
+                      n: cats.length,
+                      id: ref.id,
+                  });
         return {
             ...base,
             label,
             value,
-            formula: `Σ ${contributors.length} Buchung${contributors.length === 1 ? '' : 'en'}, netto`,
+            formula: tfmt(_n('Σ {n} booking, net', 'Σ {n} bookings, net', contributors.length), {
+                n: contributors.length,
+            }),
             children: [],
             contributors,
             provenanceMix: provenanceMix(contributors),
@@ -344,7 +361,14 @@ export function resolveEuerFigure(
             ...base,
             label: totalLabel(totalId),
             value,
-            formula: `Σ ${contributors.length} Buchungen über ${cats.length} Kategorie${cats.length === 1 ? '' : 'n'}, netto`,
+            formula: tfmt(
+                _n(
+                    'Σ {n} bookings across {cats} category, net',
+                    'Σ {n} bookings across {cats} categories, net',
+                    cats.length,
+                ),
+                { n: contributors.length, cats: cats.length },
+            ),
             children,
             contributors,
             provenanceMix: provenanceMix(contributors),
@@ -360,17 +384,20 @@ export function resolveEuerFigure(
             ...base,
             label: totalLabel(totalId),
             value: t.profit,
-            formula: `Betriebseinnahmen (${fmt(t.incomeNet)}) − Betriebsausgaben (${fmt(t.expenseNet)})`,
+            formula: tfmt(_('Business income ({income}) − business expenses ({expenses})'), {
+                income: fmt(t.incomeNet),
+                expenses: fmt(t.expenseNet),
+            }),
             children: [
                 {
                     ref: formatFigureRef({ domain: 'euer', year: agg.year, kind: 'total', id: 'betriebseinnahmen' }),
-                    label: 'Betriebseinnahmen',
+                    label: _('Business income'),
                     value: t.incomeNet,
                     op: '+',
                 },
                 {
                     ref: formatFigureRef({ domain: 'euer', year: agg.year, kind: 'total', id: 'betriebsausgaben' }),
-                    label: 'Betriebsausgaben',
+                    label: _('Business expenses'),
                     value: t.expenseNet,
                     op: '-',
                 },
@@ -387,10 +414,13 @@ export function resolveEuerFigure(
         ...base,
         label: totalLabel('ust-zahllast'),
         value: t.vatPayable,
-        formula: `vereinnahmte USt (${fmt(t.outputVat)}) − Vorsteuer (${fmt(t.inputVat)})`,
+        formula: tfmt(_('USt collected ({collected}) − Vorsteuer ({input})'), {
+            collected: fmt(t.outputVat),
+            input: fmt(t.inputVat),
+        }),
         children: [
-            { label: 'Vereinnahmte USt', value: t.outputVat, op: '+' },
-            { label: 'Gezahlte Vorsteuer', value: t.inputVat, op: '-' },
+            { label: _('USt collected'), value: t.outputVat, op: '+' },
+            { label: _('Vorsteuer paid'), value: t.inputVat, op: '-' },
         ],
         contributors,
         provenanceMix: provenanceMix(contributors),

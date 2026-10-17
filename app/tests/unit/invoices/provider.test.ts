@@ -36,17 +36,17 @@ export default async () => {
             const problems = commonInvoiceProblems(baseInput({ issueDate: '', currency: '', items: [] }));
             expect(problems.length).toBeGreaterThan(0);
             expect(problems.some((p) => p.includes('issueDate'))).toBe(true);
-            expect(problems.some((p) => p.includes('Position'))).toBe(false); // no items → no per-item rows
+            expect(problems.some((p) => p.includes('Item'))).toBe(false); // no items → no per-item rows
         });
 
         await it('flags a missing title, non-positive quantity and unparseable price/VAT', async () => {
             const problems = commonInvoiceProblems(
                 baseInput({ items: [{ title: '  ', quantity: 0, unit_price: 'abc', vat_rate: 'xx' }] }),
             );
-            expect(problems.some((p) => p.includes('Titel fehlt'))).toBe(true);
-            expect(problems.some((p) => p.includes('Menge'))).toBe(true);
-            expect(problems.some((p) => p.includes('Einzelpreis'))).toBe(true);
-            expect(problems.some((p) => p.includes('USt-Satz'))).toBe(true);
+            expect(problems.some((p) => p.includes('title is missing'))).toBe(true);
+            expect(problems.some((p) => p.includes('quantity'))).toBe(true);
+            expect(problems.some((p) => p.includes('unit price'))).toBe(true);
+            expect(problems.some((p) => p.includes('VAT rate'))).toBe(true);
         });
     });
 
@@ -66,7 +66,7 @@ export default async () => {
             const problems = provider.validate(
                 baseInput({ items: [{ title: 'x'.repeat(41), quantity: 1, unit_price: 1, vat_rate: 19 }] }),
             );
-            expect(problems.some((p) => p.includes('Qonto-Limit'))).toBe(true);
+            expect(problems.some((p) => p.includes('Qonto limit'))).toBe(true);
         });
     });
 

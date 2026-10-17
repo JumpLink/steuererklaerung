@@ -29,6 +29,7 @@ import {
 } from '../../../core/presenters/steuer.ts';
 import { appSession } from '../data/session.ts';
 import type { EuerCategoryTotal } from '../../../core/elster/euer-aggregate.ts';
+import { UNKLASSIFIZIERT } from '../../../core/elster/euer-classify.ts';
 import type { EuerTotalId, FigureKind, FigureRef } from '../../../core/actions/elster/explain.ts';
 import type { UsteAggregate } from '../../../core/elster/uste-aggregate.ts';
 import type { GewstReport } from '../../../core/actions/elster/gewst.ts';
@@ -262,11 +263,13 @@ export class BhSteuerView extends Adw.Bin {
     ): void {
         rows.clear();
         for (const cat of cats) {
+            // The sentinel category is a compared and persisted id — translate only what is shown.
+            const label = cat.category === UNKLASSIFIZIERT ? _('(unclassified)') : cat.category;
             const row = rows.add(
                 new Adw.ActionRow({
-                    title: markup(cat.bucket || cat.category),
+                    title: markup(cat.bucket || label),
                     subtitle: markup(
-                        `${cat.category} · ${fmt(_n('{n} booking', '{n} bookings', cat.count), { n: cat.count })}`,
+                        `${label} · ${fmt(_n('{n} booking', '{n} bookings', cat.count), { n: cat.count })}`,
                     ),
                 }),
             );

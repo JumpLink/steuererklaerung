@@ -15,6 +15,7 @@
 import type { SyncConfig } from '../../config/index.ts';
 import type { ElsterConfig } from '../../config/index.ts';
 import { round2, fmtDe as fmt } from '../../lib/money.ts';
+import { _, _n, fmt as tfmt } from '../../lib/i18n.ts';
 import type { EuerTxAggregate } from '../../elster/euer-transactions.ts';
 import type { UsteAggregate } from '../../elster/uste-aggregate.ts';
 import { aggregateUstvaYear, type UstvaYearQuarter } from '../../elster/ustva-aggregate.ts';
@@ -109,15 +110,17 @@ function info(id: string, label: string, detail: string): CrossCheckResult {
     return { id, label, status: 'info', detail };
 }
 
-const USTVA_USTE_LABEL = 'USt-VA (Σ Quartale) vs. USt-Jahreserklärung';
-const STEUERKONTO_LABEL = 'Steuerkonto-Zahlungen vs. angemeldete USt';
-const EUER_FEST_LABEL = 'EÜR-Gewinn vs. Feststellung (laufender Gewinn)';
-const VOLLSTAENDIGKEIT_LABEL = 'Vollständigkeit der Buchungen';
-const VERPROBUNG_LABEL = 'USt-Verprobung (Umsatz × Satz vs. angemeldete USt)';
-const VORJAHR_LABEL = 'Vorjahresvergleich';
-const EUER_EST_LABEL = 'EÜR-Gewinn vs. ESt (Einkünfte aus Gewerbebetrieb)';
+// FUNCTIONS, not constants: a module-level constant is evaluated before a frontend registers its
+// translator, which would freeze the English text into the German build.
+const ustvaUsteLabel = (): string => _('USt-VA (Σ quarters) vs. USt-Jahreserklärung');
+const steuerkontoLabel = (): string => _('Steuerkonto payments vs. declared USt');
+const euerFestLabel = (): string => _('EÜR profit vs. Feststellung (current profit)');
+const vollstaendigkeitLabel = (): string => _('Completeness of the bookings');
+const verprobungLabel = (): string => _('USt plausibility check (revenue × rate vs. declared USt)');
+const vorjahrLabel = (): string => _('Prior-year comparison');
+const euerEstLabel = (): string => _('EÜR profit vs. ESt (Einkünfte aus Gewerbebetrieb)');
 
-const NO_UST_DETAIL = 'Entität ohne Umsatzsteuer (z. B. privat) — USt-Abgleich entfällt.';
+const noUstDetail = (): string => _('Entity without VAT (private, say) — no USt reconciliation.');
 
 /**
  * Check 1 — the DECLARED quarterly USt-VA Vorauszahlungssoll (Σ Anmeldungssoll from the filing
@@ -135,9 +138,9 @@ const NO_UST_DETAIL = 'Entität ohne Umsatzsteuer (z. B. privat) — USt-Abgleic
  */
 export function checkUstvaVsUste(i: CrossCheckInputs): CrossCheckResult {
     const id = 'ustva-vs-uste';
-    if (!i.hasUst) return info(id, USTVA_USTE_LABEL, NO_UST_DETAIL);
-    if (!i.uste) return info(id, USTVA_USTE_LABEL, i.skips?.uste ?? 'USt-Jahreserklärung nicht verfügbar.');
-    if (!i.ustvaQuarters) return info(id, USTVA_USTE_LABEL, i.skips?.ustva ?? 'Quartals-USt-VA nicht verfügbar.');
+    if (!i.hasUst) return info(id, ustvaUsteLabel(), noUstDetail());
+    if (!i.uste) return info(id, ustvaUsteLabel(), i.skips?.uste ?? _('USt-Jahreserklärung not available.'));
+    if (!i.ustvaQuarters) return info(id, ustvaUsteLabel(), i.skips?.ustva ?? _('Quarterly USt-VA not available.'));
 
     // Independent Paperless-driven derivation: the recomputed Σ of the four quarterly Zahllasten.
     const sumQ = round2(i.ustvaQuarters.reduce((s, q) => s + q.zahllast, 0));
@@ -165,19 +168,30 @@ export function checkUstvaVsUste(i: CrossCheckInputs): CrossCheckResult {
     const basisUnvollstaendig = txVorsteuer > 1 && fehlbetrag > Math.max(1, txVorsteuer * 0.1);
     const status = basisUnvollstaendig && raw === 'error' ? 'warn' : raw;
 
-    const quelle = i.uste.prepaidVatSource === 'config' ? 'Config' : 'Register';
+    const quelle = i.uste.prepaidVatSource === 'config' ? _('config') : _('register');
     const detail =
-        `Σ angemeldete USt-VA-Vorauszahlungssoll (${quelle}) ${fmt(registerSoll)} € vs. Σ berechnete Quartals-Zahllast ${fmt(sumQ)} € ` +
-        `(Δ ${fmt(delta)} €). Ein Δ ≠ 0 bedeutet einen falschen Soll (z. B. Zahlung oder Säumniszuschlag statt der ` +
-        `angemeldeten Zahllast erfasst) oder eine fehlende/doppelte Periode im Register.` +
+        tfmt(
+            _(
+                'Σ declared USt-VA Vorauszahlungssoll ({source}) {soll} € vs. Σ computed quarterly Zahllast {sum} € ' +
+                    '(Δ {delta} €). A Δ ≠ 0 means a wrong Soll (a payment or a Säumniszuschlag recorded instead of ' +
+                    'the declared Zahllast, say) or a missing/duplicate period in the register.',
+            ),
+            { source: quelle, soll: fmt(registerSoll), sum: fmt(sumQ), delta: fmt(delta) },
+        ) +
         (basisUnvollstaendig
-            ? ` ACHTUNG — die Quartalsseite ist belegbasiert (Paperless) und deckt nur ${fmt(docVorsteuer)} € ` +
-              `der ${fmt(txVorsteuer)} € Jahres-Vorsteuer ab (${fmt(fehlbetrag)} € fehlen): Buchungen ohne Beleg ` +
-              `fehlen dort, dadurch ist die berechnete Quartals-Zahllast systematisch zu hoch. Das Δ ist deshalb ` +
-              `KEIN Nachweis für einen falschen Soll — nur als Hinweis gewertet. Zum Klären das ELSTER-Steuerkonto ` +
-              `gegenlesen, nicht diese Zahl.`
+            ? ' ' +
+              tfmt(
+                  _(
+                      'CAUTION — the quarterly side is receipt-based (Paperless) and covers only {covered} € of the ' +
+                          '{total} € Vorsteuer for the year ({missing} € are missing): bookings without a receipt are ' +
+                          'absent there, which makes the computed quarterly Zahllast systematically too high. So the Δ ' +
+                          'is NO proof of a wrong Soll — it counts as a hint only. To settle it, read the ELSTER ' +
+                          'Steuerkonto against it, not this figure.',
+                  ),
+                  { covered: fmt(docVorsteuer), total: fmt(txVorsteuer), missing: fmt(fehlbetrag) },
+              )
             : '');
-    return { id, label: USTVA_USTE_LABEL, status, detail, expected: sumQ, actual: registerSoll, delta };
+    return { id, label: ustvaUsteLabel(), status, detail, expected: sumQ, actual: registerSoll, delta };
 }
 
 /**
@@ -189,10 +203,10 @@ export function checkUstvaVsUste(i: CrossCheckInputs): CrossCheckResult {
  */
 export function checkSteuerkontoVsUst(i: CrossCheckInputs): CrossCheckResult {
     const id = 'steuerkonto-vs-ust';
-    if (!i.hasUst) return info(id, STEUERKONTO_LABEL, NO_UST_DETAIL);
+    if (!i.hasUst) return info(id, steuerkontoLabel(), noUstDetail());
     if (!i.steuerkonto)
-        return info(id, STEUERKONTO_LABEL, i.skips?.steuerkonto ?? 'Steuerkonto-Übersicht nicht verfügbar.');
-    if (!i.ustvaQuarters) return info(id, STEUERKONTO_LABEL, i.skips?.ustva ?? 'Quartals-USt-VA nicht verfügbar.');
+        return info(id, steuerkontoLabel(), i.skips?.steuerkonto ?? _('Steuerkonto overview not available.'));
+    if (!i.ustvaQuarters) return info(id, steuerkontoLabel(), i.skips?.ustva ?? _('Quarterly USt-VA not available.'));
 
     const declared = round2(i.ustvaQuarters.reduce((s, q) => s + q.zahllast, 0));
     const ustGroups = i.steuerkonto.groups.filter((g) => g.art === 'USt');
@@ -204,20 +218,26 @@ export function checkSteuerkontoVsUst(i: CrossCheckInputs): CrossCheckResult {
     let note: string;
     if (Math.abs(declared) <= 0.01) {
         status = 'info';
-        note = 'Keine USt angemeldet — nichts abzugleichen.';
+        note = _('No USt declared — nothing to reconcile.');
     } else if (declared > 0.01 && paidNet <= 0.01) {
         status = 'warn';
-        note = 'USt angemeldet, aber keine Zahlung auf dem Steuerkonto gefunden — prüfen.';
+        note = _('USt declared, but no payment found on the Steuerkonto — please check.');
     } else if (Math.abs(delta) <= 1) {
         status = 'ok';
-        note = 'Angemeldete USt und Steuerkonto-Zahlungen stimmen überein.';
+        note = _('Declared USt and Steuerkonto payments agree.');
     } else {
         status = 'info';
-        note =
-            'Differenz ist meist ein Timing-Effekt (Q4/Abschluss zahlen im Folgejahr) — manuell gegen Mein ELSTER prüfen.';
+        note = _(
+            'A difference is usually a timing effect (Q4/final payment settle in the following year) — check it by hand against Mein ELSTER.',
+        );
     }
-    const detail = `Angemeldete USt (Σ Q1–Q4) ${fmt(declared)} € · über die Konten an das FA gezahlt (netto) ${fmt(paidNet)} € (Δ ${fmt(delta)} €). ${note}`;
-    return { id, label: STEUERKONTO_LABEL, status, detail, expected: declared, actual: paidNet, delta };
+    const detail = `${tfmt(
+        _(
+            'Declared USt (Σ Q1–Q4) {declared} € · paid to the Finanzamt over the accounts (net) {paid} € (Δ {delta} €).',
+        ),
+        { declared: fmt(declared), paid: fmt(paidNet), delta: fmt(delta) },
+    )} ${note}`;
+    return { id, label: steuerkontoLabel(), status, detail, expected: declared, actual: paidNet, delta };
 }
 
 /**
@@ -227,21 +247,20 @@ export function checkSteuerkontoVsUst(i: CrossCheckInputs): CrossCheckResult {
 export function checkEuerVsFeststellung(i: CrossCheckInputs): CrossCheckResult {
     const id = 'euer-vs-feststellung';
     if (!i.hasFeststellung) {
-        return info(
-            id,
-            EUER_FEST_LABEL,
-            i.skips?.feststellung ?? 'Keine GbR/Personengesellschaft — Feststellung entfällt.',
-        );
+        return info(id, euerFestLabel(), i.skips?.feststellung ?? _('No GbR/Personengesellschaft — no Feststellung.'));
     }
     if (i.euer == null || i.feststellungProfit == null) {
-        return info(id, EUER_FEST_LABEL, 'EÜR oder Feststellung nicht verfügbar.');
+        return info(id, euerFestLabel(), _('EÜR or Feststellung not available.'));
     }
     const expected = round2(i.euer.totals.profit);
     const actual = round2(i.feststellungProfit);
     const delta = round2(actual - expected);
     const status = classify(delta, { okEps: 0.01, errorEps: 0.01 });
-    const detail = `EÜR-Gewinn ${fmt(expected)} € · in der Feststellung angesetzter laufender Gewinn ${fmt(actual)} € (Δ ${fmt(delta)} €).`;
-    return { id, label: EUER_FEST_LABEL, status, detail, expected, actual, delta };
+    const detail = tfmt(
+        _('EÜR profit {expected} € · current profit allocated in the Feststellung {actual} € (Δ {delta} €).'),
+        { expected: fmt(expected), actual: fmt(actual), delta: fmt(delta) },
+    );
+    return { id, label: euerFestLabel(), status, detail, expected, actual, delta };
 }
 
 /**
@@ -251,25 +270,43 @@ export function checkEuerVsFeststellung(i: CrossCheckInputs): CrossCheckResult {
  */
 export function checkVollstaendigkeit(i: CrossCheckInputs): CrossCheckResult {
     const id = 'vollstaendigkeit';
-    if (i.euer == null) return info(id, VOLLSTAENDIGKEIT_LABEL, 'EÜR nicht verfügbar.');
+    if (i.euer == null) return info(id, vollstaendigkeitLabel(), _('EÜR not available.'));
     const c = i.euer.coverage;
     const n = c.unclassified.length;
     if (n === 0) {
-        const detail = `Alle ${c.transactions} Buchung(en) im aktiven Zeitraum sind klassifiziert (via Beleg ${c.classifiedByDocument} / via Regel ${c.classifiedByRule}).`;
-        return { id, label: VOLLSTAENDIGKEIT_LABEL, status: 'ok', detail, expected: 0, actual: 0, delta: 0 };
+        const detail = tfmt(
+            _n(
+                'All {n} booking in the active period is classified (via receipt {byDoc} / via rule {byRule}).',
+                'All {n} bookings in the active period are classified (via receipt {byDoc} / via rule {byRule}).',
+                c.transactions,
+            ),
+            { n: c.transactions, byDoc: c.classifiedByDocument, byRule: c.classifiedByRule },
+        );
+        return { id, label: vollstaendigkeitLabel(), status: 'ok', detail, expected: 0, actual: 0, delta: 0 };
     }
     // A pure Arbeitnehmer-ESt (privat) is config-driven — unclassified private-account bookings do
     // NOT distort the return, so they must not block filing. They CAN still hide deductible items,
     // so surface them as a warning (not an error) with the right hint instead of the EÜR wording.
     if (i.filesEuer === false) {
-        const detail =
-            `${n} unklassifizierte Privatbuchung(en) — die ESt beruht auf Konfigurationswerten (Lohn/Vorsorge/…), ` +
-            `nicht auf diesen Buchungen. Nur auf abziehbare Posten durchsehen: Spenden, § 35a (haushaltsnahe ` +
-            `Dienstleistungen/Handwerkerleistungen), außergewöhnliche Belastungen.`;
-        return { id, label: VOLLSTAENDIGKEIT_LABEL, status: 'warn', detail, expected: 0, actual: n, delta: n };
+        const detail = tfmt(
+            _n(
+                '{n} unclassified private booking — the ESt rests on configuration values (wages/insurance/…), not on these bookings. Look through them for deductible items only: donations, § 35a (household services/trade work), außergewöhnliche Belastungen.',
+                '{n} unclassified private bookings — the ESt rests on configuration values (wages/insurance/…), not on these bookings. Look through them for deductible items only: donations, § 35a (household services/trade work), außergewöhnliche Belastungen.',
+                n,
+            ),
+            { n },
+        );
+        return { id, label: vollstaendigkeitLabel(), status: 'warn', detail, expected: 0, actual: n, delta: n };
     }
-    const detail = `${n} unklassifizierte Buchung(en) — sie verfälschen Gewinn, USt und alle abgeleiteten Zahlen. Vor Abgabe klären (elster euer report --by transactions --detail).`;
-    return { id, label: VOLLSTAENDIGKEIT_LABEL, status: 'error', detail, expected: 0, actual: n, delta: n };
+    const detail = tfmt(
+        _n(
+            '{n} unclassified booking — it falsifies the profit, the USt and every derived figure. Settle it before filing (elster euer report --by transactions --detail).',
+            '{n} unclassified bookings — they falsify the profit, the USt and every derived figure. Settle them before filing (elster euer report --by transactions --detail).',
+            n,
+        ),
+        { n },
+    );
+    return { id, label: vollstaendigkeitLabel(), status: 'error', detail, expected: 0, actual: n, delta: n };
 }
 
 /**
@@ -279,16 +316,25 @@ export function checkVollstaendigkeit(i: CrossCheckInputs): CrossCheckResult {
  */
 export function checkUstVerprobung(i: CrossCheckInputs): CrossCheckResult {
     const id = 'ust-verprobung';
-    if (!i.hasUst) return info(id, VERPROBUNG_LABEL, NO_UST_DETAIL);
-    if (!i.uste) return info(id, VERPROBUNG_LABEL, i.skips?.uste ?? 'USt-Jahreserklärung nicht verfügbar.');
+    if (!i.hasUst) return info(id, verprobungLabel(), noUstDetail());
+    if (!i.uste) return info(id, verprobungLabel(), i.skips?.uste ?? _('USt-Jahreserklärung not available.'));
     const implied = round2(i.uste.net_19 * 0.19 + i.uste.net_7 * 0.07);
     const declared = round2(i.uste.vat_out);
     const delta = round2(declared - implied);
     const status = classify(delta, { okEps: 1 }); // ok ≤1 €, else warn
-    const detail =
-        `Erwartete USt aus Umsätzen: 19 % von ${fmt(i.uste.net_19)} € + 7 % von ${fmt(i.uste.net_7)} € = ${fmt(implied)} € · ` +
-        `vereinnahmte USt lt. Erklärung ${fmt(declared)} € (Δ ${fmt(delta)} €).`;
-    return { id, label: VERPROBUNG_LABEL, status, detail, expected: implied, actual: declared, delta };
+    const detail = tfmt(
+        _(
+            'USt expected from the revenue: 19 % of {net19} € + 7 % of {net7} € = {implied} € · USt collected per the return {declared} € (Δ {delta} €).',
+        ),
+        {
+            net19: fmt(i.uste.net_19),
+            net7: fmt(i.uste.net_7),
+            implied: fmt(implied),
+            declared: fmt(declared),
+            delta: fmt(delta),
+        },
+    );
+    return { id, label: verprobungLabel(), status, detail, expected: implied, actual: declared, delta };
 }
 
 /**
@@ -308,15 +354,20 @@ export function checkUstVerprobung(i: CrossCheckInputs): CrossCheckResult {
  */
 export function checkEuerVsEst(i: CrossCheckInputs): CrossCheckResult {
     if (i.filesEuer === false)
-        return info('euer-vs-est', EUER_EST_LABEL, 'Entität ohne EÜR — Abgleich mit der ESt entfällt.');
-    if (!i.euer) return info('euer-vs-est', EUER_EST_LABEL, 'EÜR-Bericht nicht verfügbar — Abgleich übersprungen.');
+        return info('euer-vs-est', euerEstLabel(), _('Entity without an EÜR — no reconciliation with the ESt.'));
+    if (!i.euer) return info('euer-vs-est', euerEstLabel(), _('EÜR report not available — reconciliation skipped.'));
     if (!i.estGewerbe)
         return info(
             'euer-vs-est',
-            EUER_EST_LABEL,
-            'Keine ESt erklärt diesen Gewinn als ihre Einkünfte aus Gewerbebetrieb. Wenn doch, in der ' +
-                `est-Konfiguration des Jahres \`einkuenfte_gewerbe_quelle: "${i.entityLabel ?? '<entität>'}"\` ` +
-                'setzen — dann wird die Kopie hier geprüft statt still zu veralten.',
+            euerEstLabel(),
+            tfmt(
+                _(
+                    'No ESt declares this profit as its Einkünfte aus Gewerbebetrieb. If one does, set ' +
+                        '`einkuenfte_gewerbe_quelle: "{entity}"` in that year’s est configuration — then the copy is ' +
+                        'checked here instead of going stale in silence.',
+                ),
+                { entity: i.entityLabel ?? '<entity>' },
+            ),
         );
 
     const expected = round2(i.euer.totals.profit);
@@ -331,19 +382,37 @@ export function checkEuerVsEst(i: CrossCheckInputs): CrossCheckResult {
     const status = raw === 'error' && i.estGewerbe.abgegeben ? 'warn' : raw;
     const detail =
         raw === 'ok'
-            ? `ESt-Profil '${i.estGewerbe.profil}' erklärt ${fmt(actual)} € als Einkünfte aus Gewerbebetrieb — deckt sich mit dem EÜR-Gewinn ${fmt(expected)} €.`
-            : `ESt-Profil '${i.estGewerbe.profil}' erklärt ${fmt(actual)} € als Einkünfte aus Gewerbebetrieb, die Anlage EÜR ergibt ${fmt(expected)} € (Δ ${fmt(delta)} €). Beide Zahlen gehen an dasselbe Finanzamt und müssen übereinstimmen.` +
+            ? tfmt(
+                  _(
+                      'ESt profile “{profile}” declares {actual} € as Einkünfte aus Gewerbebetrieb — matches the EÜR profit {expected} €.',
+                  ),
+                  { profile: i.estGewerbe.profil, actual: fmt(actual), expected: fmt(expected) },
+              )
+            : tfmt(
+                  _(
+                      'ESt profile “{profile}” declares {actual} € as Einkünfte aus Gewerbebetrieb, the Anlage EÜR arrives at {expected} € (Δ {delta} €). Both figures go to the same Finanzamt and have to agree.',
+                  ),
+                  { profile: i.estGewerbe.profil, actual: fmt(actual), expected: fmt(expected), delta: fmt(delta) },
+              ) +
+              ' ' +
               (i.estGewerbe.abgegeben
-                  ? ' Diese ESt ist bereits übermittelt — die Anlage EÜR mit dem richtigen Gewinn abzugeben ist trotzdem korrekt (sie IST die Gewinnermittlung, das Finanzamt zieht den Gewinn von dort). Danach entscheiden, ob eine berichtigte ESt nachgereicht wird; §153 AO greift, wenn die Erklärung dadurch zu niedrig war.'
-                  : ' Vor der Abgabe die ESt-Konfiguration nachziehen.');
-    return { id: 'euer-vs-est', label: EUER_EST_LABEL, status, detail, expected, actual, delta };
+                  ? _(
+                        'This ESt has already been transmitted — filing the Anlage EÜR with the correct profit is still right (it IS the profit determination, the Finanzamt takes the profit from there). Afterwards decide whether to file a corrected ESt; § 153 AO applies if the return was too low because of it.',
+                    )
+                  : _('Bring the ESt configuration in line before filing.'));
+    return { id: 'euer-vs-est', label: euerEstLabel(), status, detail, expected, actual, delta };
 }
 
 export function checkVorjahresvergleich(i: CrossCheckInputs): CrossCheckResult {
     return info(
         'vorjahresvergleich',
-        VORJAHR_LABEL,
-        `Automatischer Vorjahresvergleich (${i.year - 1} ↔ ${i.year}) ist noch nicht implementiert — Vorjahreszahlen bis dahin manuell gegenprüfen (Follow-up).`,
+        vorjahrLabel(),
+        tfmt(
+            _(
+                'An automatic prior-year comparison ({prev} ↔ {year}) is not implemented yet — until then, check the prior-year figures by hand (follow-up).',
+            ),
+            { prev: i.year - 1, year: i.year },
+        ),
     );
 }
 

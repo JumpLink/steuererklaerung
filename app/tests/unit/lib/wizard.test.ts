@@ -121,9 +121,9 @@ export default async () => {
             const plan = assembleTaxReturnPlan(inputs({ gewst: gewstFixture, feststellung: feststellungFixture }));
             expect(plan.summary?.primary.kind).toBe('payment'); // closingBalance 597,02 ≥ 0 → Nachzahlung
             expect(plan.summary?.primary.amount).toBe(597.02);
-            expect(plan.summary?.primary.label).toBe('Voraussichtliche Nachzahlung');
+            expect(plan.summary?.primary.label).toBe('Expected additional payment');
             const labels = (plan.summary?.secondary ?? []).map((l) => l.label);
-            expect(labels.join(',')).toBe('Gewinn (EÜR),USt-Zahllast,GewSt-Messbetrag,Festgestellte Einkünfte');
+            expect(labels.join(',')).toBe('Profit (EÜR),USt-Zahllast,GewSt-Messbetrag,Festgestellte Einkünfte');
             expect(plan.summary?.secondary.find((l) => l.label === 'USt-Zahllast')?.amount).toBe(euer().totals.vatPayable);
         });
 
@@ -131,7 +131,7 @@ export default async () => {
             const plan = assembleTaxReturnPlan(inputs({ uste: uste({ closingBalance: -120 }) }));
             expect(plan.summary?.primary.kind).toBe('refund');
             expect(plan.summary?.primary.amount).toBe(120);
-            expect(plan.summary?.primary.label).toBe('Voraussichtliche Erstattung');
+            expect(plan.summary?.primary.label).toBe('Expected refund');
         });
 
         await it('deep-links open steps to where they are fixed (Buchungen / Einstellungen)', async () => {

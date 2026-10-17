@@ -37,6 +37,7 @@ import {
     type CrossCheckSummary,
 } from './cross-checks.ts';
 import { computeInputFingerprint } from './fingerprint.ts';
+import { _, fmt } from '../../lib/i18n.ts';
 import { assertFormType, getFilingSnapshot, latestFilingSnapshot, resolveEntityScope } from './snapshots.ts';
 
 export type { FilingSignoff } from '@steuererklaerung/store';
@@ -108,7 +109,9 @@ function signoffBindsToSnapshot(
     return signoff.snapshotId === snapshot.id && signoff.fingerprint === snapshot.fingerprint;
 }
 
-const STALE_BINDING_REASON = 'Freigabe bezieht sich auf einen veralteten Snapshot-Stand — bitte neu freigeben.';
+// A FUNCTION, not a constant: a module-level constant is evaluated before a frontend can register
+// its translator, which would freeze the English text into the German build.
+const staleBindingReason = (): string => _('The release points at an outdated snapshot state — please release again.');
 
 /**
  * The PURE sign-off verdict. `valid` is the FINGERPRINT-BINDING check only (a non-revoked sign-off
@@ -121,22 +124,22 @@ export function evaluateSignoffValidity(inputs: SignoffEvalInputs): SignoffValid
     const stale = snapshot != null && currentFingerprint != null && snapshot.fingerprint !== currentFingerprint;
 
     if (!snapshot) {
-        return { valid: false, stale: false, reason: 'Kein Filing-Snapshot vorhanden.' };
+        return { valid: false, stale: false, reason: _('No filing snapshot present.') };
     }
     if (!signoff) {
-        return { valid: false, stale, reason: 'Keine Freigabe (sign-off) vorhanden.' };
+        return { valid: false, stale, reason: _('No release (sign-off) present.') };
     }
     if (signoff.revoked) {
-        return { valid: false, stale, reason: 'Freigabe wurde widerrufen.' };
+        return { valid: false, stale, reason: _('The release has been revoked.') };
     }
     if (!signoffBindsToSnapshot(signoff, snapshot)) {
-        return { valid: false, stale, reason: STALE_BINDING_REASON };
+        return { valid: false, stale, reason: staleBindingReason() };
     }
     if (stale) {
         return {
             valid: false,
             stale,
-            reason: 'Daten haben sich seit der Freigabe geändert (Drift) — neu erfassen und freigeben.',
+            reason: _('The data has changed since the release (drift) — capture and release again.'),
         };
     }
     return {
@@ -144,7 +147,7 @@ export function evaluateSignoffValidity(inputs: SignoffEvalInputs): SignoffValid
         stale: false,
         reason: signoff.crossChecksClean
             ? null
-            : 'Freigabe gültig, aber die Querprüfungen waren dabei nicht sauber (Fehler) — vor der Abgabe klären.',
+            : _('Release valid, but the cross-checks were not clean at the time (errors) — settle before filing.'),
     };
 }
 
@@ -152,7 +155,7 @@ export function evaluateSignoffValidity(inputs: SignoffEvalInputs): SignoffValid
 export interface SubmissionGate {
     /** True ⇒ submission is allowed (no blockers). */
     unlocked: boolean;
-    /** Human German list of everything currently blocking submission (empty ⇒ unlocked). */
+    /** Human-readable list of everything currently blocking submission (empty ⇒ unlocked). */
     blockers: string[];
 }
 
@@ -169,28 +172,26 @@ export function computeSubmissionGate(inputs: SignoffEvalInputs): SubmissionGate
     const blockers: string[] = [];
 
     if (!snapshot) {
-        blockers.push('Kein Filing-Snapshot vorhanden — zuerst einen Snapshot erfassen.');
+        blockers.push(_('No filing snapshot present — capture a snapshot first.'));
     } else if (stale) {
-        blockers.push(
-            'Snapshot veraltet — die zugrunde liegenden Daten haben sich seit der Erfassung geändert; neu erfassen.',
-        );
+        blockers.push(_('Snapshot outdated — the underlying data has changed since it was captured; capture again.'));
     }
 
     if (snapshot) {
         if (!signoff) {
-            blockers.push('Keine Freigabe (sign-off) vorhanden.');
+            blockers.push(_('No release (sign-off) present.'));
         } else if (signoff.revoked) {
-            blockers.push('Freigabe wurde widerrufen — bitte neu freigeben.');
+            blockers.push(_('The release has been revoked — please release again.'));
         } else if (!stale && !signoffBindsToSnapshot(signoff, snapshot)) {
             // A newer snapshot replaced the one this release was bound to (drift is reported above).
-            blockers.push(STALE_BINDING_REASON);
+            blockers.push(staleBindingReason());
         }
     }
 
     // Cross-check cleanliness is bound into the sign-off (captured against the same fingerprint), so a
     // non-drifted valid sign-off reflects the current data — no re-fetch needed to gate on it.
     if (signoff && !signoff.crossChecksClean) {
-        blockers.push('Querprüfungen waren bei der Freigabe nicht sauber (Fehler) — vor der Abgabe klären.');
+        blockers.push(_('The cross-checks were not clean at the release (errors) — settle before filing.'));
     }
 
     return { unlocked: blockers.length === 0, blockers };
@@ -198,17 +199,17 @@ export function computeSubmissionGate(inputs: SignoffEvalInputs): SubmissionGate
 
 /**
  * Guard: a snapshot must EXIST and be FRESH (not drifted) before it can be signed off. Never sign off
- * drifted data — re-snapshot first. Throws a clear German error otherwise; a no-op when signable.
+ * drifted data — re-snapshot first. Throws a clear error otherwise; a no-op when signable.
  */
 export function assertSnapshotSignable(snapshot: FilingSnapshot | null, stale: boolean): void {
     if (!snapshot) {
-        throw new Error(
-            'Kein Filing-Snapshot vorhanden — zuerst einen Snapshot erfassen (elster snapshot), dann freigeben.',
-        );
+        throw new Error(_('No filing snapshot present — capture a snapshot (elster snapshot) first, then release.'));
     }
     if (stale) {
         throw new Error(
-            'Snapshot ist veraltet (Daten haben sich seit der Erfassung geändert) — vor der Freigabe neu erfassen (elster snapshot).',
+            _(
+                'The snapshot is outdated (the data has changed since it was captured) — capture it again before releasing (elster snapshot).',
+            ),
         );
     }
 }
@@ -268,8 +269,11 @@ export async function signOffFiling(opts: {
     if (opts.snapshotId && snapshot) {
         if (snapshot.entityId !== opts.entity || snapshot.year !== opts.year || snapshot.formType !== form) {
             throw new Error(
-                `Snapshot '${opts.snapshotId}' passt nicht zu ${opts.entity}/${opts.year}/${form} ` +
-                    `(ist ${snapshot.entityId}/${snapshot.year}/${snapshot.formType}).`,
+                fmt(_('Snapshot “{id}” does not match {wanted} (it is {actual}).'), {
+                    id: opts.snapshotId,
+                    wanted: `${opts.entity}/${opts.year}/${form}`,
+                    actual: `${snapshot.entityId}/${snapshot.year}/${snapshot.formType}`,
+                }),
             );
         }
     }
@@ -418,7 +422,13 @@ export function revokeFilingSignoff(entity: string, id: string): FilingSignoff |
     return withLedger((db) => {
         const existing = getSignoff(db, id);
         if (existing && existing.entityId !== entity) {
-            throw new Error(`Freigabe '${id}' gehört zu Entität '${existing.entityId}', nicht '${entity}'.`);
+            throw new Error(
+                fmt(_('Release “{id}” belongs to entity “{owner}”, not “{entity}”.'), {
+                    id,
+                    owner: existing.entityId,
+                    entity,
+                }),
+            );
         }
         return revokeSignoff(db, id);
     });

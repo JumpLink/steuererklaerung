@@ -2,8 +2,10 @@
  * Shared outgoing-invoice status vocabulary. DEPENDENCY-FREE on purpose: this module is imported
  * by the Vite web client, the Hono server AND the native GJS app, so it must not pull in node:/GJS/
  * Qonto code. It normalises the two back-ends' raw statuses (self: draft|open|paid|cancelled;
- * Qonto: draft|unpaid|paid|canceled) and derives `overdue`, with German labels + a tone per state.
+ * Qonto: draft|unpaid|paid|canceled) and derives `overdue`, with a label + a tone per state.
  */
+
+import { _p } from '../lib/i18n.ts';
 
 export type NormalizedInvoiceStatus = 'draft' | 'open' | 'paid' | 'cancelled';
 export type DisplayInvoiceStatus = NormalizedInvoiceStatus | 'overdue';
@@ -32,14 +34,24 @@ export function displayInvoiceStatus(raw: string, dueDate: string | null, today:
     return norm;
 }
 
-/** German label per display state. */
-export const INVOICE_STATUS_LABEL: Record<DisplayInvoiceStatus, string> = {
-    draft: 'Entwurf',
-    open: 'Offen',
-    overdue: 'Überfällig',
-    paid: 'Bezahlt',
-    cancelled: 'Storniert',
-};
+/**
+ * Label per display state. A function, not a `Record` constant: a module-level map would be built
+ * before a frontend registers its translator, and would then stay in the source language forever.
+ */
+export function invoiceStatusLabel(status: DisplayInvoiceStatus): string {
+    switch (status) {
+        case 'draft':
+            return _p('invoice status', 'Draft');
+        case 'open':
+            return _p('invoice status', 'Open');
+        case 'overdue':
+            return _p('invoice status', 'Overdue');
+        case 'paid':
+            return _p('invoice status', 'Paid');
+        case 'cancelled':
+            return _p('invoice status', 'Cancelled');
+    }
+}
 
 /** Tone per display state (UIs map this to their own CSS/GTK classes). */
 export const INVOICE_STATUS_TONE: Record<DisplayInvoiceStatus, StatusTone> = {

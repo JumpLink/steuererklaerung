@@ -12,6 +12,7 @@
  * "Leitfaden-IDs (Guideline-URN)".
  */
 
+import { _, fmt } from '../../lib/i18n.ts';
 import type { EInvoice, EInvoiceClassification } from './types.ts';
 
 const eRechnung = (
@@ -36,14 +37,14 @@ export function classifyGuideline(guidelineId: string | null, hybrid: boolean): 
         return sonstige(
             'unbekannt',
             null,
-            'Der Datensatz nennt keine Leitfaden-ID — er gilt nicht als E-Rechnung nach EN 16931.',
+            _('The data set names no guideline ID — it does not count as an E-Rechnung under EN 16931.'),
         );
     }
     if (urn.startsWith('urn:ferd:')) {
         return sonstige(
             'zugferd-1',
             null,
-            'ZUGFeRD 1.x erfüllt die Anforderungen an eine E-Rechnung nicht (erst ab 2.0.1) — sonstige Rechnung.',
+            _('ZUGFeRD 1.x does not meet the requirements for an E-Rechnung (only from 2.0.1) — other invoice.'),
         );
     }
     if (urn.includes('xrechnung')) {
@@ -51,8 +52,8 @@ export function classifyGuideline(guidelineId: string | null, hybrid: boolean): 
             'xrechnung',
             'XRECHNUNG',
             hybrid
-                ? 'XRechnung-Datensatz im PDF — gilt als E-Rechnung.'
-                : 'XRechnung-Datensatz nach EN 16931 — gilt als E-Rechnung.',
+                ? _('XRechnung data set inside the PDF — counts as an E-Rechnung.')
+                : _('XRechnung data set under EN 16931 — counts as an E-Rechnung.'),
         );
     }
     const zugferd =
@@ -62,41 +63,43 @@ export function classifyGuideline(guidelineId: string | null, hybrid: boolean): 
     const family = zugferd?.[1];
     const profileName = zugferd?.[2];
     const note20 =
-        family === 'zugferd.de:2p0' ? ' Die Version 2.0.1 oder höher steht nicht im XML — bitte prüfen.' : '';
+        family === 'zugferd.de:2p0' ? ` ${_('Version 2.0.1 or higher is not stated in the XML — please check.')}` : '';
     if (profileName === 'minimum') {
         return sonstige(
             'zugferd',
             'MINIMUM',
-            'ZUGFeRD/Factur-X-Profil MINIMUM ist keine E-Rechnung im Sinne des UStG — sonstige Rechnung.',
+            _('The ZUGFeRD/Factur-X profile MINIMUM is not an E-Rechnung under the UStG — other invoice.'),
         );
     }
     if (profileName === 'basicwl') {
         return sonstige(
             'zugferd',
             'BASIC-WL',
-            'ZUGFeRD/Factur-X-Profil BASIC-WL ist keine E-Rechnung im Sinne des UStG — sonstige Rechnung.',
+            _('The ZUGFeRD/Factur-X profile BASIC-WL is not an E-Rechnung under the UStG — other invoice.'),
         );
     }
+    const profilGilt = (p: string) =>
+        fmt(_('ZUGFeRD/Factur-X profile {profile} — counts as an E-Rechnung.'), { profile: p });
     if (profileName === 'basic' || profileName === 'extended') {
         const p = profileName.toUpperCase();
-        return eRechnung('zugferd', p, `ZUGFeRD/Factur-X-Profil ${p} — gilt als E-Rechnung.${note20}`);
+        return eRechnung('zugferd', p, `${profilGilt(p)}${note20}`);
     }
     if (urn === 'urn:cen.eu:en16931:2017') {
         return eRechnung(
             hybrid ? 'zugferd' : 'en16931',
             'EN 16931',
-            hybrid
-                ? `ZUGFeRD/Factur-X-Profil EN 16931 — gilt als E-Rechnung.${note20}`
-                : 'Datensatz nach EN 16931 — gilt als E-Rechnung.',
+            hybrid ? `${profilGilt('EN 16931')}${note20}` : _('Data set under EN 16931 — counts as an E-Rechnung.'),
         );
     }
     if (urn.startsWith('urn:cen.eu:en16931:2017')) {
-        return eRechnung('en16931', 'EN 16931', 'Datensatz nach EN 16931 (CIUS) — gilt als E-Rechnung.');
+        return eRechnung('en16931', 'EN 16931', _('Data set under EN 16931 (CIUS) — counts as an E-Rechnung.'));
     }
     return sonstige(
         'unbekannt',
         null,
-        `Die Leitfaden-ID „${guidelineId}“ ist unbekannt — nicht als E-Rechnung erkannt, bitte von Hand prüfen.`,
+        fmt(_('The guideline ID “{id}” is unknown — not recognised as an E-Rechnung, please check by hand.'), {
+            id: guidelineId ?? '',
+        }),
     );
 }
 
@@ -111,17 +114,20 @@ export function classifyWithoutDataSet(isPdf: boolean): EInvoiceClassification {
         'ohne-datensatz',
         null,
         isPdf
-            ? 'PDF ohne eingebetteten Datensatz — keine E-Rechnung, sondern sonstige Rechnung.'
-            : 'Bild oder Scan ohne Datensatz — keine E-Rechnung, sondern sonstige Rechnung.',
+            ? _('PDF without an embedded data set — not an E-Rechnung but an other invoice.')
+            : _('Image or scan without a data set — not an E-Rechnung but an other invoice.'),
     );
 }
 
 /** A data set was present but unreadable (§14: Formatfehler → sonstige Rechnung). */
 export function classifyBroken(message: string): EInvoiceClassification {
-    return sonstige('fehler', null, `Datensatz nicht lesbar — sonstige Rechnung. ${message}`);
+    return sonstige('fehler', null, fmt(_('Data set not readable — other invoice. {message}'), { message }));
 }
 
-export const INVOICE_KIND_LABEL: Record<EInvoiceClassification['kind'], string> = {
-    'e-rechnung': 'E-Rechnung',
-    'sonstige-rechnung': 'sonstige Rechnung',
-};
+/**
+ * The badge labels, matching the glossary titles so label and popover stay one pair. A function,
+ * not a constant: the translator is bound at startup, after module evaluation.
+ */
+export function invoiceKindLabel(kind: EInvoiceClassification['kind']): string {
+    return kind === 'e-rechnung' ? _('E-Rechnung (e-invoice)') : _('Other invoice');
+}

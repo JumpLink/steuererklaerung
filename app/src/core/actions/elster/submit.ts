@@ -42,7 +42,7 @@ import { filingKindForForm, filingPeriodForScope, type FilingForm } from './fili
 import { evaluateSubmissionGate, type SubmissionGate } from './signoffs.ts';
 import { applyEricHome, getEricStatus } from './eric-status.ts';
 import { isPrivacyAcknowledged } from './privacy-ack.ts';
-import { _ } from '../../lib/i18n.ts';
+import { _, fmt } from '../../lib/i18n.ts';
 import {
     euerDatenartVersion,
     usteDatenartVersion,
@@ -244,25 +244,29 @@ export interface SubmitReadinessInputs {
 export function computeSubmitReadiness(inp: SubmitReadinessInputs): { ready: boolean; blockers: string[] } {
     const blockers: string[] = [];
     if (!inp.snapshot) {
-        blockers.push('Kein Filing-Snapshot vorhanden — zuerst einen Snapshot erfassen.');
+        blockers.push(_('No filing snapshot present — capture a snapshot first.'));
         return { ready: false, blockers };
     }
 
     // 1. Structural guards (both modes).
     if (inp.snapshot.status === 'submitting') {
         blockers.push(
-            'Vorheriger Versand nicht abgeschlossen (Status „submitting") — Übertragung erst manuell abklären, kein blinder Neuversuch.',
+            _(
+                'The previous submission did not finish (status “submitting”) — settle the transfer by hand first, no blind retry.',
+            ),
         );
     }
     if (inp.snapshot.status === 'superseded') {
-        blockers.push('Snapshot ist „superseded" (durch einen neueren ersetzt) — den aktuellen Snapshot verwenden.');
+        blockers.push(_('The snapshot is “superseded” (a newer one replaced it) — use the current snapshot.'));
     }
     if (inp.stale) {
-        blockers.push('Snapshot veraltet — die Daten haben sich seit der Erfassung geändert; neu erfassen.');
+        blockers.push(_('Snapshot outdated — the data has changed since it was captured; capture again.'));
     }
     if (inp.herstellerIdMissing) {
         blockers.push(
-            'Keine gültige ELSTER-Hersteller-ID (Platzhalter 00000) — 5-stellige Hersteller-ID im Entwicklerbereich von elster.de beantragen, in den Einstellungen hinterlegen und den Snapshot neu erfassen.',
+            _(
+                'No valid ELSTER Hersteller-ID (placeholder 00000) — request a 5-digit Hersteller-ID in the developer area of elster.de, store it in the settings and capture the snapshot again.',
+            ),
         );
     }
     if (inp.privacyNoticeMissing) {
@@ -274,12 +278,16 @@ export function computeSubmitReadiness(inp: SubmitReadinessInputs): { ready: boo
     }
     if (inp.mode === 'test' && !inp.isTestArtifact) {
         blockers.push(
-            'Test-Versand, aber der Snapshot trägt keinen Testmerker (Echt-Artefakt). Mit test_mode=true neu erfassen.',
+            _(
+                'Test submission, but the snapshot carries no Testmerker (a live artefact). Capture it again with test_mode=true.',
+            ),
         );
     }
     if (inp.mode === 'live' && inp.isTestArtifact) {
         blockers.push(
-            'Echt-Versand, aber der Snapshot trägt einen Testmerker (würde verworfen). Mit test_mode=false neu erfassen.',
+            _(
+                'Live submission, but the snapshot carries a Testmerker (it would be discarded). Capture it again with test_mode=false.',
+            ),
         );
     }
 
@@ -288,25 +296,27 @@ export function computeSubmitReadiness(inp: SubmitReadinessInputs): { ready: boo
         if (inp.gate && !inp.gate.unlocked) blockers.push(...inp.gate.blockers);
         if (inp.snapshot.status === 'draft') {
             blockers.push(
-                'Snapshot noch nicht validiert — vor dem Echt-Versand lokal validieren / testen (test-first).',
+                _('Snapshot not validated yet — validate/test it locally before the live submission (test first).'),
             );
         }
         if (inp.alreadyFiled && !inp.isCorrection) {
             blockers.push(
-                'Für diesen Zeitraum ist bereits ein Snapshot „submitted" — doppelter Echt-Versand blockiert. ' +
-                    'Wenn das eine BERICHTIGUNG sein soll: --korrektur.',
+                _(
+                    'A snapshot for this period is already “submitted” — a second live submission is blocked. If this is meant to be a BERICHTIGUNG: --korrektur.',
+                ),
             );
         }
         // A correction claim with nothing to correct is a misunderstanding worth naming: the flag
         // would otherwise silently do nothing and the sender would believe a marker was set.
         if (inp.isCorrection && !inp.alreadyFiled) {
             blockers.push(
-                'Als Berichtigung markiert, aber für diesen Zeitraum ist keine Erklärung als „submitted" erfasst — ' +
-                    'ohne Erstabgabe gibt es nichts zu berichtigen. Ggf. die Erstabgabe erst im Register nachtragen.',
+                _(
+                    'Marked as a Berichtigung, but no return for this period is recorded as “submitted” — without a first filing there is nothing to correct. Record the first filing in the register if need be.',
+                ),
             );
         }
         if (inp.allowLive !== true) {
-            blockers.push('Echt-Versand erfordert die ausdrückliche Bestätigung (allowLive).');
+            blockers.push(_('A live submission requires the explicit confirmation (allowLive).'));
         }
     }
 
@@ -385,19 +395,19 @@ export function evaluateSubmitReadiness(opts: {
 
 /**
  * Pure pre-flight guard for a LOCAL snapshot validation: which snapshot states may be (re)validated
- * against ERiC without sending. Returns a German blocker message, or `null` when validation may
+ * against ERiC without sending. Returns a blocker message, or `null` when validation may
  * proceed. Terminal/latched states (`submitted`/`submitting`/`superseded`) and a drifted snapshot are
  * refused; `draft` and an already-`validated` snapshot are fine (re-validation is idempotent). Kept
  * pure (no I/O) so it is unit-testable on fixtures, like {@link computeSubmitReadiness}.
  */
 export function snapshotValidationBlocker(snapshot: FilingSnapshot | null, stale: boolean): string | null {
-    if (!snapshot) return 'Kein Filing-Snapshot vorhanden — zuerst einen Snapshot erfassen.';
-    if (snapshot.status === 'submitted') return 'Snapshot ist bereits „submitted" — nichts zu validieren.';
+    if (!snapshot) return _('No filing snapshot present — capture a snapshot first.');
+    if (snapshot.status === 'submitted') return _('The snapshot is already “submitted” — nothing to validate.');
     if (snapshot.status === 'submitting')
-        return 'Snapshot „submitting" (Versand offen) — erst manuell abklären, nicht neu validieren.';
+        return _('Snapshot “submitting” (submission open) — settle it by hand first, do not re-validate.');
     if (snapshot.status === 'superseded')
-        return 'Snapshot ist „superseded" (durch einen neueren ersetzt) — den aktuellen Snapshot verwenden.';
-    if (stale) return 'Snapshot veraltet — die Daten haben sich seit der Erfassung geändert; neu erfassen.';
+        return _('The snapshot is “superseded” (a newer one replaced it) — use the current snapshot.');
+    if (stale) return _('Snapshot outdated — the data has changed since it was captured; capture again.');
     return null;
 }
 
@@ -463,9 +473,8 @@ export async function validateFilingSnapshot(opts: {
             snapshotId: snapshot.id,
             status: snapshot.status,
             valid: false,
-            message:
-                'ERiC-Bibliothek nicht verfügbar — Systembibliothek installieren/importieren (siehe Konten-Ansicht).',
-            blockers: ['ERiC-Bibliothek nicht verfügbar.'],
+            message: _('ERiC library not available — install/import the system library (see the accounts view).'),
+            blockers: [_('ERiC library not available.')],
         };
     }
 
@@ -482,7 +491,9 @@ export async function validateFilingSnapshot(opts: {
             snapshotId: snapshot.id,
             status: snapshot.status,
             valid: false,
-            message: `ERiC-Validierung fehlgeschlagen: ${validation.fehler || '(kein Fehlertext)'}`,
+            message: fmt(_('ERiC validation failed: {error}'), {
+                error: validation.fehler || _('(no error text)'),
+            }),
             blockers: [],
         };
     }
@@ -493,7 +504,7 @@ export async function validateFilingSnapshot(opts: {
         snapshotId: snapshot.id,
         status: updated?.status ?? 'validated',
         valid: true,
-        message: 'ERiC-Validierung bestanden — Snapshot ist jetzt „validated" (test-first-Gate erfüllt).',
+        message: _('ERiC validation passed — the snapshot is “validated” now (test-first gate satisfied).'),
         hinweise: validation.hinweise || null,
         blockers: [],
     };
@@ -547,10 +558,8 @@ export async function submitFiling(opts: SubmitFilingOptions): Promise<SubmitFil
             transferticket: '',
             returnCode: null,
             status: snapshot.status,
-            blockers: [
-                'ERiC-Bibliothek nicht verfügbar — Systembibliothek installieren/importieren (siehe Konten-Ansicht).',
-            ],
-            message: 'ERiC nicht verfügbar.',
+            blockers: [_('ERiC library not available — install/import the system library (see the accounts view).')],
+            message: _('ERiC not available.'),
         };
     }
 
@@ -564,8 +573,8 @@ export async function submitFiling(opts: SubmitFilingOptions): Promise<SubmitFil
             transferticket: '',
             returnCode: null,
             status: snapshot.status,
-            blockers: ['Kein Zertifikatspfad (.pfx) konfiguriert — in den Einstellungen hinterlegen oder mitgeben.'],
-            message: 'Kein ELSTER-Zertifikat konfiguriert.',
+            blockers: [_('No certificate path (.pfx) configured — store it in the settings or pass it in.')],
+            message: _('No ELSTER certificate configured.'),
         };
     }
 
@@ -631,6 +640,8 @@ export async function submitFiling(opts: SubmitFilingOptions): Promise<SubmitFil
                     period: filingPeriodForScope(opts.formType as FilingForm, opts.year, opts.period),
                     filedAt: submittedAt,
                     declaredAmount: declaredAmountFromSnapshot(assertFormType(opts.formType), snapshot.figures),
+                    // PERSISTED into the filing register — stays German so the stored records read
+                    // in one language regardless of the UI locale at the time of the submission.
                     note:
                         `${opts.formType.toUpperCase()} ${opts.year}${opts.isCorrection ? ' — BERICHTIGTE Erklärung' : ''} via ERiC` +
                         ` · Transferticket ${result.transferticket || '(keins)'}` +
@@ -643,7 +654,12 @@ export async function submitFiling(opts: SubmitFilingOptions): Promise<SubmitFil
                 // failed call, so it is reported instead of thrown: the snapshot
                 // already carries the receipt, and `listSteuertermine` now flags
                 // the gap on its own.
-                registerNote = `Achtung: die Abgabe ist durch, konnte aber nicht ins Register geschrieben werden (${err instanceof Error ? err.message : String(err)}). Bitte mit \`filing record\` nachtragen.`;
+                registerNote = fmt(
+                    _(
+                        'Careful: the filing went through, but it could not be written to the register ({error}). Please add it with `filing record`.',
+                    ),
+                    { error: err instanceof Error ? err.message : String(err) },
+                );
             }
         }
         // TODO(live): additionally upload the server protocol to Paperless (DMS) linked to the filing;
@@ -657,8 +673,10 @@ export async function submitFiling(opts: SubmitFilingOptions): Promise<SubmitFil
             status: updated?.status ?? snapshot.status,
             blockers: [],
             message: isLive
-                ? `Echt-Versand erfolgreich. Transferticket: ${result.transferticket || '(keins)'}${registerNote ? `\n${registerNote}` : ' · im Register erfasst.'}`
-                : 'Test-Versand erfolgreich (verworfen am Clearing-House). Snapshot validiert.',
+                ? fmt(_('Live submission successful. Transferticket: {ticket}'), {
+                      ticket: result.transferticket || _('(none)'),
+                  }) + (registerNote ? `\n${registerNote}` : ` · ${_('recorded in the register.')}`)
+                : _('Test submission successful (discarded at the clearing house). Snapshot validated.'),
         };
     }
 
@@ -682,7 +700,15 @@ export async function submitFiling(opts: SubmitFilingOptions): Promise<SubmitFil
         blockers: [],
         message:
             isLive && mayHaveTransmitted(result.returnCode)
-                ? `Übertragungsfehler (Status evtl. unklar, Code ${result.returnCode}) — Status „submitting" bleibt, bitte manuell prüfen.`
-                : `Versand von ERiC abgelehnt (Code ${result.returnCode}): ${result.fehler.slice(0, 200)}`,
+                ? fmt(
+                      _(
+                          'Transfer error (the status may be unclear, code {code}) — the status stays “submitting”, please check by hand.',
+                      ),
+                      { code: result.returnCode },
+                  )
+                : fmt(_('ERiC refused the submission (code {code}): {error}'), {
+                      code: result.returnCode,
+                      error: result.fehler.slice(0, 200),
+                  }),
     };
 }

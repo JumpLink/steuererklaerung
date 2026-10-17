@@ -91,14 +91,14 @@ export default async () => {
             expect(invoicingBlock('own', path)).toBe(null);
             expect(invoicingBlock('', path)).toBe(null);
             const reason = invoicingBlock('misconfigured', path) ?? '';
-            expect(reason).toContain('kein Qonto-Konto');
-            expect(reason).toContain('Einstellungen → Anbindungen');
+            expect(reason).toContain('No Qonto account is assigned');
+            expect(reason).toContain('Settings → Connections');
         });
 
         await it('the presenter reports the block for the notice page', async () => {
             process.env.STEUER_WORKSPACE = fixture();
             try {
-                expect(loadInvoicingBlock('misconfigured')).toContain('kein Qonto-Konto');
+                expect(loadInvoicingBlock('misconfigured')).toContain('No Qonto account is assigned');
                 expect(loadInvoicingBlock('live')).toBe(null);
             } finally {
                 delete process.env.STEUER_WORKSPACE;
@@ -114,7 +114,7 @@ export default async () => {
                 error = e;
             }
             expect(error instanceof QontoNotConfiguredError).toBe(true);
-            expect(String((error as Error).message)).toContain('kein Qonto-Konto');
+            expect(String((error as Error).message)).toContain('No Qonto account is assigned');
             expect(fetchFn.mock.calls.length).toBe(0);
         });
 

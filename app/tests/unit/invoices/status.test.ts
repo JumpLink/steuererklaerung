@@ -2,7 +2,7 @@ import { describe, it, expect } from '@gjsify/unit';
 import {
     normalizeInvoiceStatus,
     displayInvoiceStatus,
-    INVOICE_STATUS_LABEL,
+    invoiceStatusLabel,
     INVOICE_STATUS_TONE,
 } from '../../../src/core/invoices/status.ts';
 
@@ -24,13 +24,13 @@ export default async () => {
             expect(displayInvoiceStatus('open', null, '2026-07-01')).toBe('open');
         });
 
-        await it('has a German label + tone for every display state', async () => {
+        await it('has a label + tone for every display state', async () => {
             for (const s of ['draft', 'open', 'overdue', 'paid', 'cancelled'] as const) {
-                expect(INVOICE_STATUS_LABEL[s].length).toBeGreaterThan(0);
+                expect(invoiceStatusLabel(s).length).toBeGreaterThan(0);
                 expect(INVOICE_STATUS_TONE[s]).toBeDefined();
             }
             expect(INVOICE_STATUS_TONE.overdue).toBe('error');
-            expect(INVOICE_STATUS_LABEL.overdue).toBe('Überfällig');
+            expect(invoiceStatusLabel('overdue')).toBe('Overdue'); // no catalogue bound in tests
         });
     });
 };

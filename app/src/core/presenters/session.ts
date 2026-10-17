@@ -23,6 +23,7 @@ import { euerReportByTransactions } from '../actions/elster/euer.ts';
 import type { EuerTxAggregate } from '../elster/euer-transactions.ts';
 import { type DmsProvider, type DmsDocument } from '@steuererklaerung/dms';
 import { dmsProviderForEntity } from '../dms-provider.ts';
+import { _, fmt } from '../lib/i18n.ts';
 import { timed } from '../lib/timing.ts';
 import { loadWorkspaceModel, entityOf, type EntityModel, type WorkspaceModel } from './workspace.ts';
 
@@ -79,7 +80,7 @@ export function createPresenterSession(opts: { years?: number[] } = {}): Present
     function refModel(ref: EntityRef): EntityModel {
         if (typeof ref !== 'string') return ref;
         const e = entityOf(workspace, ref);
-        if (!e) throw new Error(`Unbekannte Entität: ${ref}`);
+        if (!e) throw new Error(fmt(_('Unknown entity: {ref}'), { ref }));
         return e;
     }
 
@@ -124,8 +125,8 @@ export function createPresenterSession(opts: { years?: number[] } = {}): Present
         const key = `${e.id}:${year}`;
         let cached = aggCache.get(key);
         if (!cached) {
-            // The classification rules are re-read from the manifest on every build: „Als Regel
-            // merken", „Regel aus Auswahl" and the settings write them while this session lives, and
+            // The classification rules are re-read from the manifest on every build: "Remember as a
+            // rule", "Rule from the selection" and the settings write them while this session lives, and
             // the snapshot in `elster(e)` would keep classifying with the old ones until a restart.
             const cfg = elster(e);
             const fresh = cfg ? resolveEntityElster(e.id)?.klassifizierung : undefined;

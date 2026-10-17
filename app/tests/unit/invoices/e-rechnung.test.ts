@@ -481,7 +481,7 @@ export default async () => {
             expect(plain.invoice).toBe(null);
             expect(plain.classification.kind).toBe('sonstige-rechnung');
             expect(plain.classification.format).toBe('ohne-datensatz');
-            expect(plain.classification.reason).toContain('PDF ohne');
+            expect(plain.classification.reason).toContain('PDF without');
             const scan = readEInvoice(new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0, 16, 74, 70, 73, 70]));
             expect(scan.source).toBe('sonstiges');
             expect(scan.classification.format).toBe('ohne-datensatz');
@@ -500,7 +500,7 @@ export default async () => {
                 ),
             );
             const reading = readEInvoice(enc);
-            expect(reading.error).toContain('verschlüsselt');
+            expect(reading.error).toContain('encrypted');
             expect(reading.classification.kind).toBe('sonstige-rechnung');
         });
 

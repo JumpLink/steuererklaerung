@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-17 09:35+0200\n"
+"POT-Creation-Date: 2026-10-17 10:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,6 +119,209 @@ msgstr ""
 msgid ""
 "Only the beginning of the document was read — check the fields against the "
 "original."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:115
+msgid "USt-VA (Σ quarters) vs. USt-Jahreserklärung"
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:116
+msgid "Steuerkonto payments vs. declared USt"
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:117
+msgid "EÜR profit vs. Feststellung (current profit)"
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:118
+msgid "Completeness of the bookings"
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:119
+msgid "USt plausibility check (revenue × rate vs. declared USt)"
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:120
+msgid "Prior-year comparison"
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:121
+msgid "EÜR profit vs. ESt (Einkünfte aus Gewerbebetrieb)"
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:123
+msgid "Entity without VAT (private, say) — no USt reconciliation."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:142
+#: src/core/actions/elster/cross-checks.ts:322
+msgid "USt-Jahreserklärung not available."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:143
+#: src/core/actions/elster/cross-checks.ts:209
+msgid "Quarterly USt-VA not available."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:171
+msgid "config"
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:171
+msgid "register"
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:175
+msgid ""
+"Σ declared USt-VA Vorauszahlungssoll ({source}) {soll} € vs. Σ computed "
+"quarterly Zahllast {sum} € (Δ {delta} €). A Δ ≠ 0 means a wrong Soll (a "
+"payment or a Säumniszuschlag recorded instead of the declared Zahllast, say) "
+"or a missing/duplicate period in the register."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:185
+msgid ""
+"CAUTION — the quarterly side is receipt-based (Paperless) and covers only "
+"{covered} € of the {total} € Vorsteuer for the year ({missing} € are "
+"missing): bookings without a receipt are absent there, which makes the "
+"computed quarterly Zahllast systematically too high. So the Δ is NO proof of "
+"a wrong Soll — it counts as a hint only. To settle it, read the ELSTER "
+"Steuerkonto against it, not this figure."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:208
+msgid "Steuerkonto overview not available."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:221
+msgid "No USt declared — nothing to reconcile."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:224
+msgid "USt declared, but no payment found on the Steuerkonto — please check."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:227
+msgid "Declared USt and Steuerkonto payments agree."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:231
+msgid ""
+"A difference is usually a timing effect (Q4/final payment settle in the "
+"following year) — check it by hand against Mein ELSTER."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:235
+msgid ""
+"Declared USt (Σ Q1–Q4) {declared} € · paid to the Finanzamt over the "
+"accounts (net) {paid} € (Δ {delta} €)."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:251
+msgid "No GbR/Personengesellschaft — no Feststellung."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:255
+msgid "EÜR or Feststellung not available."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:262
+msgid ""
+"EÜR profit {expected} € · current profit allocated in the Feststellung "
+"{actual} € (Δ {delta} €)."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:275
+msgid "EÜR not available."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:281
+msgid ""
+"All {n} booking in the active period is classified (via receipt {byDoc} / "
+"via rule {byRule})."
+msgid_plural ""
+"All {n} bookings in the active period are classified (via receipt {byDoc} / "
+"via rule {byRule})."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/cross-checks.ts:295
+msgid ""
+"{n} unclassified private booking — the ESt rests on configuration values "
+"(wages/insurance/…), not on these bookings. Look through them for deductible "
+"items only: donations, § 35a (household services/trade work), "
+"außergewöhnliche Belastungen."
+msgid_plural ""
+"{n} unclassified private bookings — the ESt rests on configuration values "
+"(wages/insurance/…), not on these bookings. Look through them for deductible "
+"items only: donations, § 35a (household services/trade work), "
+"außergewöhnliche Belastungen."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/cross-checks.ts:305
+msgid ""
+"{n} unclassified booking — it falsifies the profit, the USt and every "
+"derived figure. Settle it before filing (elster euer report --by "
+"transactions --detail)."
+msgid_plural ""
+"{n} unclassified bookings — they falsify the profit, the USt and every "
+"derived figure. Settle them before filing (elster euer report --by "
+"transactions --detail)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/cross-checks.ts:329
+msgid ""
+"USt expected from the revenue: 19 % of {net19} € + 7 % of {net7} € = "
+"{implied} € · USt collected per the return {declared} € (Δ {delta} €)."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:359
+msgid "Entity without an EÜR — no reconciliation with the ESt."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:361
+msgid "EÜR report not available — reconciliation skipped."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:368
+msgid ""
+"No ESt declares this profit as its Einkünfte aus Gewerbebetrieb. If one "
+"does, set `einkuenfte_gewerbe_quelle: \"{entity}\"` in that year’s est "
+"configuration — then the copy is checked here instead of going stale in "
+"silence."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:390
+msgid ""
+"ESt profile “{profile}” declares {actual} € as Einkünfte aus Gewerbebetrieb "
+"— matches the EÜR profit {expected} €."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:396
+msgid ""
+"ESt profile “{profile}” declares {actual} € as Einkünfte aus Gewerbebetrieb, "
+"the Anlage EÜR arrives at {expected} € (Δ {delta} €). Both figures go to the "
+"same Finanzamt and have to agree."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:403
+msgid ""
+"This ESt has already been transmitted — filing the Anlage EÜR with the "
+"correct profit is still right (it IS the profit determination, the Finanzamt "
+"takes the profit from there). Afterwards decide whether to file a corrected "
+"ESt; § 153 AO applies if the return was too low because of it."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:405
+msgid "Bring the ESt configuration in line before filing."
+msgstr ""
+
+#: src/core/actions/elster/cross-checks.ts:415
+msgid ""
+"An automatic prior-year comparison ({prev} ↔ {year}) is not implemented yet "
+"— until then, check the prior-year figures by hand (follow-up)."
 msgstr ""
 
 #: src/core/actions/elster/eric-warnings.ts:62
@@ -519,6 +722,78 @@ msgid ""
 "year they are paid."
 msgstr ""
 
+#: src/core/actions/elster/explain.ts:264
+#: src/frontends/desktop/views/steuer-view.ts:214
+msgid "Business income (net)"
+msgstr ""
+
+#: src/core/actions/elster/explain.ts:266
+#: src/frontends/desktop/views/steuer-view.ts:215
+msgid "Business expenses (net)"
+msgstr ""
+
+#: src/core/actions/elster/explain.ts:268
+msgid "Profit (income − expenses)"
+msgstr ""
+
+#: src/core/actions/elster/explain.ts:270
+msgid "USt-Zahllast (VAT − Vorsteuer)"
+msgstr ""
+
+#: src/core/actions/elster/explain.ts:304
+msgid ""
+"No income category for “{id}” in {year}. Available refs: elster explain --"
+"year {year} --list."
+msgstr ""
+
+#: src/core/actions/elster/explain.ts:306
+msgid ""
+"No expense category for “{id}” in {year}. Available refs: elster explain --"
+"year {year} --list."
+msgstr ""
+
+#: src/core/actions/elster/explain.ts:318
+msgid "{n} category ({id})"
+msgid_plural "{n} categories ({id})"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/explain.ts:326
+msgid "Σ {n} booking, net"
+msgid_plural "Σ {n} bookings, net"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/explain.ts:364
+msgid "Σ {n} bookings across {cats} category, net"
+msgid_plural "Σ {n} bookings across {cats} categories, net"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/explain.ts:385
+msgid "Business income ({income}) − business expenses ({expenses})"
+msgstr ""
+
+#: src/core/actions/elster/explain.ts:392
+msgid "Business income"
+msgstr ""
+
+#: src/core/actions/elster/explain.ts:398
+msgid "Business expenses"
+msgstr ""
+
+#: src/core/actions/elster/explain.ts:415
+msgid "USt collected ({collected}) − Vorsteuer ({input})"
+msgstr ""
+
+#: src/core/actions/elster/explain.ts:420 src/core/actions/elster/wizard.ts:200
+msgid "USt collected"
+msgstr ""
+
+#: src/core/actions/elster/explain.ts:421
+msgid "Vorsteuer paid"
+msgstr ""
+
 #: src/core/actions/elster/privacy-ack.ts:71
 msgid ""
 "Privacy notice of the tax administration:\n"
@@ -540,11 +815,715 @@ msgid ""
 "vendor in a support case, and only with your explicit permission."
 msgstr ""
 
-#: src/core/actions/elster/submit.ts:271
+#: src/core/actions/elster/signoffs.ts:115
+msgid ""
+"The release points at an outdated snapshot state — please release again."
+msgstr ""
+
+#: src/core/actions/elster/signoffs.ts:128
+msgid "No filing snapshot present."
+msgstr ""
+
+#: src/core/actions/elster/signoffs.ts:131
+#: src/core/actions/elster/signoffs.ts:183
+msgid "No release (sign-off) present."
+msgstr ""
+
+#: src/core/actions/elster/signoffs.ts:134
+msgid "The release has been revoked."
+msgstr ""
+
+#: src/core/actions/elster/signoffs.ts:143
+msgid ""
+"The data has changed since the release (drift) — capture and release again."
+msgstr ""
+
+#: src/core/actions/elster/signoffs.ts:151
+msgid ""
+"Release valid, but the cross-checks were not clean at the time (errors) — "
+"settle before filing."
+msgstr ""
+
+#: src/core/actions/elster/signoffs.ts:176
+#: src/core/actions/elster/submit.ts:247 src/core/actions/elster/submit.ts:404
+msgid "No filing snapshot present — capture a snapshot first."
+msgstr ""
+
+#: src/core/actions/elster/signoffs.ts:178
+msgid ""
+"Snapshot outdated — the underlying data has changed since it was captured; "
+"capture again."
+msgstr ""
+
+#: src/core/actions/elster/signoffs.ts:185
+msgid "The release has been revoked — please release again."
+msgstr ""
+
+#: src/core/actions/elster/signoffs.ts:195
+msgid ""
+"The cross-checks were not clean at the release (errors) — settle before "
+"filing."
+msgstr ""
+
+#: src/core/actions/elster/signoffs.ts:207
+msgid ""
+"No filing snapshot present — capture a snapshot (elster snapshot) first, "
+"then release."
+msgstr ""
+
+#: src/core/actions/elster/signoffs.ts:212
+msgid ""
+"The snapshot is outdated (the data has changed since it was captured) — "
+"capture it again before releasing (elster snapshot)."
+msgstr ""
+
+#: src/core/actions/elster/signoffs.ts:273
+msgid "Snapshot “{id}” does not match {wanted} (it is {actual})."
+msgstr ""
+
+#: src/core/actions/elster/signoffs.ts:427
+msgid "Release “{id}” belongs to entity “{owner}”, not “{entity}”."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:255
+msgid ""
+"The previous submission did not finish (status “submitting”) — settle the "
+"transfer by hand first, no blind retry."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:260 src/core/actions/elster/submit.ts:409
+msgid ""
+"The snapshot is “superseded” (a newer one replaced it) — use the current "
+"snapshot."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:263 src/core/actions/elster/submit.ts:410
+msgid ""
+"Snapshot outdated — the data has changed since it was captured; capture "
+"again."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:268
+msgid ""
+"No valid ELSTER Hersteller-ID (placeholder 00000) — request a 5-digit "
+"Hersteller-ID in the developer area of elster.de, store it in the settings "
+"and capture the snapshot again."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:275
 msgid ""
 "The privacy notice of the tax administration has not been confirmed yet — "
 "read and confirm it first (desktop: it appears before sending; CLI: `elster "
 "datenschutz`)."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:282
+msgid ""
+"Test submission, but the snapshot carries no Testmerker (a live artefact). "
+"Capture it again with test_mode=true."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:289
+msgid ""
+"Live submission, but the snapshot carries a Testmerker (it would be "
+"discarded). Capture it again with test_mode=false."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:299
+msgid ""
+"Snapshot not validated yet — validate/test it locally before the live "
+"submission (test first)."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:305
+msgid ""
+"A snapshot for this period is already “submitted” — a second live submission "
+"is blocked. If this is meant to be a BERICHTIGUNG: --korrektur."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:314
+msgid ""
+"Marked as a Berichtigung, but no return for this period is recorded as "
+"“submitted” — without a first filing there is nothing to correct. Record the "
+"first filing in the register if need be."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:319
+msgid "A live submission requires the explicit confirmation (allowLive)."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:405
+msgid "The snapshot is already “submitted” — nothing to validate."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:407
+msgid ""
+"Snapshot “submitting” (submission open) — settle it by hand first, do not re-"
+"validate."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:476 src/core/actions/elster/submit.ts:561
+msgid ""
+"ERiC library not available — install/import the system library (see the "
+"accounts view)."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:477
+msgid "ERiC library not available."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:494
+msgid "ERiC validation failed: {error}"
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:495
+msgid "(no error text)"
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:507
+msgid ""
+"ERiC validation passed — the snapshot is “validated” now (test-first gate "
+"satisfied)."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:562
+msgid "ERiC not available."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:576
+msgid ""
+"No certificate path (.pfx) configured — store it in the settings or pass it "
+"in."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:577
+msgid "No ELSTER certificate configured."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:659
+msgid ""
+"Careful: the filing went through, but it could not be written to the "
+"register ({error}). Please add it with `filing record`."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:676
+msgid "Live submission successful. Transferticket: {ticket}"
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:677 src/core/actions/projects.ts:194
+msgid "(none)"
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:678
+msgid "recorded in the register."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:679
+msgid ""
+"Test submission successful (discarded at the clearing house). Snapshot "
+"validated."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:705
+msgid ""
+"Transfer error (the status may be unclear, code {code}) — the status stays "
+"“submitting”, please check by hand."
+msgstr ""
+
+#: src/core/actions/elster/submit.ts:709
+msgid "ERiC refused the submission (code {code}): {error}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:137
+msgid "Profit (EÜR)"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:138
+msgid "USt-Zahllast"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:140
+msgid "GewSt-Messbetrag"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:143 src/core/actions/elster/wizard.ts:232
+msgid "Festgestellte Einkünfte"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:148 src/core/actions/elster/wizard.ts:163
+msgid "Expected additional payment"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:148 src/core/actions/elster/wizard.ts:163
+msgid "Expected refund"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:152
+msgid "USt closing balance {year}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:167
+msgid "Income tax {year}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:169 src/core/actions/elster/wizard.ts:625
+msgid "Taxable income (zvE)"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:170 src/core/actions/elster/wizard.ts:628
+msgid "Income tax assessed"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:177
+msgid "No `betrieb` block in the ELSTER configuration."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:183
+msgid "Anlage EÜR"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:187
+msgid "Profit (current)"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:188
+msgid "USt-Zahllast (year)"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:195
+msgid "USt-Jahreserklärung"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:199
+msgid "Revenue 19 %"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:201
+msgid "Vorsteuer"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:203
+msgid "Abschlusszahlung"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:203 src/core/actions/elster/wizard.ts:629
+#: src/frontends/desktop/views/absenden-section.ts:567
+#: src/frontends/desktop/views/erstattung-group.ts:94
+#: src/frontends/desktop/views/steuer-view.ts:312
+msgid "Refund"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:213
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:63
+msgid "Gewerbesteuer"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:217
+msgid "Gewerbeertrag"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:218
+msgid "Steuermessbetrag"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:227
+#: src/frontends/desktop/views/steuer-view.ts:359
+msgid "Feststellung (GbR)"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:233
+msgid "Total income"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:256 src/core/actions/elster/wizard.ts:267
+msgid "Completeness"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:257 src/core/actions/elster/wizard.ts:268
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:183
+msgid "Complete"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:259
+msgid "Without the year-end adjustments — the ELSTER configuration is missing."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:260
+msgid "The figures are a raw cash view (no AfA/§24/private share)."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:261 src/core/actions/elster/wizard.ts:352
+#: src/core/actions/elster/wizard.ts:535
+msgid "Open settings"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:273
+msgid "All {n} booking classified."
+msgid_plural "All {n} bookings classified."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/wizard.ts:276
+msgid "{n} of {total} bookings unclassified — settle before filing."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:281
+msgid "via receipt: {byDoc} · via rule: {byRule}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:288
+msgid "unclear: {date} {amount} € {counterparty}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:296 src/core/actions/elster/wizard.ts:537
+msgid "Open bookings"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:303
+msgid "AfA: {amount}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:306
+msgid "Private share (unentgeltliche Wertabgabe): {amount}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:308
+msgid "§24 subsequent (net): {amount}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:310
+msgid "Betriebsaufgabe: gemeine Werte configured (an estimate — please check)."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:313
+msgid "Year-end adjustments"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:314
+msgid "Adjustments"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:318
+msgid "{n} adjustment taken into account."
+msgid_plural "{n} adjustments taken into account."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/wizard.ts:321
+msgid "No adjustments configured."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:324
+msgid ""
+"AfA/private share/§24/Betriebsaufgabe via `adjustments` in the ELSTER "
+"configuration."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:331
+msgid "Form previews"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:332 src/core/actions/elster/wizard.ts:636
+msgid "Forms"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:338
+msgid "{n} form ready (check PDF + ERiC XML)."
+msgid_plural "{n} forms ready (check PDF + ERiC XML)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/wizard.ts:344
+msgid "{n} of {total} forms cannot be exported."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:358
+msgid ""
+"Confirm the gemeine Werte of the Betriebsaufgabe (§16/§34 — an estimate)."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:359
+msgid "Spot-check the classification (`elster euer report --detail`)."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:360
+msgid ""
+"Reconcile the figures against the prior year / the tax adviser’s reference."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:362
+msgid ""
+"GewSt-Messbetrag 0 € (below the Freibetrag) — the return is filed all the "
+"same."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:365 src/core/actions/elster/wizard.ts:647
+msgid "Cross-check"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:366 src/core/actions/elster/wizard.ts:648
+#: src/frontends/desktop/views/konten-view.ts:350
+msgid "Check"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:369
+msgid "{n} point to check before filing."
+msgid_plural "{n} points to check before filing."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/wizard.ts:379
+msgid "Profit (current): {amount}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:380
+msgid "USt closing balance: {amount} ({kind})"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:382
+msgid "payment"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:382
+msgid "refund"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:387
+msgid "Festgestellte Einkünfte: {amount}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:392
+msgid "GewSt-Messbetrag: {amount}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:397
+msgid "{n} form exportable as ERiC XML → upload it in Mein ELSTER."
+msgid_plural "{n} forms exportable as ERiC XML → upload them in Mein ELSTER."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/wizard.ts:403
+msgid "Not ready to file yet — open steps above."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:407
+msgid "Summary & filing"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:408 src/core/actions/elster/wizard.ts:666
+msgid "Filing"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:411
+msgid "Ready to file — export the XML for Mein ELSTER."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:412
+msgid "Not ready to file yet."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:488
+msgid "Gross wages: {gross} · Lohnsteuer withheld: {withheld}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:494
+msgid "Einkünfte aus Gewerbebetrieb: {amount}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:498
+msgid ""
+"Net plausibility: detected {detected} vs. expected {expected} ({delta}, "
+"{percent} %)"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:511
+msgid "{n} booking unclassified — assign it to a topic or ignore it."
+msgid_plural ""
+"{n} bookings unclassified — assign them to a topic or ignore them."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/wizard.ts:523
+msgid "Income & Lohnsteuerbescheinigung"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:524 src/core/actions/elster/wizard.ts:724
+#: src/frontends/desktop/views/home-view.ts:159
+#: src/frontends/desktop/views/home-view.ts:375
+#: src/frontends/desktop/views/steuer-view.blp:61
+#: src/frontends/desktop/views/transactions-view.ts:55
+#: src/frontends/desktop/views/transactions-view.ts:177
+msgid "Income"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:527
+msgid "No Lohnsteuerbescheinigung for {year} in the ESt configuration."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:528
+msgid "Gross wages {amount} recorded."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:531
+msgid ""
+"Enter jahre[].bruttoarbeitslohn/lohnsteuer/soli/kirchensteuer in est-"
+"config.json."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:545
+msgid ""
+"Work-related expenses: employee lump sum {amount} (higher than the itemised "
+"proof)."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:548
+msgid "Work-related expenses: itemised {amount} (above the lump sum {lump})."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:553
+msgid ""
+"Insurance contributions deductible: {amount} (retirement {retirement} + "
+"health/care/other {other})."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:560
+msgid "Sonderausgaben (church tax/donations): {amount}."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:567
+msgid "agB: {amount} above the zumutbare Belastung ({limit})."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:571
+msgid "agB: {amount} entirely absorbed by the zumutbare Belastung ({limit})."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:582
+msgid ""
+"§35a: {n} trade/service booking without a labour-cost share — only the "
+"labour (not the material) counts; enter it from the invoice (the payment is "
+"cashless ✓)."
+msgid_plural ""
+"§35a: {n} trade/service bookings without a labour-cost share — only the "
+"labour (not the material) counts; enter it from the invoice (the payment is "
+"cashless ✓)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/wizard.ts:592
+msgid "§35a reduction: {amount} ({expired} expired)."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:596
+msgid "§35a reduction: {amount}."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:602
+msgid ""
+"Insurance candidates from bookings: {amount} — sort into basic health/care "
+"vs. other (configuration)."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:609
+msgid "Deductions"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:611
+msgid "Total amount of income {total} → zvE {zve}."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:622
+msgid "ESt 1 A + Anlage N (estimate)"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:626
+msgid "Tariff income tax"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:627
+msgid "Tax reduction §35a"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:629
+#: src/frontends/desktop/views/absenden-section.ts:567
+msgid "Additional payment"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:635
+msgid "Form preview"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:639
+msgid ""
+"ESt 1 A + Anlage N (estimate) — check PDF + E10 XML exportable; file via "
+"ELSTER direct submission (release) or the web form."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:650
+msgid "Points that can make the assessment differ from the estimate."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:653
+msgid ""
+"The Finanzamt runs the Günstigerprüfungen: Kindergeld/Kinderfreibetrag "
+"(§31), capital income (§32d (6)) + Sparer-Pauschbetrag, the old insurance "
+"rule (§10 (4a))."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:655
+msgid ""
+"§35a: an invoice + a cashless payment are required (a bank payment satisfies "
+"that) — keep the receipts."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:656
+msgid "The tax assessment is what binds; these figures are an estimate."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:665
+#: src/frontends/desktop/views/setup-assistant.ts:590
+msgid "Summary"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:670
+msgid "Expected refund: {amount}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:671
+msgid "Expected additional payment: {amount}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:672
+msgid "Still incomplete — the Lohnsteuerbescheinigung is missing."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:674
+msgid ""
+"income tax assessed {assessed} − Lohnsteuer withheld {withheld} = {result}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:679
+msgid "Soli {owed} − withheld {withheld} = {result}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:684
+msgid "KiSt {owed} − withheld {withheld} = {result}"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:723
+#: src/frontends/desktop/views/setup-assistant.ts:453
+msgid "Income tax"
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:726
+msgid "No income tax tariff on file for {year}."
+msgstr ""
+
+#: src/core/actions/elster/wizard.ts:730
+msgid ""
+"The estimate exists only for documented assessment years (2025 at the "
+"moment). Add the tariff + constants for {year} to docs/references/tax-"
+"sources.md."
 msgstr ""
 
 #: src/core/actions/fints-statements.ts:150
@@ -674,10 +1653,6 @@ msgstr ""
 
 #: src/core/actions/projects.ts:164
 msgid "There is no contact “{id}” for {entity} (see `contacts list`)."
-msgstr ""
-
-#: src/core/actions/projects.ts:194
-msgid "(none)"
 msgstr ""
 
 #: src/core/actions/projects.ts:196
@@ -882,88 +1857,88 @@ msgstr ""
 msgid "Contract number: {number}"
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:108
+#: src/core/elster/anlagegut-kandidat.ts:109
 msgid "Fixed-asset candidates: cannot be checked"
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:109
+#: src/core/elster/anlagegut-kandidat.ts:110
 msgid "No low-value asset threshold on file for {year}."
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:111
+#: src/core/elster/anlagegut-kandidat.ts:112
 msgid "the low-value asset threshold before 2018 is not in the source list"
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:115
+#: src/core/elster/anlagegut-kandidat.ts:116
 msgid "gross"
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:115
+#: src/core/elster/anlagegut-kandidat.ts:116
 msgid "net"
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:152
+#: src/core/elster/anlagegut-kandidat.ts:153
 msgid "Retailer"
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:160
+#: src/core/elster/anlagegut-kandidat.ts:161
 msgid "{n} instalments to {name} ({interval}) totalling {amount} € {basis}"
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:167
+#: src/core/elster/anlagegut-kandidat.ts:168
 msgid "One expense to {name} of {amount} € {basis}"
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:173
+#: src/core/elster/anlagegut-kandidat.ts:174
 msgid ""
 "Up to {limit} € a collective item is possible instead (§ 6 Abs. 2a EStG: one "
 "fifth per year, uniformly for all assets of the year above {from} €)."
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:181
+#: src/core/elster/anlagegut-kandidat.ts:182
 msgid ""
 "Gross, because without input tax deduction the VAT is part of the "
 "acquisition cost (§ 9b Abs. 1 EStG)."
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:188
+#: src/core/elster/anlagegut-kandidat.ts:189
 msgid "Fixed asset? {name}, {amount} €"
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:192
+#: src/core/elster/anlagegut-kandidat.ts:193
 msgid ""
 "{what} is above the low-value asset threshold of {limit} € and is not in the "
 "asset register. Probably a fixed asset: it is then depreciated over its "
 "useful life instead of deducted at once."
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:199
+#: src/core/elster/anlagegut-kandidat.ts:200
 msgid ""
 "To clarify: add it to the asset register — or mark it as fine if it is "
 "consumables or a service."
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:205
+#: src/core/elster/anlagegut-kandidat.ts:206
 msgid "Add to the asset register"
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:210
+#: src/core/elster/anlagegut-kandidat.ts:211
 #: src/core/elster/iban-wechsel.ts:206 src/core/elster/laufende-kosten.ts:373
-#: src/core/elster/reverse-charge-kandidat.ts:251
+#: src/core/elster/reverse-charge-kandidat.ts:250
 msgid "Open the transaction"
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:222
+#: src/core/elster/anlagegut-kandidat.ts:223
 msgid "Fixed-asset candidates: none"
 msgstr ""
 
-#: src/core/elster/anlagegut-kandidat.ts:225
+#: src/core/elster/anlagegut-kandidat.ts:226
 msgid "{n} expense from {year} checked in categories for acquisitions."
 msgid_plural "{n} expenses from {year} checked in categories for acquisitions."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/core/elster/anlagegut-kandidat.ts:234
+#: src/core/elster/anlagegut-kandidat.ts:235
 msgid ""
 "office equipment, office supplies, other and unclassified against the low-"
 "value asset threshold of {limit} € {basis}, instalments to the same retailer "
@@ -1037,7 +2012,7 @@ msgid ""
 msgstr ""
 
 #: src/core/elster/doppelte-rechnung.ts:198
-#: src/core/elster/ust-ohne-angabe.ts:167
+#: src/core/elster/ust-ohne-angabe.ts:165
 msgid "Open the document"
 msgstr ""
 
@@ -1233,7 +2208,7 @@ msgstr ""
 #: src/frontends/desktop/views/fristen-view.ts:158
 #: src/frontends/desktop/views/fristen-view.ts:200
 #: src/frontends/desktop/views/fristen-view.ts:236
-#: src/frontends/desktop/views/rechnungen-view.ts:561
+#: src/frontends/desktop/views/rechnungen-view.ts:560
 msgid "due {date}"
 msgstr ""
 
@@ -1660,62 +2635,62 @@ msgid_plural "and {n} more"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/core/elster/home.ts:202 src/frontends/desktop/views/util.ts:78
+#: src/core/elster/home.ts:202 src/frontends/desktop/views/util.ts:67
 msgctxt "month abbreviation"
 msgid "Jan"
 msgstr ""
 
-#: src/core/elster/home.ts:203 src/frontends/desktop/views/util.ts:79
+#: src/core/elster/home.ts:203 src/frontends/desktop/views/util.ts:68
 msgctxt "month abbreviation"
 msgid "Feb"
 msgstr ""
 
-#: src/core/elster/home.ts:204 src/frontends/desktop/views/util.ts:80
+#: src/core/elster/home.ts:204 src/frontends/desktop/views/util.ts:69
 msgctxt "month abbreviation"
 msgid "Mar"
 msgstr ""
 
-#: src/core/elster/home.ts:205 src/frontends/desktop/views/util.ts:81
+#: src/core/elster/home.ts:205 src/frontends/desktop/views/util.ts:70
 msgctxt "month abbreviation"
 msgid "Apr"
 msgstr ""
 
-#: src/core/elster/home.ts:206 src/frontends/desktop/views/util.ts:82
+#: src/core/elster/home.ts:206 src/frontends/desktop/views/util.ts:71
 msgctxt "month abbreviation"
 msgid "May"
 msgstr ""
 
-#: src/core/elster/home.ts:207 src/frontends/desktop/views/util.ts:83
+#: src/core/elster/home.ts:207 src/frontends/desktop/views/util.ts:72
 msgctxt "month abbreviation"
 msgid "Jun"
 msgstr ""
 
-#: src/core/elster/home.ts:208 src/frontends/desktop/views/util.ts:84
+#: src/core/elster/home.ts:208 src/frontends/desktop/views/util.ts:73
 msgctxt "month abbreviation"
 msgid "Jul"
 msgstr ""
 
-#: src/core/elster/home.ts:209 src/frontends/desktop/views/util.ts:85
+#: src/core/elster/home.ts:209 src/frontends/desktop/views/util.ts:74
 msgctxt "month abbreviation"
 msgid "Aug"
 msgstr ""
 
-#: src/core/elster/home.ts:210 src/frontends/desktop/views/util.ts:86
+#: src/core/elster/home.ts:210 src/frontends/desktop/views/util.ts:75
 msgctxt "month abbreviation"
 msgid "Sep"
 msgstr ""
 
-#: src/core/elster/home.ts:211 src/frontends/desktop/views/util.ts:87
+#: src/core/elster/home.ts:211 src/frontends/desktop/views/util.ts:76
 msgctxt "month abbreviation"
 msgid "Oct"
 msgstr ""
 
-#: src/core/elster/home.ts:212 src/frontends/desktop/views/util.ts:88
+#: src/core/elster/home.ts:212 src/frontends/desktop/views/util.ts:77
 msgctxt "month abbreviation"
 msgid "Nov"
 msgstr ""
 
-#: src/core/elster/home.ts:213 src/frontends/desktop/views/util.ts:89
+#: src/core/elster/home.ts:213 src/frontends/desktop/views/util.ts:78
 msgctxt "month abbreviation"
 msgid "Dec"
 msgstr ""
@@ -2140,53 +3115,53 @@ msgstr ""
 msgid "Then this applies: {origin} → project “{name}”."
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:90
+#: src/core/elster/reverse-charge-kandidat.ts:89
 msgid "counter account in {country}"
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:93
+#: src/core/elster/reverse-charge-kandidat.ts:92
 msgid "VAT ID on the receipt from {country}"
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:102
+#: src/core/elster/reverse-charge-kandidat.ts:101
 msgid "contact “{name}” based in {country}"
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:109
+#: src/core/elster/reverse-charge-kandidat.ts:108
 msgid "other bookings to this counterparty are classified as § 13b"
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:115
+#: src/core/elster/reverse-charge-kandidat.ts:114
 msgid "Abs. 1 or Abs. 2 Nr. 1"
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:116
+#: src/core/elster/reverse-charge-kandidat.ts:115
 msgid "Abs. 1: supply from the EU"
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:116
+#: src/core/elster/reverse-charge-kandidat.ts:115
 msgid "Abs. 2 Nr. 1: non-EU country"
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:172
+#: src/core/elster/reverse-charge-kandidat.ts:171
 msgid "§ 13b candidates: cannot be checked"
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:173
+#: src/core/elster/reverse-charge-kandidat.ts:172
 msgid "For {year} the app knows where none of the suppliers is based."
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:178
+#: src/core/elster/reverse-charge-kandidat.ts:177
 msgid ""
 "no booking carries a counter account IBAN or a supplier country and no "
 "contact names a country"
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:189
+#: src/core/elster/reverse-charge-kandidat.ts:188
 msgid "§ 13b candidates: none missed"
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:192
+#: src/core/elster/reverse-charge-kandidat.ts:191
 msgid ""
 "{n} expense from {year} without declared VAT checked for foreign suppliers."
 msgid_plural ""
@@ -2194,31 +3169,31 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:201
+#: src/core/elster/reverse-charge-kandidat.ts:200
 msgid ""
 "IBAN country, VAT ID on the receipt, contacts and earlier § 13b bookings of "
 "the same counterparty; classified as § 13b: {booked}, flagged for review: "
 "{review}"
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:213
+#: src/core/elster/reverse-charge-kandidat.ts:212
 msgid ""
 "As a small business this applies too — only without input tax deduction, so "
 "the tax is a real burden and has to be declared for that period in an "
 "advance return (§ 18 Abs. 4a UStG)."
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:215
+#: src/core/elster/reverse-charge-kandidat.ts:214
 msgid ""
 "With a full input tax deduction the input tax offsets it, but it still has "
 "to be declared."
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:224
+#: src/core/elster/reverse-charge-kandidat.ts:223
 msgid "§ 13b not recognised? {name}"
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:228
+#: src/core/elster/reverse-charge-kandidat.ts:227
 msgid ""
 "One expense to {name} of {amount} € without declared VAT, not classified as "
 "reverse charge — {signal}."
@@ -2228,19 +3203,19 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:235
+#: src/core/elster/reverse-charge-kandidat.ts:234
 msgid ""
 "Probably a foreign supplier: then you owe the VAT under § 13b Abs. 5 UStG "
 "({paragraph})."
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:240
+#: src/core/elster/reverse-charge-kandidat.ts:239
 msgid ""
 "To clarify: assign the invoice with a supplier country, then the app "
 "classifies § 13b itself."
 msgstr ""
 
-#: src/core/elster/reverse-charge-kandidat.ts:246
+#: src/core/elster/reverse-charge-kandidat.ts:245
 msgid "Assign a document"
 msgstr ""
 
@@ -2491,56 +3466,56 @@ msgid ""
 "are the largest VAT items."
 msgstr ""
 
-#: src/core/elster/ust-ohne-angabe.ts:63
+#: src/core/elster/ust-ohne-angabe.ts:61
 msgid "Bookings without a VAT figure: not applicable"
 msgstr ""
 
-#: src/core/elster/ust-ohne-angabe.ts:65
+#: src/core/elster/ust-ohne-angabe.ts:63
 msgid ""
 "As a small business you deduct no input tax — a missing VAT figure on the "
 "receipt changes nothing."
 msgstr ""
 
-#: src/core/elster/ust-ohne-angabe.ts:68
+#: src/core/elster/ust-ohne-angabe.ts:66
 msgid ""
 "not applicable without input tax deduction (§ 15 Abs. 2 Satz 1 Nr. 1 UStG)"
 msgstr ""
 
-#: src/core/elster/ust-ohne-angabe.ts:105
+#: src/core/elster/ust-ohne-angabe.ts:103
 msgid "Bookings without a VAT figure: cannot be checked"
 msgstr ""
 
-#: src/core/elster/ust-ohne-angabe.ts:106
+#: src/core/elster/ust-ohne-angabe.ts:104
 msgid "No expense in {year} has a linked receipt."
 msgstr ""
 
-#: src/core/elster/ust-ohne-angabe.ts:108
+#: src/core/elster/ust-ohne-angabe.ts:106
 msgid "no expense of the year is linked to a receipt"
 msgstr ""
 
-#: src/core/elster/ust-ohne-angabe.ts:115
+#: src/core/elster/ust-ohne-angabe.ts:113
 msgid "Bookings without a VAT figure: none"
 msgstr ""
 
-#: src/core/elster/ust-ohne-angabe.ts:118
+#: src/core/elster/ust-ohne-angabe.ts:116
 msgid "{n} expense from {year} with a receipt checked."
 msgid_plural "{n} expenses from {year} with a receipt checked."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/core/elster/ust-ohne-angabe.ts:127
+#: src/core/elster/ust-ohne-angabe.ts:125
 msgid ""
 "every linked receipt names a VAT amount or net and gross; excluded: VAT-free "
 "categories ({free}), § 13b candidates ({elsewhere})"
 msgstr ""
 
-#: src/core/elster/ust-ohne-angabe.ts:143
+#: src/core/elster/ust-ohne-angabe.ts:141
 msgid "{n} booking without a VAT figure on the receipt"
 msgid_plural "{n} bookings without a VAT figure on the receipt"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/core/elster/ust-ohne-angabe.ts:152
+#: src/core/elster/ust-ohne-angabe.ts:150
 msgid ""
 "For this expense of {amount} € the receipt names neither a VAT amount nor a "
 "net amount."
@@ -2550,7 +3525,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/core/elster/ust-ohne-angabe.ts:160
+#: src/core/elster/ust-ohne-angabe.ts:158
 msgid ""
 "The input tax from the receipts is therefore a lower bound: if VAT is "
 "included, its deduction is missing. To clarify: enter the VAT amount on the "
@@ -2617,6 +3592,132 @@ msgstr ""
 
 #: src/core/elster/zu-pruefen.ts:132
 msgid "Then this applies again: {source} → {category}."
+msgstr ""
+
+#: src/core/invoices/backend-gate.ts:17
+msgid ""
+"No Qonto account is assigned to “{entity}”, so invoicing through Qonto is "
+"blocked (the Qonto credentials apply to the whole installation and would "
+"otherwise show another entity’s invoices). Assign a Qonto account under "
+"Settings → Connections, or switch invoicing to “Built in”."
+msgstr ""
+
+#: src/core/invoices/doppelzahlung-text.ts:14
+msgid "{n} payment too many received — {amount} €"
+msgid_plural "{n} payments too many received — {amount} €"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/invoices/doppelzahlung-text.ts:18
+msgid "(partly too much)"
+msgstr ""
+
+#: src/core/invoices/doppelzahlung-text.ts:36
+msgid "{n} payment possibly received twice — settle before filing"
+msgid_plural "{n} payments possibly received twice — settle before filing"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/invoices/doppelzahlung-text.ts:46
+msgid "{n} double payment not refunded yet"
+msgid_plural "{n} double payments not refunded yet"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/invoices/e-rechnung/classify.ts:40
+msgid ""
+"The data set names no guideline ID — it does not count as an E-Rechnung "
+"under EN 16931."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/classify.ts:47
+msgid ""
+"ZUGFeRD 1.x does not meet the requirements for an E-Rechnung (only from "
+"2.0.1) — other invoice."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/classify.ts:55
+msgid "XRechnung data set inside the PDF — counts as an E-Rechnung."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/classify.ts:56
+msgid "XRechnung data set under EN 16931 — counts as an E-Rechnung."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/classify.ts:67
+msgid "Version 2.0.1 or higher is not stated in the XML — please check."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/classify.ts:73
+msgid ""
+"The ZUGFeRD/Factur-X profile MINIMUM is not an E-Rechnung under the UStG — "
+"other invoice."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/classify.ts:80
+msgid ""
+"The ZUGFeRD/Factur-X profile BASIC-WL is not an E-Rechnung under the UStG — "
+"other invoice."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/classify.ts:84
+msgid "ZUGFeRD/Factur-X profile {profile} — counts as an E-Rechnung."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/classify.ts:95
+msgid "Data set under EN 16931 — counts as an E-Rechnung."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/classify.ts:99
+msgid "Data set under EN 16931 (CIUS) — counts as an E-Rechnung."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/classify.ts:104
+msgid ""
+"The guideline ID “{id}” is unknown — not recognised as an E-Rechnung, please "
+"check by hand."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/classify.ts:121
+msgid ""
+"PDF without an embedded data set — not an E-Rechnung but an other invoice."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/classify.ts:122
+msgid ""
+"Image or scan without a data set — not an E-Rechnung but an other invoice."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/classify.ts:128
+msgid "Data set not readable — other invoice. {message}"
+msgstr ""
+
+#: src/core/invoices/e-rechnung/classify.ts:136
+msgid "E-Rechnung (e-invoice)"
+msgstr ""
+
+#: src/core/invoices/e-rechnung/classify.ts:136
+msgid "Other invoice"
+msgstr ""
+
+#: src/core/invoices/e-rechnung/pdf.ts:143
+msgid "The embedded file uses an unsupported PDF filter ({filter})."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/pdf.ts:153
+msgid "The PDF is encrypted — an embedded data set cannot be read."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/pdf.ts:181
+msgid "The embedded file “{name}” cannot be unpacked."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/prefill.ts:119
+msgid "Prefilled from the last invoice from {correspondent} of {date}."
+msgstr ""
+
+#: src/core/invoices/e-rechnung/prefill.ts:120
+msgid "Prefilled from the last invoice from {correspondent}."
 msgstr ""
 
 #: src/core/invoices/forderungen-hinweis.ts:33
@@ -2696,27 +3797,32 @@ msgstr ""
 msgid "View receivables"
 msgstr ""
 
-#: src/core/invoices/forderungen.ts:274
-msgid "Not due yet"
-msgstr ""
-
-#: src/core/invoices/forderungen.ts:275
-msgid "1–30 days overdue"
+#: src/core/invoices/forderungen.ts:116
+msgctxt "receivables"
+msgid "No customer"
 msgstr ""
 
 #: src/core/invoices/forderungen.ts:276
-msgid "31–60 days overdue"
+msgid "Not due yet"
 msgstr ""
 
 #: src/core/invoices/forderungen.ts:277
-msgid "61–90 days overdue"
+msgid "1–30 days overdue"
 msgstr ""
 
 #: src/core/invoices/forderungen.ts:278
+msgid "31–60 days overdue"
+msgstr ""
+
+#: src/core/invoices/forderungen.ts:279
+msgid "61–90 days overdue"
+msgstr ""
+
+#: src/core/invoices/forderungen.ts:280
 msgid "More than 90 days overdue"
 msgstr ""
 
-#: src/core/invoices/forderungen.ts:455
+#: src/core/invoices/forderungen.ts:457
 msgid "{n} receivable overdue"
 msgid_plural "{n} receivables overdue"
 msgstr[0] ""
@@ -2789,6 +3895,129 @@ msgstr ""
 
 #: src/core/invoices/mahnung-text.ts:68
 msgid "The invoice is not due yet."
+msgstr ""
+
+#: src/core/invoices/provider.ts:257
+msgid "Issue date (issueDate) is missing."
+msgstr ""
+
+#: src/core/invoices/provider.ts:258
+msgid "Due date (dueDate) is missing."
+msgstr ""
+
+#: src/core/invoices/provider.ts:259
+msgid "Currency (currency) is missing."
+msgstr ""
+
+#: src/core/invoices/provider.ts:261
+msgid "At least one invoice item is required."
+msgstr ""
+
+#: src/core/invoices/provider.ts:266
+msgid "Item {n}: the title is missing."
+msgstr ""
+
+#: src/core/invoices/provider.ts:269
+msgid "Item {n}: invalid quantity “{value}”."
+msgstr ""
+
+#: src/core/invoices/provider.ts:274
+msgid "Item {n}: invalid unit price “{value}”."
+msgstr ""
+
+#: src/core/invoices/provider.ts:279
+msgid "Item {n}: invalid VAT rate “{value}”."
+msgstr ""
+
+#: src/core/invoices/provider.ts:309
+msgid ""
+"Qonto back-end: no payment IBAN configured (invoicing.iban or QONTO_IBAN)."
+msgstr ""
+
+#: src/core/invoices/provider.ts:314
+msgid "Item {n}: title longer than {max} characters (Qonto limit)."
+msgstr ""
+
+#: src/core/invoices/provider.ts:328
+msgid ""
+"Qonto back-end: customer.qontoClientId is missing. Create the customer in "
+"Qonto (or put the client id into recurring-invoices.json) before you create "
+"the invoice."
+msgstr ""
+
+#: src/core/invoices/provider.ts:334
+msgid ""
+"Invoice invalid:\n"
+"- {problems}"
+msgstr ""
+
+#: src/core/invoices/provider.ts:390
+msgid ""
+"A draft has no final PDF yet. The invoice has to be finalised in Qonto first."
+msgstr ""
+
+#: src/core/invoices/provider.ts:396
+msgid ""
+"Qonto has not generated the PDF for this invoice yet (that takes a few "
+"seconds after finalising). Please try again in a moment."
+msgstr ""
+
+#: src/core/invoices/provider.ts:403
+msgid "The invoice file at Qonto is not a PDF ({type})."
+msgstr ""
+
+#: src/core/invoices/recurring.ts:218
+msgid "{n} invoice open, {amount}"
+msgid_plural "{n} invoices open, {amount}"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/invoices/recurring.ts:223
+msgid " — the oldest for {n} day"
+msgid_plural " — the oldest for {n} days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/invoices/recurring.ts:229
+msgctxt "reminder"
+msgid "OVERDUE"
+msgstr ""
+
+#: src/core/invoices/recurring.ts:230
+msgctxt "reminder"
+msgid "due soon"
+msgstr ""
+
+#: src/core/invoices/status.ts:44
+msgctxt "invoice status"
+msgid "Draft"
+msgstr ""
+
+#: src/core/invoices/status.ts:46
+#: src/frontends/desktop/views/rechnungen-view.ts:74
+#: src/frontends/desktop/views/rechnungen-view.ts:440
+msgctxt "invoice status"
+msgid "Open"
+msgstr ""
+
+#: src/core/invoices/status.ts:48
+#: src/frontends/desktop/views/rechnungen-view.ts:75
+#: src/frontends/desktop/views/rechnungen-view.ts:445
+msgctxt "invoice status"
+msgid "Overdue"
+msgstr ""
+
+#: src/core/invoices/status.ts:50
+#: src/frontends/desktop/views/rechnungen-view.ts:76
+#: src/frontends/desktop/views/rechnungen-view.ts:451
+msgctxt "invoice status"
+msgid "Paid"
+msgstr ""
+
+#: src/core/invoices/status.ts:52
+#: src/frontends/desktop/views/rechnungen-view.ts:77
+msgctxt "invoice status"
+msgid "Cancelled"
 msgstr ""
 
 #: src/core/lib/edition-badges.ts:29
@@ -2872,13 +4101,21 @@ msgstr ""
 msgid "name of the issuer"
 msgstr ""
 
-#: src/core/presenters/erstattungen.ts:153
-msgid "booking {id}"
-msgstr ""
-
-#: src/core/presenters/erstattungen.ts:217
+#: src/core/presenters/aufteilung.ts:75 src/core/presenters/erstattungen.ts:217
 #: src/core/presenters/erstattungen.ts:245
 msgid "Booking {id} does not belong to {entity} {year}."
+msgstr ""
+
+#: src/core/presenters/aufteilung.ts:123 src/core/presenters/aufteilung.ts:145
+msgid "The booking is linked as a refund. Unlink it before splitting."
+msgstr ""
+
+#: src/core/presenters/belege.ts:173
+msgid "{done} of {total} checked"
+msgstr ""
+
+#: src/core/presenters/erstattungen.ts:153
+msgid "booking {id}"
 msgstr ""
 
 #: src/core/presenters/erstattungen.ts:224
@@ -2964,6 +4201,14 @@ msgstr ""
 msgid "the Gewerbesteuer estimate failed: {error}"
 msgstr ""
 
+#: src/core/presenters/hinweise.ts:128
+msgid "No insight “{key}” for {entity} {year}. Available: {known}"
+msgstr ""
+
+#: src/core/presenters/laufende-kosten.ts:68
+msgid "The amount has to be greater than 0."
+msgstr ""
+
 #: src/core/presenters/projekt.ts:157
 msgid "(unknown project {id})"
 msgstr ""
@@ -3006,6 +4251,10 @@ msgstr ""
 
 #: src/core/presenters/projekt.ts:399
 msgid "an earlier rule claims it first"
+msgstr ""
+
+#: src/core/presenters/session.ts:83
+msgid "Unknown entity: {ref}"
 msgstr ""
 
 #: src/core/presenters/zu-pruefen.ts:76
@@ -3329,7 +4578,7 @@ msgid "Check & match receipts"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:56
-#: src/frontends/desktop/views/transactions-view.ts:252
+#: src/frontends/desktop/views/transactions-view.ts:253
 msgid "Transactions"
 msgstr ""
 
@@ -3823,16 +5072,6 @@ msgstr ""
 msgid "Test submission failed"
 msgstr ""
 
-#: src/frontends/desktop/views/absenden-section.ts:567
-#: src/frontends/desktop/views/erstattung-group.ts:94
-#: src/frontends/desktop/views/steuer-view.ts:309
-msgid "Refund"
-msgstr ""
-
-#: src/frontends/desktop/views/absenden-section.ts:567
-msgid "Additional payment"
-msgstr ""
-
 #: src/frontends/desktop/views/absenden-section.ts:593
 msgid "Successfully submitted"
 msgstr ""
@@ -3943,7 +5182,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/anlagen-view.ts:203
 #: src/frontends/desktop/views/steuerkonto-view.ts:119
-#: src/frontends/desktop/views/steuer-view.ts:269
+#: src/frontends/desktop/views/steuer-view.ts:272
 msgid "{n} booking"
 msgid_plural "{n} bookings"
 msgstr[0] ""
@@ -4231,8 +5470,8 @@ msgstr ""
 #: src/frontends/desktop/views/steuer-view.blp:32
 #: src/frontends/desktop/views/transactions-view.blp:32
 #: src/frontends/desktop/views/ustva-view.blp:32
-#: src/frontends/desktop/views/util.ts:442
-#: src/frontends/desktop/views/util.ts:445
+#: src/frontends/desktop/views/util.ts:431
+#: src/frontends/desktop/views/util.ts:434
 #: src/frontends/desktop/views/vertraege-view.blp:54
 #: src/frontends/desktop/views/zeiten-view.blp:47
 #: src/frontends/desktop/views/zu-pruefen-view.blp:33
@@ -4304,7 +5543,7 @@ msgstr ""
 #: src/frontends/desktop/views/dokumente-view.ts:180
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:422
-#: src/frontends/desktop/views/rechnungen-view.ts:559
+#: src/frontends/desktop/views/rechnungen-view.ts:558
 msgid "No. {number}"
 msgstr ""
 
@@ -4319,7 +5558,7 @@ msgid "Could not determine candidate transactions"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:315
-#: src/frontends/desktop/views/util.ts:460
+#: src/frontends/desktop/views/util.ts:449
 msgid "Try again"
 msgstr ""
 
@@ -4350,6 +5589,11 @@ msgstr ""
 #: src/frontends/desktop/views/steuerkonto-view.ts:102
 #: src/frontends/desktop/views/tx-detail-dialog.ts:202
 msgid "Net"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:365
+msgctxt "receipt"
+msgid "VAT"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:379
@@ -4664,10 +5908,6 @@ msgid ""
 "Two figures are enough — the third is filled in. Comma as decimal separator."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:183
-msgid "Complete"
-msgstr ""
-
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:222
 #: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:98
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:106
@@ -4830,12 +6070,12 @@ msgid "Add receipt"
 msgstr ""
 
 #: src/frontends/desktop/views/dokumente-view.ts:147
-#: src/frontends/desktop/views/transactions-view.ts:255
+#: src/frontends/desktop/views/transactions-view.ts:256
 msgid "{shown} of {total} shown"
 msgstr ""
 
 #: src/frontends/desktop/views/dokumente-view.ts:148
-#: src/frontends/desktop/views/transactions-view.ts:256
+#: src/frontends/desktop/views/transactions-view.ts:257
 msgid "{total} total"
 msgstr ""
 
@@ -5573,10 +6813,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:269
 msgid "Invoices show no VAT and carry the § 19 notice."
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:63
-msgid "Gewerbesteuer"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:64
@@ -6843,9 +8079,9 @@ msgstr ""
 #: src/frontends/desktop/views/forderungen-view.ts:156
 #: src/frontends/desktop/views/projekt-detail-dialog.ts:113
 #: src/frontends/desktop/views/projekte-view.ts:150
-#: src/frontends/desktop/views/rechnungen-view.ts:443
-#: src/frontends/desktop/views/rechnungen-view.ts:449
-#: src/frontends/desktop/views/rechnungen-view.ts:455
+#: src/frontends/desktop/views/rechnungen-view.ts:442
+#: src/frontends/desktop/views/rechnungen-view.ts:448
+#: src/frontends/desktop/views/rechnungen-view.ts:454
 msgid "{n} invoice"
 msgid_plural "{n} invoices"
 msgstr[0] ""
@@ -7001,7 +8237,7 @@ msgid "due tomorrow"
 msgstr ""
 
 #: src/frontends/desktop/views/fristen-view.ts:48
-#: src/frontends/desktop/views/rechnungen-view.ts:266
+#: src/frontends/desktop/views/rechnungen-view.ts:265
 msgid "in {n} day"
 msgid_plural "in {n} days"
 msgstr[0] ""
@@ -7465,25 +8701,17 @@ msgid "Income − expenses"
 msgstr ""
 
 #: src/frontends/desktop/views/home-view.ts:159
-#: src/frontends/desktop/views/home-view.ts:375
-#: src/frontends/desktop/views/steuer-view.blp:61
-#: src/frontends/desktop/views/transactions-view.ts:54
-#: src/frontends/desktop/views/transactions-view.ts:176
-msgid "Income"
-msgstr ""
-
-#: src/frontends/desktop/views/home-view.ts:159
 #: src/frontends/desktop/views/home-view.ts:160
-#: src/frontends/desktop/views/transactions-view.ts:176
-#: src/frontends/desktop/views/transactions-view.ts:181
+#: src/frontends/desktop/views/transactions-view.ts:177
+#: src/frontends/desktop/views/transactions-view.ts:182
 msgid "net {year}"
 msgstr ""
 
 #: src/frontends/desktop/views/home-view.ts:160
 #: src/frontends/desktop/views/home-view.ts:376
 #: src/frontends/desktop/views/steuer-view.blp:66
-#: src/frontends/desktop/views/transactions-view.ts:55
-#: src/frontends/desktop/views/transactions-view.ts:178
+#: src/frontends/desktop/views/transactions-view.ts:56
+#: src/frontends/desktop/views/transactions-view.ts:179
 msgid "Expenses"
 msgstr ""
 
@@ -7582,9 +8810,9 @@ msgid "Organisation"
 msgstr ""
 
 #: src/frontends/desktop/views/kontakte-view.ts:48
-#: src/frontends/desktop/views/rechnungen-view.ts:73
+#: src/frontends/desktop/views/rechnungen-view.ts:72
 #: src/frontends/desktop/views/tab-hub.ts:198
-#: src/frontends/desktop/views/transactions-view.ts:53
+#: src/frontends/desktop/views/transactions-view.ts:54
 #: src/frontends/desktop/views/vertraege-view.ts:61
 msgid "All"
 msgstr ""
@@ -7631,7 +8859,7 @@ msgid "Create a contact"
 msgstr ""
 
 #: src/frontends/desktop/views/kontakte-view.ts:200
-#: src/frontends/desktop/views/transactions-view.ts:268
+#: src/frontends/desktop/views/transactions-view.ts:269
 msgid "Nothing found"
 msgstr ""
 
@@ -7906,10 +9134,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/konten-view.ts:335
 msgid "DatenLieferant (name)"
-msgstr ""
-
-#: src/frontends/desktop/views/konten-view.ts:350
-msgid "Check"
 msgstr ""
 
 #: src/frontends/desktop/views/konten-view.ts:360
@@ -8863,7 +10087,7 @@ msgid "via time entries"
 msgstr ""
 
 #: src/frontends/desktop/views/projekt-detail-dialog.ts:217
-#: src/frontends/desktop/views/transactions-view.ts:327
+#: src/frontends/desktop/views/transactions-view.ts:328
 #: src/frontends/desktop/views/tx-detail-dialog.ts:260
 msgid "Assignment taken back"
 msgstr ""
@@ -9064,8 +10288,8 @@ msgid "Project created"
 msgstr ""
 
 #: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:58
-#: src/frontends/desktop/views/transactions-view.ts:293
-#: src/frontends/desktop/views/transactions-view.ts:312
+#: src/frontends/desktop/views/transactions-view.ts:294
+#: src/frontends/desktop/views/transactions-view.ts:313
 #: src/frontends/desktop/views/tx-detail-dialog.ts:225
 msgid "Assign to project"
 msgstr ""
@@ -9178,7 +10402,7 @@ msgid "Loading details …"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:150
-#: src/frontends/desktop/views/rechnungen-view.ts:557
+#: src/frontends/desktop/views/rechnungen-view.ts:556
 #: src/frontends/desktop/views/zeiten-view.ts:320
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:69
 msgid "Invoice"
@@ -9384,7 +10608,7 @@ msgid "Not sent by email yet."
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:516
-#: src/frontends/desktop/views/rechnungen-view.ts:570
+#: src/frontends/desktop/views/rechnungen-view.ts:569
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:206
 msgid "sent"
 msgstr ""
@@ -9512,7 +10736,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:751
 #: src/frontends/desktop/views/steuererklaerung-view.ts:549
-#: src/frontends/desktop/views/steuer-view.ts:380
+#: src/frontends/desktop/views/steuer-view.ts:383
 msgid "PDF not available"
 msgstr ""
 
@@ -9540,188 +10764,161 @@ msgstr ""
 msgid "All invoices"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:55
+#: src/frontends/desktop/views/rechnungen-view.ts:54
 msgctxt "recurring status"
 msgid "overdue"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:56
+#: src/frontends/desktop/views/rechnungen-view.ts:55
 msgctxt "recurring status"
 msgid "due soon"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:57
+#: src/frontends/desktop/views/rechnungen-view.ts:56
 msgctxt "recurring status"
 msgid "planned"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:58
+#: src/frontends/desktop/views/rechnungen-view.ts:57
 msgctxt "recurring status"
 msgid "paused"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:59
+#: src/frontends/desktop/views/rechnungen-view.ts:58
 msgctxt "recurring status"
 msgid "cancelled"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:74
+#: src/frontends/desktop/views/rechnungen-view.ts:73
 msgid "Drafts"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:75
-#: src/frontends/desktop/views/rechnungen-view.ts:441
-#: src/frontends/desktop/views/util.ts:70
-msgctxt "invoice status"
-msgid "Open"
-msgstr ""
-
-#: src/frontends/desktop/views/rechnungen-view.ts:76
-#: src/frontends/desktop/views/rechnungen-view.ts:446
-#: src/frontends/desktop/views/util.ts:71
-msgctxt "invoice status"
-msgid "Overdue"
-msgstr ""
-
-#: src/frontends/desktop/views/rechnungen-view.ts:77
-#: src/frontends/desktop/views/rechnungen-view.ts:452
-#: src/frontends/desktop/views/util.ts:72
-msgctxt "invoice status"
-msgid "Paid"
-msgstr ""
-
-#: src/frontends/desktop/views/rechnungen-view.ts:78
-#: src/frontends/desktop/views/util.ts:73
-msgctxt "invoice status"
-msgid "Cancelled"
-msgstr ""
-
-#: src/frontends/desktop/views/rechnungen-view.ts:186
+#: src/frontends/desktop/views/rechnungen-view.ts:185
 msgid "Invoices could not be loaded"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:209
+#: src/frontends/desktop/views/rechnungen-view.ts:208
 msgid "{overdue} overdue · {soon} due soon · {total} total"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:214
+#: src/frontends/desktop/views/rechnungen-view.ts:213
 msgid "none recorded"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:220
+#: src/frontends/desktop/views/rechnungen-view.ts:219
 msgid "No recurring invoices"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:222
+#: src/frontends/desktop/views/rechnungen-view.ts:221
 msgid ""
 "What is billed the same every year or month — hosting, maintenance, rent — "
 "is set up here once and then reminds you by itself."
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:225
+#: src/frontends/desktop/views/rechnungen-view.ts:224
 msgid "Add recurring invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:246
+#: src/frontends/desktop/views/rechnungen-view.ts:245
 msgid "Recurring item “{id}” not found."
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:261
+#: src/frontends/desktop/views/rechnungen-view.ts:260
 msgid "{n} day overdue"
 msgid_plural "{n} days overdue"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:265
+#: src/frontends/desktop/views/rechnungen-view.ts:264
 msgid "today"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:270
+#: src/frontends/desktop/views/rechnungen-view.ts:269
 msgid "due {date} ({when})"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:271
+#: src/frontends/desktop/views/rechnungen-view.ts:270
 msgid "last {number}"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:284
-#: src/frontends/desktop/views/rechnungen-view.ts:323
+#: src/frontends/desktop/views/rechnungen-view.ts:283
+#: src/frontends/desktop/views/rechnungen-view.ts:322
 msgid "Create draft"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:295
+#: src/frontends/desktop/views/rechnungen-view.ts:294
 msgid "Edit recurring item"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:310
+#: src/frontends/desktop/views/rechnungen-view.ts:309
 msgid "Creating draft …"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:315
+#: src/frontends/desktop/views/rechnungen-view.ts:314
 msgid "Draft {number} created"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:316
+#: src/frontends/desktop/views/rechnungen-view.ts:315
 msgid "Draft created"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:324
+#: src/frontends/desktop/views/rechnungen-view.ts:323
 msgid "Draft failed"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:330
+#: src/frontends/desktop/views/rechnungen-view.ts:329
 msgid "Loading invoices from the back end …"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:361
+#: src/frontends/desktop/views/rechnungen-view.ts:360
 msgid "Invoices not available"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:467
+#: src/frontends/desktop/views/rechnungen-view.ts:466
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:116
 msgid "New invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:500
+#: src/frontends/desktop/views/rechnungen-view.ts:499
 msgid "{n} total"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:507
+#: src/frontends/desktop/views/rechnungen-view.ts:506
 msgid "Nothing in this status"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:508
+#: src/frontends/desktop/views/rechnungen-view.ts:507
 msgid "No invoice has this status — another filter shows more."
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:509
+#: src/frontends/desktop/views/rechnungen-view.ts:508
 #: src/frontends/desktop/views/vertraege-view.ts:268
 msgid "Show all"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:513
+#: src/frontends/desktop/views/rechnungen-view.ts:512
 msgid "No invoices yet"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:514
+#: src/frontends/desktop/views/rechnungen-view.ts:513
 msgid ""
 "Outgoing invoices are created here — as PDF and as e-invoice (XRechnung)."
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:515
+#: src/frontends/desktop/views/rechnungen-view.ts:514
 msgid "Create invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:560
+#: src/frontends/desktop/views/rechnungen-view.ts:559
 msgid "issued {date}"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:571
+#: src/frontends/desktop/views/rechnungen-view.ts:570
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:384
 msgid "Sending failed"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:572
+#: src/frontends/desktop/views/rechnungen-view.ts:571
 msgid "not sent"
 msgstr ""
 
@@ -10212,10 +11409,6 @@ msgstr ""
 msgid "Business"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:453
-msgid "Income tax"
-msgstr ""
-
 #: src/frontends/desktop/views/setup-assistant.ts:454
 msgid ""
 "Joint assessment is for married couples and civil partners filing together."
@@ -10285,10 +11478,6 @@ msgstr ""
 msgid "API token"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:590
-msgid "Summary"
-msgstr ""
-
 #: src/frontends/desktop/views/setup-assistant.ts:620
 msgid "German tax features on"
 msgstr ""
@@ -10298,7 +11487,7 @@ msgid "German tax features off"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:636
-#: src/frontends/desktop/views/transactions-view.ts:299
+#: src/frontends/desktop/views/transactions-view.ts:300
 msgid "Done"
 msgstr ""
 
@@ -10498,125 +11687,118 @@ msgstr ""
 msgid "Business expenses by category"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:117
+#: src/frontends/desktop/views/steuer-view.ts:118
 msgid "EÜR check sheet"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:120
+#: src/frontends/desktop/views/steuer-view.ts:121
 msgid "VAT check sheet"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:123
+#: src/frontends/desktop/views/steuer-view.ts:124
 msgid "GewSt check sheet"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:126
+#: src/frontends/desktop/views/steuer-view.ts:127
 msgid "Feststellung check sheet"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:134
+#: src/frontends/desktop/views/steuer-view.ts:135
 msgid "Save the check sheet as a PDF"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:154
+#: src/frontends/desktop/views/steuer-view.ts:155
 msgid "The EÜR could not be calculated"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:178
+#: src/frontends/desktop/views/steuer-view.ts:179
 msgid "Total income (net)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:183
+#: src/frontends/desktop/views/steuer-view.ts:184
 msgid "Total expenses (net)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:203
+#: src/frontends/desktop/views/steuer-view.ts:204
 msgid "Anlage EÜR {year}"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:204
+#: src/frontends/desktop/views/steuer-view.ts:205
 msgid "Profit determination under §4 (3) EStG"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:213
-msgid "Business income (net)"
-msgstr ""
-
-#: src/frontends/desktop/views/steuer-view.ts:214
-msgid "Business expenses (net)"
-msgstr ""
-
-#: src/frontends/desktop/views/steuer-view.ts:216
+#: src/frontends/desktop/views/steuer-view.ts:217
 msgid "Profit"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:220
+#: src/frontends/desktop/views/steuer-view.ts:221
 msgid "VAT payable"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:242
+#: src/frontends/desktop/views/steuer-view.ts:243
 msgid "{n} booking is unclassified — please check"
 msgid_plural "{n} bookings are unclassified — please check"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/steuer-view.ts:284
+#: src/frontends/desktop/views/steuer-view.ts:267
+#: src/frontends/desktop/views/transactions-view.ts:340
+msgid "(unclassified)"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:287
 msgid "Key figures"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:288
+#: src/frontends/desktop/views/steuer-view.ts:291
 msgid "Anlage EÜR key figures"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:289
+#: src/frontends/desktop/views/steuer-view.ts:292
 msgid "best effort — check against the Anlage EÜR before filing"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:303
+#: src/frontends/desktop/views/steuer-view.ts:306
 msgid "Annual VAT return {year}"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:306
+#: src/frontends/desktop/views/steuer-view.ts:309
 msgid "VAT payable (year)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:307
+#: src/frontends/desktop/views/steuer-view.ts:310
 msgid "− prepayments filed"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:309
+#: src/frontends/desktop/views/steuer-view.ts:312
 msgid "Final payment"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:318
+#: src/frontends/desktop/views/steuer-view.ts:321
 msgid "§13b VAT owed (neutral for the payable)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:328
+#: src/frontends/desktop/views/steuer-view.ts:331
 msgid "Gewerbesteuer (GewSt 1 A)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:332
+#: src/frontends/desktop/views/steuer-view.ts:335
 msgid "Trade income (rounded down)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:333
+#: src/frontends/desktop/views/steuer-view.ts:336
 msgid "Tax base amount"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:338
+#: src/frontends/desktop/views/steuer-view.ts:341
 msgid "Below the allowance"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:339
+#: src/frontends/desktop/views/steuer-view.ts:342
 msgid "Base amount 0 € — the return is filed anyway"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:356
-msgid "Feststellung (GbR)"
-msgstr ""
-
-#: src/frontends/desktop/views/steuer-view.ts:360
+#: src/frontends/desktop/views/steuer-view.ts:363
 msgid "Income from a trade or business"
 msgstr ""
 
@@ -10676,71 +11858,71 @@ msgstr ""
 msgid "Search transactions …"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:56
+#: src/frontends/desktop/views/transactions-view.ts:57
 msgid "Without receipt"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:132
+#: src/frontends/desktop/views/transactions-view.ts:133
 msgid "Could not load the transactions"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:175
+#: src/frontends/desktop/views/transactions-view.ts:176
 msgid "Transactions {year}"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:183
+#: src/frontends/desktop/views/transactions-view.ts:184
 msgid "Balance"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:269
+#: src/frontends/desktop/views/transactions-view.ts:270
 msgid "No transaction matches the search and filter."
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:270
+#: src/frontends/desktop/views/transactions-view.ts:271
 msgid "Reset filter"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:274
+#: src/frontends/desktop/views/transactions-view.ts:275
 msgid "No transactions yet"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:275
+#: src/frontends/desktop/views/transactions-view.ts:276
 msgid "Transactions come from a connected account or from an imported file."
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:276
+#: src/frontends/desktop/views/transactions-view.ts:277
 msgid "Connect account"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:294
+#: src/frontends/desktop/views/transactions-view.ts:295
 msgid "Assign the marked expenses to a project"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:299
+#: src/frontends/desktop/views/transactions-view.ts:300
 msgid "Select"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:300
+#: src/frontends/desktop/views/transactions-view.ts:301
 msgid "End selection"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:300
+#: src/frontends/desktop/views/transactions-view.ts:301
 msgid "Mark expenses to assign them to a project"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:312
+#: src/frontends/desktop/views/transactions-view.ts:313
 msgid "Assign to project ({n})"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:342
+#: src/frontends/desktop/views/transactions-view.ts:346
 msgid "Project {names}"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:347
+#: src/frontends/desktop/views/transactions-view.ts:351
 msgid "Select: {title} · {date}"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:361
+#: src/frontends/desktop/views/transactions-view.ts:365
 msgid "no receipt"
 msgstr ""
 
@@ -11066,51 +12248,46 @@ msgstr ""
 msgid "XML not available"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:56
+#: src/frontends/desktop/views/util.ts:55
 msgid "{what} saved"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:69
-msgctxt "invoice status"
-msgid "Draft"
-msgstr ""
-
-#: src/frontends/desktop/views/util.ts:360
+#: src/frontends/desktop/views/util.ts:349
 msgid "Could not refresh — showing the previous data"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:395
+#: src/frontends/desktop/views/util.ts:384
 msgid "Not set up yet"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:397
+#: src/frontends/desktop/views/util.ts:386
 msgid ""
 "There is no configuration yet. The assistant creates it — entity, "
 "Steuernummer (tax number) and where the data should live."
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:400
+#: src/frontends/desktop/views/util.ts:389
 msgid "Start setup"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:405
+#: src/frontends/desktop/views/util.ts:394
 msgid "{capability} needs Paperless"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:406
+#: src/frontends/desktop/views/util.ts:395
 msgid "Receipt management can be switched in the settings."
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:407
-#: src/frontends/desktop/views/util.ts:417
+#: src/frontends/desktop/views/util.ts:396
+#: src/frontends/desktop/views/util.ts:406
 msgid "Go to settings"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:412
+#: src/frontends/desktop/views/util.ts:401
 msgid "Paperless is not set up yet"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:414
+#: src/frontends/desktop/views/util.ts:403
 msgid ""
 "Paperless lacks the document types and custom fields the figures are read "
 "from. They can be created in the settings."
