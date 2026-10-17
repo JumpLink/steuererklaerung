@@ -21,7 +21,7 @@ template $BhAuswertungenView: Adw.Bin {
         }
 
         Gtk.Label {
-          label: "Berechne Auswertungen …";
+          label: _("Calculating reports …");
           styles ["dim-label"]
         }
       };
@@ -31,7 +31,7 @@ template $BhAuswertungenView: Adw.Bin {
       name: "error";
       child: Adw.StatusPage error_page {
         icon-name: "dialog-error-symbolic";
-        title: "Konnte nicht laden";
+        title: _("Could not load");
       };
     }
 
@@ -55,7 +55,7 @@ template $BhAuswertungenView: Adw.Bin {
 
           // ── BWA · monatlich ──────────────────────────────────
           Gtk.Label {
-            label: "BWA · monatlich";
+            label: _("BWA · monthly");
             xalign: 0;
             styles ["title-4"]
           }
@@ -86,13 +86,13 @@ template $BhAuswertungenView: Adw.Bin {
             margin-top: 6;
 
             Gtk.Label {
-              label: "Einblicke";
+              label: _("Insights");
               xalign: 0;
               styles ["title-4"]
             }
 
             Gtk.Label {
-              label: "Hinweise aus deinen eigenen Zahlen — keine Steuerberatung";
+              label: _("Hints from your own numbers — not tax advice");
               xalign: 0;
               // May wrap on a phone, still asks for one line — see wrappingLabel() in responsive.ts.
               wrap: true;

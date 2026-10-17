@@ -247,9 +247,11 @@ export class BhAssistentPanel extends Gtk.Box {
 
     /** Seed a demo conversation + a §24b proposal card (STEUER_APP_ASSIST_DEMO) — for GUI screenshots. */
     private seedDemo(): void {
-        this.appendBubble('Ich war ab November alleinerziehend mit meinem Sohn.', true);
+        this.appendBubble(_('I was a single parent with my son from November on.'), true);
         this.appendBubble(
-            'Alles klar. Dann steht dir der Entlastungsbetrag für Alleinerziehende (§24b) anteilig für November und Dezember zu. Hier mein Vorschlag zum Übernehmen:',
+            _(
+                'Understood. Then you are entitled to the Entlastungsbetrag für Alleinerziehende (§24b) pro rata for November and December. Here is my suggestion to apply:',
+            ),
             false,
         );
         const p = buildProposal(

@@ -25,6 +25,7 @@ import {
 import type { AppEntity } from '../entities.ts';
 import { eur, pct } from '../../../core/lib/format.ts';
 import { LoadToken, MONTHS, applyScrollHook, kpiFlow, loadIntoStack, markup } from './util.ts';
+import { _, fmt } from '../i18n.ts';
 import { hinweisDetails } from './hinweis-handlung.ts';
 
 /** Per-level icon + colour class + sort order (most urgent first) — mirrors the web dot levels. */
@@ -64,7 +65,7 @@ export class BhAuswertungenView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'Auswertungen konnten nicht berechnet werden',
+            errorContext: _('The reports could not be calculated'),
             load: () => loadAuswertungen(entity, year),
             fill: (data) => this.fill(data),
         });
@@ -95,7 +96,7 @@ export class BhAuswertungenView extends Adw.Bin {
                     help: 'gesamtleistung',
                 },
                 { label: 'Rohertrag', value: eur(r.totals.rohertrag), help: 'rohertrag' },
-                { label: 'Summe Betriebskosten', value: eur(r.totals.betriebskosten) },
+                { label: _('Total operating costs'), value: eur(r.totals.betriebskosten) },
                 {
                     label: 'Betriebsergebnis',
                     value: eur(ergebnis),
@@ -111,9 +112,9 @@ export class BhAuswertungenView extends Adw.Bin {
         this.clearGrid();
         const lastCol = r.months.length + 1;
 
-        this._grid.attach(this.headerCell('Position', false), 0, 0, 1, 1);
+        this._grid.attach(this.headerCell(_('Item'), false), 0, 0, 1, 1);
         r.months.forEach((m, i) => this._grid.attach(this.headerCell(MONTHS[m] ?? String(m), true), i + 1, 0, 1, 1));
-        this._grid.attach(this.headerCell('Σ Jahr', true), lastCol, 0, 1, 1);
+        this._grid.attach(this.headerCell(_('Σ year'), true), lastCol, 0, 1, 1);
 
         r.lines.forEach((line, idx) => {
             const row = idx + 1;
@@ -215,7 +216,7 @@ export class BhAuswertungenView extends Adw.Bin {
             marginEnd: 16,
         });
         body.append(new Gtk.Image({ iconName: 'object-select-symbolic', cssClasses: ['success'] }));
-        body.append(new Gtk.Label({ label: `Keine Hinweise für ${this.year}`, xalign: 0 }));
+        body.append(new Gtk.Label({ label: fmt(_('No hints for {year}'), { year: this.year }), xalign: 0 }));
         const card = new Gtk.Box({ cssClasses: ['card'], valign: Gtk.Align.START });
         card.append(body);
         return card;

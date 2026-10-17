@@ -230,7 +230,7 @@ export class BhRechnungFormDialog {
             quantity: new Adw.EntryRow({ title: _('Quantity'), text: item.quantity }),
             unit: new Adw.EntryRow({ title: _('Unit (optional)'), text: item.unit ?? '' }),
             unitPrice: new Adw.EntryRow({ title: _('Net unit price (€)'), text: item.unitPrice }),
-            vatRate: new Adw.ComboRow({ title: 'USt-Satz', model: this.vatModel() }),
+            vatRate: new Adw.ComboRow({ title: _('VAT rate'), model: this.vatModel() }),
         };
         w.vatRate.set_selected(vatIndex(item.vatRate));
         const remove = new Adw.ButtonRow({ title: _('Remove line item') });

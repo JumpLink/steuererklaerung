@@ -2,21 +2,26 @@
  * The desktop's {@link MailSender}: a thin pass-through to `@curlew/smtp`.
  *
  * The library keeps credentials out of its errors; this adapter additionally turns them into
- * German text for the dialog and never forwards anything but that text, so a failure can be shown
+ * readable text for the dialog and never forwards anything but that text, so a failure can be shown
  * and logged without leaking the login.
  */
 
 import { SmtpError, sendMessage, verifyAccount, type SmtpErrorCode } from '@curlew/smtp';
 
 import type { MailSender } from '../../../core/mail/mail-sender.ts';
+import { _, fmt } from '../../../core/lib/i18n.ts';
 
-const SUMMARY: Record<SmtpErrorCode, string> = {
-    auth: 'Die Anmeldung am Mailserver ist fehlgeschlagen. Benutzer oder Passwort stimmen nicht.',
-    tls: 'Die verschlüsselte Verbindung zum Mailserver ließ sich nicht aufbauen.',
-    connect: 'Der Mailserver ist nicht erreichbar oder hat die Verbindung abgebrochen.',
-    rejected: 'Der Mailserver hat die Nachricht abgelehnt.',
-    config: 'Die Angaben zum Versandkonto oder zur Nachricht sind ungültig.',
-};
+// A function, not a constant: a module-level record is built at import time, before the frontend
+// registers its translator, and would stay English.
+function summaries(): Record<SmtpErrorCode, string> {
+    return {
+        auth: _('Signing in to the mail server failed. The user name or the password is wrong.'),
+        tls: _('The encrypted connection to the mail server could not be established.'),
+        connect: _('The mail server cannot be reached or dropped the connection.'),
+        rejected: _('The mail server rejected the message.'),
+        config: _('The details of the sending account or of the message are invalid.'),
+    };
+}
 
 /** The server's own reply, which the library appends after `": "`; empty when there is none. */
 function serverReply(err: SmtpError): string {
@@ -24,13 +29,16 @@ function serverReply(err: SmtpError): string {
     return at < 0 ? '' : err.message.slice(at + 2).trim();
 }
 
-/** Readable German message for an adapter failure; carries no credential. */
+/** Readable message for an adapter failure; carries no credential. */
 export function describeMailError(err: unknown): string {
-    if (!(err instanceof SmtpError)) return 'Beim Versand ist ein unerwarteter Fehler aufgetreten.';
+    if (!(err instanceof SmtpError)) return _('Sending failed with an unexpected error.');
+    const summary = summaries();
     // A `config` error is fixed library text naming the invalid field, safe and the useful part.
-    if (err.code === 'config') return `${SUMMARY.config} (${err.message})`;
+    if (err.code === 'config') return `${summary.config} (${err.message})`;
     const reply = serverReply(err);
-    return reply ? `${SUMMARY[err.code]} Antwort des Servers: ${reply}` : SUMMARY[err.code];
+    return reply
+        ? fmt(_('{summary} The server replied: {reply}'), { summary: summary[err.code], reply })
+        : summary[err.code];
 }
 
 export interface SmtpLibrary {

@@ -100,12 +100,14 @@ export default async () => {
             expect(result.accepted[0]).toBe('test@example.invalid');
         });
 
-        await it('turns each error code into German text', async () => {
-            expect(describeMailError(new SmtpError('auth', 'SMTP login failed', 535))).toContain('Anmeldung');
-            expect(describeMailError(new SmtpError('tls', 'SMTP TLS handshake failed'))).toContain('verschlüsselte');
-            expect(describeMailError(new SmtpError('connect', 'SMTP connection failed'))).toContain('erreichbar');
+        await it('turns each error code into readable text', async () => {
+            expect(describeMailError(new SmtpError('auth', 'SMTP login failed', 535))).toContain('Signing in');
+            expect(describeMailError(new SmtpError('tls', 'SMTP TLS handshake failed'))).toContain('encrypted');
+            expect(describeMailError(new SmtpError('connect', 'SMTP connection failed'))).toContain(
+                'cannot be reached',
+            );
             expect(describeMailError(new SmtpError('rejected', 'SMTP server rejected the message'))).toContain(
-                'abgelehnt',
+                'rejected',
             );
         });
 
@@ -127,14 +129,14 @@ export default async () => {
                 }),
             );
             const text = await failure(() => sender.send(account, message));
-            expect(text).toContain('unerwarteter Fehler');
+            expect(text).toContain('unexpected error');
             expect(text.includes(PASSWORD)).toBe(false);
         });
 
         await it('refuses security none for a non-loopback host before any network use', async () => {
             const sender = createMailSender();
             const text = await failure(() => sender.verify({ ...account, security: 'none' }));
-            expect(text).toContain('ungültig');
+            expect(text).toContain('invalid');
             expect(text.includes(PASSWORD)).toBe(false);
         });
 
@@ -154,7 +156,7 @@ export default async () => {
                 ),
             );
             expect(text).toContain('Versand fehlgeschlagen');
-            expect(text).toContain('Anmeldung');
+            expect(text).toContain('Signing in');
             expect(text.includes(PASSWORD)).toBe(false);
         });
 

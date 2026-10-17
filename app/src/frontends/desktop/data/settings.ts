@@ -41,6 +41,7 @@ import {
     type ElsterConfig,
 } from '../../../core/config/index.ts';
 import type { AppEntity } from '../entities.ts';
+import { _, fmt } from '../i18n.ts';
 
 export { MCP_GROUPS } from '../../../core/config/index.ts';
 /**
@@ -76,7 +77,7 @@ export function saveSettings(settings: AppSettings): void {
 
 /** Load the active entity's inline ELSTER config (from the workspace model). */
 export function loadElster(entity: AppEntity): ElsterConfig {
-    if (!entity.elster) throw new Error(`Entität „${entity.id}" hat keine ELSTER-Config.`);
+    if (!entity.elster) throw new Error(fmt(_('Entity “{id}” has no ELSTER config.'), { id: entity.id }));
     return entity.elster;
 }
 
@@ -118,7 +119,7 @@ export function mutateElster(entity: AppEntity, mutate: (raw: Record<string, unk
 
 /** Load the active entity's inline private-ESt config (from the workspace model). */
 export function loadEst(entity: AppEntity): EstConfig {
-    if (!entity.est) throw new Error(`Entität „${entity.id}" hat keine ESt-Config.`);
+    if (!entity.est) throw new Error(fmt(_('Entity “{id}” has no ESt config.'), { id: entity.id }));
     return entity.est;
 }
 

@@ -20,7 +20,7 @@ template $BhForderungenView: Adw.Bin {
         }
 
         Gtk.Label {
-          label: "Lade Forderungen …";
+          label: _("Loading receivables …");
           styles ["dim-label"]
         }
       };
@@ -30,7 +30,7 @@ template $BhForderungenView: Adw.Bin {
       name: "error";
       child: Adw.StatusPage error_page {
         icon-name: "dialog-error-symbolic";
-        title: "Konnte nicht laden";
+        title: _("Could not load");
       };
     }
 

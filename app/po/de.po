@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-17 09:17+0200\n"
+"POT-Creation-Date: 2026-10-17 09:32+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -209,7 +209,9 @@ msgstr "Entlastungsbetrag für Alleinerziehende (§24b)"
 #: src/core/actions/elster/est-intake-topics.ts:107
 msgid ""
 "Single with at least one child in the household — pro rata per full month."
-msgstr "Alleinstehend mit mindestens einem Kind im Haushalt — anteilig je vollem Monat."
+msgstr ""
+"Alleinstehend mit mindestens einem Kind im Haushalt — anteilig je vollem "
+"Monat."
 
 #: src/core/actions/elster/est-intake-topics.ts:121
 msgid "Kinderbetreuungskosten (§10 Nr. 5)"
@@ -219,7 +221,9 @@ msgstr "Kinderbetreuungskosten (§10 Nr. 5)"
 msgid ""
 "Nursery/after-school club/childminder — including the split between "
 "separated parents (double-deduction guard)."
-msgstr "Kita/Hort/Tagesmutter — inkl. Aufteilung zwischen getrennten Eltern (Doppelabzug-Guard)."
+msgstr ""
+"Kita/Hort/Tagesmutter — inkl. Aufteilung zwischen getrennten Eltern "
+"(Doppelabzug-Guard)."
 
 #: src/core/actions/elster/est-intake-topics.ts:143
 msgid "Household/separation timeline"
@@ -229,7 +233,9 @@ msgstr "Haushalts-/Trennungs-Zeitachse"
 msgid ""
 "When you lived apart and who the child lived with — feeds the §24b months "
 "and the Anlage Kind household block."
-msgstr "Wann getrennt gelebt, Kind bei wem — speist §24b-Monate und den Anlage-Kind-Haushaltsblock."
+msgstr ""
+"Wann getrennt gelebt, Kind bei wem — speist §24b-Monate und den Anlage-Kind-"
+"Haushaltsblock."
 
 #: src/core/actions/elster/est-intake-topics.ts:160
 msgid "Lohnersatzleistungen (§32b)"
@@ -239,7 +245,9 @@ msgstr "Lohnersatzleistungen (§32b)"
 msgid ""
 "Elterngeld, Arbeitslosengeld, Krankengeld, Mutterschaftsgeld … including "
 "repayments (Abflussprinzip)."
-msgstr "Elterngeld, Arbeitslosen-, Kranken-, Mutterschaftsgeld … inkl. Rückzahlung (Abflussprinzip)."
+msgstr ""
+"Elterngeld, Arbeitslosen-, Kranken-, Mutterschaftsgeld … inkl. Rückzahlung "
+"(Abflussprinzip)."
 
 #: src/core/actions/elster/est-intake-topics.ts:214
 msgid "Unknown tax topic “{id}”."
@@ -249,7 +257,9 @@ msgstr "Unbekanntes Steuer-Thema '{id}'."
 msgid ""
 "Were you a single parent during the year (at least for a while) — unmarried, "
 "no other adult in the household, with at least one child living with you?"
-msgstr "Warst du im Jahr (zeitweise) alleinerziehend — nicht verheiratet und ohne weiteren Erwachsenen im Haushalt, mit mindestens einem Kind bei dir?"
+msgstr ""
+"Warst du im Jahr (zeitweise) alleinerziehend — nicht verheiratet und ohne "
+"weiteren Erwachsenen im Haushalt, mit mindestens einem Kind bei dir?"
 
 #: src/core/actions/elster/est-intake.ts:94
 msgid "From which month did that apply?"
@@ -283,13 +293,17 @@ msgstr "Je weiteres Kind erhöht sich der Entlastungsbetrag um 240 €."
 #: src/core/actions/elster/est-intake.ts:125
 msgid ""
 "Does another adult live in the household (a new partner, parents, flatmates)?"
-msgstr "Wohnt eine andere volljährige Person mit im Haushalt (neue:r Partner:in, Eltern, WG)?"
+msgstr ""
+"Wohnt eine andere volljährige Person mit im Haushalt (neue:r Partner:in, "
+"Eltern, WG)?"
 
 #: src/core/actions/elster/est-intake.ts:127
 msgid ""
 "If so, the Entlastungsbetrag does not apply for that time — you then do not "
 "count as “alleinstehend” for tax purposes."
-msgstr "Falls ja, entfällt der Entlastungsbetrag für diese Zeit — dann bist du steuerlich nicht „alleinstehend\"."
+msgstr ""
+"Falls ja, entfällt der Entlastungsbetrag für diese Zeit — dann bist du "
+"steuerlich nicht „alleinstehend\"."
 
 #: src/core/actions/elster/est-intake.ts:150
 msgid "Not a single parent → no Entlastungsbetrag (§24b)."
@@ -299,18 +313,23 @@ msgstr "Nicht alleinerziehend → kein Entlastungsbetrag (§24b)."
 msgid ""
 "Another adult in the household → not “alleinstehend” for tax purposes → §24b "
 "does not apply for that time."
-msgstr "Eine andere volljährige Person im Haushalt → steuerlich nicht „alleinstehend\" → §24b entfällt für diese Zeit."
+msgstr ""
+"Eine andere volljährige Person im Haushalt → steuerlich nicht "
+"„alleinstehend\" → §24b entfällt für diese Zeit."
 
 #: src/core/actions/elster/est-intake.ts:166
 msgid ""
 "No child assigned — §24b requires at least one child with a Kindergeld "
 "entitlement in the household."
-msgstr "Kein Kind zugeordnet — §24b verlangt mindestens ein Kind mit Kindergeldanspruch im Haushalt."
+msgstr ""
+"Kein Kind zugeordnet — §24b verlangt mindestens ein Kind mit "
+"Kindergeldanspruch im Haushalt."
 
 #: src/core/actions/elster/est-intake.ts:170
 msgid ""
 "All year → the full Entlastungsbetrag (4,260 € + 240 € per further child)."
-msgstr "Ganzjährig → voller Entlastungsbetrag (4.260 € + 240 € je weiterem Kind)."
+msgstr ""
+"Ganzjährig → voller Entlastungsbetrag (4.260 € + 240 € je weiterem Kind)."
 
 #: src/core/actions/elster/est-intake.ts:173
 msgid "{n} month as a single parent → {n}/12 of the amount."
@@ -322,7 +341,9 @@ msgstr[1] "{n} Monate alleinerziehend → anteilig {n}/12."
 msgid ""
 "Did you have childcare costs for this child (nursery, after-school club, "
 "childminder) with an invoice and a non-cash payment?"
-msgstr "Hattest du für dieses Kind Betreuungskosten (Kita, Hort, Tagesmutter) mit Rechnung und unbarer Zahlung?"
+msgstr ""
+"Hattest du für dieses Kind Betreuungskosten (Kita, Hort, Tagesmutter) mit "
+"Rechnung und unbarer Zahlung?"
 
 #: src/core/actions/elster/est-intake.ts:248
 msgid "What were the total childcare costs for the year (€)?"
@@ -332,7 +353,9 @@ msgstr "Wie hoch waren die Betreuungskosten insgesamt im Jahr (€)?"
 msgid ""
 "The full amount both parents paid together — only the care portion itself "
 "(without meals)."
-msgstr "Der volle Betrag, den beide Eltern zusammen gezahlt haben — nur der reine Betreuungsanteil (ohne Verpflegung)."
+msgstr ""
+"Der volle Betrag, den beide Eltern zusammen gezahlt haben — nur der reine "
+"Betreuungsanteil (ohne Verpflegung)."
 
 #: src/core/actions/elster/est-intake.ts:256
 msgid "Did the child belong to your household during that period?"
@@ -358,7 +381,9 @@ msgstr "Hälftig (jeder die Hälfte)"
 msgid ""
 "Childcare costs are deductible only ONCE per child across both parents — the "
 "Finanzamt cross-checks both returns."
-msgstr "Betreuungskosten sind nur EINMAL je Kind über beide Eltern abziehbar — das Finanzamt gleicht beide Erklärungen ab."
+msgstr ""
+"Betreuungskosten sind nur EINMAL je Kind über beide Eltern abziehbar — das "
+"Finanzamt gleicht beide Erklärungen ab."
 
 #: src/core/actions/elster/est-intake.ts:285
 msgid "No deductible childcare costs entered."
@@ -368,25 +393,33 @@ msgstr "Keine abzugsfähigen Kinderbetreuungskosten angegeben."
 msgid ""
 "The child did not belong to your household during that period → you cannot "
 "deduct the costs (§10 Nr. 5)."
-msgstr "Das Kind gehörte in dem Zeitraum nicht zu deinem Haushalt → du kannst die Kosten nicht abziehen (§10 Nr. 5)."
+msgstr ""
+"Das Kind gehörte in dem Zeitraum nicht zu deinem Haushalt → du kannst die "
+"Kosten nicht abziehen (§10 Nr. 5)."
 
 #: src/core/actions/elster/est-intake.ts:299
 msgid ""
 "The other parent deducts the costs in full → 0 € on your side (a double "
 "deduction is ruled out)."
-msgstr "Der andere Elternteil zieht die Kosten voll ab → bei dir 0 € (ein Doppelabzug ist ausgeschlossen)."
+msgstr ""
+"Der andere Elternteil zieht die Kosten voll ab → bei dir 0 € (ein "
+"Doppelabzug ist ausgeschlossen)."
 
 #: src/core/actions/elster/est-intake.ts:305
 msgid ""
 "Split in half — the other parent deducts the other half; together never more "
 "than the total."
-msgstr "Hälftige Aufteilung — der andere Elternteil zieht die andere Hälfte ab; zusammen nie mehr als der Gesamtbetrag."
+msgstr ""
+"Hälftige Aufteilung — der andere Elternteil zieht die andere Hälfte ab; "
+"zusammen nie mehr als der Gesamtbetrag."
 
 #: src/core/actions/elster/est-intake.ts:311
 msgid ""
 "You deduct the costs in full → the other parent must NOT also deduct them "
 "(the Finanzamt cross-checks both returns)."
-msgstr "Du ziehst die Kosten voll ab → der andere Elternteil darf sie NICHT auch abziehen (das Finanzamt gleicht beide Erklärungen ab)."
+msgstr ""
+"Du ziehst die Kosten voll ab → der andere Elternteil darf sie NICHT auch "
+"abziehen (das Finanzamt gleicht beide Erklärungen ab)."
 
 #: src/core/actions/elster/est-intake.ts:343
 msgid "No child with IdNr “{idnr}” in the est config."
@@ -396,7 +429,9 @@ msgstr "Kein Kind mit IdNr '{idnr}' in der est-Config."
 msgid ""
 "Did you (the child’s parents) live apart during the year — at least for a "
 "while, no longer sharing a household?"
-msgstr "Habt ihr (die Eltern des Kindes) im Jahr — zumindest zeitweise — getrennt gelebt, also keinen gemeinsamen Haushalt mehr geführt?"
+msgstr ""
+"Habt ihr (die Eltern des Kindes) im Jahr — zumindest zeitweise — getrennt "
+"gelebt, also keinen gemeinsamen Haushalt mehr geführt?"
 
 #: src/core/actions/elster/est-intake.ts:426
 msgid "From which month did you live apart?"
@@ -404,7 +439,9 @@ msgstr "Ab welchem Monat habt ihr getrennt gelebt?"
 
 #: src/core/actions/elster/est-intake.ts:427
 msgid "For example the month the other parent moved out. Empty = from January."
-msgstr "z. B. der Monat, in dem der andere Elternteil ausgezogen ist. Leer = ab Januar."
+msgstr ""
+"z. B. der Monat, in dem der andere Elternteil ausgezogen ist. Leer = ab "
+"Januar."
 
 #: src/core/actions/elster/est-intake.ts:434
 msgid "Until which month did the separation last?"
@@ -414,7 +451,9 @@ msgstr "Bis zu welchem Monat dauerte die Trennung?"
 msgid ""
 "Empty = through the end of the year. Only fill this in if you shared a "
 "household again in the same year."
-msgstr "Leer = bis Jahresende. Nur ausfüllen, wenn ihr im selben Jahr wieder einen gemeinsamen Haushalt gebildet habt."
+msgstr ""
+"Leer = bis Jahresende. Nur ausfüllen, wenn ihr im selben Jahr wieder einen "
+"gemeinsamen Haushalt gebildet habt."
 
 #: src/core/actions/elster/est-intake.ts:444
 msgid "Who did the child live with during the separation?"
@@ -432,41 +471,55 @@ msgstr "Beim anderen Elternteil"
 msgid ""
 "The §24b months only count for the parent whose household the child belonged "
 "to."
-msgstr "Nur beim Elternteil, zu dessen Haushalt das Kind gehörte, zählen die §24b-Monate."
+msgstr ""
+"Nur beim Elternteil, zu dessen Haushalt das Kind gehörte, zählen die §24b-"
+"Monate."
 
 #: src/core/actions/elster/est-intake.ts:454
 msgid "Did the child belong to your household while you shared one?"
-msgstr "Gehörte das Kind während eines gemeinsamen Haushalts zu eurem Haushalt?"
+msgstr ""
+"Gehörte das Kind während eines gemeinsamen Haushalts zu eurem Haushalt?"
 
 #: src/core/actions/elster/est-intake.ts:455
 msgid ""
 "Before/after the separation — or the whole year if you lived together. "
 "Almost always yes."
-msgstr "Vor/nach der Trennung — bzw. das ganze Jahr, wenn ihr zusammengelebt habt. Fast immer ja."
+msgstr ""
+"Vor/nach der Trennung — bzw. das ganze Jahr, wenn ihr zusammengelebt habt. "
+"Fast immer ja."
 
 #: src/core/actions/elster/est-intake.ts:483
 msgid ""
 "No separation during the year → a shared household throughout; §24b (single "
 "parents) does not apply."
-msgstr "Keine Trennung im Jahr → durchgehend gemeinsamer Haushalt; §24b (Alleinerziehende) entfällt."
+msgstr ""
+"Keine Trennung im Jahr → durchgehend gemeinsamer Haushalt; §24b "
+"(Alleinerziehende) entfällt."
 
 #: src/core/actions/elster/est-intake.ts:497
 msgid ""
 "The separation ends before it starts — the months were swapped; please check."
-msgstr "Trennungs-Ende liegt vor dem -Beginn — die Monate wurden getauscht; bitte prüfen."
+msgstr ""
+"Trennungs-Ende liegt vor dem -Beginn — die Monate wurden getauscht; bitte "
+"prüfen."
 
 #: src/core/actions/elster/est-intake.ts:511
 msgid ""
 "A shared household again after the separation (from month {month}) — the KBK "
 "block can only carry ONE “shared” period; please add the second one in the "
 "settings."
-msgstr "Nach der Trennung wieder gemeinsamer Haushalt (ab Monat {month}) — der KBK-Block kann nur EINEN „gemeinsam\"-Zeitraum tragen; den zweiten bitte im Einstellungen-UI ergänzen."
+msgstr ""
+"Nach der Trennung wieder gemeinsamer Haushalt (ab Monat {month}) — der KBK-"
+"Block kann nur EINEN „gemeinsam\"-Zeitraum tragen; den zweiten bitte im "
+"Einstellungen-UI ergänzen."
 
 #: src/core/actions/elster/est-intake.ts:527
 msgid ""
 "The child was with the other parent during the separation → no §24b months "
 "on your side."
-msgstr "Kind während der Trennung beim anderen Elternteil → keine §24b-Monate bei dir."
+msgstr ""
+"Kind während der Trennung beim anderen Elternteil → keine §24b-Monate bei "
+"dir."
 
 #: src/core/actions/elster/est-intake.ts:536
 msgid ""
@@ -475,20 +528,28 @@ msgid ""
 msgid_plural ""
 "The child was with you during the separation → {n} months as a single parent "
 "(§24b: {n}/12)."
-msgstr[0] "Kind bei dir während der Trennung → {n} Monat alleinstehend (§24b anteilig {n}/12)."
-msgstr[1] "Kind bei dir während der Trennung → {n} Monate alleinstehend (§24b anteilig {n}/12)."
+msgstr[0] ""
+"Kind bei dir während der Trennung → {n} Monat alleinstehend (§24b anteilig "
+"{n}/12)."
+msgstr[1] ""
+"Kind bei dir während der Trennung → {n} Monate alleinstehend (§24b anteilig "
+"{n}/12)."
 
 #: src/core/actions/elster/est-intake.ts:595
 msgid ""
 "Did you receive or repay tax-free Lohnersatzleistungen during the year "
 "(Elterngeld, Arbeitslosengeld, Krankengeld, Mutterschaftsgeld …)?"
-msgstr "Hast du im Jahr steuerfreie Lohnersatzleistungen bezogen oder zurückgezahlt (Elterngeld, Arbeitslosengeld, Krankengeld, Mutterschaftsgeld …)?"
+msgstr ""
+"Hast du im Jahr steuerfreie Lohnersatzleistungen bezogen oder zurückgezahlt "
+"(Elterngeld, Arbeitslosengeld, Krankengeld, Mutterschaftsgeld …)?"
 
 #: src/core/actions/elster/est-intake.ts:598
 msgid ""
 "These benefits are tax-free but raise the tax rate on your remaining income "
 "(Progressionsvorbehalt §32b)."
-msgstr "Diese Leistungen sind steuerfrei, erhöhen aber den Steuersatz auf dein übriges Einkommen (Progressionsvorbehalt §32b)."
+msgstr ""
+"Diese Leistungen sind steuerfrei, erhöhen aber den Steuersatz auf dein "
+"übriges Einkommen (Progressionsvorbehalt §32b)."
 
 #: src/core/actions/elster/est-intake.ts:607
 msgid "How much did you receive this year (€)?"
@@ -497,7 +558,9 @@ msgstr "Wie viel hast du in diesem Jahr erhalten (€)?"
 #: src/core/actions/elster/est-intake.ts:608
 msgid ""
 "The amount received in the calendar year. 0 if you only repaid this year."
-msgstr "Der im Kalenderjahr zugeflossene Betrag. 0, wenn du in diesem Jahr nur zurückgezahlt hast."
+msgstr ""
+"Der im Kalenderjahr zugeflossene Betrag. 0, wenn du in diesem Jahr nur "
+"zurückgezahlt hast."
 
 #: src/core/actions/elster/est-intake.ts:616
 msgid "How much did you repay this year (€)?"
@@ -507,7 +570,9 @@ msgstr "Wie viel hast du in diesem Jahr zurückgezahlt (€)?"
 msgid ""
 "For example Elterngeld from last year that you repay in instalments or in "
 "full. 0 if there was no repayment."
-msgstr "z. B. Elterngeld aus dem Vorjahr, das du in Raten oder komplett zurückzahlst. 0, wenn keine Rückzahlung."
+msgstr ""
+"z. B. Elterngeld aus dem Vorjahr, das du in Raten oder komplett "
+"zurückzahlst. 0, wenn keine Rückzahlung."
 
 #: src/core/actions/elster/est-intake.ts:632
 msgid "No Lohnersatzleistungen → no Progressionsvorbehalt (§32b)."
@@ -517,23 +582,31 @@ msgstr "Keine Lohnersatzleistungen → kein Progressionsvorbehalt (§32b)."
 msgid ""
 "The repayment is larger (net {amount} €) → a negative Progressionsvorbehalt "
 "lowers the tax rate."
-msgstr "Rückzahlung überwiegt (netto {amount} €) → negativer Progressionsvorbehalt senkt den Steuersatz."
+msgstr ""
+"Rückzahlung überwiegt (netto {amount} €) → negativer Progressionsvorbehalt "
+"senkt den Steuersatz."
 
 #: src/core/actions/elster/est-intake.ts:652
 msgid ""
 "net {amount} € tax-free, but they raise the tax rate on your remaining "
 "income."
-msgstr "netto {amount} € steuerfrei, erhöhen aber den Steuersatz auf dein übriges Einkommen."
+msgstr ""
+"netto {amount} € steuerfrei, erhöhen aber den Steuersatz auf dein übriges "
+"Einkommen."
 
 #: src/core/actions/elster/est-intake.ts:656
 msgid "received and repaid cancel each other out → no effect on the tax rate."
-msgstr "erhalten und zurückgezahlt gleichen sich aus → keine Auswirkung auf den Steuersatz."
+msgstr ""
+"erhalten und zurückgezahlt gleichen sich aus → keine Auswirkung auf den "
+"Steuersatz."
 
 #: src/core/actions/elster/est-intake.ts:657
 msgid ""
 "What counts is the year of receipt/payment (§11) — repayments count in the "
 "year they are paid."
-msgstr "Maßgeblich ist das ZUFLUSS-/ABFLUSSJAHR (§11) — Rückzahlungen zählen im Jahr der Zahlung."
+msgstr ""
+"Maßgeblich ist das ZUFLUSS-/ABFLUSSJAHR (§11) — Rückzahlungen zählen im Jahr "
+"der Zahlung."
 
 #: src/core/actions/elster/privacy-ack.ts:71
 msgid ""
@@ -3493,6 +3566,17 @@ msgstr "Übernommen ✓"
 msgid "Assistant is typing …"
 msgstr "Assistent schreibt …"
 
+#: src/frontends/desktop/assistent-panel.ts:250
+msgid "I was a single parent with my son from November on."
+msgstr "Ich war ab November alleinerziehend mit meinem Sohn."
+
+#: src/frontends/desktop/assistent-panel.ts:253
+msgid ""
+"Understood. Then you are entitled to the Entlastungsbetrag für "
+"Alleinerziehende (§24b) pro rata for November and December. Here is my "
+"suggestion to apply:"
+msgstr "Alles klar. Dann steht dir der Entlastungsbetrag für Alleinerziehende (§24b) anteilig für November und Dezember zu. Hier mein Vorschlag zum Übernehmen:"
+
 #: src/frontends/desktop/data/elster-secret.ts:47
 msgid "Encrypted in the GNOME keyring, never in clear text."
 msgstr "Verschlüsselt im GNOME-Schlüsselbund, nie im Klartext."
@@ -3500,6 +3584,57 @@ msgstr "Verschlüsselt im GNOME-Schlüsselbund, nie im Klartext."
 #: src/frontends/desktop/data/elster-secret.ts:49
 msgid "Stored {where}."
 msgstr "Gespeichert {where}."
+
+#: src/frontends/desktop/data/eric.ts:36
+msgid "No active entity selected."
+msgstr "Keine aktive Entität ausgewählt."
+
+#: src/frontends/desktop/data/mail-sender.ts:18
+msgid ""
+"Signing in to the mail server failed. The user name or the password is wrong."
+msgstr "Die Anmeldung am Mailserver ist fehlgeschlagen. Benutzer oder Passwort stimmen nicht."
+
+#: src/frontends/desktop/data/mail-sender.ts:19
+msgid "The encrypted connection to the mail server could not be established."
+msgstr "Die verschlüsselte Verbindung zum Mailserver ließ sich nicht aufbauen."
+
+#: src/frontends/desktop/data/mail-sender.ts:20
+msgid "The mail server cannot be reached or dropped the connection."
+msgstr "Der Mailserver ist nicht erreichbar oder hat die Verbindung abgebrochen."
+
+#: src/frontends/desktop/data/mail-sender.ts:21
+msgid "The mail server rejected the message."
+msgstr "Der Mailserver hat die Nachricht abgelehnt."
+
+#: src/frontends/desktop/data/mail-sender.ts:22
+msgid "The details of the sending account or of the message are invalid."
+msgstr "Die Angaben zum Versandkonto oder zur Nachricht sind ungültig."
+
+#: src/frontends/desktop/data/mail-sender.ts:34
+msgid "Sending failed with an unexpected error."
+msgstr "Beim Versand ist ein unerwarteter Fehler aufgetreten."
+
+#: src/frontends/desktop/data/mail-sender.ts:40
+msgid "{summary} The server replied: {reply}"
+msgstr "{summary} Antwort des Servers: {reply}"
+
+#: src/frontends/desktop/data/settings.ts:80
+msgid "Entity “{id}” has no ELSTER config."
+msgstr "Entität „{id}“ hat keine ELSTER-Config."
+
+#: src/frontends/desktop/data/settings.ts:122
+msgid "Entity “{id}” has no ESt config."
+msgstr "Entität „{id}“ hat keine ESt-Config."
+
+#: src/frontends/desktop/data/ustva.ts:37
+msgid ""
+"The USt-VA is currently calculated from Paperless only; this entity uses the "
+"built-in DMS."
+msgstr "Die USt-VA wird zur Zeit nur aus Paperless berechnet; diese Entität nutzt das integrierte DMS."
+
+#: src/frontends/desktop/data/ustva.ts:55
+msgid "This entity has no ELSTER config."
+msgstr "Diese Entität hat keine ELSTER-Config."
 
 #: src/frontends/desktop/fints-interaction.ts:44
 msgid "No window is open in which the bank could ask."
@@ -4493,13 +4628,15 @@ msgstr "Trotzdem aufteilen"
 msgid "Could not split"
 msgstr "Konnte nicht aufteilen"
 
-#: src/frontends/desktop/views/beleg-eingang-view.blp:24
-msgid "Loading receipt inbox …"
-msgstr "Lade Beleg-Eingang …"
+#: src/frontends/desktop/views/auswertungen-view.blp:24
+msgid "Calculating reports …"
+msgstr "Berechne Auswertungen …"
 
+#: src/frontends/desktop/views/auswertungen-view.blp:34
 #: src/frontends/desktop/views/beleg-eingang-view.blp:34
 #: src/frontends/desktop/views/beleg-link-dialog.ts:38
 #: src/frontends/desktop/views/dokumente-view.blp:32
+#: src/frontends/desktop/views/forderungen-view.blp:33
 #: src/frontends/desktop/views/herleitung-dialog.blp:40
 #: src/frontends/desktop/views/home-view.blp:32
 #: src/frontends/desktop/views/kontakte-view.blp:53
@@ -4521,6 +4658,42 @@ msgstr "Lade Beleg-Eingang …"
 #: src/frontends/desktop/views/zu-pruefen-view.blp:33
 msgid "Could not load"
 msgstr "Konnte nicht laden"
+
+#: src/frontends/desktop/views/auswertungen-view.blp:58
+msgid "BWA · monthly"
+msgstr "BWA · monatlich"
+
+#: src/frontends/desktop/views/auswertungen-view.blp:89
+msgid "Insights"
+msgstr "Einblicke"
+
+#: src/frontends/desktop/views/auswertungen-view.blp:95
+msgid "Hints from your own numbers — not tax advice"
+msgstr "Hinweise aus deinen eigenen Zahlen — keine Steuerberatung"
+
+#: src/frontends/desktop/views/auswertungen-view.ts:68
+msgid "The reports could not be calculated"
+msgstr "Auswertungen konnten nicht berechnet werden"
+
+#: src/frontends/desktop/views/auswertungen-view.ts:99
+msgid "Total operating costs"
+msgstr "Summe Betriebskosten"
+
+#: src/frontends/desktop/views/auswertungen-view.ts:115
+msgid "Item"
+msgstr "Position"
+
+#: src/frontends/desktop/views/auswertungen-view.ts:117
+msgid "Σ year"
+msgstr "Σ Jahr"
+
+#: src/frontends/desktop/views/auswertungen-view.ts:219
+msgid "No hints for {year}"
+msgstr "Keine Hinweise für {year}"
+
+#: src/frontends/desktop/views/beleg-eingang-view.blp:24
+msgid "Loading receipt inbox …"
+msgstr "Lade Beleg-Eingang …"
 
 #: src/frontends/desktop/views/beleg-eingang-view.blp:109
 #: src/frontends/desktop/views/zu-pruefen-view.blp:121
@@ -4569,6 +4742,11 @@ msgstr "Buchungs-Kandidaten konnten nicht ermittelt werden"
 #: src/frontends/desktop/views/util.ts:460
 msgid "Try again"
 msgstr "Erneut versuchen"
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:329
+#: src/frontends/desktop/views/herleitung-dialog.ts:622
+msgid "AI note"
+msgstr "KI-Hinweis"
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:331
 msgid "Not matched to a transaction yet"
@@ -5182,6 +5360,7 @@ msgid "Net (€)"
 msgstr "Netto (€)"
 
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:199
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:233
 msgid "VAT rate"
 msgstr "USt-Satz"
 
@@ -7124,6 +7303,10 @@ msgid_plural "{n} candidates"
 msgstr[0] "{n} Kandidat"
 msgstr[1] "{n} Kandidaten"
 
+#: src/frontends/desktop/views/forderungen-view.blp:23
+msgid "Loading receivables …"
+msgstr "Lade Forderungen …"
+
 #: src/frontends/desktop/views/forderungen-view.ts:34
 msgid "pays later and later"
 msgstr "zahlt zunehmend später"
@@ -7745,10 +7928,6 @@ msgstr "Noch keine Entscheidung"
 #: src/frontends/desktop/views/herleitung-dialog.ts:611
 msgid "no receipt linked"
 msgstr "kein Beleg verknüpft"
-
-#: src/frontends/desktop/views/herleitung-dialog.ts:622
-msgid "AI note"
-msgstr "KI-Hinweis"
 
 #: src/frontends/desktop/views/herleitung-dialog.ts:658
 msgid "Transfer «{category}» taken back"

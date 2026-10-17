@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-17 09:17+0200\n"
+"POT-Creation-Date: 2026-10-17 09:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3173,12 +3173,74 @@ msgstr ""
 msgid "Assistant is typing …"
 msgstr ""
 
+#: src/frontends/desktop/assistent-panel.ts:250
+msgid "I was a single parent with my son from November on."
+msgstr ""
+
+#: src/frontends/desktop/assistent-panel.ts:253
+msgid ""
+"Understood. Then you are entitled to the Entlastungsbetrag für "
+"Alleinerziehende (§24b) pro rata for November and December. Here is my "
+"suggestion to apply:"
+msgstr ""
+
 #: src/frontends/desktop/data/elster-secret.ts:47
 msgid "Encrypted in the GNOME keyring, never in clear text."
 msgstr ""
 
 #: src/frontends/desktop/data/elster-secret.ts:49
 msgid "Stored {where}."
+msgstr ""
+
+#: src/frontends/desktop/data/eric.ts:36
+msgid "No active entity selected."
+msgstr ""
+
+#: src/frontends/desktop/data/mail-sender.ts:18
+msgid ""
+"Signing in to the mail server failed. The user name or the password is wrong."
+msgstr ""
+
+#: src/frontends/desktop/data/mail-sender.ts:19
+msgid "The encrypted connection to the mail server could not be established."
+msgstr ""
+
+#: src/frontends/desktop/data/mail-sender.ts:20
+msgid "The mail server cannot be reached or dropped the connection."
+msgstr ""
+
+#: src/frontends/desktop/data/mail-sender.ts:21
+msgid "The mail server rejected the message."
+msgstr ""
+
+#: src/frontends/desktop/data/mail-sender.ts:22
+msgid "The details of the sending account or of the message are invalid."
+msgstr ""
+
+#: src/frontends/desktop/data/mail-sender.ts:34
+msgid "Sending failed with an unexpected error."
+msgstr ""
+
+#: src/frontends/desktop/data/mail-sender.ts:40
+msgid "{summary} The server replied: {reply}"
+msgstr ""
+
+#: src/frontends/desktop/data/settings.ts:80
+msgid "Entity “{id}” has no ELSTER config."
+msgstr ""
+
+#: src/frontends/desktop/data/settings.ts:122
+msgid "Entity “{id}” has no ESt config."
+msgstr ""
+
+#: src/frontends/desktop/data/ustva.ts:37
+msgid ""
+"The USt-VA is currently calculated from Paperless only; this entity uses the "
+"built-in DMS."
+msgstr ""
+
+#: src/frontends/desktop/data/ustva.ts:55
+msgid "This entity has no ELSTER config."
 msgstr ""
 
 #: src/frontends/desktop/fints-interaction.ts:44
@@ -4146,13 +4208,15 @@ msgstr ""
 msgid "Could not split"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.blp:24
-msgid "Loading receipt inbox …"
+#: src/frontends/desktop/views/auswertungen-view.blp:24
+msgid "Calculating reports …"
 msgstr ""
 
+#: src/frontends/desktop/views/auswertungen-view.blp:34
 #: src/frontends/desktop/views/beleg-eingang-view.blp:34
 #: src/frontends/desktop/views/beleg-link-dialog.ts:38
 #: src/frontends/desktop/views/dokumente-view.blp:32
+#: src/frontends/desktop/views/forderungen-view.blp:33
 #: src/frontends/desktop/views/herleitung-dialog.blp:40
 #: src/frontends/desktop/views/home-view.blp:32
 #: src/frontends/desktop/views/kontakte-view.blp:53
@@ -4173,6 +4237,42 @@ msgstr ""
 #: src/frontends/desktop/views/zeiten-view.blp:47
 #: src/frontends/desktop/views/zu-pruefen-view.blp:33
 msgid "Could not load"
+msgstr ""
+
+#: src/frontends/desktop/views/auswertungen-view.blp:58
+msgid "BWA · monthly"
+msgstr ""
+
+#: src/frontends/desktop/views/auswertungen-view.blp:89
+msgid "Insights"
+msgstr ""
+
+#: src/frontends/desktop/views/auswertungen-view.blp:95
+msgid "Hints from your own numbers — not tax advice"
+msgstr ""
+
+#: src/frontends/desktop/views/auswertungen-view.ts:68
+msgid "The reports could not be calculated"
+msgstr ""
+
+#: src/frontends/desktop/views/auswertungen-view.ts:99
+msgid "Total operating costs"
+msgstr ""
+
+#: src/frontends/desktop/views/auswertungen-view.ts:115
+msgid "Item"
+msgstr ""
+
+#: src/frontends/desktop/views/auswertungen-view.ts:117
+msgid "Σ year"
+msgstr ""
+
+#: src/frontends/desktop/views/auswertungen-view.ts:219
+msgid "No hints for {year}"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.blp:24
+msgid "Loading receipt inbox …"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.blp:109
@@ -4221,6 +4321,11 @@ msgstr ""
 #: src/frontends/desktop/views/beleg-eingang-view.ts:315
 #: src/frontends/desktop/views/util.ts:460
 msgid "Try again"
+msgstr ""
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:329
+#: src/frontends/desktop/views/herleitung-dialog.ts:622
+msgid "AI note"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:331
@@ -4820,6 +4925,7 @@ msgid "Net (€)"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:199
+#: src/frontends/desktop/views/rechnung-form-dialog.ts:233
 msgid "VAT rate"
 msgstr ""
 
@@ -6672,6 +6778,10 @@ msgid_plural "{n} candidates"
 msgstr[0] ""
 msgstr[1] ""
 
+#: src/frontends/desktop/views/forderungen-view.blp:23
+msgid "Loading receivables …"
+msgstr ""
+
 #: src/frontends/desktop/views/forderungen-view.ts:34
 msgid "pays later and later"
 msgstr ""
@@ -7268,10 +7378,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/herleitung-dialog.ts:611
 msgid "no receipt linked"
-msgstr ""
-
-#: src/frontends/desktop/views/herleitung-dialog.ts:622
-msgid "AI note"
 msgstr ""
 
 #: src/frontends/desktop/views/herleitung-dialog.ts:658

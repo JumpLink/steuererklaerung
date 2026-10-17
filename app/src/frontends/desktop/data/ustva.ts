@@ -14,6 +14,7 @@ import { buildUstvaPortalUpload } from '../../../core/elster/ustva-xml.ts';
 import { DmsUnsupportedError } from '../../../core/lib/errors.ts';
 import { ustvaAusBuchungenAktiv, ustvaJahrAusBuchungen } from '../../../core/actions/elster/ustva.ts';
 import type { AppEntity } from '../entities.ts';
+import { _ } from '../i18n.ts';
 
 /** One quarter of the USt-VA year overview (re-exported so the view keeps a stable name). */
 export type UstvaQuarter = UstvaYearQuarter;
@@ -33,7 +34,7 @@ export async function loadUstvaYear(entity: AppEntity, year: number): Promise<Us
         throw new DmsUnsupportedError(
             'USt-VA',
             entity.dmsType,
-            'Die USt-VA wird zur Zeit nur aus Paperless berechnet; diese Entität nutzt das integrierte DMS.',
+            _('The USt-VA is currently calculated from Paperless only; this entity uses the built-in DMS.'),
         );
     }
     return aggregateUstvaYear(entity.elster, year, vorsteuerKorrekturenDesJahres(entity.elster, year));
@@ -51,7 +52,7 @@ export function ustvaUploadXml(
     quarter: number,
     aggregate: UstvaAggregate,
 ): { filename: string; bytes: Uint8Array } {
-    if (!entity.elster) throw new Error('Diese Entität hat keine ELSTER-Config.');
+    if (!entity.elster) throw new Error(_('This entity has no ELSTER config.'));
     const { filename, bytes } = buildUstvaPortalUpload(aggregate, entity.elster, year, quarter);
     return { filename, bytes };
 }
