@@ -1,7 +1,7 @@
 import { describe, it, expect } from '@gjsify/unit';
 import {
     deriveEntlastungAlleinerziehende,
-    ENTLASTUNG_FRAGEN,
+    entlastungFragen,
     deriveKinderbetreuung,
     deriveHaushalt,
     deriveLohnersatz,
@@ -9,14 +9,14 @@ import {
     aktiveFragen,
 } from '../../../src/core/actions/elster/est-intake.ts';
 import {
-    INTAKE_TOPICS,
+    intakeTopics,
     intakeTopic,
     describeIntakeTopics,
     buildProposal,
 } from '../../../src/core/actions/elster/est-intake-topics.ts';
 
 // The deterministic heart of the Steuer-Wizard: plain-language answers → §24b config (monate/weitere
-// Kinder) with the eligibility branching. Pure — the GUI/AI adapters render ENTLASTUNG_FRAGEN and call this.
+// Kinder) with the eligibility branching. Pure — the GUI/AI adapters render entlastungFragen() and call this.
 export default async () => {
     await describe('ESt-Intake — §24b deriveEntlastungAlleinerziehende', async () => {
         await it('0 Monate wenn nicht alleinerziehend', async () => {
@@ -59,8 +59,8 @@ export default async () => {
         });
 
         await it('exponiert die Frageliste für GUI/AI (mit Verzweigung)', async () => {
-            expect(ENTLASTUNG_FRAGEN[0].id).toBe('alleinstehendMitKind');
-            expect(ENTLASTUNG_FRAGEN.some((q) => q.wennId === 'alleinstehendMitKind')).toBe(true);
+            expect(entlastungFragen()[0].id).toBe('alleinstehendMitKind');
+            expect(entlastungFragen().some((q) => q.wennId === 'alleinstehendMitKind')).toBe(true);
         });
     });
 
@@ -72,13 +72,13 @@ export default async () => {
         await it('kein Eintrag, wenn das Kind nicht im Haushalt war (+ Hinweis §10 Nr. 5)', async () => {
             const d = deriveKinderbetreuung({ hatKosten: true, betragGesamt: 1434, kindImHaushalt: false, abzug: 'ich' });
             expect(d.eintrag).toBe(null);
-            expect(d.hinweise.some((h) => h.includes('Haushalt'))).toBe(true);
+            expect(d.hinweise.some((h) => h.includes('household'))).toBe(true);
         });
 
         await it('„nur der andere Elternteil" → 0 (Doppelabzug-Guard)', async () => {
             const d = deriveKinderbetreuung({ hatKosten: true, betragGesamt: 1434, abzug: 'anderer' });
             expect(d.eintrag).toBe(null);
-            expect(d.hinweise.some((h) => h.includes('Doppelabzug'))).toBe(true);
+            expect(d.hinweise.some((h) => h.includes('double deduction'))).toBe(true);
         });
 
         await it('„nur ich" → voller Betrag als von_mir', async () => {
@@ -152,7 +152,7 @@ export default async () => {
         await it('keine Leistungen → 0 (kein Progressionsvorbehalt)', async () => {
             const d = deriveLohnersatz({ hatLohnersatz: false });
             expect(d.netto).toBe(0);
-            expect(d.hinweise.some((h) => h.includes('kein Progressionsvorbehalt'))).toBe(true);
+            expect(d.hinweise.some((h) => h.includes('no Progressionsvorbehalt'))).toBe(true);
         });
 
         await it('nur erhalten → positives Netto (erhöht den Steuersatz)', async () => {
@@ -165,7 +165,7 @@ export default async () => {
             const d = deriveLohnersatz({ hatLohnersatz: true, zurueckgezahlt: 538.53, art: 'Elterngeld' });
             expect(d.erhalten).toBe(0);
             expect(d.netto).toBe(-538.53);
-            expect(d.hinweise.some((h) => h.includes('negativer Progressionsvorbehalt'))).toBe(true);
+            expect(d.hinweise.some((h) => h.includes('negative Progressionsvorbehalt'))).toBe(true);
         });
 
         await it('erhalten und zurückgezahlt → Differenz', async () => {
@@ -196,16 +196,20 @@ export default async () => {
         });
 
         await it('aktiveFragen filtert §24b: „nein" → nur die erste Frage, „ja" → alle', async () => {
-            expect(aktiveFragen(ENTLASTUNG_FRAGEN, { alleinstehendMitKind: false })).toHaveLength(1);
-            expect(aktiveFragen(ENTLASTUNG_FRAGEN, { alleinstehendMitKind: true }).length).toBe(ENTLASTUNG_FRAGEN.length);
+            expect(aktiveFragen(entlastungFragen(), { alleinstehendMitKind: false })).toHaveLength(1);
+            expect(aktiveFragen(entlastungFragen(), { alleinstehendMitKind: true }).length).toBe(
+                entlastungFragen().length,
+            );
         });
     });
 
     // The uniform topic registry: ONE interface over the four derive/apply pairs (GUI + AI copilot).
-    await describe('ESt-Intake — Topic-Registry INTAKE_TOPICS', async () => {
+    await describe('ESt-Intake — Topic-Registry intakeTopics()', async () => {
         await it('enthält die vier Themen mit stabilen ids', async () => {
             // @gjsify/unit toEqual = `==` (reference comparison) → check arrays via the joined string.
-            expect(INTAKE_TOPICS.map((t) => t.id).join(',')).toBe('entlastung,kinderbetreuung,haushalt,lohnersatz');
+            expect(intakeTopics()
+                .map((t) => t.id)
+                .join(',')).toBe('entlastung,kinderbetreuung,haushalt,lohnersatz');
         });
 
         await it('markiert die per-Kind-Themen (proKind) korrekt', async () => {
@@ -218,7 +222,7 @@ export default async () => {
         await it('jede vorschau() liefert eine Ergebnis-Zeile + Hinweise (reine Ableitung, kein Write)', async () => {
             const ctx = { entityId: 'privat', year: 2025 };
             const v = intakeTopic('lohnersatz')!.vorschau({ hatLohnersatz: true, zurueckgezahlt: 538.53 }, ctx);
-            expect(v.ergebnis).toBe('netto -538.53 €');
+            expect(v.ergebnis).toBe('net -538.53 €');
             expect(v.hinweise.length).toBeGreaterThan(0);
         });
 
@@ -227,7 +231,7 @@ export default async () => {
                 { getrenntGelebt: true, getrenntAb: '2025-11', kindBeiWem: 'ich' },
                 { entityId: 'privat', year: 2025, kindIdnr: '11122233344' },
             );
-            expect(v.ergebnis).toBe('§24b: 2 Monat(e) alleinstehend');
+            expect(v.ergebnis).toBe('§24b: 2 months as a single parent');
         });
 
         await it('§24b-vorschau rechnet den Entlastungsbetrag (2/12 von 4.260 €)', async () => {
@@ -235,7 +239,7 @@ export default async () => {
                 { alleinstehendMitKind: true, von: '2025-11', kindIdnr: '11122233344' },
                 { entityId: 'privat', year: 2025 },
             );
-            expect(v.ergebnis).toBe('2 Monat(e) → 710 €');
+            expect(v.ergebnis).toBe('2 months → 710 €');
         });
 
         await it('describeIntakeTopics nennt Themen + Frage-ids (für den KI-Assistenten)', async () => {
@@ -253,7 +257,7 @@ export default async () => {
                 { entityId: 'privat', year: 2025 },
             );
             expect(p?.topicId).toBe('lohnersatz');
-            expect(p?.vorschau.ergebnis).toBe('netto -538.53 €');
+            expect(p?.vorschau.ergebnis).toBe('net -538.53 €');
             expect(buildProposal('unbekannt', {}, { entityId: 'privat', year: 2025 })).toBe(null);
         });
     });

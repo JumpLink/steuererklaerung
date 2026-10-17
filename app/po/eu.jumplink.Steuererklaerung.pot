@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-17 09:01+0200\n"
+"POT-Creation-Date: 2026-10-17 09:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -160,6 +160,363 @@ msgstr ""
 
 #: src/core/actions/elster/eric-warnings.ts:118
 msgid "user installation"
+msgstr ""
+
+#: src/core/actions/elster/est-intake-topics.ts:74
+msgid "{n} month → {amount} €"
+msgid_plural "{n} months → {amount} €"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/est-intake-topics.ts:81
+msgid "your share {share} € → 80 % = {amount} € deductible"
+msgstr ""
+
+#: src/core/actions/elster/est-intake-topics.ts:85
+msgid "no deduction on your side"
+msgstr ""
+
+#: src/core/actions/elster/est-intake-topics.ts:89
+msgid "§24b: {n} month as a single parent"
+msgid_plural "§24b: {n} months as a single parent"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/est-intake-topics.ts:94
+msgid "net {amount} €"
+msgstr ""
+
+#: src/core/actions/elster/est-intake-topics.ts:106
+msgid "Entlastungsbetrag für Alleinerziehende (§24b)"
+msgstr ""
+
+#: src/core/actions/elster/est-intake-topics.ts:107
+msgid ""
+"Single with at least one child in the household — pro rata per full month."
+msgstr ""
+
+#: src/core/actions/elster/est-intake-topics.ts:121
+msgid "Kinderbetreuungskosten (§10 Nr. 5)"
+msgstr ""
+
+#: src/core/actions/elster/est-intake-topics.ts:123
+msgid ""
+"Nursery/after-school club/childminder — including the split between "
+"separated parents (double-deduction guard)."
+msgstr ""
+
+#: src/core/actions/elster/est-intake-topics.ts:143
+msgid "Household/separation timeline"
+msgstr ""
+
+#: src/core/actions/elster/est-intake-topics.ts:145
+msgid ""
+"When you lived apart and who the child lived with — feeds the §24b months "
+"and the Anlage Kind household block."
+msgstr ""
+
+#: src/core/actions/elster/est-intake-topics.ts:160
+msgid "Lohnersatzleistungen (§32b)"
+msgstr ""
+
+#: src/core/actions/elster/est-intake-topics.ts:162
+msgid ""
+"Elterngeld, Arbeitslosengeld, Krankengeld, Mutterschaftsgeld … including "
+"repayments (Abflussprinzip)."
+msgstr ""
+
+#: src/core/actions/elster/est-intake-topics.ts:214
+msgid "Unknown tax topic “{id}”."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:86
+msgid ""
+"Were you a single parent during the year (at least for a while) — unmarried, "
+"no other adult in the household, with at least one child living with you?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:94
+msgid "From which month did that apply?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:95
+msgid ""
+"For example from the month the other parent moved out. Empty = from January."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:102
+msgid "Until which month?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:103
+msgid "Empty = through December."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:110
+msgid "Which child lives in your household (for the basic amount)?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:117
+msgid "How many FURTHER children live in your household as well?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:118
+msgid "Each further child raises the Entlastungsbetrag by 240 €."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:125
+msgid ""
+"Does another adult live in the household (a new partner, parents, flatmates)?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:127
+msgid ""
+"If so, the Entlastungsbetrag does not apply for that time — you then do not "
+"count as “alleinstehend” for tax purposes."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:150
+msgid "Not a single parent → no Entlastungsbetrag (§24b)."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:156
+msgid ""
+"Another adult in the household → not “alleinstehend” for tax purposes → §24b "
+"does not apply for that time."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:166
+msgid ""
+"No child assigned — §24b requires at least one child with a Kindergeld "
+"entitlement in the household."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:170
+msgid ""
+"All year → the full Entlastungsbetrag (4,260 € + 240 € per further child)."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:173
+msgid "{n} month as a single parent → {n}/12 of the amount."
+msgid_plural "{n} months as a single parent → {n}/12 of the amount."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/est-intake.ts:239
+msgid ""
+"Did you have childcare costs for this child (nursery, after-school club, "
+"childminder) with an invoice and a non-cash payment?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:248
+msgid "What were the total childcare costs for the year (€)?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:249
+msgid ""
+"The full amount both parents paid together — only the care portion itself "
+"(without meals)."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:256
+msgid "Did the child belong to your household during that period?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:263
+msgid "Who deducts the costs?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:265
+msgid "Only me"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:266
+msgid "Only the other parent"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:267
+msgid "Half each"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:270
+msgid ""
+"Childcare costs are deductible only ONCE per child across both parents — the "
+"Finanzamt cross-checks both returns."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:285
+msgid "No deductible childcare costs entered."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:291
+msgid ""
+"The child did not belong to your household during that period → you cannot "
+"deduct the costs (§10 Nr. 5)."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:299
+msgid ""
+"The other parent deducts the costs in full → 0 € on your side (a double "
+"deduction is ruled out)."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:305
+msgid ""
+"Split in half — the other parent deducts the other half; together never more "
+"than the total."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:311
+msgid ""
+"You deduct the costs in full → the other parent must NOT also deduct them "
+"(the Finanzamt cross-checks both returns)."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:343
+msgid "No child with IdNr “{idnr}” in the est config."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:418
+msgid ""
+"Did you (the child’s parents) live apart during the year — at least for a "
+"while, no longer sharing a household?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:426
+msgid "From which month did you live apart?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:427
+msgid "For example the month the other parent moved out. Empty = from January."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:434
+msgid "Until which month did the separation last?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:436
+msgid ""
+"Empty = through the end of the year. Only fill this in if you shared a "
+"household again in the same year."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:444
+msgid "Who did the child live with during the separation?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:446
+msgid "With me"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:447
+msgid "With the other parent"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:449
+msgid ""
+"The §24b months only count for the parent whose household the child belonged "
+"to."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:454
+msgid "Did the child belong to your household while you shared one?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:455
+msgid ""
+"Before/after the separation — or the whole year if you lived together. "
+"Almost always yes."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:483
+msgid ""
+"No separation during the year → a shared household throughout; §24b (single "
+"parents) does not apply."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:497
+msgid ""
+"The separation ends before it starts — the months were swapped; please check."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:511
+msgid ""
+"A shared household again after the separation (from month {month}) — the KBK "
+"block can only carry ONE “shared” period; please add the second one in the "
+"settings."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:527
+msgid ""
+"The child was with the other parent during the separation → no §24b months "
+"on your side."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:536
+msgid ""
+"The child was with you during the separation → {n} month as a single parent "
+"(§24b: {n}/12)."
+msgid_plural ""
+"The child was with you during the separation → {n} months as a single parent "
+"(§24b: {n}/12)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/core/actions/elster/est-intake.ts:595
+msgid ""
+"Did you receive or repay tax-free Lohnersatzleistungen during the year "
+"(Elterngeld, Arbeitslosengeld, Krankengeld, Mutterschaftsgeld …)?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:598
+msgid ""
+"These benefits are tax-free but raise the tax rate on your remaining income "
+"(Progressionsvorbehalt §32b)."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:607
+msgid "How much did you receive this year (€)?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:608
+msgid ""
+"The amount received in the calendar year. 0 if you only repaid this year."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:616
+msgid "How much did you repay this year (€)?"
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:618
+msgid ""
+"For example Elterngeld from last year that you repay in instalments or in "
+"full. 0 if there was no repayment."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:632
+msgid "No Lohnersatzleistungen → no Progressionsvorbehalt (§32b)."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:644
+msgid ""
+"The repayment is larger (net {amount} €) → a negative Progressionsvorbehalt "
+"lowers the tax rate."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:652
+msgid ""
+"net {amount} € tax-free, but they raise the tax rate on your remaining "
+"income."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:656
+msgid "received and repaid cancel each other out → no effect on the tax rate."
+msgstr ""
+
+#: src/core/actions/elster/est-intake.ts:657
+msgid ""
+"What counts is the year of receipt/payment (§11) — repayments count in the "
+"year they are paid."
 msgstr ""
 
 #: src/core/actions/elster/privacy-ack.ts:71
@@ -705,7 +1062,7 @@ msgstr ""
 #: src/core/elster/euer-transactions.ts:260
 #: src/frontends/desktop/views/beleg-link-dialog.ts:230
 #: src/frontends/desktop/views/beleg-link-dialog.ts:246
-#: src/frontends/desktop/views/fristen-view.ts:243
+#: src/frontends/desktop/views/fristen-view.ts:240
 #: src/frontends/desktop/views/herleitung-dialog.ts:365
 #: src/frontends/desktop/views/herleitung-dialog.ts:616
 msgid "Receipt #{id}"
@@ -873,9 +1230,9 @@ msgstr ""
 
 #: src/core/elster/frei-verfuegbar.ts:487 src/core/elster/home.ts:350
 #: src/frontends/desktop/views/forderungen-view.ts:214
-#: src/frontends/desktop/views/fristen-view.ts:161
-#: src/frontends/desktop/views/fristen-view.ts:203
-#: src/frontends/desktop/views/fristen-view.ts:239
+#: src/frontends/desktop/views/fristen-view.ts:158
+#: src/frontends/desktop/views/fristen-view.ts:200
+#: src/frontends/desktop/views/fristen-view.ts:236
 #: src/frontends/desktop/views/rechnungen-view.ts:561
 msgid "due {date}"
 msgstr ""
@@ -2804,7 +3161,7 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:211
 #: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:124
 #: src/frontends/desktop/views/herleitung-dialog.ts:625
-#: src/frontends/desktop/views/steuer-assistent-view.ts:153
+#: src/frontends/desktop/views/steuer-assistent-view.ts:161
 msgid "Apply"
 msgstr ""
 
@@ -3406,7 +3763,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/absenden-section.ts:567
 #: src/frontends/desktop/views/erstattung-group.ts:94
-#: src/frontends/desktop/views/steuer-view.ts:316
+#: src/frontends/desktop/views/steuer-view.ts:309
 msgid "Refund"
 msgstr ""
 
@@ -3524,7 +3881,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/anlagen-view.ts:203
 #: src/frontends/desktop/views/steuerkonto-view.ts:119
-#: src/frontends/desktop/views/steuer-view.ts:276
+#: src/frontends/desktop/views/steuer-view.ts:269
 msgid "{n} booking"
 msgid_plural "{n} bookings"
 msgstr[0] ""
@@ -4074,7 +4431,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/beleg-link-dialog.ts:126
 #: src/frontends/desktop/views/offene-belege-view.ts:131
-#: src/frontends/desktop/views/ustva-view.ts:251
+#: src/frontends/desktop/views/ustva-view.ts:255
 msgid "net {amount}"
 msgstr ""
 
@@ -6511,93 +6868,93 @@ msgstr ""
 msgid "Trend: {trend}"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:41
+#: src/frontends/desktop/views/fristen-view.ts:39
 msgid "overdue"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:42
+#: src/frontends/desktop/views/fristen-view.ts:39
 msgid "overdue by {n} day"
 msgid_plural "overdue by {n} days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/fristen-view.ts:46
+#: src/frontends/desktop/views/fristen-view.ts:43
 msgid "no deadline"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:47
+#: src/frontends/desktop/views/fristen-view.ts:44
 msgid "due today"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:48
+#: src/frontends/desktop/views/fristen-view.ts:45
 msgid "due tomorrow"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:51
+#: src/frontends/desktop/views/fristen-view.ts:48
 #: src/frontends/desktop/views/rechnungen-view.ts:266
 msgid "in {n} day"
 msgid_plural "in {n} days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/fristen-view.ts:64
-#: src/frontends/desktop/views/fristen-view.ts:282
+#: src/frontends/desktop/views/fristen-view.ts:61
+#: src/frontends/desktop/views/fristen-view.ts:279
 msgid "Deadlines could not be loaded"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:68
+#: src/frontends/desktop/views/fristen-view.ts:65
 msgid "Open tax payments"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:69
+#: src/frontends/desktop/views/fristen-view.ts:66
 msgid "Upcoming tax dates"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:70
+#: src/frontends/desktop/views/fristen-view.ts:67
 msgid "Open items"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:85
+#: src/frontends/desktop/views/fristen-view.ts:82
 msgid "Loading deadlines …"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:134
+#: src/frontends/desktop/views/fristen-view.ts:131
 msgid "Could not be loaded"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:146
+#: src/frontends/desktop/views/fristen-view.ts:143
 msgid ""
 "Filed, but not yet recorded as paid. Amounts and dates are estimated from "
 "the rules — check them against the notice and the bank statement."
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:154
+#: src/frontends/desktop/views/fristen-view.ts:151
 msgid "No open tax payments"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:169
+#: src/frontends/desktop/views/fristen-view.ts:166
 msgid "Paid"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:189
+#: src/frontends/desktop/views/fristen-view.ts:186
 msgid ""
 "Standard deadlines from the entities’ master data — not yet recorded as "
 "filed."
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:196
+#: src/frontends/desktop/views/fristen-view.ts:193
 msgid "No upcoming tax dates"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:208
+#: src/frontends/desktop/views/fristen-view.ts:205
 msgid "Filed"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:226
+#: src/frontends/desktop/views/fristen-view.ts:223
 msgid "Receipts with payment status “open”."
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:232
+#: src/frontends/desktop/views/fristen-view.ts:229
 msgid "No open items"
 msgstr ""
 
@@ -9049,7 +9406,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:751
 #: src/frontends/desktop/views/steuererklaerung-view.ts:549
-#: src/frontends/desktop/views/steuer-view.ts:387
+#: src/frontends/desktop/views/steuer-view.ts:380
 msgid "PDF not available"
 msgstr ""
 
@@ -9866,28 +10223,28 @@ msgid ""
 "deduction and puts it into your tax return. Pick a topic:"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-assistent-view.ts:116
+#: src/frontends/desktop/views/steuer-assistent-view.ts:120
 msgid "Topic"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-assistent-view.ts:149
+#: src/frontends/desktop/views/steuer-assistent-view.ts:157
 #: src/frontends/desktop/views/wiederkehrend-dialog.ts:227
 msgid "Preview"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-assistent-view.ts:166
+#: src/frontends/desktop/views/steuer-assistent-view.ts:174
 msgid "— pick a child —"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-assistent-view.ts:168
+#: src/frontends/desktop/views/steuer-assistent-view.ts:176
 msgid "For which child?"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-assistent-view.ts:204
+#: src/frontends/desktop/views/steuer-assistent-view.ts:212
 msgid "— (open)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-assistent-view.ts:257
+#: src/frontends/desktop/views/steuer-assistent-view.ts:265
 msgid "Please pick a child first."
 msgstr ""
 
@@ -10059,101 +10416,101 @@ msgstr ""
 msgid "The EÜR could not be calculated"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:182
+#: src/frontends/desktop/views/steuer-view.ts:178
 msgid "Total income (net)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:190
+#: src/frontends/desktop/views/steuer-view.ts:183
 msgid "Total expenses (net)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:210
+#: src/frontends/desktop/views/steuer-view.ts:203
 msgid "Anlage EÜR {year}"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:211
+#: src/frontends/desktop/views/steuer-view.ts:204
 msgid "Profit determination under §4 (3) EStG"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:220
+#: src/frontends/desktop/views/steuer-view.ts:213
 msgid "Business income (net)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:221
+#: src/frontends/desktop/views/steuer-view.ts:214
 msgid "Business expenses (net)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:223
+#: src/frontends/desktop/views/steuer-view.ts:216
 msgid "Profit"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:227
+#: src/frontends/desktop/views/steuer-view.ts:220
 msgid "VAT payable"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:249
+#: src/frontends/desktop/views/steuer-view.ts:242
 msgid "{n} booking is unclassified — please check"
 msgid_plural "{n} bookings are unclassified — please check"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/steuer-view.ts:291
+#: src/frontends/desktop/views/steuer-view.ts:284
 msgid "Key figures"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:295
+#: src/frontends/desktop/views/steuer-view.ts:288
 msgid "Anlage EÜR key figures"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:296
+#: src/frontends/desktop/views/steuer-view.ts:289
 msgid "best effort — check against the Anlage EÜR before filing"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:310
+#: src/frontends/desktop/views/steuer-view.ts:303
 msgid "Annual VAT return {year}"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:313
+#: src/frontends/desktop/views/steuer-view.ts:306
 msgid "VAT payable (year)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:314
+#: src/frontends/desktop/views/steuer-view.ts:307
 msgid "− prepayments filed"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:316
+#: src/frontends/desktop/views/steuer-view.ts:309
 msgid "Final payment"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:325
+#: src/frontends/desktop/views/steuer-view.ts:318
 msgid "§13b VAT owed (neutral for the payable)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:335
+#: src/frontends/desktop/views/steuer-view.ts:328
 msgid "Gewerbesteuer (GewSt 1 A)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:339
+#: src/frontends/desktop/views/steuer-view.ts:332
 msgid "Trade income (rounded down)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:340
+#: src/frontends/desktop/views/steuer-view.ts:333
 msgid "Tax base amount"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:345
+#: src/frontends/desktop/views/steuer-view.ts:338
 msgid "Below the allowance"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:346
+#: src/frontends/desktop/views/steuer-view.ts:339
 msgid "Base amount 0 € — the return is filed anyway"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:363
+#: src/frontends/desktop/views/steuer-view.ts:356
 msgid "Feststellung (GbR)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:367
+#: src/frontends/desktop/views/steuer-view.ts:360
 msgid "Income from a trade or business"
 msgstr ""
 
@@ -10595,11 +10952,11 @@ msgid ""
 "currencies)"
 msgstr ""
 
-#: src/frontends/desktop/views/ustva-view.ts:234
+#: src/frontends/desktop/views/ustva-view.ts:236
 msgid "The rates could not be loaded"
 msgstr ""
 
-#: src/frontends/desktop/views/ustva-view.ts:245
+#: src/frontends/desktop/views/ustva-view.ts:249
 msgid "XML not available"
 msgstr ""
 

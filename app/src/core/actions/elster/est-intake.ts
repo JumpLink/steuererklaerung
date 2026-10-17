@@ -13,6 +13,7 @@
 
 import { upsertEstJahr, mutateEstConfig } from '../../config/accessors.ts';
 import { round2 } from '../../lib/money.ts';
+import { _, _n, fmt } from '../../lib/i18n.ts';
 
 /**
  * One wizard question — rendered by the GUI, asked by the AI copilot. `wennId`/`wennWert` make a
@@ -72,53 +73,62 @@ export interface EntlastungDerived {
     hinweise: string[];
 }
 
-/** The §24b question flow, for the GUI/AI to render. */
-export const ENTLASTUNG_FRAGEN: IntakeQuestion[] = [
-    {
-        id: 'alleinstehendMitKind',
-        typ: 'boolean',
-        frage: 'Warst du im Jahr (zeitweise) alleinerziehend — nicht verheiratet und ohne weiteren Erwachsenen im Haushalt, mit mindestens einem Kind bei dir?',
-    },
-    {
-        id: 'von',
-        typ: 'monat',
-        wennId: 'alleinstehendMitKind',
-        wennWert: true,
-        frage: 'Ab welchem Monat traf das zu?',
-        hilfe: 'z. B. ab dem Auszug des anderen Elternteils. Leer = ab Januar.',
-    },
-    {
-        id: 'bis',
-        typ: 'monat',
-        wennId: 'alleinstehendMitKind',
-        wennWert: true,
-        frage: 'Bis zu welchem Monat?',
-        hilfe: 'Leer = bis Dezember.',
-    },
-    {
-        id: 'kindIdnr',
-        typ: 'kind',
-        wennId: 'alleinstehendMitKind',
-        wennWert: true,
-        frage: 'Welches Kind lebt in deinem Haushalt (für den Grundbetrag)?',
-    },
-    {
-        id: 'weitereKinder',
-        typ: 'zahl',
-        wennId: 'alleinstehendMitKind',
-        wennWert: true,
-        frage: 'Wie viele WEITERE Kinder leben zusätzlich in deinem Haushalt?',
-        hilfe: 'Je weiteres Kind erhöht sich der Entlastungsbetrag um 240 €.',
-    },
-    {
-        id: 'andererVolljaehrigerImHaushalt',
-        typ: 'boolean',
-        wennId: 'alleinstehendMitKind',
-        wennWert: true,
-        frage: 'Wohnt eine andere volljährige Person mit im Haushalt (neue:r Partner:in, Eltern, WG)?',
-        hilfe: 'Falls ja, entfällt der Entlastungsbetrag für diese Zeit — dann bist du steuerlich nicht „alleinstehend".',
-    },
-];
+/**
+ * The §24b question flow, for the GUI/AI to render. A FUNCTION, not a constant: a module-level array
+ * is built at import time — before the frontend registers its translator — and would stay English.
+ */
+export function entlastungFragen(): IntakeQuestion[] {
+    return [
+        {
+            id: 'alleinstehendMitKind',
+            typ: 'boolean',
+            frage: _(
+                'Were you a single parent during the year (at least for a while) — unmarried, no other adult in the household, with at least one child living with you?',
+            ),
+        },
+        {
+            id: 'von',
+            typ: 'monat',
+            wennId: 'alleinstehendMitKind',
+            wennWert: true,
+            frage: _('From which month did that apply?'),
+            hilfe: _('For example from the month the other parent moved out. Empty = from January.'),
+        },
+        {
+            id: 'bis',
+            typ: 'monat',
+            wennId: 'alleinstehendMitKind',
+            wennWert: true,
+            frage: _('Until which month?'),
+            hilfe: _('Empty = through December.'),
+        },
+        {
+            id: 'kindIdnr',
+            typ: 'kind',
+            wennId: 'alleinstehendMitKind',
+            wennWert: true,
+            frage: _('Which child lives in your household (for the basic amount)?'),
+        },
+        {
+            id: 'weitereKinder',
+            typ: 'zahl',
+            wennId: 'alleinstehendMitKind',
+            wennWert: true,
+            frage: _('How many FURTHER children live in your household as well?'),
+            hilfe: _('Each further child raises the Entlastungsbetrag by 240 €.'),
+        },
+        {
+            id: 'andererVolljaehrigerImHaushalt',
+            typ: 'boolean',
+            wennId: 'alleinstehendMitKind',
+            wennWert: true,
+            frage: _('Does another adult live in the household (a new partner, parents, flatmates)?'),
+            hilfe: _(
+                'If so, the Entlastungsbetrag does not apply for that time — you then do not count as “alleinstehend” for tax purposes.',
+            ),
+        },
+    ];
+}
 
 /** Month number (1..12) from a 'YYYY-MM' string, clamped; `fallback` when empty/unparseable. */
 function monat(s: string | undefined, fallback: number): number {
@@ -137,12 +147,14 @@ export function deriveEntlastungAlleinerziehende(a: EntlastungAnswers): Entlastu
     const hinweise: string[] = [];
     const kind_idnr = a.kindIdnr;
     if (!a.alleinstehendMitKind) {
-        hinweise.push('Nicht alleinerziehend → kein Entlastungsbetrag (§24b).');
+        hinweise.push(_('Not a single parent → no Entlastungsbetrag (§24b).'));
         return { monate: 0, weitere_kinder: 0, kind_idnr, hinweise };
     }
     if (a.andererVolljaehrigerImHaushalt) {
         hinweise.push(
-            'Eine andere volljährige Person im Haushalt → steuerlich nicht „alleinstehend" → §24b entfällt für diese Zeit.',
+            _(
+                'Another adult in the household → not “alleinstehend” for tax purposes → §24b does not apply for that time.',
+            ),
         );
         return { monate: 0, weitere_kinder: 0, kind_idnr, hinweise };
     }
@@ -150,11 +162,20 @@ export function deriveEntlastungAlleinerziehende(a: EntlastungAnswers): Entlastu
     const bis = Math.min(12, monat(a.bis, 12));
     const monate = Math.max(0, bis - von + 1);
     if (!kind_idnr)
-        hinweise.push('Kein Kind zugeordnet — §24b verlangt mindestens ein Kind mit Kindergeldanspruch im Haushalt.');
+        hinweise.push(
+            _('No child assigned — §24b requires at least one child with a Kindergeld entitlement in the household.'),
+        );
     hinweise.push(
         monate >= 12
-            ? 'Ganzjährig → voller Entlastungsbetrag (4.260 € + 240 € je weiterem Kind).'
-            : `${monate} Monat(e) alleinerziehend → anteilig ${monate}/12.`,
+            ? _('All year → the full Entlastungsbetrag (4,260 € + 240 € per further child).')
+            : fmt(
+                  _n(
+                      '{n} month as a single parent → {n}/12 of the amount.',
+                      '{n} months as a single parent → {n}/12 of the amount.',
+                      monate,
+                  ),
+                  { n: monate },
+              ),
     );
     return { monate, weitere_kinder: Math.max(0, Math.trunc(a.weitereKinder ?? 0)), kind_idnr, hinweise };
 }
@@ -208,43 +229,49 @@ export interface KinderbetreuungDerived {
     hinweise: string[];
 }
 
-/** The Kinderbetreuung questions (per child) — for the GUI/AI. */
-export const KINDERBETREUUNG_FRAGEN: IntakeQuestion[] = [
-    {
-        id: 'hatKosten',
-        typ: 'boolean',
-        frage: 'Hattest du für dieses Kind Betreuungskosten (Kita, Hort, Tagesmutter) mit Rechnung und unbarer Zahlung?',
-    },
-    {
-        id: 'betragGesamt',
-        typ: 'zahl',
-        nachkomma: 2,
-        wennId: 'hatKosten',
-        wennWert: true,
-        frage: 'Wie hoch waren die Betreuungskosten insgesamt im Jahr (€)?',
-        hilfe: 'Der volle Betrag, den beide Eltern zusammen gezahlt haben — nur der reine Betreuungsanteil (ohne Verpflegung).',
-    },
-    {
-        id: 'kindImHaushalt',
-        typ: 'boolean',
-        wennId: 'hatKosten',
-        wennWert: true,
-        frage: 'Gehörte das Kind in dem Zeitraum zu deinem Haushalt?',
-    },
-    {
-        id: 'abzug',
-        typ: 'auswahl',
-        wennId: 'hatKosten',
-        wennWert: true,
-        frage: 'Wer zieht die Kosten steuerlich ab?',
-        optionen: [
-            { wert: 'ich', label: 'Nur ich' },
-            { wert: 'anderer', label: 'Nur der andere Elternteil' },
-            { wert: 'haelftig', label: 'Hälftig (jeder die Hälfte)' },
-        ],
-        hilfe: 'Betreuungskosten sind nur EINMAL je Kind über beide Eltern abziehbar — das Finanzamt gleicht beide Erklärungen ab.',
-    },
-];
+/** The Kinderbetreuung questions (per child) — for the GUI/AI; a function, see {@link entlastungFragen}. */
+export function kinderbetreuungFragen(): IntakeQuestion[] {
+    return [
+        {
+            id: 'hatKosten',
+            typ: 'boolean',
+            frage: _(
+                'Did you have childcare costs for this child (nursery, after-school club, childminder) with an invoice and a non-cash payment?',
+            ),
+        },
+        {
+            id: 'betragGesamt',
+            typ: 'zahl',
+            nachkomma: 2,
+            wennId: 'hatKosten',
+            wennWert: true,
+            frage: _('What were the total childcare costs for the year (€)?'),
+            hilfe: _('The full amount both parents paid together — only the care portion itself (without meals).'),
+        },
+        {
+            id: 'kindImHaushalt',
+            typ: 'boolean',
+            wennId: 'hatKosten',
+            wennWert: true,
+            frage: _('Did the child belong to your household during that period?'),
+        },
+        {
+            id: 'abzug',
+            typ: 'auswahl',
+            wennId: 'hatKosten',
+            wennWert: true,
+            frage: _('Who deducts the costs?'),
+            optionen: [
+                { wert: 'ich', label: _('Only me') },
+                { wert: 'anderer', label: _('Only the other parent') },
+                { wert: 'haelftig', label: _('Half each') },
+            ],
+            hilfe: _(
+                'Childcare costs are deductible only ONCE per child across both parents — the Finanzamt cross-checks both returns.',
+            ),
+        },
+    ];
+}
 
 /**
  * Derive the Kinderbetreuung entry from the answers — including the two preconditions (child in the
@@ -255,35 +282,40 @@ export const KINDERBETREUUNG_FRAGEN: IntakeQuestion[] = [
 export function deriveKinderbetreuung(a: KinderbetreuungAnswers): KinderbetreuungDerived {
     const hinweise: string[] = [];
     if (!a.hatKosten || !a.betragGesamt || a.betragGesamt <= 0) {
-        hinweise.push('Keine abzugsfähigen Kinderbetreuungskosten angegeben.');
+        hinweise.push(_('No deductible childcare costs entered.'));
         return { eintrag: null, hinweise };
     }
     if (a.kindImHaushalt === false) {
         hinweise.push(
-            'Das Kind gehörte in dem Zeitraum nicht zu deinem Haushalt → du kannst die Kosten nicht abziehen (§10 Nr. 5).',
+            _(
+                'The child did not belong to your household during that period → you cannot deduct the costs (§10 Nr. 5).',
+            ),
         );
         return { eintrag: null, hinweise };
     }
     let von_mir: number;
     if (a.abzug === 'anderer') {
         hinweise.push(
-            'Der andere Elternteil zieht die Kosten voll ab → bei dir 0 € (ein Doppelabzug ist ausgeschlossen).',
+            _('The other parent deducts the costs in full → 0 € on your side (a double deduction is ruled out).'),
         );
         von_mir = 0;
     } else if (a.abzug === 'haelftig') {
         von_mir = round2(a.betragGesamt / 2);
         hinweise.push(
-            'Hälftige Aufteilung — der andere Elternteil zieht die andere Hälfte ab; zusammen nie mehr als der Gesamtbetrag.',
+            _('Split in half — the other parent deducts the other half; together never more than the total.'),
         );
     } else {
         von_mir = round2(a.betragGesamt);
         hinweise.push(
-            'Du ziehst die Kosten voll ab → der andere Elternteil darf sie NICHT auch abziehen (das Finanzamt gleicht beide Erklärungen ab).',
+            _(
+                'You deduct the costs in full → the other parent must NOT also deduct them (the Finanzamt cross-checks both returns).',
+            ),
         );
     }
     if (von_mir <= 0) return { eintrag: null, hinweise };
     return {
         eintrag: {
+            // PERSISTED into the est config and filed with ELSTER — a stored value, so it stays German.
             bezeichnung: a.dienstleister ? `Kinderbetreuung (${a.dienstleister})` : 'Kinderbetreuung',
             zeitraum_von: a.zeitraumVon ?? '01.01',
             zeitraum_bis: a.zeitraumBis ?? '31.12',
@@ -308,7 +340,7 @@ function mutateKindJahr(
     mutateEstConfig(entityId, (raw) => {
         const kinder = Array.isArray(raw.kinder) ? (raw.kinder as Array<Record<string, unknown>>) : [];
         const kind = kinder.find((k) => (k as { idnr?: string }).idnr === kindIdnr);
-        if (!kind) throw new Error(`Kein Kind mit IdNr '${kindIdnr}' in der est-Config.`);
+        if (!kind) throw new Error(fmt(_('No child with IdNr “{idnr}” in the est config.'), { idnr: kindIdnr }));
         const jahre = Array.isArray(kind.jahre) ? (kind.jahre as Array<Record<string, unknown>>) : [];
         kind.jahre = jahre;
         let jahr = jahre.find((j) => (j as { jahr?: number }).jahr === year);
@@ -376,48 +408,54 @@ export interface HaushaltDerived {
     hinweise: string[];
 }
 
-/** The household/separation questions (per child) — for the GUI/AI. */
-export const HAUSHALT_FRAGEN: IntakeQuestion[] = [
-    {
-        id: 'getrenntGelebt',
-        typ: 'boolean',
-        frage: 'Habt ihr (die Eltern des Kindes) im Jahr — zumindest zeitweise — getrennt gelebt, also keinen gemeinsamen Haushalt mehr geführt?',
-    },
-    {
-        id: 'getrenntAb',
-        typ: 'monat',
-        wennId: 'getrenntGelebt',
-        wennWert: true,
-        frage: 'Ab welchem Monat habt ihr getrennt gelebt?',
-        hilfe: 'z. B. der Monat, in dem der andere Elternteil ausgezogen ist. Leer = ab Januar.',
-    },
-    {
-        id: 'getrenntBis',
-        typ: 'monat',
-        wennId: 'getrenntGelebt',
-        wennWert: true,
-        frage: 'Bis zu welchem Monat dauerte die Trennung?',
-        hilfe: 'Leer = bis Jahresende. Nur ausfüllen, wenn ihr im selben Jahr wieder einen gemeinsamen Haushalt gebildet habt.',
-    },
-    {
-        id: 'kindBeiWem',
-        typ: 'auswahl',
-        wennId: 'getrenntGelebt',
-        wennWert: true,
-        frage: 'Bei wem lebte das Kind während der Trennung?',
-        optionen: [
-            { wert: 'ich', label: 'Bei mir' },
-            { wert: 'anderer', label: 'Beim anderen Elternteil' },
-        ],
-        hilfe: 'Nur beim Elternteil, zu dessen Haushalt das Kind gehörte, zählen die §24b-Monate.',
-    },
-    {
-        id: 'kindImGemeinsamenHaushalt',
-        typ: 'boolean',
-        frage: 'Gehörte das Kind während eines gemeinsamen Haushalts zu eurem Haushalt?',
-        hilfe: 'Vor/nach der Trennung — bzw. das ganze Jahr, wenn ihr zusammengelebt habt. Fast immer ja.',
-    },
-];
+/** The household/separation questions (per child) — for the GUI/AI; a function, see {@link entlastungFragen}. */
+export function haushaltFragen(): IntakeQuestion[] {
+    return [
+        {
+            id: 'getrenntGelebt',
+            typ: 'boolean',
+            frage: _(
+                'Did you (the child’s parents) live apart during the year — at least for a while, no longer sharing a household?',
+            ),
+        },
+        {
+            id: 'getrenntAb',
+            typ: 'monat',
+            wennId: 'getrenntGelebt',
+            wennWert: true,
+            frage: _('From which month did you live apart?'),
+            hilfe: _('For example the month the other parent moved out. Empty = from January.'),
+        },
+        {
+            id: 'getrenntBis',
+            typ: 'monat',
+            wennId: 'getrenntGelebt',
+            wennWert: true,
+            frage: _('Until which month did the separation last?'),
+            hilfe: _(
+                'Empty = through the end of the year. Only fill this in if you shared a household again in the same year.',
+            ),
+        },
+        {
+            id: 'kindBeiWem',
+            typ: 'auswahl',
+            wennId: 'getrenntGelebt',
+            wennWert: true,
+            frage: _('Who did the child live with during the separation?'),
+            optionen: [
+                { wert: 'ich', label: _('With me') },
+                { wert: 'anderer', label: _('With the other parent') },
+            ],
+            hilfe: _('The §24b months only count for the parent whose household the child belonged to.'),
+        },
+        {
+            id: 'kindImGemeinsamenHaushalt',
+            typ: 'boolean',
+            frage: _('Did the child belong to your household while you shared one?'),
+            hilfe: _('Before/after the separation — or the whole year if you lived together. Almost always yes.'),
+        },
+    ];
+}
 
 /** Last day of a month (leap-year aware via the concrete year). */
 function letzterTag(year: number, month1to12: number): number {
@@ -441,7 +479,9 @@ export function deriveHaushalt(a: HaushaltAnswers, year: number): HaushaltDerive
     const hinweise: string[] = [];
     const kindGem = a.kindImGemeinsamenHaushalt !== false;
     if (!a.getrenntGelebt) {
-        hinweise.push('Keine Trennung im Jahr → durchgehend gemeinsamer Haushalt; §24b (Alleinerziehende) entfällt.');
+        hinweise.push(
+            _('No separation during the year → a shared household throughout; §24b (single parents) does not apply.'),
+        );
         return {
             alleinstehend_monate: 0,
             haushalt: {
@@ -454,7 +494,7 @@ export function deriveHaushalt(a: HaushaltAnswers, year: number): HaushaltDerive
     let von = Math.max(1, monat(a.getrenntAb, 1));
     let bis = Math.min(12, monat(a.getrenntBis, 12));
     if (bis < von) {
-        hinweise.push('Trennungs-Ende liegt vor dem -Beginn — die Monate wurden getauscht; bitte prüfen.');
+        hinweise.push(_('The separation ends before it starts — the months were swapped; please check.'));
         [von, bis] = [bis, von];
     }
     const haushalt: HaushaltBlock = { getrennt_zeitraum: monatsZeitraum(year, von, bis) };
@@ -466,7 +506,12 @@ export function deriveHaushalt(a: HaushaltAnswers, year: number): HaushaltDerive
     if (bis < 12) {
         if (von > 1) {
             hinweise.push(
-                `Nach der Trennung wieder gemeinsamer Haushalt (ab Monat ${bis + 1}) — der KBK-Block kann nur EINEN „gemeinsam"-Zeitraum tragen; den zweiten bitte im Einstellungen-UI ergänzen.`,
+                fmt(
+                    _(
+                        'A shared household again after the separation (from month {month}) — the KBK block can only carry ONE “shared” period; please add the second one in the settings.',
+                    ),
+                    { month: bis + 1 },
+                ),
             );
         } else {
             haushalt.gemeinsam_zeitraum = monatsZeitraum(year, bis + 1, 12);
@@ -479,14 +524,21 @@ export function deriveHaushalt(a: HaushaltAnswers, year: number): HaushaltDerive
     let alleinstehend_bis: string | undefined;
     if (a.kindBeiWem === 'anderer') {
         haushalt.kind_beim_anderen_zeitraum = monatsZeitraum(year, von, bis);
-        hinweise.push('Kind während der Trennung beim anderen Elternteil → keine §24b-Monate bei dir.');
+        hinweise.push(_('The child was with the other parent during the separation → no §24b months on your side.'));
     } else {
         haushalt.kind_bei_mir_zeitraum = monatsZeitraum(year, von, bis);
         alleinstehend_monate = monate;
         alleinstehend_von = von > 1 ? `${year}-${String(von).padStart(2, '0')}` : undefined;
         alleinstehend_bis = bis < 12 ? `${year}-${String(bis).padStart(2, '0')}` : undefined;
         hinweise.push(
-            `Kind bei dir während der Trennung → ${monate} Monat(e) alleinstehend (§24b anteilig ${monate}/12).`,
+            fmt(
+                _n(
+                    'The child was with you during the separation → {n} month as a single parent (§24b: {n}/12).',
+                    'The child was with you during the separation → {n} months as a single parent (§24b: {n}/12).',
+                    monate,
+                ),
+                { n: monate },
+            ),
         );
     }
     return { alleinstehend_monate, alleinstehend_von, alleinstehend_bis, haushalt, hinweise };
@@ -533,33 +585,41 @@ export interface LohnersatzDerived {
     hinweise: string[];
 }
 
-/** The §32b Lohnersatz questions — for the GUI/AI. */
-export const LOHNERSATZ_FRAGEN: IntakeQuestion[] = [
-    {
-        id: 'hatLohnersatz',
-        typ: 'boolean',
-        frage: 'Hast du im Jahr steuerfreie Lohnersatzleistungen bezogen oder zurückgezahlt (Elterngeld, Arbeitslosengeld, Krankengeld, Mutterschaftsgeld …)?',
-        hilfe: 'Diese Leistungen sind steuerfrei, erhöhen aber den Steuersatz auf dein übriges Einkommen (Progressionsvorbehalt §32b).',
-    },
-    {
-        id: 'erhalten',
-        typ: 'zahl',
-        nachkomma: 2,
-        wennId: 'hatLohnersatz',
-        wennWert: true,
-        frage: 'Wie viel hast du in diesem Jahr erhalten (€)?',
-        hilfe: 'Der im Kalenderjahr zugeflossene Betrag. 0, wenn du in diesem Jahr nur zurückgezahlt hast.',
-    },
-    {
-        id: 'zurueckgezahlt',
-        typ: 'zahl',
-        nachkomma: 2,
-        wennId: 'hatLohnersatz',
-        wennWert: true,
-        frage: 'Wie viel hast du in diesem Jahr zurückgezahlt (€)?',
-        hilfe: 'z. B. Elterngeld aus dem Vorjahr, das du in Raten oder komplett zurückzahlst. 0, wenn keine Rückzahlung.',
-    },
-];
+/** The §32b Lohnersatz questions — for the GUI/AI; a function, see {@link entlastungFragen}. */
+export function lohnersatzFragen(): IntakeQuestion[] {
+    return [
+        {
+            id: 'hatLohnersatz',
+            typ: 'boolean',
+            frage: _(
+                'Did you receive or repay tax-free Lohnersatzleistungen during the year (Elterngeld, Arbeitslosengeld, Krankengeld, Mutterschaftsgeld …)?',
+            ),
+            hilfe: _(
+                'These benefits are tax-free but raise the tax rate on your remaining income (Progressionsvorbehalt §32b).',
+            ),
+        },
+        {
+            id: 'erhalten',
+            typ: 'zahl',
+            nachkomma: 2,
+            wennId: 'hatLohnersatz',
+            wennWert: true,
+            frage: _('How much did you receive this year (€)?'),
+            hilfe: _('The amount received in the calendar year. 0 if you only repaid this year.'),
+        },
+        {
+            id: 'zurueckgezahlt',
+            typ: 'zahl',
+            nachkomma: 2,
+            wennId: 'hatLohnersatz',
+            wennWert: true,
+            frage: _('How much did you repay this year (€)?'),
+            hilfe: _(
+                'For example Elterngeld from last year that you repay in instalments or in full. 0 if there was no repayment.',
+            ),
+        },
+    ];
+}
 
 /**
  * Derive the §32b net amount from the answers (received − repaid). Both amounts are clamped to ≥ 0 (the
@@ -569,7 +629,7 @@ export const LOHNERSATZ_FRAGEN: IntakeQuestion[] = [
 export function deriveLohnersatz(a: LohnersatzAnswers): LohnersatzDerived {
     const hinweise: string[] = [];
     if (!a.hatLohnersatz) {
-        hinweise.push('Keine Lohnersatzleistungen → kein Progressionsvorbehalt (§32b).');
+        hinweise.push(_('No Lohnersatzleistungen → no Progressionsvorbehalt (§32b).'));
         return { erhalten: 0, zurueckgezahlt: 0, netto: 0, hinweise };
     }
     const erhalten = round2(Math.max(0, a.erhalten ?? 0));
@@ -578,12 +638,23 @@ export function deriveLohnersatz(a: LohnersatzAnswers): LohnersatzDerived {
     const art = a.art ? `${a.art}: ` : '';
     if (netto < 0)
         hinweise.push(
-            `${art}Rückzahlung überwiegt (netto ${netto} €) → negativer Progressionsvorbehalt senkt den Steuersatz.`,
+            art +
+                fmt(
+                    _(
+                        'The repayment is larger (net {amount} €) → a negative Progressionsvorbehalt lowers the tax rate.',
+                    ),
+                    { amount: netto },
+                ),
         );
     else if (netto > 0)
-        hinweise.push(`${art}netto ${netto} € steuerfrei, erhöhen aber den Steuersatz auf dein übriges Einkommen.`);
-    else hinweise.push(`${art}erhalten und zurückgezahlt gleichen sich aus → keine Auswirkung auf den Steuersatz.`);
-    hinweise.push('Maßgeblich ist das ZUFLUSS-/ABFLUSSJAHR (§11) — Rückzahlungen zählen im Jahr der Zahlung.');
+        hinweise.push(
+            art +
+                fmt(_('net {amount} € tax-free, but they raise the tax rate on your remaining income.'), {
+                    amount: netto,
+                }),
+        );
+    else hinweise.push(art + _('received and repaid cancel each other out → no effect on the tax rate.'));
+    hinweise.push(_('What counts is the year of receipt/payment (§11) — repayments count in the year they are paid.'));
     return { erhalten, zurueckgezahlt, netto, hinweise };
 }
 
