@@ -38,7 +38,7 @@ import {
 } from '../data/time.ts';
 import type { TimeRowStatus } from '../../../core/presenters/zeiten.ts';
 import type { AppEntity } from '../entities.ts';
-import { _ } from '../i18n.ts';
+import { _, _n, fmt } from '../i18n.ts';
 import { showToast } from '../toast.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { amountLabel, GroupRows, LoadToken, loadIntoStack, markup } from './util.ts';
@@ -143,7 +143,7 @@ export class BhZeitenView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'Zeiten konnten nicht geladen werden',
+            errorContext: _('Time entries could not be loaded'),
             load: () => loadTimeView(entity.id),
             fill: (model) => this.fill(model),
         });
@@ -173,7 +173,9 @@ export class BhZeitenView extends Adw.Bin {
      * project is. Without any project the dropdown stays out of the way and the form is the old one.
      */
     private fillProjectChoices(model: TimeViewModel, keep: string | null): void {
-        this._project_dropdown.set_model(Gtk.StringList.new(['Kein Projekt', ...model.projectList.map((p) => p.name)]));
+        this._project_dropdown.set_model(
+            Gtk.StringList.new([_('No project'), ...model.projectList.map((p) => p.name)]),
+        );
         const index = model.projectList.findIndex((p) => p.id === keep);
         this._project_dropdown.set_selected(index + 1);
         this._project_dropdown.set_visible(model.projectList.length > 0);
@@ -191,19 +193,19 @@ export class BhZeitenView extends Adw.Bin {
 
     private fillTimer(model: TimeViewModel): void {
         const running = model.running;
-        this._timer_group.set_title(running ? 'Läuft' : 'Zeiterfassung');
+        this._timer_group.set_title(running ? _('Running') : _('Time tracking'));
         this._form_box.set_visible(!running);
         this._stop_button.set_visible(!!running);
 
         if (!running) {
             this.stopTick();
             this._elapsed_label.set_label('00:00:00');
-            this._running_label.set_label('Kein Timer aktiv');
-            this._timer_group.set_description('Projekt eintragen und starten. Enter genügt.');
+            this._running_label.set_label(_('No timer running'));
+            this._timer_group.set_description(_('Type a project and start. Enter is enough.'));
             return;
         }
 
-        const who = running.contactId ? (model.names.get(running.contactId) ?? '') : 'ohne Kunde';
+        const who = running.contactId ? (model.names.get(running.contactId) ?? '') : _('no customer');
         const label = timeProjectLabel(running, model.projectList);
         this._running_label.set_label([label, running.description, who].filter(Boolean).join(' · '));
         this._timer_group.set_description(null);
@@ -258,12 +260,12 @@ export class BhZeitenView extends Adw.Bin {
                 description: description || null,
             });
             this._description_entry.set_text('');
-            showToast(`Timer läuft: ${target.project}`);
+            showToast(fmt(_('Timer running: {project}'), { project: target.project }));
             this.refresh();
         } catch (err) {
             void errorDialog(
                 this,
-                'Timer konnte nicht gestartet werden',
+                _('The timer could not be started'),
                 err instanceof Error ? err.message : String(err),
             );
         }
@@ -273,12 +275,17 @@ export class BhZeitenView extends Adw.Bin {
         if (!this.entity) return;
         try {
             const stopped = stopTracking(this.entity.id);
-            showToast(`Gestoppt: ${stopped.project} · ${formatDuration(stopped.durationSeconds ?? 0)}`);
+            showToast(
+                fmt(_('Stopped: {project} · {duration}'), {
+                    project: stopped.project,
+                    duration: formatDuration(stopped.durationSeconds ?? 0),
+                }),
+            );
             this.refresh();
         } catch (err) {
             void errorDialog(
                 this,
-                'Timer konnte nicht beendet werden',
+                _('The timer could not be stopped'),
                 err instanceof Error ? err.message : String(err),
             );
         }
@@ -289,33 +296,37 @@ export class BhZeitenView extends Adw.Bin {
     private fillUnbilled(model: TimeViewModel): void {
         this.unbilled.clear();
         if (model.unbilled.length === 0) {
-            this._unbilled_group.set_description('Alles abgerechnet.');
+            this._unbilled_group.set_description(_('Everything invoiced.'));
             return;
         }
         const total = model.unbilled.reduce((sum, r) => sum + r.seconds, 0);
-        this._unbilled_group.set_description(`${toHours(total)} h offen`);
+        this._unbilled_group.set_description(fmt(_('{hours} h open'), { hours: toHours(total) }));
 
         for (const row of model.unbilled) {
-            const who = row.contactId ? (model.names.get(row.contactId) ?? row.contactId) : 'ohne Kunde';
+            const who = row.contactId ? (model.names.get(row.contactId) ?? row.contactId) : _('no customer');
             const action = new Adw.ActionRow({
                 title: timeProjectLabel(row, model.projectList),
-                subtitle: `${toHours(row.seconds)} h · ${row.entries} Einträge · ${who}`,
+                subtitle: [
+                    fmt(_('{hours} h'), { hours: toHours(row.seconds) }),
+                    fmt(_n('{n} entry', '{n} entries', row.entries), { n: row.entries }),
+                    who,
+                ].join(' · '),
             });
             action.add_suffix(
                 new Gtk.Label({ label: formatDuration(row.seconds), cssClasses: ['numeric', 'dim-label'] }),
             );
             if (row.contactId) {
                 const bill = new Gtk.Button({
-                    label: 'Rechnung',
+                    label: _('Invoice'),
                     valign: Gtk.Align.CENTER,
-                    tooltipText: 'Rechnungsentwurf aus diesen Zeiten erzeugen',
+                    tooltipText: _('Create an invoice draft from this time'),
                 });
                 bill.connect('clicked', () => this.onBill(row.project, row.contactId as string, row.seconds));
                 action.add_suffix(bill);
             } else {
                 // Without a customer there is nobody to invoice — say so instead of offering a
                 // button that can only fail.
-                const hint = new Gtk.Label({ label: 'Kunde fehlt', cssClasses: ['dim-label'] });
+                const hint = new Gtk.Label({ label: _('Customer missing'), cssClasses: ['dim-label'] });
                 action.add_suffix(hint);
             }
             this.unbilled.add(action);
@@ -339,12 +350,12 @@ export class BhZeitenView extends Adw.Bin {
                         vatRate: opts.vatRate,
                         roundToMinutes: opts.roundToMinutes,
                     });
-                    showToast(`Entwurf angelegt: ${result.invoice.totals.gross} € brutto`);
+                    showToast(fmt(_('Draft created: {amount} € gross'), { amount: result.invoice.totals.gross }));
                     this.refresh();
                 } catch (err) {
                     void errorDialog(
                         this,
-                        'Rechnung konnte nicht erzeugt werden',
+                        _('The invoice could not be created'),
                         err instanceof Error ? err.message : String(err),
                     );
                 }
@@ -469,12 +480,12 @@ export class BhZeitenView extends Adw.Bin {
             onConfirm: (projectId) => {
                 try {
                     assignTimeProject(entry.id, projectId);
-                    showToast(projectId ? 'Projekt zugeordnet' : 'Projekt entfernt');
+                    showToast(projectId ? _('Project assigned') : _('Project removed'));
                     this.refresh();
                 } catch (err) {
                     void errorDialog(
                         this,
-                        'Projekt konnte nicht zugeordnet werden',
+                        _('The project could not be assigned'),
                         err instanceof Error ? err.message : String(err),
                     );
                 }
@@ -485,14 +496,14 @@ export class BhZeitenView extends Adw.Bin {
 
     private async onDelete(entry: TimeEntry): Promise<void> {
         const ok = await confirmDialog(this, {
-            heading: 'Eintrag löschen?',
+            heading: _('Delete entry?'),
             body: `${entry.project} · ${formatDuration(entry.durationSeconds ?? 0)}${entry.description ? `\n${entry.description}` : ''}`,
-            confirmLabel: 'Löschen',
+            confirmLabel: _('Delete'),
             destructive: true,
         });
         if (!ok) return;
         removeTimeEntry(entry.id);
-        showToast('Eintrag gelöscht');
+        showToast(_('Entry deleted'));
         this.refresh();
     }
 }

@@ -12,6 +12,7 @@
  */
 
 import type { Project } from '../config/index.ts';
+import { _, fmt } from '../lib/i18n.ts';
 import { listProjects, matchProjectByName, normalizeLabel } from './projects.ts';
 import {
     type Contact,
@@ -360,7 +361,13 @@ export function resolveTimeProject(
     const hit = projects.find((p) => p.id === label) ?? matchProjectByName(label, projects, contact);
     if (!hit) return { project: label, projectId: null, contactId: contact ?? null };
     if (contact && contact !== hit.contactId) {
-        throw new Error(`Projekt „${hit.name}" gehört zu Kontakt ${hit.contactId}, nicht zu ${contact}.`);
+        throw new Error(
+            fmt(_('Project “{project}” belongs to contact {owner}, not to {contact}.'), {
+                project: hit.name,
+                owner: hit.contactId,
+                contact,
+            }),
+        );
     }
     return { project: hit.name, projectId: hit.id, contactId: hit.contactId };
 }
@@ -388,14 +395,24 @@ export function timeProjectLabel(
  */
 export function assignTimeProject(id: string, projectId: string | null): TimeEntry {
     const entry = findTimeEntry(id);
-    if (!entry) throw new Error(`Kein Zeiteintrag mit der Id ${id}`);
-    if (entry.invoiceId) throw new Error(`Eintrag ${id} steht auf Rechnung ${entry.invoiceId} und bleibt unverändert.`);
+    if (!entry) throw new Error(fmt(_('No time entry with the id {id}'), { id }));
+    if (entry.invoiceId)
+        throw new Error(
+            fmt(_('Entry {id} is on invoice {invoice} and stays unchanged.'), { id, invoice: entry.invoiceId }),
+        );
     if (projectId === null) return updateTimeEntry({ ...entry, projectId: null });
     const project = listProjects(entry.entityId).find((p) => p.id === projectId);
-    if (!project) throw new Error(`Projekt „${projectId}" gibt es für ${entry.entityId} nicht.`);
+    if (!project)
+        throw new Error(
+            fmt(_('There is no project “{project}” for {entity}.'), { project: projectId, entity: entry.entityId }),
+        );
     if (entry.contactId && entry.contactId !== project.contactId) {
         throw new Error(
-            `Projekt „${project.name}" gehört zu Kontakt ${project.contactId}, nicht zu ${entry.contactId}.`,
+            fmt(_('Project “{project}” belongs to contact {owner}, not to {contact}.'), {
+                project: project.name,
+                owner: project.contactId,
+                contact: entry.contactId,
+            }),
         );
     }
     return updateTimeEntry({ ...entry, project: project.name, projectId: project.id, contactId: project.contactId });

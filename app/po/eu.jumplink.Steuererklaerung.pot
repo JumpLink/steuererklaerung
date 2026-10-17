@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-17 08:24+0200\n"
+"POT-Creation-Date: 2026-10-17 08:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -319,38 +319,38 @@ msgstr ""
 msgid "There is no contact “{id}” for {entity} (see `contacts list`)."
 msgstr ""
 
-#: src/core/actions/projects.ts:191
+#: src/core/actions/projects.ts:194
 msgid "(none)"
 msgstr ""
 
-#: src/core/actions/projects.ts:193
+#: src/core/actions/projects.ts:196
 msgid "There is no project “{id}” for {entity}. Known: {known}."
 msgstr ""
 
-#: src/core/actions/projects.ts:202 src/core/actions/projects.ts:237
+#: src/core/actions/projects.ts:205 src/core/actions/projects.ts:240
 msgid "A project needs a name."
 msgstr ""
 
-#: src/core/actions/projects.ts:207
+#: src/core/actions/projects.ts:210
 msgid "The project id “{id}” is already taken."
 msgstr ""
 
-#: src/core/actions/projects.ts:233 src/core/actions/projects.ts:264
+#: src/core/actions/projects.ts:236 src/core/actions/projects.ts:267
 #: src/core/actions/projekt-zuordnung.ts:149 src/core/presenters/projekt.ts:235
 msgid "There is no project “{id}” for {entity}."
 msgstr ""
 
-#: src/core/actions/projects.ts:268
+#: src/core/actions/projects.ts:271
 msgid ""
 "The project “{id}” is still used by {by} — detach the project there first."
 msgstr ""
 
-#: src/core/actions/projects.ts:295 src/core/actions/recurring-schedules.ts:112
+#: src/core/actions/projects.ts:298 src/core/actions/recurring-schedules.ts:112
 #: src/core/actions/recurring-schedules.ts:123
 msgid "No recurring item “{id}” for {entity}."
 msgstr ""
 
-#: src/core/actions/projects.ts:349
+#: src/core/actions/projects.ts:352
 msgid "no customer contact (customer.contactId)"
 msgstr ""
 
@@ -372,6 +372,22 @@ msgstr ""
 
 #: src/core/actions/recurring-schedules.ts:40
 msgid "No free id found for “{base}”."
+msgstr ""
+
+#: src/core/actions/time.ts:365 src/core/actions/time.ts:411
+msgid "Project “{project}” belongs to contact {owner}, not to {contact}."
+msgstr ""
+
+#: src/core/actions/time.ts:398
+msgid "No time entry with the id {id}"
+msgstr ""
+
+#: src/core/actions/time.ts:401
+msgid "Entry {id} is on invoice {invoice} and stays unchanged."
+msgstr ""
+
+#: src/core/actions/time.ts:407
+msgid "There is no project “{project}” for {entity}."
 msgstr ""
 
 #: src/core/clients/fints/client.ts:290
@@ -442,13 +458,13 @@ msgid ""
 "contact (customer.contactId) — customer not comparable."
 msgstr ""
 
-#: src/core/config/schema/project.ts:76
+#: src/core/config/schema/project.ts:78
 msgid ""
 "Recurring item “{id}” has a different customer ({customer}) than project "
 "“{project}” ({projectCustomer})."
 msgstr ""
 
-#: src/core/config/schema/project.ts:98
+#: src/core/config/schema/project.ts:103
 msgid "The project id “{id}” is given twice."
 msgstr ""
 
@@ -1039,6 +1055,7 @@ msgid "Mark as fine"
 msgstr ""
 
 #: src/core/elster/hinweise.ts:149
+#: src/frontends/desktop/views/anlagen-view.ts:178
 msgid "no date"
 msgstr ""
 
@@ -2804,6 +2821,7 @@ msgstr ""
 #: src/frontends/desktop/views/entity-dialogs.ts:101
 #: src/frontends/desktop/views/konten-view.ts:768
 #: src/frontends/desktop/views/konten-view.ts:849
+#: src/frontends/desktop/views/laufende-kosten-view.ts:300
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:465
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:76
 #: src/frontends/desktop/window.ts:258
@@ -3394,6 +3412,231 @@ msgstr ""
 msgid "Live submission failed"
 msgstr ""
 
+#: src/frontends/desktop/views/anlagen-view.ts:53
+msgid "Movable assets"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:53
+msgid "Buildings / fixtures"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:58
+msgid "Depreciable movable assets — straight-line AfA (§7 (1) EStG)."
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:59
+msgid "Immovable assets — building AfA."
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:128
+msgid "Asset register {year}"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:129
+msgid ""
+"Anlage AVEÜR · straight-line AfA (§7 EStG). A yearly entry that moves no "
+"money."
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:132
+msgid "Σ AfA for the year"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:134
+msgid "pro rata until business cessation"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:137
+msgid "Σ Residual book value (31.12.)"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:158
+msgid "Interim total"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:159
+msgid "AfA for the year · residual book value (31.12.)"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:174
+msgid "(no designation)"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:176
+msgid "AHK {ahk} · {date} · useful life {years} y."
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:184
+msgid "Acquisition/production cost (AHK)"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:185
+msgid "Acquisition"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:188
+msgid "Useful life"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:190
+msgid "{n} year"
+msgid_plural "{n} years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:194
+msgid "Residual book value at 01.01."
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:195
+msgid "AfA for the year"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:196
+msgid "pro rata · {months}/12 months"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:199
+msgid "Residual book value at 31.12."
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:204
+msgid "Paid with"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:205
+msgid "{n} booking"
+msgid_plural "{n} bookings"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:229
+#: src/frontends/desktop/views/anlagen-view.ts:260
+msgid "＋ Record an asset"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:232
+msgid "Add a depreciable asset to the asset register"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:253
+msgid "No assets yet"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:255
+msgid "No asset is recorded in the asset register for {year}."
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:257
+msgid "Record a depreciable asset (AHK, useful life) for the Anlage AVEÜR."
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:273
+msgid "No ELSTER configuration"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:275
+msgid ""
+"The asset register belongs to the Anlage AVEÜR (EÜR/business entities only)."
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:277
+msgid "No ELSTER configuration is stored for this entity."
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:296
+msgid "Record an asset"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:300
+msgid "Asset"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:304
+msgid "Prefilled from {n} booking — check the useful life and the designation."
+msgid_plural ""
+"Prefilled from {n} bookings — check the useful life and the designation."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:310
+msgid "Depreciable asset for the Anlage AVEÜR (straight-line AfA)."
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:312
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:99
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:197
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:279
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:69
+msgid "Designation"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:314
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:100
+msgid "Acquisition (YYYY-MM-DD)"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:318
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:101
+msgid "Acquisition cost AHK (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:323
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:102
+msgid "Useful life (years)"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:331
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:103
+msgid "Residual book value at 01.01. (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:332
+msgid "Book value at the start of the year — in the year of acquisition = AHK"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:341
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:104
+msgid "Movable"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:341
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:104
+msgid "Building"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:342
+#: src/frontends/desktop/views/einstellungen/abschluss.ts:104
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:65
+#: src/frontends/desktop/views/tx-detail-dialog.ts:201
+msgid "Type"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:347
+#: src/frontends/desktop/views/anlagen-view.ts:395
+msgid "Record"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:379
+msgid "Designation missing"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:379
+msgid "Please give the asset a designation."
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:385
+msgid "Recording …"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:391
+msgid "Asset recorded"
+msgstr ""
+
+#: src/frontends/desktop/views/anlagen-view.ts:396
+msgid "Recording failed"
+msgstr ""
+
 #: src/frontends/desktop/views/aufteilen-dialog.ts:58
 #: src/frontends/desktop/views/aufteilen-dialog.ts:160
 msgid "Period already filed"
@@ -3445,6 +3688,7 @@ msgstr ""
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:102
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:383
 #: src/frontends/desktop/views/wiederkehrend-dialog.ts:193
+#: src/frontends/desktop/views/zeit-projekt-dialog.ts:40
 msgid "Save"
 msgstr ""
 
@@ -3534,6 +3778,7 @@ msgstr ""
 #: src/frontends/desktop/views/home-view.blp:32
 #: src/frontends/desktop/views/kontakte-view.blp:53
 #: src/frontends/desktop/views/konten-view.blp:32
+#: src/frontends/desktop/views/laufende-kosten-view.blp:48
 #: src/frontends/desktop/views/offene-belege-view.blp:32
 #: src/frontends/desktop/views/projekte-view.blp:32
 #: src/frontends/desktop/views/rechnung-detail-dialog.blp:41
@@ -3543,6 +3788,7 @@ msgstr ""
 #: src/frontends/desktop/views/util.ts:442
 #: src/frontends/desktop/views/util.ts:445
 #: src/frontends/desktop/views/vertraege-view.blp:54
+#: src/frontends/desktop/views/zeiten-view.blp:47
 #: src/frontends/desktop/views/zu-pruefen-view.blp:33
 msgid "Could not load"
 msgstr ""
@@ -3701,6 +3947,7 @@ msgid "Tip: ←/→ to browse · Enter confirms"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:547
+#: src/frontends/desktop/views/laufende-kosten-view.ts:155
 msgid "Confirmed"
 msgstr ""
 
@@ -4049,6 +4296,9 @@ msgid "I have read the privacy notice and the privacy letter."
 msgstr ""
 
 #: src/frontends/desktop/views/datenschutz-dialog.ts:74
+#: src/frontends/desktop/views/laufende-kosten-view.ts:228
+#: src/frontends/desktop/views/laufende-kosten-view.ts:229
+#: src/frontends/desktop/views/laufende-kosten-view.ts:301
 msgid "Confirm"
 msgstr ""
 
@@ -4158,43 +4408,6 @@ msgstr ""
 msgid "Key (id)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/abschluss.ts:99
-#: src/frontends/desktop/views/einstellungen/abschluss.ts:197
-#: src/frontends/desktop/views/einstellungen/abschluss.ts:279
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:69
-msgid "Designation"
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen/abschluss.ts:100
-msgid "Acquisition (YYYY-MM-DD)"
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen/abschluss.ts:101
-msgid "Acquisition cost AHK (€)"
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen/abschluss.ts:102
-msgid "Useful life (years)"
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen/abschluss.ts:103
-msgid "Residual book value at 01.01. (€)"
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen/abschluss.ts:104
-#: src/frontends/desktop/views/kontakt-form-dialog.ts:65
-#: src/frontends/desktop/views/tx-detail-dialog.ts:201
-msgid "Type"
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen/abschluss.ts:104
-msgid "Movable"
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen/abschluss.ts:104
-msgid "Building"
-msgstr ""
-
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:107
 msgid "Remove asset"
 msgstr ""
@@ -4256,6 +4469,7 @@ msgid "Partner"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:280
+#: src/frontends/desktop/views/laufende-kosten-view.ts:292
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:199
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:396
 #: src/frontends/desktop/views/vertrag-labels.ts:160
@@ -4644,6 +4858,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:228
 #: src/frontends/desktop/views/setup-assistant.ts:386
+#: src/frontends/desktop/views/zeit-rechnung-dialog.ts:48
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:68
 msgid "VAT"
 msgstr ""
@@ -5433,10 +5648,11 @@ msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:217
 #: src/frontends/desktop/views/kontakte-view.ts:266
-#: src/frontends/desktop/views/kontakte-view.ts:294
-#: src/frontends/desktop/views/projekte-view.ts:173
-#: src/frontends/desktop/views/projekte-view.ts:200
+#: src/frontends/desktop/views/kontakte-view.ts:293
+#: src/frontends/desktop/views/projekte-view.ts:169
+#: src/frontends/desktop/views/projekte-view.ts:196
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:623
+#: src/frontends/desktop/views/zeiten-view.ts:501
 msgid "Delete"
 msgstr ""
 
@@ -6130,7 +6346,7 @@ msgstr ""
 #: src/frontends/desktop/views/forderungen-view.ts:127
 #: src/frontends/desktop/views/forderungen-view.ts:156
 #: src/frontends/desktop/views/projekt-detail-dialog.ts:113
-#: src/frontends/desktop/views/projekte-view.ts:153
+#: src/frontends/desktop/views/projekte-view.ts:150
 #: src/frontends/desktop/views/rechnungen-view.ts:443
 #: src/frontends/desktop/views/rechnungen-view.ts:449
 #: src/frontends/desktop/views/rechnungen-view.ts:455
@@ -6373,7 +6589,7 @@ msgid "Booking updated"
 msgstr ""
 
 #: src/frontends/desktop/views/herleitung-dialog.ts:443
-#: src/frontends/desktop/views/projekt-detail-dialog.ts:284
+#: src/frontends/desktop/views/projekt-detail-dialog.ts:282
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:432
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:389
 msgid "Could not save"
@@ -6451,6 +6667,7 @@ msgid "Unlink"
 msgstr ""
 
 #: src/frontends/desktop/views/herleitung-dialog.ts:541
+#: src/frontends/desktop/views/laufende-kosten-view.ts:244
 #: src/frontends/desktop/views/projekt-detail-dialog.ts:160
 #: src/frontends/desktop/views/tx-detail-dialog.ts:252
 #: src/frontends/desktop/views/tx-detail-dialog.ts:305
@@ -6760,7 +6977,7 @@ msgid "＋ Add a contact"
 msgstr ""
 
 #: src/frontends/desktop/views/kontakte-view.ts:218
-#: src/frontends/desktop/views/kontakte-view.ts:319
+#: src/frontends/desktop/views/kontakte-view.ts:318
 msgid "Import"
 msgstr ""
 
@@ -6790,39 +7007,39 @@ msgstr ""
 msgid "Delete contact"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:291
+#: src/frontends/desktop/views/kontakte-view.ts:290
 msgid ""
 "Really delete “{name}”? The links to Qonto/Paperless are lost locally only."
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:300
+#: src/frontends/desktop/views/kontakte-view.ts:299
 msgid "Contact deleted"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:303
-#: src/frontends/desktop/views/projekte-view.ts:209
+#: src/frontends/desktop/views/kontakte-view.ts:302
+#: src/frontends/desktop/views/projekte-view.ts:205
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:633
 msgid "Deleting failed"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:311
+#: src/frontends/desktop/views/kontakte-view.ts:310
 msgid "Importing …"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:321
+#: src/frontends/desktop/views/kontakte-view.ts:319
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:321
 msgid "Import failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:328
+#: src/frontends/desktop/views/kontakte-view.ts:324
 msgid "No connected services — nothing to import."
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:332
+#: src/frontends/desktop/views/kontakte-view.ts:328
 msgid "{source}: error"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:333
+#: src/frontends/desktop/views/kontakte-view.ts:329
 msgid "{source}: {imported} new · {linked} linked · {matched} known"
 msgstr ""
 
@@ -6877,7 +7094,7 @@ msgstr ""
 msgid "Contact created"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakt-form-dialog.ts:122
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:120
 #: src/frontends/desktop/views/projekt-form-dialog.ts:179
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:436
 msgid "Saving failed"
@@ -7550,6 +7767,139 @@ msgstr ""
 msgid "Not assigned: {error}"
 msgstr ""
 
+#: src/frontends/desktop/views/laufende-kosten-view.blp:38
+msgid "Loading recurring costs …"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:51
+msgid "Confirmed as a recurring cost"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:53
+msgid "Remembered as “no recurring cost”"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:55
+msgid "Remembered as ended"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:57
+msgid "Decision taken back"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:107
+msgid "Recurring costs could not be loaded"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:130
+#: src/frontends/desktop/views/tab-hub.ts:200
+msgid "Recurring costs"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:133
+msgid ""
+"Regular debits to the same recipient, detected from all bookings. Only "
+"confirmed ones count in Free to spend and drop out of the money checks."
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:134
+msgid "Data as of {date}."
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:141
+msgid "Nothing to confirm"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:143
+msgid "Every detected series is decided."
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:145
+msgid ""
+"No debits at a fixed interval found — monthly and quarterly need three "
+"payments, twice a year and yearly need two."
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:157
+msgid ""
+"The next expected payment per series — Free to spend subtracts those of the "
+"next 30 days."
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:164
+#: src/frontends/desktop/views/laufende-kosten-view.ts:237
+msgid "No recurring cost"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:165
+#: src/frontends/desktop/views/laufende-kosten-view.ts:234
+msgid "Ended"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:175
+msgid "last {date}"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:179
+msgid "next {date}"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:180
+msgid "ended? — no payment for more than 1.5 intervals"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:183
+msgid "{n} payment"
+msgid_plural "{n} payments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:187
+msgid "price change on {date}: {from} → {to}"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:195
+msgid "corrected (detected: {interval}, {amount})"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:233
+#: src/frontends/desktop/views/laufende-kosten-view.ts:243
+msgid "Correct"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:236
+msgctxt "button"
+msgid "None"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:266
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:411
+msgid "Decision not saved"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:275
+msgid "Correct the recurring cost"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:278
+msgid ""
+"{name}: detected {interval}, last {amount}. The correction applies to the "
+"next expected payment."
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:287
+msgctxt "series"
+msgid "Interval"
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:323
+msgid "The booking was not found."
+msgstr ""
+
+#: src/frontends/desktop/views/laufende-kosten-view.ts:339
+msgid "Booking not opened"
+msgstr ""
+
 #: src/frontends/desktop/views/mahnung-dialog.ts:34
 msgid "Draft payment reminder"
 msgstr ""
@@ -7745,6 +8095,7 @@ msgstr ""
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:141
 #: src/frontends/desktop/views/tx-detail-dialog.ts:224
 #: src/frontends/desktop/views/wiederkehrend-dialog.ts:65
+#: src/frontends/desktop/views/zeit-projekt-dialog.ts:33
 msgid "Project"
 msgstr ""
 
@@ -7782,6 +8133,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/frontends/desktop/views/projekt-detail-dialog.ts:121
+#: src/frontends/desktop/views/zeit-rechnung-dialog.ts:56
 msgid "Result"
 msgstr ""
 
@@ -7943,36 +8295,36 @@ msgstr ""
 msgid "No projects yet"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:134
+#: src/frontends/desktop/views/projekte-view.ts:133
 msgid ""
 "A project belongs to a customer and sets who the cover letter addresses."
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:136
+#: src/frontends/desktop/views/projekte-view.ts:134
 msgid "Create a project"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:150
+#: src/frontends/desktop/views/projekte-view.ts:148
 msgid "Contact {id} is missing"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:155
+#: src/frontends/desktop/views/projekte-view.ts:151
 msgid "Result {year}: {amount}"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:167
+#: src/frontends/desktop/views/projekte-view.ts:163
 msgid "Salutation: {name}"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:198
+#: src/frontends/desktop/views/projekte-view.ts:194
 msgid "Delete project"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:199
+#: src/frontends/desktop/views/projekte-view.ts:195
 msgid "Really delete “{name}”? Times already recorded keep their name."
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:206
+#: src/frontends/desktop/views/projekte-view.ts:202
 msgid "Project deleted"
 msgstr ""
 
@@ -8061,6 +8413,7 @@ msgstr ""
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:268
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:139
 #: src/frontends/desktop/views/tx-detail-dialog.ts:244
+#: src/frontends/desktop/views/zeiten-view.ts:177
 msgid "No project"
 msgstr ""
 
@@ -8155,7 +8508,7 @@ msgstr ""
 msgid "rule “{pattern}” already existed"
 msgstr ""
 
-#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:259
+#: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:258
 msgid "{n} skipped"
 msgstr ""
 
@@ -8165,6 +8518,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:150
 #: src/frontends/desktop/views/rechnungen-view.ts:557
+#: src/frontends/desktop/views/zeiten-view.ts:320
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:69
 msgid "Invoice"
 msgstr ""
@@ -8312,10 +8666,6 @@ msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:397
 msgid "Refunded elsewhere …"
-msgstr ""
-
-#: src/frontends/desktop/views/rechnung-detail-dialog.ts:411
-msgid "Decision not saved"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:419
@@ -9445,10 +9795,6 @@ msgstr ""
 #: src/frontends/desktop/views/tab-hub.ts:199
 #: src/frontends/desktop/views/zu-pruefen-view.ts:320
 msgid "To review"
-msgstr ""
-
-#: src/frontends/desktop/views/tab-hub.ts:200
-msgid "Recurring costs"
 msgstr ""
 
 #: src/frontends/desktop/views/tab-hub.ts:206
@@ -10968,6 +11314,43 @@ msgstr ""
 msgid "“{name}” created"
 msgstr ""
 
+#: src/frontends/desktop/views/zeiten-view.blp:37
+msgid "Loading time entries …"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.blp:81
+#: src/frontends/desktop/views/zeiten-view.ts:203
+msgid "No timer running"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.blp:97
+msgid "Pick a project from the project list"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.blp:103
+msgid "Project / label"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.blp:109
+msgid "What are you working on?"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.blp:116
+msgid "Start the timer"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.blp:123
+msgid "Stop the timer"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.blp:132
+msgid "Not yet invoiced"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.blp:136
+msgid "Tracked time"
+msgstr ""
+
 #: src/frontends/desktop/views/zeiten-view.ts:52
 msgid "Invoiced"
 msgstr ""
@@ -10976,33 +11359,182 @@ msgstr ""
 msgid "Internal"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:364
+#: src/frontends/desktop/views/zeiten-view.ts:146
+msgid "Time entries could not be loaded"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:196
+msgid "Running"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:196
+msgid "Time tracking"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:204
+msgid "Type a project and start. Enter is enough."
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:208
+#: src/frontends/desktop/views/zeiten-view.ts:306
+msgid "no customer"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:263
+msgid "Timer running: {project}"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:268
+msgid "The timer could not be started"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:279
+msgid "Stopped: {project} · {duration}"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:288
+msgid "The timer could not be stopped"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:299
+msgid "Everything invoiced."
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:303
+msgid "{hours} h open"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:310
+msgid "{hours} h"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:311
+msgid "{n} entry"
+msgid_plural "{n} entries"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:322
+msgid "Create an invoice draft from this time"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:329
+msgid "Customer missing"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:353
+msgid "Draft created: {amount} € gross"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:358
+msgid "The invoice could not be created"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:375
 msgid "Nothing tracked yet."
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:379
+#: src/frontends/desktop/views/zeiten-view.ts:390
 msgid "Today"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:381
+#: src/frontends/desktop/views/zeiten-view.ts:392
 msgid "Yesterday"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:399
+#: src/frontends/desktop/views/zeiten-view.ts:410
 msgid "estimated"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:443
+#: src/frontends/desktop/views/zeiten-view.ts:454
+#: src/frontends/desktop/views/zeit-projekt-dialog.ts:29
 msgid "Assign project"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:443
-#: src/frontends/desktop/views/zeiten-view.ts:452
+#: src/frontends/desktop/views/zeiten-view.ts:454
+#: src/frontends/desktop/views/zeiten-view.ts:463
 msgid "Already invoiced"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:452
+#: src/frontends/desktop/views/zeiten-view.ts:463
 msgid "Delete entry"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:483
+msgid "Project assigned"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:483
+msgid "Project removed"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:488
+msgid "The project could not be assigned"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:499
+msgid "Delete entry?"
+msgstr ""
+
+#: src/frontends/desktop/views/zeiten-view.ts:506
+msgid "Entry deleted"
+msgstr ""
+
+#: src/frontends/desktop/views/zeit-projekt-dialog.ts:34
+msgid "No project for this customer yet (Projects view)"
+msgstr ""
+
+#: src/frontends/desktop/views/zeit-projekt-dialog.ts:35
+msgid "— no project —"
+msgstr ""
+
+#: src/frontends/desktop/views/zeit-rechnung-dialog.ts:37
+msgid "exact"
+msgstr ""
+
+#: src/frontends/desktop/views/zeit-rechnung-dialog.ts:37
+msgid "to 15 min"
+msgstr ""
+
+#: src/frontends/desktop/views/zeit-rechnung-dialog.ts:37
+msgid "to 30 min"
+msgstr ""
+
+#: src/frontends/desktop/views/zeit-rechnung-dialog.ts:37
+msgid "to the full hour"
+msgstr ""
+
+#: src/frontends/desktop/views/zeit-rechnung-dialog.ts:46
+msgid "Hourly rate net (€)"
+msgstr ""
+
+#: src/frontends/desktop/views/zeit-rechnung-dialog.ts:52
+msgid "Rounding"
+msgstr ""
+
+#: src/frontends/desktop/views/zeit-rechnung-dialog.ts:53
+msgid "per project, not per entry"
+msgstr ""
+
+#: src/frontends/desktop/views/zeit-rechnung-dialog.ts:59
+msgid "Invoice from time entries"
+msgstr ""
+
+#: src/frontends/desktop/views/zeit-rechnung-dialog.ts:64
+msgid "{hours} h for {customer}"
+msgstr ""
+
+#: src/frontends/desktop/views/zeit-rechnung-dialog.ts:77
+msgctxt "time invoice"
+msgid "Create draft"
+msgstr ""
+
+#: src/frontends/desktop/views/zeit-rechnung-dialog.ts:108
+msgid "Enter an hourly rate"
+msgstr ""
+
+#: src/frontends/desktop/views/zeit-rechnung-dialog.ts:116
+msgid "{hours} h × {rate} € = {net} € net · {gross} € gross"
 msgstr ""
 
 #: src/frontends/desktop/views/zu-pruefen-view.blp:23
