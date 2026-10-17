@@ -9,23 +9,24 @@
  */
 
 import type { IntakeQuestion } from './est-intake.ts';
+import { _, _n, fmt } from '../../lib/i18n.ts';
 import {
-    ENTLASTUNG_FRAGEN,
+    entlastungFragen,
     deriveEntlastungAlleinerziehende,
     applyEntlastungAlleinerziehende,
     type EntlastungAnswers,
     type EntlastungDerived,
-    KINDERBETREUUNG_FRAGEN,
+    kinderbetreuungFragen,
     deriveKinderbetreuung,
     applyKinderbetreuung,
     type KinderbetreuungAnswers,
     type KinderbetreuungDerived,
-    HAUSHALT_FRAGEN,
+    haushaltFragen,
     deriveHaushalt,
     applyHaushalt,
     type HaushaltAnswers,
     type HaushaltDerived,
-    LOHNERSATZ_FRAGEN,
+    lohnersatzFragen,
     deriveLohnersatz,
     applyLohnersatz,
     type LohnersatzAnswers,
@@ -68,93 +69,115 @@ export function entlastungBetrag(monate: number, weitereKinder: number): number 
 
 // Result headline per topic. `vorschau()` (pure) and `anwenden()` (after the write) format the SAME
 // `*Derived` shape identically — so each derives once and both share the topic's `*Ergebnis` helper
-// (the returned STRINGS are contract-tested verbatim, e.g. "2 Monat(e) → 710 €", "netto -538.53 €").
+// (the returned STRINGS are contract-tested verbatim, e.g. "2 months → 710 €", "net -538.53 €").
 function entlastungErgebnis(d: EntlastungDerived): string {
-    return `${d.monate} Monat(e) → ${entlastungBetrag(d.monate, d.weitere_kinder)} €`;
+    return fmt(_n('{n} month → {amount} €', '{n} months → {amount} €', d.monate), {
+        n: d.monate,
+        amount: entlastungBetrag(d.monate, d.weitere_kinder),
+    });
 }
 function kinderbetreuungErgebnis(d: KinderbetreuungDerived): string {
     return d.eintrag
-        ? `dein Anteil ${d.eintrag.von_mir} € → 80 % = ${Math.round(d.eintrag.von_mir * 0.8)} € Abzug`
-        : 'kein Abzug bei dir';
+        ? fmt(_('your share {share} € → 80 % = {amount} € deductible'), {
+              share: d.eintrag.von_mir,
+              amount: Math.round(d.eintrag.von_mir * 0.8),
+          })
+        : _('no deduction on your side');
 }
 function haushaltErgebnis(d: HaushaltDerived): string {
-    return `§24b: ${d.alleinstehend_monate} Monat(e) alleinstehend`;
+    return fmt(
+        _n('§24b: {n} month as a single parent', '§24b: {n} months as a single parent', d.alleinstehend_monate),
+        { n: d.alleinstehend_monate },
+    );
 }
 function lohnersatzErgebnis(d: LohnersatzDerived): string {
-    return `netto ${d.netto} €`;
+    return fmt(_('net {amount} €'), { amount: d.netto });
 }
 
-export const INTAKE_TOPICS: IntakeTopic[] = [
-    {
-        id: 'entlastung',
-        titel: 'Entlastungsbetrag für Alleinerziehende (§24b)',
-        beschreibung: 'Alleinstehend mit mindestens einem Kind im Haushalt — anteilig je vollem Monat.',
-        fragen: ENTLASTUNG_FRAGEN,
-        proKind: false,
-        vorschau: (a) => {
-            const d = deriveEntlastungAlleinerziehende(a as unknown as EntlastungAnswers);
-            return { ergebnis: entlastungErgebnis(d), hinweise: d.hinweise };
+/**
+ * The four ESt intake topics. A FUNCTION, not a constant: the titles, descriptions and questions are
+ * translated, and a module-level array would be built at import time — before the frontend registers
+ * its translator. Callers that keep a topic across calls compare by `id`, never by object identity.
+ */
+export function intakeTopics(): IntakeTopic[] {
+    return [
+        {
+            id: 'entlastung',
+            titel: _('Entlastungsbetrag für Alleinerziehende (§24b)'),
+            beschreibung: _('Single with at least one child in the household — pro rata per full month.'),
+            fragen: entlastungFragen(),
+            proKind: false,
+            vorschau: (a) => {
+                const d = deriveEntlastungAlleinerziehende(a as unknown as EntlastungAnswers);
+                return { ergebnis: entlastungErgebnis(d), hinweise: d.hinweise };
+            },
+            anwenden: (a, ctx) => {
+                const d = applyEntlastungAlleinerziehende(ctx.entityId, ctx.year, a as unknown as EntlastungAnswers);
+                return { ergebnis: entlastungErgebnis(d), hinweise: d.hinweise };
+            },
         },
-        anwenden: (a, ctx) => {
-            const d = applyEntlastungAlleinerziehende(ctx.entityId, ctx.year, a as unknown as EntlastungAnswers);
-            return { ergebnis: entlastungErgebnis(d), hinweise: d.hinweise };
+        {
+            id: 'kinderbetreuung',
+            titel: _('Kinderbetreuungskosten (§10 Nr. 5)'),
+            beschreibung: _(
+                'Nursery/after-school club/childminder — including the split between separated parents (double-deduction guard).',
+            ),
+            fragen: kinderbetreuungFragen(),
+            proKind: true,
+            vorschau: (a) => {
+                const d = deriveKinderbetreuung(a as unknown as KinderbetreuungAnswers);
+                return { ergebnis: kinderbetreuungErgebnis(d), hinweise: d.hinweise };
+            },
+            anwenden: (a, ctx) => {
+                const d = applyKinderbetreuung(
+                    ctx.entityId,
+                    ctx.year,
+                    ctx.kindIdnr ?? '',
+                    a as unknown as KinderbetreuungAnswers,
+                );
+                return { ergebnis: kinderbetreuungErgebnis(d), hinweise: d.hinweise };
+            },
         },
-    },
-    {
-        id: 'kinderbetreuung',
-        titel: 'Kinderbetreuungskosten (§10 Nr. 5)',
-        beschreibung: 'Kita/Hort/Tagesmutter — inkl. Aufteilung zwischen getrennten Eltern (Doppelabzug-Guard).',
-        fragen: KINDERBETREUUNG_FRAGEN,
-        proKind: true,
-        vorschau: (a) => {
-            const d = deriveKinderbetreuung(a as unknown as KinderbetreuungAnswers);
-            return { ergebnis: kinderbetreuungErgebnis(d), hinweise: d.hinweise };
+        {
+            id: 'haushalt',
+            titel: _('Household/separation timeline'),
+            beschreibung: _(
+                'When you lived apart and who the child lived with — feeds the §24b months and the Anlage Kind household block.',
+            ),
+            fragen: haushaltFragen(),
+            proKind: true,
+            vorschau: (a, ctx) => {
+                const d = deriveHaushalt(a as unknown as HaushaltAnswers, ctx.year);
+                return { ergebnis: haushaltErgebnis(d), hinweise: d.hinweise };
+            },
+            anwenden: (a, ctx) => {
+                const d = applyHaushalt(ctx.entityId, ctx.year, ctx.kindIdnr ?? '', a as unknown as HaushaltAnswers);
+                return { ergebnis: haushaltErgebnis(d), hinweise: d.hinweise };
+            },
         },
-        anwenden: (a, ctx) => {
-            const d = applyKinderbetreuung(
-                ctx.entityId,
-                ctx.year,
-                ctx.kindIdnr ?? '',
-                a as unknown as KinderbetreuungAnswers,
-            );
-            return { ergebnis: kinderbetreuungErgebnis(d), hinweise: d.hinweise };
+        {
+            id: 'lohnersatz',
+            titel: _('Lohnersatzleistungen (§32b)'),
+            beschreibung: _(
+                'Elterngeld, Arbeitslosengeld, Krankengeld, Mutterschaftsgeld … including repayments (Abflussprinzip).',
+            ),
+            fragen: lohnersatzFragen(),
+            proKind: false,
+            vorschau: (a) => {
+                const d = deriveLohnersatz(a as unknown as LohnersatzAnswers);
+                return { ergebnis: lohnersatzErgebnis(d), hinweise: d.hinweise };
+            },
+            anwenden: (a, ctx) => {
+                const d = applyLohnersatz(ctx.entityId, ctx.year, a as unknown as LohnersatzAnswers);
+                return { ergebnis: lohnersatzErgebnis(d), hinweise: d.hinweise };
+            },
         },
-    },
-    {
-        id: 'haushalt',
-        titel: 'Haushalts-/Trennungs-Zeitachse',
-        beschreibung: 'Wann getrennt gelebt, Kind bei wem — speist §24b-Monate und den Anlage-Kind-Haushaltsblock.',
-        fragen: HAUSHALT_FRAGEN,
-        proKind: true,
-        vorschau: (a, ctx) => {
-            const d = deriveHaushalt(a as unknown as HaushaltAnswers, ctx.year);
-            return { ergebnis: haushaltErgebnis(d), hinweise: d.hinweise };
-        },
-        anwenden: (a, ctx) => {
-            const d = applyHaushalt(ctx.entityId, ctx.year, ctx.kindIdnr ?? '', a as unknown as HaushaltAnswers);
-            return { ergebnis: haushaltErgebnis(d), hinweise: d.hinweise };
-        },
-    },
-    {
-        id: 'lohnersatz',
-        titel: 'Lohnersatzleistungen (§32b)',
-        beschreibung: 'Elterngeld, Arbeitslosen-, Kranken-, Mutterschaftsgeld … inkl. Rückzahlung (Abflussprinzip).',
-        fragen: LOHNERSATZ_FRAGEN,
-        proKind: false,
-        vorschau: (a) => {
-            const d = deriveLohnersatz(a as unknown as LohnersatzAnswers);
-            return { ergebnis: lohnersatzErgebnis(d), hinweise: d.hinweise };
-        },
-        anwenden: (a, ctx) => {
-            const d = applyLohnersatz(ctx.entityId, ctx.year, a as unknown as LohnersatzAnswers);
-            return { ergebnis: lohnersatzErgebnis(d), hinweise: d.hinweise };
-        },
-    },
-];
+    ];
+}
 
 /** Find one intake topic by id (fail-soft — undefined when unknown). */
 export function intakeTopic(id: string): IntakeTopic | undefined {
-    return INTAKE_TOPICS.find((t) => t.id === id);
+    return intakeTopics().find((t) => t.id === id);
 }
 
 /**
@@ -188,7 +211,7 @@ export function buildProposal(
  */
 export function applyProposal(proposal: EstIntakeProposal, ctx: { entityId: string; year: number }): IntakeVorschau {
     const topic = intakeTopic(proposal.topicId);
-    if (!topic) throw new Error(`Unbekanntes Steuer-Thema '${proposal.topicId}'.`);
+    if (!topic) throw new Error(fmt(_('Unknown tax topic “{id}”.'), { id: proposal.topicId }));
     return topic.anwenden(proposal.answers, { entityId: ctx.entityId, year: ctx.year, kindIdnr: proposal.kindIdnr });
 }
 
@@ -199,14 +222,16 @@ export function applyProposal(proposal: EstIntakeProposal, ctx: { entityId: stri
  * assistant and the wizard never drift apart.
  */
 export function describeIntakeTopics(): string {
-    return INTAKE_TOPICS.map((t) => {
-        const fragen = t.fragen
-            .map((q) => {
-                const opt = q.optionen ? ` (Werte: ${q.optionen.map((o) => o.wert).join(' | ')})` : '';
-                const gate = q.wennId ? ` [nur wenn ${q.wennId}=${JSON.stringify(q.wennWert)}]` : '';
-                return `    · ${q.id} (${q.typ})${opt}${gate}: ${q.frage}`;
-            })
-            .join('\n');
-        return `• ${t.id} — ${t.titel}${t.proKind ? ' [kindIdnr nötig]' : ''}\n${fragen}`;
-    }).join('\n');
+    return intakeTopics()
+        .map((t) => {
+            const fragen = t.fragen
+                .map((q) => {
+                    const opt = q.optionen ? ` (Werte: ${q.optionen.map((o) => o.wert).join(' | ')})` : '';
+                    const gate = q.wennId ? ` [nur wenn ${q.wennId}=${JSON.stringify(q.wennWert)}]` : '';
+                    return `    · ${q.id} (${q.typ})${opt}${gate}: ${q.frage}`;
+                })
+                .join('\n');
+            return `• ${t.id} — ${t.titel}${t.proKind ? ' [kindIdnr nötig]' : ''}\n${fragen}`;
+        })
+        .join('\n');
 }

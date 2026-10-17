@@ -1,7 +1,7 @@
 /**
  * BhSteuerAssistentView — the question-guided "Steuer-Assistent" for the private Einkommensteuer.
  *
- * The thin GUI seam over the tested intake topic registry ({@link INTAKE_TOPICS}): per topic
+ * The thin GUI seam over the tested intake topic registry ({@link intakeTopics}): per topic
  * (§24b, Kinderbetreuung, Haushalts-Zeitachse, §32b Lohnersatz) it generically renders that topic's
  * question flow (branching via {@link aktiveFragen}), shows the pure {@link IntakeTopic.vorschau}
  * live and, on confirm, writes through {@link IntakeTopic.anwenden} (the existing `apply*` seam) +
@@ -17,7 +17,7 @@ import Adw from '@girs/adw-1';
 
 import type { AppEntity } from '../entities.ts';
 import { appSession } from '../data/session.ts';
-import { INTAKE_TOPICS, type IntakeTopic, type IntakeContext } from '../../../core/actions/elster/est-intake-topics.ts';
+import { intakeTopics, type IntakeTopic, type IntakeContext } from '../../../core/actions/elster/est-intake-topics.ts';
 import { aktiveFragen, type IntakeQuestion } from '../../../core/actions/elster/est-intake.ts';
 import type { EstKind } from '../../../core/config/schema/est.ts';
 import { comboRow, spinRow, toggleRow, type SettingsHost } from './einstellungen/rows.ts';
@@ -56,7 +56,7 @@ export class BhSteuerAssistentView extends Adw.Bin {
     private questionsGroup?: Adw.PreferencesGroup;
     private previewRow?: Adw.ActionRow;
 
-    private topic: IntakeTopic = INTAKE_TOPICS[0];
+    private topic: IntakeTopic = intakeTopics()[0];
     private answers: Record<string, unknown> = {};
     private kindIdnr?: string;
     /** True while programmatically populating rows — suppresses the row helpers' change→persist. */
@@ -74,7 +74,7 @@ export class BhSteuerAssistentView extends Adw.Bin {
     reload(entity: AppEntity, year: number): void {
         this.entity = entity;
         this.year = year;
-        this.topic = INTAKE_TOPICS[0];
+        this.topic = intakeTopics()[0];
         this.answers = {};
         this.kindIdnr = undefined;
         this.buildPage();
@@ -112,13 +112,21 @@ export class BhSteuerAssistentView extends Adw.Bin {
                 'Answer a few questions in plain words — the assistant works out the deduction and puts it into your tax return. Pick a topic:',
             ),
         });
-        const themen = INTAKE_TOPICS.map((t) => t.titel);
-        const selektor = comboRow(this.host(), _('Topic'), themen, INTAKE_TOPICS.indexOf(this.topic), (i) => {
-            this.topic = INTAKE_TOPICS[i] ?? INTAKE_TOPICS[0];
-            this.answers = {};
-            this.kindIdnr = undefined;
-            this.buildQuestions();
-        });
+        // `intakeTopics()` builds fresh objects on every call (translated lazily) — match by id, not identity.
+        const themen = intakeTopics();
+        const aktuell = themen.findIndex((t) => t.id === this.topic.id);
+        const selektor = comboRow(
+            this.host(),
+            _('Topic'),
+            themen.map((t) => t.titel),
+            Math.max(0, aktuell),
+            (i) => {
+                this.topic = themen[i] ?? themen[0];
+                this.answers = {};
+                this.kindIdnr = undefined;
+                this.buildQuestions();
+            },
+        );
         intro.add(selektor);
         page.add(intro);
 
