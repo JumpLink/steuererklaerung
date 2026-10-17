@@ -326,7 +326,7 @@ export class BhBelegEingangView extends Adw.Bin {
     private hinweisGroup(doc: DmsDocument): Gtk.Widget {
         const group = new Adw.PreferencesGroup();
         const row = doc.aiNote
-            ? new Adw.ActionRow({ title: 'KI-Hinweis', subtitle: markup(doc.aiNote) })
+            ? new Adw.ActionRow({ title: _('AI note'), subtitle: markup(doc.aiNote) })
             : new Adw.ActionRow({
                   title: _('Not matched to a transaction yet'),
                   subtitle: _('Choose the matching transaction, then confirm.'),

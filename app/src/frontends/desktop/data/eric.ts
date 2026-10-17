@@ -17,6 +17,7 @@ import {
 import type { ElsterConfig } from '../../../core/config/index.ts';
 import { herstellerIdSource } from '../../../core/elster/eds-envelope.ts';
 import type { AppEntity } from '../entities.ts';
+import { _ } from '../i18n.ts';
 
 export type { EricStatus };
 
@@ -32,7 +33,7 @@ export interface EricStatusView extends EricStatus {
 
 /** Require an active entity for a config WRITE — the writers address the entity by its id. */
 function requireEntityId(entity: AppEntity | null): string {
-    if (!entity) throw new Error('Keine aktive Entität ausgewählt.');
+    if (!entity) throw new Error(_('No active entity selected.'));
     return entity.id;
 }
 
