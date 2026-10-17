@@ -23,6 +23,7 @@ import type { UstvaDocumentDetail } from '../../../core/elster/ustva-aggregate.t
 import type { AppEntity } from '../entities.ts';
 import { deDate, eur } from '../../../core/lib/format.ts';
 import { LoadToken, amountLabel, loadIntoStack, markup, saveFileViaDialog } from './util.ts';
+import { _, fmt } from '../i18n.ts';
 import { importBmfRates } from '../../../core/config/bmf-import.ts';
 import { errorDialog } from './dialogs.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
@@ -56,7 +57,7 @@ export class BhUstvaView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'USt-VA konnte nicht berechnet werden',
+            errorContext: _('The USt-VA could not be calculated'),
             load: () =>
                 Promise.all([
                     loadUstvaYear(entity, year),
@@ -90,7 +91,7 @@ export class BhUstvaView extends Adw.Bin {
 
         if (withData.length === 0) {
             const group = new Adw.PreferencesGroup({ title: `USt-VA ${year}` });
-            group.add(new Adw.ActionRow({ title: 'Keine USt-relevanten Belege in diesem Jahr' }));
+            group.add(new Adw.ActionRow({ title: _('No VAT-relevant receipts in this year') }));
             this._quarters_box.append(group);
             return;
         }
@@ -109,7 +110,7 @@ export class BhUstvaView extends Adw.Bin {
         const a = q.aggregate;
         const group = new Adw.PreferencesGroup({
             title: `Q${q.quarter} ${year}`,
-            description: 'Umsatzsteuer-Voranmeldung · Ist-Versteuerung',
+            description: _('VAT advance return · cash accounting'),
         });
         group.set_header_suffix(this.exportButton(q, year));
 
@@ -122,12 +123,12 @@ export class BhUstvaView extends Adw.Bin {
             row.add_suffix(label);
             group.add(row);
         };
-        summary('Steuerpfl. Umsätze 19 % (Kz 81)', amountLabel(eur(a.net_19)));
-        if (a.net_7 > 0) summary('Steuerpfl. Umsätze 7 % (Kz 86)', amountLabel(eur(a.net_7)));
-        summary('Umsatzsteuer', amountLabel(eur(a.vat_out)), 'vereinnahmte-ust');
-        summary('Vorsteuer (Kz 66)', amountLabel(eur(a.vat_in)), 'vorsteuer');
+        summary(_('Taxable sales 19 % (Kz 81)'), amountLabel(eur(a.net_19)));
+        if (a.net_7 > 0) summary(_('Taxable sales 7 % (Kz 86)'), amountLabel(eur(a.net_7)));
+        summary(_('VAT charged'), amountLabel(eur(a.vat_out)), 'vereinnahmte-ust');
+        summary(_('Input VAT (Kz 66)'), amountLabel(eur(a.vat_in)), 'vorsteuer');
         summary(
-            'Zahllast (Kz 83)',
+            _('VAT payable (Kz 83)'),
             amountLabel(eur(q.zahllast), { heading: true, accent: q.zahllast < 0 ? 'success' : undefined }),
             'ust-zahllast',
         );
@@ -136,13 +137,14 @@ export class BhUstvaView extends Adw.Bin {
             // Missing conversion rates block a correct figure — flag it as a warning (icon + amber) and
             // let the full list wrap rather than truncate, so it can actually be acted on.
             const warn = new Adw.ActionRow({
-                title: 'Fehlende BMF-Umrechnungskurse',
-                // NOT "in bmf-umrechnungskurse.json ergänzen" any more: naming a file the user must
+                title: _('Missing BMF conversion rates'),
+                // NOT "add them to bmf-umrechnungskurse.json" any more: naming a file the user must
                 // open in an editor is the same dead end as naming a command, and the header now
-                // carries a "Kurse laden" button that does it.
+                // carries a "Load rates" button that does it.
                 subtitle: markup(
                     q.missingBmfRates.map((m) => `#${m.id} ${m.currency} ${m.month}`).join(', ') +
-                        ' — „Kurse laden" holt sie vom Bundesfinanzministerium.',
+                        ' — ' +
+                        _('“Load rates” fetches them from the Bundesfinanzministerium.'),
                 ),
             });
             warn.set_subtitle_lines(0);
@@ -157,18 +159,21 @@ export class BhUstvaView extends Adw.Bin {
         }
 
         const belege = new Adw.ExpanderRow({
-            title: 'Belege',
-            subtitle: `${q.outgoing.length} Ausgang · ${q.incoming.length} Eingang`,
+            title: _('Receipts'),
+            subtitle: [
+                fmt(_('{n} outgoing'), { n: q.outgoing.length }),
+                fmt(_('{n} incoming'), { n: q.incoming.length }),
+            ].join(' · '),
         });
-        for (const d of q.outgoing) belege.add_row(this.docRow(d, 'Ausgang'));
-        for (const d of q.incoming) belege.add_row(this.docRow(d, 'Eingang'));
+        for (const d of q.outgoing) belege.add_row(this.docRow(d, _('Outgoing')));
+        for (const d of q.incoming) belege.add_row(this.docRow(d, _('Incoming')));
         group.add(belege);
 
         this._quarters_box.append(group);
     }
 
     /**
-     * A per-quarter "Für Mein ELSTER (XML)" save button — exports the plain `<Anmeldungssteuern>`
+     * A per-quarter "For Mein ELSTER (XML)" save button — exports the plain `<Anmeldungssteuern>`
      * ISO-8859-15 file (buildUstvaPortalUpload) for the Mein-ELSTER XML-Import. Disabled when BMF
      * conversion rates are missing (foreign-currency docs would be silently excluded → wrong
      * figures) — fix bmf-umrechnungskurse.json first, then re-export.
@@ -177,8 +182,8 @@ export class BhUstvaView extends Adw.Bin {
         const blocked = q.missingBmfRates.length > 0;
         if (!blocked) {
             const btn = new Gtk.Button({
-                label: 'Für Mein ELSTER (XML)',
-                tooltipText: 'Umsatzsteuer-Voranmeldung als XML für den Mein-ELSTER-Upload speichern',
+                label: _('For Mein ELSTER (XML)'),
+                tooltipText: _('Save the VAT advance return as XML for the Mein ELSTER upload'),
                 cssClasses: ['flat'],
                 valign: Gtk.Align.CENTER,
             });
@@ -191,8 +196,10 @@ export class BhUstvaView extends Adw.Bin {
         // in a GUI, and the one thing an app must never answer a user with. Now the button DOES the
         // import: the pieces (fetch, parse, write) already existed, they just had no door.
         const btn = new Gtk.Button({
-            label: 'Kurse laden',
-            tooltipText: `Fehlende BMF-Umrechnungskurse (${q.missingBmfRates.join(', ')}) von bundesfinanzministerium.de laden`,
+            label: _('Load rates'),
+            tooltipText: fmt(_('Load the missing BMF conversion rates ({rates}) from bundesfinanzministerium.de'), {
+                rates: q.missingBmfRates.join(', '),
+            }),
             valign: Gtk.Align.CENTER,
         });
         btn.add_css_class('suggested-action');
@@ -203,12 +210,16 @@ export class BhUstvaView extends Adw.Bin {
     /** Fetch + write the official rates, then reload so the export unblocks itself. */
     private async loadBmfRates(btn: Gtk.Button, year: number): Promise<void> {
         btn.set_sensitive(false);
-        btn.set_label('Lade …');
+        btn.set_label(_('Loading …'));
         try {
             const result = await importBmfRates(year);
             showToast(
-                `BMF-Kurse ${result.year} geladen: ${result.added} neu, ${result.updated} aktualisiert ` +
-                    `(${result.currencies.length} Währungen)`,
+                fmt(_('BMF rates {year} loaded: {added} new, {updated} updated ({currencies} currencies)'), {
+                    year: result.year,
+                    added: result.added,
+                    updated: result.updated,
+                    currencies: result.currencies.length,
+                }),
                 5,
             );
             const entity = this.currentEntity;
@@ -219,10 +230,10 @@ export class BhUstvaView extends Adw.Bin {
             }
         } catch (err) {
             btn.set_sensitive(true);
-            btn.set_label('Kurse laden');
+            btn.set_label(_('Load rates'));
             void errorDialog(
                 this,
-                'Kurse konnten nicht geladen werden',
+                _('The rates could not be loaded'),
                 err instanceof Error ? err.message : String(err),
             );
         }
@@ -235,13 +246,13 @@ export class BhUstvaView extends Adw.Bin {
             const { filename, bytes } = ustvaUploadXml(entity, year, q.quarter, q.aggregate);
             saveFileViaDialog(this, filename, bytes, `USt-VA Q${q.quarter} ${year} (XML)`);
         } catch (err) {
-            void errorDialog(this, 'XML nicht verfügbar', err instanceof Error ? err.message : String(err));
+            void errorDialog(this, _('XML not available'), err instanceof Error ? err.message : String(err));
         }
     }
 
     private docRow(d: UstvaDocumentDetail, direction: string): Adw.ActionRow {
         const parts = [direction, d.date_used ? deDate(d.date_used) : '—'];
-        if (d.total_net != null) parts.push(`netto ${eur(d.total_net)}`);
+        if (d.total_net != null) parts.push(fmt(_('net {amount}'), { amount: eur(d.total_net) }));
         if (d.invoice_currency && d.invoice_currency.toUpperCase() !== 'EUR') parts.push(d.invoice_currency);
         const row = new Adw.ActionRow({
             title: markup(d.title ?? `#${d.id}`),

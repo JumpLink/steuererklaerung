@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-17 08:45+0200\n"
+"POT-Creation-Date: 2026-10-17 09:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -705,6 +705,7 @@ msgstr ""
 #: src/core/elster/euer-transactions.ts:260
 #: src/frontends/desktop/views/beleg-link-dialog.ts:230
 #: src/frontends/desktop/views/beleg-link-dialog.ts:246
+#: src/frontends/desktop/views/fristen-view.ts:243
 #: src/frontends/desktop/views/herleitung-dialog.ts:365
 #: src/frontends/desktop/views/herleitung-dialog.ts:616
 msgid "Receipt #{id}"
@@ -872,6 +873,9 @@ msgstr ""
 
 #: src/core/elster/frei-verfuegbar.ts:487 src/core/elster/home.ts:350
 #: src/frontends/desktop/views/forderungen-view.ts:214
+#: src/frontends/desktop/views/fristen-view.ts:161
+#: src/frontends/desktop/views/fristen-view.ts:203
+#: src/frontends/desktop/views/fristen-view.ts:239
 #: src/frontends/desktop/views/rechnungen-view.ts:561
 msgid "due {date}"
 msgstr ""
@@ -1448,61 +1452,73 @@ msgid "{line} · to {iban}"
 msgstr ""
 
 #: src/core/elster/kontoauszug.ts:70
+#: src/frontends/desktop/views/steuer-assistent-view.ts:29
 msgctxt "month"
 msgid "January"
 msgstr ""
 
 #: src/core/elster/kontoauszug.ts:71
+#: src/frontends/desktop/views/steuer-assistent-view.ts:30
 msgctxt "month"
 msgid "February"
 msgstr ""
 
 #: src/core/elster/kontoauszug.ts:72
+#: src/frontends/desktop/views/steuer-assistent-view.ts:31
 msgctxt "month"
 msgid "March"
 msgstr ""
 
 #: src/core/elster/kontoauszug.ts:73
+#: src/frontends/desktop/views/steuer-assistent-view.ts:32
 msgctxt "month"
 msgid "April"
 msgstr ""
 
 #: src/core/elster/kontoauszug.ts:74
+#: src/frontends/desktop/views/steuer-assistent-view.ts:33
 msgctxt "month"
 msgid "May"
 msgstr ""
 
 #: src/core/elster/kontoauszug.ts:75
+#: src/frontends/desktop/views/steuer-assistent-view.ts:34
 msgctxt "month"
 msgid "June"
 msgstr ""
 
 #: src/core/elster/kontoauszug.ts:76
+#: src/frontends/desktop/views/steuer-assistent-view.ts:35
 msgctxt "month"
 msgid "July"
 msgstr ""
 
 #: src/core/elster/kontoauszug.ts:77
+#: src/frontends/desktop/views/steuer-assistent-view.ts:36
 msgctxt "month"
 msgid "August"
 msgstr ""
 
 #: src/core/elster/kontoauszug.ts:78
+#: src/frontends/desktop/views/steuer-assistent-view.ts:37
 msgctxt "month"
 msgid "September"
 msgstr ""
 
 #: src/core/elster/kontoauszug.ts:79
+#: src/frontends/desktop/views/steuer-assistent-view.ts:38
 msgctxt "month"
 msgid "October"
 msgstr ""
 
 #: src/core/elster/kontoauszug.ts:80
+#: src/frontends/desktop/views/steuer-assistent-view.ts:39
 msgctxt "month"
 msgid "November"
 msgstr ""
 
 #: src/core/elster/kontoauszug.ts:81
+#: src/frontends/desktop/views/steuer-assistent-view.ts:40
 msgctxt "month"
 msgid "December"
 msgstr ""
@@ -2788,6 +2804,7 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:211
 #: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:124
 #: src/frontends/desktop/views/herleitung-dialog.ts:625
+#: src/frontends/desktop/views/steuer-assistent-view.ts:153
 msgid "Apply"
 msgstr ""
 
@@ -2821,7 +2838,7 @@ msgstr ""
 #: src/frontends/desktop/views/entity-dialogs.ts:101
 #: src/frontends/desktop/views/konten-view.ts:768
 #: src/frontends/desktop/views/konten-view.ts:849
-#: src/frontends/desktop/views/laufende-kosten-view.ts:300
+#: src/frontends/desktop/views/laufende-kosten-view.ts:294
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:465
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:76
 #: src/frontends/desktop/window.ts:258
@@ -3389,6 +3406,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/absenden-section.ts:567
 #: src/frontends/desktop/views/erstattung-group.ts:94
+#: src/frontends/desktop/views/steuer-view.ts:316
 msgid "Refund"
 msgstr ""
 
@@ -3478,92 +3496,94 @@ msgstr ""
 msgid "Useful life"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:190
+#: src/frontends/desktop/views/anlagen-view.ts:189
 msgid "{n} year"
 msgid_plural "{n} years"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:194
+#: src/frontends/desktop/views/anlagen-view.ts:192
 msgid "Residual book value at 01.01."
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:195
+#: src/frontends/desktop/views/anlagen-view.ts:193
 msgid "AfA for the year"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:196
+#: src/frontends/desktop/views/anlagen-view.ts:194
 msgid "pro rata · {months}/12 months"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:199
+#: src/frontends/desktop/views/anlagen-view.ts:197
 msgid "Residual book value at 31.12."
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:204
+#: src/frontends/desktop/views/anlagen-view.ts:202
 msgid "Paid with"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:205
+#: src/frontends/desktop/views/anlagen-view.ts:203
+#: src/frontends/desktop/views/steuerkonto-view.ts:119
+#: src/frontends/desktop/views/steuer-view.ts:276
 msgid "{n} booking"
 msgid_plural "{n} bookings"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:229
-#: src/frontends/desktop/views/anlagen-view.ts:260
+#: src/frontends/desktop/views/anlagen-view.ts:227
+#: src/frontends/desktop/views/anlagen-view.ts:258
 msgid "＋ Record an asset"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:232
+#: src/frontends/desktop/views/anlagen-view.ts:230
 msgid "Add a depreciable asset to the asset register"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:253
+#: src/frontends/desktop/views/anlagen-view.ts:251
 msgid "No assets yet"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:255
+#: src/frontends/desktop/views/anlagen-view.ts:253
 msgid "No asset is recorded in the asset register for {year}."
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:257
+#: src/frontends/desktop/views/anlagen-view.ts:255
 msgid "Record a depreciable asset (AHK, useful life) for the Anlage AVEÜR."
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:273
+#: src/frontends/desktop/views/anlagen-view.ts:271
 msgid "No ELSTER configuration"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:275
+#: src/frontends/desktop/views/anlagen-view.ts:273
 msgid ""
 "The asset register belongs to the Anlage AVEÜR (EÜR/business entities only)."
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:277
+#: src/frontends/desktop/views/anlagen-view.ts:275
 msgid "No ELSTER configuration is stored for this entity."
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:296
+#: src/frontends/desktop/views/anlagen-view.ts:294
 msgid "Record an asset"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:300
+#: src/frontends/desktop/views/anlagen-view.ts:298
 msgid "Asset"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:304
+#: src/frontends/desktop/views/anlagen-view.ts:302
 msgid "Prefilled from {n} booking — check the useful life and the designation."
 msgid_plural ""
 "Prefilled from {n} bookings — check the useful life and the designation."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:310
+#: src/frontends/desktop/views/anlagen-view.ts:308
 msgid "Depreciable asset for the Anlage AVEÜR (straight-line AfA)."
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:312
+#: src/frontends/desktop/views/anlagen-view.ts:310
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:99
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:197
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:279
@@ -3571,69 +3591,70 @@ msgstr ""
 msgid "Designation"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:314
+#: src/frontends/desktop/views/anlagen-view.ts:312
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:100
 msgid "Acquisition (YYYY-MM-DD)"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:318
+#: src/frontends/desktop/views/anlagen-view.ts:316
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:101
 msgid "Acquisition cost AHK (€)"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:323
+#: src/frontends/desktop/views/anlagen-view.ts:321
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:102
 msgid "Useful life (years)"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:331
+#: src/frontends/desktop/views/anlagen-view.ts:329
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:103
 msgid "Residual book value at 01.01. (€)"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:332
+#: src/frontends/desktop/views/anlagen-view.ts:330
 msgid "Book value at the start of the year — in the year of acquisition = AHK"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:341
+#: src/frontends/desktop/views/anlagen-view.ts:339
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:104
 msgid "Movable"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:341
+#: src/frontends/desktop/views/anlagen-view.ts:339
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:104
 msgid "Building"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:342
+#: src/frontends/desktop/views/anlagen-view.ts:340
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:104
 #: src/frontends/desktop/views/kontakt-form-dialog.ts:65
 #: src/frontends/desktop/views/tx-detail-dialog.ts:201
 msgid "Type"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:347
-#: src/frontends/desktop/views/anlagen-view.ts:395
+#: src/frontends/desktop/views/anlagen-view.ts:345
+#: src/frontends/desktop/views/anlagen-view.ts:393
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:122
 msgid "Record"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:379
+#: src/frontends/desktop/views/anlagen-view.ts:377
 msgid "Designation missing"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:379
+#: src/frontends/desktop/views/anlagen-view.ts:377
 msgid "Please give the asset a designation."
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:385
+#: src/frontends/desktop/views/anlagen-view.ts:383
 msgid "Recording …"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:391
+#: src/frontends/desktop/views/anlagen-view.ts:389
 msgid "Asset recorded"
 msgstr ""
 
-#: src/frontends/desktop/views/anlagen-view.ts:396
+#: src/frontends/desktop/views/anlagen-view.ts:394
 msgid "Recording failed"
 msgstr ""
 
@@ -3716,6 +3737,7 @@ msgid ""
 msgstr ""
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:153
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:58
 #: src/frontends/desktop/views/herleitung-dialog.ts:454
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:536
 msgid "Amount"
@@ -3784,7 +3806,10 @@ msgstr ""
 #: src/frontends/desktop/views/rechnung-detail-dialog.blp:41
 #: src/frontends/desktop/views/rechnungen-view.blp:45
 #: src/frontends/desktop/views/steuererklaerung-view.blp:32
+#: src/frontends/desktop/views/steuerkonto-view.blp:32
+#: src/frontends/desktop/views/steuer-view.blp:32
 #: src/frontends/desktop/views/transactions-view.blp:32
+#: src/frontends/desktop/views/ustva-view.blp:32
 #: src/frontends/desktop/views/util.ts:442
 #: src/frontends/desktop/views/util.ts:445
 #: src/frontends/desktop/views/vertraege-view.blp:54
@@ -3860,6 +3885,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:364
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:99
+#: src/frontends/desktop/views/steuerkonto-view.ts:102
 #: src/frontends/desktop/views/tx-detail-dialog.ts:202
 msgid "Net"
 msgstr ""
@@ -4048,6 +4074,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/beleg-link-dialog.ts:126
 #: src/frontends/desktop/views/offene-belege-view.ts:131
+#: src/frontends/desktop/views/ustva-view.ts:251
 msgid "net {amount}"
 msgstr ""
 
@@ -4116,6 +4143,7 @@ msgid "Invoice number"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:87
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:57
 msgid "Date (YYYY-MM-DD)"
 msgstr ""
 
@@ -4298,7 +4326,7 @@ msgstr ""
 #: src/frontends/desktop/views/datenschutz-dialog.ts:74
 #: src/frontends/desktop/views/laufende-kosten-view.ts:228
 #: src/frontends/desktop/views/laufende-kosten-view.ts:229
-#: src/frontends/desktop/views/laufende-kosten-view.ts:301
+#: src/frontends/desktop/views/laufende-kosten-view.ts:295
 msgid "Confirm"
 msgstr ""
 
@@ -4313,6 +4341,7 @@ msgstr ""
 #: src/frontends/desktop/views/dokumente-view.blp:57
 #: src/frontends/desktop/views/setup-assistant.ts:581
 #: src/frontends/desktop/views/setup-assistant.ts:626
+#: src/frontends/desktop/views/ustva-view.ts:162
 msgid "Receipts"
 msgstr ""
 
@@ -4469,7 +4498,7 @@ msgid "Partner"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:280
-#: src/frontends/desktop/views/laufende-kosten-view.ts:292
+#: src/frontends/desktop/views/laufende-kosten-view.ts:286
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:199
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:396
 #: src/frontends/desktop/views/vertrag-labels.ts:160
@@ -6482,6 +6511,179 @@ msgstr ""
 msgid "Trend: {trend}"
 msgstr ""
 
+#: src/frontends/desktop/views/fristen-view.ts:41
+msgid "overdue"
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:42
+msgid "overdue by {n} day"
+msgid_plural "overdue by {n} days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/fristen-view.ts:46
+msgid "no deadline"
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:47
+msgid "due today"
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:48
+msgid "due tomorrow"
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:51
+#: src/frontends/desktop/views/rechnungen-view.ts:266
+msgid "in {n} day"
+msgid_plural "in {n} days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/fristen-view.ts:64
+#: src/frontends/desktop/views/fristen-view.ts:282
+msgid "Deadlines could not be loaded"
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:68
+msgid "Open tax payments"
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:69
+msgid "Upcoming tax dates"
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:70
+msgid "Open items"
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:85
+msgid "Loading deadlines …"
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:134
+msgid "Could not be loaded"
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:146
+msgid ""
+"Filed, but not yet recorded as paid. Amounts and dates are estimated from "
+"the rules — check them against the notice and the bank statement."
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:154
+msgid "No open tax payments"
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:169
+msgid "Paid"
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:189
+msgid ""
+"Standard deadlines from the entities’ master data — not yet recorded as "
+"filed."
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:196
+msgid "No upcoming tax dates"
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:208
+msgid "Filed"
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:226
+msgid "Receipts with payment status “open”."
+msgstr ""
+
+#: src/frontends/desktop/views/fristen-view.ts:232
+msgid "No open items"
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:59
+msgid "Transfer ticket / receipt"
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:60
+#: src/frontends/desktop/views/projekt-form-dialog.ts:129
+#: src/frontends/desktop/views/projekt-form-dialog.ts:130
+msgctxt "project"
+msgid "Note"
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:69
+msgid "Record as filed"
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:69
+msgid "Record as paid"
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:96
+msgid ""
+"The annual forms are filed by hand in Mein ELSTER — this only records that "
+"it happened, so the date stops nagging."
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:98
+msgid "Once the payment is recorded, the item leaves the open tax payments."
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:100
+msgid "Filed on (YYYY-MM-DD)"
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:100
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:647
+msgid "Paid on (YYYY-MM-DD)"
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:102
+msgid "Declared amount"
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:102
+msgid "Amount paid"
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:104
+msgid "Transfer ticket"
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:104
+msgid "Payment receipt"
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:134
+msgid "The date must be in the format YYYY-MM-DD."
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:139
+msgid ""
+"The amount is not a number — please check (comma as the decimal separator)."
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:150
+msgid "Transfer ticket: {reference}"
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:150
+msgid "Receipt: {reference}"
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:167
+msgid "Recorded as filed"
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:167
+msgid "Recorded as paid"
+msgstr ""
+
+#: src/frontends/desktop/views/frist-erledigen-dialog.ts:170
+msgid "Could not record: {error}"
+msgstr ""
+
 #: src/frontends/desktop/views/herleitung-dialog.blp:7
 #: src/frontends/desktop/views/herleitung-dialog.ts:141
 #: src/frontends/desktop/views/herleitung-dialog.ts:246
@@ -6801,6 +7003,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/home-view.ts:159
 #: src/frontends/desktop/views/home-view.ts:375
+#: src/frontends/desktop/views/steuer-view.blp:61
 #: src/frontends/desktop/views/transactions-view.ts:54
 #: src/frontends/desktop/views/transactions-view.ts:176
 msgid "Income"
@@ -6815,6 +7018,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/home-view.ts:160
 #: src/frontends/desktop/views/home-view.ts:376
+#: src/frontends/desktop/views/steuer-view.blp:66
 #: src/frontends/desktop/views/transactions-view.ts:55
 #: src/frontends/desktop/views/transactions-view.ts:178
 msgid "Expenses"
@@ -7872,31 +8076,31 @@ msgctxt "button"
 msgid "None"
 msgstr ""
 
-#: src/frontends/desktop/views/laufende-kosten-view.ts:266
+#: src/frontends/desktop/views/laufende-kosten-view.ts:264
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:411
 msgid "Decision not saved"
 msgstr ""
 
-#: src/frontends/desktop/views/laufende-kosten-view.ts:275
+#: src/frontends/desktop/views/laufende-kosten-view.ts:271
 msgid "Correct the recurring cost"
 msgstr ""
 
-#: src/frontends/desktop/views/laufende-kosten-view.ts:278
+#: src/frontends/desktop/views/laufende-kosten-view.ts:273
 msgid ""
 "{name}: detected {interval}, last {amount}. The correction applies to the "
 "next expected payment."
 msgstr ""
 
-#: src/frontends/desktop/views/laufende-kosten-view.ts:287
+#: src/frontends/desktop/views/laufende-kosten-view.ts:281
 msgctxt "series"
 msgid "Interval"
 msgstr ""
 
-#: src/frontends/desktop/views/laufende-kosten-view.ts:323
+#: src/frontends/desktop/views/laufende-kosten-view.ts:317
 msgid "The booking was not found."
 msgstr ""
 
-#: src/frontends/desktop/views/laufende-kosten-view.ts:339
+#: src/frontends/desktop/views/laufende-kosten-view.ts:333
 msgid "Booking not opened"
 msgstr ""
 
@@ -8380,12 +8584,6 @@ msgstr ""
 msgid "as the entity’s default"
 msgstr ""
 
-#: src/frontends/desktop/views/projekt-form-dialog.ts:129
-#: src/frontends/desktop/views/projekt-form-dialog.ts:130
-msgctxt "project"
-msgid "Note"
-msgstr ""
-
 #: src/frontends/desktop/views/projekt-form-dialog.ts:148
 msgid "The project name is missing."
 msgstr ""
@@ -8811,10 +9009,6 @@ msgstr ""
 msgid "Draft deleted"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnung-detail-dialog.ts:647
-msgid "Paid on (YYYY-MM-DD)"
-msgstr ""
-
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:650
 msgid "Without link"
 msgstr ""
@@ -8855,6 +9049,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:751
 #: src/frontends/desktop/views/steuererklaerung-view.ts:549
+#: src/frontends/desktop/views/steuer-view.ts:387
 msgid "PDF not available"
 msgstr ""
 
@@ -8977,12 +9172,6 @@ msgstr[1] ""
 #: src/frontends/desktop/views/rechnungen-view.ts:265
 msgid "today"
 msgstr ""
-
-#: src/frontends/desktop/views/rechnungen-view.ts:266
-msgid "in {n} day"
-msgid_plural "in {n} days"
-msgstr[0] ""
-msgstr[1] ""
 
 #: src/frontends/desktop/views/rechnungen-view.ts:270
 msgid "due {date} ({when})"
@@ -9667,6 +9856,41 @@ msgstr ""
 msgid "Optional. The tax office is already part of the tax number."
 msgstr ""
 
+#: src/frontends/desktop/views/steuer-assistent-view.ts:110
+msgid "Tax assistant"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-assistent-view.ts:112
+msgid ""
+"Answer a few questions in plain words — the assistant works out the "
+"deduction and puts it into your tax return. Pick a topic:"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-assistent-view.ts:116
+msgid "Topic"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-assistent-view.ts:149
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:227
+msgid "Preview"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-assistent-view.ts:166
+msgid "— pick a child —"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-assistent-view.ts:168
+msgid "For which child?"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-assistent-view.ts:204
+msgid "— (open)"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-assistent-view.ts:257
+msgid "Please pick a child first."
+msgstr ""
+
 #: src/frontends/desktop/views/steuererklaerung-view.blp:22
 msgid "Checking the tax return …"
 msgstr ""
@@ -9751,6 +9975,186 @@ msgstr ""
 
 #: src/frontends/desktop/views/steuererklaerung-view.ts:530
 msgid "Save check data sheet as PDF"
+msgstr ""
+
+#: src/frontends/desktop/views/steuerkonto-view.blp:22
+msgid "Loading tax payments …"
+msgstr ""
+
+#: src/frontends/desktop/views/steuerkonto-view.blp:61
+msgid "By tax type"
+msgstr ""
+
+#: src/frontends/desktop/views/steuerkonto-view.ts:55
+msgid "Tax payments could not be loaded"
+msgstr ""
+
+#: src/frontends/desktop/views/steuerkonto-view.ts:77
+msgid "{n} internal transfer to the tax sub-account · {amount}"
+msgid_plural "{n} internal transfers to the tax sub-account · {amount}"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/steuerkonto-view.ts:92
+msgid "Tax payments {year}"
+msgstr ""
+
+#: src/frontends/desktop/views/steuerkonto-view.ts:100
+msgid "paid to the Finanzamt"
+msgstr ""
+
+#: src/frontends/desktop/views/steuerkonto-view.ts:101
+msgid "refunded"
+msgstr ""
+
+#: src/frontends/desktop/views/steuerkonto-view.ts:108
+msgid "No tax payments found"
+msgstr ""
+
+#: src/frontends/desktop/views/steuerkonto-view.ts:120
+msgid "paid {amount}"
+msgstr ""
+
+#: src/frontends/desktop/views/steuerkonto-view.ts:121
+msgid "refunded {amount}"
+msgstr ""
+
+#: src/frontends/desktop/views/steuerkonto-view.ts:132
+msgid "reference {year}"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.blp:22
+msgid "Calculating the EÜR …"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.blp:62
+msgid "Business income by category"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.blp:67
+msgid "Business expenses by category"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:117
+msgid "EÜR check sheet"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:120
+msgid "VAT check sheet"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:123
+msgid "GewSt check sheet"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:126
+msgid "Feststellung check sheet"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:134
+msgid "Save the check sheet as a PDF"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:154
+msgid "The EÜR could not be calculated"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:182
+msgid "Total income (net)"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:190
+msgid "Total expenses (net)"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:210
+msgid "Anlage EÜR {year}"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:211
+msgid "Profit determination under §4 (3) EStG"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:220
+msgid "Business income (net)"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:221
+msgid "Business expenses (net)"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:223
+msgid "Profit"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:227
+msgid "VAT payable"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:249
+msgid "{n} booking is unclassified — please check"
+msgid_plural "{n} bookings are unclassified — please check"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/frontends/desktop/views/steuer-view.ts:291
+msgid "Key figures"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:295
+msgid "Anlage EÜR key figures"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:296
+msgid "best effort — check against the Anlage EÜR before filing"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:310
+msgid "Annual VAT return {year}"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:313
+msgid "VAT payable (year)"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:314
+msgid "− prepayments filed"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:316
+msgid "Final payment"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:325
+msgid "§13b VAT owed (neutral for the payable)"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:335
+msgid "Gewerbesteuer (GewSt 1 A)"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:339
+msgid "Trade income (rounded down)"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:340
+msgid "Tax base amount"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:345
+msgid "Below the allowance"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:346
+msgid "Base amount 0 € — the return is filed anyway"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:363
+msgid "Feststellung (GbR)"
+msgstr ""
+
+#: src/frontends/desktop/views/steuer-view.ts:367
+msgid "Income from a trade or business"
 msgstr ""
 
 #: src/frontends/desktop/views/support-dialog.ts:25
@@ -10100,6 +10504,103 @@ msgstr ""
 
 #: src/frontends/desktop/views/umbuchen-dialog.ts:261
 msgid "Could not revert: {error}"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.blp:22
+msgid "Calculating the USt-VA …"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:60
+msgid "The USt-VA could not be calculated"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:94
+msgid "No VAT-relevant receipts in this year"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:113
+msgid "VAT advance return · cash accounting"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:126
+msgid "Taxable sales 19 % (Kz 81)"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:127
+msgid "Taxable sales 7 % (Kz 86)"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:128
+msgid "VAT charged"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:129
+msgid "Input VAT (Kz 66)"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:131
+msgid "VAT payable (Kz 83)"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:140
+msgid "Missing BMF conversion rates"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:147
+msgid "“Load rates” fetches them from the Bundesfinanzministerium."
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:164
+msgid "{n} outgoing"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:165
+msgid "{n} incoming"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:168
+msgid "Outgoing"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:169
+msgid "Incoming"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:185
+msgid "For Mein ELSTER (XML)"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:186
+msgid "Save the VAT advance return as XML for the Mein ELSTER upload"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:199
+#: src/frontends/desktop/views/ustva-view.ts:233
+msgid "Load rates"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:200
+msgid ""
+"Load the missing BMF conversion rates ({rates}) from "
+"bundesfinanzministerium.de"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:213
+msgid "Loading …"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:217
+msgid ""
+"BMF rates {year} loaded: {added} new, {updated} updated ({currencies} "
+"currencies)"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:234
+msgid "The rates could not be loaded"
+msgstr ""
+
+#: src/frontends/desktop/views/ustva-view.ts:245
+msgid "XML not available"
 msgstr ""
 
 #: src/frontends/desktop/views/util.ts:56
@@ -11225,10 +11726,6 @@ msgstr ""
 msgid ""
 "Text above the line items. Placeholders: {list}. Empty = the entity’s "
 "default text (Settings → Invoicing)."
-msgstr ""
-
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:227
-msgid "Preview"
 msgstr ""
 
 #: src/frontends/desktop/views/wiederkehrend-dialog.ts:249

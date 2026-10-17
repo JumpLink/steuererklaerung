@@ -19,7 +19,7 @@ template $BhSteuerView: Adw.Bin {
         }
 
         Gtk.Label {
-          label: "Berechne EÜR …";
+          label: _("Calculating the EÜR …");
           styles ["dim-label"]
         }
       };
@@ -29,7 +29,7 @@ template $BhSteuerView: Adw.Bin {
       name: "error";
       child: Adw.StatusPage error_page {
         icon-name: "dialog-error-symbolic";
-        title: "Konnte nicht laden";
+        title: _("Could not load");
       };
     }
 
@@ -58,13 +58,13 @@ template $BhSteuerView: Adw.Bin {
             Adw.PreferencesGroup summary_group {}
 
             Adw.PreferencesGroup income_group {
-              title: "Einnahmen";
-              description: "Betriebseinnahmen nach Kategorie";
+              title: _("Income");
+              description: _("Business income by category");
             }
 
             Adw.PreferencesGroup expense_group {
-              title: "Ausgaben";
-              description: "Betriebsausgaben nach Kategorie";
+              title: _("Expenses");
+              description: _("Business expenses by category");
             }
 
             Adw.PreferencesGroup kennzahlen_group {}

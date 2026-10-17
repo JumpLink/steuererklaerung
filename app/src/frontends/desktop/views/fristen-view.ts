@@ -29,18 +29,25 @@ import {
 import { showToast } from '../toast.ts';
 import { amountLabel, GroupRows, LoadToken, loadIntoStack, markup } from './util.ts';
 import { BhFristErledigenDialog, type FristAction, type FristTarget } from './frist-erledigen-dialog.ts';
+import { _, _n, fmt } from '../i18n.ts';
 
 /** How a due date reads, and how urgent it looks. */
 function urgency(daysUntil: number | null, overdue: boolean): { text: string; css: string } {
     if (overdue) {
         const days = daysUntil == null ? null : Math.abs(daysUntil);
-        return { text: days == null ? 'überfällig' : `${days} Tage überfällig`, css: 'error' };
+        return {
+            text: days == null ? _('overdue') : fmt(_n('overdue by {n} day', 'overdue by {n} days', days), { n: days }),
+            css: 'error',
+        };
     }
-    if (daysUntil == null) return { text: 'ohne Frist', css: 'dim-label' };
-    if (daysUntil === 0) return { text: 'heute fällig', css: 'warning' };
-    if (daysUntil === 1) return { text: 'morgen fällig', css: 'warning' };
+    if (daysUntil == null) return { text: _('no deadline'), css: 'dim-label' };
+    if (daysUntil === 0) return { text: _('due today'), css: 'warning' };
+    if (daysUntil === 1) return { text: _('due tomorrow'), css: 'warning' };
     // Two weeks is the point where a Frist stops being "later" and becomes something to act on.
-    return { text: `in ${daysUntil} Tagen`, css: daysUntil <= 14 ? 'warning' : 'dim-label' };
+    return {
+        text: fmt(_n('in {n} day', 'in {n} days', daysUntil), { n: daysUntil }),
+        css: daysUntil <= 14 ? 'warning' : 'dim-label',
+    };
 }
 
 export class BhFristenView extends Adw.Bin {
@@ -51,13 +58,13 @@ export class BhFristenView extends Adw.Bin {
     private readonly stack = new Gtk.Stack({ transitionType: Gtk.StackTransitionType.CROSSFADE });
     private readonly errorPage = new Adw.StatusPage({
         iconName: 'dialog-error-symbolic',
-        title: 'Fristen konnten nicht geladen werden',
+        title: _('Deadlines could not be loaded'),
     });
     private readonly token = new LoadToken();
 
-    private readonly zahlungen = new Adw.PreferencesGroup({ title: 'Offene Steuerzahlungen' });
-    private readonly termine = new Adw.PreferencesGroup({ title: 'Kommende Steuertermine' });
-    private readonly posten = new Adw.PreferencesGroup({ title: 'Offene Posten' });
+    private readonly zahlungen = new Adw.PreferencesGroup({ title: _('Open tax payments') });
+    private readonly termine = new Adw.PreferencesGroup({ title: _('Upcoming tax dates') });
+    private readonly posten = new Adw.PreferencesGroup({ title: _('Open items') });
     private readonly zahlungenRows: GroupRows;
     private readonly termineRows: GroupRows;
     private readonly postenRows: GroupRows;
@@ -72,7 +79,7 @@ export class BhFristenView extends Adw.Bin {
             spacing: 12,
         });
         loading.append(new Adw.Spinner({ widthRequest: 32, heightRequest: 32 }));
-        loading.append(new Gtk.Label({ label: 'Lade Fristen …', cssClasses: ['dim-label'] }));
+        loading.append(new Gtk.Label({ label: _('Loading deadlines …'), cssClasses: ['dim-label'] }));
         this.stack.add_named(loading, 'loading');
         this.stack.add_named(this.errorPage, 'error');
 
@@ -121,7 +128,7 @@ export class BhFristenView extends Adw.Bin {
      * also tells the user which numbers they should not trust right now.
      */
     private errorRow(message: string): Adw.ActionRow {
-        const row = new Adw.ActionRow({ title: 'Konnte nicht geladen werden', subtitle: markup(message) });
+        const row = new Adw.ActionRow({ title: _('Could not be loaded'), subtitle: markup(message) });
         row.set_subtitle_lines(0);
         row.add_prefix(new Gtk.Image({ iconName: 'dialog-warning-symbolic', cssClasses: ['warning'] }));
         return row;
@@ -132,26 +139,31 @@ export class BhFristenView extends Adw.Bin {
     private fillZahlungen(items: OffeneSteuerzahlung[], error?: string): void {
         this.zahlungenRows.clear();
         this.zahlungen.set_description(
-            'Abgegeben, aber noch nicht als bezahlt erfasst. Beträge und Termine sind aus den Regeln ' +
-                'geschätzt — gegen Bescheid und Kontoauszug prüfen.',
+            _(
+                'Filed, but not yet recorded as paid. Amounts and dates are estimated from the rules — check them against the notice and the bank statement.',
+            ),
         );
         if (error) {
             this.zahlungenRows.add(this.errorRow(error));
             return;
         }
         if (items.length === 0) {
-            this.zahlungenRows.add(this.emptyRow('Keine offenen Steuerzahlungen'));
+            this.zahlungenRows.add(this.emptyRow(_('No open tax payments')));
             return;
         }
         for (const z of items) {
             const u = urgency(z.daysUntil, z.overdue);
-            const sub = [z.entityName, z.dueDate ? `fällig ${deDate(z.dueDate)}` : z.note, u.text].filter(Boolean);
+            const sub = [
+                z.entityName,
+                z.dueDate ? fmt(_('due {date}'), { date: deDate(z.dueDate) }) : z.note,
+                u.text,
+            ].filter(Boolean);
             const row = new Adw.ActionRow({ title: markup(z.label), subtitle: markup(sub.join('  ·  ')) });
             row.set_subtitle_lines(0);
             row.add_suffix(amountLabel(eur(z.amount), { accent: z.overdue ? 'error' : undefined }));
             row.add_suffix(
                 this.erledigenButton(
-                    'Bezahlt',
+                    _('Paid'),
                     {
                         entityId: z.entityId,
                         kind: z.kind,
@@ -171,26 +183,26 @@ export class BhFristenView extends Adw.Bin {
     private fillTermine(items: SteuerTermin[], error?: string): void {
         this.termineRows.clear();
         this.termine.set_description(
-            'Regelfristen aus den Stammdaten der Entitäten — noch nicht als abgegeben erfasst.',
+            _('Standard deadlines from the entities’ master data — not yet recorded as filed.'),
         );
         if (error) {
             this.termineRows.add(this.errorRow(error));
             return;
         }
         if (items.length === 0) {
-            this.termineRows.add(this.emptyRow('Keine anstehenden Steuertermine'));
+            this.termineRows.add(this.emptyRow(_('No upcoming tax dates')));
             return;
         }
         for (const t of items) {
             const u = urgency(t.daysUntil, t.overdue);
             const row = new Adw.ActionRow({
                 title: markup(t.label),
-                subtitle: markup([t.entityName, `fällig ${deDate(t.dueDate)}`].join('  ·  ')),
+                subtitle: markup([t.entityName, fmt(_('due {date}'), { date: deDate(t.dueDate) })].join('  ·  ')),
             });
             row.add_suffix(new Gtk.Label({ label: u.text, cssClasses: ['caption', u.css], valign: Gtk.Align.CENTER }));
             row.add_suffix(
                 this.erledigenButton(
-                    'Abgegeben',
+                    _('Filed'),
                     {
                         entityId: t.entityId,
                         kind: t.kind,
@@ -208,22 +220,24 @@ export class BhFristenView extends Adw.Bin {
 
     private fillPosten(items: OpenItem[], error?: string): void {
         this.postenRows.clear();
-        this.posten.set_description('Belege mit Zahlungsstatus „offen".');
+        this.posten.set_description(_('Receipts with payment status “open”.'));
         if (error) {
             this.postenRows.add(this.errorRow(error));
             return;
         }
         if (items.length === 0) {
-            this.postenRows.add(this.emptyRow('Keine offenen Posten'));
+            this.postenRows.add(this.emptyRow(_('No open items')));
             return;
         }
         for (const item of items) {
             const u = urgency(item.daysUntil, item.overdue);
-            const sub = [item.correspondent, item.dueDate ? `fällig ${deDate(item.dueDate)}` : null, u.text].filter(
-                Boolean,
-            );
+            const sub = [
+                item.correspondent,
+                item.dueDate ? fmt(_('due {date}'), { date: deDate(item.dueDate) }) : null,
+                u.text,
+            ].filter(Boolean);
             const row = new Adw.ActionRow({
-                title: markup(item.title?.trim() || `Beleg #${item.id}`),
+                title: markup(item.title?.trim() || fmt(_('Receipt #{id}'), { id: item.id })),
                 subtitle: markup(sub.join('  ·  ')),
             });
             if (item.amount != null) {
@@ -262,7 +276,7 @@ export class BhFristenView extends Adw.Bin {
             stack: this.stack,
             errorPage: this.errorPage,
             token: this.token,
-            errorContext: 'Fristen konnten nicht geladen werden',
+            errorContext: _('Deadlines could not be loaded'),
             load: () => loadFristen(),
             fill: (data) => this.fill(data),
         });
