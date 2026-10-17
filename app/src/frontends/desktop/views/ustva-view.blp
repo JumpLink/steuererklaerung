@@ -19,7 +19,7 @@ template $BhUstvaView: Adw.Bin {
         }
 
         Gtk.Label {
-          label: "Berechne USt-VA …";
+          label: _("Calculating the USt-VA …");
           styles ["dim-label"]
         }
       };
@@ -29,7 +29,7 @@ template $BhUstvaView: Adw.Bin {
       name: "error";
       child: Adw.StatusPage error_page {
         icon-name: "dialog-error-symbolic";
-        title: "Konnte nicht laden";
+        title: _("Could not load");
       };
     }
 

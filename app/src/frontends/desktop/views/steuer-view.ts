@@ -47,6 +47,7 @@ interface SteuerViewData {
 /** One report → its PDF loader + save-toast label (for the shared exportPdf). */
 type PdfLoader = (entity: AppEntity, year: number) => Promise<{ filename: string; bytes: Uint8Array }>;
 import { GroupRows, LoadToken, amountLabel, loadIntoStack, markup, saveFileViaDialog } from './util.ts';
+import { _, _n, fmt } from '../i18n.ts';
 import { errorDialog } from './dialogs.ts';
 import { BhHerleitungDialog } from './herleitung-dialog.ts';
 
@@ -109,20 +110,20 @@ export class BhSteuerView extends Adw.Bin {
         this.gewst = new GroupRows(this._gewst_group);
         this.fest = new GroupRows(this._fest_group);
 
-        // A "Prüf-Datenblatt als PDF" save button in each report group's header — renders the same
+        // A "Check PDF" save button in each report group's header — renders the same
         // datasheet the CLI (`--pdf`) and web (`/api/<kind>/pdf`) produce, then Save-As. Disabled
         // until the report has loaded.
         this.pdfButton = this.makePdfButton(this._summary_group, () =>
-            this.exportPdf((e, y) => loadEuerPdf(appSession(), e, y), 'EÜR-Prüfblatt'),
+            this.exportPdf((e, y) => loadEuerPdf(appSession(), e, y), _('EÜR check sheet')),
         );
         this.ustePdfButton = this.makePdfButton(this._uste_group, () =>
-            this.exportPdf((e, y) => loadUstePdf(appSession(), e, y), 'USt-Prüfblatt'),
+            this.exportPdf((e, y) => loadUstePdf(appSession(), e, y), _('VAT check sheet')),
         );
         this.gewstPdfButton = this.makePdfButton(this._gewst_group, () =>
-            this.exportPdf((e, y) => loadGewstPdf(appSession(), e, y), 'GewSt-Prüfblatt'),
+            this.exportPdf((e, y) => loadGewstPdf(appSession(), e, y), _('GewSt check sheet')),
         );
         this.festPdfButton = this.makePdfButton(this._fest_group, () =>
-            this.exportPdf((e, y) => loadFeststellungPdf(appSession(), e, y), 'Feststellungs-Prüfblatt'),
+            this.exportPdf((e, y) => loadFeststellungPdf(appSession(), e, y), _('Feststellung check sheet')),
         );
     }
 
@@ -130,7 +131,7 @@ export class BhSteuerView extends Adw.Bin {
     private makePdfButton(group: Adw.PreferencesGroup, onClick: () => void): Gtk.Button {
         const btn = new Gtk.Button({
             iconName: 'document-save-symbolic',
-            tooltipText: 'Prüf-Datenblatt als PDF speichern',
+            tooltipText: _('Save the check sheet as a PDF'),
             cssClasses: ['flat'],
             valign: Gtk.Align.CENTER,
             sensitive: false,
@@ -150,7 +151,7 @@ export class BhSteuerView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'EÜR konnte nicht berechnet werden',
+            errorContext: _('The EÜR could not be calculated'),
             // The EÜR is required; the annual USt/GewSt/Feststellung derive from the SAME cached
             // aggregate (one Paperless fetch) and are optional — an Einzelunternehmer has no
             // Feststellung, a services entity may lack a Gewerbe block, so those resolve to null.
@@ -174,12 +175,12 @@ export class BhSteuerView extends Adw.Bin {
         const t = euer.aggregate.totals;
         this.fillSummary(t, year);
         this.fillBanner(euer.aggregate.coverage.unclassified.length);
-        this.fillCategories(this.income, euer.aggregate.income, t.incomeNet, 'Summe Einnahmen (netto)', 'income', year);
+        this.fillCategories(this.income, euer.aggregate.income, t.incomeNet, _('Total income (net)'), 'income', year);
         this.fillCategories(
             this.expense,
             euer.aggregate.expenses,
             t.expenseNet,
-            'Summe Ausgaben (netto)',
+            _('Total expenses (net)'),
             'expense',
             year,
         );
@@ -199,8 +200,8 @@ export class BhSteuerView extends Adw.Bin {
 
     private fillSummary(t: EuerData['aggregate']['totals'], year: number): void {
         this.summary.clear();
-        this._summary_group.set_title(`Anlage EÜR ${year}`);
-        this._summary_group.set_description('Gewinnermittlung nach §4 Abs. 3 EStG');
+        this._summary_group.set_title(fmt(_('Anlage EÜR {year}'), { year }));
+        this._summary_group.set_description(_('Profit determination under §4 (3) EStG'));
 
         // Each headline figure drills into its Herleitung (S1): a total ref → child terms + bookings.
         const add = (title: string, label: Gtk.Label, id: EuerTotalId) => {
@@ -209,14 +210,14 @@ export class BhSteuerView extends Adw.Bin {
             this.makeDrillable(row, { domain: 'euer', year, kind: 'total', id });
             this.summary.add(row);
         };
-        add('Betriebseinnahmen (netto)', amountLabel(eur(t.incomeNet)), 'betriebseinnahmen');
-        add('Betriebsausgaben (netto)', amountLabel(eur(t.expenseNet)), 'betriebsausgaben');
+        add(_('Business income (net)'), amountLabel(eur(t.incomeNet)), 'betriebseinnahmen');
+        add(_('Business expenses (net)'), amountLabel(eur(t.expenseNet)), 'betriebsausgaben');
         add(
-            'Gewinn',
+            _('Profit'),
             amountLabel(eur(t.profit), { accent: t.profit >= 0 ? 'success' : 'error', heading: true }),
             'gewinn',
         );
-        add('USt-Zahllast', amountLabel(eur(t.vatPayable)), 'ust-zahllast');
+        add(_('VAT payable'), amountLabel(eur(t.vatPayable)), 'ust-zahllast');
     }
 
     /** Make a figure row activatable: a "go-next" chevron + open its Herleitung drill-down on click. */
@@ -236,7 +237,14 @@ export class BhSteuerView extends Adw.Bin {
     private fillBanner(unclassified: number): void {
         if (unclassified > 0) {
             this._unclassified_banner.set_title(
-                `${unclassified} Buchung${unclassified === 1 ? '' : 'en'} unklassifiziert — bitte prüfen`,
+                fmt(
+                    _n(
+                        '{n} booking is unclassified — please check',
+                        '{n} bookings are unclassified — please check',
+                        unclassified,
+                    ),
+                    { n: unclassified },
+                ),
             );
             this._unclassified_banner.set_revealed(true);
         } else {
@@ -257,7 +265,9 @@ export class BhSteuerView extends Adw.Bin {
             const row = rows.add(
                 new Adw.ActionRow({
                     title: markup(cat.bucket || cat.category),
-                    subtitle: markup(`${cat.category} · ${cat.count} Buchung${cat.count === 1 ? '' : 'en'}`),
+                    subtitle: markup(
+                        `${cat.category} · ${fmt(_n('{n} booking', '{n} bookings', cat.count), { n: cat.count })}`,
+                    ),
                 }),
             );
             row.add_suffix(amountLabel(eur(cat.net)));
@@ -271,12 +281,12 @@ export class BhSteuerView extends Adw.Bin {
 
     private fillKennzahlen(kennzahlen: EuerData['kennzahlen']): void {
         this.kennzahlen.clear();
-        this._kennzahlen_group.set_title('Kennzahlen');
+        this._kennzahlen_group.set_title(_('Key figures'));
 
         const expander = this.kennzahlen.add(
             new Adw.ExpanderRow({
-                title: 'Anlage-EÜR Kennzahlen',
-                subtitle: 'best-effort — vor Abgabe gegen die Anlage-EÜR prüfen',
+                title: _('Anlage EÜR key figures'),
+                subtitle: _('best effort — check against the Anlage EÜR before filing'),
             }),
         );
         for (const k of kennzahlen) {
@@ -290,13 +300,13 @@ export class BhSteuerView extends Adw.Bin {
         this.uste.clear();
         this._uste_group.set_visible(u != null);
         if (!u) return;
-        this._uste_group.set_title(`USt-Jahreserklärung ${u.year}`);
+        this._uste_group.set_title(fmt(_('Annual VAT return {year}'), { year: u.year }));
         this.ustePdfButton.set_sensitive(true);
         const add = (title: string, label: Gtk.Label) => this.uste.add(new Adw.ActionRow({ title })).add_suffix(label);
-        add('USt-Zahllast (Jahr)', amountLabel(eur(u.vatPayable)));
-        add('− angemeldete Vorauszahlungen', amountLabel(eur(u.prepaidVat)));
+        add(_('VAT payable (year)'), amountLabel(eur(u.vatPayable)));
+        add(_('− prepayments filed'), amountLabel(eur(u.prepaidVat)));
         add(
-            u.closingBalance >= 0 ? 'Abschlusszahlung' : 'Erstattung',
+            u.closingBalance >= 0 ? _('Final payment') : _('Refund'),
             // A refund (negative balance) reads green — same accent semantics as the USt-VA Zahllast.
             amountLabel(eur(Math.abs(u.closingBalance)), {
                 heading: true,
@@ -305,7 +315,7 @@ export class BhSteuerView extends Adw.Bin {
         );
         if (u.reverseCharge && u.reverseCharge.count > 0) {
             add(
-                '§13b geschuldete USt (zahllastneutral)',
+                _('§13b VAT owed (neutral for the payable)'),
                 amountLabel(eur(u.reverseCharge.abs1Tax + u.reverseCharge.abs2Tax)),
             );
         }
@@ -315,18 +325,18 @@ export class BhSteuerView extends Adw.Bin {
         this.gewst.clear();
         this._gewst_group.set_visible(r != null);
         if (!r) return;
-        this._gewst_group.set_title('Gewerbesteuer (GewSt 1 A)');
+        this._gewst_group.set_title(_('Gewerbesteuer (GewSt 1 A)'));
         this.gewstPdfButton.set_sensitive(true);
         const g = r.result;
         const add = (title: string, label: Gtk.Label) => this.gewst.add(new Adw.ActionRow({ title })).add_suffix(label);
-        add('Gewerbeertrag (abgerundet)', amountLabel(eur(g.gewerbeertragRounded)));
-        add('Steuermessbetrag', amountLabel(eur(g.messbetrag), { heading: true }));
+        add(_('Trade income (rounded down)'), amountLabel(eur(g.gewerbeertragRounded)));
+        add(_('Tax base amount'), amountLabel(eur(g.messbetrag), { heading: true }));
         if (g.messbetrag === 0) {
             // A Messbetrag of 0 € is the expected, positive case (below the Freibetrag) — render it as
             // an ok-status note with a proper title/subtitle rather than a glyph-prefixed dim string.
             const note = new Adw.ActionRow({
-                title: 'Unter dem Freibetrag',
-                subtitle: 'Messbetrag 0 € — die Erklärung wird dennoch abgegeben',
+                title: _('Below the allowance'),
+                subtitle: _('Base amount 0 € — the return is filed anyway'),
             });
             note.add_prefix(
                 new Gtk.Image({
@@ -343,11 +353,11 @@ export class BhSteuerView extends Adw.Bin {
         this.fest.clear();
         this._fest_group.set_visible(r != null);
         if (!r) return;
-        this._fest_group.set_title('Feststellung (GbR)');
+        this._fest_group.set_title(_('Feststellung (GbR)'));
         this.festPdfButton.set_sensitive(true);
         const f = r.result;
         this.fest
-            .add(new Adw.ActionRow({ title: 'Einkünfte aus Gewerbebetrieb' }))
+            .add(new Adw.ActionRow({ title: _('Income from a trade or business') }))
             .add_suffix(amountLabel(eur(f.einkuenfteGesamt), { heading: true }));
         for (const a of f.allocations) {
             const row = new Adw.ActionRow({
@@ -367,7 +377,7 @@ export class BhSteuerView extends Adw.Bin {
             const { filename, bytes } = await loader(entity, this.currentYear);
             saveFileViaDialog(this, filename, bytes, toastLabel);
         } catch (err) {
-            await errorDialog(this, 'PDF nicht verfügbar', err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('PDF not available'), err instanceof Error ? err.message : String(err));
         }
     }
 }

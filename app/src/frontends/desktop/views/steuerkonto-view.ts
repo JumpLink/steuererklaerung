@@ -17,6 +17,7 @@ import { appSession } from '../data/session.ts';
 import type { AppEntity } from '../entities.ts';
 import { deDate, eur } from '../../../core/lib/format.ts';
 import { GroupRows, LoadToken, amountLabel, loadIntoStack, markup } from './util.ts';
+import { _, _n, fmt } from '../i18n.ts';
 
 export class BhSteuerkontoView extends Adw.Bin {
     declare private _stack: Gtk.Stack;
@@ -51,7 +52,7 @@ export class BhSteuerkontoView extends Adw.Bin {
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
-            errorContext: 'Steuerzahlungen konnten nicht geladen werden',
+            errorContext: _('Tax payments could not be loaded'),
             load: () => loadSteuerkonto(appSession(), entity, year),
             fill: (report) => this.fill(report),
         });
@@ -71,7 +72,14 @@ export class BhSteuerkontoView extends Adw.Bin {
         const n = r.internalReserve.count;
         if (n > 0) {
             this._reserve_banner.set_title(
-                `${n} interne Umbuchung${n === 1 ? '' : 'en'} auf das Steuer-Unterkonto · ${eur(r.internalReserve.out)}`,
+                fmt(
+                    _n(
+                        '{n} internal transfer to the tax sub-account · {amount}',
+                        '{n} internal transfers to the tax sub-account · {amount}',
+                        n,
+                    ),
+                    { n, amount: eur(r.internalReserve.out) },
+                ),
             );
             this._reserve_banner.set_revealed(true);
         } else {
@@ -81,7 +89,7 @@ export class BhSteuerkontoView extends Adw.Bin {
 
     private fillSummary(r: SteuerkontoReport): void {
         this.summary.clear();
-        this._summary_group.set_title(`Steuer-Zahlungen ${r.year}`);
+        this._summary_group.set_title(fmt(_('Tax payments {year}'), { year: r.year }));
         const gezahlt = r.groups.reduce((s, g) => s + g.gezahlt, 0);
         const erstattet = r.groups.reduce((s, g) => s + g.erstattet, 0);
         const netto = r.groups.reduce((s, g) => s + g.netto, 0);
@@ -89,15 +97,15 @@ export class BhSteuerkontoView extends Adw.Bin {
         const add = (title: string, value: string, accent?: 'success' | 'error', heading?: boolean) => {
             this.summary.add(new Adw.ActionRow({ title })).add_suffix(amountLabel(value, { accent, heading }));
         };
-        add('an Finanzamt gezahlt', eur(gezahlt));
-        add('erstattet', eur(erstattet));
-        add('Netto', eur(netto), netto >= 0 ? 'success' : 'error', true);
+        add(_('paid to the Finanzamt'), eur(gezahlt));
+        add(_('refunded'), eur(erstattet));
+        add(_('Net'), eur(netto), netto >= 0 ? 'success' : 'error', true);
     }
 
     private fillGroups(r: SteuerkontoReport): void {
         this.list.clear();
         if (r.groups.length === 0) {
-            this.list.add(new Adw.ActionRow({ title: 'Keine Steuerzahlungen gefunden' }));
+            this.list.add(new Adw.ActionRow({ title: _('No tax payments found') }));
             return;
         }
         for (const g of r.groups) {
@@ -106,8 +114,12 @@ export class BhSteuerkontoView extends Adw.Bin {
                 new Adw.ExpanderRow({
                     title: markup(g.art),
                     subtitle: markup(
-                        `${entityLabel} · ${g.items.length} Buchung${g.items.length === 1 ? '' : 'en'} · ` +
-                            `gezahlt ${eur(g.gezahlt)} · erstattet ${eur(g.erstattet)}`,
+                        [
+                            entityLabel,
+                            fmt(_n('{n} booking', '{n} bookings', g.items.length), { n: g.items.length }),
+                            fmt(_('paid {amount}'), { amount: eur(g.gezahlt) }),
+                            fmt(_('refunded {amount}'), { amount: eur(g.erstattet) }),
+                        ].join(' · '),
                     ),
                 }),
             );
@@ -115,7 +127,10 @@ export class BhSteuerkontoView extends Adw.Bin {
                 amountLabel(eur(g.netto), { accent: g.netto >= 0 ? 'success' : 'error', heading: true }),
             );
             for (const it of g.items) {
-                const sub = [deDate(it.bookingDate), it.bezugsjahr ? `Bezug ${it.bezugsjahr}` : null].filter(Boolean);
+                const sub = [
+                    deDate(it.bookingDate),
+                    it.bezugsjahr ? fmt(_('reference {year}'), { year: it.bezugsjahr }) : null,
+                ].filter(Boolean);
                 const row = new Adw.ActionRow({
                     title: markup(it.counterparty?.trim() || it.purpose?.trim() || g.art),
                     subtitle: markup(sub.join('  ·  ')),

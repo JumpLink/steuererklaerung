@@ -21,21 +21,25 @@ import { INTAKE_TOPICS, type IntakeTopic, type IntakeContext } from '../../../co
 import { aktiveFragen, type IntakeQuestion } from '../../../core/actions/elster/est-intake.ts';
 import type { EstKind } from '../../../core/config/schema/est.ts';
 import { comboRow, spinRow, toggleRow, type SettingsHost } from './einstellungen/rows.ts';
+import { _, _p, fmt } from '../i18n.ts';
 
-const MONATE = [
-    'Januar',
-    'Februar',
-    'März',
-    'April',
-    'Mai',
-    'Juni',
-    'Juli',
-    'August',
-    'September',
-    'Oktober',
-    'November',
-    'Dezember',
-];
+/** Full month names for the month combo — a function so the translator is already registered. */
+function monate(): string[] {
+    return [
+        _p('month', 'January'),
+        _p('month', 'February'),
+        _p('month', 'March'),
+        _p('month', 'April'),
+        _p('month', 'May'),
+        _p('month', 'June'),
+        _p('month', 'July'),
+        _p('month', 'August'),
+        _p('month', 'September'),
+        _p('month', 'October'),
+        _p('month', 'November'),
+        _p('month', 'December'),
+    ];
+}
 
 /** Display label for a child in a combo (Vorname, plus Nachname when set — the IdNr stays internal). */
 function kindLabel(k: EstKind): string {
@@ -103,12 +107,13 @@ export class BhSteuerAssistentView extends Adw.Bin {
         const page = new Adw.PreferencesPage();
 
         const intro = new Adw.PreferencesGroup({
-            title: 'Steuer-Assistent',
-            description:
-                'Beantworte ein paar Fragen in Klartext — der Assistent rechnet den Abzug aus und trägt ihn in deine Steuererklärung ein. Wähle ein Thema:',
+            title: _('Tax assistant'),
+            description: _(
+                'Answer a few questions in plain words — the assistant works out the deduction and puts it into your tax return. Pick a topic:',
+            ),
         });
         const themen = INTAKE_TOPICS.map((t) => t.titel);
-        const selektor = comboRow(this.host(), 'Thema', themen, INTAKE_TOPICS.indexOf(this.topic), (i) => {
+        const selektor = comboRow(this.host(), _('Topic'), themen, INTAKE_TOPICS.indexOf(this.topic), (i) => {
             this.topic = INTAKE_TOPICS[i] ?? INTAKE_TOPICS[0];
             this.answers = {};
             this.kindIdnr = undefined;
@@ -141,11 +146,11 @@ export class BhSteuerAssistentView extends Adw.Bin {
         const gateIds = new Set(this.topic.fragen.filter((q) => q.wennId).map((q) => q.wennId as string));
         for (const q of aktiveFragen(this.topic.fragen, this.answers)) group.add(this.questionRow(q, gateIds));
 
-        const preview = new Adw.ActionRow({ title: 'Vorschau', subtitleLines: 0 });
+        const preview = new Adw.ActionRow({ title: _('Preview'), subtitleLines: 0 });
         this.previewRow = preview;
         group.add(preview);
 
-        const uebernehmen = new Adw.ButtonRow({ title: 'Übernehmen' });
+        const uebernehmen = new Adw.ButtonRow({ title: _('Apply') });
         uebernehmen.add_css_class('suggested-action');
         uebernehmen.connect('activated', () => this.uebernehmen());
         group.add(uebernehmen);
@@ -158,9 +163,9 @@ export class BhSteuerAssistentView extends Adw.Bin {
 
     /** The child selector for per-child topics (sets `this.kindIdnr` in the context). */
     private kindContextRow(): Adw.ComboRow {
-        const optionen = ['— Kind wählen —', ...this.kinder.map(kindLabel)];
+        const optionen = [_('— pick a child —'), ...this.kinder.map(kindLabel)];
         const sel = this.kindIdnr ? this.kinder.findIndex((k) => k.idnr === this.kindIdnr) + 1 : 0;
-        return comboRow(this.host(), 'Für welches Kind?', optionen, Math.max(0, sel), (i) => {
+        return comboRow(this.host(), _('For which child?'), optionen, Math.max(0, sel), (i) => {
             this.kindIdnr = i > 0 ? this.kinder[i - 1]?.idnr : undefined;
             this.refreshPreview();
         });
@@ -193,8 +198,12 @@ export class BhSteuerAssistentView extends Adw.Bin {
 
         if (q.typ === 'monat') {
             const cur = typeof this.answers[q.id] === 'string' ? Number((this.answers[q.id] as string).slice(5, 7)) : 0;
-            const row = comboRow(this.host(), q.frage, ['— (offen)', ...MONATE], cur >= 1 && cur <= 12 ? cur : 0, (i) =>
-                changed(i === 0 ? undefined : `${this.year}-${String(i).padStart(2, '0')}`),
+            const row = comboRow(
+                this.host(),
+                q.frage,
+                [_('— (open)'), ...monate()],
+                cur >= 1 && cur <= 12 ? cur : 0,
+                (i) => changed(i === 0 ? undefined : `${this.year}-${String(i).padStart(2, '0')}`),
             );
             if (q.hilfe) row.set_subtitle(q.hilfe);
             return row;
@@ -245,7 +254,7 @@ export class BhSteuerAssistentView extends Adw.Bin {
         const entity = this.entity;
         if (!entity) return;
         if (this.topic.proKind && !this.kindIdnr) {
-            this.notify_user('Bitte zuerst ein Kind wählen.');
+            this.notify_user(_('Please pick a child first.'));
             return;
         }
         try {

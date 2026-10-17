@@ -19,6 +19,7 @@ import Gtk from '@girs/gtk-4.0';
 import { parseGermanInput } from '../../../core/lib/parsing.ts';
 import { saveFiling } from '../data/filings.ts';
 import { markup } from './util.ts';
+import { _, _p, fmt } from '../i18n.ts';
 
 /** Which half of the obligation is being recorded. */
 export type FristAction = 'filed' | 'paid';
@@ -53,10 +54,10 @@ export class BhFristErledigenDialog extends Adw.Dialog {
     private readonly action: FristAction;
     private readonly done: FristResult;
 
-    private readonly date = new Adw.EntryRow({ title: 'Datum (JJJJ-MM-TT)' });
-    private readonly amount = new Adw.EntryRow({ title: 'Betrag' });
-    private readonly reference = new Adw.EntryRow({ title: 'Transferticket / Beleg' });
-    private readonly note = new Adw.EntryRow({ title: 'Notiz' });
+    private readonly date = new Adw.EntryRow({ title: _('Date (YYYY-MM-DD)') });
+    private readonly amount = new Adw.EntryRow({ title: _('Amount') });
+    private readonly reference = new Adw.EntryRow({ title: _('Transfer ticket / receipt') });
+    private readonly note = new Adw.EntryRow({ title: _p('project', 'Note') });
     private readonly banner = new Adw.Banner({ revealed: false });
 
     constructor(target: FristTarget, action: FristAction, done: FristResult) {
@@ -65,7 +66,7 @@ export class BhFristErledigenDialog extends Adw.Dialog {
         this.action = action;
         this.done = done;
 
-        this.set_title(action === 'filed' ? 'Als abgegeben erfassen' : 'Als bezahlt erfassen');
+        this.set_title(action === 'filed' ? _('Record as filed') : _('Record as paid'));
         this.set_content_width(500);
         this.set_content_height(480);
         this.set_child(this.build());
@@ -91,15 +92,16 @@ export class BhFristErledigenDialog extends Adw.Dialog {
         const group = new Adw.PreferencesGroup({
             title: markup(this.target.label),
             description: filed
-                ? 'Die Jahresformulare werden von Hand in Mein ELSTER abgegeben — hier wird nur ' +
-                  'festgehalten, dass es passiert ist, damit der Termin nicht weiter mahnt.'
-                : 'Wird die Zahlung erfasst, verschwindet der Posten aus den offenen Steuerzahlungen.',
+                ? _(
+                      'The annual forms are filed by hand in Mein ELSTER — this only records that it happened, so the date stops nagging.',
+                  )
+                : _('Once the payment is recorded, the item leaves the open tax payments.'),
         });
-        this.date.set_title(filed ? 'Abgegeben am (JJJJ-MM-TT)' : 'Bezahlt am (JJJJ-MM-TT)');
+        this.date.set_title(filed ? _('Filed on (YYYY-MM-DD)') : _('Paid on (YYYY-MM-DD)'));
         group.add(this.date);
-        this.amount.set_title(filed ? 'Anmeldungssoll' : 'Gezahlter Betrag');
+        this.amount.set_title(filed ? _('Declared amount') : _('Amount paid'));
         group.add(this.amount);
-        this.reference.set_title(filed ? 'Transferticket' : 'Zahlungsbeleg');
+        this.reference.set_title(filed ? _('Transfer ticket') : _('Payment receipt'));
         group.add(this.reference);
         group.add(this.note);
         box.append(group);
@@ -117,7 +119,7 @@ export class BhFristErledigenDialog extends Adw.Dialog {
             marginStart: 12,
             marginEnd: 12,
         });
-        const save = new Gtk.Button({ label: 'Erfassen' });
+        const save = new Gtk.Button({ label: _('Record') });
         save.add_css_class('suggested-action');
         save.add_css_class('pill');
         save.connect('clicked', () => this.onSave());
@@ -129,12 +131,12 @@ export class BhFristErledigenDialog extends Adw.Dialog {
     private onSave(): void {
         const date = (this.date.get_text() ?? '').trim();
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-            this.warn('Datum muss im Format JJJJ-MM-TT stehen.');
+            this.warn(_('The date must be in the format YYYY-MM-DD.'));
             return;
         }
         const amount = parseAmount(this.amount.get_text() ?? '');
         if (amount === undefined) {
-            this.warn('Betrag ist keine Zahl — bitte prüfen (Komma als Dezimaltrennzeichen).');
+            this.warn(_('The amount is not a number — please check (comma as the decimal separator).'));
             return;
         }
 
@@ -143,7 +145,12 @@ export class BhFristErledigenDialog extends Adw.Dialog {
         const note = (this.note.get_text() ?? '').trim();
         // The reference belongs in the note rather than in a field of its own: the register has no
         // column for it, and inventing one would be a schema change for a string nobody queries.
-        const combined = [reference ? `${filed ? 'Transferticket' : 'Beleg'}: ${reference}` : null, note || null]
+        const combined = [
+            reference
+                ? fmt(filed ? _('Transfer ticket: {reference}') : _('Receipt: {reference}'), { reference })
+                : null,
+            note || null,
+        ]
             .filter(Boolean)
             .join(' · ');
 
@@ -157,10 +164,10 @@ export class BhFristErledigenDialog extends Adw.Dialog {
                 ...(filed ? { filedAt: date, declaredAmount: amount } : { paidAt: date, amount }),
                 ...(combined ? { note: combined } : {}),
             });
-            this.done(filed ? 'Als abgegeben erfasst' : 'Als bezahlt erfasst', true);
+            this.done(filed ? _('Recorded as filed') : _('Recorded as paid'), true);
             this.close();
         } catch (err) {
-            this.warn(`Konnte nicht erfassen: ${err instanceof Error ? err.message : String(err)}`);
+            this.warn(fmt(_('Could not record: {error}'), { error: err instanceof Error ? err.message : String(err) }));
         }
     }
 
