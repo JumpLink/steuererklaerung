@@ -265,9 +265,12 @@ export class BhSteuerView extends Adw.Bin {
         for (const cat of cats) {
             // The sentinel category is a compared and persisted id — translate only what is shown.
             const label = cat.category === UNKLASSIFIZIERT ? _('(unclassified)') : cat.category;
+            // The sentinel has no EÜR bucket, so the aggregate repeats the category as the bucket —
+            // which would put the raw id back in the title the label just replaced.
+            const bucket = cat.bucket === UNKLASSIFIZIERT ? label : cat.bucket;
             const row = rows.add(
                 new Adw.ActionRow({
-                    title: markup(cat.bucket || label),
+                    title: markup(bucket || label),
                     subtitle: markup(
                         `${label} · ${fmt(_n('{n} booking', '{n} bookings', cat.count), { n: cat.count })}`,
                     ),

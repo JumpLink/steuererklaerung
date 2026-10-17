@@ -390,7 +390,9 @@ export class BhZeitenView extends Adw.Bin {
                 ? _('Today')
                 : day.relative === 'yesterday'
                   ? _('Yesterday')
-                  : new Date(`${day.day}T12:00:00`).toLocaleDateString('de-DE', {
+                  : // The only date in the UI spelled with words. `undefined` takes the process
+                    // locale, so a German user reads "Mi., 16. September" exactly as before.
+                    new Date(`${day.day}T12:00:00`).toLocaleDateString(undefined, {
                         weekday: 'short',
                         day: '2-digit',
                         month: 'long',
