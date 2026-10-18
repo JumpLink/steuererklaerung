@@ -377,7 +377,11 @@ export class BhZuPruefenView extends Adw.Bin {
 
     private renderDoneDetail(item: ZuPruefenRow): void {
         const group = new Adw.PreferencesGroup();
-        const row = new Adw.ActionRow({ title: _p('reviewed item', 'Done'), subtitle: this.done.get(item.id) ?? '', useMarkup: false });
+        const row = new Adw.ActionRow({
+            title: _p('reviewed item', 'Done'),
+            subtitle: this.done.get(item.id) ?? '',
+            useMarkup: false,
+        });
         row.add_prefix(new Gtk.Image({ iconName: 'object-select-symbolic', cssClasses: ['success'] }));
         group.add(row);
         this._detail_box.append(group);

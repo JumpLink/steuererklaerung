@@ -12,7 +12,8 @@ import { join } from 'node:path';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const DIR = join(ROOT, 'src/frontends/desktop');
-const WIDGETS = 'ActionRow|ExpanderRow|SwitchRow|ComboRow|SpinRow|EntryRow|PreferencesGroup|PreferencesRow|Banner|Toast|StatusPage|ButtonRow';
+const WIDGETS =
+    'ActionRow|ExpanderRow|SwitchRow|ComboRow|SpinRow|EntryRow|PreferencesGroup|PreferencesRow|Banner|Toast|StatusPage|ButtonRow';
 const PROPS = new Set(['title', 'subtitle', 'description']);
 
 /**
@@ -98,8 +99,16 @@ for (const file of walk(DIR)) {
         for (const e of list) {
             if (!PROPS.has(e.key) || !readsData(e.value)) continue;
             const abs = text.slice(0, open + 1 + e.at + body.slice(e.at).search(/\S/)).split('\n').length;
-            if (text.split('\n').slice(abs - 1, abs + 2).some((l) => l.includes('markup-ok'))) continue;
-            problems.push(`${file.slice(ROOT.length)}:${abs}: ${m[0].slice(4, -2)} ${e.key}: ${e.value.slice(0, 60).replace(/\s+/g, ' ')} — markup() oder useMarkup: false`);
+            if (
+                text
+                    .split('\n')
+                    .slice(abs - 1, abs + 2)
+                    .some((l) => l.includes('markup-ok'))
+            )
+                continue;
+            problems.push(
+                `${file.slice(ROOT.length)}:${abs}: ${m[0].slice(4, -2)} ${e.key}: ${e.value.slice(0, 60).replace(/\s+/g, ' ')} — markup() oder useMarkup: false`,
+            );
         }
     }
 }

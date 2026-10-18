@@ -118,17 +118,19 @@ function saveAnlagen(host: SettingsHost, entity: AppEntity, rows: AnlageRowWidge
     if (host.isFilling()) return;
     // Typed map (not `unknown[]`) so the shared writer validates the shape; the widgets don't surface
     // `vorsteuerabzug`, so it's omitted here exactly as before (setAdjArray dropped it too).
-    const list = rows.map((w): ElsterAnlagegut => ({
-        id: (w.id.get_text() ?? '').trim(),
-        bezeichnung: (w.bezeichnung.get_text() ?? '').trim(),
-        anschaffung: (w.anschaffung.get_text() ?? '').trim(),
-        ahk: money2(w.ahk.get_value()),
-        nutzungsdauer_jahre: Math.round(w.nutzungsdauer.get_value()),
-        restbuchwert_anfang: money2(w.restbuchwert.get_value()),
-        erinnerungswert: w.erinnerungswert,
-        art: w.art.get_selected() === 1 ? 'gebaeude' : 'beweglich',
-        ...(w.buchung_ids?.length ? { buchung_ids: w.buchung_ids } : {}),
-    }));
+    const list = rows.map(
+        (w): ElsterAnlagegut => ({
+            id: (w.id.get_text() ?? '').trim(),
+            bezeichnung: (w.bezeichnung.get_text() ?? '').trim(),
+            anschaffung: (w.anschaffung.get_text() ?? '').trim(),
+            ahk: money2(w.ahk.get_value()),
+            nutzungsdauer_jahre: Math.round(w.nutzungsdauer.get_value()),
+            restbuchwert_anfang: money2(w.restbuchwert.get_value()),
+            erinnerungswert: w.erinnerungswert,
+            art: w.art.get_selected() === 1 ? 'gebaeude' : 'beweglich',
+            ...(w.buchung_ids?.length ? { buchung_ids: w.buchung_ids } : {}),
+        }),
+    );
     host.saveWith(() => saveAnlageverzeichnis(entity, list), { clearCache: true });
 }
 
@@ -261,7 +263,10 @@ function addSonderRow(
     partners: Partner[],
     item: ElsterSonderbetriebsausgabe,
 ): void {
-    const row = new Adw.ExpanderRow({ title: item.bezeichnung.trim() || _('New special partner expense'), useMarkup: false });
+    const row = new Adw.ExpanderRow({
+        title: item.bezeichnung.trim() || _('New special partner expense'),
+        useMarkup: false,
+    });
     const save = () => saveSonder(host, entity, rows, partners);
     const idx = Math.max(
         0,
