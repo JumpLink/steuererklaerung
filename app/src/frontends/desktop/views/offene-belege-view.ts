@@ -115,7 +115,9 @@ export class BhOffeneBelegeView extends Adw.Bin {
 
     private monthGroup(m: { month: number; rows: BelegGapRow[]; vat: number }, year: number): Adw.PreferencesGroup {
         const group = new Adw.PreferencesGroup({
+            // markup-ok: numbers / catalogue text only
             title: `${MONTHS[m.month] ?? m.month} ${year}`,
+            // markup-ok: numbers / catalogue text only
             description: fmt(_('{n} open · {amount} input VAT'), { n: m.rows.length, amount: eur(m.vat) }),
         });
         for (const r of m.rows) group.add(this.buildRow(r));

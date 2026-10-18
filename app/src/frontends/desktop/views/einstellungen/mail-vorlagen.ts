@@ -205,7 +205,7 @@ export function buildMailTemplatesGroup(
     if (templates.length) group.add(defaultRow);
 
     for (const t of templates) {
-        const row = new Adw.ActionRow({ title: t.name, subtitle: t.subject, activatable: true });
+        const row = new Adw.ActionRow({ title: t.name, subtitle: t.subject, activatable: true, useMarkup: false });
         const del = new Gtk.Button({ iconName: 'user-trash-symbolic', valign: Gtk.Align.CENTER });
         del.add_css_class('flat');
         del.set_tooltip_text(_('Delete template'));

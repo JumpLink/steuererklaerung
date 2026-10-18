@@ -342,6 +342,7 @@ export class BhBelegEingangView extends Adw.Bin {
     private belegGroup(doc: DmsDocument): Gtk.Widget {
         const group = new Adw.PreferencesGroup({
             title: _('Receipt'),
+            // markup-ok: numbers / catalogue text only
             description: DMS_LABEL[this.kind] ?? this.kind,
         });
         const title = new Adw.ActionRow({
@@ -354,7 +355,7 @@ export class BhBelegEingangView extends Adw.Bin {
 
         const fact = (label: string, value: string | null) => {
             if (!value) return;
-            const row = new Adw.ActionRow({ title: label });
+            const row = new Adw.ActionRow({ title: label, useMarkup: false });
             row.add_suffix(new Gtk.Label({ label: value, cssClasses: ['dim-label'], valign: Gtk.Align.CENTER }));
             group.add(row);
         };
@@ -566,6 +567,7 @@ export class BhBelegEingangView extends Adw.Bin {
         const page = new Adw.StatusPage({
             iconName: 'object-select-symbolic',
             title: fresh ? _('All matched') : _('All checked'),
+            // markup-ok: numbers / catalogue text only
             description: fresh
                 ? fmt(_('Every receipt in {year} is matched to a transaction. New receipts appear here.'), {
                       year: this.year,

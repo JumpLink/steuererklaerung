@@ -152,6 +152,7 @@ export class BhForderungenView extends Adw.Bin {
             if (!klasse) continue;
             const row = new Adw.ExpanderRow({
                 title: markup(k.label),
+                // markup-ok: numbers / catalogue text only
                 subtitle: klasse.anzahl
                     ? fmt(_n('{n} invoice', '{n} invoices', klasse.anzahl), { n: klasse.anzahl })
                     : _('none'),

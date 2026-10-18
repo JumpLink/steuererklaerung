@@ -296,6 +296,7 @@ export function openAnlagegutErfassen(
 
     const group = new Adw.PreferencesGroup({
         title: _('Asset'),
+        // markup-ok: numbers / catalogue text only
         description: vorbelegung
             ? fmt(
                   _n(

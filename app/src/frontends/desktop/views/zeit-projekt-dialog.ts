@@ -10,6 +10,7 @@ import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 import type { Project } from '../../../core/config/index.ts';
 import { _ } from '../i18n.ts';
+import { markup } from './util.ts';
 
 export interface ZeitProjektDialogInit {
     /** What the entry says now, for the heading. */
@@ -28,7 +29,7 @@ export class BhZeitProjektDialog {
     constructor(private readonly init: ZeitProjektDialogInit) {
         this.dialog.set_title(_('Assign project'));
 
-        const group = new Adw.PreferencesGroup({ title: init.title });
+        const group = new Adw.PreferencesGroup({ title: markup(init.title) });
         this.row = new Adw.ComboRow({
             title: _('Project'),
             subtitle: init.projects.length ? '' : _('No project for this customer yet (Projects view)'),

@@ -99,6 +99,7 @@ export class BhProjektDetailDialog {
         this.dialog.set_title(p.name);
 
         const ergebnis = new Adw.PreferencesGroup({
+            // markup-ok: numbers / catalogue text only
             title: fmt(_('Project result {year}'), { year: a.year }),
             description: markup(_('Internal evaluation, not a tax figure. Net, without VAT.')),
         });

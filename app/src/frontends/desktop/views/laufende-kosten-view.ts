@@ -127,7 +127,9 @@ export class BhLaufendeKostenView extends Adw.Bin {
         const lernmodus = lernmodusOn();
 
         const offen = new Adw.PreferencesGroup({
+            // markup-ok: numbers / catalogue text only
             title: u.vorschlaege.length ? zuBestaetigenTitel(u.vorschlaege.length) : _('Recurring costs'),
+            // markup-ok: numbers / catalogue text only
             description:
                 _(
                     'Regular debits to the same recipient, detected from all bookings. Only confirmed ones count in Free to spend and drop out of the money checks.',
@@ -244,7 +246,11 @@ export class BhLaufendeKostenView extends Adw.Bin {
             knopf(_('Take back'), _('Take back'), () => void this.entscheide(k, { status: 'vorschlag' }), 'flat');
         }
         for (const z of [...k.zahlungen].reverse()) {
-            const r = new Adw.ActionRow({ title: deDate(z.datum), subtitle: markup(k.empfaenger), activatable: true });
+            const r = new Adw.ActionRow({
+                title: markup(deDate(z.datum)),
+                subtitle: markup(k.empfaenger),
+                activatable: true,
+            });
             r.add_suffix(amountLabel(eur(-z.betrag)));
             r.add_suffix(new Gtk.Image({ iconName: 'go-next-symbolic', cssClasses: ['dim-label'] }));
             r.connect('activated', () => void this.openTx(z.id, z.datum));

@@ -22,6 +22,7 @@ import { aktiveFragen, type IntakeQuestion } from '../../../core/actions/elster/
 import type { EstKind } from '../../../core/config/schema/est.ts';
 import { comboRow, spinRow, toggleRow, type SettingsHost } from './einstellungen/rows.ts';
 import { _, _p, fmt } from '../i18n.ts';
+import { markup } from './util.ts';
 
 /** Full month names for the month combo — a function so the translator is already registered. */
 function monate(): string[] {
@@ -145,7 +146,10 @@ export class BhSteuerAssistentView extends Adw.Bin {
             this.page.remove(this.questionsGroup);
             this.questionsGroup = undefined;
         }
-        const group = new Adw.PreferencesGroup({ title: this.topic.titel, description: this.topic.beschreibung });
+        const group = new Adw.PreferencesGroup({
+            title: markup(this.topic.titel),
+            description: markup(this.topic.beschreibung),
+        });
 
         // Per-child topics: pick the child first (context); Übernehmen stays blocked until one is chosen.
         if (this.topic.proKind) group.add(this.kindContextRow());
@@ -154,7 +158,7 @@ export class BhSteuerAssistentView extends Adw.Bin {
         const gateIds = new Set(this.topic.fragen.filter((q) => q.wennId).map((q) => q.wennId as string));
         for (const q of aktiveFragen(this.topic.fragen, this.answers)) group.add(this.questionRow(q, gateIds));
 
-        const preview = new Adw.ActionRow({ title: _('Preview'), subtitleLines: 0 });
+        const preview = new Adw.ActionRow({ title: _('Preview'), subtitleLines: 0, useMarkup: false });
         this.previewRow = preview;
         group.add(preview);
 

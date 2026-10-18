@@ -169,6 +169,7 @@ export class BhVertragVorschlagDialog {
         const labels = PROPOSAL_FIELD_LABEL();
         for (const field of proposal.fields) {
             const row = new Adw.SwitchRow({
+                // markup-ok: numbers / catalogue text only
                 title: labels[field.field],
                 subtitle: markup(fieldSubtitle(field)),
                 active: field.differs,

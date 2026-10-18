@@ -85,6 +85,7 @@ export class BhProjektZuordnenDialog extends Adw.Dialog {
         });
 
         const ziel = new Adw.PreferencesGroup({
+            // markup-ok: numbers / catalogue text only
             title: fmt(_n('{n} expense', '{n} expenses', this.ids.length), { n: this.ids.length }),
             description: markup(_('The assignment changes no figure of the EÜR, only the project result.')),
         });

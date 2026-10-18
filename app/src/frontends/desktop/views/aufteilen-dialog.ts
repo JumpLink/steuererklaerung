@@ -151,6 +151,7 @@ export class BhAufteilenDialog extends Adw.Dialog {
         summary.set_header_suffix(new BhGlossaryHelp('splitbuchung', lernmodusOn()));
         const betrag = new Adw.ActionRow({
             title: _('Amount'),
+            // markup-ok: numbers / catalogue text only
             subtitle: `${a.bookingDate.split('-').reverse().join('.')}`,
         });
         betrag.add_suffix(new Gtk.Label({ label: `${fmtDe(a.amount)} €`, cssClasses: ['numeric', 'title-4'] }));

@@ -14,6 +14,7 @@ import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 import { parseGermanInput } from '../../../core/lib/parsing.ts';
 import { _, _p, fmt } from '../i18n.ts';
+import { markup } from './util.ts';
 
 export interface ZeitRechnungOptions {
     hourlyRate: number;
@@ -60,8 +61,8 @@ export class BhZeitRechnungDialog {
 
         const page = new Adw.PreferencesPage();
         const group = new Adw.PreferencesGroup({
-            title: init.project,
-            description: fmt(_('{hours} h for {customer}'), { hours: init.hours, customer: init.customer }),
+            title: markup(init.project),
+            description: markup(fmt(_('{hours} h for {customer}'), { hours: init.hours, customer: init.customer })),
         });
 
         this.rateRow.set_text('');

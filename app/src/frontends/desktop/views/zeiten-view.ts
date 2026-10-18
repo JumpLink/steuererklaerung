@@ -311,6 +311,7 @@ export class BhZeitenView extends Adw.Bin {
                     fmt(_n('{n} entry', '{n} entries', row.entries), { n: row.entries }),
                     who,
                 ].join(' · '),
+                useMarkup: false,
             });
             action.add_suffix(
                 new Gtk.Label({ label: formatDuration(row.seconds), cssClasses: ['numeric', 'dim-label'] }),

@@ -222,7 +222,7 @@ export class BhRechnungFormDialog {
 
     /** Append one position expander row and track its widgets. */
     private addItemRow(item: InvoiceItemDraft): void {
-        const row = new Adw.ExpanderRow({ title: item.title || _('New line item'), expanded: true });
+        const row = new Adw.ExpanderRow({ title: item.title || _('New line item'), expanded: true, useMarkup: false });
         const w: ItemWidgets = {
             row,
             title: new Adw.EntryRow({ title: _('Item name'), text: item.title }),
@@ -289,6 +289,7 @@ export class BhRechnungFormDialog {
             const row = new Adw.ActionRow({
                 title: e.description?.trim() || project.name,
                 subtitle: `${e.startedAt.slice(0, 10)} · ${formatDuration(e.durationSeconds ?? 0)}`,
+                useMarkup: false,
             });
             const check = new Gtk.CheckButton({ active: true, valign: Gtk.Align.CENTER });
             row.add_prefix(check);
