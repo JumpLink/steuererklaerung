@@ -19,14 +19,15 @@ whole path from bank transaction to filed return on your own machine.
 | ![Receipt inbox](docs/screenshots/02-beleg-eingang.png) | ![Reports](docs/screenshots/08-auswertungen.png) |
 
 All screenshots use the bundled demo entity: an invented company with invented numbers.
-The app UI and most documentation are in German. A [screen-by-screen tour](docs/app/README.md)
-shows every view.
+The app follows your system language — English and German, with the official German tax
+terms kept in both. A [screen-by-screen tour](docs/app/README.md) shows every view in German.
 
 ## Who it is for
 
 German freelancers and small businesses who prepare their own tax returns, including
-English speakers living in Germany who file via ELSTER. The tax logic follows German law, so
-the interface and terms stay German. This README glosses them where needed.
+English speakers living in Germany who file via ELSTER. The interface speaks English and
+German; the tax logic follows German law, so the official terms stay German in both. This
+README glosses them where needed.
 
 ## Features
 

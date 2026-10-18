@@ -44,7 +44,7 @@ das fertige Ergebnis sind und nie ein Zwischenstand.
 
 ## 1. Übersicht — Zahlen und was als Nächstes ansteht
 
-![Übersicht](../screenshots/01-uebersicht.png)
+![Übersicht](../screenshots/01-uebersicht-de.png)
 
 Der Einstieg: Gewinn, Einnahmen, Ausgaben und die Steuer-Prognose des Jahres als Kacheln,
 darunter **Als Nächstes** (die nächsten Fristen mit Fälligkeit und Begründung), der Verlauf von
@@ -58,7 +58,7 @@ bequeme Linse auf dieselben Daten, keine Steuerberatung.
 
 ## 2. Beleg-Eingang — Belege prüfen und zuordnen
 
-![Beleg-Eingang](../screenshots/02-beleg-eingang.png)
+![Beleg-Eingang](../screenshots/02-beleg-eingang-de.png)
 
 Der erste von drei Reitern unter **Beleg-Eingang**, und die Arbeitsfläche für neue Belege: links
 die Warteschlange, rechts der Beleg mit den extrahierten Feldern (Datum, Rechnungsnummer, netto,
@@ -78,7 +78,7 @@ sich ihre Vorsteuer gefahrlos abziehen lässt.
 
 ## 4. Alle Belege — der Dokumentenbestand
 
-![Alle Belege](../screenshots/04-belege.png)
+![Alle Belege](../screenshots/04-belege-de.png)
 
 Der dritte Reiter listet alle Belege des Entität-Jahres über denselben `DmsProvider`, den auch
 die Web-Oberfläche benutzt: beim eingebauten DMS ein lokaler SQLite-Zugriff, bei einer
@@ -87,7 +87,7 @@ Korrespondent, Datum, Belegnummer, Betrag und die Buchungsverknüpfung.
 
 ## 5. Buchungen — das Journal
 
-![Buchungen](../screenshots/05-buchungen.png)
+![Buchungen](../screenshots/05-buchungen-de.png)
 
 Alle Buchungen des Entität-Jahres über sämtliche Konten: oben eine Übersichtskarte (Anzahl,
 Einnahmen, Ausgaben, Saldo), darunter Suche, Filter (Alle · Einnahmen · Ausgaben · **Ohne
@@ -97,7 +97,7 @@ kein ausgehender Aufruf, die Ansicht ist sofort da.
 
 ## 6. Rechnungen — Ausgangsrechnungen und Wiederkehrendes
 
-![Rechnungen](../screenshots/06-rechnungen.png)
+![Rechnungen](../screenshots/06-rechnungen-de.png)
 
 Oben Offen / Überfällig / Bezahlt als Summen, dann zwei Abschnitte: **Wiederkehrende Rechnungen**
 (Verträge mit Intervall, Fälligkeit und „Entwurf erstellen") und **Alle Rechnungen** mit
@@ -249,7 +249,7 @@ Betrag in der Zeile.
 
 ## 8. Auswertungen — BWA und Einblicke
 
-![Auswertungen](../screenshots/08-auswertungen.png)
+![Auswertungen](../screenshots/08-auswertungen-de.png)
 
 Oben die betriebswirtschaftliche Auswertung: Gesamtleistung, Rohertrag, Betriebskosten und
 Betriebsergebnis als Summen über einer **Monatsmatrix** (Jan–Dez, Erträge, Kostengruppen,
@@ -260,7 +260,7 @@ Kleinunternehmer-Grenze) mit dem jeweiligen Betrag und der Rechtsgrundlage. Ausd
 
 ## 9. Steuer › Erklärung — der Weg zur Abgabe
 
-![Steuererklärung](../screenshots/09-steuererklaerung.png)
+![Steuererklärung](../screenshots/09-steuererklaerung-de.png)
 
 Der erste Reiter des Steuer-Hubs und die Antwort auf „kann ich abgeben?". Oben die
 voraussichtliche Nachzahlung mit ihren Bestandteilen, darunter der Abgabestatus mit dem Grund,
@@ -272,7 +272,7 @@ Abgabe noch zu klären.
 
 ## 10. Steuer › EÜR — Anlage EÜR
 
-![Anlage EÜR](../screenshots/10-euer.png)
+![Anlage EÜR](../screenshots/10-euer-de.png)
 
 Die Gewinnermittlung nach § 4 Abs. 3 EStG: Betriebseinnahmen, Betriebsausgaben, Gewinn und
 USt-Zahllast, darunter Einnahmen und Ausgaben nach Kategorie mit SKR-Konto und Buchungszahl.

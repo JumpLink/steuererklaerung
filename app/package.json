@@ -161,7 +161,7 @@
                     "p": "It runs on your machine: your bank data and documents stay in a local store. Every figure can be traced back to the transaction it came from."
                 },
                 {
-                    "p": "It works fully without AI: you write your own classification rules instead of letting a model guess. An assistant is optional and off by default."
+                    "p": "It works without AI: you write your own classification rules instead of letting a model guess, and no figure depends on a model."
                 },
                 {
                     "p": "The tax logic follows German law, so the interface keeps the official German terms. The app is a preparation aid, not tax advice."
