@@ -15,8 +15,9 @@
 #   5. „Später" is remembered: the relaunch shows neither the welcome nor the setup assistant but the
 #      setup banner; closing it keeps it closed across a relaunch, and a NEW gap (an entity without a
 #      bank account) brings it back.
-#   6. Settings keep the assistant and the MCP server apart; „Externen Agenten verbinden …" shows the
-#      client config; „Jetzt sichern" runs in a child process while the window shows „Wird gesichert …".
+#   6. Settings offer the MCP server but no AI engine — this build does not have the assistant;
+#      „Externen Agenten verbinden …" shows the client config; „Jetzt sichern" runs in a child
+#      process while the window shows „Wird gesichert …".
 # With a shots-dir the welcome pages and the Settings groups are written there, as welcome-*.png in the
 # language of E2E_LANG (default de_DE.UTF-8).
 #
@@ -147,7 +148,7 @@ wait_bus
 await "$L_BANNER"
 [ "$(setting welcomeCompleted)" = True ] || fail "welcomeCompleted not recorded"
 [ "$(setting preferredMode)" = demo ] || fail "preferredMode: $(setting preferredMode)"
-[ "$(setting aiAssistant)" = False ] || fail "aiAssistant must default to off: $(setting aiAssistant)"
+[ "$(setting aiAssistant)" = None ] || fail "a build without the assistant must not record aiAssistant: $(setting aiAssistant)"
 [ -e "$T/cfg/steuererklaerung/steuererklaerung.json" ] && fail "the welcome wrote a manifest"
 step "„$L_DEMO“ → „$L_START“ restarts the app in demo mode; the choice is in settings.json, no manifest written"
 
@@ -220,11 +221,11 @@ await "$L_GAP"
 await "Erika Muster"
 step "an entity without a bank account is a new gap and brings the banner back"
 
-# ── 6. Settings: AI and MCP apart, the agent config, a backup in the background ──────────────────────
+# ── 6. Settings: the MCP server, the agent config, a backup in the background ───────────────────────
 launch "$T/run" STEUER_DEMO=1 STEUER_APP_VIEW=settings STEUER_APP_SIZE="1100 1500" STEUER_APP_SCROLL=end
-await "$L_ENGINE"
+absent "$L_ENGINE"
 await "$L_MCP"
-step "Settings show the assistant and the MCP server as separate groups"
+step "Settings offer the MCP server, and no engine row for the assistant this build does not have"
 shot_as ai-mcp-settings
 click "$L_CONNECT" AdwButtonRow
 await "Claude Code"
