@@ -43,7 +43,7 @@ and `NoticeDeadline.reason` (see [ADR 0004](../adr/0004-contracts.md)).
 ## Done
 
 The desktop UI is fully English: every view, dialog and Blueprint template, plus the core strings
-they display. 188 source files (162 TypeScript, 26 Blueprint), 3019 msgids — 118 with plurals, 96
+they display. 188 source files (162 TypeScript, 26 Blueprint), 3018 msgids — 118 with plurals, 96
 with a context.
 
 | Area | What |

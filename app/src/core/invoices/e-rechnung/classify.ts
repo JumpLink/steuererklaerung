@@ -114,8 +114,8 @@ export function classifyWithoutDataSet(isPdf: boolean): EInvoiceClassification {
         'ohne-datensatz',
         null,
         isPdf
-            ? _('PDF without an embedded data set — not an E-Rechnung but an other invoice.')
-            : _('Image or scan without a data set — not an E-Rechnung but an other invoice.'),
+            ? _('PDF without an embedded data set — an “Other invoice”, not an E-Rechnung.')
+            : _('Image or scan without a data set — an “Other invoice”, not an E-Rechnung.'),
     );
 }
 

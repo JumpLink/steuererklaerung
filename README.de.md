@@ -13,12 +13,12 @@ Veranlagungszeitraum 2020 nicht mehr zugelassen. Was bleibt, ist das Browser-Por
 Versuch, den Weg von der Bankbuchung bis zum Transferticket auf dem eigenen Rechner
 zusammenhängend zu machen.
 
-![Übersicht](docs/screenshots/01-uebersicht.png)
+![Übersicht](docs/screenshots/01-uebersicht-de.png)
 
 | | |
 |---|---|
-| ![Steuererklärung](docs/screenshots/09-steuererklaerung.png) | ![Anlage EÜR](docs/screenshots/10-euer.png) |
-| ![Beleg-Eingang](docs/screenshots/02-beleg-eingang.png) | ![Auswertungen](docs/screenshots/08-auswertungen.png) |
+| ![Steuererklärung](docs/screenshots/09-steuererklaerung-de.png) | ![Anlage EÜR](docs/screenshots/10-euer-de.png) |
+| ![Beleg-Eingang](docs/screenshots/02-beleg-eingang-de.png) | ![Auswertungen](docs/screenshots/08-auswertungen-de.png) |
 
 Alle Bilder stammen aus der mitgelieferten Demo-Entität — erfundene Firma, erfundene
 Zahlen. Der [Bildschirm-für-Bildschirm-Rundgang](docs/app/README.md) zeigt jede Ansicht.

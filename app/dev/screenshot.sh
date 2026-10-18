@@ -16,6 +16,9 @@
 #                           has a full duplicate on RE-2025-0004 and a partial overpayment on RE-2026-0003
 #   STEUER_APP_TX_DETAIL=1  open the Buchungs-Detail sheet on the first classified booking
 #   STEUER_APP_MAIL_DIALOG=1 open the invoice mail dialog on the first issued invoice (view rechnungen)
+#   STEUER_SHOT_HOLD=1      do NOT capture: set the view up and hold the window open, so that
+#                           `headless-run --window-shot OUT.png -- app/dev/screenshot.sh …` takes
+#                           the picture (window + shadow + rounded corners on transparency)
 #   STEUER_SHOT_SCREENCAST=1 capture the compositor's monitor at its physical resolution (2× under
 #                           `headless-run --scale 2 --size <2×W>x<2×H>`) instead of devtools' 1× render
 #   STEUER_SHOT_KEEP_SHADOW=1 with SCREENCAST: keep the whole monitor frame (window + shadow), no crop
@@ -187,6 +190,17 @@ if [ -n "${STEUER_SHOT_ACTIVATE:-}" ]; then
   esac
   # Whatever the activation triggers (navigation, a dialog, a reload) needs its own settle.
   sleep "${STEUER_SHOT_SETTLE:-2.5}"
+fi
+
+if [ "${STEUER_SHOT_HOLD:-}" = "1" ]; then
+  # Set the stage, then stand still. `headless-run --window-shot` takes the picture itself — it
+  # mattes the window off the backdrop, so it gets the shadow and the rounded corners that neither
+  # devtools' in-process render nor the screencast crop can produce. But it needs its command to
+  # STAY ALIVE: a screenshot.sh that captures and exits trips "the command exited before the shot".
+  # So hold here and let the rig kill the whole process group when it is done.
+  echo "holding $VIEW${TAB:+ ($TAB)} for an external capture" >&2
+  while kill -0 "$APP_PID" 2>/dev/null; do sleep 1; done
+  exit 0
 fi
 
 if [ "${STEUER_SHOT_SCREENCAST:-}" = "1" ]; then
