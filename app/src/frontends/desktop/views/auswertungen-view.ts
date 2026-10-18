@@ -96,7 +96,9 @@ export class BhAuswertungenView extends Adw.Bin {
                     help: 'gesamtleistung',
                 },
                 { label: 'Rohertrag', value: eur(r.totals.rohertrag), help: 'rohertrag' },
-                { label: _('Total operating costs'), value: eur(r.totals.betriebskosten) },
+                // German like its three neighbours and like the BWA row right below it
+                // (core/elster/bwa.ts) — the BWA metric names are the labels, in both languages.
+                { label: 'Summe Betriebskosten', value: eur(r.totals.betriebskosten) },
                 {
                     label: 'Betriebsergebnis',
                     value: eur(ergebnis),
