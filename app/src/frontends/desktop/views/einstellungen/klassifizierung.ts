@@ -262,6 +262,7 @@ function presentRuleEditor(
         // exception list is never a field only a text editor can reach.
         if (pair.ausnahmen.length > 0) {
             const row = new Adw.ActionRow({
+                // markup-ok: numbers / catalogue text only
                 title: fmt(_n('{count} exception', '{count} exceptions', pair.ausnahmen.length), {
                     count: pair.ausnahmen.length,
                 }),

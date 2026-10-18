@@ -109,6 +109,7 @@ export class BhUstvaView extends Adw.Bin {
     private addQuarter(q: UstvaQuarter, year: number): void {
         const a = q.aggregate;
         const group = new Adw.PreferencesGroup({
+            // markup-ok: numbers / catalogue text only
             title: `Q${q.quarter} ${year}`,
             description: _('VAT advance return · cash accounting'),
         });
@@ -160,6 +161,7 @@ export class BhUstvaView extends Adw.Bin {
 
         const belege = new Adw.ExpanderRow({
             title: _('Receipts'),
+            // markup-ok: numbers / catalogue text only
             subtitle: [
                 fmt(_('{n} outgoing'), { n: q.outgoing.length }),
                 fmt(_('{n} incoming'), { n: q.incoming.length }),

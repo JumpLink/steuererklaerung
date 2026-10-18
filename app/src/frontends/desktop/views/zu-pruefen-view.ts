@@ -298,7 +298,7 @@ export class BhZuPruefenView extends Adw.Bin {
     private buchungGroup(item: ZuPruefenRow): Gtk.Widget {
         const group = new Adw.PreferencesGroup({
             title: markup(item.counterparty?.trim() || '—'),
-            description: [deDate(item.bookingDate), item.account].filter(Boolean).join('  ·  '),
+            description: markup([deDate(item.bookingDate), item.account].filter(Boolean).join('  ·  ')),
         });
         group.set_header_suffix(
             amountLabel(eur(item.amount), { heading: true, accent: item.amount < 0 ? 'error' : 'success' }),
@@ -377,7 +377,7 @@ export class BhZuPruefenView extends Adw.Bin {
 
     private renderDoneDetail(item: ZuPruefenRow): void {
         const group = new Adw.PreferencesGroup();
-        const row = new Adw.ActionRow({ title: _p('reviewed item', 'Done'), subtitle: this.done.get(item.id) ?? '' });
+        const row = new Adw.ActionRow({ title: _p('reviewed item', 'Done'), subtitle: this.done.get(item.id) ?? '', useMarkup: false });
         row.add_prefix(new Gtk.Image({ iconName: 'object-select-symbolic', cssClasses: ['success'] }));
         group.add(row);
         this._detail_box.append(group);
@@ -389,6 +389,7 @@ export class BhZuPruefenView extends Adw.Bin {
         const page = new Adw.StatusPage({
             iconName: 'object-select-symbolic',
             title: _('All reviewed'),
+            // markup-ok: numbers / catalogue text only
             description: fresh
                 ? fmt(_('Every transaction in {year} is classified by a receipt, an own rule or by hand.'), {
                       year: this.year,

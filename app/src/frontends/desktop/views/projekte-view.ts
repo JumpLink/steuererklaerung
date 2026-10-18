@@ -110,6 +110,7 @@ export class BhProjekteView extends Adw.Bin {
         const contracts = [...data.schedulesByProject.values()].reduce((sum, ids) => sum + ids.length, 0);
         this.summary.add(
             new Adw.ActionRow({
+                // markup-ok: numbers / catalogue text only
                 title: fmt(_('{n} in total'), { n: data.projects.length }),
                 subtitle: fmt(_('{n} assigned recurring invoices'), { n: contracts }),
             }),

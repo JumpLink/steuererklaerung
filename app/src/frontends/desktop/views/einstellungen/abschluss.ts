@@ -89,7 +89,7 @@ function addAnlageRow(
     rows: AnlageRowWidgets[],
     item: ElsterAnlagegut,
 ): void {
-    const row = new Adw.ExpanderRow({ title: item.bezeichnung.trim() || _('New asset') });
+    const row = new Adw.ExpanderRow({ title: item.bezeichnung.trim() || _('New asset'), useMarkup: false });
     const save = () => saveAnlagen(host, entity, rows);
     const w: AnlageRowWidgets = {
         row,
@@ -190,7 +190,7 @@ function addPrivatanteilRow(
     rows: PrivatanteilRowWidgets[],
     item: ElsterPrivatanteil,
 ): void {
-    const row = new Adw.ExpanderRow({ title: item.bezeichnung.trim() || _('New private share') });
+    const row = new Adw.ExpanderRow({ title: item.bezeichnung.trim() || _('New private share'), useMarkup: false });
     const save = () => savePrivatanteile(host, entity, rows);
     const w: PrivatanteilRowWidgets = {
         row,
@@ -261,7 +261,7 @@ function addSonderRow(
     partners: Partner[],
     item: ElsterSonderbetriebsausgabe,
 ): void {
-    const row = new Adw.ExpanderRow({ title: item.bezeichnung.trim() || _('New special partner expense') });
+    const row = new Adw.ExpanderRow({ title: item.bezeichnung.trim() || _('New special partner expense'), useMarkup: false });
     const save = () => saveSonder(host, entity, rows, partners);
     const idx = Math.max(
         0,

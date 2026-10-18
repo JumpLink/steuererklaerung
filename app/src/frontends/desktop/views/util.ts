@@ -18,10 +18,8 @@ import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 import { wrappingLabel } from '../widgets/responsive.ts';
 import { _, _p, fmt } from '../i18n.ts';
 
-/** Escape a plain string for the Pango-markup labels Adwaita rows / status pages use. */
-export function markup(text: string): string {
-    return GLib.markup_escape_text(text, -1);
-}
+import { markup } from './markup.ts';
+export { markup };
 
 /**
  * Who is operating this app — recorded as the author of a decision that the store keeps forever

@@ -92,7 +92,7 @@ export class BhTxDetailDialog {
     /** One "label → value" row; returns null (skipped) when the value is empty. */
     private row(label: string, value: string | null | undefined): Adw.ActionRow | null {
         if (value == null || value === '') return null;
-        const r = new Adw.ActionRow({ title: label, subtitle: value });
+        const r = new Adw.ActionRow({ title: label, subtitle: value, useMarkup: false });
         r.set_subtitle_selectable(true);
         r.set_subtitle_lines(0);
         return r;
@@ -109,8 +109,8 @@ export class BhTxDetailDialog {
         // Hero header (mirrors the web <bh-modal-amt>): counterparty · date+account · big signed amount.
         const account = r.account?.trim();
         const group = new Adw.PreferencesGroup({
-            title: r.counterparty?.trim() || '—',
-            description: [deDate(r.bookingDate), account].filter(Boolean).join('  ·  '),
+            title: markup(r.counterparty?.trim() || '—'),
+            description: markup([deDate(r.bookingDate), account].filter(Boolean).join('  ·  ')),
         });
         const accent = r.amount < 0 ? 'error' : r.amount > 0 ? 'success' : undefined;
         group.set_header_suffix(
@@ -188,6 +188,7 @@ export class BhTxDetailDialog {
             const part = new Adw.ActionRow({
                 title: p.rest ? fmt(_('Part {n} · remainder'), { n: p.nr }) : fmt(_('Part {n}'), { n: p.nr }),
                 subtitle: `${p.category} · ${Math.round(p.vatRate * 100)} %${p.betrieblich ? '' : ` · ${_('private, no input VAT')}`}`,
+                useMarkup: false,
             });
             part.set_subtitle_lines(0);
             part.add_suffix(new Gtk.Label({ label: eur(p.betrag), cssClasses: ['numeric'], valign: Gtk.Align.CENTER }));
@@ -283,7 +284,7 @@ export class BhTxDetailDialog {
         const danach = wasGiltDanach(r);
         if (!danach) return null;
         if (istAufteilung(r)) {
-            const row = new Adw.ActionRow({ title: _('Remove split'), subtitle: danach });
+            const row = new Adw.ActionRow({ title: _('Remove split'), subtitle: danach, useMarkup: false });
             row.set_subtitle_lines(0);
             const button = new Gtk.Button({ label: _p('split', 'Remove'), valign: Gtk.Align.CENTER });
             button.add_css_class('destructive-action');
@@ -299,7 +300,7 @@ export class BhTxDetailDialog {
         // A linked Erstattung is undone by lifting the link; the sentence says what applies then.
         const erstattung = istErstattung(r);
         const title = erstattung ? _p('refund', 'Unlink') : _('Take back transfer');
-        const row = new Adw.ActionRow({ title, subtitle: danach });
+        const row = new Adw.ActionRow({ title, subtitle: danach, useMarkup: false });
         row.set_subtitle_lines(0);
         const button = new Gtk.Button({
             label: erstattung ? _p('button', 'Unlink') : _('Take back'),

@@ -22,6 +22,7 @@ export function rechnungsartRow(
     if (!doc.invoiceKind || doc.direction === 'outgoing') return null;
     const eRechnung = doc.invoiceKind === 'e-rechnung';
     const row = new Adw.ActionRow({
+        // markup-ok: numbers / catalogue text only
         title: invoiceKindLabel(doc.invoiceKind),
         subtitle: markup(doc.invoiceKindReason ?? ''),
     });

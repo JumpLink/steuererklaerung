@@ -143,6 +143,7 @@ export class BhRegelAusAuswahlDialog extends Adw.Dialog {
         }
 
         const treffer = new Adw.PreferencesGroup({
+            // markup-ok: numbers / catalogue text only
             title: fmt(_n('Matches {n} transaction', 'Matches {n} transactions', v.treffer.length), {
                 n: v.treffer.length,
             }),

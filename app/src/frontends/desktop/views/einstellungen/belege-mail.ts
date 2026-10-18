@@ -124,7 +124,7 @@ export function buildBelegeMailGroup(host: SettingsHost, entity: AppEntity, pare
     });
     group.add(save);
 
-    const result = new Adw.ActionRow({ title: _('Last fetch'), subtitle: lastLine(entity.id) });
+    const result = new Adw.ActionRow({ title: _('Last fetch'), subtitle: lastLine(entity.id), useMarkup: false });
     result.set_subtitle_lines(0);
     const refreshResult = (): void => result.set_subtitle(lastLine(entity.id));
 

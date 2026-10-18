@@ -24,7 +24,7 @@ import { deDate } from '../../../core/lib/format.ts';
 import type { AppEntity } from '../entities.ts';
 import { showToast } from '../toast.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
-import { LoadToken, saveFileViaDialog } from './util.ts';
+import { LoadToken, markup, saveFileViaDialog } from './util.ts';
 import { _, fmt } from '../i18n.ts';
 
 const STUFEN: (1 | 2 | 3)[] = [1, 2, 3];
@@ -56,10 +56,12 @@ export class BhMahnungDialog {
         this.stufeRow.set_selected(STUFEN.indexOf(posten.naechsteStufe ?? 3));
 
         const gruppe = new Adw.PreferencesGroup({
-            title: fmt(_('Invoice {number} · {customer}'), {
-                number: posten.nummer ?? posten.rechnungId,
-                customer: posten.kunde,
-            }),
+            title: markup(
+                fmt(_('Invoice {number} · {customer}'), {
+                    number: posten.nummer ?? posten.rechnungId,
+                    customer: posten.kunde,
+                }),
+            ),
             description: _(
                 'This is a draft. The app sends nothing — you copy the text or open it in your ' +
                     'mail program. Only once you have sent it yourself do you mark the level as sent.',

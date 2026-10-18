@@ -292,7 +292,7 @@ export class BhHomeView extends Adw.Bin {
     private tasksGroup(m: HomeModel): Gtk.Widget {
         const group = new Adw.PreferencesGroup({ title: _('Up next') });
         for (const t of m.tasks) {
-            const row = new Adw.ActionRow({ title: t.title, subtitle: t.sub });
+            const row = new Adw.ActionRow({ title: t.title, subtitle: t.sub, useMarkup: false });
             // Leading marker tinted by the task tone (warn = amber) — same signal as the web badge.
             const meta = TASK_TONE[t.tone] ?? TASK_TONE.neutral;
             row.add_prefix(new Gtk.Image({ iconName: meta.icon, cssClasses: [meta.css], valign: Gtk.Align.CENTER }));

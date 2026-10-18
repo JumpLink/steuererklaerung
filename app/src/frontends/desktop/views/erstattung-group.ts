@@ -127,6 +127,7 @@ export function erstattungGroup(
             if (frage.kandidaten.length > 1) {
                 const andere = new Adw.ActionRow({
                     title: _('Pick another payment …'),
+                    // markup-ok: numbers / catalogue text only
                     subtitle: fmt(_n('{n} candidate', '{n} candidates', frage.kandidaten.length), {
                         n: frage.kandidaten.length,
                     }),

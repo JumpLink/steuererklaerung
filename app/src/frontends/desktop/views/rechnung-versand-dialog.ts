@@ -126,7 +126,10 @@ export class BhRechnungVersandDialog {
             );
         if (this.setup.account && this.storedPassword) {
             accounts.add(
-                new Adw.ActionRow({ title: fmt(_('From: {sender} (SMTP)'), { sender: this.setup.account.from }) }),
+                new Adw.ActionRow({
+                    title: fmt(_('From: {sender} (SMTP)'), { sender: this.setup.account.from }),
+                    useMarkup: false,
+                }),
             );
         } else {
             const missing = new Adw.ActionRow({
@@ -148,6 +151,7 @@ export class BhRechnungVersandDialog {
 
         const message = new Adw.PreferencesGroup({
             title: _('Message'),
+            // markup-ok: numbers / catalogue text only
             description: fmt(_('Invoice {number} is attached as a PDF. Subject and text can be changed.'), {
                 number: this.summary.number ?? '',
             }),
@@ -208,6 +212,7 @@ export class BhRechnungVersandDialog {
                             h.result === 'sent'
                                 ? fmt(_('to {recipients}'), { recipients: h.to.join(', ') })
                                 : (h.error ?? ''),
+                        useMarkup: false,
                     }),
                 );
             }

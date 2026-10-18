@@ -13,6 +13,7 @@ import { mcpClientSnippets, resolveMcpLaunch, type McpClientSnippet } from '../.
 import { currentMcpInstallation, currentMcpPlatform } from '../self-launch.ts';
 import { showToast } from '../toast.ts';
 import { _, fmt } from '../i18n.ts';
+import { markup } from './util.ts';
 
 export function currentMcpSnippets(): McpClientSnippet[] {
     // Deliberately WITHOUT `readOnly`: the person registered this client themselves, so
@@ -22,8 +23,8 @@ export function currentMcpSnippets(): McpClientSnippet[] {
 
 function snippetGroup(s: McpClientSnippet): Adw.PreferencesGroup {
     const group = new Adw.PreferencesGroup({
-        title: s.name,
-        description: s.kind === 'shell' ? _('Run in a terminal') : fmt(_('Add to {file}'), { file: s.target }),
+        title: markup(s.name),
+        description: markup(s.kind === 'shell' ? _('Run in a terminal') : fmt(_('Add to {file}'), { file: s.target })),
     });
     const copy = new Gtk.Button({ iconName: 'edit-copy-symbolic', tooltipText: _('Copy'), valign: Gtk.Align.CENTER });
     copy.add_css_class('flat');

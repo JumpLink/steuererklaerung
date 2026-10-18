@@ -313,6 +313,7 @@ export class BhHerleitungDialog {
         // Buchungen — the contributing transactions, with a provenance chip each.
         const bookings = new Adw.PreferencesGroup({
             title: _('Bookings'),
+            // markup-ok: numbers / catalogue text only
             description: provenanceSummary(ex.provenanceMix),
         });
         if (ex.contributors.length === 0) {
