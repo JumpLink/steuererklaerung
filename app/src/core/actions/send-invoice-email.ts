@@ -39,7 +39,9 @@ import type { MailSender, OutgoingMessage, SendResult, SmtpAccount } from '../ma
 import {
     BUILTIN_TEMPLATE_ID,
     buildInvoiceMail,
+    renderMailTemplate,
     unknownMailPlaceholders,
+    type InvoiceMailContext,
     type InvoiceMailDraft,
 } from '../mail/invoice-mail.ts';
 import { getOutgoingInvoicePdfBytes } from './outgoing-invoices.ts';
@@ -55,6 +57,8 @@ export interface InvoiceMailRequest {
     to: string[];
     subject: string;
     text: string;
+    /** When set, placeholders left in subject and text are filled from it, in preview and send alike. */
+    context?: InvoiceMailContext;
     account: SmtpAccount;
 }
 
@@ -119,11 +123,19 @@ function redact(text: string, account: SmtpAccount): string {
     return secret ? text.split(secret).join('***') : text;
 }
 
+/** Fill the placeholders of an edited subject and text, so what is previewed is what is sent. */
+export function resolveRequestText(req: InvoiceMailRequest): InvoiceMailRequest {
+    const { context } = req;
+    if (!context) return req;
+    return { ...req, subject: renderMailTemplate(req.subject, context), text: renderMailTemplate(req.text, context) };
+}
+
 export async function sendInvoiceEmail(
-    req: InvoiceMailRequest,
+    request: InvoiceMailRequest,
     opts: { confirm: boolean; allowUnknownPlaceholders?: boolean },
     deps: SendInvoiceEmailDeps,
 ): Promise<SendInvoiceEmailResult> {
+    const req = resolveRequestText(request);
     validate(req);
     const pdf = await deps.loadPdf();
     if (!pdf) throw new Error('Zur Rechnung gibt es kein PDF zum Anhängen.');
@@ -408,6 +420,28 @@ export interface InvoiceMailFacts {
     url?: string | null;
 }
 
+/** The placeholder values for one invoice; the draft and the send both render from this. */
+export function invoiceMailContext(setup: InvoiceMailSetup, invoice: InvoiceMailFacts): InvoiceMailContext {
+    return {
+        number: invoice.number,
+        total: invoice.total,
+        net: invoice.net,
+        issueDate: invoice.issueDate,
+        period: invoice.period,
+        dueDate: invoice.dueDate,
+        customerName: setup.facts.customerName,
+        domains: setup.facts.domains,
+        description: setup.facts.description,
+        projectName: setup.facts.projectName,
+        itemTitles: setup.facts.itemTitles,
+        greeting: setup.greeting,
+        formality: setup.formality,
+        closing: setup.closing,
+        issuerName: setup.issuerName,
+        paymentUrl: invoice.url && /^https:\/\//i.test(invoice.url) ? invoice.url : null,
+    };
+}
+
 /** The proposed subject and text for one invoice. Both frontends draft through here. */
 export function draftInvoiceMail(
     setup: InvoiceMailSetup,
@@ -415,24 +449,7 @@ export function draftInvoiceMail(
     templateId: string = setup.templateId,
 ): InvoiceMailDraft {
     return buildInvoiceMail(
-        {
-            number: invoice.number,
-            total: invoice.total,
-            net: invoice.net,
-            issueDate: invoice.issueDate,
-            period: invoice.period,
-            dueDate: invoice.dueDate,
-            customerName: setup.facts.customerName,
-            domains: setup.facts.domains,
-            description: setup.facts.description,
-            projectName: setup.facts.projectName,
-            itemTitles: setup.facts.itemTitles,
-            greeting: setup.greeting,
-            formality: setup.formality,
-            closing: setup.closing,
-            issuerName: setup.issuerName,
-            paymentUrl: invoice.url && /^https:\/\//i.test(invoice.url) ? invoice.url : null,
-        },
+        invoiceMailContext(setup, invoice),
         setup.templates.find((t) => t.id === templateId),
     );
 }

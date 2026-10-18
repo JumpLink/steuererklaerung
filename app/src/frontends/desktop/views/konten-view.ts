@@ -161,7 +161,7 @@ export class BhKontenView extends Adw.Bin {
                   )
                 : status.error
                   ? fmt(_('Library cannot be loaded: {error}'), { error: status.error })
-                  : fmt(_('not found — expected at {path}'), { path: status.libPath }) +
+                  : fmt(_('not found — expected at {path}'), { path: displayPath(status.libPath) }) +
                     (status.missing.length ? fmt(_(' · missing: {names}'), { names: status.missing.join(', ') }) : '') +
                     fmt(_n(' · {n} plugin', ' · {n} plugins', status.pluginCount), { n: status.pluginCount });
             statusRow.set_subtitle(markup(detail));
