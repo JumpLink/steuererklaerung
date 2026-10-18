@@ -78,6 +78,23 @@ export default async () => {
             expect(logs.length).toBe(0);
         });
 
+        await it('fills placeholders of an edited text identically in preview and send', async () => {
+            const sender = new FakeSender();
+            const edited: InvoiceMailRequest = {
+                ...request,
+                subject: 'Rechnung {rechnungsnummer}',
+                text: 'Online ansehen und bezahlen: {zahlungslink}',
+                context: { number: 'RE-0001', total: 119, dueDate: null, paymentUrl: 'https://pay.example.invalid/r/1' },
+            };
+            const deps = { sender, loadPdf: pdf, now };
+            const preview = await sendInvoiceEmail(edited, { confirm: false }, deps);
+            expect(preview.preview.text).toBe('Online ansehen und bezahlen: https://pay.example.invalid/r/1');
+            expect(preview.preview.unknownPlaceholders.length).toBe(0);
+            await sendInvoiceEmail(edited, { confirm: true }, deps);
+            expect(sender.sent[0].message.text).toBe(preview.preview.text);
+            expect(sender.sent[0].message.subject).toBe('Rechnung RE-0001');
+        });
+
         await it('sends exactly once on confirm and writes the log', async () => {
             const sender = new FakeSender();
             const logs: SentLog[] = [];

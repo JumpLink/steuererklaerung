@@ -13,6 +13,8 @@ import Gtk from '@girs/gtk-4.0';
 import {
     defaultInvoiceMailDeps,
     draftInvoiceMail,
+    invoiceMailContext,
+    type InvoiceMailFacts,
     loadInvoiceMailSetup,
     sendInvoiceEmail,
     type InvoiceMailRequest,
@@ -240,21 +242,25 @@ export class BhRechnungVersandDialog {
         this.applyTemplate(this.currentTemplate);
     }
 
+    private invoiceFacts(): InvoiceMailFacts {
+        return {
+            number: this.summary.number ?? '',
+            total: this.summary.total ?? null,
+            dueDate: this.summary.dueDate ?? null,
+            issueDate: this.summary.issueDate ?? null,
+            period:
+                this.summary.performanceStart && this.summary.performanceEnd
+                    ? { start: this.summary.performanceStart, end: this.summary.performanceEnd }
+                    : null,
+            url: this.summary.url,
+        };
+    }
+
     /** Draft subject and text from a template; marks the fields as untouched. */
     private applyTemplate(templateId: string): void {
         const mail = draftInvoiceMail(
             this.setup,
-            {
-                number: this.summary.number ?? '',
-                total: this.summary.total ?? null,
-                dueDate: this.summary.dueDate ?? null,
-                issueDate: this.summary.issueDate ?? null,
-                period:
-                    this.summary.performanceStart && this.summary.performanceEnd
-                        ? { start: this.summary.performanceStart, end: this.summary.performanceEnd }
-                        : null,
-                url: this.summary.url,
-            },
+            this.invoiceFacts(),
             templateId,
         );
         this.filling = true;
@@ -340,6 +346,7 @@ export class BhRechnungVersandDialog {
                 .filter(Boolean),
             subject: this.subjectRow.get_text(),
             text: this.currentText(),
+            context: invoiceMailContext(this.setup, this.invoiceFacts()),
             account,
         };
     }
