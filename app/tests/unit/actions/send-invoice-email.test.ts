@@ -84,7 +84,12 @@ export default async () => {
                 ...request,
                 subject: 'Rechnung {rechnungsnummer}',
                 text: 'Online ansehen und bezahlen: {zahlungslink}',
-                context: { number: 'RE-0001', total: 119, dueDate: null, paymentUrl: 'https://pay.example.invalid/r/1' },
+                context: {
+                    number: 'RE-0001',
+                    total: 119,
+                    dueDate: null,
+                    paymentUrl: 'https://pay.example.invalid/r/1',
+                },
             };
             const deps = { sender, loadPdf: pdf, now };
             const preview = await sendInvoiceEmail(edited, { confirm: false }, deps);

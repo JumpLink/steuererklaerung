@@ -258,11 +258,7 @@ export class BhRechnungVersandDialog {
 
     /** Draft subject and text from a template; marks the fields as untouched. */
     private applyTemplate(templateId: string): void {
-        const mail = draftInvoiceMail(
-            this.setup,
-            this.invoiceFacts(),
-            templateId,
-        );
+        const mail = draftInvoiceMail(this.setup, this.invoiceFacts(), templateId);
         this.filling = true;
         this.subjectRow.set_text(mail.subject);
         this.textView.get_buffer().set_text(mail.text, -1);

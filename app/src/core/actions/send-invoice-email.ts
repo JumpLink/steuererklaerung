@@ -423,22 +423,22 @@ export interface InvoiceMailFacts {
 /** The placeholder values for one invoice; the draft and the send both render from this. */
 export function invoiceMailContext(setup: InvoiceMailSetup, invoice: InvoiceMailFacts): InvoiceMailContext {
     return {
-            number: invoice.number,
-            total: invoice.total,
-            net: invoice.net,
-            issueDate: invoice.issueDate,
-            period: invoice.period,
-            dueDate: invoice.dueDate,
-            customerName: setup.facts.customerName,
-            domains: setup.facts.domains,
-            description: setup.facts.description,
-            projectName: setup.facts.projectName,
-            itemTitles: setup.facts.itemTitles,
-            greeting: setup.greeting,
-            formality: setup.formality,
-            closing: setup.closing,
-            issuerName: setup.issuerName,
-            paymentUrl: invoice.url && /^https:\/\//i.test(invoice.url) ? invoice.url : null,
+        number: invoice.number,
+        total: invoice.total,
+        net: invoice.net,
+        issueDate: invoice.issueDate,
+        period: invoice.period,
+        dueDate: invoice.dueDate,
+        customerName: setup.facts.customerName,
+        domains: setup.facts.domains,
+        description: setup.facts.description,
+        projectName: setup.facts.projectName,
+        itemTitles: setup.facts.itemTitles,
+        greeting: setup.greeting,
+        formality: setup.formality,
+        closing: setup.closing,
+        issuerName: setup.issuerName,
+        paymentUrl: invoice.url && /^https:\/\//i.test(invoice.url) ? invoice.url : null,
     };
 }
 
