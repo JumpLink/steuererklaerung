@@ -108,6 +108,12 @@ jobs:
       - name: Format check
         run: cd app && gjsify run format:check
 
+      # The store listing is the first thing a stranger sees. `appstream` is already installed above
+      # (appstreamcli); `flatpak-builder-lint` is not, and needs the built manifest, so the manifest
+      # lint stays with the flatpak job and only the MetaInfo is checked here, offline.
+      - name: MetaInfo passes appstreamcli and the Flathub quality guidelines
+        run: cd app && gjsify flatpak check --no-builder-lint --metainfo data/eu.jumplink.Steuererklaerung.metainfo.xml ../eu.jumplink.Steuererklaerung.json
+
       - name: Build GJS bundle
         run: cd app && gjsify run build:gjs
 
