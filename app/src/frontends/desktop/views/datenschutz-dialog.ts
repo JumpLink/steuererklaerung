@@ -17,6 +17,7 @@ import { join } from 'node:path';
 import { getEricStatus } from '../../../core/actions/elster/eric-status.ts';
 import {
     acknowledgePrivacy,
+    backupNoticeText,
     isPrivacyAcknowledged,
     logFileNoticeText,
     privacyNoticeText,
@@ -51,6 +52,9 @@ export async function ensurePrivacyAck(parent: Gtk.Widget): Promise<boolean> {
     });
     logNote.add_css_class('dim-label');
     box.append(logNote);
+
+    const backupNote = new Gtk.Label({ label: backupNoticeText(), wrap: true, xalign: 0 });
+    box.append(backupNote);
 
     const open = new Gtk.Button({
         label: hasLetter ? _('Open the full privacy letter (PDF)') : _('Open the privacy letter on elster.de'),

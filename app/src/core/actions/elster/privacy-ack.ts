@@ -72,6 +72,11 @@ export function privacyNoticeText(): string {
     );
 }
 
+/** The backup advice the licence (§ 5 para. 8) prescribes: users are told to secure their data. */
+export function backupNoticeText(): string {
+    return _('Please back up your data before you send and at regular intervals: Settings → Backup → Back up now.');
+}
+
 /** The log-file notice the licence (§ 15) prescribes; {path} is where ERiC writes them. */
 export function logFileNoticeText(): string {
     return _(

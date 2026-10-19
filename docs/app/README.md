@@ -270,6 +270,13 @@ Regel), sind die nicht zahlungswirksamen Anpassungen erfasst (AfA, Privatanteil,
 Betriebsaufgabe), stehen die Formulare mit ihren Kennzahlen und Exporten, und was ist vor der
 Abgabe noch zu klären.
 
+**Vor der Übermittlung sichern.** Die ERiC-Lizenz verlangt den Hinweis, die eigenen Daten zu
+sichern; der Datenschutzdialog vor der ersten Übermittlung nennt ihn ebenfalls. Lege vor jeder
+Übermittlung und auch sonst regelmäßig eine Sicherung an: **Einstellungen → Sicherung → „Jetzt
+sichern"** (Details: [Sicherung und Wiederherstellung](backup.md)).
+
+![Datenschutzdialog mit Sicherungshinweis](../screenshots/datenschutz-dialog-de.png)
+
 ## 10. Steuer › EÜR — Anlage EÜR
 
 ![Anlage EÜR](../screenshots/10-euer-de.png)

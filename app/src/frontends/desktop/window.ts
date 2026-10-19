@@ -31,6 +31,7 @@ import { isAssistantEnabled, loadMailEingang, loadManifest } from '../../core/co
 import { capabilities } from '../../core/countries/index.ts';
 import { loadAppWorkspace, type AppEntity, type AppWorkspace } from './entities.ts';
 import { showToast } from './toast.ts';
+import { ensurePrivacyAck } from './views/datenschutz-dialog.ts';
 import { showSupportPrompt } from './views/support-dialog.ts';
 import { presentRemoveEntity, presentRenameEntity } from './views/entity-dialogs.ts';
 import { BhSetupAssistant } from './views/setup-assistant.ts';
@@ -579,6 +580,8 @@ export class MainWindow extends Adw.ApplicationWindow {
         // STEUER_APP_SUPPORT_PROMPT=1 (dev/testing hook): show the post-filing support prompt right away,
         // so it can be screenshotted without a real ELSTER submission. Bypasses the once-per-year ledger.
         if (process.env.STEUER_APP_SUPPORT_PROMPT === '1') void showSupportPrompt(this);
+        // STEUER_APP_PRIVACY_DIALOG=1 (dev/testing hook): the privacy notice before the first send.
+        if (process.env.STEUER_APP_PRIVACY_DIALOG === '1') void ensurePrivacyAck(this);
     }
 
     /**
