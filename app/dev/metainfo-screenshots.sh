@@ -15,10 +15,9 @@
 # Every view is taken twice: `<name>.png` in English for the metainfo's <image> and for README.md,
 # `<name>-de.png` for README.de.md and the German manual in docs/app/README.md. That is the rule for
 # every view this script takes; a figure of the German manual that was never taken in English keeps
-# its plain name and stays German. The metainfo gets the English shot only: it is generated from
-# `gjsify.ship` (dev/metainfo.sh), and gjsify renders one <image> per screenshot with no way to add
-# a localized one — a hand-written <image xml:lang="de"> would be dropped on the next regeneration
-# and would never reach the shipped file anyway.
+# its plain name and stays German. The metainfo takes both: the English shot as <image>, the German twin as
+# <image xml:lang="de"> through `localizedUrls` of each screenshot in `gjsify.ship` (package.json),
+# so a new twin needs that entry too. Views without a twin stay English-only.
 # The German catalogue is compiled first and GJSIFY_LOCALE_DIR set explicitly: `gjsify run` sets
 # none, and without it the app silently falls back to English.
 set -euo pipefail

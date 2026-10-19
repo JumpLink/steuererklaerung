@@ -19,26 +19,32 @@
   <screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/01-uebersicht.png</image>
+      <image xml:lang="de">https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/01-uebersicht-de.png</image>
       <caption>Overview with key figures and what to do next</caption>
     </screenshot>
     <screenshot>
       <image>https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/04-belege.png</image>
+      <image xml:lang="de">https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/04-belege-de.png</image>
       <caption>Receipts, linked to transactions</caption>
     </screenshot>
     <screenshot>
       <image>https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/05-buchungen.png</image>
+      <image xml:lang="de">https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/05-buchungen-de.png</image>
       <caption>All transactions of all accounts, searchable</caption>
     </screenshot>
     <screenshot>
       <image>https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/06-rechnungen.png</image>
+      <image xml:lang="de">https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/06-rechnungen-de.png</image>
       <caption>Outgoing invoices with status and recurring billing</caption>
     </screenshot>
     <screenshot>
       <image>https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/10-euer.png</image>
+      <image xml:lang="de">https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/10-euer-de.png</image>
       <caption>Anlage EÜR, every line down to its transactions</caption>
     </screenshot>
     <screenshot>
       <image>https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/09-steuererklaerung.png</image>
+      <image xml:lang="de">https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/09-steuererklaerung-de.png</image>
       <caption>Tax return with checks before filing</caption>
     </screenshot>
   </screenshots>
