@@ -41,3 +41,17 @@ export class EricBindingError extends EricNotAvailableError {
     this.cause = cause;
   }
 }
+
+/**
+ * koffi, the FFI that loads ERiC on Windows/macOS, could not be required: the module or its native
+ * prebuild is missing from this installation. ERiC itself may be present, so this must not read as
+ * "ERiC not installed". The message of the cause is kept.
+ */
+export class EricFfiError extends EricNotAvailableError {
+  readonly cause: string;
+
+  constructor(cause: string) {
+    super(`The native FFI module could not be loaded (${cause}). This installation is incomplete; reinstall the app.`);
+    this.cause = cause;
+  }
+}

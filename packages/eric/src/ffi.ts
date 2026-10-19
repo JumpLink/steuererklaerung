@@ -16,7 +16,7 @@ import { eric8bitPath, windowsShortPath } from './ascii-path.ts';
 import { appDataDir, baseLibraryPaths, getEricPaths, isEricAvailable, ERIC_NOT_FOUND_MESSAGE } from './paths.ts';
 import { ericPlatform } from './platform.ts';
 import { prepareLoad } from './runtime-env.ts';
-import { EricNotAvailableError } from './errors.ts';
+import { EricFfiError, EricNotAvailableError } from './errors.ts';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -32,18 +32,18 @@ type EricRueckgabepufferHandle = unknown;
 // koffi is a native addon with a prebuild per OS, and ERiC is optional: a build without it, or a
 // platform it does not exist for, must still start. A static `import koffi` made the whole app
 // bundle fail at start where the addon is missing. So it is required when ERiC is first called, and
-// a missing module reads as "ERiC not available".
+// a missing module is reported as EricFfiError, not as "ERiC not installed".
 type Koffi = typeof import('koffi');
 
 let koffiModule: Koffi | null = null;
 
-function loadKoffi(): Koffi {
+export function loadKoffi(): Koffi {
   if (koffiModule) return koffiModule;
   let koffi: Koffi;
   try {
     koffi = createRequire(import.meta.url)('koffi') as Koffi;
-  } catch {
-    throw new EricNotAvailableError(ERIC_NOT_FOUND_MESSAGE);
+  } catch (err) {
+    throw new EricFfiError(err instanceof Error ? err.message : String(err));
   }
   // Types are registered once, by name, process-wide — a second registration throws.
   koffi.opaque('EricReturnBufferApi');

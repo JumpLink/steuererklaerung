@@ -50,6 +50,8 @@ export interface EricStatus {
     error?: string;
     /** The native SteuerEric binding itself is unusable (stale prebuild), not ERiC: `error` is the raw GI text. */
     bindingBroken?: boolean;
+    /** koffi (the FFI on Windows/macOS) is missing from this installation; `error` is the raw cause. */
+    ffiMissing?: boolean;
     /**
      * False where no ERiC build exists (an architecture other than x86_64 / macOS). The UI says so
      * instead of asking the user to download something that would not be used.
@@ -125,8 +127,9 @@ export async function getEricStatus(ericHome?: string): Promise<EricStatus> {
         return {
             ...base,
             available: false,
-            error: err instanceof Error ? err.message : String(err),
+            error: err instanceof eric.EricFfiError ? err.cause : err instanceof Error ? err.message : String(err),
             ...(err instanceof eric.EricBindingError ? { bindingBroken: true } : {}),
+            ...(err instanceof eric.EricFfiError ? { ffiMissing: true } : {}),
         };
     } finally {
         try {

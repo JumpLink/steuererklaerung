@@ -16,7 +16,7 @@ export {
 } from './paths.ts';
 export type { EricPaths, EricHomeSource } from './paths.ts';
 
-export { EricError, EricNotAvailableError, EricBindingError } from './errors.ts';
+export { EricError, EricNotAvailableError, EricBindingError, EricFfiError } from './errors.ts';
 
 export {
   EricFlags,

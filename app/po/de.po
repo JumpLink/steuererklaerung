@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-19 12:18+0200\n"
+"POT-Creation-Date: 2026-10-19 15:09+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -27,7 +27,7 @@ msgstr ""
 #: src/core/actions/classification-rules.ts:48
 #: src/frontends/desktop/views/setup-assistant.ts:63
 #: src/frontends/desktop/views/setup-assistant.ts:468
-#: src/frontends/desktop/window.ts:722
+#: src/frontends/desktop/window.ts:725
 msgid "Private"
 msgstr "Privat"
 
@@ -1483,7 +1483,7 @@ msgid "Cross-check"
 msgstr "Gegenprüfung"
 
 #: src/core/actions/elster/wizard.ts:361 src/core/actions/elster/wizard.ts:637
-#: src/frontends/desktop/views/konten-view.ts:350
+#: src/frontends/desktop/views/konten-view.ts:356
 msgid "Check"
 msgstr "Prüfung"
 
@@ -4869,28 +4869,36 @@ msgid "Not confirmed yet. Run again with --bestaetigen once you have read it."
 msgstr ""
 "Noch nicht bestätigt. Nach dem Lesen erneut mit --bestaetigen ausführen."
 
-#: src/frontends/cli/elster/eric.ts:61
+#: src/frontends/cli/elster/eric.ts:62
+msgid ""
+"The native FFI module is missing from this installation, ERiC cannot be "
+"loaded: {error}"
+msgstr ""
+"Das FFI-Modul fehlt in dieser Installation, ERiC lässt sich nicht "
+"laden: {error}"
+
+#: src/frontends/cli/elster/eric.ts:68
 msgid "ERiC cannot be loaded: {error}"
 msgstr "ERiC lässt sich nicht laden: {error}"
 
-#: src/frontends/cli/elster/eric.ts:62
+#: src/frontends/cli/elster/eric.ts:69
 msgid "ERiC not found under {path}."
 msgstr "ERiC nicht gefunden unter {path}."
 
-#: src/frontends/cli/elster/eric.ts:66
+#: src/frontends/cli/elster/eric.ts:73
 #: src/frontends/desktop/views/konten-view.ts:152
 msgid "ERiC version unknown"
 msgstr "ERiC-Version unbekannt"
 
-#: src/frontends/cli/elster/eric.ts:67
+#: src/frontends/cli/elster/eric.ts:74
 msgid "Location: {path}"
 msgstr "Ort: {path}"
 
-#: src/frontends/cli/elster/eric.ts:68
+#: src/frontends/cli/elster/eric.ts:75
 msgid "Source: {source}"
 msgstr "Quelle: {source}"
 
-#: src/frontends/cli/elster/eric.ts:69
+#: src/frontends/cli/elster/eric.ts:76
 msgid "Check plugins: {count}"
 msgstr "Prüf-Plugins: {count}"
 
@@ -4909,7 +4917,7 @@ msgstr "Assistent"
 #: src/frontends/desktop/assistent-panel.blp:40
 #: src/frontends/desktop/lotse-panel.blp:36
 #: src/frontends/desktop/views/beleg-upload.ts:130
-#: src/frontends/desktop/views/konten-view.ts:680
+#: src/frontends/desktop/views/konten-view.ts:686
 #: src/frontends/desktop/window.blp:206
 msgid "Close"
 msgstr "Schließen"
@@ -5080,12 +5088,12 @@ msgstr "Kein Fenster offen, in dem die Bank gefragt werden könnte."
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:36
 #: src/frontends/desktop/views/entity-dialogs.ts:42
 #: src/frontends/desktop/views/entity-dialogs.ts:101
-#: src/frontends/desktop/views/konten-view.ts:768
-#: src/frontends/desktop/views/konten-view.ts:849
+#: src/frontends/desktop/views/konten-view.ts:774
+#: src/frontends/desktop/views/konten-view.ts:855
 #: src/frontends/desktop/views/laufende-kosten-view.ts:300
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:465
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:76
-#: src/frontends/desktop/window.ts:258
+#: src/frontends/desktop/window.ts:259
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -5289,7 +5297,7 @@ msgid "Navigation"
 msgstr "Navigation"
 
 #: src/frontends/desktop/sync-controller.ts:35
-#: src/frontends/desktop/views/konten-view.ts:798
+#: src/frontends/desktop/views/konten-view.ts:804
 msgid "just now"
 msgstr "gerade eben"
 
@@ -5958,7 +5966,7 @@ msgstr "Teile"
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:408
 #: src/frontends/desktop/views/kontakt-form-dialog.ts:83
 #: src/frontends/desktop/views/kontakt-form-dialog.ts:119
-#: src/frontends/desktop/views/konten-view.ts:850
+#: src/frontends/desktop/views/konten-view.ts:856
 #: src/frontends/desktop/views/projekt-form-dialog.ts:135
 #: src/frontends/desktop/views/projekt-form-dialog.ts:173
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:466
@@ -6708,7 +6716,7 @@ msgid "Add receipts"
 msgstr "Belege hinzufügen"
 
 #: src/frontends/desktop/views/dokumente-view.ts:175
-#: src/frontends/desktop/views/konten-view.ts:610
+#: src/frontends/desktop/views/konten-view.ts:616
 msgid "{n} transaction"
 msgid_plural "{n} transactions"
 msgstr[0] "{n} Buchung"
@@ -6844,7 +6852,7 @@ msgstr "Eigene Daten"
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:42
 #: src/frontends/desktop/views/welcome.ts:201
-#: src/frontends/desktop/window.ts:655
+#: src/frontends/desktop/window.ts:658
 msgid "Use my own data"
 msgstr "Eigene Daten verwenden"
 
@@ -7559,7 +7567,7 @@ msgstr "Gemeiner Wert (€)"
 
 #: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:191
 #: src/frontends/desktop/views/entity-dialogs.ts:102
-#: src/frontends/desktop/views/konten-view.ts:427
+#: src/frontends/desktop/views/konten-view.ts:433
 #: src/frontends/desktop/views/projekt-detail-dialog.ts:161
 msgid "Remove"
 msgstr "Entfernen"
@@ -9757,7 +9765,15 @@ msgstr ""
 msgid "ERiC status not available: {error}"
 msgstr "ERiC-Status nicht verfügbar: {error}"
 
-#: src/frontends/desktop/views/konten-view.ts:160
+#: src/frontends/desktop/views/konten-view.ts:159
+msgid ""
+"The native FFI module of this installation is missing, so ERiC cannot be "
+"loaded: {error}"
+msgstr ""
+"Das FFI-Modul dieser Installation fehlt, daher lässt sich ERiC nicht "
+"laden: {error}"
+
+#: src/frontends/desktop/views/konten-view.ts:164
 msgid ""
 "The ERiC binding of this installation is broken. Rebuild it with \"gjsify "
 "run -w @steuererklaerung/eric build:meson\" or reinstall the app."
@@ -9765,38 +9781,38 @@ msgstr ""
 "Die ERiC-Anbindung dieser Installation ist defekt. Baue sie mit „gjsify run "
 "-w @steuererklaerung/eric build:meson“ neu oder installiere die App neu."
 
-#: src/frontends/desktop/views/konten-view.ts:163
+#: src/frontends/desktop/views/konten-view.ts:167
 msgid "Library cannot be loaded: {error}"
 msgstr "Bibliothek nicht ladbar: {error}"
 
-#: src/frontends/desktop/views/konten-view.ts:164
+#: src/frontends/desktop/views/konten-view.ts:168
 msgid "not found — expected at {path}"
 msgstr "nicht gefunden — erwartet unter {path}"
 
-#: src/frontends/desktop/views/konten-view.ts:165
+#: src/frontends/desktop/views/konten-view.ts:170
 msgid " · missing: {names}"
 msgstr " · fehlend: {names}"
 
-#: src/frontends/desktop/views/konten-view.ts:166
+#: src/frontends/desktop/views/konten-view.ts:172
 msgid " · {n} plugin"
 msgid_plural " · {n} plugins"
 msgstr[0] " · {n} Plugin(s)"
 msgstr[1] " · {n} Plugin(s)"
 
-#: src/frontends/desktop/views/konten-view.ts:168
+#: src/frontends/desktop/views/konten-view.ts:174
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:522
 msgid "Error"
 msgstr "Fehler"
 
-#: src/frontends/desktop/views/konten-view.ts:168
+#: src/frontends/desktop/views/konten-view.ts:174
 msgid "not found"
 msgstr "nicht gefunden"
 
-#: src/frontends/desktop/views/konten-view.ts:175
+#: src/frontends/desktop/views/konten-view.ts:181
 msgid "ERiC log files"
 msgstr "ERiC-Protokolldateien"
 
-#: src/frontends/desktop/views/konten-view.ts:179
+#: src/frontends/desktop/views/konten-view.ts:185
 msgid ""
 "ERiC writes its log files locally to {path}. They stay on this computer and "
 "are passed on only in a support case and only with your explicit permission."
@@ -9805,15 +9821,15 @@ msgstr ""
 "Rechner und werden nur im Supportfall und nur mit deiner ausdrücklichen "
 "Erlaubnis weitergegeben."
 
-#: src/frontends/desktop/views/konten-view.ts:191
+#: src/frontends/desktop/views/konten-view.ts:197
 msgid "there is no ERiC for this architecture"
 msgstr "für diese Architektur gibt es kein ERiC"
 
-#: src/frontends/desktop/views/konten-view.ts:193
+#: src/frontends/desktop/views/konten-view.ts:199
 msgid "Sending to ELSTER is not possible"
 msgstr "Absenden an ELSTER nicht möglich"
 
-#: src/frontends/desktop/views/konten-view.ts:196
+#: src/frontends/desktop/views/konten-view.ts:202
 msgid ""
 "Generating and checking the XML still works; to send, upload the XML to Mein "
 "ELSTER or start the app on an x86_64 system."
@@ -9821,28 +9837,28 @@ msgstr ""
 "XML erzeugen und prüfen funktioniert weiter; zum Absenden das XML in Mein "
 "ELSTER hochladen oder die App auf einem x86_64-System starten."
 
-#: src/frontends/desktop/views/konten-view.ts:206
+#: src/frontends/desktop/views/konten-view.ts:212
 msgid "Own ERiC folder (overrides ERIC_HOME and the bundled one)"
 msgstr "Eigener ERiC-Ordner (hat Vorrang vor ERIC_HOME und dem mitgelieferten)"
 
-#: src/frontends/desktop/views/konten-view.ts:221
+#: src/frontends/desktop/views/konten-view.ts:227
 msgid "Choose ERiC folder (contains lib/libericapi.so)"
 msgstr "ERiC-Ordner wählen (enthält lib/libericapi.so)"
 
 #
-#: src/frontends/desktop/views/konten-view.ts:224
+#: src/frontends/desktop/views/konten-view.ts:230
 msgid "Choose ERiC folder"
 msgstr "ERiC-Ordner wählen"
 
-#: src/frontends/desktop/views/konten-view.ts:244
+#: src/frontends/desktop/views/konten-view.ts:250
 msgid "Reset to the bundled or detected ERiC"
 msgstr "Auf mitgeliefertes oder erkanntes ERiC zurücksetzen"
 
-#: src/frontends/desktop/views/konten-view.ts:257
+#: src/frontends/desktop/views/konten-view.ts:263
 msgid "Download ERiC yourself"
 msgstr "ERiC selbst herunterladen"
 
-#: src/frontends/desktop/views/konten-view.ts:260
+#: src/frontends/desktop/views/konten-view.ts:266
 msgid ""
 "This build does not bring ERiC with it (the licence allows redistribution "
 "only in the official release). After unpacking, choose the folder here that "
@@ -9857,134 +9873,134 @@ msgstr ""
 "hochladen geht."
 
 #
-#: src/frontends/desktop/views/konten-view.ts:267
+#: src/frontends/desktop/views/konten-view.ts:273
 msgid "Open elster.de"
 msgstr "elster.de öffnen"
 
-#: src/frontends/desktop/views/konten-view.ts:278
+#: src/frontends/desktop/views/konten-view.ts:284
 msgid "ELSTER certificate (.pfx)"
 msgstr "ELSTER-Zertifikat (.pfx)"
 
-#: src/frontends/desktop/views/konten-view.ts:284
+#: src/frontends/desktop/views/konten-view.ts:290
 msgid "Choose certificate file"
 msgstr "Zertifikatsdatei wählen"
 
-#: src/frontends/desktop/views/konten-view.ts:287
+#: src/frontends/desktop/views/konten-view.ts:293
 msgid "Choose ELSTER certificate"
 msgstr "ELSTER-Zertifikat wählen"
 
-#: src/frontends/desktop/views/konten-view.ts:321
+#: src/frontends/desktop/views/konten-view.ts:327
 msgid "ELSTER Hersteller-ID (bundled with the app, enter your own to override)"
 msgstr ""
 "ELSTER-Hersteller-ID (mitgeliefert; eigene eintragen zum Überschreiben)"
 
-#: src/frontends/desktop/views/konten-view.ts:322
+#: src/frontends/desktop/views/konten-view.ts:328
 msgid "ELSTER Hersteller-ID (elster.de)"
 msgstr "ELSTER-Hersteller-ID (elster.de)"
 
-#: src/frontends/desktop/views/konten-view.ts:325
+#: src/frontends/desktop/views/konten-view.ts:331
 msgid "bundled"
 msgstr "mitgeliefert"
 
-#: src/frontends/desktop/views/konten-view.ts:335
+#: src/frontends/desktop/views/konten-view.ts:341
 msgid "DatenLieferant (name)"
 msgstr "DatenLieferant (Name)"
 
-#: src/frontends/desktop/views/konten-view.ts:360
+#: src/frontends/desktop/views/konten-view.ts:366
 msgid "Certificate path could not be saved: {error}"
 msgstr "Zertifikat-Pfad konnte nicht gespeichert werden: {error}"
 
-#: src/frontends/desktop/views/konten-view.ts:363
+#: src/frontends/desktop/views/konten-view.ts:369
 msgid "Certificate path saved"
 msgstr "Zertifikat-Pfad gespeichert"
 
-#: src/frontends/desktop/views/konten-view.ts:363
+#: src/frontends/desktop/views/konten-view.ts:369
 msgid "Certificate path removed"
 msgstr "Zertifikat-Pfad entfernt"
 
-#: src/frontends/desktop/views/konten-view.ts:375
+#: src/frontends/desktop/views/konten-view.ts:381
 msgid "{label} could not be saved: {error}"
 msgstr "{label} konnte nicht gespeichert werden: {error}"
 
-#: src/frontends/desktop/views/konten-view.ts:378
+#: src/frontends/desktop/views/konten-view.ts:384
 msgid "{label} saved"
 msgstr "{label} gespeichert"
 
-#: src/frontends/desktop/views/konten-view.ts:390
-#: src/frontends/desktop/views/konten-view.ts:407
-#: src/frontends/desktop/views/konten-view.ts:845
+#: src/frontends/desktop/views/konten-view.ts:396
+#: src/frontends/desktop/views/konten-view.ts:413
+#: src/frontends/desktop/views/konten-view.ts:851
 msgid "Certificate PIN"
 msgstr "Zertifikat-PIN"
 
-#: src/frontends/desktop/views/konten-view.ts:391
+#: src/frontends/desktop/views/konten-view.ts:397
 msgid "Keyring not available — the PIN is asked for when sending."
 msgstr "Schlüsselbund nicht verfügbar — die PIN wird beim Senden abgefragt."
 
-#: src/frontends/desktop/views/konten-view.ts:408
+#: src/frontends/desktop/views/konten-view.ts:414
 msgid "stored in the keyring"
 msgstr "im Schlüsselbund hinterlegt"
 
-#: src/frontends/desktop/views/konten-view.ts:408
+#: src/frontends/desktop/views/konten-view.ts:414
 msgid "no PIN stored"
 msgstr "keine PIN hinterlegt"
 
-#: src/frontends/desktop/views/konten-view.ts:419
+#: src/frontends/desktop/views/konten-view.ts:425
 msgid "Change"
 msgstr "Ändern"
 
-#: src/frontends/desktop/views/konten-view.ts:419
+#: src/frontends/desktop/views/konten-view.ts:425
 msgid "Store"
 msgstr "Hinterlegen"
 
-#: src/frontends/desktop/views/konten-view.ts:444
+#: src/frontends/desktop/views/konten-view.ts:450
 msgid "Certificate PIN stored in the keyring"
 msgstr "Zertifikat-PIN im Schlüsselbund hinterlegt"
 
-#: src/frontends/desktop/views/konten-view.ts:445
+#: src/frontends/desktop/views/konten-view.ts:451
 msgid "Certificate PIN could not be saved."
 msgstr "Zertifikat-PIN konnte nicht gespeichert werden."
 
-#: src/frontends/desktop/views/konten-view.ts:454
+#: src/frontends/desktop/views/konten-view.ts:460
 msgid "Certificate PIN removed"
 msgstr "Zertifikat-PIN entfernt"
 
-#: src/frontends/desktop/views/konten-view.ts:463
+#: src/frontends/desktop/views/konten-view.ts:469
 msgid "ERiC path could not be saved: {error}"
 msgstr "ERiC-Pfad konnte nicht gespeichert werden: {error}"
 
-#: src/frontends/desktop/views/konten-view.ts:466
+#: src/frontends/desktop/views/konten-view.ts:472
 msgid "ERiC path saved"
 msgstr "ERiC-Pfad gespeichert"
 
 #
-#: src/frontends/desktop/views/konten-view.ts:486
+#: src/frontends/desktop/views/konten-view.ts:492
 msgid "Active connections"
 msgstr "Aktive Verbindungen"
 
-#: src/frontends/desktop/views/konten-view.ts:491
+#: src/frontends/desktop/views/konten-view.ts:497
 msgid "{total} account · {live} live"
 msgid_plural "{total} accounts · {live} live"
 msgstr[0] "{total} Konto · {live} live"
 msgstr[1] "{total} Konten · {live} live"
 
 #
-#: src/frontends/desktop/views/konten-view.ts:503
+#: src/frontends/desktop/views/konten-view.ts:509
 msgid "Check connections"
 msgstr "Anbindungen prüfen"
 
-#: src/frontends/desktop/views/konten-view.ts:512
-#: src/frontends/desktop/views/konten-view.ts:531
+#: src/frontends/desktop/views/konten-view.ts:518
+#: src/frontends/desktop/views/konten-view.ts:537
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.blp:7
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:244
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:517
 msgid "Add account"
 msgstr "Konto hinzufügen"
 
-#: src/frontends/desktop/views/konten-view.ts:524
+#: src/frontends/desktop/views/konten-view.ts:530
 msgid "No accounts yet"
 msgstr "Noch keine Konten"
 
-#: src/frontends/desktop/views/konten-view.ts:527
+#: src/frontends/desktop/views/konten-view.ts:533
 msgid ""
 "Import a bank statement (CAMT, PayPal) or connect Qonto or your bank via "
 "FinTS — then the app calculates from your transactions."
@@ -9992,135 +10008,135 @@ msgstr ""
 "Importiere einen Kontoauszug (CAMT, PayPal) oder verbinde Qonto bzw. deine "
 "Bank über FinTS — danach rechnet die App aus deinen Buchungen."
 
-#: src/frontends/desktop/views/konten-view.ts:561
+#: src/frontends/desktop/views/konten-view.ts:567
 msgid "Accounts could not be reloaded: {error}"
 msgstr "Konten konnten nicht neu geladen werden: {error}"
 
-#: src/frontends/desktop/views/konten-view.ts:597
+#: src/frontends/desktop/views/konten-view.ts:603
 msgctxt "account source"
 msgid "live"
 msgstr "live"
 
-#: src/frontends/desktop/views/konten-view.ts:597
+#: src/frontends/desktop/views/konten-view.ts:603
 msgctxt "account source"
 msgid "File"
 msgstr "Datei"
 
-#: src/frontends/desktop/views/konten-view.ts:607
+#: src/frontends/desktop/views/konten-view.ts:613
 msgid "Synced {when}"
 msgstr "Synchronisiert {when}"
 
-#: src/frontends/desktop/views/konten-view.ts:609
+#: src/frontends/desktop/views/konten-view.ts:615
 msgid "Imported {range}"
 msgstr "Importiert {range}"
 
 #. TRANSLATORS: Tooltip on the headerbar button that syncs Qonto and Paperless
-#: src/frontends/desktop/views/konten-view.ts:627
-#: src/frontends/desktop/views/konten-view.ts:716
+#: src/frontends/desktop/views/konten-view.ts:633
+#: src/frontends/desktop/views/konten-view.ts:722
 #: src/frontends/desktop/window.blp:152
 msgid "Sync"
 msgstr "Abgleichen"
 
-#: src/frontends/desktop/views/konten-view.ts:638
-#: src/frontends/desktop/views/konten-view.ts:758
+#: src/frontends/desktop/views/konten-view.ts:644
+#: src/frontends/desktop/views/konten-view.ts:764
 msgid "Disconnect"
 msgstr "Verbindung trennen"
 
 #
-#: src/frontends/desktop/views/konten-view.ts:677
+#: src/frontends/desktop/views/konten-view.ts:683
 msgid "All connections reachable"
 msgstr "Alle Anbindungen erreichbar"
 
 #
-#: src/frontends/desktop/views/konten-view.ts:677
+#: src/frontends/desktop/views/konten-view.ts:683
 msgid "Not all connections reachable"
 msgstr "Nicht alle Anbindungen erreichbar"
 
 #
-#: src/frontends/desktop/views/konten-view.ts:683
+#: src/frontends/desktop/views/konten-view.ts:689
 msgid "Check failed: {error}"
 msgstr "Prüfung fehlgeschlagen: {error}"
 
-#: src/frontends/desktop/views/konten-view.ts:707
+#: src/frontends/desktop/views/konten-view.ts:713
 msgid "Syncing …"
 msgstr "Synchronisiere …"
 
-#: src/frontends/desktop/views/konten-view.ts:717
+#: src/frontends/desktop/views/konten-view.ts:723
 msgid "Sync failed: {error}"
 msgstr "Sync fehlgeschlagen: {error}"
 
-#: src/frontends/desktop/views/konten-view.ts:735
+#: src/frontends/desktop/views/konten-view.ts:741
 msgid "Disconnected · {n} transaction deleted"
 msgid_plural "Disconnected · {n} transactions deleted"
 msgstr[0] "Getrennt · {n} Buchung gelöscht"
 msgstr[1] "Getrennt · {n} Buchungen gelöscht"
 
-#: src/frontends/desktop/views/konten-view.ts:741
+#: src/frontends/desktop/views/konten-view.ts:747
 msgid "Sync stopped — data kept"
 msgstr "Sync gestoppt — Daten behalten"
 
-#: src/frontends/desktop/views/konten-view.ts:745
+#: src/frontends/desktop/views/konten-view.ts:751
 msgid "Disconnect failed"
 msgstr "Trennen fehlgeschlagen"
 
-#: src/frontends/desktop/views/konten-view.ts:761
+#: src/frontends/desktop/views/konten-view.ts:767
 msgid "{source} · {ref} — {n} transaction. What should happen?"
 msgid_plural "{source} · {ref} — {n} transactions. What should happen?"
 msgstr[0] "{source} · {ref} — {n} Buchung. Was soll passieren?"
 msgstr[1] "{source} · {ref} — {n} Buchungen. Was soll passieren?"
 
-#: src/frontends/desktop/views/konten-view.ts:769
+#: src/frontends/desktop/views/konten-view.ts:775
 msgid "Only stop syncing"
 msgstr "Nur Sync stoppen"
 
-#: src/frontends/desktop/views/konten-view.ts:770
+#: src/frontends/desktop/views/konten-view.ts:776
 msgid "Delete everything"
 msgstr "Alles löschen"
 
 #
-#: src/frontends/desktop/views/konten-view.ts:794
+#: src/frontends/desktop/views/konten-view.ts:800
 msgid "never"
 msgstr "noch nie"
 
-#: src/frontends/desktop/views/konten-view.ts:800
+#: src/frontends/desktop/views/konten-view.ts:806
 msgid "{n} minute ago"
 msgid_plural "{n} minutes ago"
 msgstr[0] "vor {n} Minute"
 msgstr[1] "vor {n} Minuten"
 
-#: src/frontends/desktop/views/konten-view.ts:802
+#: src/frontends/desktop/views/konten-view.ts:808
 msgid "{n} hour ago"
 msgid_plural "{n} hours ago"
 msgstr[0] "vor {n} Stunde"
 msgstr[1] "vor {n} Stunden"
 
-#: src/frontends/desktop/views/konten-view.ts:804
+#: src/frontends/desktop/views/konten-view.ts:810
 msgid "{n} day ago"
 msgid_plural "{n} days ago"
 msgstr[0] "vor {n} Tag"
 msgstr[1] "vor {n} Tagen"
 
-#: src/frontends/desktop/views/konten-view.ts:805
+#: src/frontends/desktop/views/konten-view.ts:811
 msgid "on {date}"
 msgstr "am {date}"
 
-#: src/frontends/desktop/views/konten-view.ts:811
+#: src/frontends/desktop/views/konten-view.ts:817
 msgid "{label}: nothing to sync"
 msgstr "{label}: nichts zu synchronisieren"
 
-#: src/frontends/desktop/views/konten-view.ts:814
+#: src/frontends/desktop/views/konten-view.ts:820
 msgid "{label}: error — {errors}"
 msgstr "{label}: Fehler — {errors}"
 
-#: src/frontends/desktop/views/konten-view.ts:817
+#: src/frontends/desktop/views/konten-view.ts:823
 msgid "{label}: +{added} new · {updated} updated"
 msgstr "{label}: +{added} neu · {updated} aktualisiert"
 
-#: src/frontends/desktop/views/konten-view.ts:841
+#: src/frontends/desktop/views/konten-view.ts:847
 msgid "Store certificate PIN"
 msgstr "Zertifikat-PIN hinterlegen"
 
-#: src/frontends/desktop/views/konten-view.ts:842
+#: src/frontends/desktop/views/konten-view.ts:848
 msgid "{note} Never in clear text in the configuration."
 msgstr "{note} Nie im Klartext in der Konfiguration."
 
@@ -12259,7 +12275,7 @@ msgid "Dauerfristverlängerung: every VAT return is due one month later."
 msgstr "Jede Voranmeldung ist einen Monat später fällig."
 
 #: src/frontends/desktop/views/setup-assistant.ts:424
-#: src/frontends/desktop/window.ts:722
+#: src/frontends/desktop/window.ts:725
 msgid "Business"
 msgstr "Unternehmen"
 
@@ -14762,54 +14778,54 @@ msgstr "Entität einrichten …"
 msgid "About Steuererklärung"
 msgstr "Über Steuererklärung"
 
-#: src/frontends/desktop/window.ts:252
+#: src/frontends/desktop/window.ts:253
 msgid "Switch to the demo?"
 msgstr "Zur Demo wechseln?"
 
-#: src/frontends/desktop/window.ts:252
+#: src/frontends/desktop/window.ts:253
 msgid "Switch to your own data?"
 msgstr "Zu eigenen Daten wechseln?"
 
-#: src/frontends/desktop/window.ts:255
+#: src/frontends/desktop/window.ts:256
 msgid ""
 "The app restarts with fictional sample data. Your own data is not changed."
 msgstr ""
 "Die App startet mit erfundenen Beispieldaten neu. Deine eigenen Daten "
 "bleiben unverändert."
 
-#: src/frontends/desktop/window.ts:256
+#: src/frontends/desktop/window.ts:257
 msgid "The app restarts with your own data. The demo data stays separate."
 msgstr ""
 "Die App startet mit deinen eigenen Daten neu. Die Demodaten bleiben getrennt."
 
-#: src/frontends/desktop/window.ts:259
+#: src/frontends/desktop/window.ts:260
 msgid "Restart"
 msgstr "Neu starten"
 
-#: src/frontends/desktop/window.ts:272
+#: src/frontends/desktop/window.ts:273
 msgid "Please restart the app yourself to switch."
 msgstr "Bitte starte die App selbst neu, um zu wechseln."
 
-#: src/frontends/desktop/window.ts:647
+#: src/frontends/desktop/window.ts:650
 msgid "Data could not be loaded completely: {error}"
 msgstr "Daten konnten nicht vollständig geladen werden: {error}"
 
-#: src/frontends/desktop/window.ts:654
+#: src/frontends/desktop/window.ts:657
 msgid "Demo data – fictional examples, no real financial data"
 msgstr "Demodaten – fiktive Beispieldaten, keine echten Finanzdaten"
 
-#: src/frontends/desktop/window.ts:684
+#: src/frontends/desktop/window.ts:687
 msgid "Setup is not finished: no business or private tax return is set up yet."
 msgstr ""
 "Die Einrichtung ist nicht abgeschlossen: Es ist noch kein Betrieb und keine "
 "private Steuererklärung eingerichtet."
 
-#: src/frontends/desktop/window.ts:685
+#: src/frontends/desktop/window.ts:688
 msgid "Setup is not finished: “{entity}” has no bank account yet."
 msgstr ""
 "Die Einrichtung ist nicht abgeschlossen: „{entity}“ hat noch kein Bankkonto."
 
-#: src/frontends/desktop/window.ts:790
+#: src/frontends/desktop/window.ts:793
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."

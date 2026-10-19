@@ -57,9 +57,16 @@ export const ericSubcommand: YargsCommandModule = {
         }
         if (!status.available) {
             console.log(
-                status.error
-                    ? fmt(_('ERiC cannot be loaded: {error}'), { error: status.error })
-                    : fmt(_('ERiC not found under {path}.'), { path: status.libPath }),
+                status.ffiMissing
+                    ? fmt(
+                          _('The native FFI module is missing from this installation, ERiC cannot be loaded: {error}'),
+                          {
+                              error: status.error ?? '',
+                          },
+                      )
+                    : status.error
+                      ? fmt(_('ERiC cannot be loaded: {error}'), { error: status.error })
+                      : fmt(_('ERiC not found under {path}.'), { path: status.libPath }),
             );
             return process.exit(1);
         }
