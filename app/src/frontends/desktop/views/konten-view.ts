@@ -155,15 +155,21 @@ export class BhKontenView extends Adw.Bin {
             );
             statusRow.add_suffix(ericPill(true, _('available')));
         } else {
-            const detail = status.bindingBroken
-                ? _(
-                      'The ERiC binding of this installation is broken. Rebuild it with "gjsify run -w @steuererklaerung/eric build:meson" or reinstall the app.',
-                  )
-                : status.error
-                  ? fmt(_('Library cannot be loaded: {error}'), { error: status.error })
-                  : fmt(_('not found — expected at {path}'), { path: displayPath(status.libPath) }) +
-                    (status.missing.length ? fmt(_(' · missing: {names}'), { names: status.missing.join(', ') }) : '') +
-                    fmt(_n(' · {n} plugin', ' · {n} plugins', status.pluginCount), { n: status.pluginCount });
+            const detail = status.ffiMissing
+                ? fmt(_('The FFI module (koffi) of this installation is missing, so ERiC cannot be loaded: {error}'), {
+                      error: status.error ?? '',
+                  })
+                : status.bindingBroken
+                  ? _(
+                        'The ERiC binding of this installation is broken. Rebuild it with "gjsify run -w @steuererklaerung/eric build:meson" or reinstall the app.',
+                    )
+                  : status.error
+                    ? fmt(_('Library cannot be loaded: {error}'), { error: status.error })
+                    : fmt(_('not found — expected at {path}'), { path: displayPath(status.libPath) }) +
+                      (status.missing.length
+                          ? fmt(_(' · missing: {names}'), { names: status.missing.join(', ') })
+                          : '') +
+                      fmt(_n(' · {n} plugin', ' · {n} plugins', status.pluginCount), { n: status.pluginCount });
             statusRow.set_subtitle(markup(detail));
             statusRow.add_suffix(ericPill(false, status.error ? _('Error') : _('not found')));
         }

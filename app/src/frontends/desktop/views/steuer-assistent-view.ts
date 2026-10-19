@@ -21,7 +21,7 @@ import { intakeTopics, type IntakeTopic, type IntakeContext } from '../../../cor
 import { aktiveFragen, type IntakeQuestion } from '../../../core/actions/elster/est-intake.ts';
 import type { EstKind } from '../../../core/config/schema/est.ts';
 import { comboRow, spinRow, toggleRow, type SettingsHost } from './einstellungen/rows.ts';
-import { _, _p, fmt } from '../i18n.ts';
+import { _, _p } from '../i18n.ts';
 import { markup } from './util.ts';
 
 /** Full month names for the month combo — a function so the translator is already registered. */

@@ -5,7 +5,7 @@
  */
 
 import { describe, expect, it } from '@gjsify/unit';
-import { EricBindingError, EricNotAvailableError } from '../../../../packages/eric/src/errors.ts';
+import { EricBindingError, EricFfiError, EricNotAvailableError } from '../../../../packages/eric/src/errors.ts';
 
 type GiShape = { gi?: Record<string, { Eric?: { $gtype: unknown } }> };
 
@@ -16,6 +16,16 @@ export default async () => {
             expect(err instanceof EricNotAvailableError).toBe(true);
             expect(err.cause).toBe('Unsupported type void');
             expect(err.message.includes('build:meson')).toBe(true);
+        });
+    });
+
+    await describe('EricFfiError', async () => {
+        await it('keeps the cause and does not claim ERiC is not installed', async () => {
+            const err = new EricFfiError("Cannot find module 'koffi'");
+            expect(err instanceof EricNotAvailableError).toBe(true);
+            expect(err.cause).toBe("Cannot find module 'koffi'");
+            expect(err.message.includes('koffi')).toBe(true);
+            expect(err.message.includes('ist nicht installiert')).toBe(false);
         });
     });
 
