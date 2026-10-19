@@ -51,7 +51,7 @@ export class EricFfiError extends EricNotAvailableError {
   readonly cause: string;
 
   constructor(cause: string) {
-    super(`The native FFI module (koffi) could not be loaded (${cause}). This installation is incomplete; reinstall the app.`);
+    super(`The native FFI module could not be loaded (${cause}). This installation is incomplete; reinstall the app.`);
     this.cause = cause;
   }
 }

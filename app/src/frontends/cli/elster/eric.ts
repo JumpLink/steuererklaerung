@@ -59,7 +59,7 @@ export const ericSubcommand: YargsCommandModule = {
             console.log(
                 status.ffiMissing
                     ? fmt(
-                          _('The FFI module (koffi) is missing from this installation, ERiC cannot be loaded: {error}'),
+                          _('The native FFI module is missing from this installation, ERiC cannot be loaded: {error}'),
                           {
                               error: status.error ?? '',
                           },

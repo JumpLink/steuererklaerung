@@ -24,7 +24,7 @@ export default async () => {
             const err = new EricFfiError("Cannot find module 'koffi'");
             expect(err instanceof EricNotAvailableError).toBe(true);
             expect(err.cause).toBe("Cannot find module 'koffi'");
-            expect(err.message.includes('koffi')).toBe(true);
+            expect(err.message.includes('FFI')).toBe(true);
             expect(err.message.includes('ist nicht installiert')).toBe(false);
         });
     });

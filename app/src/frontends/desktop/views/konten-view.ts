@@ -156,7 +156,7 @@ export class BhKontenView extends Adw.Bin {
             statusRow.add_suffix(ericPill(true, _('available')));
         } else {
             const detail = status.ffiMissing
-                ? fmt(_('The FFI module (koffi) of this installation is missing, so ERiC cannot be loaded: {error}'), {
+                ? fmt(_('The native FFI module of this installation is missing, so ERiC cannot be loaded: {error}'), {
                       error: status.error ?? '',
                   })
                 : status.bindingBroken
