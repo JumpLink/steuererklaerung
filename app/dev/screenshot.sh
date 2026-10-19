@@ -29,6 +29,7 @@
 #   STEUER_APP_SCROLL=      scroll the Einstellungen page: "end" or a fraction 0..1; "vor-abgabe" in the Abgabe step
 #   STEUER_APP_ENTITY=id    entity to open
 #   STEUER_APP_YEAR=YYYY    year to open
+#   STEUER_APP_PRIVACY_DIALOG=1 open the privacy notice shown before the first send (unless confirmed)
 #   STEUER_APP_SUPPORT_PROMPT=1 open the post-filing support prompt (ignores the once-per-year ledger)
 #   STEUER_SHOT_ACTION=     activate a GAction before capturing, e.g. "win goto-konten" (scope and
 #                           name, space-separated) — proves a
@@ -91,6 +92,7 @@ ENV_ARGS=(GJSIFY_DEVTOOLS=1 "STEUER_APP_ID=$APP_ID" "STEUER_APP_VIEW=$VIEW")
 [ -n "${STEUER_APP_SEARCH:-}" ] && ENV_ARGS+=("STEUER_APP_SEARCH=$STEUER_APP_SEARCH")
 [ -n "${STEUER_APP_STEP:-}" ] && ENV_ARGS+=("STEUER_APP_STEP=$STEUER_APP_STEP")
 [ -n "${STEUER_APP_SUPPORT_PROMPT:-}" ] && ENV_ARGS+=("STEUER_APP_SUPPORT_PROMPT=$STEUER_APP_SUPPORT_PROMPT")
+[ -n "${STEUER_APP_PRIVACY_DIALOG:-}" ] && ENV_ARGS+=("STEUER_APP_PRIVACY_DIALOG=$STEUER_APP_PRIVACY_DIALOG")
 ENV_ARGS+=("STEUER_APP_SIZE=${STEUER_SHOT_SIZE:-1280 860}")
 [ -n "${STEUER_APP_SCROLL:-}" ] && ENV_ARGS+=("STEUER_APP_SCROLL=$STEUER_APP_SCROLL")
 

@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
     acknowledgePrivacy,
+    backupNoticeText,
     isPrivacyAcknowledged,
     logFileNoticeText,
     privacyAckPath,
@@ -45,6 +46,7 @@ export default async function () {
         it('carries the notices the licence prescribes', () => {
             expect(privacyNoticeText().includes('GDPR')).toBe(true);
             expect(logFileNoticeText().includes('{path}')).toBe(true);
+            expect(backupNoticeText().includes('Settings → Backup')).toBe(true);
         });
     });
 
