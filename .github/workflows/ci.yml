@@ -293,7 +293,7 @@ jobs:
           check() {
             zip="$1"; native="$2"
             listing=$(unzip -Z1 "$zip")
-            for need in "node_modules/koffi/package.json" "node_modules/@koromix/$native/"; do
+            for need in "node_modules/koffi/package.json" "node_modules/koffi/src/koffi/src/static.cjs" "node_modules/@koromix/$native/"; do
               echo "$listing" | grep -q "$need" || { echo "::error::$zip lacks $need"; exit 1; }
             done
             echo "$listing" | grep -q "node_modules/@koromix/$native/.*koffi\.node" || { echo "::error::$zip has no koffi.node for $native"; exit 1; }
