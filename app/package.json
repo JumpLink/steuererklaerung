@@ -200,26 +200,32 @@
             "screenshots": [
                 {
                     "url": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/01-uebersicht.png",
+                    "localizedUrls": { "de": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/01-uebersicht-de.png" },
                     "caption": "Overview with key figures and what to do next"
                 },
                 {
                     "url": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/04-belege.png",
+                    "localizedUrls": { "de": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/04-belege-de.png" },
                     "caption": "Receipts, linked to transactions"
                 },
                 {
                     "url": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/05-buchungen.png",
+                    "localizedUrls": { "de": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/05-buchungen-de.png" },
                     "caption": "All transactions of all accounts, searchable"
                 },
                 {
                     "url": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/06-rechnungen.png",
+                    "localizedUrls": { "de": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/06-rechnungen-de.png" },
                     "caption": "Outgoing invoices with status and recurring billing"
                 },
                 {
                     "url": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/10-euer.png",
+                    "localizedUrls": { "de": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/10-euer-de.png" },
                     "caption": "Anlage EÜR, every line down to its transactions"
                 },
                 {
                     "url": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/09-steuererklaerung.png",
+                    "localizedUrls": { "de": "https://raw.githubusercontent.com/JumpLink/steuererklaerung/main/docs/screenshots/09-steuererklaerung-de.png" },
                     "caption": "Tax return with checks before filing"
                 }
             ],

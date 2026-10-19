@@ -23,6 +23,7 @@ mkdir -p dist/locale
 gjsify ship --stage --skip-build --out "$STAGE" > /dev/null
 
 # `localeDir` makes ship fold the German catalogue into the file as xml:lang elements; the source
-# file keeps the English text and lets the catalogue translate, so drop those.
-grep -v 'xml:lang=' "$STAGE/stage/share/metainfo/$ID.metainfo.xml" > "data/$ID.metainfo.xml"
+# file keeps the English text and lets the catalogue translate, so drop those. The localized
+# <image> elements come from `localizedUrls` in package.json, not from the catalogue: keep them.
+awk '!/xml:lang=/ || /<image /' "$STAGE/stage/share/metainfo/$ID.metainfo.xml" > "data/$ID.metainfo.xml"
 printf 'wrote data/%s.metainfo.xml\n' "$ID"
