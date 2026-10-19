@@ -129,8 +129,11 @@ try {
     parsed = Promise.reject(err);
 }
 
-// Runtime detection (the same probe the gjsify examples use — no extra dependency).
-const isGjs = typeof (globalThis as { imports?: unknown }).imports !== 'undefined';
+// Runtime detection, the probe @gjsify/node-gi uses: node-gi defines `imports` under node too,
+// only GJS has both `imports` and `print`.
+const isGjs =
+    typeof (globalThis as { imports?: unknown }).imports !== 'undefined' &&
+    typeof (globalThis as { print?: unknown }).print === 'function';
 
 if (isGjs) {
     // GJS has no always-on event loop, so a GLib main loop keeps async command

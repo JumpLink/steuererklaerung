@@ -48,8 +48,9 @@ if (natives.length === 0) {
     console.error(`no @koromix/koffi-${os}-${arch} installed — install with --os ${os} --cpu ${arch}`);
     process.exit(1);
 }
-// Runtime files only: the JS entry points and the prebuilt binaries, not docs/vendor/sources.
-const keep = (path: string) => /(^|\/)(package\.json|index\.(c?js)|indirect\.(c?js)|koffi\.node)$/.test(path);
+// Runtime files only: every JS module and the prebuilt binaries, not docs/vendor/C++ sources.
+// The entry points require ./src/koffi/src/static.cjs, so naming files one by one breaks the load.
+const keep = (path: string) => /(^|\/)(package\.json|[^/]+\.c?js|koffi\.node)$/.test(path);
 const stage = (pkgName: string) => {
     const base = join(modules, pkgName);
     for (const file of walk(base)) {

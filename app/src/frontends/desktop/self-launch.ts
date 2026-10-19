@@ -57,8 +57,11 @@ export function selfCommand(args: string[], gjs: boolean = isGjsRuntime()): stri
     return gjs ? [interpreter(), '-m', bundlePath(), ...args] : [process.execPath, bundlePath(), ...args];
 }
 
+// `imports` alone is not enough: @gjsify/node-gi defines it under node too (the Windows and macOS
+// packages), and that sent the backup to a `gjs` that is not installed there. Same probe as node-gi.
 function isGjsRuntime(): boolean {
-    return typeof (globalThis as { imports?: unknown }).imports !== 'undefined';
+    const g = globalThis as { imports?: unknown; print?: unknown };
+    return typeof g.imports !== 'undefined' && typeof g.print === 'function';
 }
 
 /** The one place `process.platform` is read for the MCP guide; everything below takes it as input. */
