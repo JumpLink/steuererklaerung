@@ -40,8 +40,8 @@ export function alertDialog(opts: AlertOptions): Promise<string> {
         dlg.heading = opts.heading;
         if (opts.body) dlg.body = opts.body;
         for (const ch of opts.choices) {
-            dlg.addResponse(ch.id, ch.label);
-            if (ch.appearance && ch.appearance !== 'default') dlg.setResponseAppearance(ch.id, ch.appearance);
+            dlg.add_response(ch.id, ch.label);
+            if (ch.appearance && ch.appearance !== 'default') dlg.set_response_appearance(ch.id, ch.appearance);
         }
         const closeId =
             opts.closeId ?? opts.choices.find((c) => (c.appearance ?? 'default') === 'default')?.id ?? opts.choices[0].id;
@@ -52,7 +52,7 @@ export function alertDialog(opts: AlertOptions): Promise<string> {
         dlg.addEventListener('response', (e) => {
             if (settled) return; // the element also emits on dismissal — guard against a double-settle
             settled = true;
-            const id = (e as CustomEvent<{ response: string }>).detail.response;
+            const [id] = (e as CustomEvent<[string]>).detail;
             dlg.remove();
             resolve(id);
         });
