@@ -904,7 +904,7 @@ export function buildEstEds(config: EstConfig, inputs: EstInputs, aggregate: Est
         // it to match the official example.
         empfaengerZiel: bundeslandZiel(config.person.bundesland),
         produktName: 'steuererklaerung-cli',
-        produktVersion: '0.1.0',
+        produktVersion: '0.1.1',
         nutzdatenLieferant: config.person.name,
         nutzdaten,
     });

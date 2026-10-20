@@ -32,7 +32,7 @@ import { loadAppSettings, MCP_GROUPS, restrictMcpToReadOnly, type McpGroup } fro
 import { refusingFinTSInteraction, setFinTSInteraction } from '../../core/clients/fints/interaction.ts';
 
 const SERVER_NAME = 'steuererklaerung';
-const SERVER_VERSION = '0.1.0';
+const SERVER_VERSION = '0.1.1';
 
 /** Group → its tool-registration function. The single source for what each group exposes. */
 const GROUP_REGISTRARS: Record<McpGroup, (server: McpServer, ctx: AppContext) => void> = {

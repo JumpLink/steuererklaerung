@@ -411,7 +411,7 @@ export function buildEuerEds(agg: EuerTxAggregate, config: ElsterConfig, betrieb
         datenLieferant: config.datenlieferant,
         empfaenger: bufaFromElsterSteuernummer(steuernr13),
         produktName: 'steuererklaerung-cli',
-        produktVersion: '0.1.0',
+        produktVersion: '0.1.1',
         nutzdatenLieferant: betrieb.name,
         nutzdaten,
     });
