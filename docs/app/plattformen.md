@@ -30,9 +30,20 @@ Ein Interface (`app/src/core/secrets/store.ts`), ein Backend je System:
 Fehlt das Programm, fragt die App jedes Mal nach. Es gibt keinen Klartext-Fallback; die Texte im
 Absenden-Dialog und in Konten sagen, wo ein Geheimnis liegt.
 
+## Getestet
+
+Windows 11 x64 in einer VM, Build von 0.1.0 (Oktober 2026):
+
+- MSI-Installation, Start über das Startmenü, portables Zip, deutsche Oberfläche
+- „Jetzt sichern" in der Oberfläche und `steuererklaerung.cmd backup manual`
+- ERiC 44.3.6.0 aus dem Benutzerordner: Status „verfügbar"
+- MCP über stdio: `tools/list` liefert alle Werkzeuge
+
+Noch nicht geprüft: der Datenschutz-Dialog vor dem Absenden (braucht eine Hersteller-ID), eine
+echte Übermittlung, DPAPI und macOS.
+
 ## Bekannte Grenzen
 
-- **ELSTER-Übermittlung nur unter Linux.** ERiC wird per koffi geladen und ist dort geprüft; auf
-  macOS und Windows zeigt die App „nicht unterstützt".
-- **Diagramm-Beschriftungen fehlen** unter node-gi, bis node-gi die cairo-Textoperationen
-  enthält (`packages/node-gi/node-gi/src/cairo.cc` in gjsify). Die Balken werden gezeichnet.
+- **ELSTER nur auf x86_64 bzw. Universal-macOS.** ERiC gibt es für Linux x86_64, Windows x64 und
+  macOS (Universal, `packages/eric/src/platform.ts`). Auf anderen Architekturen (z. B. Linux oder
+  Windows auf ARM) meldet die ERiC-Einrichtung „unsupported platform".
