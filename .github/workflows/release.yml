@@ -26,6 +26,10 @@ env:
   ERIC_REPO: JumpLink/steuererklaerung-eric
   ERIC_VERSION: "44.3.6.0"
 
+# The repo's default token is read-only; attaching the packages to the release needs write.
+permissions:
+  contents: write
+
 jobs:
   package:
     runs-on: ubuntu-latest
