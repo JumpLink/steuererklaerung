@@ -12,6 +12,7 @@ import { listSteuertermine } from '../../../core/actions/steuertermine.ts';
 import { listOffeneSteuerzahlungen } from '../../../core/actions/steuerzahlungen.ts';
 import type { SteuerTermin } from '../../../core/elster/steuertermine.ts';
 import type { OffeneSteuerzahlung } from '../../../core/elster/steuerzahlungen.ts';
+import { errorText } from '../error-text.ts';
 
 export type { OpenItem, SteuerTermin, OffeneSteuerzahlung };
 
@@ -28,7 +29,7 @@ async function layer<T>(load: () => Promise<T> | T, fallback: T): Promise<{ valu
     try {
         return { value: await load() };
     } catch (err) {
-        return { value: fallback, error: err instanceof Error ? err.message : String(err) };
+        return { value: fallback, error: errorText(err) };
     }
 }
 

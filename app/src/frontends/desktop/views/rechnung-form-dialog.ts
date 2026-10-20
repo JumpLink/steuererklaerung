@@ -32,6 +32,7 @@ import { num2 } from '../../../core/lib/format.ts';
 import { errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
 import { _, _n, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 const VAT_OPTIONS = ['19', '7', '0'];
 const vatIndex = (rate: string): number => Math.max(0, VAT_OPTIONS.indexOf(rate));
@@ -355,7 +356,7 @@ export class BhRechnungFormDialog {
                 ),
             );
         } catch (err) {
-            await errorDialog(this.dialog, _('Import time entries'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this.dialog, _('Import time entries'), errorText(err));
         }
     }
 
@@ -434,7 +435,7 @@ export class BhRechnungFormDialog {
         } catch (err) {
             this.saveButton.set_sensitive(true);
             this.saveButton.set_title(_('Save draft'));
-            await errorDialog(this.dialog, _('Saving failed'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this.dialog, _('Saving failed'), errorText(err));
         }
     }
 }

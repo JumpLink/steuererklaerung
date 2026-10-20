@@ -169,13 +169,17 @@ export function loadPaperlessConfig(options?: LoadSyncConfigOptions, path = getM
         throw new ConfigError(
             `steuererklaerung.json hat keinen „paperless"-Abschnitt. Richte Paperless in der Konfiguration ein.`,
             path,
+            { code: 'paperless-missing' },
         );
     }
     if (options?.strict === false) return paperless;
     const result = SyncConfigStrictSchema.safeParse(paperless);
     if (!result.success) {
         const issues = result.error.issues.map((i) => `  ${i.path.join('.')}: ${i.message}`).join('\n');
-        throw new ConfigError(`Ungültiger Paperless-Abschnitt in steuererklaerung.json:\n${issues}`, path);
+        throw new ConfigError(`Ungültiger Paperless-Abschnitt in steuererklaerung.json:\n${issues}`, path, {
+            code: 'paperless-invalid',
+            params: { issues },
+        });
     }
     return result.data as SyncConfig;
 }
@@ -190,6 +194,7 @@ export function loadFinTSConfig(path = getManifestPath()): FinTSConfig {
         throw new ConfigError(
             `steuererklaerung.json hat keinen „fints"-Abschnitt. Konfiguriere die FinTS-Bankzugänge.`,
             path,
+            { code: 'fints-missing' },
         );
     }
     return fints;
@@ -368,11 +373,19 @@ function mutateEntityElster(
     const target = requireEntity(loadManifest(p), entityId);
     writeManifestEntity(p, target.id, (rawEntity) => {
         const sec = rawEntity.elster as Record<string, unknown> | undefined;
-        if (!sec) throw new ConfigError(`Entität „${target.id}" hat keinen ELSTER-Abschnitt (elster).`, p);
+        if (!sec)
+            throw new ConfigError(`Entität „${target.id}" hat keinen ELSTER-Abschnitt (elster).`, p, {
+                code: 'entity-section-missing',
+                params: { id: target.id, section: 'elster' },
+            });
         mutate(sec);
     });
     const elster = resolveEntity(loadManifest(p), target.id).elster;
-    if (!elster) throw new ConfigError(`Entität „${target.id}" hat keinen ELSTER-Abschnitt (elster).`, p);
+    if (!elster)
+        throw new ConfigError(`Entität „${target.id}" hat keinen ELSTER-Abschnitt (elster).`, p, {
+            code: 'entity-section-missing',
+            params: { id: target.id, section: 'elster' },
+        });
     return elster;
 }
 
@@ -386,11 +399,19 @@ function mutateEntityEst(
     const target = requireEntity(loadManifest(p), entityId);
     writeManifestEntity(p, target.id, (rawEntity) => {
         const sec = rawEntity.est as Record<string, unknown> | undefined;
-        if (!sec) throw new ConfigError(`Entität „${target.id}" hat keinen ESt-Abschnitt (est).`, p);
+        if (!sec)
+            throw new ConfigError(`Entität „${target.id}" hat keinen ESt-Abschnitt (est).`, p, {
+                code: 'entity-section-missing',
+                params: { id: target.id, section: 'est' },
+            });
         mutate(sec);
     });
     const est = resolveEntity(loadManifest(p), target.id).est;
-    if (!est) throw new ConfigError(`Entität „${target.id}" hat keinen ESt-Abschnitt (est).`, p);
+    if (!est)
+        throw new ConfigError(`Entität „${target.id}" hat keinen ESt-Abschnitt (est).`, p, {
+            code: 'entity-section-missing',
+            params: { id: target.id, section: 'est' },
+        });
     return est;
 }
 

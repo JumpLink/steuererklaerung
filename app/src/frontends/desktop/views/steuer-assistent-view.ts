@@ -22,6 +22,7 @@ import { aktiveFragen, type IntakeQuestion } from '../../../core/actions/elster/
 import type { EstKind } from '../../../core/config/schema/est.ts';
 import { comboRow, spinRow, toggleRow, type SettingsHost } from './einstellungen/rows.ts';
 import { _, _p } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import { markup } from './util.ts';
 
 /** Full month names for the month combo — a function so the translator is already registered. */
@@ -258,7 +259,7 @@ export class BhSteuerAssistentView extends Adw.Bin {
             const lines = [v.ergebnis, ...v.hinweise.map((h) => `• ${h}`)];
             this.previewRow.set_subtitle(lines.join('\n'));
         } catch (err) {
-            this.previewRow.set_subtitle(err instanceof Error ? err.message : String(err));
+            this.previewRow.set_subtitle(errorText(err));
         }
     }
 
@@ -274,7 +275,7 @@ export class BhSteuerAssistentView extends Adw.Bin {
             appSession().invalidate(entity.id);
             this.notify_user(`✓ ${this.topic.titel}: ${v.ergebnis}`);
         } catch (err) {
-            this.notify_user(err instanceof Error ? err.message : String(err));
+            this.notify_user(errorText(err));
         }
     }
 

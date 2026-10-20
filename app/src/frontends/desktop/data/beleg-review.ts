@@ -15,6 +15,7 @@ import { autoLinkOffeneBelege, type AutoLinkRunResult } from '../../../core/acti
 import { unlinkDocumentFromTransaction } from '../../../core/actions/link-candidates.ts';
 import { appSession } from './session.ts';
 import type { AppEntity } from '../entities.ts';
+import { errorText } from '../error-text.ts';
 
 export type { BelegConfirmResult, BelegConfirmUndo } from '../../../core/actions/beleg-review.ts';
 export type { AutoLinkRunResult } from '../../../core/actions/auto-link-belege.ts';
@@ -64,7 +65,7 @@ export async function undoAutoLink(
             try {
                 await unlinkDocumentFromTransaction(entity.id, p.documentId, p.txId);
             } catch (err) {
-                failed.push({ ...p, message: err instanceof Error ? err.message : String(err) });
+                failed.push({ ...p, message: errorText(err) });
             }
         }
     } finally {

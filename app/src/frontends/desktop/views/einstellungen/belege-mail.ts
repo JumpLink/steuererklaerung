@@ -26,6 +26,7 @@ import { appSession } from '../../data/session.ts';
 import { loadDms } from '../../data/settings.ts';
 import type { AppEntity } from '../../entities.ts';
 import { _ } from '../../i18n.ts';
+import { errorText } from '../../error-text.ts';
 import { showToast } from '../../toast.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../../widgets/glossary-help.ts';
 import { errorDialog } from '../dialogs.ts';
@@ -34,8 +35,6 @@ import type { SettingsHost } from './rows.ts';
 const SECURITY = ['tls', 'none'] as const;
 const securityLabels = (): string[] => ['TLS (Port 993)', _('None (local only)')];
 const DEFAULT_PORT: Record<(typeof SECURITY)[number], number> = { tls: 993, none: 143 };
-
-const errorText = (err: unknown): string => (err instanceof Error ? err.message : String(err));
 
 export function buildBelegeMailGroup(host: SettingsHost, entity: AppEntity, parent: Gtk.Widget): Adw.PreferencesGroup {
     const group = new Adw.PreferencesGroup({

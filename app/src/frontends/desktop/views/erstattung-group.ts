@@ -23,6 +23,7 @@ import { showToast } from '../toast.ts';
 import { errorDialog } from './dialogs.ts';
 import { markup } from './util.ts';
 import { _, _n, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 
 function kandidatSub(k: ErstattungKandidatView): string {
@@ -91,7 +92,7 @@ export function erstattungGroup(
                 showToast(what);
                 onChanged(what);
             })
-            .catch((err) => errorDialog(parent, _('Refund'), err instanceof Error ? err.message : String(err)))
+            .catch((err) => errorDialog(parent, _('Refund'), errorText(err)))
             .finally(() => {
                 busy = false;
             });

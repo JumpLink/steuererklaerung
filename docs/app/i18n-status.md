@@ -25,6 +25,14 @@ German entry, or placeholders that differ between msgid and msgstr.
   the filing-register note in `actions/elster/submit.ts`, the ESt intake topic titles, mail
   template placeholder names (`{betrag}`, `{kunde}`, …) — stay German wherever a translated copy
   would break an existing file.
+- **Core errors, except those with a `detail`.** A core error carries a German message for the CLI
+  and MCP. The ones the window shows on first start, in Settings and on backup also carry a
+  language-neutral `detail` (code + parameters) that
+  [`error-detail-text.ts`](../../app/src/frontends/desktop/error-detail-text.ts) words in the UI
+  language: manifest missing, unreadable, invalid or too new; entity not found or without an
+  ELSTER/ESt section; missing Paperless/FinTS section; backup busy, inside a copied folder,
+  failed integrity check. Every other `ConfigError` and API error still shows its German message
+  (lifecycle, migration and bmf-rates errors, API errors, the `Weigere mich …` write guards).
 - **Official tax terms**, also in the English UI (see the table below). Where the term is the
   official name it stays inside the English msgid: *USt-VA*, *EÜR*, *Steuerkonto*, *Zahllast*,
   *Vorsteuer*, *Feststellung*, *Säumniszuschlag*, *Sonderausgaben* and the rest of the table.

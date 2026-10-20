@@ -50,6 +50,7 @@ import { transactionsSummary } from '../../../core/actions/transactions.ts';
 import { getManifestPath, loadManifest, type Manifest } from '../../../core/config/index.ts';
 import { countryOf, OTHER_COUNTRY, taxModuleOf } from '../../../core/countries/index.ts';
 import { _, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import { markup } from './util.ts';
 
 interface KindChoice {
@@ -646,7 +647,7 @@ export class BhSetupAssistant extends Adw.Dialog {
                     error.set_title(
                         markup(
                             fmt(_('Setup failed: {error}'), {
-                                error: err instanceof Error ? err.message : String(err),
+                                error: errorText(err),
                             }),
                         ),
                     );

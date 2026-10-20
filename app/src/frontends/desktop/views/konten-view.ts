@@ -47,6 +47,7 @@ import { deDate, eur } from '../../../core/lib/format.ts';
 import { displayPath } from '../../../core/paths.ts';
 import { applyScrollHook, GroupRows, LoadToken, amountLabel, loadIntoStack, markup } from './util.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import { ericSourceLabel, ericVersionLabel } from '../../../core/actions/elster/eric-warnings.ts';
 import { ericWarningRow } from './eric-warning-rows.ts';
 import { showToast } from '../toast.ts';
@@ -866,5 +867,5 @@ function promptPin(parent: Gtk.Widget): Promise<string | null> {
 }
 
 function msg(err: unknown): string {
-    return err instanceof Error ? err.message : String(err);
+    return errorText(err);
 }

@@ -62,6 +62,7 @@ import {
     buildEntlastungGroup,
 } from './einstellungen/privat.ts';
 import { _, _p, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 const GROUP_LABEL: Record<McpGroup, string> = {
     dms: _('Documents (DMS)'),
@@ -448,5 +449,5 @@ export class BhEinstellungenView extends Adw.Bin {
 }
 
 function msg(err: unknown): string {
-    return err instanceof Error ? err.message : String(err);
+    return errorText(err);
 }

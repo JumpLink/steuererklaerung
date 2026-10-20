@@ -29,6 +29,7 @@ import { BhProjektDetailDialog } from './projekt-detail-dialog.ts';
 import { BhProjektFormDialog } from './projekt-form-dialog.ts';
 import { GroupRows, LoadToken, emptyState, loadIntoStack, markup } from './util.ts';
 import { _, _n, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 export class BhProjekteView extends Adw.Bin {
     declare private _stack: Gtk.Stack;
@@ -203,7 +204,7 @@ export class BhProjekteView extends Adw.Bin {
             showToast(_('Project deleted'));
             this.refresh();
         } catch (err) {
-            await errorDialog(this, _('Deleting failed'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Deleting failed'), errorText(err));
         }
     }
 }

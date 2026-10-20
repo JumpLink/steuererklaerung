@@ -20,6 +20,7 @@ import Pango from '@girs/pango-1.0';
 
 import type { AppEntity } from './entities.ts';
 import { _, fmt } from './i18n.ts';
+import { errorText } from './error-text.ts';
 import { askAssistant } from './data/assistent.ts';
 import type { ChatTurn } from '../../core/actions/assistant/chat.ts';
 import { appSession } from './data/session.ts';
@@ -200,7 +201,7 @@ export class BhAssistentPanel extends Gtk.Box {
                 showToast(`✓ ${p.titel}: ${v.ergebnis}`);
                 this.onApplied?.(); // shell re-reads the est snapshot + reloads the visible view
             } catch (err) {
-                showToast(err instanceof Error ? err.message : String(err));
+                showToast(errorText(err));
             }
         });
         const btnRow = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, halign: Gtk.Align.END });
@@ -234,7 +235,7 @@ export class BhAssistentPanel extends Gtk.Box {
         } catch (err) {
             this._messages.remove(typing);
             const msg = new Gtk.Label({
-                label: err instanceof Error ? err.message : String(err),
+                label: errorText(err),
                 xalign: 0,
                 wrap: true,
                 cssClasses: ['error'],

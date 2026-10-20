@@ -22,6 +22,7 @@ import { errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
 import { LoadToken, amountLabel, loadIntoStack, markup } from './util.ts';
 import { _, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 /** A small confidence badge: percent + a colour class by band (strong / plausible / weak). */
 export function scoreBadge(score: number): Gtk.Label {
@@ -176,7 +177,7 @@ export class BhBelegLinkDialog {
                 })
                 .catch((err) => {
                     if (token !== this.searchToken) return;
-                    this.showSearchError(err instanceof Error ? err.message : String(err));
+                    this.showSearchError(errorText(err));
                 });
         });
         return entry;
@@ -270,7 +271,7 @@ export class BhBelegLinkDialog {
             this.dialog.close();
             this.onLinked?.();
         } catch (err) {
-            await errorDialog(this.dialog, _('Linking failed'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this.dialog, _('Linking failed'), errorText(err));
         }
     }
 }

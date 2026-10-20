@@ -76,6 +76,7 @@ export class ManifestTooNewError extends ConfigError {
                 'ein Schreibzugriff würde alles verwerfen, was diese Fassung noch nicht kennt. ' +
                 'Bitte die neuere Fassung verwenden oder die Datei aus einer Sicherung zurückholen.',
             path,
+            { code: 'manifest-too-new', params: { fileVersion, appVersion: MANIFEST_VERSION } },
         );
         this.fileVersion = fileVersion;
     }

@@ -13,6 +13,7 @@ import { setupPaperlessFields } from '../../../../core/actions/paperless/setup.t
 import { loadDms, saveDms, loadInvoicing, saveInvoicing, type IssuerConfig } from '../../data/settings.ts';
 import type { AppEntity } from '../../entities.ts';
 import { _, _n, _p, fmt } from '../../i18n.ts';
+import { errorText } from '../../error-text.ts';
 import { comboRow, entryRow, spinRow, toggleRow, type SettingsHost } from './rows.ts';
 
 // ── Beleg-Verwaltung (DMS) ────────────────────────────────────────────────────────────────────────
@@ -106,9 +107,7 @@ function buildSetupRow(host: SettingsHost): Adw.ActionRow {
                 );
             })
             .catch((err: unknown) => {
-                host.banner(
-                    fmt(_('Setup failed: {error}'), { error: err instanceof Error ? err.message : String(err) }),
-                );
+                host.banner(fmt(_('Setup failed: {error}'), { error: errorText(err) }));
             })
             .finally(() => {
                 button.set_sensitive(true);

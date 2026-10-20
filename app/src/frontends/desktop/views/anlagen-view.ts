@@ -35,6 +35,7 @@ import {
 import type { AnlagegutVorbelegung } from '../../../core/elster/hinweise.ts';
 import { deDate, eur } from '../../../core/lib/format.ts';
 import { _, _n, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import { amountLabel, markup } from './util.ts';
 import { wrapButtonLabel } from '../widgets/responsive.ts';
 import { errorDialog } from './dialogs.ts';
@@ -392,7 +393,7 @@ async function persistErfassen(
     } catch (err) {
         button.set_sensitive(true);
         button.set_title(_('Record'));
-        await errorDialog(dialog, _('Recording failed'), err instanceof Error ? err.message : String(err));
+        await errorDialog(dialog, _('Recording failed'), errorText(err));
     }
 }
 

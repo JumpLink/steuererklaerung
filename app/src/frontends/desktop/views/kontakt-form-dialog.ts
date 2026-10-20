@@ -16,6 +16,7 @@ import type { AppEntity } from '../entities.ts';
 import { errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
 import { _ } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 /** Contact kinds in combo-row order; the combo's selected index maps back to these. */
 const KINDS: ContactInput['kind'][] = ['company', 'individual', 'freelancer', 'organization'];
@@ -117,7 +118,7 @@ export class BhKontaktFormDialog {
         } catch (err) {
             this.saveButton.set_sensitive(true);
             this.saveButton.set_title(_('Save'));
-            await errorDialog(this.dialog, _('Saving failed'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this.dialog, _('Saving failed'), errorText(err));
         }
     }
 }

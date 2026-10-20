@@ -170,7 +170,10 @@ function findRawEntity(
     const index = entities.findIndex((e) => e.id === id || aliases.has(String(e.id)));
     if (index < 0) {
         const known = entities.map((e) => String(e.id)).join(', ') || '(keine)';
-        throw new ConfigError(`Entität „${id}" nicht im Manifest gefunden. Bekannte Entitäten: ${known}.`, path);
+        throw new ConfigError(`Entität „${id}" nicht im Manifest gefunden. Bekannte Entitäten: ${known}.`, path, {
+            code: 'entity-not-found',
+            params: { id, known },
+        });
     }
     return { entity: entities[index], index };
 }
@@ -296,7 +299,10 @@ export function removeManifestEntity(path: string, id: string, guard?: RemovalGu
     const target = manifest.entities.find((e) => e.id === id || aliases.has(e.id));
     if (!target) {
         const known = manifest.entities.map((e) => e.id).join(', ') || '(keine)';
-        throw new ConfigError(`Entität „${id}" nicht im Manifest gefunden. Bekannte Entitäten: ${known}.`, path);
+        throw new ConfigError(`Entität „${id}" nicht im Manifest gefunden. Bekannte Entitäten: ${known}.`, path, {
+            code: 'entity-not-found',
+            params: { id, known },
+        });
     }
     guard?.(target);
 

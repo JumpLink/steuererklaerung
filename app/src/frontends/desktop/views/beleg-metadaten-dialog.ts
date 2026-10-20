@@ -42,6 +42,7 @@ import { rechnungsartRow } from './rechnungsart-row.ts';
 import { markup } from './util.ts';
 import { parseGermanInput } from '../../../core/lib/parsing.ts';
 import { _, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 /** Report the outcome; the caller toasts it and reloads. */
 export type MetadataResult = (message: string, changed: boolean) => void;
@@ -363,7 +364,7 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
             this.done(message, true);
             this.close();
         } catch (err) {
-            this.warn(fmt(_('Saving failed: {error}'), { error: err instanceof Error ? err.message : String(err) }));
+            this.warn(fmt(_('Saving failed: {error}'), { error: errorText(err) }));
         }
     }
 
@@ -385,7 +386,7 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
                 : fmt(_('Receipt saved · rule for “{pattern}” already existed'), { pattern: muster });
         } catch (err) {
             return fmt(_('Receipt saved — rule not remembered: {error}'), {
-                error: err instanceof Error ? err.message : String(err),
+                error: errorText(err),
             });
         }
     }
@@ -397,7 +398,7 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
             this.done(satz, true);
             this.close();
         } catch (err) {
-            this.warn(fmt(_('Reverting failed: {error}'), { error: err instanceof Error ? err.message : String(err) }));
+            this.warn(fmt(_('Reverting failed: {error}'), { error: errorText(err) }));
         }
     }
 

@@ -15,6 +15,7 @@ import Gtk from '@girs/gtk-4.0';
 import { projektRegelVorschau, weiseProjektZu, type ProjektRegelVorschau } from '../../../core/presenters/projekt.ts';
 import { appSession } from '../data/session.ts';
 import { _, _n, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import type { AppEntity } from '../entities.ts';
 import { markup } from './util.ts';
 
@@ -228,9 +229,7 @@ export class BhProjektZuordnenDialog extends Adw.Dialog {
     }
 
     private zeigeFehler(err: unknown): void {
-        this.banner.set_title(
-            markup(fmt(_('Could not save: {error}'), { error: err instanceof Error ? err.message : String(err) })),
-        );
+        this.banner.set_title(markup(fmt(_('Could not save: {error}'), { error: errorText(err) })));
         this.banner.set_revealed(true);
     }
 

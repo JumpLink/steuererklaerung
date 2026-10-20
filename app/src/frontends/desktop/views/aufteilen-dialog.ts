@@ -34,6 +34,7 @@ import { confirmDialog, errorDialog } from './dialogs.ts';
 import { markup } from './util.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 import { _, _n, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 const satzLabel = (s: number) => `${Math.round(s * 100)} %`;
 
@@ -91,7 +92,7 @@ export async function aufteilungAufheben(
         showToast(_('Split removed'));
         onDone();
     } catch (err) {
-        void errorDialog(parent, _('Could not remove'), err instanceof Error ? err.message : String(err));
+        void errorDialog(parent, _('Could not remove'), errorText(err));
     }
 }
 
@@ -135,7 +136,7 @@ export class BhAufteilenDialog extends Adw.Dialog {
                 this.pruefen();
             })
             .catch((err) => {
-                void errorDialog(this, _('Split'), err instanceof Error ? err.message : String(err));
+                void errorDialog(this, _('Split'), errorText(err));
                 this.close();
             });
     }
@@ -301,7 +302,7 @@ export class BhAufteilenDialog extends Adw.Dialog {
             const teile = berechneTeile(a.amount, eingaben);
             hinweis = doppelzaehlungHinweis(teile, a.privatanteile);
         } catch (err) {
-            fehler = err instanceof Error ? err.message : String(err);
+            fehler = errorText(err);
         }
         this.save.set_sensitive(!fehler && !a.gesperrt);
         const text = fehler ?? hinweis;
@@ -326,7 +327,7 @@ export class BhAufteilenDialog extends Adw.Dialog {
             this.close();
             this.done();
         } catch (err) {
-            void errorDialog(this, _('Could not split'), err instanceof Error ? err.message : String(err));
+            void errorDialog(this, _('Could not split'), errorText(err));
         }
     }
 }

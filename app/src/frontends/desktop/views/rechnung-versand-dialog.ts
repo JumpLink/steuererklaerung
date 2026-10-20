@@ -37,8 +37,7 @@ import { desktopMailSender } from '../data/mail-sender.ts';
 import { showToast } from '../toast.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { _, fmt } from '../i18n.ts';
-
-const errorText = (err: unknown): string => (err instanceof Error ? err.message : String(err));
+import { errorText } from '../error-text.ts';
 
 const kib = (bytes: number): string => `${Math.max(1, Math.round(bytes / 1024))} KB`;
 

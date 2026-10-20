@@ -20,6 +20,7 @@ import { parseGermanInput } from '../../../core/lib/parsing.ts';
 import { saveFiling } from '../data/filings.ts';
 import { markup } from './util.ts';
 import { _, _p, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 /** Which half of the obligation is being recorded. */
 export type FristAction = 'filed' | 'paid';
@@ -167,7 +168,7 @@ export class BhFristErledigenDialog extends Adw.Dialog {
             this.done(filed ? _('Recorded as filed') : _('Recorded as paid'), true);
             this.close();
         } catch (err) {
-            this.warn(fmt(_('Could not record: {error}'), { error: err instanceof Error ? err.message : String(err) }));
+            this.warn(fmt(_('Could not record: {error}'), { error: errorText(err) }));
         }
     }
 

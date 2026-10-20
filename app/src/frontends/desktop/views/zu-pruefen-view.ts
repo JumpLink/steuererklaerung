@@ -33,6 +33,7 @@ import { erstattungGroup } from './erstattung-group.ts';
 import { navigateTo } from '../nav.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 import { _, _p, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 interface QueueRow {
     row: Gtk.ListBoxRow;
@@ -147,7 +148,7 @@ export class BhZuPruefenView extends Adw.Bin {
             this.renderDetail();
             this.focusCurrentRow();
         } catch (err) {
-            await errorDialog(this, _('Reload failed'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Reload failed'), errorText(err));
         }
     }
 
@@ -434,7 +435,7 @@ export class BhZuPruefenView extends Adw.Bin {
                 this.focusCurrentRow();
             }
         } catch (err) {
-            await errorDialog(this, _('Confirming failed'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Confirming failed'), errorText(err));
         } finally {
             this.busy = false;
         }

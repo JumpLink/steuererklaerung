@@ -26,6 +26,7 @@ import { showToast } from '../toast.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { LoadToken, markup, saveFileViaDialog } from './util.ts';
 import { _, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 const STUFEN: (1 | 2 | 3)[] = [1, 2, 3];
 
@@ -153,7 +154,7 @@ export class BhMahnungDialog {
             this.entwurf = null;
             this.betreff.set_label('');
             this.text.set_label('');
-            this.status.set_label(err instanceof Error ? err.message : String(err));
+            this.status.set_label(errorText(err));
         }
     }
 
@@ -216,7 +217,7 @@ export class BhMahnungDialog {
             this.dialog.close();
             this.onChanged();
         } catch (err) {
-            await errorDialog(this.dialog, _('Not saved'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this.dialog, _('Not saved'), errorText(err));
         }
     }
 }

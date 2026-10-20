@@ -17,6 +17,7 @@ import { desktopMailSender } from '../../data/mail-sender.ts';
 import { loadInvoicing, saveMailAccount } from '../../data/settings.ts';
 import type { AppEntity } from '../../entities.ts';
 import { _ } from '../../i18n.ts';
+import { errorText } from '../../error-text.ts';
 import { showToast } from '../../toast.ts';
 import { errorDialog } from '../dialogs.ts';
 import type { SettingsHost } from './rows.ts';
@@ -24,8 +25,6 @@ import type { SettingsHost } from './rows.ts';
 const SECURITY = ['tls', 'starttls', 'none'] as const;
 const securityLabels = (): string[] => ['TLS (Port 465)', 'STARTTLS (Port 587)', _('None (local only)')];
 const DEFAULT_PORT: Record<(typeof SECURITY)[number], number> = { tls: 465, starttls: 587, none: 25 };
-
-const errorText = (err: unknown): string => (err instanceof Error ? err.message : String(err));
 
 export function buildMailGroup(host: SettingsHost, entity: AppEntity, parent: Gtk.Widget): Adw.PreferencesGroup {
     const account = loadInvoicing(entity).mail ?? null;

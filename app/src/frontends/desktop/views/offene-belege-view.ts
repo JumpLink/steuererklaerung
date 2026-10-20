@@ -22,6 +22,7 @@ import { BhBelegLinkDialog } from './beleg-link-dialog.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { showToast, showUndoToast } from '../toast.ts';
 import { _, _n, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 export class BhOffeneBelegeView extends Adw.Bin {
     declare private _stack: Gtk.Stack;
@@ -226,7 +227,7 @@ export class BhOffeneBelegeView extends Adw.Bin {
             );
             if (this.entity?.id === entity.id && this.year === year) this.reload(entity, year);
         } catch (err) {
-            await errorDialog(this, _('Matching failed'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Matching failed'), errorText(err));
         } finally {
             this.autoLinkBusy = false;
         }

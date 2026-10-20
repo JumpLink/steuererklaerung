@@ -24,6 +24,7 @@ import type { AppEntity } from '../entities.ts';
 import { deDate, eur } from '../../../core/lib/format.ts';
 import { LoadToken, amountLabel, loadIntoStack, markup, saveFileViaDialog } from './util.ts';
 import { _, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import { importBmfRates } from '../../../core/config/bmf-import.ts';
 import { errorDialog } from './dialogs.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
@@ -233,11 +234,7 @@ export class BhUstvaView extends Adw.Bin {
         } catch (err) {
             btn.set_sensitive(true);
             btn.set_label(_('Load rates'));
-            void errorDialog(
-                this,
-                _('The rates could not be loaded'),
-                err instanceof Error ? err.message : String(err),
-            );
+            void errorDialog(this, _('The rates could not be loaded'), errorText(err));
         }
     }
 
@@ -248,7 +245,7 @@ export class BhUstvaView extends Adw.Bin {
             const { filename, bytes } = ustvaUploadXml(entity, year, q.quarter, q.aggregate);
             saveFileViaDialog(this, filename, bytes, `USt-VA Q${q.quarter} ${year} (XML)`);
         } catch (err) {
-            void errorDialog(this, _('XML not available'), err instanceof Error ? err.message : String(err));
+            void errorDialog(this, _('XML not available'), errorText(err));
         }
     }
 

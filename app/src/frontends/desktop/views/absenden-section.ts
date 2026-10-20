@@ -67,6 +67,7 @@ import { ensurePrivacyAck } from './datenschutz-dialog.ts';
 import { vorAbgabeGroup } from './vor-abgabe-group.ts';
 import { showToast } from '../toast.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 /** Per-form Prüf-Datenblatt loader (byte-producing) — the same presenters the Steuer + Wizard views
  * use, so the Absenden section can offer a "Prüf-PDF" for a final read right next to Freigeben. No
@@ -90,7 +91,7 @@ const SNAPSHOT_STATUS: Record<FilingSnapshot['status'], { label: string; css: st
 };
 
 function msg(err: unknown): string {
-    return err instanceof Error ? err.message : String(err);
+    return errorText(err);
 }
 
 /** A small status pill (icon + accented caption) — shared by the ERiC row and the per-form gate. */

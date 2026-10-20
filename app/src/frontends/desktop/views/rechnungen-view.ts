@@ -40,6 +40,7 @@ import { errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
 import { boundRowText, chipScroller, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 /** Status label + colour class for a recurring reminder. */
 const DUE_META: Record<string, { label: string; css: string }> = {
@@ -312,7 +313,7 @@ export class BhRechnungenView extends Adw.Bin {
         } catch (err) {
             btn.set_sensitive(true);
             btn.set_label(_('Create draft'));
-            await errorDialog(this, _('Draft failed'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Draft failed'), errorText(err));
         }
     }
 
@@ -350,7 +351,7 @@ export class BhRechnungenView extends Adw.Bin {
                 this.invoices.add(
                     new Adw.ActionRow({
                         title: _('Invoices not available'),
-                        subtitle: markup(err instanceof Error ? err.message : String(err)),
+                        subtitle: markup(errorText(err)),
                     }),
                 );
             });

@@ -39,6 +39,7 @@ import {
 import type { TimeRowStatus } from '../../../core/presenters/zeiten.ts';
 import type { AppEntity } from '../entities.ts';
 import { _, _n, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import { showToast } from '../toast.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { amountLabel, GroupRows, LoadToken, loadIntoStack, markup } from './util.ts';
@@ -263,11 +264,7 @@ export class BhZeitenView extends Adw.Bin {
             showToast(fmt(_('Timer running: {project}'), { project: target.project }));
             this.refresh();
         } catch (err) {
-            void errorDialog(
-                this,
-                _('The timer could not be started'),
-                err instanceof Error ? err.message : String(err),
-            );
+            void errorDialog(this, _('The timer could not be started'), errorText(err));
         }
     }
 
@@ -283,11 +280,7 @@ export class BhZeitenView extends Adw.Bin {
             );
             this.refresh();
         } catch (err) {
-            void errorDialog(
-                this,
-                _('The timer could not be stopped'),
-                err instanceof Error ? err.message : String(err),
-            );
+            void errorDialog(this, _('The timer could not be stopped'), errorText(err));
         }
     }
 
@@ -354,11 +347,7 @@ export class BhZeitenView extends Adw.Bin {
                     showToast(fmt(_('Draft created: {amount} € gross'), { amount: result.invoice.totals.gross }));
                     this.refresh();
                 } catch (err) {
-                    void errorDialog(
-                        this,
-                        _('The invoice could not be created'),
-                        err instanceof Error ? err.message : String(err),
-                    );
+                    void errorDialog(this, _('The invoice could not be created'), errorText(err));
                 }
             },
         });
@@ -486,11 +475,7 @@ export class BhZeitenView extends Adw.Bin {
                     showToast(projectId ? _('Project assigned') : _('Project removed'));
                     this.refresh();
                 } catch (err) {
-                    void errorDialog(
-                        this,
-                        _('The project could not be assigned'),
-                        err instanceof Error ? err.message : String(err),
-                    );
+                    void errorDialog(this, _('The project could not be assigned'), errorText(err));
                 }
             },
         });

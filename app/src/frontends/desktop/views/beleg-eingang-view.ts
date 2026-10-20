@@ -45,6 +45,7 @@ import { neueBelegeAusMailZaehlen } from '../../../core/actions/mail-eingang.ts'
 import { herkunftSatz as mailHerkunftSatz, neueBelegeSatz } from '../../../core/mail-eingang/herkunft.ts';
 import { wrapButtonLabel } from '../widgets/responsive.ts';
 import { _, _p, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 const DMS_LABEL: Record<string, string> = { builtin: _('built-in DMS'), paperless: 'Paperless' };
 
@@ -407,7 +408,7 @@ export class BhBelegEingangView extends Adw.Bin {
         try {
             cands = await loadLinkCandidates(this.entity, { documentId: doc.id });
         } catch (err) {
-            failure = err instanceof Error ? err.message : String(err);
+            failure = errorText(err);
         }
         if (token !== this.detailToken.current || this.currentId !== doc.id) return; // stale
         if (cands == null) {
@@ -641,7 +642,7 @@ export class BhBelegEingangView extends Adw.Bin {
                 this.focusCurrentRow();
             }
         } catch (err) {
-            await errorDialog(this, _('Confirming failed'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Confirming failed'), errorText(err));
         } finally {
             this.confirmBusy = false;
             this.updateConfirmSensitive();
@@ -675,7 +676,7 @@ export class BhBelegEingangView extends Adw.Bin {
                 this.focusCurrentRow();
             }
         } catch (err) {
-            await errorDialog(this, _('Undo failed'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Undo failed'), errorText(err));
         }
     }
 
@@ -719,5 +720,5 @@ function extForMime(mime: string): string {
 }
 
 function errText(err: unknown): string {
-    return err instanceof Error ? err.message : String(err);
+    return errorText(err);
 }

@@ -30,6 +30,7 @@ import { errorDialog } from './dialogs.ts';
 import { nimmProjektZuordnungZurueck, type BuchungProjektAnsicht } from '../../../core/presenters/projekt.ts';
 import { BhProjektZuordnenDialog, type ProjektOption } from './projekt-zuordnen-dialog.ts';
 import { _, _p, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 /** ClassSource → German label (mirrors the web view-helpers SOURCE_LABEL). */
 const SOURCE_LABEL: Record<string, string> = {
@@ -262,9 +263,7 @@ export class BhTxDetailDialog {
                         dialog.close();
                         edit.onChanged();
                     })
-                    .catch((err: unknown) =>
-                        errorDialog(dialog, _('Could not take back'), err instanceof Error ? err.message : String(err)),
-                    );
+                    .catch((err: unknown) => errorDialog(dialog, _('Could not take back'), errorText(err)));
             });
             row.add_suffix(button);
             group.add(row);
@@ -317,7 +316,7 @@ export class BhTxDetailDialog {
                 dialog.close();
                 edit.onChanged();
             } catch (err) {
-                void errorDialog(dialog, _('Could not take back'), err instanceof Error ? err.message : String(err));
+                void errorDialog(dialog, _('Could not take back'), errorText(err));
             }
         });
         row.add_suffix(button);

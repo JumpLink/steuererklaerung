@@ -32,6 +32,7 @@ import { rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
 import { BhKontaktFormDialog } from './kontakt-form-dialog.ts';
 import { GroupRows, LoadToken, emptyState, loadIntoStack, markup } from './util.ts';
 import { _, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 const KIND_LABEL: Record<string, string> = {
     company: _('Company'),
@@ -299,7 +300,7 @@ export class BhKontakteView extends Adw.Bin {
             showToast(_('Contact deleted'));
             this.refresh();
         } catch (err) {
-            await errorDialog(this, _('Deleting failed'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Deleting failed'), errorText(err));
         }
     }
 
@@ -316,7 +317,7 @@ export class BhKontakteView extends Adw.Bin {
         } catch (err) {
             btn.set_sensitive(true);
             btn.set_label(_('Import'));
-            showToast(fmt(_('Import failed: {error}'), { error: err instanceof Error ? err.message : String(err) }), 5);
+            showToast(fmt(_('Import failed: {error}'), { error: errorText(err) }), 5);
         }
     }
 

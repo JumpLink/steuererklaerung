@@ -11,6 +11,8 @@
 
 import Gio from '@girs/gio-2.0';
 
+import { BackupError } from '../../core/actions/backup.ts';
+import type { ErrorDetail } from '../../core/lib/errors.ts';
 import { BACKUP_CHILD_ARG } from './launch-mode.ts';
 import { selfCommand } from './self-launch.ts';
 
@@ -71,9 +73,9 @@ function spawnBackup(reason: string): Promise<BackgroundBackupResult> {
             if (line) {
                 const parsed = JSON.parse(line.slice(BACKUP_RESULT_PREFIX.length)) as
                     | { ok: true; path: string }
-                    | { ok: false; error: string };
+                    | { ok: false; error: string; detail?: ErrorDetail };
                 if (parsed.ok) resolve({ path: parsed.path });
-                else reject(new Error(parsed.error));
+                else reject(parsed.detail ? new BackupError(parsed.error, parsed.detail) : new Error(parsed.error));
                 return;
             }
             const lastErr = stderr

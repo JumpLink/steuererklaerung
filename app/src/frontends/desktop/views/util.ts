@@ -17,6 +17,7 @@ import { stopwatch, timed } from '../../../core/lib/timing.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 import { wrappingLabel } from '../widgets/responsive.ts';
 import { _, _p, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 import { markup } from './markup.ts';
 export { markup };
@@ -424,7 +425,7 @@ const originalTitle = new WeakMap<Adw.StatusPage, string>();
  * the user somewhere that cannot help.
  */
 export function applyRemedy(page: Adw.StatusPage, err: unknown, retry?: () => void): void {
-    const message = err instanceof Error ? err.message : String(err);
+    const message = errorText(err);
     const remedy = remedyFor(err);
     if (!originalTitle.has(page)) originalTitle.set(page, page.get_title() ?? _('Could not load'));
     // StatusPage.description is parsed as Pango markup (no use-markup toggle) — escape it.

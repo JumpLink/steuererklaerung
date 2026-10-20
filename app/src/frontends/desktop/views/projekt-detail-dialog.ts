@@ -23,6 +23,7 @@ import {
 } from '../../../core/presenters/projekt.ts';
 import { appSession } from '../data/session.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import type { AppEntity } from '../entities.ts';
 import { showToast } from '../toast.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
@@ -74,11 +75,7 @@ export class BhProjektDetailDialog {
             const a = await loadProjektAnsicht(appSession(), this.entity, this.year);
             this.render(a);
         } catch (err) {
-            void errorDialog(
-                this.dialog,
-                _('The project could not be loaded'),
-                err instanceof Error ? err.message : String(err),
-            );
+            void errorDialog(this.dialog, _('The project could not be loaded'), errorText(err));
         }
     }
 
@@ -223,7 +220,7 @@ export class BhProjektDetailDialog {
             this.onChanged();
             await this.refresh();
         } catch (err) {
-            void errorDialog(this.dialog, _('Could not change'), err instanceof Error ? err.message : String(err));
+            void errorDialog(this.dialog, _('Could not change'), errorText(err));
         }
     }
 
@@ -256,11 +253,7 @@ export class BhProjektDetailDialog {
                     this.onChanged();
                     void this.refresh();
                 } catch (err) {
-                    void errorDialog(
-                        this.dialog,
-                        _p('rule', 'Could not remove'),
-                        err instanceof Error ? err.message : String(err),
-                    );
+                    void errorDialog(this.dialog, _p('rule', 'Could not remove'), errorText(err));
                 }
             });
             row.add_suffix(button);
@@ -280,7 +273,7 @@ export class BhProjektDetailDialog {
                 this.onChanged();
                 void this.refresh();
             } catch (err) {
-                void errorDialog(this.dialog, _('Could not save'), err instanceof Error ? err.message : String(err));
+                void errorDialog(this.dialog, _('Could not save'), errorText(err));
             }
         });
         group.add(neu);
