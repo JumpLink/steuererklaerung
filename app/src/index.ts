@@ -129,11 +129,9 @@ try {
     parsed = Promise.reject(err);
 }
 
-// Runtime detection, the probe @gjsify/node-gi uses: node-gi defines `imports` under node too,
-// only GJS has both `imports` and `print`.
-const isGjs =
-    typeof (globalThis as { imports?: unknown }).imports !== 'undefined' &&
-    typeof (globalThis as { print?: unknown }).print === 'function';
+// Runtime detection: @gjsify/node-gi defines `imports` and `print` under node too, only gjsify's
+// process shim on GJS reports `versions.gjs`.
+const isGjs = typeof (process.versions as Record<string, string | undefined>).gjs === 'string';
 
 if (isGjs) {
     // GJS has no always-on event loop, so a GLib main loop keeps async command

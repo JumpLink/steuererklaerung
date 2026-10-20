@@ -57,11 +57,11 @@ export function selfCommand(args: string[], gjs: boolean = isGjsRuntime()): stri
     return gjs ? [interpreter(), '-m', bundlePath(), ...args] : [process.execPath, bundlePath(), ...args];
 }
 
-// `imports` alone is not enough: @gjsify/node-gi defines it under node too (the Windows and macOS
-// packages), and that sent the backup to a `gjs` that is not installed there. Same probe as node-gi.
+// No global probe works here: @gjsify/node-gi installs `imports` AND `print` under node (the
+// Windows and macOS packages), which sent the backup to a `gjs` that is not installed there. Only
+// gjsify's process shim on GJS reports `versions.gjs`; node's own process never does.
 function isGjsRuntime(): boolean {
-    const g = globalThis as { imports?: unknown; print?: unknown };
-    return typeof g.imports !== 'undefined' && typeof g.print === 'function';
+    return typeof (process.versions as Record<string, string | undefined>).gjs === 'string';
 }
 
 /** The one place `process.platform` is read for the MCP guide; everything below takes it as input. */
