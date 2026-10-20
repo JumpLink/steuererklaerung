@@ -151,6 +151,28 @@
                 "lib/steuererklaerung/demo/transactions-data/qonto_demo-fw-geschaeft.ndjson": "demo/transactions-data/qonto_demo-fw-geschaeft.ndjson",
                 "lib/steuererklaerung/demo/transactions-data/statements.json": "demo/transactions-data/statements.json"
             },
+            "formats": {
+                "deb": {
+                    "bundledTypelibs": [
+                        ".gda-stage/gi"
+                    ],
+                    "extraFiles": {
+                        "lib/steuererklaerung/gda/lib/libgda-6.0/providers/libgda-sqlite-6.0.so": ".gda-stage/tree/usr/lib/steuererklaerung/gda/lib/libgda-6.0/providers/libgda-sqlite-6.0.so",
+                        "lib/steuererklaerung/gda/share/libgda-6.0/information_schema.xml": ".gda-stage/tree/usr/lib/steuererklaerung/gda/share/libgda-6.0/information_schema.xml",
+                        "lib/steuererklaerung/gda/share/libgda-6.0/dtd/libgda-array.dtd": ".gda-stage/tree/usr/lib/steuererklaerung/gda/share/libgda-6.0/dtd/libgda-array.dtd",
+                        "lib/steuererklaerung/gda/share/libgda-6.0/dtd/libgda-db-catalog.dtd": ".gda-stage/tree/usr/lib/steuererklaerung/gda/share/libgda-6.0/dtd/libgda-db-catalog.dtd",
+                        "lib/steuererklaerung/gda/share/libgda-6.0/dtd/libgda-paramlist.dtd": ".gda-stage/tree/usr/lib/steuererklaerung/gda/share/libgda-6.0/dtd/libgda-paramlist.dtd",
+                        "lib/steuererklaerung/gda/share/libgda-6.0/dtd/libgda-server-operation.dtd": ".gda-stage/tree/usr/lib/steuererklaerung/gda/share/libgda-6.0/dtd/libgda-server-operation.dtd"
+                    }
+                }
+            },
+            "depends": {
+                "deb": [
+                    "libxml2-16",
+                    "libsqlite3-0",
+                    "gir1.2-freedesktop"
+                ]
+            },
             "appId": "eu.jumplink.Steuererklaerung",
             "name": "Steuererklärung",
             "summary": "Taxes and bookkeeping",

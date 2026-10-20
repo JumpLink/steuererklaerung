@@ -38,9 +38,41 @@ permissions:
   contents: write
 
 jobs:
-  package:
+  # libgda 6 for the .deb (#148). Ubuntu 26.04 ships libgda 5 only, so the deb carries its own build
+  # (app/dev/ship-gda-deb.sh). It has to be built where the deb's libraries live — libgda links
+  # libxml2.so.16 on Ubuntu, Fedora has .so.2 — so this is Ubuntu, not the Fedora container below.
+  # Cached on the recipe: the build takes minutes, and its inputs are the script and the pinned
+  # tarball digest inside it.
+  gda-deb:
     if: ${{ !inputs.tag }}
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache the libgda build
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: app/.gda-stage
+          key: gda-deb-${{ hashFiles('app/dev/ship-gda-deb.sh') }}
+
+      - name: Build libgda for the deb
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: docker run --rm -v "$PWD":/w -w /w ubuntu:26.04 app/dev/ship-gda-deb.sh --install-deps
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gda-deb-stage
+          path: app/.gda-stage
+          include-hidden-files: true
+          retention-days: 7
+
+  package:
+    if: ${{ !inputs.tag }}
+    needs: gda-deb
+    runs-on: ubuntu-latest
+    outputs:
+      eric: ${{ steps.eric.outputs.fetched }}
     container:
       # Fedora, because the install proof needs a package manager that resolves the rpm's Requires
       # for real. The same reasoning as ci.yml: every system library named explicitly, nothing
@@ -110,6 +142,12 @@ jobs:
 
       - name: Third-party licences are all decided
         run: cd app && gjsify run check:licenses
+
+      # The libgda the deb carries (`gjsify.ship.formats.deb`), built by the job above.
+      - uses: actions/download-artifact@v4
+        with:
+          name: gda-deb-stage
+          path: app/.gda-stage
 
       # ERiC for the Linux package: the slim runtime plus the GJS binding that loads it. The binding
       # needs no ERiC to build (it dlopens it at run time), so it is built only when ERiC is bundled.
@@ -234,6 +272,65 @@ jobs:
             || gh release create -R "$GITHUB_REPOSITORY" "$tag" --verify-tag --title "Steuererklärung ${tag#v}" --notes "" \
             || gh release view -R "$GITHUB_REPOSITORY" "$tag" >/dev/null
           gh release upload -R "$GITHUB_REPOSITORY" "$tag" app/ship/out/* --clobber
+
+  # The deb install proof, the twin of the rpm one above, on the distribution the deb is for:
+  # Ubuntu 26.04 has gjs 1.88 and no libgda 6, which is exactly what the bundled libgda answers.
+  # Skipped for a build that contains ERiC: its artifact is not uploaded (it would be readable by
+  # anyone), so there is nothing to download.
+  prove-deb:
+    needs: package
+    if: ${{ !inputs.tag && needs.package.outputs.eric != 'true' }}
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:26.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages
+          path: packages
+
+      # `apt-get install ./x.deb` resolves every `Depends:` the package declares, and no libgda is
+      # named in them: an undeclared library fails here instead of on a user's machine.
+      - name: Install the package
+        run: |
+          set -eu
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update -qq
+          apt-get install -y --no-install-recommends ./packages/*.deb
+          if dpkg -l | grep -E 'libgda|gir1.2-gda'; then echo "::error::a system libgda was installed - the proof would not test the bundled one"; exit 1; fi
+
+      - name: Install the runtime the start proof needs
+        run: >
+          apt-get install -y --no-install-recommends
+          xvfb xauth dbus libglib2.0-bin libgles2 libegl1 libgl1-mesa-dri
+
+      - name: The installed app starts
+        run: |
+          set -eu
+          cat > /tmp/prove.sh <<'SH'
+          set -eu
+          export GJSIFY_DEVTOOLS=1 STEUER_DEMO=1 STEUER_APP_ID=eu.jumplink.Steuererklaerung.CI
+          export HOME=/tmp/fresh XDG_DATA_HOME=/tmp/fresh/data XDG_CONFIG_HOME=/tmp/fresh/config
+          mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME"
+          steuererklaerung &
+          APP=$!
+          for _ in $(seq 1 60); do
+            if gdbus call --session --dest eu.jumplink.Steuererklaerung.CI \
+                 --object-path /eu/jumplink/Steuererklaerung/CI/devtools \
+                 --method org.gjsify.Devtools.GetStatus >/tmp/status.json 2>/dev/null; then
+              echo "the installed app answered:"; cat /tmp/status.json
+              kill "$APP" 2>/dev/null || true
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::the installed app never answered GetStatus - it did not start"
+          kill "$APP" 2>/dev/null || true
+          exit 1
+          SH
+          # STEUER_DEMO seeds the demo store, which opens SQLite through libgda's provider: a deb
+          # whose libgda is half there fails here, not at the first window.
+          xvfb-run -a dbus-run-session -- sh /tmp/prove.sh
 
   # macOS and Windows packages, assembled on Linux (ADR 0024 § A1: assembly is not host-bound, the
   # Mach-O and PE payloads are only RUN on their own OS). They carry the NODE bundle
