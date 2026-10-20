@@ -27,7 +27,7 @@
    "repository": "JumpLink/steuererklaerung",
    "translations": "app/po",
    "icon": "app/data/icons/hicolor/scalable/apps/eu.jumplink.Steuererklaerung.svg",
-   "releaseAssets": false,
+   "releaseAssets": true,
    "downloads": [
     {
      "platform": "linux",
