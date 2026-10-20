@@ -7,8 +7,9 @@
  *   build:  npm run build:app    (gjsify build → dist/steuer-app.gjs.mjs)
  *   run:    npm run start:app    (gjsify run dist/steuer-app.gjs.mjs)
  *
- * The shell is @gjsify/adwaita-app's runAdwaitaApp(): it owns the runAsync lifecycle (NOT the
- * synchronous run()), the app.quit/app.about actions and the env-gated @gjsify/devtools control
+ * The shell is @gjsify/adwaita-app's AdwaitaApp + runApplication() — what runAdwaitaApp() wraps,
+ * minus its fixed command line (see guiArgv in launch-mode.ts). It owns the runAsync lifecycle (NOT
+ * the synchronous run()), the app.quit/app.about actions and the env-gated @gjsify/devtools control
  * plane. runAsync is required, not cosmetic: under the synchronous run() the GJS promise-job queue
  * is not flushed for a purely synchronous load (one with no Gio/libsoup I/O in its chain), so a
  * store-only view load — e.g. a `privat` entity's Home model or ESt plan — would never run its
@@ -22,7 +23,7 @@
 import './i18n-init.ts';
 import 'dotenv/config';
 import Gtk from '@girs/gtk-4.0';
-import { runAdwaitaApp } from '@gjsify/adwaita-app';
+import { AdwaitaApp, runApplication } from '@gjsify/adwaita-app';
 import { donationsAllowed } from '@gjsify/distribution';
 import { installMigrationBackup, runConfiguredBackup } from '../../core/actions/backup.ts';
 import { applyDemoEnv } from '../../core/config/demo.ts';
@@ -37,7 +38,7 @@ import { EDITION_BADGE_CSS, installAbout } from './about-dialog.ts';
 import { dialogFinTSInteraction } from './fints-interaction.ts';
 import { _ } from './i18n.ts';
 import { APP_ICON } from './icons.ts';
-import { launchMode } from './launch-mode.ts';
+import { guiArgv, launchMode } from './launch-mode.ts';
 import { relaunchIfRequested, snapshotLaunchEnv } from './restart.ts';
 import { localizedSupportUrl } from './views/support-dialog.ts';
 import { MainWindow } from './window.ts';
@@ -129,7 +130,7 @@ if (mode === 'cli') {
                 'on the same backend (store, EÜR/tax reports, receipts, contacts).',
         ),
     };
-    const status = await runAdwaitaApp({
+    const guiApp = new AdwaitaApp({
         applicationId: APP_ID,
         css: EDITION_BADGE_CSS,
         // Not the `about` option: the plain dialog has no room for the edition badges.
@@ -138,6 +139,9 @@ if (mode === 'cli') {
             return new MainWindow(app);
         },
     });
+    // runApplication, not runAdwaitaApp: that convenience wrapper hands the raw command line to
+    // GApplication, which rejects the app's own `--demo` (see guiArgv). Same lifecycle otherwise.
+    const status = await runApplication(guiApp, [process.argv[1] ?? APP_NAME, ...guiArgv(process.argv.slice(2))]);
     relaunchIfRequested();
     process.exit(status);
 }

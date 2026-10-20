@@ -42,3 +42,16 @@ export function launchMode(args: string[]): LaunchMode {
     return 'cli';
 }
 
+/**
+ * The command line for `Gio.Application.run()` — the window's own flags removed.
+ *
+ * GApplication parses argv itself and bails out on anything it does not know, so a flag the app
+ * handles before the loop starts must not reach it: `steuererklaerung --demo` printed
+ * `Unbekannte Option --demo` and exited 1 instead of opening the demo window (a second finding
+ * from issue #133, present long before the dispatch above). Dropping the flag here loses nothing:
+ * `applyDemoEnv()` has already turned it into `STEUER_DEMO=1`, which is what every later read
+ * looks at, and restart.ts keeps its own unfiltered snapshot of the launch.
+ */
+export function guiArgv(args: string[]): string[] {
+    return args.filter((a) => !GUI_FLAGS.has(a));
+}

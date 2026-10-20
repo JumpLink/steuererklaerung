@@ -6,7 +6,7 @@
 
 import { describe, expect, it } from '@gjsify/unit';
 
-import { BACKUP_CHILD_ARG, launchMode } from '../../../src/frontends/desktop/launch-mode.ts';
+import { BACKUP_CHILD_ARG, guiArgv, launchMode } from '../../../src/frontends/desktop/launch-mode.ts';
 
 export default async () => {
     await describe('launchMode', async () => {
@@ -48,6 +48,19 @@ export default async () => {
             expect(launchMode(['backup', 'list'])).toBe('cli');
             expect(launchMode(['backup', 'create'])).toBe('cli');
             expect(launchMode([BACKUP_CHILD_ARG, 'manual'])).toBe('backup-child');
+        });
+    });
+
+    await describe('guiArgv', async () => {
+        await it("drops the window's own flags, which GApplication would reject", async () => {
+            // `--demo` reached g_application_run and killed the launch with "Unbekannte Option
+            // --demo"; by then applyDemoEnv() has long since set STEUER_DEMO=1.
+            expect(guiArgv(['--demo'])).toEqualArray([]);
+        });
+
+        await it('leaves everything else untouched', async () => {
+            expect(guiArgv([])).toEqualArray([]);
+            expect(guiArgv(['--gdk-debug=all'])).toEqualArray(['--gdk-debug=all']);
         });
     });
 };
