@@ -118,6 +118,8 @@
         "install -d /app/lib/girepository-1.0",
         "install -m644 node_modules/@gjsify/http-soup-bridge-linux-x64/prebuilds/linux-x64/GjsifyHttpSoupBridge-1.0.typelib /app/lib/girepository-1.0/",
         "install -m755 node_modules/@gjsify/http-soup-bridge-linux-x64/prebuilds/linux-x64/libgjsifyhttpsoupbridge.so /app/lib/",
+        "install -d /app/demo",
+        "cp -r app/demo/. /app/demo/",
         "install -d /app/share/locale",
         "cp -r app/dist/locale/. /app/share/locale/",
         "install -Dm644 app/data/eu.jumplink.Steuererklaerung.desktop /app/share/applications/eu.jumplink.Steuererklaerung.desktop",
