@@ -30,12 +30,14 @@ import { loadUserSettings } from '../../core/config/user-settings.ts';
 import { setFinTSInteraction } from '../../core/clients/fints/interaction.ts';
 import { applyPathEnv } from '../../core/paths.ts';
 import { ensureDemoSeeded } from '../cli/demo.ts';
+import { runCli } from '../cli/main.ts';
 import { BACKUP_RESULT_PREFIX } from './background-backup.ts';
 import { APP_ID, APP_NAME, APP_VERSION } from './constants.ts';
 import { EDITION_BADGE_CSS, installAbout } from './about-dialog.ts';
 import { dialogFinTSInteraction } from './fints-interaction.ts';
 import { _ } from './i18n.ts';
 import { APP_ICON } from './icons.ts';
+import { launchMode } from './launch-mode.ts';
 import { relaunchIfRequested, snapshotLaunchEnv } from './restart.ts';
 import { localizedSupportUrl } from './views/support-dialog.ts';
 import { MainWindow } from './window.ts';
@@ -43,19 +45,17 @@ import { MainWindow } from './window.ts';
 // Pin GTK 4 before libadwaita pulls it in; keep the import referenced.
 void Gtk;
 
-// `steuererklaerung mcp` — the installed app is the one binary a package or Flatpak ships, so it
-// must also be what an external agent starts. No window, no demo seeding: stdout is the protocol.
-const mcpMode = process.argv[2] === 'mcp';
-// `<app> backup <reason>` — the child the window starts for "Back up now" (background-backup.ts),
-// so the copy runs off the GLib loop. Not a user command: the CLI's `steuer backup create` is.
-const backupMode = process.argv[2] === 'backup';
+// The installed app is the one binary a package or Flatpak ships, so it is also the CLI and the
+// MCP server an external agent starts. Only an argument-free launch opens a window — see
+// launch-mode.ts for why anything else must not.
+const mode = launchMode(process.argv.slice(2));
 
 // The environment as launched, for a restart into the other data mode — before anything rewrites it.
 snapshotLaunchEnv();
 // Someone who picked the demo (welcome or Settings) gets it again, unless the launch says otherwise.
+// Only for the window: a CLI invocation must never silently read demo data because of a GUI setting.
 if (
-    !mcpMode &&
-    !backupMode &&
+    mode === 'gui' &&
     process.env.STEUER_DEMO === undefined &&
     process.env.BH_DEMO === undefined &&
     !process.argv.includes('--demo') &&
@@ -70,7 +70,15 @@ installMigrationBackup();
 // cwd `/` or `$HOME` and finds no manifest at all. Strictly additive — an existing installation
 // (a manifest in cwd, an override, a store beside the module) is left exactly as it was.
 applyPathEnv();
-if (mcpMode) {
+if (mode === 'cli') {
+    // `steuererklaerung --help`, `… --version`, `… elster plan 2025`, `… backup list`: the whole
+    // `steuer` CLI, headless, from the packaged binary. Called from this SYNCHRONOUS stack on
+    // purpose — on GJS runCli() ends in `loop.run()`, and a main loop entered from the
+    // continuation of a top-level await never flushes the promise jobs (the same trap the `mcp`
+    // branch below documents). runCli() repeats the idempotent env setup above; it has to, because
+    // the standalone `steuer` bundle calls it with none of it done.
+    runCli();
+} else if (mode === 'mcp') {
     // Awaited, not driven by a nested GLib.MainLoop: this module already sits in a top-level await,
     // and a nested loop.run() inside it never flushes the promise jobs — the server would hang
     // before answering `initialize`. GJS spins its own loop until this settles; the server parks
@@ -82,7 +90,9 @@ if (mcpMode) {
         console.error(err instanceof Error ? err.message : String(err));
         process.exit(1);
     }
-} else if (backupMode) {
+} else if (mode === 'backup-child') {
+    // The child the window starts for "Back up now" (background-backup.ts), so the copy runs off
+    // the GLib loop. Not a user command — that is the CLI's `steuer backup create`.
     // The parent passed its resolved environment, so this backs up exactly what the window shows.
     // One result line on stdout; the lock in createBackup keeps it from overlapping any other run.
     let line: string;

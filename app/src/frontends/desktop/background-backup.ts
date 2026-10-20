@@ -3,13 +3,15 @@
  *
  * A backup is synchronous all the way down — recursive copies and SQLite's `VACUUM INTO` — and on
  * a real store that takes seconds in which the GLib loop would draw nothing. So the app runs it in
- * a child process (`<app> backup`, see main.ts) and only waits for the result asynchronously. The
- * child takes the same per-user lock as the CLI and the pre-migration backup, so the runs never
- * overlap; closing the window does not abort a backup that is already being written.
+ * a child process (`<app> --internal-backup <reason>`, see main.ts) and only waits for the result
+ * asynchronously. The child takes the same per-user lock as the CLI and the pre-migration backup,
+ * so the runs never overlap; closing the window does not abort a backup that is already being
+ * written.
  */
 
 import Gio from '@girs/gio-2.0';
 
+import { BACKUP_CHILD_ARG } from './launch-mode.ts';
 import { selfCommand } from './self-launch.ts';
 
 export interface BackgroundBackupResult {
@@ -46,7 +48,7 @@ function spawnBackup(reason: string): Promise<BackgroundBackupResult> {
         );
         let proc: Gio.Subprocess;
         try {
-            proc = launcher.spawnv(selfCommand(['backup', reason]));
+            proc = launcher.spawnv(selfCommand([BACKUP_CHILD_ARG, reason]));
         } catch (err) {
             reject(err instanceof Error ? err : new Error(String(err)));
             return;

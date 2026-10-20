@@ -1,6 +1,6 @@
 /**
  * How this app starts a copy of itself for work that must not run on the GLib main loop — a
- * backup (`<app> backup`) — and what an external agent runs for `<app> mcp`.
+ * backup (`<app> --internal-backup <reason>`) — and what an external agent runs for `<app> mcp`.
  */
 
 import { existsSync, readFileSync } from 'node:fs';
