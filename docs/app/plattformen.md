@@ -35,7 +35,7 @@ Absenden-Dialog und in Konten sagen, wo ein Geheimnis liegt.
 Windows 11 x64 in einer VM, Build von 0.1.0 (Oktober 2026):
 
 - MSI-Installation, Start über das Startmenü, portables Zip, deutsche Oberfläche
-- „Jetzt sichern" in der Oberfläche und `steuererklaerung.cmd backup manual`
+- „Jetzt sichern" in der Oberfläche und `steuererklaerung.cmd --internal-backup manual`
 - ERiC 44.3.6.0 aus dem Benutzerordner: Status „verfügbar"
 - MCP über stdio: `tools/list` liefert alle Werkzeuge
 

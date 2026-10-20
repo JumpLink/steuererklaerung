@@ -16,7 +16,7 @@ import { join } from 'node:path';
 const ROOT = new URL('..', import.meta.url).pathname;
 const CLI_DIR = join(ROOT, 'src/frontends/cli');
 const BARREL = join(CLI_DIR, 'index.ts');
-const ENTRY = join(ROOT, 'src/index.ts');
+const ENTRY = join(ROOT, 'src/frontends/cli/main.ts');
 
 /**
  * The files the barrel is meant to cover: every module directly in `cli/`, plus the `index.ts` of
@@ -60,7 +60,7 @@ for (const [spec, path] of surfaceModules()) {
     }
     for (const name of commands) {
         if (!new RegExp(`\\.command\\(\\s*${name}\\s*\\)`).test(entry)) {
-            problems.push(`${name} (${spec}) ist nicht per .command() in src/index.ts registriert`);
+            problems.push(`${name} (${spec}) ist nicht per .command() in src/frontends/cli/main.ts registriert`);
         }
     }
 }
