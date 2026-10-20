@@ -437,17 +437,26 @@ jobs:
         with:
           ref: ${{ inputs.tag || github.ref }}
 
-      - name: Check the manifest keeps the sandbox narrow
+      # The bundle is built from a variant of the Flathub manifest WITHOUT the `opencode` module: that
+      # module is `extra-data`, and flatpak cannot install a single-file bundle of an extra-data app
+      # ("Extra data missing in detached metadata", flatpak/flatpak#1334). 0.1.x does not offer the
+      # built-in assistant anyway; it returns in 0.2 -- revisit this then. The `git` source becomes
+      # this checkout (a container's checkout is not a repo git trusts). Flathub keeps the full manifest.
+      - name: Derive the bundle manifest and check the sandbox stays narrow
         run: |
           set -eu
-          m=eu.jumplink.Steuererklaerung.json
+          jq 'del(.modules[] | select(.name == "opencode"))
+              | (.modules[] | select(.name == "steuererklaerung") | .sources[0]) = {"type":"dir","path":".","skip":[".git",".flatpak-builder","node_modules"]}' \
+            eu.jumplink.Steuererklaerung.json > ci-manifest.json
+          m=ci-manifest.json
           jq -e '.["finish-args"] | index("--share=network")' "$m" >/dev/null \
             || { echo "::error::$m lacks --share=network"; exit 1; }
           if jq -e '.["finish-args"][] | select(startswith("--filesystem") or . == "--talk-name=org.freedesktop.Flatpak")' "$m" >/dev/null; then
             echo "::error::$m widens the sandbox (--filesystem or org.freedesktop.Flatpak)"; exit 1
           fi
-          jq -e '[.modules[].sources[]? | select(type == "object" and .type == "script" and .["dest-filename"] == "apply_extra")] | length == 1' "$m" >/dev/null \
-            || { echo "::error::$m has no apply_extra script (bundled opencode)"; exit 1; }
+          if jq -e '[.modules[].sources[]? | select(type == "object" and .type == "extra-data")] | length > 0' "$m" >/dev/null; then
+            echo "::error::$m still has extra-data, which a single-file bundle cannot carry"; exit 1
+          fi
           echo "manifest ok"
 
       - name: Install the GNOME runtime, SDK and its extensions
@@ -462,12 +471,9 @@ jobs:
             "org.freedesktop.Sdk.Extension.node24//$fdo" \
             "org.freedesktop.Sdk.Extension.typescript//$fdo"
 
-      # The `git` source becomes this checkout (a container's checkout is not a repo git trusts).
       - name: Build and export the Flatpak
         run: |
           set -eu
-          jq '(.modules[] | select(.name == "steuererklaerung") | .sources[0]) = {"type":"dir","path":".","skip":[".git",".flatpak-builder","node_modules"]}' \
-            eu.jumplink.Steuererklaerung.json > ci-manifest.json
           flatpak-builder --disable-rofiles-fuse --force-clean --state-dir=/tmp/fp-state \
             --repo=/tmp/fp-repo /tmp/fp-build ci-manifest.json
 
