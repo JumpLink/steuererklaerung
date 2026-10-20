@@ -11,7 +11,14 @@ name: Release
 on:
   push:
     tags: ['v*']
+  # `tag` re-runs the Flatpak job against an ALREADY PUBLISHED release: it builds that tag's sources
+  # and uploads the bundle to that release only (--clobber). The other jobs are skipped then.
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag to attach the Flatpak to (e.g. v0.1.1); empty = build only"
+        required: false
+        type: string
 
 # ERiC (the tax authority's submission library) is bundled into OFFICIAL builds only (licence § 4
 # Abs. 1: shipped with our own software as one product). It is cloned from a PRIVATE repo over SSH
@@ -32,6 +39,7 @@ permissions:
 
 jobs:
   package:
+    if: ${{ !inputs.tag }}
     runs-on: ubuntu-latest
     container:
       # Fedora, because the install proof needs a package manager that resolves the rpm's Requires
@@ -225,6 +233,7 @@ jobs:
   # Order matters: the Linux smoke start needs the Linux node_modules, and every
   # `gjsify install --os …` below replaces them, so it comes first.
   package-macos-windows:
+    if: ${{ !inputs.tag }}
     runs-on: ubuntu-latest
     container:
       image: quay.io/fedora/fedora:44
@@ -406,3 +415,85 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release upload -R "$GITHUB_REPOSITORY" "${GITHUB_REF_NAME}" app/ship/out/*.zip app/ship/out/*.msi --clobber
+
+  # The Flatpak bundle (`.flatpak`) for a plain `flatpak install`. Same manifest as ci.yml's
+  # `flatpak` job, but this one exports and bundles it. WITHOUT ERiC, on purpose: the manifest builds
+  # from public sources only and ERiC's licence allows it solely inside our own official builds.
+  # `--runtime-repo` is what lets `flatpak install x.flatpak` fetch the GNOME runtime from Flathub
+  # by itself; without it the install fails on a machine that has not added Flathub.
+  # Privileged because flatpak-builder needs namespaces inside a container.
+  package-flatpak:
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/fedora/fedora:44
+      options: --privileged
+    steps:
+      - name: Install system prerequisites
+        run: >
+          dnf install -y --setopt=install_weak_deps=False
+          git tar xz findutils gjs flatpak flatpak-builder jq gh
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+
+      - name: Check the manifest keeps the sandbox narrow
+        run: |
+          set -eu
+          m=eu.jumplink.Steuererklaerung.json
+          jq -e '.["finish-args"] | index("--share=network")' "$m" >/dev/null \
+            || { echo "::error::$m lacks --share=network"; exit 1; }
+          if jq -e '.["finish-args"][] | select(startswith("--filesystem") or . == "--talk-name=org.freedesktop.Flatpak")' "$m" >/dev/null; then
+            echo "::error::$m widens the sandbox (--filesystem or org.freedesktop.Flatpak)"; exit 1
+          fi
+          jq -e '[.modules[].sources[]? | select(type == "object" and .type == "script" and .["dest-filename"] == "apply_extra")] | length == 1' "$m" >/dev/null \
+            || { echo "::error::$m has no apply_extra script (bundled opencode)"; exit 1; }
+          echo "manifest ok"
+
+      - name: Install the GNOME runtime, SDK and its extensions
+        run: |
+          set -eu
+          flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+          flatpak install --system --noninteractive org.gnome.Platform//50 org.gnome.Sdk//50
+          fdo=$(flatpak info --show-metadata org.gnome.Sdk//50 \
+            | sed -n '/^\[Extension org.freedesktop.Sdk.Extension\]/,/^\[/s/^version *= *//p')
+          test -n "$fdo"
+          flatpak install --system --noninteractive \
+            "org.freedesktop.Sdk.Extension.node24//$fdo" \
+            "org.freedesktop.Sdk.Extension.typescript//$fdo"
+
+      # The `git` source becomes this checkout (a container's checkout is not a repo git trusts).
+      - name: Build and export the Flatpak
+        run: |
+          set -eu
+          jq '(.modules[] | select(.name == "steuererklaerung") | .sources[0]) = {"type":"dir","path":".","skip":[".git",".flatpak-builder","node_modules"]}' \
+            eu.jumplink.Steuererklaerung.json > ci-manifest.json
+          flatpak-builder --disable-rofiles-fuse --force-clean --state-dir=/tmp/fp-state \
+            --repo=/tmp/fp-repo /tmp/fp-build ci-manifest.json
+
+      - name: Bundle it
+        run: |
+          set -eu
+          version=$(jq -r .version app/package.json)
+          mkdir -p flatpak-out
+          flatpak build-bundle \
+            --runtime-repo=https://dl.flathub.org/repo/flathub.flatpakrepo \
+            /tmp/fp-repo "flatpak-out/eu.jumplink.Steuererklaerung-${version}-1.x86_64.flatpak" \
+            eu.jumplink.Steuererklaerung
+          ls -la flatpak-out
+          [ -s "flatpak-out/eu.jumplink.Steuererklaerung-${version}-1.x86_64.flatpak" ]
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packages-flatpak
+          path: flatpak-out/*.flatpak
+          compression-level: 0
+
+      # A tag push attaches to its own release; a manual run with `tag` to that existing release.
+      # Neither: build only, nothing is published.
+      - name: Attach to the release
+        if: startsWith(github.ref, 'refs/tags/v') || inputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: gh release upload -R "$GITHUB_REPOSITORY" "$TAG" flatpak-out/*.flatpak --clobber
