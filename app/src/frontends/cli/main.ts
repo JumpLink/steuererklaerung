@@ -57,6 +57,7 @@ import { applyDemoEnv } from '../../core/config/demo.ts';
 import { setFinTSInteraction } from '../../core/clients/fints/interaction.ts';
 import { terminalFinTSInteraction } from './fints-interaction.ts';
 import { applyPathEnv } from '../../core/paths.ts';
+import { APP_VERSION } from '../desktop/constants.ts';
 
 function reportError(err: unknown): void {
     // With yargs' `.fail(false)` (below) yargs no longer prints its own usage dump on a
@@ -113,6 +114,9 @@ const parseArgs = () =>
         // The product is `steuererklaerung`; the command is the short `steuer` — every usage line,
         // help page and validation error must name what the user actually types.
         .scriptName('steuer')
+        // yargs would read the version from the nearest package.json, which a packaged build does
+        // not carry — `--version` printed "unknown" from the Windows MSI.
+        .version(APP_VERSION)
         .help()
         // Don't let yargs print its own multi-line usage dump on a validation/demandCommand failure
         // — it otherwise doubled with the hint we print in reportError (once from yargs, once from
