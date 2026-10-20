@@ -42,9 +42,10 @@ jobs:
           gjs
           libsoup3 json-glib gnutls libnghttp2
           libgda libgda-sqlite
-          pango cairo
+          pango cairo librsvg2
           gettext
           squashfs-tools file
+          gh
 
       # `appimagetool` is the one tool here that is DOWNLOADED rather than installed: nothing
       # packages it, not Fedora and not Debian (ADR 0024 § M5 in gjsify). Pinned by version AND
@@ -230,7 +231,7 @@ jobs:
           git tar xz findutils gjs
           libsoup3 json-glib gnutls libnghttp2
           pango cairo gtk4 libadwaita
-          gettext glib2 msitools zip unzip
+          gettext glib2 msitools zip unzip gh
           xorg-x11-server-Xvfb dbus-daemon libglvnd-gles libglvnd-egl mesa-dri-drivers
 
       - uses: actions/checkout@v4
