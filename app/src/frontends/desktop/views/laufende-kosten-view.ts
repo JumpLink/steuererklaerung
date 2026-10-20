@@ -30,6 +30,7 @@ import { loadDms } from '../data/settings.ts';
 import type { AppEntity } from '../entities.ts';
 import { deDate, eur } from '../../../core/lib/format.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import { LoadToken, amountLabel, applyScrollHook, emptyState, loadIntoStack, markup } from './util.ts';
 import { showToast } from '../toast.ts';
 import { errorDialog } from './dialogs.ts';
@@ -267,7 +268,7 @@ export class BhLaufendeKostenView extends Adw.Bin {
             showToast(`${gespeichertText(e.status)}: ${k.empfaenger}`);
             this.reload(entity, this.year);
         } catch (err) {
-            await errorDialog(this, _('Decision not saved'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Decision not saved'), errorText(err));
         }
     }
 
@@ -336,7 +337,7 @@ export class BhLaufendeKostenView extends Adw.Bin {
                 },
             });
         } catch (err) {
-            await errorDialog(this, _('Booking not opened'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Booking not opened'), errorText(err));
         }
     }
 }

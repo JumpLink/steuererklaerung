@@ -27,6 +27,7 @@ import { isAssistantEnabled } from '../../../../core/config/assistant-preference
 import { demoAvailable, isDemoMode } from '../../../../core/config/demo.ts';
 import { loadUserSettings, updateUserSettings } from '../../../../core/config/user-settings.ts';
 import { _, fmt } from '../../i18n.ts';
+import { errorText } from '../../error-text.ts';
 import { isBackupRunning, runBackupInBackground } from '../../background-backup.ts';
 import { showToast } from '../../toast.ts';
 import { markup } from '../util.ts';
@@ -187,7 +188,7 @@ export function buildBackupGroup(group: Adw.PreferencesGroup): void {
             .catch((err: unknown) =>
                 showToast(
                     fmt(_('Backup failed: {error}'), {
-                        error: err instanceof Error ? err.message : String(err),
+                        error: errorText(err),
                     }),
                 ),
             )

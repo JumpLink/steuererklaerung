@@ -30,6 +30,7 @@ import type { AppEntity } from '../entities.ts';
 import type { HomeModel, HomeTask } from '../../../core/elster/home.ts';
 import type { FreiErgebnis, FreiVerfuegbarModel } from '../../../core/elster/frei-verfuegbar.ts';
 import { _, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 const ACCENT = '#3584e4';
 const EXPENSE = '#c25d52';
@@ -349,7 +350,7 @@ export class BhHomeView extends Adw.Bin {
             dialog.onChanged = () => this.reload(entity, this.year);
             dialog.open(this, entity, invoice, loadCapabilities(entity.id));
         } catch (err) {
-            await errorDialog(this, _('Could not load the invoice'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('Could not load the invoice'), errorText(err));
         }
     }
 

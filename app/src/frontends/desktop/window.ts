@@ -61,6 +61,7 @@ import { currentMcpInstallation } from './self-launch.ts';
 import Template from './window.blp';
 import type { PortedView } from './view.ts';
 import { _, fmt } from './i18n.ts';
+import { errorText } from './error-text.ts';
 import { logTiming, timingOn } from '../../core/lib/timing.ts';
 
 // window.blp names these three as `$BhEntitySwitcher`, `$BhYearSwitcher` and `$BhAssistentPanel`,
@@ -367,7 +368,7 @@ export class MainWindow extends Adw.ApplicationWindow {
             this.workspace = loadAppWorkspace();
             this.loadError = null;
         } catch (err) {
-            this.loadError = err instanceof Error ? err.message : String(err);
+            this.loadError = errorText(err);
             this.refreshBanner();
             return;
         }
@@ -524,7 +525,7 @@ export class MainWindow extends Adw.ApplicationWindow {
             this.workspace = loadAppWorkspace();
             this.loadError = null;
         } catch (err) {
-            this.loadError = err instanceof Error ? err.message : String(err);
+            this.loadError = errorText(err);
         }
 
         if (!this.workspace || this.workspace.entities.length === 0) {

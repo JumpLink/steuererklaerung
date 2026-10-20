@@ -23,6 +23,7 @@ import { dmsProviderFor } from '../data/dms.ts';
 import type { AppEntity } from '../entities.ts';
 import { markup } from './util.ts';
 import { _, _n, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 export interface UploadOutcome {
     stored: number;
@@ -62,7 +63,7 @@ export async function pickAndStoreReceipts(
             });
             outcome.stored++;
         } catch (err) {
-            outcome.failed.push({ filename, reason: err instanceof Error ? err.message : String(err) });
+            outcome.failed.push({ filename, reason: errorText(err) });
         }
     }
     return outcome;

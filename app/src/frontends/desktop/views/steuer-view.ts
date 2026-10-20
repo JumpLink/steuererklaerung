@@ -49,6 +49,7 @@ interface SteuerViewData {
 type PdfLoader = (entity: AppEntity, year: number) => Promise<{ filename: string; bytes: Uint8Array }>;
 import { GroupRows, LoadToken, amountLabel, loadIntoStack, markup, saveFileViaDialog } from './util.ts';
 import { _, _n, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import { errorDialog } from './dialogs.ts';
 import { BhHerleitungDialog } from './herleitung-dialog.ts';
 
@@ -383,7 +384,7 @@ export class BhSteuerView extends Adw.Bin {
             const { filename, bytes } = await loader(entity, this.currentYear);
             saveFileViaDialog(this, filename, bytes, toastLabel);
         } catch (err) {
-            await errorDialog(this, _('PDF not available'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('PDF not available'), errorText(err));
         }
     }
 }

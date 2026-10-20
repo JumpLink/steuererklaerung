@@ -19,6 +19,7 @@ import type { AppEntity } from '../entities.ts';
 import { showToast } from '../toast.ts';
 import { errorDialog } from './dialogs.ts';
 import { _, _p } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 /** Anredeform options in combo order: unset falls through to the contract, then to `du`. */
 const FORMALITY_OPTIONS: Array<{ label: string; value: 'du' | 'sie' | null }> = [
@@ -171,7 +172,7 @@ export class BhProjektFormDialog {
         } catch (err) {
             this.saveButton.set_sensitive(true);
             this.saveButton.set_title(_('Save'));
-            await this.fail(err instanceof Error ? err.message : String(err));
+            await this.fail(errorText(err));
         }
     }
 

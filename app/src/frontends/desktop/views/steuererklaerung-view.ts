@@ -47,6 +47,7 @@ import type { EstThemeCard, EstWaterfallRow } from '../../../core/actions/elster
 import type { AppEntity } from '../entities.ts';
 import { fmtDe } from '../../../core/lib/money.ts';
 import { _, _n, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import { LoadToken, loadIntoStack, markup, saveFileViaDialog, amountLabel } from './util.ts';
 import { errorDialog } from './dialogs.ts';
 
@@ -546,7 +547,7 @@ export class BhSteuererklaerungView extends Adw.Bin {
             const { filename, bytes } = await loader(entity, year);
             saveFileViaDialog(this, filename, bytes, fmt(_('{form} check sheet'), { form: f.title }));
         } catch (err) {
-            await errorDialog(this, _('PDF not available'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this, _('PDF not available'), errorText(err));
         }
     }
 }

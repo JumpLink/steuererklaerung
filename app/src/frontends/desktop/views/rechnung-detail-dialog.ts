@@ -53,9 +53,10 @@ import { BhRechnungFormDialog } from './rechnung-form-dialog.ts';
 import { BhRechnungVersandDialog } from './rechnung-versand-dialog.ts';
 import { showToast } from '../toast.ts';
 import { _, _p, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 function msg(err: unknown): string {
-    return err instanceof Error ? err.message : String(err);
+    return errorText(err);
 }
 
 /** A small list dialog: one activatable row per item; picking closes the dialog and reports the index. */
@@ -611,7 +612,7 @@ export class BhRechnungDetailDialog {
             this.onChanged?.();
             this.dialog.close();
         } catch (err) {
-            await errorDialog(this.dialog, _('Finalizing failed'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this.dialog, _('Finalizing failed'), errorText(err));
         }
     }
 
@@ -630,7 +631,7 @@ export class BhRechnungDetailDialog {
             this.onChanged?.();
             this.dialog.close();
         } catch (err) {
-            await errorDialog(this.dialog, _('Deleting failed'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this.dialog, _('Deleting failed'), errorText(err));
         }
     }
 
@@ -686,10 +687,7 @@ export class BhRechnungDetailDialog {
                     this.onChanged?.();
                     this.dialog.close();
                 })
-                .catch(
-                    (err: unknown) =>
-                        void errorDialog(dlg, _('Failed'), err instanceof Error ? err.message : String(err)),
-                );
+                .catch((err: unknown) => void errorDialog(dlg, _('Failed'), errorText(err)));
         });
     }
 
@@ -710,7 +708,7 @@ export class BhRechnungDetailDialog {
             this.onChanged?.();
             this.dialog.close();
         } catch (err) {
-            await errorDialog(this.dialog, _('Cancelling failed'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this.dialog, _('Cancelling failed'), errorText(err));
         }
     }
 
@@ -748,7 +746,7 @@ export class BhRechnungDetailDialog {
                 new Gtk.FileLauncher({ file: Gio.File.new_for_path(path) }).launch(this.rootWindow(), null, () => {});
             }
         } catch (err) {
-            await errorDialog(this.dialog, _('PDF not available'), err instanceof Error ? err.message : String(err));
+            await errorDialog(this.dialog, _('PDF not available'), errorText(err));
         }
     }
 
@@ -770,11 +768,7 @@ export class BhRechnungDetailDialog {
                 }
             });
         } catch (err) {
-            await errorDialog(
-                this.dialog,
-                _('XRechnung not available'),
-                err instanceof Error ? err.message : String(err),
-            );
+            await errorDialog(this.dialog, _('XRechnung not available'), errorText(err));
         }
     }
 

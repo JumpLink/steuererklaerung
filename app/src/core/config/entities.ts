@@ -17,7 +17,10 @@ export function requireEntity(manifest: Manifest, id: string): ManifestEntity {
     const entity = manifest.entities.find((e) => e.id === id || aliases.has(e.id));
     if (!entity) {
         const known = manifest.entities.map((e) => e.id).join(', ') || '(keine)';
-        throw new ConfigError(`Entität „${id}" nicht im Manifest gefunden. Bekannte Entitäten: ${known}.`);
+        throw new ConfigError(`Entität „${id}" nicht im Manifest gefunden. Bekannte Entitäten: ${known}.`, undefined, {
+            code: 'entity-not-found',
+            params: { id, known },
+        });
     }
     return entity;
 }
@@ -34,7 +37,8 @@ export function findEntity(manifest: Manifest, id: string): ManifestEntity | und
  * entity. Throws only on an empty registry (which the schema already forbids, so this is defensive).
  */
 export function defaultEntityFor(manifest: Manifest, kind?: string): ManifestEntity {
-    if (manifest.entities.length === 0) throw new ConfigError('Manifest enthält keine Entität.');
+    if (manifest.entities.length === 0)
+        throw new ConfigError('Manifest enthält keine Entität.', undefined, { code: 'manifest-no-entity' });
     if (kind) {
         const byKind = manifest.entities.find((e) => e.kind === kind);
         if (byKind) return byKind;

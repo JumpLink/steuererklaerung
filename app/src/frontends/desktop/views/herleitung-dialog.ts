@@ -60,6 +60,7 @@ import { loeseErstattung } from '../../../core/presenters/erstattungen.ts';
 import { showToast } from '../toast.ts';
 import { LoadToken, amountLabel, currentOperator, loadIntoStack, markup } from './util.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 /** Everything the leaf needs, loaded in one pass (categories + persisted decision/log + Beleg meta). */
 interface LeafData {
@@ -441,7 +442,7 @@ export class BhHerleitungDialog {
                 this.navView.pop();
                 this.reloaders.get(spawningPage)?.();
             } catch (err) {
-                void errorDialog(this.dialog, _('Could not save'), err instanceof Error ? err.message : String(err));
+                void errorDialog(this.dialog, _('Could not save'), errorText(err));
             }
         };
 
@@ -552,11 +553,7 @@ export class BhHerleitungDialog {
                     this.navView.pop();
                     this.reloaders.get(spawningPage)?.();
                 } catch (err) {
-                    void errorDialog(
-                        this.dialog,
-                        _('Could not take back'),
-                        err instanceof Error ? err.message : String(err),
-                    );
+                    void errorDialog(this.dialog, _('Could not take back'), errorText(err));
                 }
             });
             undo.add_suffix(button);

@@ -27,16 +27,31 @@ export class ApiError extends Error {
 }
 
 /**
+ * A language-neutral description of an error, next to its German message.
+ *
+ * The message is what the CLI and the MCP tools print and stays German on purpose. The desktop
+ * app cannot translate a finished sentence, so an error it is likely to show carries the same fact
+ * as a stable `code` plus the `params` that were interpolated; the app turns that into the UI
+ * language (`frontends/desktop/error-text.ts`). Without a `detail` the message is shown as is.
+ */
+export interface ErrorDetail {
+  code: string;
+  params?: Record<string, string | number>;
+}
+
+/**
  * Configuration error: missing config file, invalid values, etc.
  */
 export class ConfigError extends Error {
   // Typed as string, not the literal, so subclasses can name themselves — same as ApiError above.
   readonly name: string = 'ConfigError';
   readonly configPath?: string;
+  readonly detail?: ErrorDetail;
 
-  constructor(message: string, configPath?: string) {
+  constructor(message: string, configPath?: string, detail?: ErrorDetail) {
     super(message);
     this.configPath = configPath;
+    this.detail = detail;
   }
 }
 

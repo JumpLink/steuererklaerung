@@ -18,6 +18,7 @@ import type { DmsDocument } from '../../../core/presenters/belege.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 import { markup } from './util.ts';
 import { _ } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 function baseRow(title: string, icon: string): Adw.ActionRow {
     const row = new Adw.ActionRow({ title: markup(title) });
@@ -46,7 +47,7 @@ export function paperlessZuordnungRow(entityId: string, doc: Pick<DmsDocument, '
         },
         (err: unknown) => {
             row.set_title(_('Paperless assignment not available'));
-            row.set_subtitle(markup(err instanceof Error ? err.message : String(err)));
+            row.set_subtitle(markup(errorText(err)));
         },
     );
     return row;

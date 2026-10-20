@@ -31,6 +31,7 @@ import { loadDokumentRegeln, saveDokumentRegeln } from '../../../../core/actions
 import type { DokumentRegel } from '../../../../core/dokumentregeln/regeln.ts';
 import type { AppEntity } from '../../entities.ts';
 import { _, _n, _p, fmt } from '../../i18n.ts';
+import { errorText } from '../../error-text.ts';
 import { markup } from '../util.ts';
 import type { SettingsHost } from './rows.ts';
 import { helpFor } from '../../widgets/glossary-help.ts';
@@ -58,7 +59,7 @@ export function buildKlassifizierungGroup(
     } catch (err) {
         host.banner(
             fmt(_('Could not read the classification rules: {error}'), {
-                error: err instanceof Error ? err.message : String(err),
+                error: errorText(err),
             }),
         );
         return group;
@@ -120,7 +121,7 @@ export function buildKlassifizierungGroup(
         } catch (err) {
             host.banner(
                 fmt(_('Could not read the document rules: {error}'), {
-                    error: err instanceof Error ? err.message : String(err),
+                    error: errorText(err),
                 }),
             );
         }

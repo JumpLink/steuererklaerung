@@ -21,6 +21,7 @@ import type { AppEntity } from '../../entities.ts';
 import { markup } from '../util.ts';
 import type { SettingsHost } from './rows.ts';
 import { _, fmt } from '../../i18n.ts';
+import { errorText } from '../../error-text.ts';
 
 /** `kindschaftsverhaeltnis` as the schema spells it, in the order the form offers. */
 const VERHAELTNIS: Array<{ value: '1' | '2' | '3'; label: string }> = [
@@ -46,9 +47,7 @@ export function buildKinderGroup(
     try {
         kinder = listKinder(entity.id);
     } catch (err) {
-        host.banner(
-            fmt(_('Children not readable: {error}'), { error: err instanceof Error ? err.message : String(err) }),
-        );
+        host.banner(fmt(_('Children not readable: {error}'), { error: errorText(err) }));
         return group;
     }
 
@@ -213,7 +212,7 @@ function presentKindDialog(
             host.reloadEntityGroups();
             dialog.close();
         } catch (err) {
-            warn(fmt(_('Could not save: {error}'), { error: err instanceof Error ? err.message : String(err) }));
+            warn(fmt(_('Could not save: {error}'), { error: errorText(err) }));
         }
     });
     bottom.append(save);

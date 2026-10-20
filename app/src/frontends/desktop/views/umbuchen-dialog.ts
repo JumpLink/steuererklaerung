@@ -25,6 +25,7 @@ import { loadEuerCategories } from '../data/decisions.ts';
 import type { AppEntity } from '../entities.ts';
 import { markup } from './util.ts';
 import { _, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 /** The booking being reclassified — the subset both call sites can supply. */
 export interface UmbuchenTarget {
@@ -241,14 +242,14 @@ export class BhUmbuchenDialog extends Adw.Dialog {
                     learned = result.added ? _(' · rule remembered') : _(' · rule already existed');
                 } catch (err) {
                     learned = fmt(_(' · rule NOT remembered ({error})'), {
-                        error: err instanceof Error ? err.message : String(err),
+                        error: errorText(err),
                     });
                 }
             }
             this.done(fmt(_('Reclassified to {category}'), { category }) + learned, true);
             this.close();
         } catch (err) {
-            this.warn(fmt(_('Could not save: {error}'), { error: err instanceof Error ? err.message : String(err) }));
+            this.warn(fmt(_('Could not save: {error}'), { error: errorText(err) }));
         }
     }
 
@@ -258,7 +259,7 @@ export class BhUmbuchenDialog extends Adw.Dialog {
             this.done(_('Transfer reverted'), true);
             this.close();
         } catch (err) {
-            this.warn(fmt(_('Could not revert: {error}'), { error: err instanceof Error ? err.message : String(err) }));
+            this.warn(fmt(_('Could not revert: {error}'), { error: errorText(err) }));
         }
     }
 

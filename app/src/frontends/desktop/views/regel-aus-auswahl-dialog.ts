@@ -16,6 +16,7 @@ import { loadEuerCategories } from '../data/decisions.ts';
 import type { AppEntity } from '../entities.ts';
 import { markup } from './util.ts';
 import { _, _n, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 const KEINE_KATEGORIE = _('— Choose category —');
 
@@ -79,7 +80,7 @@ export class BhRegelAusAuswahlDialog extends Adw.Dialog {
             const page = new Adw.StatusPage({
                 iconName: 'dialog-error-symbolic',
                 title: _('No preview possible'),
-                description: markup(err instanceof Error ? err.message : String(err)),
+                description: markup(errorText(err)),
             });
             this.showContent(page);
         }
@@ -251,9 +252,7 @@ export class BhRegelAusAuswahlDialog extends Adw.Dialog {
             );
             this.close();
         } catch (err) {
-            this.banner.set_title(
-                markup(fmt(_('Could not save: {error}'), { error: err instanceof Error ? err.message : String(err) })),
-            );
+            this.banner.set_title(markup(fmt(_('Could not save: {error}'), { error: errorText(err) })));
             this.banner.set_revealed(true);
         }
     }

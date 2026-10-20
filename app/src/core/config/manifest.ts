@@ -124,12 +124,16 @@ function readRawJson(path: string): Record<string, unknown> {
         throw new ConfigError(
             `${name} konnte nicht gelesen werden: ${err instanceof Error ? err.message : String(err)}`,
             path,
+            { code: 'manifest-unreadable', params: { name, error: err instanceof Error ? err.message : String(err) } },
         );
     }
     try {
         return JSON.parse(text) as Record<string, unknown>;
     } catch (err) {
-        throw new ConfigError(`${name} ist kein gültiges JSON: ${err instanceof Error ? err.message : err}`, path);
+        throw new ConfigError(`${name} ist kein gültiges JSON: ${err instanceof Error ? err.message : err}`, path, {
+            code: 'manifest-bad-json',
+            params: { name, error: err instanceof Error ? err.message : String(err) },
+        });
     }
 }
 
@@ -152,6 +156,7 @@ export function loadManifest(path = getManifestPath()): Manifest {
             `Kein Manifest unter ${path} gefunden (gesucht wurde ${MANIFEST_FILENAME}, ersatzweise ` +
                 `der alte Name ${LEGACY_MANIFEST_FILENAME}). ${MIGRATE_HINT}`,
             path,
+            { code: 'manifest-missing', params: { path, file: MANIFEST_FILENAME, legacy: LEGACY_MANIFEST_FILENAME } },
         );
     }
     const raw = readRawJson(path);
@@ -173,13 +178,17 @@ export function loadManifest(path = getManifestPath()): Manifest {
             throw new ConfigError(
                 `${basename(path)} ${detail} ist noch nicht auf das Manifest-Format v${MANIFEST_VERSION} migriert. ${MIGRATE_HINT}`,
                 path,
+                { code: 'manifest-not-migrated', params: { name: basename(path), version: MANIFEST_VERSION } },
             );
         }
     }
     const result = ManifestSchema.safeParse(raw);
     if (!result.success) {
         const issues = result.error.issues.map((i) => `  ${i.path.join('.')}: ${i.message}`).join('\n');
-        throw new ConfigError(`Ungültiges Manifest unter ${path}:\n${issues}`, path);
+        throw new ConfigError(`Ungültiges Manifest unter ${path}:\n${issues}`, path, {
+            code: 'manifest-invalid',
+            params: { path, issues },
+        });
     }
     return result.data;
 }
@@ -224,7 +233,10 @@ export function writeManifestAtomic(path: string, raw: unknown): void {
  */
 export function mutateManifest(path: string, mutate: (raw: Record<string, unknown>) => void): Manifest {
     if (!existsSync(path)) {
-        throw new ManifestMissingError(`Kein Manifest unter ${path} zum Speichern vorhanden. ${MIGRATE_HINT}`, path);
+        throw new ManifestMissingError(`Kein Manifest unter ${path} zum Speichern vorhanden. ${MIGRATE_HINT}`, path, {
+            code: 'manifest-save-missing',
+            params: { path },
+        });
     }
     const raw = readRawJson(path);
     const upgradedFrom = manifestVersionOf(raw);
@@ -243,6 +255,7 @@ export function mutateManifest(path: string, mutate: (raw: Record<string, unknow
             throw new ConfigError(
                 `${basename(path)} unter ${path} ist noch kein v${MANIFEST_VERSION}-Manifest. ${MIGRATE_HINT}`,
                 path,
+                { code: 'manifest-not-migrated', params: { name: basename(path), version: MANIFEST_VERSION } },
             );
         }
     }

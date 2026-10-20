@@ -53,6 +53,7 @@ import { DatabaseSync } from 'node:sqlite';
 
 import { getStoreDir, ledgerDbPath } from '@steuererklaerung/store';
 import { userDataDir } from '../paths.ts';
+import type { ErrorDetail } from '../lib/errors.ts';
 import { getManifestPath, LEGACY_MANIFEST_FILENAME, MANIFEST_FILENAME } from '../config/manifest.ts';
 import { setBeforeMigrationWrite } from '../config/migrate-forward.ts';
 import { defaultBackupRoot, loadUserSettings, updateUserSettings, type UserSettings } from '../config/user-settings.ts';
@@ -172,7 +173,11 @@ export function snapshotDatabase(src: string, dest: string): void {
     try {
         const rows = copy.prepare('PRAGMA integrity_check').all() as { integrity_check?: unknown }[];
         const verdict = rows.map((r) => String(r.integrity_check)).join('; ');
-        if (verdict !== 'ok') throw new Error(`Integritätsprüfung der Kopie ${dest} fehlgeschlagen: ${verdict}`);
+        if (verdict !== 'ok')
+            throw new BackupError(`Integritätsprüfung der Kopie ${dest} fehlgeschlagen: ${verdict}`, {
+                code: 'backup-integrity',
+                params: { dest, verdict },
+            });
     } finally {
         copy.close();
     }
@@ -208,8 +213,20 @@ function copyTree(srcDir: string, destDir: string, backupDir: string, out: Colle
     }
 }
 
+/** A backup that failed for a reason worth telling the person; `detail` lets the app word it in its language. */
+export class BackupError extends Error {
+    constructor(
+        message: string,
+        readonly detail: ErrorDetail,
+    ) {
+        super(message);
+        this.name = 'BackupError';
+    }
+}
+
 /** Another backup holds the lock — nothing was written. */
 export class BackupBusyError extends Error {
+    readonly detail: ErrorDetail;
     constructor(readonly holder: { pid: number; startedAt: string; reason: string } | null) {
         super(
             holder
@@ -217,6 +234,9 @@ export class BackupBusyError extends Error {
                 : 'Es läuft bereits eine Sicherung.',
         );
         this.name = 'BackupBusyError';
+        this.detail = holder
+            ? { code: 'backup-busy', params: { pid: holder.pid, since: holder.startedAt } }
+            : { code: 'backup-busy-unknown' };
     }
 }
 
@@ -290,7 +310,13 @@ function writeBackup(opts: CreateBackupOptions): BackupResult {
     // A backup folder inside a copied tree would copy itself into the next backup, forever.
     for (const tree of [sources.storeDir, hasInvoices ? invoicesDir : null]) {
         if (tree && isInside(root, tree)) {
-            throw new Error(`Der Sicherungsordner ${root} liegt innerhalb von ${tree} — bitte einen anderen wählen.`);
+            throw new BackupError(
+                `Der Sicherungsordner ${root} liegt innerhalb von ${tree} — bitte einen anderen wählen.`,
+                {
+                    code: 'backup-inside',
+                    params: { root, tree },
+                },
+            );
         }
     }
 

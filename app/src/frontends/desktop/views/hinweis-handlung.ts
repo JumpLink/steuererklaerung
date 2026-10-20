@@ -42,6 +42,7 @@ import { BhGlossaryHelp } from '../widgets/glossary-help.ts';
 import { loadAppSettings } from '../../../core/config/index.ts';
 import { markup } from './util.ts';
 import { _, _n, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 /** The entity-year a hint belongs to, and what to do once an action changed something. */
 export interface HinweisKontext {
@@ -216,9 +217,7 @@ export function runHinweisHandlung(
     key: string,
     handlung: HinweisHandlung,
 ): void {
-    dispatch(parent, ctx, key, handlung).catch((err: unknown) =>
-        errorDialog(parent, handlung.label, err instanceof Error ? err.message : String(err)),
-    );
+    dispatch(parent, ctx, key, handlung).catch((err: unknown) => errorDialog(parent, handlung.label, errorText(err)));
 }
 
 /** Open one affected booking, invoice or Beleg. */
@@ -229,9 +228,7 @@ function openBetroffen(parent: Gtk.Widget, ctx: HinweisKontext, b: HinweisBetrof
             : b.art === 'beleg'
               ? openBeleg(parent, ctx, b.id)
               : openTx(parent, ctx, b.id);
-    run.catch((err: unknown) =>
-        errorDialog(parent, _('Could not open'), err instanceof Error ? err.message : String(err)),
-    );
+    run.catch((err: unknown) => errorDialog(parent, _('Could not open'), errorText(err)));
 }
 
 /**

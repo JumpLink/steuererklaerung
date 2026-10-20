@@ -43,6 +43,7 @@ import { accountOwner } from '../../../core/actions/entity-setup.ts';
 import { assertAccountsMovable, assignAccount } from '../../../core/actions/entities.ts';
 import { loadManifest, type Manifest } from '../../../core/config/index.ts';
 import { _, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import { navigateTo } from '../nav.ts';
 import { markup } from './util.ts';
 
@@ -76,7 +77,7 @@ interface PendingAccount {
     commit: () => Promise<{ message: string; keys: string[] }>;
 }
 
-const msg = (err: unknown) => (err instanceof Error ? err.message : String(err));
+const msg = (err: unknown) => errorText(err);
 
 /** One page of the dialog's NavigationView: scrolling body plus an optional primary-action bar. */
 class BhAddAccountPage extends Adw.NavigationPage {

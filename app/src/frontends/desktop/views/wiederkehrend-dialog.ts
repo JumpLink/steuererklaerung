@@ -40,6 +40,7 @@ import { parseGermanInput } from '../../../core/lib/parsing.ts';
 import type { AppEntity } from '../entities.ts';
 import { markup } from './util.ts';
 import { _, _p, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 /** Intervals a person actually bills in, in months. */
 const INTERVALS: Array<{ label: string; months: number }> = [
@@ -354,7 +355,7 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
                     : _('No cover letter (set neither here nor as the entity’s default).'),
             );
         } catch (err) {
-            this.preview.set_label(err instanceof Error ? err.message : String(err));
+            this.preview.set_label(errorText(err));
         }
     }
 
@@ -470,7 +471,7 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
                     {},
                 );
         } catch (err) {
-            return this.warn(err instanceof Error ? err.message : String(err));
+            return this.warn(errorText(err));
         }
 
         try {
@@ -514,7 +515,7 @@ export class BhWiederkehrendDialog extends Adw.Dialog {
             );
             this.close();
         } catch (err) {
-            this.warn(fmt(_('Could not save: {error}'), { error: err instanceof Error ? err.message : String(err) }));
+            this.warn(fmt(_('Could not save: {error}'), { error: errorText(err) }));
         }
     }
 

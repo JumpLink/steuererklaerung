@@ -27,6 +27,7 @@ import { contractAccountKeys, type ContractSummary, saveContractRecord } from '.
 import { contractExtractionAvailable } from '../data/contract-extract.ts';
 import type { AppEntity } from '../entities.ts';
 import { _, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import { showToast } from '../toast.ts';
 import { errorDialog } from './dialogs.ts';
 import { CYCLE_LABEL, NOTICE_UNIT_LABEL, PAYMENT_METHOD_LABEL, STATUS_LABEL } from './vertrag-labels.ts';
@@ -381,7 +382,7 @@ export class BhVertragFormDialog {
         } catch (err) {
             this.saveButton.set_sensitive(true);
             this.saveButton.set_title(_('Save'));
-            await this.fail(err instanceof Error ? err.message : String(err));
+            await this.fail(errorText(err));
         }
     }
 

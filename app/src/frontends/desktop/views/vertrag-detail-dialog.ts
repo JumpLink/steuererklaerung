@@ -28,6 +28,7 @@ import {
 import { contractExtractionAvailable } from '../data/contract-extract.ts';
 import type { AppEntity } from '../entities.ts';
 import { _, _n, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import { showToast } from '../toast.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { amountLabel, currentOperator, markup } from './util.ts';
@@ -471,4 +472,4 @@ function badge(label: string, css: string): Gtk.Label {
     return new Gtk.Label({ label, cssClasses: ['caption', css], valign: Gtk.Align.CENTER });
 }
 
-const message = (err: unknown) => (err instanceof Error ? err.message : String(err));
+const message = (err: unknown) => errorText(err);

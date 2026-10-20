@@ -18,6 +18,7 @@ import type Gtk from '@girs/gtk-4.0';
 import { lockedYearsFor, removeEntity, updateEntity } from '../../../core/actions/entities.ts';
 import { markup } from './util.ts';
 import { _, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 
 /** Report the outcome to the caller (which toasts it and reloads). */
 export type EntityDialogResult = (message: string, changed: boolean) => void;
@@ -56,7 +57,7 @@ export function presentRenameEntity(
             updateEntity(entity.id, { name });
             done(fmt(_('Entity renamed: {name}'), { name }), true);
         } catch (err) {
-            done(fmt(_('Rename failed: {error}'), { error: err instanceof Error ? err.message : String(err) }), false);
+            done(fmt(_('Rename failed: {error}'), { error: errorText(err) }), false);
         }
     });
     dialog.present(parent);
@@ -111,7 +112,7 @@ export function presentRemoveEntity(
         } catch (err) {
             // The last-entity and GoBD refusals both land here; both messages are already written
             // for a human, so pass them through rather than paraphrasing.
-            done(err instanceof Error ? err.message : String(err), false);
+            done(errorText(err), false);
         }
     });
     dialog.present(parent);

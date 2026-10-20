@@ -101,7 +101,8 @@ if (mode === 'cli') {
         const r = runConfiguredBackup({ reason: process.argv[3] || 'manual' });
         line = JSON.stringify({ ok: true, path: r.path });
     } catch (err) {
-        line = JSON.stringify({ ok: false, error: err instanceof Error ? err.message : String(err) });
+        const detail = (err as { detail?: unknown }).detail; // language-neutral twin of the message, see error-text.ts
+        line = JSON.stringify({ ok: false, error: err instanceof Error ? err.message : String(err), detail });
     }
     console.log(BACKUP_RESULT_PREFIX + line);
     process.exit(0);

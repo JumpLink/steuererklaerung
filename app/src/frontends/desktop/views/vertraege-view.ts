@@ -29,6 +29,7 @@ import {
 } from '../../../core/presenters/contracts.ts';
 import type { AppEntity } from '../entities.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
+import { errorText } from '../error-text.ts';
 import { showToast } from '../toast.ts';
 import { chipScroller, pinnableCluster, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
 import Template from './vertraege-view.blp';
@@ -356,7 +357,7 @@ export class BhVertraegeView extends Adw.Bin {
                 _('Deadlines saved'),
             );
         } catch (err) {
-            void errorDialog(this, _('Export failed'), err instanceof Error ? err.message : String(err));
+            void errorDialog(this, _('Export failed'), errorText(err));
             return;
         }
         showToast(_('Deadlines exported'));
