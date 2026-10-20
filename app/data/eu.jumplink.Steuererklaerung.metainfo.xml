@@ -56,6 +56,11 @@
   <url type="donation">https://jumplink.eu/steuererklaerung/en/support/</url>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.1.1" date="2026-10-20">
+      <description>
+        <p>Commands work in the installed app on Windows and macOS, Back up now no longer opens a second window, and error messages follow the interface language.</p>
+      </description>
+    </release>
     <release version="0.1.0" date="2026-10-12">
       <description>
         <p>First public release: receipts, transactions and invoices, the EÜR and VAT returns, and filing through ELSTER.</p>

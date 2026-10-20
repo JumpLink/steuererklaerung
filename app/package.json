@@ -1,7 +1,7 @@
 {
     "name": "steuererklaerung-cli",
     "description": "CLI for steuererklaerung: Qonto, Paperless-NGX, ELSTER, FinTS",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "license": "AGPL-3.0-or-later",
     "author": "Pascal Garber",
     "private": true,
@@ -186,11 +186,16 @@
                 "name": "Pascal Garber"
             },
             "branding": {
-                "accentLight": "#62a0ea",
-                "accentDark": "#1a5fb4"
+                "accentLight": "#cfe5c8",
+                "accentDark": "#2f5238"
             },
             "contentRating": "oars-1.1",
             "releases": [
+                {
+                    "version": "0.1.1",
+                    "date": "2026-10-20",
+                    "description": "Commands work in the installed app on Windows and macOS, Back up now no longer opens a second window, and error messages follow the interface language."
+                },
                 {
                     "version": "0.1.0",
                     "date": "2026-10-12",
