@@ -207,50 +207,9 @@ jobs:
             fi
           done
 
-      # THE step. `dnf install` resolves every `Requires:` the package declares — an undeclared
-      # runtime dependency fails here instead of on a user's machine after the download.
-      - name: Install the package
-        run: dnf install -y --setopt=install_weak_deps=False ./app/ship/out/*.rpm
-
-      # And the step after THAT: what was installed has to start. Under Xvfb because a GTK app
-      # needs a display, and inside `dbus-run-session` because the devtools control plane — the
-      # only way to ask a running GUI whether it is alive — speaks over the session bus.
-      # libglvnd-gles + mesa-dri-drivers: GTK4's GL renderer dlopens libGLESv2 and the bare
-      # container has neither it nor a software rasteriser, so the app aborted right after
-      # exporting devtools. The package does not own these; a desktop always has them.
-      - name: Install the runtime the start proof needs
-        run: >
-          dnf install -y --setopt=install_weak_deps=False
-          xorg-x11-server-Xvfb dbus-daemon libglvnd-gles libglvnd-egl mesa-dri-drivers
-
-      - name: The installed app starts
-        run: |
-          set -eu
-          cat > /tmp/prove.sh <<'SH'
-          set -eu
-          export GJSIFY_DEVTOOLS=1 STEUER_APP_ID=eu.jumplink.Steuererklaerung.CI
-          export HOME=/tmp/fresh XDG_DATA_HOME=/tmp/fresh/data XDG_CONFIG_HOME=/tmp/fresh/config
-          mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME"
-          steuererklaerung &
-          APP=$!
-          for _ in $(seq 1 60); do
-            if gdbus call --session --dest eu.jumplink.Steuererklaerung.CI \
-                 --object-path /eu/jumplink/Steuererklaerung/CI/devtools \
-                 --method org.gjsify.Devtools.GetStatus >/tmp/status.json 2>/dev/null; then
-              echo "the installed app answered:"; cat /tmp/status.json
-              kill "$APP" 2>/dev/null || true
-              exit 0
-            fi
-            sleep 1
-          done
-          echo "::error::the installed app never answered GetStatus — it did not start"
-          kill "$APP" 2>/dev/null || true
-          exit 1
-          SH
-          chmod +x /tmp/prove.sh
-          # A fresh HOME on purpose: this is the first launch a stranger gets, and the run must
-          # prove THAT one works, not one with a config left behind by an earlier step.
-          xvfb-run -a dbus-run-session -- /tmp/prove.sh
+      # The rpm install proof is NOT here: this container carries the build prerequisites (libgda,
+      # libgda-sqlite, ...), so an undeclared `Requires:` would be satisfied by accident. It runs in
+      # the clean `prove-rpm` job below (#152).
 
       - uses: actions/upload-artifact@v4
         if: steps.eric.outputs.fetched != 'true'
@@ -272,6 +231,85 @@ jobs:
             || gh release create -R "$GITHUB_REPOSITORY" "$tag" --verify-tag --title "Steuererklärung ${tag#v}" --notes "" \
             || gh release view -R "$GITHUB_REPOSITORY" "$tag" >/dev/null
           gh release upload -R "$GITHUB_REPOSITORY" "$tag" app/ship/out/* --clobber
+
+  # The rpm install proof, in a CLEAN Fedora container: nothing but the rpm and what `dnf` resolves
+  # from its `Requires:`. The `package` job's container has libgda and libgda-sqlite installed as
+  # build prerequisites, which is how an rpm that did not require libgda-sqlite passed (#152).
+  # Skipped for a build that contains ERiC, for the same reason as `prove-deb`.
+  prove-rpm:
+    needs: package
+    if: ${{ !inputs.tag && needs.package.outputs.eric != 'true' }}
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/fedora/fedora:44
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages
+          path: packages
+
+      # `dnf install` resolves every `Requires:` the package declares: an undeclared runtime
+      # dependency fails below instead of on a user's machine after the download.
+      - name: Install the package
+        run: |
+          set -eu
+          if rpm -q libgda libgda-sqlite; then echo "::error::libgda is already installed - the proof would not test the rpm's Requires"; exit 1; fi
+          dnf install -y --setopt=install_weak_deps=False ./packages/*.rpm
+          rpm -q libgda libgda-sqlite
+
+      # The demo store opens SQLite through libgda's provider, so a missing libgda-sqlite fails here.
+      # Over MCP because it needs no display; the tool count is the proof that the server came up.
+      - name: The installed app answers over MCP
+        run: |
+          set -eu
+          export HOME=/tmp/fresh XDG_DATA_HOME=/tmp/fresh/data XDG_CONFIG_HOME=/tmp/fresh/config STEUER_DEMO=1
+          mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME"
+          printf '%s\n' \
+            '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"ci","version":"0"}}}' \
+            '{"jsonrpc":"2.0","method":"notifications/initialized"}' \
+            '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' \
+            | (cat; sleep 15) | timeout 60 steuererklaerung mcp > /tmp/mcp.out || true
+          grep -q '"serverInfo"' /tmp/mcp.out || { echo "::error::no initialize answer"; exit 1; }
+          n=$(grep '"id":2' /tmp/mcp.out | grep -o '"name":"[a-z_0-9]*"' | wc -l)
+          echo "tools: $n"
+          [ "$n" -gt 0 ] || { echo "::error::tools/list is empty"; exit 1; }
+
+      # And the GUI: what was installed has to start. Under Xvfb because a GTK app needs a display,
+      # and inside `dbus-run-session` because the devtools control plane speaks over the session bus.
+      # libglvnd-gles + mesa-dri-drivers: GTK4's GL renderer dlopens libGLESv2 and the bare container
+      # has neither it nor a software rasteriser. The package does not own these; a desktop has them.
+      - name: Install the runtime the start proof needs
+        run: >
+          dnf install -y --setopt=install_weak_deps=False
+          xorg-x11-server-Xvfb dbus-daemon libglvnd-gles libglvnd-egl mesa-dri-drivers
+
+      - name: The installed app starts
+        run: |
+          set -eu
+          cat > /tmp/prove.sh <<'SH'
+          set -eu
+          export GJSIFY_DEVTOOLS=1 STEUER_DEMO=1 STEUER_APP_ID=eu.jumplink.Steuererklaerung.CI
+          export HOME=/tmp/fresh XDG_DATA_HOME=/tmp/fresh/data XDG_CONFIG_HOME=/tmp/fresh/config
+          mkdir -p "$XDG_DATA_HOME" "$XDG_CONFIG_HOME"
+          steuererklaerung &
+          APP=$!
+          for _ in $(seq 1 60); do
+            if gdbus call --session --dest eu.jumplink.Steuererklaerung.CI \
+                 --object-path /eu/jumplink/Steuererklaerung/CI/devtools \
+                 --method org.gjsify.Devtools.GetStatus >/tmp/status.json 2>/dev/null; then
+              echo "the installed app answered:"; cat /tmp/status.json
+              kill "$APP" 2>/dev/null || true
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "::error::the installed app never answered GetStatus - it did not start"
+          kill "$APP" 2>/dev/null || true
+          exit 1
+          SH
+          chmod +x /tmp/prove.sh
+          # A fresh HOME on purpose: this is the first launch a stranger gets.
+          xvfb-run -a dbus-run-session -- /tmp/prove.sh
 
   # The deb install proof, the twin of the rpm one above, on the distribution the deb is for:
   # Ubuntu 26.04 has gjs 1.88 and no libgda 6, which is exactly what the bundled libgda answers.
