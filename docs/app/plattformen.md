@@ -13,6 +13,26 @@ in `release.yml`); gestartet wird auf den Zielsystemen selbst.
 
 Die Pakete sind unsigniert.
 
+## Linux: deb und rpm
+
+Beide setzen GJS ≥ 1.86 voraus (`minGjsVersion` bleibt, GJS wird nicht mitgeliefert).
+
+| Paket | libgda 6 | Läuft auf |
+|---|---|---|
+| rpm | Systempaket `libgda` (Fedora hat `libgda6`) | Fedora 43+ |
+| deb | **im Paket**, gebaut mit `app/dev/ship-gda-deb.sh` | Ubuntu ≥ 26.04 und jede Distribution mit GJS ≥ 1.86 |
+
+Das deb bringt libgda selbst mit, weil Ubuntu 26.04 nur libgda 5 führt und es dort kein
+`gir1.2-gda-6.0` gibt (#148). Es liegt unter `/usr/lib/steuererklaerung/gi` (Bibliothek und Typelib)
+und `/usr/lib/steuererklaerung/gda` (SQLite-Provider und DTDs); libgda findet beides über den
+Präfix, mit dem es gebaut wurde, ohne Umgebungsvariable. Die Bibliothek ist gegen Ubuntus
+`libxml2.so.16` gelinkt und deshalb nur im deb (`gjsify.ship.formats.deb`), nicht im rpm oder
+AppImage. Das deb hängt zusätzlich von `libxml2-16`, `libsqlite3-0` und `gir1.2-freedesktop` ab
+(Letzteres liefert die `libxml2-2.0`-Typelib, die `Gda-6.0` einbindet).
+
+Debian stable (trixie, GJS 1.82) ist ausgeschlossen, bis eine Debian-Version GJS ≥ 1.86 liefert.
+Der Release-Workflow prüft Installation und Start des deb auf Ubuntu 26.04 (`prove-deb`).
+
 ## Datenbank
 
 Das Node-Bundle nutzt `node:sqlite`. libgda wird nur unter Linux gebraucht.
