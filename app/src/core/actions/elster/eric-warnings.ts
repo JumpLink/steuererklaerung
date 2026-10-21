@@ -66,7 +66,7 @@ export function ericVersionLabel(library: string | null): string | null {
 /** One reason to doubt the installed ERiC; a hint, never a blocker. */
 export type EricWarning =
     | { kind: 'outdated'; found: string; expected: string }
-    | { kind: 'missing-plugin'; plugin: string };
+    | { kind: 'missing-plugin'; plugin: string; year: number | null; upcoming: boolean };
 
 /** The warning when the found library is older than the one official builds bundle. */
 export function outdatedWarning(library: string | null): EricWarning | null {
@@ -78,12 +78,22 @@ export function outdatedWarning(library: string | null): EricWarning | null {
 /**
  * Warnings for sending one datenartVersion (`UStVA_2026`): the plugin `checkUStVA_2026` must exist.
  * `plugins` are the base names found in the runtime; an empty list means the runtime could not be
- * read, which says nothing about the plugin, so no warning.
+ * read, which says nothing about the plugin, so no warning. `upcoming` is set when the runtime has
+ * plugins of the same form, all for older years: ELSTER ships a year's plugin with a later ERiC
+ * release, so the install is not broken, it just predates that year.
  */
 export function missingPluginWarning(datenartVersion: string, plugins: readonly string[]): EricWarning | null {
     if (plugins.length === 0) return null;
     const plugin = `check${datenartVersion}`;
-    return plugins.includes(plugin) ? null : { kind: 'missing-plugin', plugin };
+    if (plugins.includes(plugin)) return null;
+    const m = /^(.+)_(\d{4})$/.exec(plugin);
+    if (!m) return { kind: 'missing-plugin', plugin, year: null, upcoming: false };
+    const year = Number(m[2]);
+    const sameForm = plugins
+        .map((p) => (p.startsWith(`${m[1]}_`) ? Number(p.slice(m[1].length + 1)) : NaN))
+        .filter((y) => Number.isInteger(y));
+    const upcoming = sameForm.length > 0 && sameForm.every((y) => y < year);
+    return { kind: 'missing-plugin', plugin, year, upcoming };
 }
 
 /** The user-facing sentence for a warning, translated. */
@@ -94,6 +104,14 @@ export function ericWarningText(w: EricWarning): string {
                 'This ERiC (library {found}) is older than the one bundled with official builds ({expected}). ELSTER may reject submissions from an ERiC whose support period has ended — download a current one.',
             ),
             { found: w.found, expected: w.expected },
+        );
+    }
+    if (w.upcoming && w.year !== null) {
+        return fmt(
+            _(
+                'This ERiC has no check for tax year {year} yet ({plugin}). ELSTER ships it with a later ERiC release, once the forms for that year are published. Nothing is broken; this form cannot be checked or sent with this ERiC until then.',
+            ),
+            { year: String(w.year), plugin: w.plugin },
         );
     }
     return fmt(

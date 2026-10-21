@@ -13,6 +13,9 @@
  * dropped selectively through {@link invalidate} after a write.
  */
 
+import { existsSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+import { getStoreDir, ledgerDbPath } from '@steuererklaerung/store';
 import { createAppContext, type AppContext } from '../context.ts';
 import type { ElsterConfig } from '../config/index.ts';
 import type { EstConfig } from '../config/index.ts';
@@ -54,6 +57,13 @@ export interface PresenterSession {
     aggregate(entity: EntityRef, year: number): Promise<EuerTxAggregate>;
     /** The memoized DMS document list for one entity-year (async; outbound for Paperless). Evicted on failure. */
     documents(entity: EntityRef, year: number): Promise<DocumentsModel>;
+    /**
+     * Memoize one derived per-entity-year result (a count, a hint list …) until the store changes.
+     * The entry is dropped by {@link invalidate} AND when the store's files change on disk (so a write
+     * from another process, or from a path that never calls `invalidate`, cannot serve stale data), and
+     * at midnight (results depend on "today"). Evicted on failure.
+     */
+    memo<T>(entity: EntityRef, year: number, key: string, build: () => Promise<T>): Promise<T>;
     /** Drop the memoized aggregate + documents builds — for one entity-year, one entity, or globally. */
     invalidate(entityId?: string, year?: number): void;
 }
@@ -73,6 +83,8 @@ export function createPresenterSession(opts: { years?: number[] } = {}): Present
     const dmsCache = new Map<string, DmsProvider>();
     const aggCache = new Map<string, Promise<EuerTxAggregate>>();
     const docCache = new Map<string, Promise<DocumentsModel>>();
+
+    const memoCache = new Map<string, { stamp: string; value: Promise<unknown> }>();
 
     /** The DMS back-end each entity is configured for (built-in by default; a manifest entity opts in). */
     let dmsConfigById = resolveDmsConfigs();
@@ -165,6 +177,20 @@ export function createPresenterSession(opts: { years?: number[] } = {}): Present
         return cached;
     }
 
+    function memo<T>(ref: EntityRef, year: number, key: string, build: () => Promise<T>): Promise<T> {
+        const id = refModel(ref).id;
+        const slot = `${id}:${year}:${key}`;
+        const stamp = `${new Date().toDateString()}|${storeFingerprint()}`;
+        const hit = memoCache.get(slot);
+        if (hit && hit.stamp === stamp) return hit.value as Promise<T>;
+        const value = build().catch((err) => {
+            if (memoCache.get(slot)?.value === value) memoCache.delete(slot); // never cache a rejection
+            throw err;
+        });
+        memoCache.set(slot, { stamp, value });
+        return value;
+    }
+
     function invalidate(entityId?: string, year?: number): void {
         // The config snapshot goes too: a write such as „Wirtschaftsgut erfassen" updates the entity's
         // in-memory `elster`, and a cached copy would keep the next aggregate on the old Anlageverzeichnis.
@@ -173,12 +199,16 @@ export function createPresenterSession(opts: { years?: number[] } = {}): Present
             docCache.clear();
             elsterCache.clear();
             estCache.clear();
+            memoCache.clear();
             return;
         }
         elsterCache.delete(entityId);
         estCache.delete(entityId);
         const exact = year != null ? `${entityId}:${year}` : null;
         const prefix = `${entityId}:`;
+        for (const key of memoCache.keys()) {
+            if (exact ? key.startsWith(`${exact}:`) : key.startsWith(prefix)) memoCache.delete(key);
+        }
         for (const map of [aggCache, docCache]) {
             for (const key of map.keys()) {
                 if (exact ? key === exact : key.startsWith(prefix)) map.delete(key);
@@ -186,7 +216,7 @@ export function createPresenterSession(opts: { years?: number[] } = {}): Present
         }
     }
 
-    return { ctx, workspace, elster, est, dms, reloadDms, aggregate, documents, invalidate };
+    return { ctx, workspace, elster, est, dms, reloadDms, aggregate, documents, memo, invalidate };
 }
 
 /**
@@ -197,4 +227,29 @@ function resolveDmsConfigs(): Map<string, EntityDmsConfig> {
     const storeKeys = transactionsSummary().accounts.map((a) => a.accountKey);
     const resolved = resolveWorkspaceEntities(storeKeys);
     return new Map(resolved.map((e) => [e.id, e.dms]));
+}
+
+/**
+ * Cheap change detector for everything the derived results read: the ledger DB (+ its WAL, where a
+ * write lands first) and the NDJSON transaction files. A handful of `stat` calls (well under a
+ * millisecond), so it can run on every {@link PresenterSession.memo} lookup.
+ */
+function storeFingerprint(): string {
+    const parts: string[] = [];
+    const stat = (path: string): void => {
+        try {
+            const st = statSync(path);
+            parts.push(`${st.mtimeMs}:${st.size}`);
+        } catch {
+            parts.push('-');
+        }
+    };
+    const db = ledgerDbPath();
+    stat(db);
+    stat(`${db}-wal`);
+    const dir = getStoreDir();
+    if (existsSync(dir)) {
+        for (const f of readdirSync(dir).sort()) if (f.endsWith('.ndjson') || f.endsWith('.json')) stat(join(dir, f));
+    }
+    return parts.join(',');
 }

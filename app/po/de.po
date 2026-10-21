@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-20 13:45+0200\n"
+"POT-Creation-Date: 2026-10-21 08:03+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -394,7 +394,7 @@ msgstr "ERiC {release} (Bibliothek {library})"
 msgid "ERiC library {library}"
 msgstr "ERiC-Bibliothek {library}"
 
-#: src/core/actions/elster/eric-warnings.ts:94
+#: src/core/actions/elster/eric-warnings.ts:104
 msgid ""
 "This ERiC (library {found}) is older than the one bundled with official "
 "builds ({expected}). ELSTER may reject submissions from an ERiC whose "
@@ -404,7 +404,19 @@ msgstr ""
 "({expected}). ELSTER kann Übermittlungen von einem ERiC ablehnen, dessen "
 "Unterstützungszeitraum abgelaufen ist — bitte ein aktuelles herunterladen."
 
-#: src/core/actions/elster/eric-warnings.ts:100
+#: src/core/actions/elster/eric-warnings.ts:112
+msgid ""
+"This ERiC has no check for tax year {year} yet ({plugin}). ELSTER ships it "
+"with a later ERiC release, once the forms for that year are published. "
+"Nothing is broken; this form cannot be checked or sent with this ERiC until "
+"then."
+msgstr ""
+"Dieses ERiC enthält noch keine Prüfung für das Steuerjahr {year} "
+"({plugin}). ELSTER liefert sie mit einer späteren ERiC-Version, sobald die "
+"Formulare für dieses Jahr veröffentlicht sind. Es ist nichts kaputt; bis "
+"dahin lässt sich dieses Formular mit diesem ERiC weder prüfen noch senden."
+
+#: src/core/actions/elster/eric-warnings.ts:118
 msgid ""
 "This ERiC has no check plugin {plugin} for this form and year. Sending may "
 "fail — download a current ERiC."
@@ -413,23 +425,23 @@ msgstr ""
 "Senden kann scheitern — bitte ein aktuelles ERiC herunterladen."
 
 #
-#: src/core/actions/elster/eric-warnings.ts:110
+#: src/core/actions/elster/eric-warnings.ts:128
 msgid "own folder"
 msgstr "eigener Ordner"
 
-#: src/core/actions/elster/eric-warnings.ts:112
+#: src/core/actions/elster/eric-warnings.ts:130
 msgid "ERIC_HOME"
 msgstr "ERIC_HOME"
 
-#: src/core/actions/elster/eric-warnings.ts:114
+#: src/core/actions/elster/eric-warnings.ts:132
 msgid "bundled with the app"
 msgstr "mit der App geliefert"
 
-#: src/core/actions/elster/eric-warnings.ts:116
+#: src/core/actions/elster/eric-warnings.ts:134
 msgid "project folder (elster/runtime)"
 msgstr "Projektordner (elster/runtime)"
 
-#: src/core/actions/elster/eric-warnings.ts:118
+#: src/core/actions/elster/eric-warnings.ts:136
 msgid "user installation"
 msgstr "Nutzerinstallation"
 
@@ -8756,15 +8768,19 @@ msgstr ""
 msgid "Entity removed: {name}"
 msgstr "Entität entfernt: {name}"
 
-#: src/frontends/desktop/views/eric-warning-rows.ts:16
+#: src/frontends/desktop/views/eric-warning-rows.ts:17
 msgid "Update the app to get the current ERiC."
 msgstr "Mit einem Update der App kommt das aktuelle ERiC."
 
-#: src/frontends/desktop/views/eric-warning-rows.ts:22
+#: src/frontends/desktop/views/eric-warning-rows.ts:25
 msgid "ERiC is out of date"
 msgstr "ERiC ist veraltet"
 
-#: src/frontends/desktop/views/eric-warning-rows.ts:22
+#: src/frontends/desktop/views/eric-warning-rows.ts:27
+msgid "Check not available yet"
+msgstr "Prüfung noch nicht verfügbar"
+
+#: src/frontends/desktop/views/eric-warning-rows.ts:28
 msgid "Check plugin missing"
 msgstr "Prüf-Plugin fehlt"
 

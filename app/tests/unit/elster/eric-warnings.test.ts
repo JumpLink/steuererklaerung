@@ -102,6 +102,26 @@ export default async () => {
             expect(missingOf(datenartVersionFor('ustva', 2026, xml))).toBe('checkUStVA_2027');
         });
 
+        await it('calls a year newer than every plugin of the form "upcoming", not broken', async () => {
+            const w = missingPluginWarning(datenartVersionFor('euer', 2026, ''), plugins);
+            expect(w?.kind === 'missing-plugin' && w.upcoming).toBe(true);
+            const text = ericWarningText(w!);
+            expect(text.includes('2026')).toBe(true);
+            expect(text.includes('later ERiC release')).toBe(true);
+            expect(text.includes('Nothing is broken')).toBe(true);
+        });
+
+        await it('keeps the broken-install wording when a plugin of the form is missing for an older year', async () => {
+            const w = missingPluginWarning('EUER_2024', ['checkEUER_2025', 'checkEUER_2026']);
+            expect(w?.kind === 'missing-plugin' && w.upcoming).toBe(false);
+            expect(ericWarningText(w!).includes('no check plugin')).toBe(true);
+        });
+
+        await it('keeps the broken-install wording when the form has no plugin at all', async () => {
+            const w = missingPluginWarning(datenartVersionFor('gewst', 2025, ''), plugins);
+            expect(w?.kind === 'missing-plugin' && w.upcoming).toBe(false);
+        });
+
         await it('says nothing when the plugin list could not be read', async () => {
             expect(missingPluginWarning('UStVA_2026', [])).toBeNull();
         });

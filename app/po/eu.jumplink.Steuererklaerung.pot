@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-20 13:45+0200\n"
+"POT-Creation-Date: 2026-10-21 08:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -332,36 +332,44 @@ msgstr ""
 msgid "ERiC library {library}"
 msgstr ""
 
-#: src/core/actions/elster/eric-warnings.ts:94
+#: src/core/actions/elster/eric-warnings.ts:104
 msgid ""
 "This ERiC (library {found}) is older than the one bundled with official "
 "builds ({expected}). ELSTER may reject submissions from an ERiC whose "
 "support period has ended — download a current one."
 msgstr ""
 
-#: src/core/actions/elster/eric-warnings.ts:100
+#: src/core/actions/elster/eric-warnings.ts:112
+msgid ""
+"This ERiC has no check for tax year {year} yet ({plugin}). ELSTER ships it "
+"with a later ERiC release, once the forms for that year are published. "
+"Nothing is broken; this form cannot be checked or sent with this ERiC until "
+"then."
+msgstr ""
+
+#: src/core/actions/elster/eric-warnings.ts:118
 msgid ""
 "This ERiC has no check plugin {plugin} for this form and year. Sending may "
 "fail — download a current ERiC."
 msgstr ""
 
-#: src/core/actions/elster/eric-warnings.ts:110
+#: src/core/actions/elster/eric-warnings.ts:128
 msgid "own folder"
 msgstr ""
 
-#: src/core/actions/elster/eric-warnings.ts:112
+#: src/core/actions/elster/eric-warnings.ts:130
 msgid "ERIC_HOME"
 msgstr ""
 
-#: src/core/actions/elster/eric-warnings.ts:114
+#: src/core/actions/elster/eric-warnings.ts:132
 msgid "bundled with the app"
 msgstr ""
 
-#: src/core/actions/elster/eric-warnings.ts:116
+#: src/core/actions/elster/eric-warnings.ts:134
 msgid "project folder (elster/runtime)"
 msgstr ""
 
-#: src/core/actions/elster/eric-warnings.ts:118
+#: src/core/actions/elster/eric-warnings.ts:136
 msgid "user installation"
 msgstr ""
 
@@ -8031,15 +8039,19 @@ msgstr ""
 msgid "Entity removed: {name}"
 msgstr ""
 
-#: src/frontends/desktop/views/eric-warning-rows.ts:16
+#: src/frontends/desktop/views/eric-warning-rows.ts:17
 msgid "Update the app to get the current ERiC."
 msgstr ""
 
-#: src/frontends/desktop/views/eric-warning-rows.ts:22
+#: src/frontends/desktop/views/eric-warning-rows.ts:25
 msgid "ERiC is out of date"
 msgstr ""
 
-#: src/frontends/desktop/views/eric-warning-rows.ts:22
+#: src/frontends/desktop/views/eric-warning-rows.ts:27
+msgid "Check not available yet"
+msgstr ""
+
+#: src/frontends/desktop/views/eric-warning-rows.ts:28
 msgid "Check plugin missing"
 msgstr ""
 

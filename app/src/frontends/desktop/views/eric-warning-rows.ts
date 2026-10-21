@@ -13,13 +13,20 @@ import { markup } from './util.ts';
 
 /** The text of one warning, with where to get a current ERiC. */
 export function ericWarningMessage(w: EricWarning, bundled: boolean): string {
-    return bundled ? `${ericWarningText(w)} ${_('Update the app to get the current ERiC.')}` : ericWarningText(w);
+    if (!bundled || (w.kind === 'missing-plugin' && w.upcoming)) return ericWarningText(w);
+    return `${ericWarningText(w)} ${_('Update the app to get the current ERiC.')}`;
+}
+
+/** The row title: a year ELSTER has not shipped yet is not a broken install. */
+export function ericWarningTitle(w: EricWarning): string {
+    if (w.kind === 'outdated') return _('ERiC is out of date');
+    return w.upcoming ? _('Check not available yet') : _('Check plugin missing');
 }
 
 /** One warning row for a preferences group. */
 export function ericWarningRow(w: EricWarning, bundled: boolean): Adw.ActionRow {
     const row = new Adw.ActionRow({
-        title: w.kind === 'outdated' ? _('ERiC is out of date') : _('Check plugin missing'),
+        title: markup(ericWarningTitle(w)),
         subtitle: markup(ericWarningMessage(w, bundled)),
     });
     row.set_subtitle_lines(0);
