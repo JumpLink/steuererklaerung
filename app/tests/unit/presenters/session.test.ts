@@ -122,6 +122,40 @@ export default async () => {
             expect(s.documents('test', 2024)).not.toBe(y24c);
         });
 
+        await it('memo(): a warm lookup skips the build; invalidate and a store write rebuild', async () => {
+            const s = createPresenterSession();
+            let builds = 0;
+            const build = async () => ++builds;
+            expect(await s.memo('test', 2025, 'k', build)).toBe(1);
+            expect(await s.memo('test', 2025, 'k', build)).toBe(1); // warm: not recomputed
+            expect(builds).toBe(1);
+            expect(await s.memo('test', 2024, 'k', build)).toBe(2); // other year, own slot
+
+            s.invalidate('test', 2025);
+            expect(await s.memo('test', 2025, 'k', build)).toBe(3);
+            expect(await s.memo('test', 2024, 'k', build)).toBe(2); // untouched by the scoped drop
+
+            // A booking written through the store (no invalidate call) must not be served stale.
+            upsertAccount('camt:test', [tx({ id: 'c', bookingDate: '2025-07-01', purpose: 'late booking' })]);
+            expect(await s.memo('test', 2025, 'k', build)).toBe(4);
+
+            s.invalidate();
+            expect(await s.memo('test', 2024, 'k', build)).toBe(5);
+        });
+
+        await it('memo(): a rejected build is not cached', async () => {
+            const s = createPresenterSession();
+            let n = 0;
+            const flaky = async () => {
+                if (++n === 1) throw new Error('boom');
+                return n;
+            };
+            let failed = false;
+            await s.memo('test', 2025, 'f', flaky).catch(() => (failed = true));
+            expect(failed).toBe(true);
+            expect(await s.memo('test', 2025, 'f', flaky)).toBe(2);
+        });
+
         await it('a rejected build is not cached — the next call rebuilds', async () => {
             // Only a Paperless entity asks Paperless; a built-in one resolves offline.
             writeFileSync(
