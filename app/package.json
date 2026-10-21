@@ -171,6 +171,9 @@
                     "libxml2-16",
                     "libsqlite3-0",
                     "gir1.2-freedesktop"
+                ],
+                "rpm": [
+                    "libgda-sqlite"
                 ]
             },
             "appId": "eu.jumplink.Steuererklaerung",
