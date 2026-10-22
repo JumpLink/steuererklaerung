@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-22 19:52+0200\n"
+"POT-Creation-Date: 2026-10-22 22:45+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -5203,6 +5203,7 @@ msgid "No window is open in which the bank could ask."
 msgstr "Kein Fenster offen, in dem die Bank gefragt werden könnte."
 
 #: src/frontends/desktop/fints-interaction.ts:58
+#: src/frontends/desktop/lotse-panel.ts:128
 #: src/frontends/desktop/views/absenden-dialog.ts:78
 #: src/frontends/desktop/views/absenden-dialog.ts:275
 #: src/frontends/desktop/views/datenschutz-dialog.ts:77
@@ -5252,9 +5253,35 @@ msgid "en"
 msgstr "de"
 
 #. TRANSLATORS: Link to the coding agent's own documentation
-#: src/frontends/desktop/lotse-panel.blp:84
+#: src/frontends/desktop/lotse-panel.blp:103
 msgid "Documentation"
 msgstr "Dokumentation"
+
+#: src/frontends/desktop/lotse-panel.ts:120
+msgid "Download {agent}?"
+msgstr "{agent} herunterladen?"
+
+#: src/frontends/desktop/lotse-panel.ts:123
+msgid ""
+"{agent} {version} ({size} MB) is downloaded from registry.npmjs.org, checked "
+"against a fixed checksum and stored in this app’s own data folder. Nothing "
+"outside it is changed."
+msgstr ""
+"{agent} {version} ({size} MB) wird von registry.npmjs.org heruntergeladen, "
+"gegen eine feste Prüfsumme geprüft und im eigenen Datenordner dieser App "
+"abgelegt. Außerhalb davon wird nichts verändert."
+
+#: src/frontends/desktop/lotse-panel.ts:129
+msgid "Download"
+msgstr "Herunterladen"
+
+#: src/frontends/desktop/lotse-panel.ts:140
+msgid "Downloading {agent}…"
+msgstr "{agent} wird heruntergeladen …"
+
+#: src/frontends/desktop/lotse-panel.ts:182
+msgid "Install {agent} ({size} MB)"
+msgstr "{agent} installieren ({size} MB)"
 
 #: src/frontends/desktop/main.ts:128
 #: src/frontends/desktop/views/support-dialog.ts:32
@@ -15038,11 +15065,11 @@ msgid ""
 "the Flatpak carries the demo workspace, so install and first run work out of "
 "the box."
 msgstr ""
-"KI ist optional: Alles funktioniert auch ohne. Über den integrierten MCP-Server "
-"kann ein Assistent angebunden werden — jeder von Lotse unterstützte Anbieter kann "
-"genutzt werden, und kostenlose Fremdmodelle bleiben abgelehnt. Die Linux-Pakete "
-"bringen ihre Datenbankbibliotheken mit und das Flatpak enthält die Demo-Workspace, "
-"installieren und der erste Start funktionieren."
+"KI ist optional: Alles funktioniert auch ohne. Über den integrierten MCP-"
+"Server kann ein Assistent angebunden werden — jeder von Lotse unterstützte "
+"Anbieter kann genutzt werden, und kostenlose Fremdmodelle bleiben abgelehnt. "
+"Die Linux-Pakete bringen ihre Datenbankbibliotheken mit und das Flatpak "
+"enthält die Demo-Workspace, installieren und der erste Start funktionieren."
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:63
 msgid ""

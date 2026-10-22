@@ -19,11 +19,11 @@
  *   4. **The tools it gets are read-only.** The agent reaches this app through this app's own MCP
  *      server, started with {@link MCP_READONLY_ENV} — see `core/config/mcp-readonly.ts` for why
  *      the manifest's `allowWrite` is the wrong switch for an agent the app spawned itself.
- *   5. **No free hosted model may answer.** {@link LOTSE_MODEL_POLICY} is handed to `LotseChat` as
- *      its `modelPolicy`, which hides those models and refuses a prompt while one is selected.
- *      Everything this pane can read — receipts, Buchungen, Steuernummern — arrives through the MCP
- *      server above and ends up in the model's context, so the destination is as much a decision as
- *      the tools are.
+ *   5. **A free hosted model may answer — with a warning, not a block** (issue #95, ADR 0002). The
+ *      pane passes no `modelPolicy`, so `LotseChat` shows its warning card above the message field
+ *      while a free model is selected: the provider may store and train on what is sent. Everything
+ *      this pane can read arrives through the MCP server above, so the person sees where it goes
+ *      and decides. {@link LOTSE_MODEL_POLICY} stays for unattended jobs, which show no card.
  *
  * **What the gate can and cannot do.** {@link assistantGateAnswer} answers the agent's
  * `session/request_permission`: it declines the destructive kinds outright and asks the person
@@ -40,11 +40,17 @@ import { chmodSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 import {
+    AgentInstallError,
+    BUNDLED_AGENTS,
     denyFreeHostedModels,
+    distFor,
     gatherResolveContext,
+    installAgent,
+    isInstalled,
     lotsePathsUnder,
     resolveDefaultWithNote,
     type AgentChoice,
+    type BundledAgent,
     type DefaultResolution,
     type ResolveContext,
     type LotsePaths,
@@ -131,7 +137,9 @@ export function assistantGateAnswer(view: { tool: string; kind: string }): 'ask'
 }
 
 /**
- * Which models this pane's prompts may reach — lotse's ready-made rule, unmodified.
+ * Which models an UNATTENDED job may reach (`runJob` in `opencode-provider.ts`) — lotse's
+ * ready-made rule, unmodified. The interactive pane does not use it: there the person sees lotse's
+ * warning card and decides; a background job has nobody to warn, so it stays closed.
  *
  * `denyFreeHostedModels` is `isFreeModel`'s answer turned into a policy: anything lotse
  * recognises as free (an id ending in `-free`, plus `opencode/big-pickle`), and an empty id. The widget hides those
@@ -163,8 +171,6 @@ export interface LotseEmbedPlan {
     mcpServers: McpServer[];
     /** The directory a new conversation runs in — the data root, never a source checkout. */
     cwd: string;
-    /** Where a prompt from this pane may go: {@link LOTSE_MODEL_POLICY}, part of the plan so a test sees it. */
-    modelPolicy: ModelPolicy;
 }
 
 export interface LotseEmbedOptions {
@@ -194,7 +200,6 @@ export function lotseEmbedPlan(options: LotseEmbedOptions): LotseEmbedPlan | nul
         paths: lotsePathsUnder(dataRoot),
         mcpServers: lotseMcpServers(lotseMcpLaunch(options.installation)),
         cwd: dataRoot,
-        modelPolicy: LOTSE_MODEL_POLICY,
     };
 }
 
@@ -207,6 +212,52 @@ export function ensureLotseDataRoot(root: string): string {
     mkdirSync(root, { recursive: true, mode: 0o700 });
     chmodSync(root, 0o700);
     return root;
+}
+
+/** What the "no agent" page may offer: lotse's pinned opencode, downloaded for this person on request. */
+export interface AgentInstallOffer {
+    agent: BundledAgent;
+    /** Download size in whole megabytes, rounded up — what the consent dialog names. */
+    megabytes: number;
+}
+
+/**
+ * The install offer for this machine, or `null` when there is nothing to offer: the catalog has no
+ * pin for this platform, or the pinned copy is already there (then the agent resolved, or the
+ * failure is something else a download would not fix).
+ *
+ * Only the pin in lotse's catalog is ever fetched — no "latest", no URL from this app. The person
+ * is asked first; the offer only describes what asking would be about.
+ */
+export function agentInstallOffer(
+    paths: LotsePaths,
+    platform: NodeJS.Platform = process.platform,
+    arch: string = process.arch,
+): AgentInstallOffer | null {
+    const agent = BUNDLED_AGENTS.find((entry) => entry.id === 'opencode');
+    if (!agent) return null;
+    const dist = distFor(agent, platform, arch);
+    if (!dist || isInstalled(agent, paths.dataDir)) return null;
+    return { agent, megabytes: Math.ceil(dist.size / 1_000_000) };
+}
+
+/**
+ * Download and unpack the offered agent under `<dataDir>/agent-binaries`. Resolves with `null` on
+ * success and with lotse's own message on failure, so the caller shows a sentence rather than a
+ * stack. Anything that is not an {@link AgentInstallError} is a bug and is rethrown.
+ */
+export async function installOfferedAgent(
+    offer: AgentInstallOffer,
+    paths: LotsePaths,
+    options: { fetch?: typeof fetch } = {},
+): Promise<string | null> {
+    try {
+        await installAgent(offer.agent, paths.dataDir, options);
+        return null;
+    } catch (error) {
+        if (error instanceof AgentInstallError) return error.message;
+        throw error;
+    }
 }
 
 export type AgentSource = 'bundled' | 'host';

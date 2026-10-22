@@ -66,8 +66,7 @@ nichts auszuwählen.
 **Welches opencode?** Zeile **Coding-Agent** direkt darunter (gilt ab dem nächsten Start, für das
 Panel *und* die Einmal-Aufträge). Voreinstellung: **Mitgeliefertes opencode** mit eigener, isolierter
 Konfiguration. Wer **Eigenes opencode (globale Konfiguration)** wählt, nutzt sein installiertes
-opencode samt eigener Anmeldung und Modellen. Die Modellregel gegen kostenlose Fremdmodelle gilt für
-beide. Fehlt die gewählte Variante, nimmt lotse die andere und die App schreibt einen Hinweis;
+opencode samt eigener Anmeldung und Modellen. Kostenlose Fremdmodelle lösen in beiden Fällen die Warnkarte aus. Fehlt die gewählte Variante, nimmt lotse die andere und die App schreibt einen Hinweis;
 gibt es gar keine, erscheint die Hinweisseite.
 
 ### Was lotse hier bekommt — und was nicht
@@ -88,23 +87,20 @@ gibt es gar keine, erscheint die Hinweisseite.
   andere wird **gefragt**. Es gibt keine Antwort, die etwas zusätzlich erlaubt.
   `fetch` ist bewusst nicht abgelehnt: so sieht der Agent einen Gesetzestext oder eine
   BMF-Seite nach. Die URL steht in der Rückfrage.
-- **Keine kostenlosen Fremdmodelle — und zwar durchgesetzt, nicht nur nicht angeboten.** Das Panel
-  übergibt lotse eine **Modellregel** (`denyFreeHostedModels`): kostenlose Fremdmodelle stehen in
-  der Modellauswahl nicht zur Verfügung, und solange eines ausgewählt ist, geht **keine Eingabe
-  raus** — das Senden ist gesperrt und der Grund steht darunter. Umgeschaltet wird dabei nie: die
-  Modellwahl bleibt die der Person, sie wird nur eingeschränkt. Die Regel ist **fail-closed**: ein
-  Fehler in der Prüfung und ein Modell, das lotse nicht zuordnen kann, gelten beide als Ablehnung.
-  Die Regel schränkt **Modelle** ein, nicht Anbieter: Ist noch keiner verbunden, bietet das Panel
-  die Anmeldung bei **jedem Anbieter an, den lotse unterstützt** (`providerOnboarding` an), und ein
-  Anbieter mit bezahlten und kostenlosen Modellen bleibt mit den bezahlten nutzbar. Die Rückfrage-Logik hat damit nichts zu tun; sie sieht Werkzeugaufrufe und kann ein
-  Modell gar nicht erkennen.
-
-  Eine **bekannte Lücke**, offen benannt: erkannt werden alles mit der Endung `-free` und
-  `opencode/big-pickle` (lotses Regel `isFreeModel`). Eine *unbekannte* Modell-ID gilt als
-  erlaubt, denn die Regel benennt die kostenlosen Modelle und nicht die bezahlten — würde Unbekanntes
-  abgelehnt, wären fast alle Modelle gesperrt, auch bezahlte. Wer es genauer braucht, pflegt eine
-  eigene Positivliste; das wäre dann eine Liste, die veraltet und jemanden von einem Modell
-  aussperrt, für das er zahlt.
+- **Kostenlose Fremdmodelle: warnen statt sperren.** Zum Ausprobieren darf auch ein kostenloses
+  Modell antworten. Solange eines ausgewählt ist, steht über dem Eingabefeld eine **Warnkarte**
+  (lotses): der Anbieter kann speichern und damit trainieren, was gesendet wird. Die Modellwahl
+  bleibt die der Person; umgeschaltet wird nie. Das Panel übergibt dafür bewusst keine Modellregel.
+  **Einmal-Aufträge** (Hintergrund, ohne Person davor) behalten die harte Regel
+  (`denyFreeHostedModels`, fail-closed): niemand läge vor der Karte, die sie lesen könnte. Die
+  Rückfrage-Logik hat damit nichts zu tun; sie sieht Werkzeugaufrufe und kann ein Modell gar nicht
+  erkennen. Ist noch kein Anbieter verbunden, bietet das Panel die Anmeldung bei **jedem Anbieter
+  an, den lotse unterstützt** (`providerOnboarding` an).
+- **opencode fehlt?** Ohne mitgeliefertes und ohne eigenes opencode zeigt die Hinweisseite den Knopf
+  **opencode installieren (… MB)**. Nach einer Rückfrage mit Größe und Quelle lädt die App genau
+  die in lotse festgelegte Version (Prüfsumme und Größe werden vor dem Entpacken geprüft) in ihren
+  eigenen Datenordner; sonst wird nichts geändert. Nur Linux (x86_64, aarch64); anderswo bleibt
+  die Anleitung.
 
 Technisch: die Pakete `@lotse/*` kommen von npm; ein Entwicklungs-Link auf einen lokalen Checkout
 ist optional — [lotse einbinden](lotse-entwicklung.md).

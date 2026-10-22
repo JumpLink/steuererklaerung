@@ -14,15 +14,18 @@ import { join } from 'node:path';
 import {
     denyFreeHostedModels,
     isFreeModel,
+    lotsePathsUnder,
     type AgentDetection,
     type McpServer,
     type ResolveContext,
 } from '@lotse/core';
 
 import {
+    agentInstallOffer,
     AI_ENGINE_ENV,
     assistantGateAnswer,
     ensureLotseDataRoot,
+    installOfferedAgent,
     launchIsReadOnly,
     lotseDataRoot,
     lotseEmbedPlan,
@@ -175,50 +178,67 @@ export default async () => {
         });
     });
 
-    await describe('lotseEmbedPlan — no free hosted model answers a prompt from this pane', async () => {
-        await it('carries the policy in the plan, so the panel has one to pass', async () => {
-            const built = plan();
-            if (!built) return;
-            expect(built.modelPolicy).toBe(LOTSE_MODEL_POLICY);
-            // lotse's rule, unmodified — not a copy of it that could drift from the rule.
+    await describe('free hosted models — warned about in the pane, blocked in unattended jobs', async () => {
+        await it('keeps lotse’s rule unmodified for background jobs', async () => {
+            // Not a copy of the rule that could drift from it.
             expect(LOTSE_MODEL_POLICY).toBe(denyFreeHostedModels);
         });
 
-        await it('denies every id lotse recognises as free', async () => {
-            const built = plan();
-            if (!built) return;
-            const ids = ['opencode/big-pickle', 'opencode/fledge-alpha-free', 'x/any-free'];
-            for (const id of ids) {
+        await it('denies what lotse recognises as free, an empty id too, and allows a paid id', async () => {
+            for (const id of ['opencode/big-pickle', 'opencode/fledge-alpha-free', 'x/any-free']) {
                 expect(isFreeModel(id)).toBe(true);
-                expect(built.modelPolicy(id)).toBe('deny');
+                expect(LOTSE_MODEL_POLICY(id)).toBe('deny');
             }
+            expect(LOTSE_MODEL_POLICY('')).toBe('deny');
+            expect(LOTSE_MODEL_POLICY('   ')).toBe('deny');
+            // The documented gap, asserted rather than left implied: an unrecognised id is allowed.
+            expect(LOTSE_MODEL_POLICY('anthropic/claude-opus-5')).toBe('allow');
         });
 
-        await it('denies the -free suffix and an empty id, allows a paid id', async () => {
+        await it('the plan carries no policy, so the pane shows lotse’s warning card instead', async () => {
             const built = plan();
             if (!built) return;
-            // The measured case: what an opencode with no provider connected answers with.
-            expect(built.modelPolicy('opencode/fledge-alpha-free')).toBe('deny');
-            expect(built.modelPolicy('')).toBe('deny');
-            expect(built.modelPolicy('   ')).toBe('deny');
-            // The documented gap, asserted rather than left implied: an unrecognised id is allowed.
-            expect(built.modelPolicy('anthropic/claude-opus-5')).toBe('allow');
+            expect('modelPolicy' in built).toBe(false);
         });
 
         /**
-         * **The panel is the one place this can still be dropped, and it needs GTK to run.**
-         * `BhLotsePanel.build` cannot be instantiated headless (Sandbox Exit 144), so the plan
-         * above proves the policy EXISTS and this proves it is handed over. Same shape as the
-         * identifier-literal guard in `euer-transactions.test.ts`: a privacy invariant that only
-         * the source can answer is checked against the source.
-         *
-         * It is deliberately not a regex over a formatted line — `modelPolicy` must be passed
-         * `plan.modelPolicy` and nothing else, because a literal here would be a second policy
-         * beside the one the plan decided.
+         * The panel needs GTK and cannot be built headless (Sandbox Exit 144), so the source is
+         * checked: the interactive pane must not pass a policy (#95), or the warning card never
+         * shows and a free model stays hidden. The headless job in `opencode-provider.ts` must
+         * keep passing one, since nobody is there to read a card.
          */
-        await it('the panel hands the plan’s policy to LotseChat', async () => {
-            const source = readFileSync(join(process.cwd(), 'src/frontends/desktop/lotse-panel.ts'), 'utf-8');
-            expect(source.includes('modelPolicy: plan.modelPolicy,')).toBe(true);
+        await it('the pane passes no modelPolicy, the unattended job still does', async () => {
+            const panel = readFileSync(join(process.cwd(), 'src/frontends/desktop/lotse-panel.ts'), 'utf-8');
+            expect(panel.includes('modelPolicy:')).toBe(false);
+            const job = readFileSync(join(process.cwd(), 'src/core/clients/llm/opencode-provider.ts'), 'utf-8');
+            expect(job.includes('modelPolicy: embed.LOTSE_MODEL_POLICY')).toBe(true);
+        });
+    });
+
+    await describe('agentInstallOffer — the "no agent" page offers lotse’s pin, never a "latest"', async () => {
+        const paths = lotsePathsUnder(mkdtempSync(join(tmpdir(), 'lotse-offer-')));
+
+        await it('offers the pinned opencode on a platform the catalog has a pin for, with its size', async () => {
+            const offer = agentInstallOffer(paths, 'linux', 'x64');
+            expect(offer?.agent.id).toBe('opencode');
+            expect((offer?.megabytes ?? 0) > 0).toBe(true);
+            expect(agentInstallOffer(paths, 'linux', 'arm64')?.agent.id).toBe('opencode');
+        });
+
+        await it('offers nothing where the catalog has no pin', async () => {
+            expect(agentInstallOffer(paths, 'darwin', 'arm64')).toBe(null);
+            expect(agentInstallOffer(paths, 'win32', 'x64')).toBe(null);
+            expect(agentInstallOffer(paths, 'linux', 'riscv64')).toBe(null);
+        });
+
+        await it('reports a failed download as lotse’s sentence and leaves nothing behind', async () => {
+            const offer = agentInstallOffer(paths, 'linux', 'x64');
+            if (!offer) return;
+            const failing = (() => Promise.resolve(new Response('', { status: 503 }))) as unknown as typeof fetch;
+            const failure = await installOfferedAgent(offer, paths, { fetch: failing });
+            expect(typeof failure).toBe('string');
+            // Still offered: nothing was installed.
+            expect(agentInstallOffer(paths, 'linux', 'x64')?.agent.id).toBe('opencode');
         });
     });
 

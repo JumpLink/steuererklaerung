@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-22 19:52+0200\n"
+"POT-Creation-Date: 2026-10-22 22:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4604,6 +4604,7 @@ msgid "No window is open in which the bank could ask."
 msgstr ""
 
 #: src/frontends/desktop/fints-interaction.ts:58
+#: src/frontends/desktop/lotse-panel.ts:128
 #: src/frontends/desktop/views/absenden-dialog.ts:78
 #: src/frontends/desktop/views/absenden-dialog.ts:275
 #: src/frontends/desktop/views/datenschutz-dialog.ts:77
@@ -4652,8 +4653,31 @@ msgid "en"
 msgstr ""
 
 #. TRANSLATORS: Link to the coding agent's own documentation
-#: src/frontends/desktop/lotse-panel.blp:84
+#: src/frontends/desktop/lotse-panel.blp:103
 msgid "Documentation"
+msgstr ""
+
+#: src/frontends/desktop/lotse-panel.ts:120
+msgid "Download {agent}?"
+msgstr ""
+
+#: src/frontends/desktop/lotse-panel.ts:123
+msgid ""
+"{agent} {version} ({size} MB) is downloaded from registry.npmjs.org, checked "
+"against a fixed checksum and stored in this app’s own data folder. Nothing "
+"outside it is changed."
+msgstr ""
+
+#: src/frontends/desktop/lotse-panel.ts:129
+msgid "Download"
+msgstr ""
+
+#: src/frontends/desktop/lotse-panel.ts:140
+msgid "Downloading {agent}…"
+msgstr ""
+
+#: src/frontends/desktop/lotse-panel.ts:182
+msgid "Install {agent} ({size} MB)"
 msgstr ""
 
 #: src/frontends/desktop/main.ts:128

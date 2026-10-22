@@ -3,9 +3,9 @@
   "requested": [
     "@gjsify/cli@0.64.5",
     "@gjsify/site@0.64.5",
-    "@lotse/core@^0.4.0",
-    "@lotse/session@^0.4.0",
-    "@lotse/widget@^0.4.0",
+    "@lotse/core@^0.5.0",
+    "@lotse/session@^0.5.0",
+    "@lotse/widget@^0.5.0",
     "@curlew/smtp@0.1.0",
     "@hono/node-server@^2.1.4",
     "@inquirer/prompts@^8.7.3",
@@ -4362,36 +4362,36 @@
       }
     },
     "node_modules/@lotse/acp": {
-      "version": "0.4.0",
-      "resolved": "https://registry.npmjs.org/@lotse/acp/-/acp-0.4.0.tgz",
-      "integrity": "sha512-ng/IVx5g+D9XLqoMUqHWamyAPRvg42bkgUKC++zkL1CEBcw1ZYwxgHGvl8mr9NkEhJV0ZP2UyHvA9e1FHDUxyQ=="
+      "version": "0.5.0",
+      "resolved": "https://registry.npmjs.org/@lotse/acp/-/acp-0.5.0.tgz",
+      "integrity": "sha512-WOV/dKDdEZr6mrG99HerkOF339qJ13kmcYRk6poHZYkqD+BKv21Dmmi8GZWTgvXWLYcLhpwnpzcQZNeDvTAimA=="
     },
     "node_modules/@lotse/core": {
-      "version": "0.4.0",
-      "resolved": "https://registry.npmjs.org/@lotse/core/-/core-0.4.0.tgz",
-      "integrity": "sha512-AuXpVfe7SB7idb39xs4uzcUpSBtVfqe29IsRENh3KlcdjPkA1mgusjfd1QNx1eWoX9jQqNIXJ5EKFSHC4diM7w==",
+      "version": "0.5.0",
+      "resolved": "https://registry.npmjs.org/@lotse/core/-/core-0.5.0.tgz",
+      "integrity": "sha512-R2LejN73Uys3W0ukXsz9peaLB09s1sepotZUWUeYsl0Ga3BPyFb3k1mwiknsPOt23MH5s1DTlliWrEum5fJaZw==",
       "dependencies": {
-        "@lotse/acp": "^0.4.0",
-        "@lotse/session": "^0.4.0",
+        "@lotse/acp": "^0.5.0",
+        "@lotse/session": "^0.5.0",
         "@modelcontextprotocol/sdk": "^1.30.0"
       }
     },
     "node_modules/@lotse/session": {
-      "version": "0.4.0",
-      "resolved": "https://registry.npmjs.org/@lotse/session/-/session-0.4.0.tgz",
-      "integrity": "sha512-6QPx+COpxdQQkUox4QadNXN9ZdalXMGGqUla8PTBASoiLzkuUCr8Tx5TDtocR2UCQnk/N0eLzrBeY0A6gaBpVw==",
+      "version": "0.5.0",
+      "resolved": "https://registry.npmjs.org/@lotse/session/-/session-0.5.0.tgz",
+      "integrity": "sha512-sGyYn0QKFOauPB9hjoAy0krEQELNagPAD2q6BFlEv22Z3kSjptZJnzFQ3skYLc6C9ObCi5y5cSTv22gZY6aiLQ==",
       "dependencies": {
-        "@lotse/acp": "^0.4.0"
+        "@lotse/acp": "^0.5.0"
       }
     },
     "node_modules/@lotse/widget": {
-      "version": "0.4.0",
-      "resolved": "https://registry.npmjs.org/@lotse/widget/-/widget-0.4.0.tgz",
-      "integrity": "sha512-BiUG1Hik3CXoeD/kiLSxBayQxyaahDbhqe1AckOb17dB8ATzuemHP39b99IIF6Cm97QBilvGrhpUQ2YqWKLG+A==",
+      "version": "0.5.0",
+      "resolved": "https://registry.npmjs.org/@lotse/widget/-/widget-0.5.0.tgz",
+      "integrity": "sha512-6ZzxZd8EyGgSL1kcgSQ68J1JEfjty440A+tJQvipf3aPlRD4zd4d5G5ZYrzXiNHnkyxw9VD2DBpo33Htl6lEJw==",
       "dependencies": {
-        "@lotse/acp": "^0.4.0",
-        "@lotse/core": "^0.4.0",
-        "@lotse/session": "^0.4.0"
+        "@lotse/acp": "^0.5.0",
+        "@lotse/core": "^0.5.0",
+        "@lotse/session": "^0.5.0"
       },
       "peerDependencies": {
         "@girs/adw-1": "^5.4.0",
