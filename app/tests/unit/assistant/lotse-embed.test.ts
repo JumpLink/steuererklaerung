@@ -13,7 +13,7 @@ import { join } from 'node:path';
 
 import {
     denyFreeHostedModels,
-    FREE_MODELS,
+    isFreeModel,
     type AgentDetection,
     type McpServer,
     type ResolveContext,
@@ -180,15 +180,16 @@ export default async () => {
             const built = plan();
             if (!built) return;
             expect(built.modelPolicy).toBe(LOTSE_MODEL_POLICY);
-            // lotse's rule, unmodified — not a copy of it that could drift from the list.
+            // lotse's rule, unmodified — not a copy of it that could drift from the rule.
             expect(LOTSE_MODEL_POLICY).toBe(denyFreeHostedModels);
         });
 
-        await it('denies every id on lotse’s free list', async () => {
+        await it('denies every id lotse recognises as free', async () => {
             const built = plan();
             if (!built) return;
-            expect(FREE_MODELS.ids.length > 0).toBe(true);
-            for (const id of FREE_MODELS.ids) {
+            const ids = ['opencode/big-pickle', 'opencode/fledge-alpha-free', 'x/any-free'];
+            for (const id of ids) {
+                expect(isFreeModel(id)).toBe(true);
                 expect(built.modelPolicy(id)).toBe('deny');
             }
         });

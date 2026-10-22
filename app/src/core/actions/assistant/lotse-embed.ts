@@ -133,8 +133,8 @@ export function assistantGateAnswer(view: { tool: string; kind: string }): 'ask'
 /**
  * Which models this pane's prompts may reach — lotse's ready-made rule, unmodified.
  *
- * `denyFreeHostedModels` is `isFreeModel`'s answer turned into a policy: the ids in lotse's
- * `free-models.json`, anything whose id ends in `-free`, and an empty id. The widget hides those
+ * `denyFreeHostedModels` is `isFreeModel`'s answer turned into a policy: anything lotse
+ * recognises as free (an id ending in `-free`, plus `opencode/big-pickle`), and an empty id. The widget hides those
  * models from the dropdown and REFUSES a prompt while one is selected; it never switches the model
  * for the person, so the choice stays theirs and is only narrowed. Fail-closed on both edges lotse
  * documents: a policy that throws is a deny, and so is a model lotse cannot identify.
@@ -145,7 +145,7 @@ export function assistantGateAnswer(view: { tool: string; kind: string }): 'ask'
  * provider the person connected earlier, or an agent config that names one.
  *
  * **Its one known gap, deliberately not papered over here:** an id the list does not recognise is
- * ALLOWED, because the list names free models rather than paid ones and denying the unrecognised
+ * ALLOWED, because the rule names free models rather than paid ones and denying the unrecognised
  * would deny nearly every model including the paid ones. An allowlist would close that gap and
  * would also need this app to maintain a list of every model it considers acceptable — a list that
  * rots silently and locks the person out of a model they pay for. The suffix rule is what catches

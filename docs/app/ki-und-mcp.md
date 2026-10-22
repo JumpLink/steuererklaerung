@@ -99,9 +99,9 @@ gibt es gar keine, erscheint die Hinweisseite.
   Anbieter mit bezahlten und kostenlosen Modellen bleibt mit den bezahlten nutzbar. Die Rückfrage-Logik hat damit nichts zu tun; sie sieht Werkzeugaufrufe und kann ein
   Modell gar nicht erkennen.
 
-  Eine **bekannte Lücke**, offen benannt: erkannt werden die Einträge aus lotses Liste
-  (`free-models.json`) und alles mit der Endung `-free`. Eine *unbekannte* Modell-ID gilt als
-  erlaubt, denn die Liste führt die kostenlosen Modelle und nicht die bezahlten — würde Unbekanntes
+  Eine **bekannte Lücke**, offen benannt: erkannt werden alles mit der Endung `-free` und
+  `opencode/big-pickle` (lotses Regel `isFreeModel`). Eine *unbekannte* Modell-ID gilt als
+  erlaubt, denn die Regel benennt die kostenlosen Modelle und nicht die bezahlten — würde Unbekanntes
   abgelehnt, wären fast alle Modelle gesperrt, auch bezahlte. Wer es genauer braucht, pflegt eine
   eigene Positivliste; das wäre dann eine Liste, die veraltet und jemanden von einem Modell
   aussperrt, für das er zahlt.
