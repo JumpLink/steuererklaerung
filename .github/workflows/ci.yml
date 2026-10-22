@@ -184,7 +184,7 @@ jobs:
 
   # macOS and Windows packages, assembled on Linux (ADR 0024 § A1: assembly is not host-bound, the
   # Mach-O and PE payloads are only RUN on their own OS). They carry the NODE bundle
-  # (`build:app:node`) on node-gi + the GTK closure from `@gjsify/gtk-runtime-*`, not the GJS one.
+  # (`build:app:node`) on node-gi + the GTK closure `gjsify ship` fetches into its cache, not the GJS one.
   # Order matters: the Linux smoke start needs the Linux node_modules, and every
   # `gjsify install --os …` below replaces them, so it comes first.
   ship-macos-windows:
@@ -251,8 +251,8 @@ jobs:
           chmod +x /tmp/prove.sh
           xvfb-run -a dbus-run-session -- /tmp/prove.sh
 
-      # Naming the target installs the os/cpu-gated optionalDependencies (node-runtime, gtk-runtime,
-      # node-gi prebuild) that a plain Linux install skips.
+      # Naming the target installs the os/cpu-gated optionalDependencies (node-runtime, node-gi
+      # prebuild) that a plain Linux install skips. The GTK closure is not one: `ship` fetches it.
       - name: Ship macOS (arm64)
         run: |
           gjsify install --os darwin --cpu arm64 --immutable
