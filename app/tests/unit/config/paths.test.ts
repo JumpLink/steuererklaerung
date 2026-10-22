@@ -107,6 +107,10 @@ export default async () => {
     });
 
     await describe('XDG resolution', async () => {
+        // The fallbacks below are the Linux ones; macOS and Windows have their own roots
+        // (tested above), so the host running the suite must not decide which applies.
+        const linux = { platform: 'linux' as const };
+
         await it('honours XDG_CONFIG_HOME / XDG_DATA_HOME when absolute', async () => {
             stub({ XDG_CONFIG_HOME: '/xdg/cfg', XDG_DATA_HOME: '/xdg/data' });
             expect(xdgConfigHome()).toBe('/xdg/cfg');
@@ -119,14 +123,14 @@ export default async () => {
             // A relative value is not merely unusual: honouring it would place the manifest
             // somewhere that moves with the working directory — the very bug this fixes.
             stub({ XDG_CONFIG_HOME: 'relative/path' });
-            expect(xdgConfigHome().startsWith('/')).toBe(true);
-            expect(xdgConfigHome().endsWith('/.config')).toBe(true);
+            expect(xdgConfigHome(linux).startsWith('/')).toBe(true);
+            expect(xdgConfigHome(linux).endsWith('/.config')).toBe(true);
         });
 
         await it('falls back to ~/.config and ~/.local/share when unset', async () => {
             stub({});
-            expect(xdgConfigHome().endsWith('/.config')).toBe(true);
-            expect(xdgDataHome().endsWith('/.local/share')).toBe(true);
+            expect(xdgConfigHome(linux).endsWith('/.config')).toBe(true);
+            expect(xdgDataHome(linux).endsWith('/.local/share')).toBe(true);
         });
 
         await it('names the manifest and store under those roots', async () => {
