@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-21 08:03+0200\n"
+"POT-Creation-Date: 2026-10-22 19:29+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -411,10 +411,10 @@ msgid ""
 "Nothing is broken; this form cannot be checked or sent with this ERiC until "
 "then."
 msgstr ""
-"Dieses ERiC enthält noch keine Prüfung für das Steuerjahr {year} "
-"({plugin}). ELSTER liefert sie mit einer späteren ERiC-Version, sobald die "
-"Formulare für dieses Jahr veröffentlicht sind. Es ist nichts kaputt; bis "
-"dahin lässt sich dieses Formular mit diesem ERiC weder prüfen noch senden."
+"Dieses ERiC enthält noch keine Prüfung für das Steuerjahr {year} ({plugin}). "
+"ELSTER liefert sie mit einer späteren ERiC-Version, sobald die Formulare für "
+"dieses Jahr veröffentlicht sind. Es ist nichts kaputt; bis dahin lässt sich "
+"dieses Formular mit diesem ERiC weder prüfen noch senden."
 
 #: src/core/actions/elster/eric-warnings.ts:118
 msgid ""
@@ -4826,7 +4826,7 @@ msgstr "enthält „{pattern}“ nicht"
 msgid "an earlier rule claims it first"
 msgstr "eine frühere Regel greift zuerst"
 
-#: src/core/presenters/session.ts:83
+#: src/core/presenters/session.ts:95
 msgid "Unknown entity: {ref}"
 msgstr "Unbekannte Entität: {ref}"
 
@@ -5341,7 +5341,7 @@ msgid "dates · payments · open items"
 msgstr "Termine · Zahlungen · offene Posten"
 
 #: src/frontends/desktop/nav.ts:68
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:75
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:72
 msgid "Tax"
 msgstr "Steuer"
 
@@ -7356,7 +7356,7 @@ msgstr "USt-IdNr muss DE + 9 Ziffern sein."
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:228
 #: src/frontends/desktop/views/setup-assistant.ts:387
 #: src/frontends/desktop/views/zeit-rechnung-dialog.ts:49
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:79
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:76
 msgid "VAT"
 msgstr "Umsatzsteuer"
 
@@ -8772,15 +8772,15 @@ msgstr "Entität entfernt: {name}"
 msgid "Update the app to get the current ERiC."
 msgstr "Mit einem Update der App kommt das aktuelle ERiC."
 
-#: src/frontends/desktop/views/eric-warning-rows.ts:25
+#: src/frontends/desktop/views/eric-warning-rows.ts:22
 msgid "ERiC is out of date"
 msgstr "ERiC ist veraltet"
 
-#: src/frontends/desktop/views/eric-warning-rows.ts:27
+#: src/frontends/desktop/views/eric-warning-rows.ts:23
 msgid "Check not available yet"
 msgstr "Prüfung noch nicht verfügbar"
 
-#: src/frontends/desktop/views/eric-warning-rows.ts:28
+#: src/frontends/desktop/views/eric-warning-rows.ts:23
 msgid "Check plugin missing"
 msgstr "Prüf-Plugin fehlt"
 
@@ -11363,7 +11363,7 @@ msgstr "Lade Details …"
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
 #: src/frontends/desktop/views/rechnungen-view.ts:549
 #: src/frontends/desktop/views/zeiten-view.ts:314
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:80
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:77
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -14988,11 +14988,14 @@ msgstr ""
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:12
 msgid ""
-"It works without AI: you write your own classification rules instead of "
-"letting a model guess, and no figure depends on a model."
+"AI is optional: everything works without it. If you want help from an AI "
+"assistant, switch on the built-in MCP server and connect the assistant of "
+"your choice. It can read your books and, only if you allow it, make changes."
 msgstr ""
-"Sie arbeitet ohne KI: Du schreibst eigene Klassifizierungsregeln, statt ein "
-"Modell raten zu lassen, und keine Zahl hängt an einem Modell."
+"KI ist optional: Alles funktioniert auch ohne. Wenn du dir von einem KI-"
+"Assistenten helfen lassen willst, schaltest du den eingebauten MCP-Server ein "
+"und verbindest den Assistenten deiner Wahl. Er kann deine Buchhaltung lesen "
+"und, nur wenn du es erlaubst, Änderungen vornehmen."
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:13
 msgid ""
@@ -15027,7 +15030,7 @@ msgstr "Anlage EÜR, jede Zeile bis zu den Buchungen"
 msgid "Tax return with checks before filing"
 msgstr "Steuererklärung mit Prüfungen vor der Abgabe"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:61
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:58
 msgid ""
 "Commands work in the installed app on Windows and macOS, Back up now no "
 "longer opens a second window, and error messages follow the interface "
@@ -15037,7 +15040,7 @@ msgstr ""
 "„Jetzt sichern“ öffnet kein zweites Fenster mehr, und Fehlermeldungen folgen "
 "der Sprache der Oberfläche."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:66
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:63
 msgid ""
 "First public release: receipts, transactions and invoices, the EÜR and VAT "
 "returns, and filing through ELSTER."
@@ -15045,17 +15048,24 @@ msgstr ""
 "Erste öffentliche Version: Belege, Buchungen und Rechnungen, EÜR und "
 "Umsatzsteuererklärungen sowie die Übermittlung über ELSTER."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:76
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:73
 msgid "Accounting"
 msgstr "Buchhaltung"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:77
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:74
 msgid "ELSTER"
 msgstr "ELSTER"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:78
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:75
 msgid "EÜR"
 msgstr "EÜR"
+
+#~ msgid ""
+#~ "It works without AI: you write your own classification rules instead of "
+#~ "letting a model guess, and no figure depends on a model."
+#~ msgstr ""
+#~ "Sie arbeitet ohne KI: Du schreibst eigene Klassifizierungsregeln, statt "
+#~ "ein Modell raten zu lassen, und keine Zahl hängt an einem Modell."
 
 #~ msgid "Total operating costs"
 #~ msgstr "Summe Betriebskosten"

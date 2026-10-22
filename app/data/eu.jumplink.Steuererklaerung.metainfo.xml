@@ -9,7 +9,7 @@
   <description>
     <p>Receipts, transactions and invoices in one place. From them the app computes the income-surplus statement (EÜR), the VAT returns, trade tax and the separate assessment for partnerships, and files them through ELSTER.</p>
     <p>It runs on your machine: your bank data and documents stay in a local store. Every figure can be traced back to the transaction it came from.</p>
-    <p>It works without AI: you write your own classification rules instead of letting a model guess, and no figure depends on a model.</p>
+    <p>AI is optional: everything works without it. If you want help from an AI assistant, switch on the built-in MCP server and connect the assistant of your choice. It can read your books and, only if you allow it, make changes.</p>
     <p>The tax logic follows German law, so the interface keeps the official German terms. The app is a preparation aid, not tax advice.</p>
   </description>
   <developer id="eu.jumplink">
@@ -51,9 +51,6 @@
   <url type="homepage">https://jumplink.eu/steuererklaerung/</url>
   <url type="bugtracker">https://github.com/JumpLink/steuererklaerung/issues</url>
   <url type="vcs-browser">https://github.com/JumpLink/steuererklaerung</url>
-  <url type="contribute">https://github.com/JumpLink/steuererklaerung</url>
-  <url type="contact">https://github.com/JumpLink/steuererklaerung/issues</url>
-  <url type="donation">https://jumplink.eu/steuererklaerung/en/support/</url>
   <content_rating type="oars-1.1"/>
   <releases>
     <release version="0.1.1" date="2026-10-20">

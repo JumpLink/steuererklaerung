@@ -13,6 +13,11 @@ on:
       - "docs/screenshots/**"
       - "gjsify-lock.json"
       - ".github/workflows/deploy-site.yml"
+  # The download buttons link the latest release's assets, read at build time — so rebuild once a
+  # release has uploaded them, or the site keeps pointing at the previous one.
+  workflow_run:
+    workflows: [Release]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
