@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from '@gjsify/unit';
 
-import { ownCommandLine } from '../../../src/frontends/desktop/restart.ts';
+import { ownCommandLine, relaunchesThroughNode } from '../../../src/frontends/desktop/restart.ts';
 
 export default async () => {
     await describe('ownCommandLine on Windows', async () => {
@@ -18,6 +18,27 @@ export default async () => {
 
         await it('is undefined when there is no launcher, so the app asks for a manual restart', async () => {
             expect(ownCommandLine('win32', execPath, argv, () => false)).toBe(undefined);
+        });
+    });
+
+    // Measured in the macOS `.app`: no /proc, so the welcome's "demo" choice only showed "restart
+    // yourself" — and a manual restart opened own data again, because nothing was remembered.
+    await describe('ownCommandLine on macOS', async () => {
+        const execPath = '/Applications/Steuer.app/Contents/MacOS/node';
+        const argv = [execPath, '/Applications/Steuer.app/Contents/Resources/lib/steuer-app.node.mjs', '--demo'];
+
+        await it('is node plus the bundle and the user arguments under node', async () => {
+            expect(ownCommandLine('darwin', execPath, argv, () => false, false)).toStrictEqual(argv);
+        });
+
+        await it('is undefined under GJS, so the app asks for a manual restart', async () => {
+            expect(ownCommandLine('darwin', execPath, argv, () => false, true)).toBe(undefined);
+        });
+
+        await it('relaunches through node, never through the SIP-protected /bin/sh', async () => {
+            expect(relaunchesThroughNode('darwin', false)).toBe(true);
+            expect(relaunchesThroughNode('linux', false)).toBe(false);
+            expect(relaunchesThroughNode('win32', false)).toBe(true);
         });
     });
 };
