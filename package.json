@@ -1,6 +1,6 @@
 {
  "name": "steuererklaerung",
- "version": "0.1.1",
+ "version": "0.1.2",
  "license": "AGPL-3.0-or-later",
  "author": "Pascal Garber",
  "private": true,
@@ -189,6 +189,16 @@
     ]
    },
    "releases": [
+    {
+     "version": "0.1.2",
+     "date": "2026-10-22",
+     "description": [
+      {
+       "p": "The AI assistant is optional and can be connected through the built-in MCP server — every provider supported by Lotse can be used, and free hosted models stay refused. The Linux packages ship their database libraries and the Flatpak carries the demo workspace, so install and first run work out of the box.",
+       "translatorHint": "Release notes for 0.1.2 — the one-line summary"
+      }
+     ]
+    },
     {
      "version": "0.1.1",
      "date": "2026-10-20",
