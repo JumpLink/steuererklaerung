@@ -56,9 +56,9 @@
         "@gjsify/node-runtime-win32-x64": "0.64.5"
     },
     "dependencies": {
-        "@lotse/core": "^0.3.0",
-        "@lotse/session": "^0.3.0",
-        "@lotse/widget": "^0.3.0",
+        "@lotse/core": "^0.4.0",
+        "@lotse/session": "^0.4.0",
+        "@lotse/widget": "^0.4.0",
         "@steuererklaerung/charts": "*",
         "@steuererklaerung/dms": "*",
         "@steuererklaerung/eric": "*",
