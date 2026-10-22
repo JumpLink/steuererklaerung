@@ -47,6 +47,10 @@ subprocesses. It stays a standalone app that keeps growing, and it will also shi
   (Amended 2026-10-22: the rule narrows models, not providers. The widget offers to connect every
   provider lotse supports — `providerOnboarding: true` — and `denyFreeHostedModels` still refuses
   free hosted models from any of them.)
+  (Amended again 2026-10-22, issue #95: the interactive pane no longer refuses a free hosted model.
+  It passes no policy, so lotse's warning card shows while one is selected and the person decides —
+  free models must work "to try it out". Unattended jobs keep `denyFreeHostedModels`: nobody is
+  there to read a card.)
 - **History:** conversation history lives in this app's data directory, readable only by the user,
   is included in the app's backups, and can be deleted in Settings.
 - **UI:** lotse's current interface is a proof of concept, and so was this app's old assistant

@@ -79,6 +79,25 @@ Adw.StatusPage no_agent_page {
       styles ["monospace", "card"]
     }
 
+    // Shown only where lotse's pinned opencode can be downloaded for this person; the label carries
+    // the size so the click is an informed one (a confirmation dialog follows).
+    Gtk.Button no_agent_install {
+      visible: false;
+      halign: center;
+
+      styles ["suggested-action", "pill"]
+
+      clicked => $_onInstallClicked();
+    }
+
+    Gtk.Label no_agent_install_status {
+      visible: false;
+      wrap: true;
+      justify: center;
+
+      styles ["dim-label"]
+    }
+
     Gtk.LinkButton no_agent_docs {
       // TRANSLATORS: Link to the coding agent's own documentation
       label: _("Documentation");
