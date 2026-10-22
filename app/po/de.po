@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-22 19:29+0200\n"
+"POT-Creation-Date: 2026-10-22 19:52+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -5341,7 +5341,7 @@ msgid "dates · payments · open items"
 msgstr "Termine · Zahlungen · offene Posten"
 
 #: src/frontends/desktop/nav.ts:68
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:72
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:77
 msgid "Tax"
 msgstr "Steuer"
 
@@ -7356,7 +7356,7 @@ msgstr "USt-IdNr muss DE + 9 Ziffern sein."
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:228
 #: src/frontends/desktop/views/setup-assistant.ts:387
 #: src/frontends/desktop/views/zeit-rechnung-dialog.ts:49
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:76
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:81
 msgid "VAT"
 msgstr "Umsatzsteuer"
 
@@ -11363,7 +11363,7 @@ msgstr "Lade Details …"
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
 #: src/frontends/desktop/views/rechnungen-view.ts:549
 #: src/frontends/desktop/views/zeiten-view.ts:314
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:77
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:82
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -14993,9 +14993,9 @@ msgid ""
 "your choice. It can read your books and, only if you allow it, make changes."
 msgstr ""
 "KI ist optional: Alles funktioniert auch ohne. Wenn du dir von einem KI-"
-"Assistenten helfen lassen willst, schaltest du den eingebauten MCP-Server ein "
-"und verbindest den Assistenten deiner Wahl. Er kann deine Buchhaltung lesen "
-"und, nur wenn du es erlaubst, Änderungen vornehmen."
+"Assistenten helfen lassen willst, schaltest du den eingebauten MCP-Server "
+"ein und verbindest den Assistenten deiner Wahl. Er kann deine Buchhaltung "
+"lesen und, nur wenn du es erlaubst, Änderungen vornehmen."
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:13
 msgid ""
@@ -15032,6 +15032,20 @@ msgstr "Steuererklärung mit Prüfungen vor der Abgabe"
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:58
 msgid ""
+"The AI assistant is optional and can be connected through the built-in MCP "
+"server — every provider supported by Lotse can be used, and free hosted "
+"models stay refused. The Linux packages ship their database libraries and "
+"the Flatpak carries the demo workspace, so install and first run work out of "
+"the box."
+msgstr ""
+"KI ist optional: Alles funktioniert auch ohne. Über den integrierten MCP-Server "
+"kann ein Assistent angebunden werden — jeder von Lotse unterstützte Anbieter kann "
+"genutzt werden, und kostenlose Fremdmodelle bleiben abgelehnt. Die Linux-Pakete "
+"bringen ihre Datenbankbibliotheken mit und das Flatpak enthält die Demo-Workspace, "
+"installieren und der erste Start funktionieren."
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:63
+msgid ""
 "Commands work in the installed app on Windows and macOS, Back up now no "
 "longer opens a second window, and error messages follow the interface "
 "language."
@@ -15040,7 +15054,7 @@ msgstr ""
 "„Jetzt sichern“ öffnet kein zweites Fenster mehr, und Fehlermeldungen folgen "
 "der Sprache der Oberfläche."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:63
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:68
 msgid ""
 "First public release: receipts, transactions and invoices, the EÜR and VAT "
 "returns, and filing through ELSTER."
@@ -15048,15 +15062,15 @@ msgstr ""
 "Erste öffentliche Version: Belege, Buchungen und Rechnungen, EÜR und "
 "Umsatzsteuererklärungen sowie die Übermittlung über ELSTER."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:73
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:78
 msgid "Accounting"
 msgstr "Buchhaltung"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:74
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:79
 msgid "ELSTER"
 msgstr "ELSTER"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:75
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:80
 msgid "EÜR"
 msgstr "EÜR"
 

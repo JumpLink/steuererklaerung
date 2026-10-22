@@ -1,7 +1,7 @@
 {
     "name": "steuererklaerung-cli",
     "description": "CLI for steuererklaerung: Qonto, Paperless-NGX, ELSTER, FinTS",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "license": "AGPL-3.0-or-later",
     "author": "Pascal Garber",
     "private": true,
@@ -213,6 +213,11 @@
             },
             "contentRating": "oars-1.1",
             "releases": [
+                {
+                    "version": "0.1.2",
+                    "date": "2026-10-22",
+                    "description": "The AI assistant is optional and can be connected through the built-in MCP server — every provider supported by Lotse can be used, and free hosted models stay refused. The Linux packages ship their database libraries and the Flatpak carries the demo workspace, so install and first run work out of the box."
+                },
                 {
                     "version": "0.1.1",
                     "date": "2026-10-20",

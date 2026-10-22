@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-22 19:29+0200\n"
+"POT-Creation-Date: 2026-10-22 19:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4738,7 +4738,7 @@ msgid "dates · payments · open items"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:68
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:72
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:77
 msgid "Tax"
 msgstr ""
 
@@ -6694,7 +6694,7 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:228
 #: src/frontends/desktop/views/setup-assistant.ts:387
 #: src/frontends/desktop/views/zeit-rechnung-dialog.ts:49
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:76
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:81
 msgid "VAT"
 msgstr ""
 
@@ -10517,7 +10517,7 @@ msgstr ""
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
 #: src/frontends/desktop/views/rechnungen-view.ts:549
 #: src/frontends/desktop/views/zeiten-view.ts:314
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:77
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:82
 msgid "Invoice"
 msgstr ""
 
@@ -14021,25 +14021,34 @@ msgstr ""
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:58
 msgid ""
+"The AI assistant is optional and can be connected through the built-in MCP "
+"server — every provider supported by Lotse can be used, and free hosted "
+"models stay refused. The Linux packages ship their database libraries and "
+"the Flatpak carries the demo workspace, so install and first run work out of "
+"the box."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:63
+msgid ""
 "Commands work in the installed app on Windows and macOS, Back up now no "
 "longer opens a second window, and error messages follow the interface "
 "language."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:63
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:68
 msgid ""
 "First public release: receipts, transactions and invoices, the EÜR and VAT "
 "returns, and filing through ELSTER."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:73
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:78
 msgid "Accounting"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:74
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:79
 msgid "ELSTER"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:75
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:80
 msgid "EÜR"
 msgstr ""
