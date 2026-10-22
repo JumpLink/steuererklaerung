@@ -45,7 +45,7 @@ import {
     type SetupGap,
     type SetupGapEntity,
 } from '../../core/actions/setup-gaps.ts';
-import { canRestart, restartInMode } from './restart.ts';
+import { canRestart, rememberMode, restartInMode } from './restart.ts';
 import { loadDocuments } from '../../core/presenters/belege.ts';
 import { appSession } from './data/session.ts';
 import { reloadEst } from './data/settings.ts';
@@ -271,6 +271,7 @@ export class MainWindow extends Adw.ApplicationWindow {
     private restartInto(mode: 'demo' | 'own'): void {
         const app = this.get_application();
         if (!app || !canRestart()) {
+            rememberMode(mode);
             showToast(_('Please restart the app yourself to switch.'));
             return;
         }

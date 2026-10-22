@@ -37,17 +37,23 @@ export function snapshotLaunchEnv(): void {
  * The command that starts this app again. Linux reads `/proc`; Windows has none, but the program
  * directory holds the launcher (`steuererklaerung.exe`) next to the `node.exe` this runs under, and
  * the launcher needs no arguments beyond the user's own.
+ *
+ * macOS has no `/proc` either. Under node (the `.app`) `execPath` and `argv` are the whole command:
+ * the `.app` launcher only exports variables, which are in the snapshot already. Under GJS there is
+ * no honest answer — see {@link relaunchesThroughNode} — so the app asks for a manual restart.
  */
 export function ownCommandLine(
     platform: string = process.platform,
     execPath: string = process.execPath,
     argv: string[] = process.argv,
     exists: (path: string) => boolean = existsSync,
+    gjs: boolean = isGjsRuntime(),
 ): string[] | undefined {
     if (platform === 'win32') {
         const launcher = join(dirname(execPath), 'steuererklaerung.exe');
         return exists(launcher) ? [launcher, ...argv.slice(2)] : undefined;
     }
+    if (platform === 'darwin') return gjs ? undefined : [execPath, ...argv.slice(1)];
     try {
         const parts = readFileSync('/proc/self/cmdline', 'utf8').split('\0');
         if (parts.at(-1) === '') parts.pop();
@@ -57,7 +63,7 @@ export function ownCommandLine(
     }
 }
 
-// Windows has no `sh` and no `kill -0`: a throwaway node waits for our pid, then starts the successor.
+// A throwaway node waits for our pid, then starts the successor — see {@link relaunchesThroughNode}.
 const WAIT_THEN_START =
     'const p=+process.argv[1];const t=setInterval(()=>{try{process.kill(p,0)}catch{clearInterval(t);' +
     "require('child_process').spawn(process.argv[2],process.argv.slice(3),{detached:true,stdio:'ignore'}).unref()}},100)";
@@ -84,18 +90,27 @@ export function requestRestart(app: Gio.Application, env: Record<string, string 
     app.quit();
 }
 
-/** Remember `mode` as the person's choice and restart into it. */
-export function restartInMode(app: Gio.Application, mode: 'demo' | 'own'): void {
+/**
+ * Remember `mode` as the person's choice, so the next launch opens in it. Also when this process
+ * cannot restart itself: "please restart the app yourself" is only true advice if the restart
+ * then lands in the mode that was picked.
+ */
+export function rememberMode(mode: 'demo' | 'own'): void {
     updateUserSettings((settings) => {
         settings.preferredMode = mode;
     });
+}
+
+/** Remember `mode` as the person's choice and restart into it. */
+export function restartInMode(app: Gio.Application, mode: 'demo' | 'own'): void {
+    rememberMode(mode);
     requestRestart(app, mode === 'demo' ? { STEUER_DEMO: '1' } : { STEUER_DEMO: undefined, BH_DEMO: undefined });
 }
 
 /** Start the successor requested by {@link requestRestart}, if any. Call after the main loop ends. */
 export function relaunchIfRequested(): void {
     if (!pending || !launchEnv || !launchArgv) return;
-    if (process.platform === 'win32') {
+    if (relaunchesThroughNode()) {
         spawn(process.execPath, ['-e', WAIT_THEN_START, String(process.pid), ...launchArgv], {
             env: launchEnv,
             detached: true,
@@ -113,4 +128,20 @@ export function relaunchIfRequested(): void {
         String(process.pid),
         ...launchArgv,
     ]);
+}
+
+/**
+ * Whether the successor is started by a throwaway node rather than `sh`. Windows has no `sh` and no
+ * `kill -0`. macOS has both, but `/bin/sh` is SIP-protected and drops every `DYLD_*` variable on
+ * exec, while the `.app` has re-exec'd itself with `DYLD_FALLBACK_LIBRARY_PATH` pointing at its GTK
+ * and `GJSIFY_GTK_REEXEC` set so it does not do so twice: through `sh` the successor would start
+ * with the marker and without the path. Node is not protected, so it passes both on.
+ */
+export function relaunchesThroughNode(platform: string = process.platform, gjs: boolean = isGjsRuntime()): boolean {
+    return platform === 'win32' || (platform === 'darwin' && !gjs);
+}
+
+// gjsify's process shim on GJS reports `versions.gjs`; node's own process never does.
+function isGjsRuntime(): boolean {
+    return typeof (process.versions as Record<string, string | undefined>).gjs === 'string';
 }
