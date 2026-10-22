@@ -330,6 +330,12 @@ h1 {
 }
 
 .download-cta {
+  border-radius: var(--radius);
+}
+
+/* Only a CTA with the toggle beside it gives up its right corners: without a release there is no
+ * split, just the button to the source or the releases. */
+.download-split .download-cta {
   border-radius: var(--radius) 0 0 var(--radius);
 }
 
@@ -341,12 +347,12 @@ h1 {
 /* The accent would have to be contrasted against the app's colour, which is unknowable here. The
  * band's text colour was already measured against it, so the button inverts that pair and is
  * readable on any brand. */
-.masthead .download-split .button {
+.masthead .download .button {
   background: var(--band-fg);
   color: var(--brand);
 }
 
-.masthead .download-split .button:hover {
+.masthead .download .button:hover {
   background: color-mix(in srgb, var(--band-fg) 86%, var(--brand));
 }
 
@@ -1084,6 +1090,10 @@ app-download:not([data-enhanced]) .download-toggle {
   display: none;
 }
 
+app-download:not([data-enhanced]) .download-cta {
+  border-radius: var(--radius);
+}
+
 /* The inline panel is taller than the name, so the hero reads top down, not centred. */
 .hero-inner:has(app-download:not([data-enhanced])) {
   align-items: flex-start;
@@ -1103,6 +1113,74 @@ app-support {
 
 .support-back {
   margin-block: 1.5rem 0;
+}
+
+/* Related apps: same card list as the links, with the app's own icon */
+
+.related {
+  margin-block: 2rem;
+}
+
+.related h2 {
+  font-size: 1.15rem;
+}
+
+.related-list {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  overflow: hidden;
+  list-style: none;
+  padding: 0;
+}
+
+.related-list li + li {
+  border-top: 1px solid var(--line);
+}
+
+.related-list a {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.related-list a:hover {
+  background: color-mix(in srgb, var(--fg) 6%, transparent);
+}
+
+.related-icon {
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.related-icon-blank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--muted);
+}
+
+.related-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.related-name {
+  font-weight: 600;
+}
+
+.related-summary {
+  color: var(--muted);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
 }
 
 /* Footer */

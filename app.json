@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "id": "eu.jumplink.Steuererklaerung",
+  "name": {
+    "en": "Steuererklärung",
+    "de": "Steuererklärung"
+  },
+  "summary": {
+    "en": "Taxes and bookkeeping",
+    "de": "Steuern und Buchhaltung"
+  },
+  "icon": "https://jumplink.eu/steuererklaerung/eu.jumplink.Steuererklaerung.svg",
+  "url": "https://jumplink.eu/steuererklaerung/",
+  "languages": [
+    "de",
+    "en"
+  ],
+  "developer": {
+    "id": "eu.jumplink",
+    "name": "Pascal Garber"
+  }
+}
