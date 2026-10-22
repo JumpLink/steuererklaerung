@@ -139,10 +139,10 @@ export function assistantGateAnswer(view: { tool: string; kind: string }): 'ask'
  * for the person, so the choice stays theirs and is only narrowed. Fail-closed on both edges lotse
  * documents: a policy that throws is a deny, and so is a model lotse cannot identify.
  *
- * **It is the model side of `providerOnboarding: false`, not a duplicate of it.** Not offering to
- * connect a provider keeps the app from *walking* anybody into a free hosted model; it does nothing
- * about a person who already has one connected, or about an agent whose own config names one. This
- * refuses the prompt either way.
+ * **It narrows models, not providers.** The pane offers every provider lotse supports
+ * (`providerOnboarding: true`), and a provider that serves both paid and free models stays usable
+ * with the paid ones. A free model is refused however it got selected — through the login dialog, a
+ * provider the person connected earlier, or an agent config that names one.
  *
  * **Its one known gap, deliberately not papered over here:** an id the list does not recognise is
  * ALLOWED, because the list names free models rather than paid ones and denying the unrecognised

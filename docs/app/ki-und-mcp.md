@@ -94,9 +94,9 @@ gibt es gar keine, erscheint die Hinweisseite.
   raus** — das Senden ist gesperrt und der Grund steht darunter. Umgeschaltet wird dabei nie: die
   Modellwahl bleibt die der Person, sie wird nur eingeschränkt. Die Regel ist **fail-closed**: ein
   Fehler in der Prüfung und ein Modell, das lotse nicht zuordnen kann, gelten beide als Ablehnung.
-  Zusätzlich bietet die App die Anbieter-Einrichtung im Panel **nicht** an (`providerOnboarding`
-  aus) — das Paar ist Absicht: das eine betrifft, wohin die App jemanden führt, das andere, was sie
-  annimmt. Die Rückfrage-Logik hat damit nichts zu tun; sie sieht Werkzeugaufrufe und kann ein
+  Die Regel schränkt **Modelle** ein, nicht Anbieter: Ist noch keiner verbunden, bietet das Panel
+  die Anmeldung bei **jedem Anbieter an, den lotse unterstützt** (`providerOnboarding` an), und ein
+  Anbieter mit bezahlten und kostenlosen Modellen bleibt mit den bezahlten nutzbar. Die Rückfrage-Logik hat damit nichts zu tun; sie sieht Werkzeugaufrufe und kann ein
   Modell gar nicht erkennen.
 
   Eine **bekannte Lücke**, offen benannt: erkannt werden die Einträge aus lotses Liste

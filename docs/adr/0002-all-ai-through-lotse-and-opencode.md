@@ -44,6 +44,9 @@ subprocesses. It stays a standalone app that keeps growing, and it will also shi
   otherwise. Prompts, VAT rates and category lists come from the country module (ADR 0001).
 - **Privacy:** receipt data and tax figures only go to a provider the user connected. Free hosted
   defaults are refused through a model allow-list in the job API.
+  (Amended 2026-10-22: the rule narrows models, not providers. The widget offers to connect every
+  provider lotse supports — `providerOnboarding: true` — and `denyFreeHostedModels` still refuses
+  free hosted models from any of them.)
 - **History:** conversation history lives in this app's data directory, readable only by the user,
   is included in the app's backups, and can be deleted in Settings.
 - **UI:** lotse's current interface is a proof of concept, and so was this app's old assistant
