@@ -13,7 +13,7 @@
 # "the window fills the whole monitor".
 #
 # Every view is taken twice: `<name>.png` in English for the metainfo's <image> and for README.md,
-# `<name>-de.png` for README.de.md and the German manual in docs/app/README.md. That is the rule for
+# `<name>-de.png` for the German manual in docs/app/README.md. That is the rule for
 # every view this script takes; a figure of the German manual that was never taken in English keeps
 # its plain name and stays German. The metainfo takes both: the English shot as <image>, the German twin as
 # <image xml:lang="de"> through `localizedUrls` of each screenshot in `gjsify.ship` (package.json),

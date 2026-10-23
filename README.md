@@ -1,7 +1,5 @@
 # Steuererklärung
 
-*[Deutsche Version](README.de.md)*
-
 A native GNOME application that computes the annual profit statement (EÜR), the VAT
 pre-return (USt-VA) and income tax from your own bank transactions and receipts, and submits
 the finished return to ELSTER through **ERiC**.
@@ -194,18 +192,13 @@ everywhere, writing in few places, and filing itself runs through the CLI.
 The project is developed largely through vibe coding. The code is written with AI coding
 agents; the maintainer directs the work and reviews the results. Most lines are not
 hand-written. Where that AI work is involved, sorted roughly: the application runtime and
-CLI (`app/src/`), the GJS bindings (`packages/`), the test suite, the documentation (both
-READMEs included), and the distribution packaging (Flatpak manifest, metainfo, CI). The
+CLI (`app/src/`), the GJS bindings (`packages/`), the test suite, the documentation (this
+README included), and the distribution packaging (Flatpak manifest, metainfo, CI). The
 screenshots come from real app runs, not AI-generated images.
 
-What backs the numbers is not where the code came from but whether it can be checked. Every
-tax constant cites its source, retrieval date and tax year in
-[`docs/references/tax-sources.md`](docs/references/tax-sources.md), so it can be checked
-against the law no matter who typed it, and generated returns are validated against
-ELSTER's ERiC. Separately, the `check:ai` gate lists every place where the app itself calls
-an AI model and requires a way to do the same without one. Still: this is not tax advice,
-there is no warranty (see the [AGPL](LICENSE)), and you must check your return yourself
-before sending it.
+Every tax rule the app uses links to its legal source in
+[`docs/references/tax-sources.md`](docs/references/tax-sources.md). This is not tax advice
+and comes without warranty (see the [AGPL](LICENSE)): check your return before you send it.
 
 ### Disclaimer
 
