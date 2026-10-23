@@ -147,9 +147,10 @@ die native Bibliothek des Bayerischen Landesamts für Steuern.
 > keine Binaries, keine Schemata. Die offiziellen Release-Builds liefern ein schlankes ERiC 44.3.6.0
 > (Linux, Windows, macOS) mit; die Release-Pipeline holt es aus einem privaten Repo. Sie tragen
 > zusätzlich unsere 5-stellige ELSTER-Hersteller-ID (aus einem Build-Secret): die Kennung, mit der
-> jede Übermittlung diese Software als Absender ausweist. Sie taucht nie im Quellrepo auf, und der
-> Flathub-Build läuft ohne sie — deine eigene, kostenfreie Kennung aus dem Entwicklerbereich
-> überschreibt sie in den Einstellungen. Weder ERiC noch diese Kennung dürfen aus den
+> jede Übermittlung diese Software als Absender ausweist. Sie taucht nie im Quellrepo auf; deine eigene,
+> kostenfreie Kennung aus dem Entwicklerbereich überschreibt sie in den Einstellungen. Der
+> Flathub-Build enthält weder ERiC noch diese Kennung: Dort exportierst du die Erklärung als XML
+> und lädst sie in *Mein ELSTER* hoch. Weder ERiC noch diese Kennung dürfen aus den
 > Release-Bundles für andere Software extrahiert werden: Verbreitung gehört zu diesem einen
 > Produkt (§ 4 Abs. 1), Weitergabe an Dritte ist verboten (§ 4 Abs. 3), und ELSTER kann die
 > Kennung bei Verstoß sperren (§ 9). Die App zeigt vor der ersten Übermittlung das

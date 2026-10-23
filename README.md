@@ -151,8 +151,9 @@ library from the Bavarian tax authority.
 > Official release builds bundle a slim ERiC 44.3.6.0 (Linux, Windows, macOS), which the release
 > pipeline fetches from a private repo. Release builds also carry the app's own 5-digit ELSTER
 > Hersteller-ID (written from a build secret): the identifier that marks submissions on the wire
-> as this software. It never appears in the source repo, and the Flathub build ships without it —
-> your own free identifier (ELSTER developer area) in the settings overrides it. Neither ERiC nor
+> as this software. It never appears in the source repo; your own free identifier (ELSTER
+> developer area) in the settings overrides it. The Flathub build carries neither ERiC nor this
+> identifier: export the return as XML and upload it in *Mein ELSTER*. Neither ERiC nor
 > this identifier may be extracted from the release bundles for use by other software:
 > redistribution belongs to this one product (§ 4 (1)), passing either on is forbidden
 > (§ 4 (3)), and ELSTER can block the identifier on violation (§ 9). The app shows the tax
