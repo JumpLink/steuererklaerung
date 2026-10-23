@@ -146,13 +146,13 @@ die native Bibliothek des Bayerischen Landesamts für Steuern.
 > **unser eigener Wrapper** ([`packages/eric`](packages/eric/README.md)) — kein ERiC-Quellcode,
 > keine Binaries, keine Schemata. Die offiziellen Release-Builds liefern ein schlankes ERiC 44.3.6.0
 > (Linux, Windows, macOS) mit; die Release-Pipeline holt es aus einem privaten Repo. Sie tragen
-> zusätzlich unsere 5-stellige ELSTER-Hersteller-ID (aus einem Build-Secret): die Kennung, die
-> Übermeldungen am Kabel als „diese Software" ausweist. Sie taucht nie im Quellrepo auf, und der
+> zusätzlich unsere 5-stellige ELSTER-Hersteller-ID (aus einem Build-Secret): die Kennung, mit der
+> jede Übermittlung diese Software als Absender ausweist. Sie taucht nie im Quellrepo auf, und der
 > Flathub-Build läuft ohne sie — deine eigene, kostenfreie Kennung aus dem Entwicklerbereich
 > überschreibt sie in den Einstellungen. Weder ERiC noch diese Kennung dürfen aus den
 > Release-Bundles für andere Software extrahiert werden: Verbreitung gehört zu diesem einen
 > Produkt (§ 4 Abs. 1), Weitergabe an Dritte ist verboten (§ 4 Abs. 3), und ELSTER kann die
-> Kennung bei Verstoß sperren (§9). Die App zeigt vor der ersten Übermittlung das
+> Kennung bei Verstoß sperren (§ 9). Die App zeigt vor der ersten Übermittlung das
 > Datenschutzschreiben und fragt deine Bestätigung ab.
 
 Für Forks und Eigenbauten besorgst du ERiC selbst (Entwickler-Registrierung im
@@ -203,10 +203,12 @@ App-Laufzeit und CLI (`app/src/`), GJS-Bindings (`packages/`), Tests, Dokumentat
 CI). Die Screenshots stammen aus echten App-Läufen, keine KI-Bilder.
 
 Was die Zahlen absichert, ist nicht die Herkunft des Codes, sondern die Überprüfbarkeit:
-Keine steuerliche Zahl ist eine KI-Behauptung — jede Konstante steht mit Quelle in
-[`docs/references/tax-sources.md`](docs/references/tax-sources.md), und die erzeugten
-Erklärungen werden gegen ELSTERs ERiC validiert. Welche Dateien die KI überhaupt
-erreicht, prüft das Repo (das `check:ai`-Gate). Trotzdem gilt: Das ist keine
+Jede steuerliche Konstante steht mit Quelle, Abrufdatum und Veranlagungszeitraum in
+[`docs/references/tax-sources.md`](docs/references/tax-sources.md) und lässt sich dort
+gegen das Gesetz prüfen, egal wer sie eingetragen hat; die erzeugten Erklärungen werden
+gegen ELSTERs ERiC validiert. Unabhängig davon listet das `check:ai`-Gate jede Stelle, an
+der die App selbst ein KI-Modell aufruft, und verlangt dafür einen Weg ohne KI. Trotzdem
+gilt: Das ist keine
 Steuerberatung, es gibt keine Gewährleistung (siehe [AGPL](LICENSE)), und du prüfst deine
 Erklärung selbst, bevor du sie abgibst.
 

@@ -155,7 +155,7 @@ library from the Bavarian tax authority.
 > your own free identifier (ELSTER developer area) in the settings overrides it. Neither ERiC nor
 > this identifier may be extracted from the release bundles for use by other software:
 > redistribution belongs to this one product (§ 4 (1)), passing either on is forbidden
-> (§ 4 (3)), and ELSTER can block the identifier on violation (§9). The app shows the tax
+> (§ 4 (3)), and ELSTER can block the identifier on violation (§ 9). The app shows the tax
 > authority's Datenschutzschreiben and asks for your acknowledgement before the first send.
 
 Forks and self-builds provide ERiC themselves (developer registration in the
@@ -197,11 +197,12 @@ CLI (`app/src/`), the GJS bindings (`packages/`), the test suite, the documentat
 READMEs included), and the distribution packaging (Flatpak manifest, metainfo, CI). The
 screenshots come from real app runs, not AI-generated images.
 
-What backs the numbers is not where the code came from but whether it can be checked. No
-tax figure rests on an AI assertion: tax rules cite their sources in
-[`docs/references/tax-sources.md`](docs/references/tax-sources.md), and generated
-returns are validated against ELSTER's ERiC. Which files the AI can reach at all is
-audited in the repo (the `check:ai` gate). Still: this is not tax advice,
+What backs the numbers is not where the code came from but whether it can be checked. Every
+tax constant cites its source, retrieval date and tax year in
+[`docs/references/tax-sources.md`](docs/references/tax-sources.md), so it can be checked
+against the law no matter who typed it, and generated returns are validated against
+ELSTER's ERiC. Separately, the `check:ai` gate lists every place where the app itself calls
+an AI model and requires a way to do the same without one. Still: this is not tax advice,
 there is no warranty (see the [AGPL](LICENSE)), and you must check your return yourself
 before sending it.
 
