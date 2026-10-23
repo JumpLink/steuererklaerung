@@ -185,12 +185,17 @@ everywhere, writing in few places, and filing itself runs through the CLI.
 ### Transparency: how this is made
 
 The project is developed largely through vibe coding. The code is written with AI coding
-agents; the maintainer directs the work and reviews the results. Most lines were not
-written by hand.
+agents; the maintainer directs the work and reviews the results. Most lines are not
+hand-written. Where that AI work is involved, sorted roughly: the application runtime and
+CLI (`app/src/`), the GJS bindings (`packages/`), the test suite, the documentation (both
+READMEs included), and the distribution packaging (Flatpak manifest, metainfo, CI). The
+screenshots come from real app runs, not AI-generated images.
 
-What backs the numbers is not where the code came from but whether it can be checked. Tax
-rules cite their sources in [`docs/references/tax-sources.md`](docs/references/tax-sources.md),
-and generated returns are validated against ELSTER's ERiC. Still: this is not tax advice,
+What backs the numbers is not where the code came from but whether it can be checked. No
+tax figure rests on an AI assertion: tax rules cite their sources in
+[`docs/references/tax-sources.md`](docs/references/tax-sources.md), and generated
+returns are validated against ELSTER's ERiC. Which files the AI can reach at all is
+audited in the repo (the `check:ai` gate). Still: this is not tax advice,
 there is no warranty (see the [AGPL](LICENSE)), and you must check your return yourself
 before sending it.
 

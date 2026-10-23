@@ -189,12 +189,16 @@ die Abgabe selbst läuft über die CLI.
 
 Das Projekt wird zu großen Teilen per Vibe-Coding entwickelt: Der Code entsteht mit
 KI-Coding-Agenten, der Maintainer gibt die Richtung vor und prüft die Ergebnisse. Die
-meisten Zeilen sind nicht von Hand geschrieben.
+meisten Zeilen sind nicht von Hand geschrieben. Wo die KI-Arbeit ansetzt, grob einsortiert:
+App-Laufzeit und CLI (`app/src/`), GJS-Bindings (`packages/`), Tests, Dokumentation
+(beide Readmes eingeschlossen) und die Vertriebsverpackung (Flatpak-Manifest, Metainfo,
+CI). Die Screenshots stammen aus echten App-Läufen, keine KI-Bilder.
 
 Was die Zahlen absichert, ist nicht die Herkunft des Codes, sondern die Überprüfbarkeit:
-Steuerrechtliche Konstanten stehen mit Quelle in
+Keine steuerliche Zahl ist eine KI-Behauptung — jede Konstante steht mit Quelle in
 [`docs/references/tax-sources.md`](docs/references/tax-sources.md), und die erzeugten
-Erklärungen werden gegen ELSTERs ERiC validiert. Trotzdem gilt: Das ist keine
+Erklärungen werden gegen ELSTERs ERiC validiert. Welche Dateien die KI überhaupt
+erreicht, prüft das Repo (das `check:ai`-Gate). Trotzdem gilt: Das ist keine
 Steuerberatung, es gibt keine Gewährleistung (siehe [AGPL](LICENSE)), und du prüfst deine
 Erklärung selbst, bevor du sie abgibst.
 
