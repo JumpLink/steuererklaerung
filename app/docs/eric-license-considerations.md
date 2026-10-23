@@ -13,14 +13,14 @@ ERiC is a C library provided free of charge by the Bayerisches Landesamt für St
 §4 (1) of the license agreement grants the right to integrate ERiC into one's own software products and to distribute it together with them as a single product, directly or indirectly. §4 (3) prohibits transferring that right to third parties and sublicensing beyond §4 (1). This means:
 
 - The ERiC binary library stays **out of the public source repository** (proprietary, version-bound).
-- Official release artifacts (Flatpak, deb/rpm, AppImage, MSI/zip, macOS zip) **may bundle ERiC** as part of the one product. Planned: the release pipeline fetches ERiC from a private repo. Not implemented yet.
+- Official release artifacts (Flatpak, deb/rpm, AppImage, MSI/zip, macOS zip) **may bundle ERiC** as part of the one product. The release pipeline fetches ERiC from a private repo with a read-only deploy key (secret `ERIC_DEPLOY_KEY`) and adds it to every package, including the `.flatpak` bundle on the GitHub release. The Flathub build does not carry it, and a build without the secret has none.
 - Forks and self-builds do not inherit our right: they provide their own ERiC (`ERIC_HOME`) after accepting the license themselves.
 - Distribution through third-party stores is "indirect" distribution of our product; ERiC must stay bound to the app and must not be offered as a standalone download.
 
 ### Recommended approach
 
 - Keep the setup script and documented instructions for forks, self-builds and development.
-- Until bundling exists, the setup process must make clear that the user has to accept the ERiC license.
+- Wherever ERiC is not bundled (Flathub, forks, self-builds), the setup process must make clear that the user has to accept the ERiC license.
 - Never offer ERiC separately from the application.
 
 ## Mandatory End-User Notices
