@@ -1,6 +1,6 @@
 {
  "name": "steuererklaerung",
- "version": "0.1.4",
+ "version": "0.1.5",
  "license": "AGPL-3.0-or-later",
  "author": "Pascal Garber",
  "private": true,
@@ -190,11 +190,21 @@
    },
    "releases": [
     {
+     "version": "0.1.5",
+     "date": "2026-10-23",
+     "description": [
+      {
+       "p": "The README now names which parts of the app are written with AI. The Flatpak from Flathub comes without ERiC: export the return as XML and upload it in Mein ELSTER.",
+       "translatorHint": "Release notes for 0.1.5 — the one-line summary"
+      }
+     ]
+    },
+    {
      "version": "0.1.4",
      "date": "2026-10-23",
      "description": [
       {
-       "p": "The Linux Flatpak bundles ERiC now, so validating and submitting a return through ELSTER works from the Flatpak download too.",
+       "p": "The Flatpak bundle on the GitHub release page includes ERiC, so validating and submitting a return through ELSTER works from that download too.",
        "translatorHint": "Release notes for 0.1.4 — the one-line summary"
       }
      ]
