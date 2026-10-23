@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-23 10:54+0200\n"
+"POT-Creation-Date: 2026-10-23 15:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4762,7 +4762,7 @@ msgid "dates · payments · open items"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:68
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:82
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:87
 msgid "Tax"
 msgstr ""
 
@@ -6700,7 +6700,7 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:228
 #: src/frontends/desktop/views/setup-assistant.ts:387
 #: src/frontends/desktop/views/zeit-rechnung-dialog.ts:49
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:86
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:91
 msgid "VAT"
 msgstr ""
 
@@ -10523,7 +10523,7 @@ msgstr ""
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
 #: src/frontends/desktop/views/rechnungen-view.ts:549
 #: src/frontends/desktop/views/zeiten-view.ts:314
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:87
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:92
 msgid "Invoice"
 msgstr ""
 
@@ -14027,12 +14027,18 @@ msgstr ""
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:58
 msgid ""
+"The Linux Flatpak bundles ERiC now, so validating and submitting a return "
+"through ELSTER works from the Flatpak download too."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:63
+msgid ""
 "Restarting into the demo workspace works on macOS again, and the Flatpak "
 "builds with the current assistant libraries. The AI assistant stays switched "
 "off in this release."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:63
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:68
 msgid ""
 "The AI assistant is optional and can be connected through the built-in MCP "
 "server — every provider supported by Lotse can be used, and free hosted "
@@ -14041,27 +14047,27 @@ msgid ""
 "the box."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:68
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:73
 msgid ""
 "Commands work in the installed app on Windows and macOS, Back up now no "
 "longer opens a second window, and error messages follow the interface "
 "language."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:73
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:78
 msgid ""
 "First public release: receipts, transactions and invoices, the EÜR and VAT "
 "returns, and filing through ELSTER."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:83
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:88
 msgid "Accounting"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:84
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:89
 msgid "ELSTER"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:85
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:90
 msgid "EÜR"
 msgstr ""

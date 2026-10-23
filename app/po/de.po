@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-23 10:54+0200\n"
+"POT-Creation-Date: 2026-10-23 15:59+0200\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -5368,7 +5368,7 @@ msgid "dates · payments · open items"
 msgstr "Termine · Zahlungen · offene Posten"
 
 #: src/frontends/desktop/nav.ts:68
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:82
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:87
 msgid "Tax"
 msgstr "Steuer"
 
@@ -7365,7 +7365,7 @@ msgstr "USt-IdNr muss DE + 9 Ziffern sein."
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:228
 #: src/frontends/desktop/views/setup-assistant.ts:387
 #: src/frontends/desktop/views/zeit-rechnung-dialog.ts:49
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:86
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:91
 msgid "VAT"
 msgstr "Umsatzsteuer"
 
@@ -11372,7 +11372,7 @@ msgstr "Lade Details …"
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
 #: src/frontends/desktop/views/rechnungen-view.ts:549
 #: src/frontends/desktop/views/zeiten-view.ts:314
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:87
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:92
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -15041,15 +15041,23 @@ msgstr "Steuererklärung mit Prüfungen vor der Abgabe"
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:58
 msgid ""
+"The Linux Flatpak bundles ERiC now, so validating and submitting a return "
+"through ELSTER works from the Flatpak download too."
+msgstr ""
+"Das Linux-Flatpak bündelt ERiC jetzt, so dass das Prüfen und Absenden einer "
+"Steuererklärung über ELSTER auch aus dem Flatpak-Download funktioniert."
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:63
+msgid ""
 "Restarting into the demo workspace works on macOS again, and the Flatpak "
 "builds with the current assistant libraries. The AI assistant stays switched "
 "off in this release."
 msgstr ""
 "Der Neustart in den Demo-Arbeitsbereich funktioniert unter macOS wieder, und "
-"das Flatpak baut mit den aktuellen Assistenten-Bibliotheken. Der KI-Assistent "
-"bleibt in dieser Version ausgeschaltet."
+"das Flatpak baut mit den aktuellen Assistenten-Bibliotheken. Der KI-"
+"Assistent bleibt in dieser Version ausgeschaltet."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:63
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:68
 msgid ""
 "The AI assistant is optional and can be connected through the built-in MCP "
 "server — every provider supported by Lotse can be used, and free hosted "
@@ -15063,7 +15071,7 @@ msgstr ""
 "Die Linux-Pakete bringen ihre Datenbankbibliotheken mit und das Flatpak "
 "enthält die Demo-Workspace, installieren und der erste Start funktionieren."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:68
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:73
 msgid ""
 "Commands work in the installed app on Windows and macOS, Back up now no "
 "longer opens a second window, and error messages follow the interface "
@@ -15073,7 +15081,7 @@ msgstr ""
 "„Jetzt sichern“ öffnet kein zweites Fenster mehr, und Fehlermeldungen folgen "
 "der Sprache der Oberfläche."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:73
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:78
 msgid ""
 "First public release: receipts, transactions and invoices, the EÜR and VAT "
 "returns, and filing through ELSTER."
@@ -15081,15 +15089,15 @@ msgstr ""
 "Erste öffentliche Version: Belege, Buchungen und Rechnungen, EÜR und "
 "Umsatzsteuererklärungen sowie die Übermittlung über ELSTER."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:83
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:88
 msgid "Accounting"
 msgstr "Buchhaltung"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:84
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:89
 msgid "ELSTER"
 msgstr "ELSTER"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:85
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:90
 msgid "EÜR"
 msgstr "EÜR"
 
