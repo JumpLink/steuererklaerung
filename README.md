@@ -149,8 +149,14 @@ library from the Bavarian tax authority.
 > and passing the right on (§ 4 (3)). The source repo holds only our own wrapper
 > ([`packages/eric`](packages/eric/README.md)): no ERiC source, no binaries, no schemas.
 > Official release builds bundle a slim ERiC 44.3.6.0 (Linux, Windows, macOS), which the release
-> pipeline fetches from a private repo. The app shows the tax authority's Datenschutzschreiben
-> and asks for your acknowledgement before the first send.
+> pipeline fetches from a private repo. Release builds also carry the app's own 5-digit ELSTER
+> Hersteller-ID (written from a build secret): the identifier that marks submissions on the wire
+> as this software. It never appears in the source repo, and the Flathub build ships without it —
+> your own free identifier (ELSTER developer area) in the settings overrides it. Neither ERiC nor
+> this identifier may be extracted from the release bundles for use by other software:
+> redistribution belongs to this one product (§ 4 (1)), passing either on is forbidden
+> (§ 4 (3)), and ELSTER can block the identifier on violation (§9). The app shows the tax
+> authority's Datenschutzschreiben and asks for your acknowledgement before the first send.
 
 Forks and self-builds provide ERiC themselves (developer registration in the
 [ELSTER developer area](https://www.elster.de/eportal/infoseite/entwickler), accepting the

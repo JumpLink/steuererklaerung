@@ -144,10 +144,18 @@ die native Bibliothek des Bayerischen Landesamts für Steuern.
 > einheitliches Produkt zu verbreiten (§ 4 Abs. 1); Unterlizenzierung und Übertragung des
 > Nutzungsrechts an Dritte sind verboten (§ 4 Abs. 3). Im Quell-Repo liegt ausschließlich
 > **unser eigener Wrapper** ([`packages/eric`](packages/eric/README.md)) — kein ERiC-Quellcode,
-> keine Binaries, keine Schemata. Geplant: Die offiziellen Release-Builds liefern ERiC mit; die
-> Release-Pipeline holt es aus einem privaten Repo (noch nicht umgesetzt).
+> keine Binaries, keine Schemata. Die offiziellen Release-Builds liefern ein schlankes ERiC 44.3.6.0
+> (Linux, Windows, macOS) mit; die Release-Pipeline holt es aus einem privaten Repo. Sie tragen
+> zusätzlich unsere 5-stellige ELSTER-Hersteller-ID (aus einem Build-Secret): die Kennung, die
+> Übermeldungen am Kabel als „diese Software" ausweist. Sie taucht nie im Quellrepo auf, und der
+> Flathub-Build läuft ohne sie — deine eigene, kostenfreie Kennung aus dem Entwicklerbereich
+> überschreibt sie in den Einstellungen. Weder ERiC noch diese Kennung dürfen aus den
+> Release-Bundles für andere Software extrahiert werden: Verbreitung gehört zu diesem einen
+> Produkt (§ 4 Abs. 1), Weitergabe an Dritte ist verboten (§ 4 Abs. 3), und ELSTER kann die
+> Kennung bei Verstoß sperren (§9). Die App zeigt vor der ersten Übermittlung das
+> Datenschutzschreiben und fragt deine Bestätigung ab.
 
-Bis dahin sowie für Forks und Eigenbauten besorgst du ERiC selbst (Entwickler-Registrierung im
+Für Forks und Eigenbauten besorgst du ERiC selbst (Entwickler-Registrierung im
 [ELSTER-Entwicklerbereich](https://www.elster.de/eportal/infoseite/entwickler), Lizenz
 selbst akzeptieren) und bringst es über `ERIC_HOME` mit:
 
