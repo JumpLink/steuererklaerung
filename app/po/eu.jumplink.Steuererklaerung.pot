@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-23 08:46+0200\n"
+"POT-Creation-Date: 2026-10-23 10:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4762,7 +4762,7 @@ msgid "dates · payments · open items"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:68
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:77
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:82
 msgid "Tax"
 msgstr ""
 
@@ -6700,7 +6700,7 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:228
 #: src/frontends/desktop/views/setup-assistant.ts:387
 #: src/frontends/desktop/views/zeit-rechnung-dialog.ts:49
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:81
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:86
 msgid "VAT"
 msgstr ""
 
@@ -10523,7 +10523,7 @@ msgstr ""
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
 #: src/frontends/desktop/views/rechnungen-view.ts:549
 #: src/frontends/desktop/views/zeiten-view.ts:314
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:82
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:87
 msgid "Invoice"
 msgstr ""
 
@@ -14027,6 +14027,13 @@ msgstr ""
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:58
 msgid ""
+"Restarting into the demo workspace works on macOS again, and the Flatpak "
+"builds with the current assistant libraries. The AI assistant stays switched "
+"off in this release."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:63
+msgid ""
 "The AI assistant is optional and can be connected through the built-in MCP "
 "server — every provider supported by Lotse can be used, and free hosted "
 "models stay refused. The Linux packages ship their database libraries and "
@@ -14034,27 +14041,27 @@ msgid ""
 "the box."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:63
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:68
 msgid ""
 "Commands work in the installed app on Windows and macOS, Back up now no "
 "longer opens a second window, and error messages follow the interface "
 "language."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:68
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:73
 msgid ""
 "First public release: receipts, transactions and invoices, the EÜR and VAT "
 "returns, and filing through ELSTER."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:78
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:83
 msgid "Accounting"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:79
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:84
 msgid "ELSTER"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:80
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:85
 msgid "EÜR"
 msgstr ""
