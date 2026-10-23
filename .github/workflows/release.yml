@@ -568,8 +568,10 @@ jobs:
           gh release upload -R "$GITHUB_REPOSITORY" "$tag" app/ship/out/*.zip app/ship/out/*.msi --clobber
 
   # The Flatpak bundle (`.flatpak`) for a plain `flatpak install`. Same manifest as ci.yml's
-  # `flatpak` job, but this one exports and bundles it. WITHOUT ERiC, on purpose: the manifest builds
-  # from public sources only and ERiC's licence allows it solely inside our own official builds.
+  # `flatpak` job, but this one exports and bundles it. The Flathub manifest stays free of ERiC (it
+  # builds from public sources only); ERiC's licence allows it solely inside our own official builds,
+  # so THIS job adds it to the derived bundle manifest when the deploy key is there, like the other
+  # packages do.
   # `--runtime-repo` is what lets `flatpak install x.flatpak` fetch the GNOME runtime from Flathub
   # by itself; without it the install fails on a machine that has not added Flathub.
   # Privileged because flatpak-builder needs namespaces inside a container.
@@ -588,18 +590,70 @@ jobs:
         with:
           ref: ${{ inputs.tag || github.ref }}
 
+      # ERiC for the bundle, fetched like in the Linux package job. Without the secret (forks) the
+      # bundle is built without it.
+      - name: Fetch ERiC
+        id: eric
+        env:
+          ERIC_DEPLOY_KEY: ${{ secrets.ERIC_DEPLOY_KEY }}
+          ERIC_HERSTELLER_ID: ${{ secrets.ERIC_HERSTELLER_ID }}
+        run: |
+          set -eu
+          if [ -z "${ERIC_DEPLOY_KEY:-}" ]; then
+            echo "::notice::ERIC_DEPLOY_KEY is not set - building the Flatpak without ERiC"
+            echo "fetched=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          dnf install -y --setopt=install_weak_deps=False openssh-clients
+          key=$(mktemp)
+          trap 'rm -f "$key"' EXIT
+          printf '%s\n' "$ERIC_DEPLOY_KEY" > "$key"
+          chmod 600 "$key"
+          export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+          git clone --quiet --depth 1 --filter=blob:none --sparse "git@github.com:${ERIC_REPO}.git" /tmp/eric-repo
+          git -C /tmp/eric-repo sparse-checkout set --no-cone "/${ERIC_VERSION}/eric-${ERIC_VERSION}-Linux-x86_64.tar.gz"
+          rm -f "$key"
+          mkdir -p app/.eric-stage
+          tar -xzf "/tmp/eric-repo/${ERIC_VERSION}/eric-${ERIC_VERSION}-Linux-x86_64.tar.gz" -C app/.eric-stage
+          rm -rf /tmp/eric-repo
+          if [ -n "${ERIC_HERSTELLER_ID:-}" ]; then
+            printf '%s\n' "$ERIC_HERSTELLER_ID" > app/.eric-stage/hersteller-id
+          fi
+          echo "fetched=true" >> "$GITHUB_OUTPUT"
+
       # The bundle is built from a variant of the Flathub manifest WITHOUT the `opencode` module: that
       # module is `extra-data`, and flatpak cannot install a single-file bundle of an extra-data app
       # ("Extra data missing in detached metadata", flatpak/flatpak#1334). 0.1.x does not offer the
       # built-in assistant anyway; it returns in 0.2 -- revisit this then. The `git` source becomes
       # this checkout (a container's checkout is not a repo git trusts). Flathub keeps the full manifest.
+      #
+      # With ERiC fetched, two modules are added HERE and nowhere else: our GJS binding (built from
+      # packages/eric with meson, it dlopens ERiC at run time) and the runtime at
+      # lib/steuererklaerung/eric/Linux-x86_64. The app looks for `eric/<platform>` upward from the
+      # bundle at /app/bin, hence the symlink. No permission changes.
       - name: Derive the bundle manifest and check the sandbox stays narrow
+        env:
+          ERIC_FETCHED: ${{ steps.eric.outputs.fetched }}
         run: |
           set -eu
           jq 'del(.modules[] | select(.name == "opencode"))
-              | (.modules[] | select(.name == "steuererklaerung") | .sources[0]) = {"type":"dir","path":".","skip":[".git",".flatpak-builder","node_modules"]}' \
+              | (.modules[] | select(.name == "steuererklaerung") | .sources[0]) = {"type":"dir","path":".","skip":[".git",".flatpak-builder","node_modules","app/.eric-stage"]}' \
             eu.jumplink.Steuererklaerung.json > ci-manifest.json
           m=ci-manifest.json
+          if [ "$ERIC_FETCHED" = "true" ]; then
+            jq '(.modules |= (
+                  [.[] | select(.name != "steuererklaerung")]
+                  + [{"name":"eric-binding","buildsystem":"meson","sources":[{"type":"dir","path":"packages/eric"}]},
+                     {"name":"eric","buildsystem":"simple",
+                      "build-commands":[
+                        "install -d /app/lib/steuererklaerung/eric/Linux-x86_64",
+                        "cp -a . /app/lib/steuererklaerung/eric/Linux-x86_64/",
+                        "install -d /app/bin",
+                        "ln -s ../lib/steuererklaerung/eric /app/bin/eric"],
+                      "sources":[{"type":"dir","path":"app/.eric-stage"}]}]
+                  + [.[] | select(.name == "steuererklaerung")]))' "$m" > "$m.tmp"
+            mv "$m.tmp" "$m"
+          fi
           jq -e '.["finish-args"] | index("--share=network")' "$m" >/dev/null \
             || { echo "::error::$m lacks --share=network"; exit 1; }
           if jq -e '.["finish-args"][] | select(startswith("--filesystem") or . == "--talk-name=org.freedesktop.Flatpak")' "$m" >/dev/null; then
@@ -639,6 +693,21 @@ jobs:
             eu.jumplink.Steuererklaerung
           ls -la flatpak-out
           [ -s "flatpak-out/eu.jumplink.Steuererklaerung-${version}-1.x86_64.flatpak" ]
+
+      - name: ERiC is in the build when it was fetched
+        env:
+          ERIC_FETCHED: ${{ steps.eric.outputs.fetched }}
+        run: |
+          set -eu
+          d=/tmp/fp-build/files/lib/steuererklaerung/eric/Linux-x86_64
+          if [ "$ERIC_FETCHED" = "true" ]; then
+            ls "$d" /tmp/fp-build/files/lib/libsteuereric.so /tmp/fp-build/files/lib/girepository-1.0/SteuerEric-1.0.typelib
+            ls "$d"/lib/libericapi.so*
+            # The app searches upward from /app/bin, so the symlink has to resolve.
+            ls /tmp/fp-build/files/bin/eric/Linux-x86_64/lib/libericapi.so*
+          else
+            [ ! -e "$d" ] || { echo "::error::ERiC in a build that fetched none"; exit 1; }
+          fi
 
       - uses: actions/upload-artifact@v4
         with:

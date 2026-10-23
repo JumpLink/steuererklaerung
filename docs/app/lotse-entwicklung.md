@@ -81,7 +81,8 @@ Grenzen im Flatpak:
 - Pfade außerhalb der eigenen XDG-Ordner (`.env` über `DOTENV_CONFIG_PATH`, cwd-relative
   `steuererklaerung.json`, Belegordner, `~/Downloads`) sind unsichtbar; Dateien kommen nur über den
   Dateiauswahl-Portal herein.
-- ERiC (`ERIC_HOME`) ist im Flatpak noch nicht gebündelt; die ELSTER-Übermittlung ist dort eine
-  bekannte Grenze. Die Herstellerlizenz erlaubt das Mitliefern (§ 4 Abs. 1), geplant über ein
-  privates Repo in der Release-Pipeline.
+- ERiC steckt nur im Release-Bundle (`.flatpak` an den GitHub-Releases), nicht im Flathub-Build:
+  die Release-Pipeline holt es mit dem Deploy-Key aus dem privaten Repo und ergänzt es im
+  abgeleiteten Manifest (Herstellerlizenz § 4 Abs. 1). Ohne Secret (Forks) bleibt es draußen; dann
+  hilft nur ein eigenes ERiC, und `ERIC_HOME` muss im Sandkasten sichtbar sein.
 - Der MCP-Server läuft als `flatpak run … mcp` im selben Sandkasten.
