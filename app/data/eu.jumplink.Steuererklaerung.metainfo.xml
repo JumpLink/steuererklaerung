@@ -53,6 +53,11 @@
   <url type="vcs-browser">https://github.com/JumpLink/steuererklaerung</url>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.1.3" date="2026-10-23">
+      <description>
+        <p>Restarting into the demo workspace works on macOS again, and the Flatpak builds with the current assistant libraries. The AI assistant stays switched off in this release.</p>
+      </description>
+    </release>
     <release version="0.1.2" date="2026-10-22">
       <description>
         <p>The AI assistant is optional and can be connected through the built-in MCP server — every provider supported by Lotse can be used, and free hosted models stay refused. The Linux packages ship their database libraries and the Flatpak carries the demo workspace, so install and first run work out of the box.</p>

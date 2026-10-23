@@ -1,6 +1,6 @@
 {
  "name": "steuererklaerung",
- "version": "0.1.2",
+ "version": "0.1.3",
  "license": "AGPL-3.0-or-later",
  "author": "Pascal Garber",
  "private": true,
@@ -189,6 +189,16 @@
     ]
    },
    "releases": [
+    {
+     "version": "0.1.3",
+     "date": "2026-10-23",
+     "description": [
+      {
+       "p": "Restarting into the demo workspace works on macOS again, and the Flatpak builds with the current assistant libraries. The AI assistant stays switched off in this release.",
+       "translatorHint": "Release notes for 0.1.3 — the one-line summary"
+      }
+     ]
+    },
     {
      "version": "0.1.2",
      "date": "2026-10-22",
