@@ -76,6 +76,17 @@
      }
     ]
    },
+   "legalNotice": {
+    "statements": {
+     "de": "docs/legal-notice.de.md",
+     "en": "docs/legal-notice.md"
+    }
+   },
+   "relatedApps": [
+    {
+     "url": "https://jumplink.eu/beifahrer/"
+    }
+   ],
    "support": [
     {
      "kind": "GitHub Sponsors",
