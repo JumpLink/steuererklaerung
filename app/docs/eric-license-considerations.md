@@ -17,6 +17,20 @@ ERiC is a C library provided free of charge by the Bayerisches Landesamt für St
 - Forks and self-builds do not inherit our right: they provide their own ERiC (`ERIC_HOME`) after accepting the license themselves.
 - Distribution through third-party stores is "indirect" distribution of our product; ERiC must stay bound to the app and must not be offered as a standalone download.
 
+### The bundled Hersteller-ID
+
+Official release builds also carry the app's own 5-digit ELSTER Hersteller-ID: written from
+the `ERIC_HERSTELLER_ID` secret as a `hersteller-id` file next to the bundled runtime, read
+by `packages/eric/src/paths.ts`. It marks submissions on the wire as this software. It never
+appears in the source repository, and the Flathub build ships without it (a person's own
+identifier from the settings overrides it, and registering one is free in the ELSTER
+developer area).
+
+**Neither ERiC nor the bundled identifier may be lifted out of the release artifacts for use
+by other software.** Distribution is bound to this one product (§4 (1)); transferring either
+to third parties or sublicensing beyond that is forbidden (§4 (3)); misuse can get the
+identifier blocked, rendering the integration non-functional (§9).
+
 ### Recommended approach
 
 - Keep the setup script and documented instructions for forks, self-builds and development.
@@ -79,3 +93,4 @@ If the application uses RABE (reference-based document retrieval), additional ob
 | Confidentiality | Do not publish developer portal internals |
 | Support | Your responsibility, not LfSt's |
 | Hersteller-ID | Keep out of the repo (private config); can be revoked on violation (§9) |
+| Reuse from bundles | ERiC and the bundled Hersteller-ID are product-bound; extraction for other software is a licence violation (§4 (3), §9) |

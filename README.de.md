@@ -144,10 +144,19 @@ die native Bibliothek des Bayerischen Landesamts für Steuern.
 > einheitliches Produkt zu verbreiten (§ 4 Abs. 1); Unterlizenzierung und Übertragung des
 > Nutzungsrechts an Dritte sind verboten (§ 4 Abs. 3). Im Quell-Repo liegt ausschließlich
 > **unser eigener Wrapper** ([`packages/eric`](packages/eric/README.md)) — kein ERiC-Quellcode,
-> keine Binaries, keine Schemata. Geplant: Die offiziellen Release-Builds liefern ERiC mit; die
-> Release-Pipeline holt es aus einem privaten Repo (noch nicht umgesetzt).
+> keine Binaries, keine Schemata. Die offiziellen Release-Builds liefern ein schlankes ERiC 44.3.6.0
+> (Linux, Windows, macOS) mit; die Release-Pipeline holt es aus einem privaten Repo. Sie tragen
+> zusätzlich unsere 5-stellige ELSTER-Hersteller-ID (aus einem Build-Secret): die Kennung, mit der
+> jede Übermittlung diese Software als Absender ausweist. Sie taucht nie im Quellrepo auf; deine eigene,
+> kostenfreie Kennung aus dem Entwicklerbereich überschreibt sie in den Einstellungen. Der
+> Flathub-Build enthält weder ERiC noch diese Kennung: Dort exportierst du die Erklärung als XML
+> und lädst sie in *Mein ELSTER* hoch. Weder ERiC noch diese Kennung dürfen aus den
+> Release-Bundles für andere Software extrahiert werden: Verbreitung gehört zu diesem einen
+> Produkt (§ 4 Abs. 1), Weitergabe an Dritte ist verboten (§ 4 Abs. 3), und ELSTER kann die
+> Kennung bei Verstoß sperren (§ 9). Die App zeigt vor der ersten Übermittlung das
+> Datenschutzschreiben und fragt deine Bestätigung ab.
 
-Bis dahin sowie für Forks und Eigenbauten besorgst du ERiC selbst (Entwickler-Registrierung im
+Für Forks und Eigenbauten besorgst du ERiC selbst (Entwickler-Registrierung im
 [ELSTER-Entwicklerbereich](https://www.elster.de/eportal/infoseite/entwickler), Lizenz
 selbst akzeptieren) und bringst es über `ERIC_HOME` mit:
 
@@ -189,12 +198,18 @@ die Abgabe selbst läuft über die CLI.
 
 Das Projekt wird zu großen Teilen per Vibe-Coding entwickelt: Der Code entsteht mit
 KI-Coding-Agenten, der Maintainer gibt die Richtung vor und prüft die Ergebnisse. Die
-meisten Zeilen sind nicht von Hand geschrieben.
+meisten Zeilen sind nicht von Hand geschrieben. Wo die KI-Arbeit ansetzt, grob einsortiert:
+App-Laufzeit und CLI (`app/src/`), GJS-Bindings (`packages/`), Tests, Dokumentation
+(beide Readmes eingeschlossen) und die Vertriebsverpackung (Flatpak-Manifest, Metainfo,
+CI). Die Screenshots stammen aus echten App-Läufen, keine KI-Bilder.
 
 Was die Zahlen absichert, ist nicht die Herkunft des Codes, sondern die Überprüfbarkeit:
-Steuerrechtliche Konstanten stehen mit Quelle in
-[`docs/references/tax-sources.md`](docs/references/tax-sources.md), und die erzeugten
-Erklärungen werden gegen ELSTERs ERiC validiert. Trotzdem gilt: Das ist keine
+Jede steuerliche Konstante steht mit Quelle, Abrufdatum und Veranlagungszeitraum in
+[`docs/references/tax-sources.md`](docs/references/tax-sources.md) und lässt sich dort
+gegen das Gesetz prüfen, egal wer sie eingetragen hat; die erzeugten Erklärungen werden
+gegen ELSTERs ERiC validiert. Unabhängig davon listet das `check:ai`-Gate jede Stelle, an
+der die App selbst ein KI-Modell aufruft, und verlangt dafür einen Weg ohne KI. Trotzdem
+gilt: Das ist keine
 Steuerberatung, es gibt keine Gewährleistung (siehe [AGPL](LICENSE)), und du prüfst deine
 Erklärung selbst, bevor du sie abgibst.
 

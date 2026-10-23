@@ -53,9 +53,14 @@
   <url type="vcs-browser">https://github.com/JumpLink/steuererklaerung</url>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.1.5" date="2026-10-23">
+      <description>
+        <p>The README now names which parts of the app are written with AI. The Flatpak from Flathub comes without ERiC: export the return as XML and upload it in Mein ELSTER.</p>
+      </description>
+    </release>
     <release version="0.1.4" date="2026-10-23">
       <description>
-        <p>The Linux Flatpak bundles ERiC now, so validating and submitting a return through ELSTER works from the Flatpak download too.</p>
+        <p>The Flatpak bundle on the GitHub release page includes ERiC, so validating and submitting a return through ELSTER works from that download too.</p>
       </description>
     </release>
     <release version="0.1.3" date="2026-10-23">

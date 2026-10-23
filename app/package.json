@@ -1,7 +1,7 @@
 {
     "name": "steuererklaerung-cli",
     "description": "CLI for steuererklaerung: Qonto, Paperless-NGX, ELSTER, FinTS",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "license": "AGPL-3.0-or-later",
     "author": "Pascal Garber",
     "private": true,
@@ -214,9 +214,14 @@
             "contentRating": "oars-1.1",
             "releases": [
                 {
+                    "version": "0.1.5",
+                    "date": "2026-10-23",
+                    "description": "The README now names which parts of the app are written with AI. The Flatpak from Flathub comes without ERiC: export the return as XML and upload it in Mein ELSTER."
+                },
+                {
                     "version": "0.1.4",
                     "date": "2026-10-23",
-                    "description": "The Linux Flatpak bundles ERiC now, so validating and submitting a return through ELSTER works from the Flatpak download too."
+                    "description": "The Flatpak bundle on the GitHub release page includes ERiC, so validating and submitting a return through ELSTER works from that download too."
                 },
                 {
                     "version": "0.1.3",

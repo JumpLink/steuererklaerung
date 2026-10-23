@@ -149,8 +149,15 @@ library from the Bavarian tax authority.
 > and passing the right on (§ 4 (3)). The source repo holds only our own wrapper
 > ([`packages/eric`](packages/eric/README.md)): no ERiC source, no binaries, no schemas.
 > Official release builds bundle a slim ERiC 44.3.6.0 (Linux, Windows, macOS), which the release
-> pipeline fetches from a private repo. The app shows the tax authority's Datenschutzschreiben
-> and asks for your acknowledgement before the first send.
+> pipeline fetches from a private repo. Release builds also carry the app's own 5-digit ELSTER
+> Hersteller-ID (written from a build secret): the identifier that marks submissions on the wire
+> as this software. It never appears in the source repo; your own free identifier (ELSTER
+> developer area) in the settings overrides it. The Flathub build carries neither ERiC nor this
+> identifier: export the return as XML and upload it in *Mein ELSTER*. Neither ERiC nor
+> this identifier may be extracted from the release bundles for use by other software:
+> redistribution belongs to this one product (§ 4 (1)), passing either on is forbidden
+> (§ 4 (3)), and ELSTER can block the identifier on violation (§ 9). The app shows the tax
+> authority's Datenschutzschreiben and asks for your acknowledgement before the first send.
 
 Forks and self-builds provide ERiC themselves (developer registration in the
 [ELSTER developer area](https://www.elster.de/eportal/infoseite/entwickler), accepting the
@@ -185,12 +192,18 @@ everywhere, writing in few places, and filing itself runs through the CLI.
 ### Transparency: how this is made
 
 The project is developed largely through vibe coding. The code is written with AI coding
-agents; the maintainer directs the work and reviews the results. Most lines were not
-written by hand.
+agents; the maintainer directs the work and reviews the results. Most lines are not
+hand-written. Where that AI work is involved, sorted roughly: the application runtime and
+CLI (`app/src/`), the GJS bindings (`packages/`), the test suite, the documentation (both
+READMEs included), and the distribution packaging (Flatpak manifest, metainfo, CI). The
+screenshots come from real app runs, not AI-generated images.
 
-What backs the numbers is not where the code came from but whether it can be checked. Tax
-rules cite their sources in [`docs/references/tax-sources.md`](docs/references/tax-sources.md),
-and generated returns are validated against ELSTER's ERiC. Still: this is not tax advice,
+What backs the numbers is not where the code came from but whether it can be checked. Every
+tax constant cites its source, retrieval date and tax year in
+[`docs/references/tax-sources.md`](docs/references/tax-sources.md), so it can be checked
+against the law no matter who typed it, and generated returns are validated against
+ELSTER's ERiC. Separately, the `check:ai` gate lists every place where the app itself calls
+an AI model and requires a way to do the same without one. Still: this is not tax advice,
 there is no warranty (see the [AGPL](LICENSE)), and you must check your return yourself
 before sending it.
 
