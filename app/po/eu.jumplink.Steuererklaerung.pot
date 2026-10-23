@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-22 22:45+0200\n"
+"POT-Creation-Date: 2026-10-23 08:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,7 @@ msgstr ""
 #: src/core/actions/classification-rules.ts:48
 #: src/frontends/desktop/views/setup-assistant.ts:64
 #: src/frontends/desktop/views/setup-assistant.ts:469
-#: src/frontends/desktop/window.ts:726
+#: src/frontends/desktop/window.ts:727
 msgid "Private"
 msgstr ""
 
@@ -6339,135 +6339,117 @@ msgstr ""
 msgid "Remove special partner expense"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:39
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:37
 msgid "Data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:40
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:38
 msgid "Demo data — fictional examples"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:40
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:38
 msgid "Your own data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:43
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:41
 #: src/frontends/desktop/views/welcome.ts:201
-#: src/frontends/desktop/window.ts:659
+#: src/frontends/desktop/window.ts:660
 msgid "Use my own data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:43
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:41
 #: src/frontends/desktop/views/welcome.ts:187
 msgid "Try the demo"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:51
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:49
 msgid "Your own data — this installation ships no demo data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:56
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:54
 msgid "Show welcome again"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:65
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:63
 #: src/frontends/desktop/views/welcome.ts:270
 #: src/frontends/desktop/views/welcome.ts:292
 #: src/frontends/desktop/views/welcome.ts:305
 msgid "AI assistant"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:67
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:65
 msgid ""
 "Questions and the data needed to answer them go to the configured AI "
 "provider. Independent of the MCP server."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:96
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:90
 msgid "Coding agent"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:98
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:92
 msgid ""
 "Your own opencode uses your login and models from its global configuration. "
 "Takes effect the next time the app starts."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:101
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:95
 msgid "Bundled opencode (recommended)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:101
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:95
 msgid "Own opencode (global configuration)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:105
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:99
 msgid ""
 "The Flatpak sandbox cannot reach your own opencode, so the bundled one is "
 "always used."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:128
-msgid "Assistant engine"
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:129
-msgid "Takes effect the next time the app starts."
-msgstr ""
-
-#. TRANSLATORS: The assistant that is part of the app and answers in-process
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:132
-msgid "Built in"
-msgstr ""
-
-#. TRANSLATORS: lotse is a program name — it starts a coding agent as a separate process
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:134
-msgid "Coding agent (lotse)"
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:150
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:114
 msgid "Last backup"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:152
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:211
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:116
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:175
 msgid "Backup folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:160
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:124
 msgid "{time} in {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:165
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:129
 msgid "Never"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:171
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:179
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:135
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:143
 msgid "Back up now"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:179
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:143
 msgid "Backing up …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:187
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:151
 msgid "Backup saved: {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:190
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:154
 msgid "Backup failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:205
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:169
 msgid "Choose folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:233
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:197
 msgid "Keep backups"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:234
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:198
 msgid "Older ones are deleted after each new backup"
 msgstr ""
 
@@ -11542,7 +11524,7 @@ msgid "Dauerfristverlängerung: every VAT return is due one month later."
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:425
-#: src/frontends/desktop/window.ts:726
+#: src/frontends/desktop/window.ts:727
 msgid "Business"
 msgstr ""
 
@@ -13959,27 +13941,27 @@ msgstr ""
 msgid "Restart"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:274
+#: src/frontends/desktop/window.ts:275
 msgid "Please restart the app yourself to switch."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:651
+#: src/frontends/desktop/window.ts:652
 msgid "Data could not be loaded completely: {error}"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:658
+#: src/frontends/desktop/window.ts:659
 msgid "Demo data – fictional examples, no real financial data"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:688
+#: src/frontends/desktop/window.ts:689
 msgid "Setup is not finished: no business or private tax return is set up yet."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:689
+#: src/frontends/desktop/window.ts:690
 msgid "Setup is not finished: “{entity}” has no bank account yet."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:794
+#: src/frontends/desktop/window.ts:795
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."

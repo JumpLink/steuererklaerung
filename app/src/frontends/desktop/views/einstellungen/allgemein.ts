@@ -16,10 +16,8 @@ import Gtk from '@girs/gtk-4.0';
 
 import {
     type AgentSource,
-    type AiEngine,
     agentSourceLockedToBundled,
     resolveAgentSource,
-    resolveAiEngine,
 } from '../../../../core/actions/assistant/lotse-embed.ts';
 import { configuredBackupRoot } from '../../../../core/actions/backup.ts';
 import { assistantOffered } from '../../../../core/config/assistant-offered.ts';
@@ -69,20 +67,16 @@ export function buildGeneralGroup(group: Adw.PreferencesGroup): void {
         ),
     });
     ai.set_active(isAssistantEnabled());
-    const engine = buildEngineRow();
     const source = buildAgentSourceRow();
-    engine.set_sensitive(ai.get_active());
     source.set_sensitive(ai.get_active());
     ai.connect('notify::active', () => {
         updateUserSettings((s) => {
             s.aiAssistant = ai.get_active();
         });
-        engine.set_sensitive(ai.get_active());
         source.set_sensitive(ai.get_active());
         ai.activate_action('win.assistant-preference', null);
     });
     group.add(ai);
-    group.add(engine);
     group.add(source);
 }
 
@@ -110,36 +104,6 @@ function buildAgentSourceRow(): Adw.ComboRow {
         if (!chosen) return;
         updateUserSettings((s) => {
             s.aiAgentSource = chosen;
-        });
-    });
-    return row;
-}
-
-/**
- * Which assistant the switch above turns on. Insensitive while AI is off, because the choice is
- * meaningless then — neither pane is built and no agent is started either way.
- *
- * A restart, not a live swap: the coding agent is a subprocess with a session file of its own, and
- * rebuilding the pane under a running turn would be a second way for it to end.
- */
-function buildEngineRow(): Adw.ComboRow {
-    const engines: AiEngine[] = ['builtin', 'lotse'];
-    const row = new Adw.ComboRow({
-        title: _('Assistant engine'),
-        subtitle: _('Takes effect the next time the app starts.'),
-        model: Gtk.StringList.new([
-            // TRANSLATORS: The assistant that is part of the app and answers in-process
-            _('Built in'),
-            // TRANSLATORS: lotse is a program name — it starts a coding agent as a separate process
-            _('Coding agent (lotse)'),
-        ]),
-    });
-    row.set_selected(Math.max(0, engines.indexOf(resolveAiEngine())));
-    row.connect('notify::selected', () => {
-        const chosen = engines[row.get_selected()];
-        if (!chosen) return;
-        updateUserSettings((s) => {
-            s.aiEngine = chosen;
         });
     });
     return row;
