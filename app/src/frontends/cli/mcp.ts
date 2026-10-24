@@ -1,4 +1,5 @@
 import type { CommandModule } from 'yargs';
+import { DEFAULT_MCP_HOST } from '../mcp/http-server.ts';
 
 export const mcpCommand: CommandModule = {
     command: 'mcp',
@@ -15,11 +16,17 @@ export const mcpCommand: CommandModule = {
                 type: 'number',
                 default: 3020,
                 describe: 'HTTP port (only used with --transport http)',
+            })
+            .option('host', {
+                type: 'string',
+                default: DEFAULT_MCP_HOST,
+                describe: 'Bind host (only used with --transport http; default localhost, no authentication)',
             }),
     handler: async (argv) => {
         const { startMcpServer } = await import('../mcp/server.ts');
         const transport = (argv as Record<string, unknown>).transport as 'stdio' | 'http';
         const port = (argv as Record<string, unknown>).port as number;
-        await startMcpServer({ transport, port });
+        const host = (argv as Record<string, unknown>).host as string;
+        await startMcpServer({ transport, port, host });
     },
 };

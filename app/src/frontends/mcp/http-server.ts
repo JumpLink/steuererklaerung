@@ -8,6 +8,9 @@ import express, { type Request, type Response } from 'express';
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 
+/** The MCP HTTP mode has no authentication, so it binds to loopback unless told otherwise. */
+export const DEFAULT_MCP_HOST = '127.0.0.1';
+
 function getSessionId(headers: Request['headers']): string | undefined {
     const header = headers['mcp-session-id'] || headers['Mcp-Session-Id'];
     return typeof header === 'string' ? header : undefined;

@@ -199,6 +199,7 @@ import txView from './unit/web/tx-view.test.ts';
 import chatContext from './unit/web/chat.test.ts';
 import chatAgent from './unit/web/chat-agent.test.ts';
 import accountsWeb from './unit/web/accounts.test.ts';
+import mcpBind from './unit/web/mcp-bind.test.ts';
 import dms from './unit/dms/dms.test.ts';
 import dmsInbox from './unit/dms/inbox.test.ts';
 import dmsReconcileOpenItems from './unit/dms/reconcile-open-items.test.ts';
@@ -414,6 +415,7 @@ run({
     chatContext,
     chatAgent,
     accountsWeb,
+    mcpBind,
     dms,
     dmsInbox,
     dmsReconcileOpenItems,

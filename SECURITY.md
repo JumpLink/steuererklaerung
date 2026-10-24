@@ -81,9 +81,9 @@ Antwort des Modells noch die Fehlermeldung des Parsers protokolliert.
 Der MCP-Server ist der Weg, auf dem ein externer KI-Assistent an die Daten kommt. Er ist
 in den Einstellungen abschaltbar, pro Werkzeuggruppe freigebbar, und **schreibende
 Werkzeuge sind hinter `mcp.allowWrite` gesperrt**, das standardmäßig aus ist. Er lauscht
-auf stdio; im HTTP-Modus auf einer lokalen Adresse. Die Web-Oberfläche bindet sich
-ebenfalls per Voreinstellung an `127.0.0.1` — sie hat keine Authentifizierung und gehört
-nicht ins offene Netz.
+auf stdio; im HTTP-Modus per Voreinstellung nur auf `127.0.0.1` (eine andere Adresse nur
+ausdrücklich per `--host`). Die Web-Oberfläche bindet sich ebenfalls per Voreinstellung an
+`127.0.0.1` — beide haben keine Authentifizierung und gehören nicht ins offene Netz.
 
 ### ELSTER und ERiC
 
