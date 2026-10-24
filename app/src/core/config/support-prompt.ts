@@ -19,6 +19,11 @@ export function supportUrl(lang: SupportLang): string {
 
 export type SupportLang = 'de' | 'en';
 
+/** A legal page of the project site, per language: the privacy statement or the legal notice. */
+export function sitePageUrl(page: 'privacy' | 'legal-notice', lang: SupportLang): string {
+    return `https://jumplink.eu/steuererklaerung/${lang}/${page}/`;
+}
+
 /**
  * `de` for a German session, `en` for everything else — the same rule `initLocale()` applies to the
  * catalogue, so the page matches the language of the dialog that links to it. `names` is

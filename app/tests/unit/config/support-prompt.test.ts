@@ -13,6 +13,7 @@ import { join } from 'node:path';
 import {
     claimSupportPrompt,
     shouldPromptSupport,
+    sitePageUrl,
     supportLang,
     supportUrl,
 } from '../../../src/core/config/support-prompt.ts';
@@ -71,6 +72,11 @@ export default async () => {
             expect(supportLang(['en_US.UTF-8', 'en', 'C'])).toBe('en');
             expect(supportLang(['C'])).toBe('en');
             expect(supportLang([])).toBe('en');
+        });
+
+        await it('points at the per-language privacy and legal notice pages', async () => {
+            expect(sitePageUrl('privacy', 'de')).toBe('https://jumplink.eu/steuererklaerung/de/privacy/');
+            expect(sitePageUrl('legal-notice', 'en')).toBe('https://jumplink.eu/steuererklaerung/en/legal-notice/');
         });
 
         await it('points at the per-language support page', async () => {

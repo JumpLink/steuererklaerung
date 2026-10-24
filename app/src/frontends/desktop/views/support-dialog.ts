@@ -10,12 +10,17 @@
 import Adw from '@girs/adw-1';
 import GLib from '@girs/glib-2.0';
 import Gtk from '@girs/gtk-4.0';
-import { supportLang, supportUrl } from '../../../core/config/support-prompt.ts';
+import { sitePageUrl, supportLang, supportUrl } from '../../../core/config/support-prompt.ts';
 import { _ } from '../i18n.ts';
 
 /** The support page in the language of the running session. */
 export function localizedSupportUrl(): string {
     return supportUrl(supportLang(GLib.get_language_names()));
+}
+
+/** A legal page of the project site in the language of the running session. */
+export function localizedSitePageUrl(page: 'privacy' | 'legal-notice'): string {
+    return sitePageUrl(page, supportLang(GLib.get_language_names()));
 }
 
 /** Present the prompt over `parent`; resolves once it is closed. Opens the page on "Support". */
