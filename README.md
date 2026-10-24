@@ -23,7 +23,9 @@ terms kept in both. A [screen-by-screen tour](docs/app/README.md) shows every vi
 ## Who it is for
 
 Freelancers, small businesses and private individuals in Germany who prepare their own tax
-returns, including English speakers who file via ELSTER. The interface speaks English and
+returns, including English speakers who file via ELSTER. Without the tax returns, the app
+also works as plain bookkeeping (receipts, bank transactions, invoices), outside Germany
+too as long as you keep your books in euros. The interface speaks English and
 German; the tax logic follows German law, so the official terms stay German in both. This
 README glosses them where needed.
 
