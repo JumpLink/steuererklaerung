@@ -1,7 +1,7 @@
 {
     "name": "steuererklaerung-cli",
     "description": "CLI for steuererklaerung: Qonto, Paperless-NGX, ELSTER, FinTS",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "license": "AGPL-3.0-or-later",
     "author": "Pascal Garber",
     "private": true,
@@ -213,6 +213,11 @@
             },
             "contentRating": "oars-1.1",
             "releases": [
+                {
+                    "version": "0.1.6",
+                    "date": "2026-10-24",
+                    "description": "The About dialog now links to the privacy policy and the legal notice. The MCP server binds to loopback by default."
+                },
                 {
                     "version": "0.1.5",
                     "date": "2026-10-23",

@@ -1,6 +1,6 @@
 {
  "name": "steuererklaerung",
- "version": "0.1.5",
+ "version": "0.1.6",
  "license": "AGPL-3.0-or-later",
  "author": "Pascal Garber",
  "private": true,
@@ -209,6 +209,16 @@
     ]
    },
    "releases": [
+    {
+     "version": "0.1.6",
+     "date": "2026-10-24",
+     "description": [
+      {
+       "p": "The About dialog now links to the privacy policy and the legal notice. The MCP server binds to loopback by default.",
+       "translatorHint": "Release notes for 0.1.6 — the one-line summary"
+      }
+     ]
+    },
     {
      "version": "0.1.5",
      "date": "2026-10-23",
