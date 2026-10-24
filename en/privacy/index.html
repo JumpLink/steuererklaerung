@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy – Steuererklärung</title>
+<meta name="description" content="What Steuererklärung does with data.">
+<link rel="canonical" href="https://jumplink.eu/steuererklaerung/en/privacy/">
+<link rel="alternate" hreflang="de" href="https://jumplink.eu/steuererklaerung/de/privacy/">
+<link rel="alternate" hreflang="en" href="https://jumplink.eu/steuererklaerung/en/privacy/">
+<link rel="alternate" hreflang="x-default" href="https://jumplink.eu/steuererklaerung/de/privacy/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Privacy – Steuererklärung">
+<meta property="og:description" content="What Steuererklärung does with data.">
+<meta property="og:url" content="https://jumplink.eu/steuererklaerung/en/privacy/">
+<meta property="og:site_name" content="Steuererklärung">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="de_DE">
+<meta property="og:image" content="https://jumplink.eu/steuererklaerung/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Steuererklärung">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Privacy – Steuererklärung">
+<meta name="twitter:description" content="What Steuererklärung does with data.">
+<meta name="twitter:image" content="https://jumplink.eu/steuererklaerung/og-en.png">
+<meta name="theme-color" content="#cfe5c8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#2f5238" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="/steuererklaerung/eu.jumplink.Steuererklaerung.svg">
+
+<style>:root{--brand-light:#cfe5c8;--band-fg-light:#10233b;--brand-dark:#2f5238;--band-fg-dark:#ffffff}</style>
+<link rel="stylesheet" href="/steuererklaerung/assets/site-f54aed08.css">
+<script type="module" src="/steuererklaerung/assets/site-0a042efd.js"></script>
+</head>
+<body>
+<div class="topbar">
+<div class="bar-inner">
+<a class="bar-brand" href="/steuererklaerung/en/">
+<img src="/steuererklaerung/eu.jumplink.Steuererklaerung.svg" alt="" width="24" height="24">
+<span>Steuererklärung</span>
+</a>
+<div class="bar-end">
+<nav class="bar-languages" aria-label="Language"><ul><li><a href="/steuererklaerung/de/privacy/" hreflang="de" lang="de">DE</a></li><li><span aria-current="true">EN</span></li></ul></nav>
+<a class="bar-link" href="https://github.com/JumpLink/steuererklaerung"><svg class="icon" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M5.6 11.8 2 8l3.6-3.8M10.4 4.2 14 8l-3.6 3.8M9.4 2.6 6.6 13.4"/></svg><span>GitHub</span></a>
+</div>
+</div>
+</div>
+<header class="masthead">
+<div class="hero-inner">
+<div class="hero-icon" style="--icon-url:url(/steuererklaerung/eu.jumplink.Steuererklaerung.svg)"><img src="/steuererklaerung/eu.jumplink.Steuererklaerung.svg" alt="" width="128" height="128"></div>
+<div class="hero-text">
+<h1>Privacy</h1>
+<p class="hero-by">Steuererklärung</p>
+</div>
+</div>
+</header>
+<main>
+<div class="column privacy-statement">
+<p class="privacy-hosting">This page is a static file: no cookie, no analytics, nothing from a third party. Whoever serves it may keep ordinary web-server access logs of the request.</p>
+<h2>Privacy</h2>
+<p>This page describes what the Steuererklärung app does with your data. It is a desktop app with a command line and an MCP server, not an online service. The app is open source, so key statements link to the source file they are based on and can be checked rather than taken on trust. What cannot be checked in the code is marked as such.</p>
+<p>The provider&#39;s details are in the <a href="../legal-notice/">legal notice</a>. Contact for privacy questions: Pascal Garber, JumpLink, pascal@jumplink.eu.</p>
+<h3>1. The developer receives no data</h3>
+<p>The developer runs no server for this app. The source contains no analytics, crash reporting, telemetry or update check; a search for such code finds nothing (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/SECURITY.md">SECURITY.md</a>, section &quot;Keine Telemetrie&quot;). The only counter, <a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/clients/llm/types.ts"><code>LLMTelemetry</code></a>, tallies tokens and cost of your own AI calls on your computer.</p>
+<p>Wherever the app talks to a third party, you set that connection up yourself, with your own account. What that third party does with the data is governed by its own terms and privacy policy, not by this page.</p>
+<h3>2. Your data stays on your computer</h3>
+<p>Your master data, bookings, receipts and generated tax files are stored as files on your machine; nothing is copied elsewhere.</p>
+<ul><li>Configuration (<code>steuererklaerung.json</code>, with tax numbers and accounts): a fresh install uses <code>~/.config/steuererklaerung</code> (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/paths.ts">paths.ts</a>).</li><li>Bookings, the SQLite ledger (<code>ledger.db</code>) and receipts of the built-in document store: <code>~/.local/share/steuererklaerung/transactions-data</code> (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/paths.ts">paths.ts</a>, <a href="https://github.com/JumpLink/steuererklaerung/blob/main/packages/store/src/transactions/store.ts">transactions store</a>, <a href="https://github.com/JumpLink/steuererklaerung/blob/main/packages/store/src/ledger/path.ts">ledger path</a>). Both locations can be changed with environment variables.</li><li>Credentials for services are read from environment variables or a <code>.env</code> file (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/frontends/desktop/main.ts">main.ts</a>).</li></ul>
+<p>In the Flatpak, these paths are inside the app&#39;s sandbox. The Flatpak asks for no access to your home directory or other folders (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/eu.jumplink.Steuererklaerung.json">Flatpak manifest</a>).</p>
+<h3>3. Passwords and PINs are kept in the keyring</h3>
+<p>The ELSTER certificate PIN and mail passwords (invoice mailing, receipt mailbox) are stored in the operating system&#39;s secret store, not in a file: the Secret Service (GNOME Keyring) on Linux, the Keychain on macOS, a DPAPI-encrypted file on Windows (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/secrets/store.ts">store.ts</a>). If no secret store works, the app asks every time instead of falling back to plain text. The Flatpak is allowed to talk to the Secret Service for this. Storing the ELSTER PIN is optional (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/frontends/desktop/data/submission.ts">submission.ts</a>).</p>
+<h3>4. Connections the app makes</h3>
+<p>The app opens network connections only to services you configure or use. The Flatpak has network access (<code>--share=network</code>, see the <a href="https://github.com/JumpLink/steuererklaerung/blob/main/eu.jumplink.Steuererklaerung.json">Flatpak manifest</a>).</p>
+<ul><li><strong>Qonto</strong> (bank, API): <code>thirdparty.qonto.com</code>, or the test host when staging is selected (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/clients/qonto/request.ts">request.ts</a>). Your login and secret key are sent as request headers, and bookings and account data are retrieved. Only used if you enter Qonto credentials.</li><li><strong>Paperless-ngx</strong>: the server at your own <code>PAPERLESS_BASE_URL</code>, with your API token (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/packages/paperless/src/request.ts">request.ts</a>). Documents and metadata are exchanged with your server. No Paperless address is built into the app.</li><li><strong>ELSTER (tax authority)</strong>: when you validate or submit a return, the ERiC library sends it to the tax administration. According to the ERiC licence, it also transmits information about the type of operating system, and it writes log files that stay on your computer (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/actions/elster/privacy-ack.ts">privacy-ack.ts</a>). The app shows this notice before the first transmission (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/frontends/desktop/views/datenschutz-dialog.ts">dialog</a>). A test send, a release step and a snapshot come before a real submission (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/SECURITY.md">SECURITY.md</a>).</li><li><strong>Your bank via FinTS/HBCI</strong>: the bank address you enter (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/clients/fints/client.ts">client.ts</a>).</li><li><strong>INWX</strong> (domain invoices): the INWX API, only with INWX credentials (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/clients/inwx/request.ts">request.ts</a>).</li><li><strong>Mail servers</strong>: an IMAP server for the receipt mailbox, using TLS by default. The app only reads and never deletes, moves or marks messages (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/config/schema/mail-eingang.ts">mail-eingang.ts</a>). An SMTP server is used for sending invoices (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/mail/mail-sender.ts">mail-sender.ts</a>). Both servers are yours.</li><li><strong>Federal Ministry of Finance</strong>: <code>www.bundesfinanzministerium.de</code>, to fetch official exchange rates, only when you run the import yourself (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/config/bmf-import.ts">bmf-import.ts</a>).</li><li><strong>AI providers</strong>: see section 5.</li></ul>
+<p>PayPal and Amazon files are only read on your computer; the code makes no connection to either (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/clients/paypal/parser.ts">PayPal parser</a>, <a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/clients/amazon/parser.ts">Amazon parser</a>).</p>
+<p>Links such as the support page open in your browser only when you click them (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/frontends/desktop/views/support-dialog.ts">support-dialog.ts</a>).</p>
+<h3>5. AI features are optional</h3>
+<p>An AI model is called only when you use an AI function: reading invoice fields, classifying documents, reviewing metadata, or asking the assistant. You choose the provider with the setting <code>LLM_PROVIDER</code> (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/clients/llm/index.ts">index.ts</a>):</p>
+<ul><li><code>claude</code>: the Claude Agent SDK, with no tools allowed (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/clients/llm/claude-agent-provider.ts">claude-agent-provider.ts</a>). The prompt goes to Anthropic under your own account.</li><li><code>scaleway</code>: <code>api.scaleway.ai</code>, with your API key (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/clients/scaleway/chat.ts">chat.ts</a>).</li><li><code>opencode</code>: a coding agent started as a local process by lotse. Free hosted models are refused for background jobs (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/actions/assistant/lotse-embed.ts">lotse-embed.ts</a>).</li></ul>
+<p>What is sent is the text of the document or your question. The assistant receives only summed-up figures, no IBANs or tax numbers (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/actions/assistant/chat.ts">chat.ts</a>). These providers process the data under their own terms; the developer sees none of it. Without AI, you can enter everything by hand.</p>
+<h3>6. The MCP server: an AI client you connect yourself</h3>
+<p>The app includes an MCP server through which an external AI assistant of your choice (for example Claude Code) can read your data. The app does not set up this connection on its own. You register the server in your AI client (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/frontends/cli/mcp.ts">MCP command</a>).</p>
+<p>Once connected, tool results (bookings, documents, figures from the groups you enabled) go to that AI client and from there to its provider. Which provider that is, and how it handles the data, depends on the client you chose. The server can be switched off and limited per tool group. Tools that change data are blocked unless the setting <code>mcp.allowWrite</code> is on, which is off by default (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/config/schema/app-settings.ts">app-settings.ts</a>).</p>
+<p>By default the server talks to the AI client directly on your computer (stdio). The optional HTTP mode (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/frontends/mcp/server.ts">server.ts</a>) is bound to a local address and has no login, so use it only on a computer and network you trust. The web review interface is also bound to the local address <code>127.0.0.1</code> by default and has no login (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/app/src/frontends/web/server.ts">server.ts</a>).</p>
+<h3>7. Installation</h3>
+<p>The Flatpak build downloads the opencode agent from <code>registry.npmjs.org</code> when it is installed, as extra data with a fixed checksum (<a href="https://github.com/JumpLink/steuererklaerung/blob/main/eu.jumplink.Steuererklaerung.json">Flatpak manifest</a>). No data about you is sent in this step beyond what any download involves. The app does not update itself.</p>
+<h3>8. Your rights</h3>
+<p>The developer holds no personal data about you, so there is nothing to look up or delete on that side. Your data lives on your device and, where you set it up, at the services above; use their own channels for requests. Questions about this page: pascal@jumplink.eu.</p>
+<h3>9. Changes</h3>
+<p>This page changes in the same commit as the behaviour it describes.</p>
+<p class="support-back"><a href="/steuererklaerung/en/">Back to Steuererklärung</a></p>
+</div>
+</main>
+<footer class="footer">
+<div class="footer-inner">
+<nav class="footer-languages" aria-label="Language"><ul><li><a href="/steuererklaerung/de/privacy/" hreflang="de" lang="de">Deutsch</a></li><li><span aria-current="true">English</span></li></ul></nav>
+<p class="footer-source"><a href="https://github.com/JumpLink/steuererklaerung"><svg class="icon" viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M5.6 11.8 2 8l3.6-3.8M10.4 4.2 14 8l-3.6 3.8M9.4 2.6 6.6 13.4"/></svg><span>Source code</span></a></p>
+<p class="footer-license">Steuererklärung is licensed under AGPL-3.0-or-later. This page reproduces text licensed under CC0-1.0.</p>
+<p class="footer-made"><a href="https://github.com/gjsify/gjsify">Made with gjsify</a></p>
+<ul class="footer-legal"><li><a href="/steuererklaerung/en/legal-notice/">Legal Notice</a></li><li><a href="/steuererklaerung/en/privacy/">Privacy</a></li></ul>
+</div>
+</footer>
+</body>
+</html>
