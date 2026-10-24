@@ -19,7 +19,7 @@
  */
 export const APP_ID = process.env.STEUER_APP_ID || 'eu.jumplink.Steuererklaerung';
 export const APP_NAME = 'Steuererklärung';
-export const APP_VERSION = '0.1.5';
+export const APP_VERSION = '0.1.6';
 
 /** GResource base path (derived from the app id) — used once resources are bundled. */
 export const RESOURCE_PATH = `/${APP_ID.replace(/\./g, '/')}`;

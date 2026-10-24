@@ -54,6 +54,11 @@
   <url type="donation">https://jumplink.eu/steuererklaerung/en/support/</url>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.1.6" date="2026-10-24">
+      <description>
+        <p>The About dialog now links to the privacy policy and the legal notice. The MCP server binds to loopback by default.</p>
+      </description>
+    </release>
     <release version="0.1.5" date="2026-10-23">
       <description>
         <p>The README now names which parts of the app are written with AI. The Flatpak from Flathub comes without ERiC: export the return as XML and upload it in Mein ELSTER.</p>
