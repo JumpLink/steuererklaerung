@@ -40,7 +40,7 @@ import { _ } from './i18n.ts';
 import { APP_ICON } from './icons.ts';
 import { guiArgv, launchMode } from './launch-mode.ts';
 import { relaunchIfRequested, snapshotLaunchEnv } from './restart.ts';
-import { localizedSupportUrl } from './views/support-dialog.ts';
+import { localizedSitePageUrl, localizedSupportUrl } from './views/support-dialog.ts';
 import { MainWindow } from './window.ts';
 
 // Pin GTK 4 before libadwaita pulls it in; keep the import referenced.
@@ -125,7 +125,11 @@ if (mode === 'cli') {
         copyright: '© 2026 Pascal Garber',
         // "Support", never "Donate": business income, nothing here implies a tax deduction. A store
         // channel shows no donation UI at all.
-        links: donationsAllowed() ? [{ title: _('Support'), url: localizedSupportUrl() }] : [],
+        links: [
+            ...(donationsAllowed() ? [{ title: _('Support'), url: localizedSupportUrl() }] : []),
+            { title: _('Privacy'), url: localizedSitePageUrl('privacy') },
+            { title: _('Legal Notice'), url: localizedSitePageUrl('legal-notice') },
+        ],
         comments: _(
             'Native Adwaita interface for the tax return — alongside the web interface, ' +
                 'on the same backend (store, EÜR/tax reports, receipts, contacts).',

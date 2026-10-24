@@ -12,6 +12,7 @@ on:
       - "app/po/**"
       - "docs/screenshots/**"
       - "docs/legal-notice*.md"
+      - "docs/privacy*.md"
       - "gjsify-lock.json"
       - ".github/workflows/deploy-site.yml"
   # The download buttons link the latest release's assets, read at build time — so rebuild once a

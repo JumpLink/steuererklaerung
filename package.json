@@ -82,6 +82,12 @@
      "en": "docs/legal-notice.md"
     }
    },
+   "privacy": {
+    "statements": {
+     "de": "docs/privacy.de.md",
+     "en": "docs/privacy.md"
+    }
+   },
    "relatedApps": [
     {
      "url": "https://jumplink.eu/beifahrer/"
