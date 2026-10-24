@@ -27,7 +27,7 @@ import { registerContactsTools } from './tools/contacts.ts';
 import { registerContractsTools } from './tools/contracts.ts';
 import { registerMcpPrompts } from './prompts.ts';
 import { guardTaxOnlyTools } from './tax-guard.ts';
-import { createHttpMcpServer } from './http-server.ts';
+import { createHttpMcpServer, DEFAULT_MCP_HOST } from './http-server.ts';
 import { loadAppSettings, MCP_GROUPS, restrictMcpToReadOnly, type McpGroup } from '../../core/config/index.ts';
 import { refusingFinTSInteraction, setFinTSInteraction } from '../../core/clients/fints/interaction.ts';
 
@@ -141,10 +141,11 @@ function createMcpServerWithTools(ctx: AppContext): McpServer {
 export interface StartMcpServerOptions {
     transport?: 'stdio' | 'http';
     port?: number;
+    host?: string;
 }
 
 export async function startMcpServer(options: StartMcpServerOptions = {}): Promise<void> {
-    const { transport: mode = 'stdio', port = 3020 } = options;
+    const { transport: mode = 'stdio', port = 3020, host = DEFAULT_MCP_HOST } = options;
     // Undo the CLI entry's terminal TAN prompt: under stdio transport, stdin IS the MCP protocol
     // channel, so a bank prompt would read protocol bytes as a TAN and corrupt the session. Beyond
     // that, a TAN is the user's second factor — an agent must not be able to answer one. Resetting
@@ -180,8 +181,8 @@ export async function startMcpServer(options: StartMcpServerOptions = {}): Promi
             },
         });
 
-        app.listen(port, '0.0.0.0', () => {
-            console.error(`[mcp] ${SERVER_NAME} v${SERVER_VERSION} listening on http://0.0.0.0:${port}/mcp`);
+        app.listen(port, host, () => {
+            console.error(`[mcp] ${SERVER_NAME} v${SERVER_VERSION} listening on http://${host}:${port}/mcp`);
         });
     } else {
         // stdio transport — Claude Code auto-starts and manages this process
