@@ -172,12 +172,13 @@ export class BhBelegEingangView extends Adw.Bin {
         }
         this.rows.clear();
         for (const d of this.docs) {
-            const action = new Adw.ActionRow();
+            const action = new Adw.ActionRow({ name: d.id });
             const amount = new Gtk.Label({ cssClasses: ['numeric', 'caption'], valign: Gtk.Align.CENTER });
             action.add_suffix(amount);
             const check = new Gtk.Image({ iconName: 'object-select-symbolic', cssClasses: ['success'] });
             action.add_suffix(check);
-            const row = new Gtk.ListBoxRow({ child: action, name: d.id });
+            // An AdwActionRow is a GtkListBoxRow itself; wrapped in a second one it warns.
+            const row: Gtk.ListBoxRow = action;
             this.rows.set(d.id, { row, action, amount, check });
             this.fillRow(d);
             this._list_box.append(row);

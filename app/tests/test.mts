@@ -111,6 +111,7 @@ import betriebsaufgabe from './unit/lib/betriebsaufgabe.test.ts';
 import bwa from './unit/lib/bwa.test.ts';
 import chartsGeometry from './unit/lib/charts-geometry.test.ts';
 import dateUtils from './unit/lib/date-utils.test.ts';
+import formatLib from './unit/lib/format.test.ts';
 import euerAggregate from './unit/lib/euer-aggregate.test.ts';
 import euerTransactions from './unit/lib/euer-transactions.test.ts';
 import euerAdjustments from './unit/lib/euer-adjustments.test.ts';
@@ -327,6 +328,7 @@ run({
     bwa,
     chartsGeometry,
     dateUtils,
+    formatLib,
     euerAggregate,
     euerTransactions,
     euerAdjustments,

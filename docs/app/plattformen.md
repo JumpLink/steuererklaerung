@@ -13,6 +13,22 @@ in `release.yml`); gestartet wird auf den Zielsystemen selbst.
 
 Die Pakete sind unsigniert.
 
+Bis einschließlich 0.1.6 fehlte den macOS- und Windows-Paketen die GTK-Laufzeit: `gjsify ship` konnte
+sie beim Bau auf Linux nicht holen und schrieb die Pakete trotzdem. Die App startete nur auf einem Mac
+mit Homebrew-GTK und beendete sich sonst sofort. Behoben in gjsify#2386; seither prüfen `ci.yml` und
+`release.yml` jedes Paket auf die GTK-Laufzeit und das Adwaita-Icon-Theme.
+
+## macOS: erster Start
+
+Ein im Browser geladenes Zip trägt das Quarantäne-Attribut, und Gatekeeper lässt eine unsignierte
+App dann nicht starten: Es erscheint „„Steuererklärung“ nicht geöffnet", und jeder weitere Start
+endet sofort ohne Meldung. Nach dem Entpacken und Verschieben nach „Programme" hebt dieser Befehl
+die Sperre auf:
+
+```sh
+xattr -dr com.apple.quarantine /Applications/Steuererklärung.app
+```
+
 ## Linux: deb und rpm
 
 Beide setzen GJS ≥ 1.86 voraus (`minGjsVersion` bleibt, GJS wird nicht mitgeliefert).
@@ -52,6 +68,14 @@ Absenden-Dialog und in Konten sagen, wo ein Geheimnis liegt.
 
 ## Getestet
 
+macOS 27 auf Apple Silicon, lokal gebautes `.app` mit GTK-Laufzeit (Oktober 2026), gesteuert über
+`GJSIFY_DEVTOOLS`:
+
+- Erststart ohne Konfiguration, Einführung, Einrichtungsassistent bis „Einrichtung abschließen"
+- alle Ansichten mit Demodaten, „Eigene Daten verwenden" samt Neustart
+- „Jetzt sichern", Beenden, zweiter Start mit eigenen Daten
+- alle Bibliotheken aus dem Paket, keine aus Homebrew
+
 Windows 11 x64 in einer VM, Build von 0.1.0 (Oktober 2026):
 
 - MSI-Installation, Start über das Startmenü, portables Zip, deutsche Oberfläche
@@ -60,7 +84,8 @@ Windows 11 x64 in einer VM, Build von 0.1.0 (Oktober 2026):
 - MCP über stdio: `tools/list` liefert alle Werkzeuge
 
 Noch nicht geprüft: der Datenschutz-Dialog vor dem Absenden (braucht eine Hersteller-ID), eine
-echte Übermittlung, DPAPI und macOS.
+echte Übermittlung, DPAPI; unter macOS ERiC, der Schlüsselbund und die Übersetzungen von GTK
+selbst, die GTK noch unter dem Homebrew-Pfad sucht.
 
 ## Bekannte Grenzen
 

@@ -164,7 +164,7 @@ export class BhZuPruefenView extends Adw.Bin {
         }
         this.rows.clear();
         for (const item of this.items) {
-            const action = new Adw.ActionRow({ titleLines: 1, subtitleLines: 2 });
+            const action = new Adw.ActionRow({ titleLines: 1, subtitleLines: 2, name: item.id });
             const check = new Gtk.CheckButton({ valign: Gtk.Align.CENTER, active: this.marked.has(item.id) });
             check.set_tooltip_text(
                 fmt(_('Mark for “Rule from selection”: {name} · {date}'), {
@@ -187,7 +187,8 @@ export class BhZuPruefenView extends Adw.Bin {
             );
             const done = new Gtk.Image({ iconName: 'object-select-symbolic', cssClasses: ['success'] });
             action.add_suffix(done);
-            const row = new Gtk.ListBoxRow({ child: action, name: item.id });
+            // An AdwActionRow is a GtkListBoxRow itself; wrapped in a second one it warns.
+            const row: Gtk.ListBoxRow = action;
             this.rows.set(item.id, { row, action, check, done });
             this.fillRow(item);
             this._list_box.append(row);

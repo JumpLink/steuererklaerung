@@ -4,14 +4,21 @@
  * they live in the kernel to keep the surfaces thin. DOM-specific escaping stays in the web client.
  */
 
+/**
+ * Zero for anything that shows as 0,00: `Intl` keeps the sign of `-0` and of every amount that
+ * rounds to it, so a signed empty total (`-expenseNet` with no expenses) read „-0,00 €". Only the
+ * sign changes — the rounding itself stays Intl's.
+ */
+const cents = (n: number): number => (Math.abs(n) < 0.005 ? 0 : n);
+
 export const eur = (n: number | null | undefined): string =>
-    n == null ? '—' : n.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+    n == null ? '—' : cents(n).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
 
 export const pct = (frac: number): string => `${(frac * 100).toLocaleString('de-DE', { maximumFractionDigits: 2 })} %`;
 
 /** Plain de-DE number with exactly two decimals, no currency symbol (e.g. an editable amount field). */
 export const num2 = (n: number | null | undefined): string =>
-    n == null ? '' : n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    n == null ? '' : cents(n).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 /** ISO `YYYY-MM-DD` → `DD.MM.YYYY`. */
 export const deDate = (iso: string | null | undefined): string => {
