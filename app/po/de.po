@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-24 15:57+0200\n"
+"POT-Creation-Date: 2026-10-25 14:16+0100\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -5283,20 +5283,20 @@ msgstr "{agent} wird heruntergeladen …"
 msgid "Install {agent} ({size} MB)"
 msgstr "{agent} installieren ({size} MB)"
 
-#: src/frontends/desktop/main.ts:129
+#: src/frontends/desktop/main.ts:130
 #: src/frontends/desktop/views/support-dialog.ts:37
 msgid "Support"
 msgstr "Unterstützen"
 
-#: src/frontends/desktop/main.ts:130
+#: src/frontends/desktop/main.ts:131
 msgid "Privacy"
 msgstr "Datenschutz"
 
-#: src/frontends/desktop/main.ts:131
+#: src/frontends/desktop/main.ts:132
 msgid "Legal Notice"
 msgstr "Impressum"
 
-#: src/frontends/desktop/main.ts:134
+#: src/frontends/desktop/main.ts:136
 msgid ""
 "Native Adwaita interface for the tax return — alongside the web interface, "
 "on the same backend (store, EÜR/tax reports, receipts, contacts)."
@@ -5304,6 +5304,13 @@ msgstr ""
 "Native Adwaita-Oberfläche für die Steuererklärung — parallel zur Web-"
 "Oberfläche, auf demselben Backend (Store, EÜR/Steuer-Reports, Belege, "
 "Kontakte)."
+
+#: src/frontends/desktop/main.ts:141
+msgid ""
+"An early version (0.x), built for its author's own tax returns and largely "
+"written with AI. It can contain mistakes: check every return before you send "
+"it, and report what goes wrong."
+msgstr "Eine frühe Version (0.x), entstanden für die eigenen Steuererklärungen des Autors und größtenteils mit KI geschrieben. Sie kann Fehler enthalten: Prüfe jede Erklärung, bevor du sie abschickst, und melde, was nicht stimmt."
 
 #: src/frontends/desktop/nav.ts:54
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:533
@@ -7008,13 +7015,13 @@ msgid "Your own data"
 msgstr "Eigene Daten"
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:41
-#: src/frontends/desktop/views/welcome.ts:201
+#: src/frontends/desktop/views/welcome.ts:229
 #: src/frontends/desktop/window.ts:660
 msgid "Use my own data"
 msgstr "Eigene Daten verwenden"
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:41
-#: src/frontends/desktop/views/welcome.ts:187
+#: src/frontends/desktop/views/welcome.ts:215
 msgid "Try the demo"
 msgstr "Demo ausprobieren"
 
@@ -7028,9 +7035,9 @@ msgstr "Einführung erneut anzeigen"
 
 #
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:63
-#: src/frontends/desktop/views/welcome.ts:270
-#: src/frontends/desktop/views/welcome.ts:292
-#: src/frontends/desktop/views/welcome.ts:305
+#: src/frontends/desktop/views/welcome.ts:298
+#: src/frontends/desktop/views/welcome.ts:320
+#: src/frontends/desktop/views/welcome.ts:333
 msgid "AI assistant"
 msgstr "KI-Assistent"
 
@@ -10419,8 +10426,8 @@ msgstr ""
 #: src/frontends/desktop/views/setup-assistant.ts:472
 #: src/frontends/desktop/views/setup-assistant.ts:522
 #: src/frontends/desktop/views/setup-assistant.ts:582
-#: src/frontends/desktop/views/welcome.ts:149
-#: src/frontends/desktop/views/welcome.ts:282
+#: src/frontends/desktop/views/welcome.ts:151
+#: src/frontends/desktop/views/welcome.ts:310
 msgid "Next"
 msgstr "Weiter"
 
@@ -10568,7 +10575,7 @@ msgstr "Entität"
 #: src/frontends/desktop/views/setup-assistant.ts:78
 #: src/frontends/desktop/views/setup-assistant.ts:200
 #: src/frontends/desktop/views/setup-assistant.ts:590
-#: src/frontends/desktop/views/welcome.ts:98
+#: src/frontends/desktop/views/welcome.ts:100
 msgid "Later"
 msgstr "Später"
 
@@ -12294,8 +12301,8 @@ msgstr "Neue Entität"
 #. TRANSLATORS: Primary menu item reopening the first-run introduction
 #: src/frontends/desktop/views/setup-assistant.ts:224
 #: src/frontends/desktop/views/setup-assistant.ts:243
-#: src/frontends/desktop/views/welcome.ts:56
-#: src/frontends/desktop/views/welcome.ts:148
+#: src/frontends/desktop/views/welcome.ts:58
+#: src/frontends/desktop/views/welcome.ts:150
 #: src/frontends/desktop/window.blp:13
 msgid "Welcome"
 msgstr "Einführung"
@@ -14199,11 +14206,11 @@ msgid "Notices, not a block — nothing changes until you act."
 msgstr "Hinweise, keine Sperre — geändert wird erst mit einer Handlung."
 
 #
-#: src/frontends/desktop/views/welcome.ts:123
+#: src/frontends/desktop/views/welcome.ts:125
 msgid "Welcome to Steuererklärung"
 msgstr "Willkommen bei Steuererklärung"
 
-#: src/frontends/desktop/views/welcome.ts:126
+#: src/frontends/desktop/views/welcome.ts:128
 msgid ""
 "Prepare your profit-and-loss statement, VAT and income tax from your bank "
 "transactions and receipts."
@@ -14211,11 +14218,11 @@ msgstr ""
 "Bereite Einnahmenüberschussrechnung, Umsatzsteuer und Einkommensteuer aus "
 "deinen Bankbuchungen und Belegen vor."
 
-#: src/frontends/desktop/views/welcome.ts:136
+#: src/frontends/desktop/views/welcome.ts:138
 msgid "Your data stays on this computer"
 msgstr "Deine Daten bleiben auf diesem Rechner"
 
-#: src/frontends/desktop/views/welcome.ts:137
+#: src/frontends/desktop/views/welcome.ts:139
 msgid ""
 "Configuration, transactions and receipts are ordinary files in your home "
 "folder."
@@ -14224,11 +14231,11 @@ msgstr ""
 "Persönlichen Ordner."
 
 #
-#: src/frontends/desktop/views/welcome.ts:143
+#: src/frontends/desktop/views/welcome.ts:145
 msgid "Connections are optional"
 msgstr "Verbindungen sind freiwillig"
 
-#: src/frontends/desktop/views/welcome.ts:144
+#: src/frontends/desktop/views/welcome.ts:146
 msgid ""
 "Qonto, Paperless-ngx, online banking, AI and ELSTER validation only when you "
 "set them up."
@@ -14236,34 +14243,66 @@ msgstr ""
 "Qonto, Paperless-ngx, Onlinebanking, KI und ELSTER-Prüfung nur, wenn du sie "
 "einrichtest."
 
-#: src/frontends/desktop/views/welcome.ts:161
-msgid "No tax advice"
-msgstr "Keine Steuerberatung"
+#: src/frontends/desktop/views/welcome.ts:160
+msgid "Before you start"
+msgstr "Bevor du anfängst"
 
 #: src/frontends/desktop/views/welcome.ts:164
+msgid "An early version"
+msgstr "Eine frühe Version"
+
+#: src/frontends/desktop/views/welcome.ts:165
 msgid ""
-"The app helps you prepare. It does not replace a tax adviser, and its "
-"figures are estimates until ELSTER has validated them. Check every return "
-"before you send it."
-msgstr ""
-"Die App hilft bei der Vorbereitung. Sie ersetzt keine Steuerberatung, und "
-"ihre Zahlen sind Schätzungen, bis ELSTER sie geprüft hat. Prüfe jede "
-"Erklärung, bevor du sie abschickst."
+"Version 0.x, open source, built for its author's own tax returns and tested "
+"only on those so far."
+msgstr "Version 0.x, Open Source, entstanden für die eigenen Steuererklärungen des Autors und bisher nur an diesen getestet."
+
+#: src/frontends/desktop/views/welcome.ts:171
+msgid "Not made by a tax adviser"
+msgstr "Nicht von einem Steuerberater"
+
+#: src/frontends/desktop/views/welcome.ts:173
+msgid ""
+"The tax rules come from cited legal sources, worked out with AI; most of the "
+"code is written by AI. Mistakes are possible."
+msgstr "Die Steuerregeln stammen aus belegten Rechtsquellen und wurden mit KI erarbeitet; der Großteil des Codes ist von KI geschrieben. Fehler sind möglich."
+
+#: src/frontends/desktop/views/welcome.ts:181
+msgid "Check before you send"
+msgstr "Vor dem Absenden prüfen"
+
+#: src/frontends/desktop/views/welcome.ts:182
+msgid ""
+"Figures are estimates until ELSTER has validated them. Check every return "
+"yourself."
+msgstr "Die Zahlen sind Schätzungen, bis ELSTER sie geprüft hat. Prüfe jede Erklärung selbst."
+
+#: src/frontends/desktop/views/welcome.ts:187
+msgid "Your feedback counts"
+msgstr "Deine Rückmeldung zählt"
+
+#: src/frontends/desktop/views/welcome.ts:188
+msgid "Report errors or missing cases. This is how the app gets better."
+msgstr "Melde Fehler oder fehlende Fälle. So wird die App besser."
+
+#: src/frontends/desktop/views/welcome.ts:190
+msgid "Report a problem"
+msgstr "Problem melden"
 
 #
-#: src/frontends/desktop/views/welcome.ts:170
+#: src/frontends/desktop/views/welcome.ts:198
 msgid "Please note"
 msgstr "Bitte beachten"
 
-#: src/frontends/desktop/views/welcome.ts:171
+#: src/frontends/desktop/views/welcome.ts:199
 msgid "Understood"
 msgstr "Verstanden"
 
-#: src/frontends/desktop/views/welcome.ts:181
+#: src/frontends/desktop/views/welcome.ts:209
 msgid "How do you want to start?"
 msgstr "Wie möchtest du beginnen?"
 
-#: src/frontends/desktop/views/welcome.ts:182
+#: src/frontends/desktop/views/welcome.ts:210
 msgid ""
 "Demo and own data are kept strictly apart. You can switch later in the "
 "Settings."
@@ -14271,40 +14310,40 @@ msgstr ""
 "Demo und eigene Daten bleiben strikt getrennt. Wechseln kannst du später in "
 "den Einstellungen."
 
-#: src/frontends/desktop/views/welcome.ts:189
+#: src/frontends/desktop/views/welcome.ts:217
 msgid ""
 "A fictional business with sample transactions — nothing of yours is touched."
 msgstr ""
 "Ein erfundener Betrieb mit Beispielbuchungen — nichts von dir wird angefasst."
 
-#: src/frontends/desktop/views/welcome.ts:190
+#: src/frontends/desktop/views/welcome.ts:218
 msgid "This installation ships no demo data."
 msgstr "Diese Installation enthält keine Demo-Daten."
 
-#: src/frontends/desktop/views/welcome.ts:202
+#: src/frontends/desktop/views/welcome.ts:230
 msgid "Set up your business or private tax return in a few steps."
 msgstr ""
 "Richte deinen Betrieb oder deine private Steuererklärung in wenigen "
 "Schritten ein."
 
-#: src/frontends/desktop/views/welcome.ts:212
+#: src/frontends/desktop/views/welcome.ts:240
 msgid "I already have a steuererklaerung.json"
 msgstr "Ich habe schon eine steuererklaerung.json"
 
-#: src/frontends/desktop/views/welcome.ts:213
+#: src/frontends/desktop/views/welcome.ts:241
 msgid "Show where the app looks for it."
 msgstr "Zeigt, wo die App sie sucht."
 
-#: src/frontends/desktop/views/welcome.ts:218
+#: src/frontends/desktop/views/welcome.ts:246
 msgid "Your data"
 msgstr "Deine Daten"
 
-#: src/frontends/desktop/views/welcome.ts:228
-#: src/frontends/desktop/views/welcome.ts:246
+#: src/frontends/desktop/views/welcome.ts:256
+#: src/frontends/desktop/views/welcome.ts:274
 msgid "Existing configuration"
 msgstr "Vorhandene Konfiguration"
 
-#: src/frontends/desktop/views/welcome.ts:230
+#: src/frontends/desktop/views/welcome.ts:258
 msgid ""
 "Copy your steuererklaerung.json (or the older buchhaltung.json) to this "
 "place, then restart the app. Your transactions and receipts stay where the "
@@ -14315,26 +14354,26 @@ msgstr ""
 "Datei sie erwartet."
 
 #
-#: src/frontends/desktop/views/welcome.ts:234
+#: src/frontends/desktop/views/welcome.ts:262
 msgid "Expected location"
 msgstr "Erwarteter Ort"
 
 #
-#: src/frontends/desktop/views/welcome.ts:238
+#: src/frontends/desktop/views/welcome.ts:266
 msgid "Open folder"
 msgstr "Ordner öffnen"
 
 #
-#: src/frontends/desktop/views/welcome.ts:247
+#: src/frontends/desktop/views/welcome.ts:275
 msgid "Restart now"
 msgstr "Jetzt neu starten"
 
 #
-#: src/frontends/desktop/views/welcome.ts:260
+#: src/frontends/desktop/views/welcome.ts:288
 msgid "Optional connections"
 msgstr "Optionale Verbindungen"
 
-#: src/frontends/desktop/views/welcome.ts:261
+#: src/frontends/desktop/views/welcome.ts:289
 msgid ""
 "None of them is needed to start. Set them up later in the Settings, whenever "
 "you like."
@@ -14343,32 +14382,32 @@ msgstr ""
 "ein, wann immer du magst."
 
 #
-#: src/frontends/desktop/views/welcome.ts:263
+#: src/frontends/desktop/views/welcome.ts:291
 msgid "Fetch business account transactions"
 msgstr "Buchungen vom Geschäftskonto abrufen"
 
-#: src/frontends/desktop/views/welcome.ts:265
+#: src/frontends/desktop/views/welcome.ts:293
 msgid "Use receipts from your document archive"
 msgstr "Belege aus deinem Dokumentenarchiv nutzen"
 
-#: src/frontends/desktop/views/welcome.ts:267
+#: src/frontends/desktop/views/welcome.ts:295
 msgid "Online banking with German banks"
 msgstr "Onlinebanking mit deutschen Banken"
 
-#: src/frontends/desktop/views/welcome.ts:270
+#: src/frontends/desktop/views/welcome.ts:298
 msgid "Answers questions and proposes bookings"
 msgstr "Beantwortet Fragen und schlägt Buchungen vor"
 
-#: src/frontends/desktop/views/welcome.ts:273
+#: src/frontends/desktop/views/welcome.ts:301
 msgid "Validate returns with the official ELSTER library"
 msgstr "Erklärungen mit der amtlichen ELSTER-Bibliothek prüfen"
 
 #
-#: src/frontends/desktop/views/welcome.ts:279
+#: src/frontends/desktop/views/welcome.ts:307
 msgid "Connections"
 msgstr "Verbindungen"
 
-#: src/frontends/desktop/views/welcome.ts:294
+#: src/frontends/desktop/views/welcome.ts:322
 msgid ""
 "When you use the assistant, your question and the data it needs to answer go "
 "to the AI provider you configure. Nothing is sent unless you ask. Without "
@@ -14378,20 +14417,20 @@ msgstr ""
 "Daten an den KI-Anbieter, den du einrichtest. Ohne deine Frage wird nichts "
 "gesendet. Ohne Assistent funktioniert die App vollständig."
 
-#: src/frontends/desktop/views/welcome.ts:299
+#: src/frontends/desktop/views/welcome.ts:327
 msgid "Built-in AI assistant"
 msgstr "Eingebauter KI-Assistent"
 
-#: src/frontends/desktop/views/welcome.ts:312
+#: src/frontends/desktop/views/welcome.ts:340
 msgid "Start the demo"
 msgstr "Demo starten"
 
-#: src/frontends/desktop/views/welcome.ts:312
+#: src/frontends/desktop/views/welcome.ts:340
 msgid "Set up my data"
 msgstr "Meine Daten einrichten"
 
 #
-#: src/frontends/desktop/views/welcome.ts:350
+#: src/frontends/desktop/views/welcome.ts:378
 msgid "Could not open {dir}"
 msgstr "{dir} konnte nicht geöffnet werden"
 
@@ -15017,11 +15056,9 @@ msgstr ""
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:13
 msgid ""
 "The tax logic follows German law, so the interface keeps the official German "
-"terms. The app is a preparation aid, not tax advice."
-msgstr ""
-"Die Steuerlogik folgt deutschem Recht, deshalb behält die Oberfläche die "
-"amtlichen deutschen Begriffe. Die App ist eine Vorbereitungshilfe, keine "
-"Steuerberatung."
+"terms. The app is an early version and a preparation aid, not tax advice: "
+"check every return before you send it."
+msgstr "Die Steuerlogik folgt deutschem Recht, deshalb behält die Oberfläche die amtlichen deutschen Begriffe. Die App ist eine frühe Version und eine Vorbereitungshilfe, keine Steuerberatung: Prüfe jede Erklärung, bevor du sie abschickst."
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:23
 msgid "Overview with key figures and what to do next"

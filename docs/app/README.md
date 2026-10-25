@@ -395,7 +395,8 @@ Benutzers (`$XDG_CONFIG_HOME/eu.jumplink.Steuererklaerung/settings.json`):
 
 Wer die App zum ersten Mal öffnet — **keine** Einstellungsdatei mit abgeschlossener Einführung und
 **kein** Manifest (`steuererklaerung.json` oder das ältere `buchhaltung.json`) —, sieht eine kurze
-Einführung: was die App tut und dass die Daten lokal bleiben, dass sie keine Steuerberatung ist,
+Einführung: was die App tut und dass die Daten lokal bleiben, dass sie eine frühe, größtenteils mit KI
+geschriebene Version und keine Steuerberatung ist, mit einem Knopf zum Melden von Fehlern,
 dann die Wahl zwischen Demo, eigenen Daten (weiter zum Einrichtungsassistenten) und „Ich habe schon
 eine steuererklaerung.json" (zeigt, wo die App sie sucht). Zuletzt die optionalen Anbindungen und
 der KI-Assistent, standardmäßig aus. Bestehende Installationen haben ein Manifest und sehen die
@@ -404,7 +405,8 @@ Start wieder. Erneut öffnen: Hauptmenü → „Einführung" oder Einstellungen 
 
 | | |
 |---|---|
-| ![Einführung, Start](../screenshots/welcome-start.png) | ![Einführung, Demo oder eigene Daten](../screenshots/welcome-choice.png) |
+| ![Einführung, Start](../screenshots/welcome-start.png) | ![Einführung, Bevor du anfängst](../screenshots/welcome-notice.png) |
+| ![Einführung, Demo oder eigene Daten](../screenshots/welcome-choice.png) | |
 
 Englische Fassungen: `welcome-*-en.png`. Erzeugt von `app/dev/welcome-e2e.sh <ordner>`.
 

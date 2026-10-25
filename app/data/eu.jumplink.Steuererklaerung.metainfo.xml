@@ -10,7 +10,7 @@
     <p>Receipts, transactions and invoices in one place. From them the app computes the income-surplus statement (EÜR), the VAT returns, trade tax and the separate assessment for partnerships, and files them through ELSTER.</p>
     <p>It runs on your machine: your bank data and documents stay in a local store. Every figure can be traced back to the transaction it came from.</p>
     <p>AI is optional: everything works without it. If you want help from an AI assistant, switch on the built-in MCP server and connect the assistant of your choice. It can read your books and, only if you allow it, make changes.</p>
-    <p>The tax logic follows German law, so the interface keeps the official German terms. The app is a preparation aid, not tax advice.</p>
+    <p>The tax logic follows German law, so the interface keeps the official German terms. The app is an early version and a preparation aid, not tax advice: check every return before you send it.</p>
   </description>
   <developer id="eu.jumplink">
     <name translate="no">Pascal Garber</name>

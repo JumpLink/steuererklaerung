@@ -4,7 +4,8 @@
  * It explains, it does not configure. Five short pages, every one of them skippable:
  *
  *   1. What this is — local data, every connection optional.
- *   2. What it is not — no tax advice; check before you send.
+ *   2. Before you start — an early, AI-written version, no tax advice; check before you send, and
+ *      report what goes wrong.
  *   3. Demo or own data — plus a way out for someone who already HAS a `steuererklaerung.json`
  *      and only needs to know where to put it.
  *   4. Optional connections (own data only) — what exists, and that it waits in the Settings.
@@ -30,6 +31,7 @@ import { demoAvailable, isDemoMode } from '../../../core/config/demo.ts';
 import { assistantOffered, getManifestPath } from '../../../core/config/index.ts';
 import { loadUserSettings, updateUserSettings } from '../../../core/config/user-settings.ts';
 import { defaultManifestPath } from '../../../core/paths.ts';
+import { ISSUES_URL } from '../constants.ts';
 import { _, fmt } from '../i18n.ts';
 import { markup } from './util.ts';
 
@@ -151,22 +153,48 @@ export class BhWelcome extends Adw.Dialog {
         });
     }
 
-    // ── 2 · What it is not ────────────────────────────────────────────────────────────────────
+    // ── 2 · Before you start ───────────────────────────────────────────────────────────────────
 
     private pageNotice(): Adw.NavigationPage {
         const box = this.column();
-        box.append(
-            new Adw.StatusPage({
-                iconName: 'dialog-information-symbolic',
-                title: _('No tax advice'),
-                description: markup(
-                    _(
-                        'The app helps you prepare. It does not replace a tax adviser, and its figures ' +
-                            'are estimates until ELSTER has validated them. Check every return before you send it.',
-                    ),
-                ),
-            }),
+        const facts = new Adw.PreferencesGroup({ title: _('Before you start') });
+        facts.add(
+            this.infoRow(
+                'dialog-information-symbolic',
+                _('An early version'),
+                _("Version 0.x, open source, built for its author's own tax returns and tested only on those so far."),
+            ),
         );
+        facts.add(
+            this.infoRow(
+                'starred-symbolic',
+                _('Not made by a tax adviser'),
+                _(
+                    'The tax rules come from cited legal sources, worked out with AI; most of the code is ' +
+                        'written by AI. Mistakes are possible.',
+                ),
+            ),
+        );
+        facts.add(
+            this.infoRow(
+                'object-select-symbolic',
+                _('Check before you send'),
+                _('Figures are estimates until ELSTER has validated them. Check every return yourself.'),
+            ),
+        );
+        const feedback = this.infoRow(
+            'mail-send-symbolic',
+            _('Your feedback counts'),
+            _('Report errors or missing cases. This is how the app gets better.'),
+        );
+        const report = new Gtk.Button({ label: _('Report a problem'), valign: Gtk.Align.CENTER });
+        report.connect('clicked', () => {
+            const root = this.get_root();
+            new Gtk.UriLauncher({ uri: ISSUES_URL }).launch(root instanceof Gtk.Window ? root : null, null, () => {});
+        });
+        feedback.add_suffix(report);
+        facts.add(feedback);
+        box.append(facts);
         return this.page('notice', _('Please note'), box, {
             label: _('Understood'),
             run: () => this.nav.push(this.pageData()),
