@@ -543,6 +543,24 @@ jobs:
           check "steuererklaerung-${version}-1.macos.arm64.zip" koffi-darwin-arm64
           check "steuererklaerung-${version}-1.macos.x86_64.zip" koffi-darwin-x64
 
+      # `gjsify ship` writes the package even when it could not fetch the GTK closure. Up to 0.1.6
+      # every macOS and Windows package shipped without one and started only where Homebrew had GTK
+      # (gjsify/gjsify#2386).
+      - name: Assert the GTK closure is in the packages
+        working-directory: app/ship/out
+        run: |
+          set -eu
+          version=$(node -p "require('$GITHUB_WORKSPACE/app/package.json').version")
+          for zip in \
+            "steuererklaerung-${version}-1.windows.x64.zip" \
+            "steuererklaerung-${version}-1.macos.arm64.zip" \
+            "steuererklaerung-${version}-1.macos.x86_64.zip"; do
+            unzip -Z1 "$zip" | grep -qE '/gtk/(lib|bin)/(lib)?gtk-4[^/]*\.(dylib|dll)$' \
+              || { echo "::error::$zip carries no GTK closure"; exit 1; }
+            unzip -Z1 "$zip" | grep -q '/gtk/share/icons/Adwaita/index.theme' \
+              || { echo "::error::$zip carries no Adwaita icon theme"; exit 1; }
+          done
+
       - uses: actions/upload-artifact@v4
         if: steps.eric.outputs.fetched != 'true'
         with:
