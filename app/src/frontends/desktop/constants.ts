@@ -19,7 +19,7 @@
  */
 export const APP_ID = process.env.STEUER_APP_ID || 'eu.jumplink.Steuererklaerung';
 export const APP_NAME = 'Steuererklärung';
-export const APP_VERSION = '0.1.6';
+export const APP_VERSION = '0.1.7';
 /** Where people report errors and missing cases — the metainfo's bugtracker URL. */
 export const ISSUES_URL = 'https://github.com/JumpLink/steuererklaerung/issues';
 

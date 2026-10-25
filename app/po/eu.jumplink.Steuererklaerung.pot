@@ -4777,7 +4777,7 @@ msgid "dates · payments · open items"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:68
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:98
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:103
 msgid "Tax"
 msgstr ""
 
@@ -6715,7 +6715,7 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:228
 #: src/frontends/desktop/views/setup-assistant.ts:387
 #: src/frontends/desktop/views/zeit-rechnung-dialog.ts:49
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:102
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:107
 msgid "VAT"
 msgstr ""
 
@@ -10538,7 +10538,7 @@ msgstr ""
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
 #: src/frontends/desktop/views/rechnungen-view.ts:549
 #: src/frontends/desktop/views/zeiten-view.ts:314
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:103
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:108
 msgid "Invoice"
 msgstr ""
 
@@ -14078,31 +14078,37 @@ msgstr ""
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:59
 msgid ""
+"The macOS and Windows packages now include GTK, so the app starts without a "
+"separately installed GTK. Empty totals no longer show a minus sign."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:64
+msgid ""
 "The About dialog now links to the privacy policy and the legal notice. The "
 "MCP server binds to loopback by default."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:64
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:69
 msgid ""
 "The README now names which parts of the app are written with AI. The Flatpak "
 "from Flathub comes without ERiC: export the return as XML and upload it in "
 "Mein ELSTER."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:69
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:74
 msgid ""
 "The Flatpak bundle on the GitHub release page includes ERiC, so validating "
 "and submitting a return through ELSTER works from that download too."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:74
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:79
 msgid ""
 "Restarting into the demo workspace works on macOS again, and the Flatpak "
 "builds with the current assistant libraries. The AI assistant stays switched "
 "off in this release."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:79
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:84
 msgid ""
 "The AI assistant is optional and can be connected through the built-in MCP "
 "server — every provider supported by Lotse can be used, and free hosted "
@@ -14111,27 +14117,27 @@ msgid ""
 "the box."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:84
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:89
 msgid ""
 "Commands work in the installed app on Windows and macOS, Back up now no "
 "longer opens a second window, and error messages follow the interface "
 "language."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:89
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:94
 msgid ""
 "First public release: receipts, transactions and invoices, the EÜR and VAT "
 "returns, and filing through ELSTER."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:99
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:104
 msgid "Accounting"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:100
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:105
 msgid "ELSTER"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:101
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:106
 msgid "EÜR"
 msgstr ""

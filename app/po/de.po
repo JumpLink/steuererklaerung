@@ -5383,7 +5383,7 @@ msgid "dates · payments · open items"
 msgstr "Termine · Zahlungen · offene Posten"
 
 #: src/frontends/desktop/nav.ts:68
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:98
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:103
 msgid "Tax"
 msgstr "Steuer"
 
@@ -7380,7 +7380,7 @@ msgstr "USt-IdNr muss DE + 9 Ziffern sein."
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:228
 #: src/frontends/desktop/views/setup-assistant.ts:387
 #: src/frontends/desktop/views/zeit-rechnung-dialog.ts:49
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:102
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:107
 msgid "VAT"
 msgstr "Umsatzsteuer"
 
@@ -11387,7 +11387,7 @@ msgstr "Lade Details …"
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
 #: src/frontends/desktop/views/rechnungen-view.ts:549
 #: src/frontends/desktop/views/zeiten-view.ts:314
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:103
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:108
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -15086,13 +15086,21 @@ msgstr "Steuererklärung mit Prüfungen vor der Abgabe"
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:59
 msgid ""
+"The macOS and Windows packages now include GTK, so the app starts without a "
+"separately installed GTK. Empty totals no longer show a minus sign."
+msgstr ""
+"Die Pakete für macOS und Windows bringen jetzt GTK mit, die App startet also "
+"ohne separat installiertes GTK. Leere Summen zeigen kein Minuszeichen mehr."
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:64
+msgid ""
 "The About dialog now links to the privacy policy and the legal notice. The "
 "MCP server binds to loopback by default."
 msgstr ""
 "Der Über-Dialog verlinkt jetzt die Datenschutzerklärung und das Impressum. "
 "Der MCP-Server lauscht standardmäßig nur auf Loopback."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:64
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:69
 msgid ""
 "The README now names which parts of the app are written with AI. The Flatpak "
 "from Flathub comes without ERiC: export the return as XML and upload it in "
@@ -15102,7 +15110,7 @@ msgstr ""
 "Flatpak von Flathub kommt ohne ERiC: Exportiere die Erklärung als XML und "
 "lade sie in Mein ELSTER hoch."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:69
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:74
 msgid ""
 "The Flatpak bundle on the GitHub release page includes ERiC, so validating "
 "and submitting a return through ELSTER works from that download too."
@@ -15111,7 +15119,7 @@ msgstr ""
 "Prüfen und Absenden einer Steuererklärung über ELSTER auch aus diesem "
 "Download funktioniert."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:74
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:79
 msgid ""
 "Restarting into the demo workspace works on macOS again, and the Flatpak "
 "builds with the current assistant libraries. The AI assistant stays switched "
@@ -15121,7 +15129,7 @@ msgstr ""
 "das Flatpak baut mit den aktuellen Assistenten-Bibliotheken. Der KI-"
 "Assistent bleibt in dieser Version ausgeschaltet."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:79
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:84
 msgid ""
 "The AI assistant is optional and can be connected through the built-in MCP "
 "server — every provider supported by Lotse can be used, and free hosted "
@@ -15135,7 +15143,7 @@ msgstr ""
 "Die Linux-Pakete bringen ihre Datenbankbibliotheken mit und das Flatpak "
 "enthält die Demo-Workspace, installieren und der erste Start funktionieren."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:84
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:89
 msgid ""
 "Commands work in the installed app on Windows and macOS, Back up now no "
 "longer opens a second window, and error messages follow the interface "
@@ -15145,7 +15153,7 @@ msgstr ""
 "„Jetzt sichern“ öffnet kein zweites Fenster mehr, und Fehlermeldungen folgen "
 "der Sprache der Oberfläche."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:89
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:94
 msgid ""
 "First public release: receipts, transactions and invoices, the EÜR and VAT "
 "returns, and filing through ELSTER."
@@ -15153,15 +15161,15 @@ msgstr ""
 "Erste öffentliche Version: Belege, Buchungen und Rechnungen, EÜR und "
 "Umsatzsteuererklärungen sowie die Übermittlung über ELSTER."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:99
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:104
 msgid "Accounting"
 msgstr "Buchhaltung"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:100
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:105
 msgid "ELSTER"
 msgstr "ELSTER"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:101
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:106
 msgid "EÜR"
 msgstr "EÜR"
 
