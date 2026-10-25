@@ -54,6 +54,11 @@
   <url type="donation">https://jumplink.eu/steuererklaerung/en/support/</url>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release version="0.1.7" date="2026-10-25">
+      <description>
+        <p>The macOS and Windows packages now include GTK, so the app starts without a separately installed GTK. Empty totals no longer show a minus sign.</p>
+      </description>
+    </release>
     <release version="0.1.6" date="2026-10-24">
       <description>
         <p>The About dialog now links to the privacy policy and the legal notice. The MCP server binds to loopback by default.</p>
