@@ -72,6 +72,7 @@ export interface AboutOptions {
     developerName: string;
     version: string;
     website: string;
+    issueUrl: string;
     copyright: string;
     links: { title: string; url: string }[];
     comments: string;
@@ -84,6 +85,7 @@ export function createAboutDialog(o: AboutOptions): Adw.AboutDialog {
         developerName: o.developerName,
         version: o.version,
         website: o.website,
+        issueUrl: o.issueUrl,
         copyright: o.copyright,
         comments: o.comments,
     });

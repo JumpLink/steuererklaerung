@@ -4,7 +4,8 @@
 #
 #   app/dev/welcome-e2e.sh [shots-dir]     (build first: gjsify run build)
 #
-#   1. A fresh HOME without any manifest opens the welcome. „Demo ausprobieren" → „Demo starten" restarts
+#   1. A fresh HOME without any manifest opens the welcome; its second page says this is an early
+#      version. „Demo ausprobieren" → „Demo starten" restarts
 #      the app, which comes back in demo mode; settings.json records the choice.
 #   2. A plain relaunch (no STEUER_DEMO) stays in the demo, because the person chose it; Settings →
 #      „Einführung erneut anzeigen" reopens the welcome and „Später" closes it again.
@@ -112,7 +113,7 @@ shot_as() {
 setting() { python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get(sys.argv[2]))' "$SETTINGS" "$1"; }
 
 if [ "$SUFFIX" = "" ]; then
-  L_TITLE="Willkommen bei Steuererklärung"; L_NEXT="Weiter"; L_OK="Verstanden"; L_DEMO="Demo ausprobieren"
+  L_TITLE="Willkommen bei Steuererklärung"; L_NEXT="Weiter"; L_OK="Verstanden"; L_EARLY="Eine frühe Version"; L_DEMO="Demo ausprobieren"
   L_START="Demo starten"; L_BANNER="Demodaten"; L_OWN="Eigene Daten verwenden"; L_RESTART="Neu starten"
   L_SETUP="Wo die Daten liegen werden"; L_GENERAL="Allgemein"; L_BACKUP="Jetzt sichern"
   L_AGAIN="Einführung erneut anzeigen"; L_LATER="Später"
@@ -120,7 +121,7 @@ if [ "$SUFFIX" = "" ]; then
   L_MCP="MCP-Server für externe Agenten"; L_ENGINE="KI-Engine"; L_CONNECT="Externen Agenten verbinden …"
   L_BUSY="Wird gesichert …"
 else
-  L_TITLE="Welcome to Steuererklärung"; L_NEXT="Next"; L_OK="Understood"; L_DEMO="Try the demo"
+  L_TITLE="Welcome to Steuererklärung"; L_NEXT="Next"; L_OK="Understood"; L_EARLY="An early version"; L_DEMO="Try the demo"
   L_START="Start the demo"; L_BANNER="Demo data"; L_OWN="Use my own data"; L_RESTART="Restart"
   L_SETUP="Where your data will be stored"; L_GENERAL="General"; L_BACKUP="Back up now"
   L_AGAIN="Show welcome again"; L_LATER="Later"
@@ -137,6 +138,8 @@ step "fresh HOME without a manifest opens the welcome"
 shot start
 click "$L_NEXT" GtkButton
 await "$L_OK"
+await "$L_EARLY"
+shot notice
 click "$L_OK" GtkButton
 await "$L_DEMO"
 shot choice

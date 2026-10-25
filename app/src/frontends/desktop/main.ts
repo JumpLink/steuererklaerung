@@ -33,7 +33,7 @@ import { applyPathEnv } from '../../core/paths.ts';
 import { ensureDemoSeeded } from '../cli/demo.ts';
 import { runCli } from '../cli/main.ts';
 import { BACKUP_RESULT_PREFIX } from './background-backup.ts';
-import { APP_ID, APP_NAME, APP_VERSION } from './constants.ts';
+import { APP_ID, APP_NAME, APP_VERSION, ISSUES_URL } from './constants.ts';
 import { EDITION_BADGE_CSS, installAbout } from './about-dialog.ts';
 import { dialogFinTSInteraction } from './fints-interaction.ts';
 import { _ } from './i18n.ts';
@@ -122,6 +122,7 @@ if (mode === 'cli') {
         developerName: 'JumpLink',
         version: APP_VERSION,
         website: 'https://github.com/JumpLink',
+        issueUrl: ISSUES_URL,
         copyright: '© 2026 Pascal Garber',
         // "Support", never "Donate": business income, nothing here implies a tax deduction. A store
         // channel shows no donation UI at all.
@@ -130,10 +131,16 @@ if (mode === 'cli') {
             { title: _('Privacy'), url: localizedSitePageUrl('privacy') },
             { title: _('Legal Notice'), url: localizedSitePageUrl('legal-notice') },
         ],
-        comments: _(
-            'Native Adwaita interface for the tax return — alongside the web interface, ' +
-                'on the same backend (store, EÜR/tax reports, receipts, contacts).',
-        ),
+        comments:
+            _(
+                'Native Adwaita interface for the tax return — alongside the web interface, ' +
+                    'on the same backend (store, EÜR/tax reports, receipts, contacts).',
+            ) +
+            '\n\n' +
+            _(
+                "An early version (0.x), built for its author's own tax returns and largely written with AI. " +
+                    'It can contain mistakes: check every return before you send it, and report what goes wrong.',
+            ),
     };
     const guiApp = new AdwaitaApp({
         applicationId: APP_ID,

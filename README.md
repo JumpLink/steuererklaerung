@@ -9,6 +9,14 @@ Windows-only and was discontinued. What remains is the browser portal *Mein ELST
 you type numbers in by hand with no bookkeeping underneath. This project tries to cover the
 whole path from bank transaction to filed return on your own machine.
 
+> **Early version (0.x).** Steuererklärung is open source and started as a tool for the
+> maintainer's own tax returns; so far it has only been tested on those. The maintainer is not
+> a tax adviser: the tax rules were worked out from the cited legal sources with the help of AI,
+> and most of the code is vibe-coded (see [Transparency](#transparency-how-this-is-made)). Expect
+> mistakes and check every return before you send it. If something is wrong or your case is
+> missing, please [open an issue](https://github.com/JumpLink/steuererklaerung/issues): the app
+> gets better through its users' feedback.
+
 ![Overview](docs/screenshots/01-uebersicht.png)
 
 | | |
@@ -178,15 +186,9 @@ crashing. You can also upload the generated XML to *Mein ELSTER* by hand. Detail
 
 ## Maturity
 
-This is one person's working tool, built because no tax advisor is involved and the returns
-still have to be right. Every figure is meant to be checkable: tax constants are listed with
-source, retrieval date and tax year in
-[`docs/references/tax-sources.md`](docs/references/tax-sources.md), and each figure can be
-expanded down to single transactions (`steuer elster explain`).
-
-It is not a polished product and does not cover every case. It was built and tried on a
-dissolved partnership (GbR), a sole proprietorship and private income tax cases. Anything
-else is untested. The native app is marked as a preview: reading and reviewing work
+The app does not cover every case. It was built and tried on a dissolved partnership (GbR), a
+sole proprietorship and private income tax cases; anything else is untested. Every figure can
+be expanded down to single transactions (`steuer elster explain`). The native app is marked as a preview: reading and reviewing work
 everywhere, writing in few places, and filing itself runs through the CLI.
 
 ### Transparency: how this is made
