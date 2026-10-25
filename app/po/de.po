@@ -1481,7 +1481,7 @@ msgstr ""
 #: src/core/actions/elster/wizard.ts:355
 msgid ""
 "Reconcile the figures against the prior year / the tax adviser’s reference."
-msgstr "Zahlen gegen Vorjahr / Steuerberater-Referenz abgleichen."
+msgstr "Zahlen gegen Vorjahr / Referenz der Steuerberatung abgleichen."
 
 #: src/core/actions/elster/wizard.ts:357
 msgid ""
@@ -5310,7 +5310,7 @@ msgid ""
 "An early version (0.x), built for its author's own tax returns and largely "
 "written with AI. It can contain mistakes: check every return before you send "
 "it, and report what goes wrong."
-msgstr "Eine frühe Version (0.x), entstanden für die eigenen Steuererklärungen des Autors und größtenteils mit KI geschrieben. Sie kann Fehler enthalten: Prüfe jede Erklärung, bevor du sie abschickst, und melde, was nicht stimmt."
+msgstr "Eine frühe Version (0.x), entstanden für die eigenen Steuererklärungen der Person, die die App entwickelt, und größtenteils mit KI geschrieben. Sie kann Fehler enthalten: Prüfe jede Erklärung, bevor du sie abschickst, und melde, was nicht stimmt."
 
 #: src/frontends/desktop/nav.ts:54
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:533
@@ -14255,11 +14255,11 @@ msgstr "Eine frühe Version"
 msgid ""
 "Version 0.x, open source, built for its author's own tax returns and tested "
 "only on those so far."
-msgstr "Version 0.x, Open Source, entstanden für die eigenen Steuererklärungen des Autors und bisher nur an diesen getestet."
+msgstr "Version 0.x, Open Source, entstanden für die eigenen Steuererklärungen der Person, die die App entwickelt, und bisher nur an diesen getestet."
 
 #: src/frontends/desktop/views/welcome.ts:171
 msgid "Not made by a tax adviser"
-msgstr "Nicht von einem Steuerberater"
+msgstr "Nicht von Steuerberater:innen erstellt"
 
 #: src/frontends/desktop/views/welcome.ts:173
 msgid ""
