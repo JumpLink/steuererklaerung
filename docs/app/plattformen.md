@@ -29,7 +29,7 @@ mit Homebrew-GTK und beendete sich sonst sofort. Behoben in gjsify#2386; seither
 Das `.dmg` öffnen und die App nach „Programme" ziehen. Die signierten Pakete startet Gatekeeper
 ohne Rückfrage.
 
-Ältere, unsignierte Pakete (bis 0.1.6 und aus `ci.yml`) startet Gatekeeper nach einem Download im
+Unsignierte Pakete (ältere Releases und die aus `ci.yml`) startet Gatekeeper nach einem Download im
 Browser nicht: Es erscheint „„Steuererklärung“ nicht geöffnet", und jeder weitere Start endet sofort
 ohne Meldung. Nach dem Entpacken und Verschieben nach „Programme" hebt dieser Befehl die Sperre auf:
 
