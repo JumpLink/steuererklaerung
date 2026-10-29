@@ -370,12 +370,265 @@ jobs:
           # whose libgda is half there fails here, not at the first window.
           xvfb-run -a dbus-run-session -- sh /tmp/prove.sh
 
-  # macOS and Windows packages, assembled on Linux (ADR 0024 § A1: assembly is not host-bound, the
-  # Mach-O and PE payloads are only RUN on their own OS). They carry the NODE bundle
-  # (`build:app:node`) on node-gi + the GTK closure `gjsify ship` fetches into its cache, not the GJS one.
-  # Order matters: the Linux smoke start needs the Linux node_modules, and every
-  # `gjsify install --os …` below replaces them, so it comes first.
-  package-macos-windows:
+  # macOS packages: a `.zip` and a `.dmg` per arch, signed and notarised. They carry the NODE bundle
+  # (`build:app:node`) on node-gi + the GTK closure `gjsify ship` fetches into its cache, not the
+  # GJS one. Unlike Beifahrer (stage on Linux, pack on macOS), the WHOLE job runs on macOS: a stage
+  # with ERiC would have to cross jobs as an artifact, and those are readable by anyone (see the
+  # header). Signing needs a Mac, so building, adding ERiC and signing happen in one job.
+  #
+  # The identity is a Developer ID Application certificate, the notary credential an App Store
+  # Connect API key. Repository secrets:
+  #
+  #   APPLE_DEVELOPER_ID_P12_BASE64   the certificate + private key, `base64 -w0`
+  #   APPLE_DEVELOPER_ID_P12_PASSWORD its export password
+  #   APPLE_NOTARY_KEY_P8             the `AuthKey_<id>.p8` file, as text
+  #   APPLE_NOTARY_KEY_ID             the key id
+  #   APPLE_NOTARY_ISSUER_ID          the issuer UUID
+  #
+  # A manual run without all five packs UNSIGNED with a notice; a tag does not, because an unsigned
+  # `.app` that Gatekeeper refuses on every Mac is the silent kind of wrong.
+  package-macos:
+    if: ${{ !inputs.tag }}
+    runs-on: macos-latest
+    env:
+      P12_BASE64: ${{ secrets.APPLE_DEVELOPER_ID_P12_BASE64 }}
+      P12_PASSWORD: ${{ secrets.APPLE_DEVELOPER_ID_P12_PASSWORD }}
+      NOTARY_KEY_P8: ${{ secrets.APPLE_NOTARY_KEY_P8 }}
+      NOTARY_KEY_ID: ${{ secrets.APPLE_NOTARY_KEY_ID }}
+      NOTARY_ISSUER_ID: ${{ secrets.APPLE_NOTARY_ISSUER_ID }}
+    steps:
+      - name: Decide whether to sign
+        env:
+          RELEASE: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        run: |
+          set -eu
+          missing=""
+          for v in P12_BASE64 P12_PASSWORD NOTARY_KEY_P8 NOTARY_KEY_ID NOTARY_ISSUER_ID; do
+            eval "val=\${$v:-}"
+            [ -n "$val" ] || missing="$missing $v"
+          done
+          if [ -z "$missing" ]; then
+            echo "CAN_SIGN=1" >> "$GITHUB_ENV"
+          elif [ "$RELEASE" = "true" ]; then
+            echo "::error::a release needs the secrets behind:$missing"
+            exit 1
+          else
+            echo "::notice::not signing, missing:$missing"
+          fi
+
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Cache gjsify tarball store
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/gjsify/tarballs
+          key: gjsify-tarballs-macos-${{ hashFiles('gjsify-lock.json') }}
+          restore-keys: |
+            gjsify-tarballs-macos-
+
+      - name: Bootstrap the gjsify CLI
+        run: |
+          VERSION=$(node -p "require('./app/package.json').devDependencies['@gjsify/cli']")
+          npm install -g "@gjsify/cli@$VERSION"
+
+      - name: Install dependencies
+        run: gjsify install --immutable
+
+      # `i18n.sh compile` runs msgfmt; Homebrew's gettext is keg-only, so put it on PATH.
+      - name: Install gettext
+        run: |
+          command -v msgfmt >/dev/null || brew install gettext
+          echo "$(brew --prefix gettext)/bin" >> "$GITHUB_PATH"
+
+      # BEFORE ship: `gjsify.ship.localeDir` points at dist/locale, nothing else creates it.
+      - name: Compile the catalogues and build the node bundle
+        run: cd app && gjsify run i18n:compile && gjsify run build:app:node
+
+      - name: Fetch ERiC
+        id: eric
+        env:
+          ERIC_DEPLOY_KEY: ${{ secrets.ERIC_DEPLOY_KEY }}
+        run: |
+          set -eu
+          if [ -z "${ERIC_DEPLOY_KEY:-}" ]; then
+            echo "::notice::ERIC_DEPLOY_KEY is not set - building without ERiC"
+            echo "fetched=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          key=$(mktemp)
+          trap 'rm -f "$key"' EXIT
+          printf '%s\n' "$ERIC_DEPLOY_KEY" > "$key"
+          chmod 600 "$key"
+          export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+          repo="$RUNNER_TEMP/eric-repo"
+          git clone --quiet --depth 1 --filter=blob:none --sparse "git@github.com:${ERIC_REPO}.git" "$repo"
+          git -C "$repo" sparse-checkout set --no-cone "/${ERIC_VERSION}/eric-${ERIC_VERSION}-Darwin-universal.tar.gz"
+          rm -f "$key"
+          mkdir -p app/.eric-stage/Darwin-universal
+          tar -xzf "$repo/${ERIC_VERSION}/eric-${ERIC_VERSION}-Darwin-universal.tar.gz" -C app/.eric-stage/Darwin-universal
+          rm -rf "$repo"
+          echo "fetched=true" >> "$GITHUB_OUTPUT"
+          echo "ERIC_FETCHED=true" >> "$GITHUB_ENV"
+
+      # `with_eric <platform> <arch> <command…>`: see package-windows.
+      - name: Define with_eric
+        run: |
+          mkdir -p "$RUNNER_TEMP/bin"
+          cat > "$RUNNER_TEMP/bin/with_eric" <<'SH'
+          #!/bin/sh
+          set -eu
+          id="$1"; arch="$2"; shift 2
+          if [ "${ERIC_FETCHED:-false}" != "true" ]; then exec "$@"; fi
+          orig=$(mktemp)
+          cp package.json "$orig"
+          trap 'cp "$orig" package.json; rm -f "$orig"' EXIT
+          ERIC_HERSTELLER_ID="${ERIC_HERSTELLER_ID:-}" node dev/ship-eric.ts ".eric-stage/$id" "$id" "$arch"
+          "$@"
+          SH
+          chmod +x "$RUNNER_TEMP/bin/with_eric"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+      # A throwaway keychain, unlocked for the job. `codesign` cannot prompt on a runner, so the
+      # key's partition list is opened to it up front; without that the signature fails with
+      # errSecInternalComponent. It is also made the DEFAULT keychain because `notarytool` reads
+      # the default one and gjsify passes it no `--keychain`.
+      - name: Import the signing identity
+        if: ${{ env.CAN_SIGN == '1' }}
+        run: |
+          set -eu
+          keychain="$RUNNER_TEMP/build.keychain-db"
+          password=$(openssl rand -base64 24)
+          printf '%s' "$P12_BASE64" | base64 --decode > "$RUNNER_TEMP/identity.p12"
+          security create-keychain -p "$password" "$keychain"
+          security set-keychain-settings -lut 21600 "$keychain"
+          security unlock-keychain -p "$password" "$keychain"
+          security import "$RUNNER_TEMP/identity.p12" -k "$keychain" -P "$P12_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$password" "$keychain" >/dev/null
+          security list-keychains -d user -s "$keychain" login.keychain-db
+          security default-keychain -d user -s "$keychain"
+          rm -f "$RUNNER_TEMP/identity.p12"
+          identity=$(security find-identity -v -p codesigning "$keychain" | awk '/Developer ID Application/ { print $2; exit }')
+          [ -n "$identity" ] || { echo "::error::no Developer ID Application identity in the .p12"; exit 1; }
+          echo "SIGN_IDENTITY=$identity" >> "$GITHUB_ENV"
+
+      - name: Store the notary credential
+        if: ${{ env.CAN_SIGN == '1' }}
+        run: |
+          set -eu
+          printf '%s\n' "$NOTARY_KEY_P8" > "$RUNNER_TEMP/notary.p8"
+          chmod 600 "$RUNNER_TEMP/notary.p8"
+          xcrun notarytool store-credentials gjsify-notary \
+            --key "$RUNNER_TEMP/notary.p8" --key-id "$NOTARY_KEY_ID" --issuer "$NOTARY_ISSUER_ID"
+          rm -f "$RUNNER_TEMP/notary.p8"
+
+      # Naming the target installs the os/cpu-gated optionalDependencies (node-runtime, node-gi
+      # prebuild) for that arch. The GTK closure is not one: `ship` fetches it.
+      - name: Ship macOS
+        env:
+          ERIC_HERSTELLER_ID: ${{ secrets.ERIC_HERSTELLER_ID }}
+        run: |
+          set -eu
+          if [ -z "${SIGN_IDENTITY:-}" ]; then
+            echo "::notice::not signing — packing UNSIGNED macOS packages"
+            sign=""
+          else
+            sign="--sign $SIGN_IDENTITY --notarize gjsify-notary"
+          fi
+          for arch in arm64 x64; do
+            gjsify install --os darwin --cpu "$arch" --immutable
+            # shellcheck disable=SC2086
+            (cd app && with_eric Darwin-universal "$arch" dev/with-koffi.sh darwin "$arch" \
+              gjsify ship darwin --arch "$arch" --skip-build --target macos-app-zip,macos-app-dmg $sign)
+          done
+          ls -la app/ship/out
+
+      # Asserted by name because `ship` exits 0 after writing nothing when every target is filtered
+      # away. macOS labels x64 as `x86_64`. koffi loads ERiC (also a user-supplied one), so every
+      # package carries it with its native prebuild (issue #131); and `ship` writes the package even
+      # when it could not fetch the GTK closure (gjsify/gjsify#2386). Signed, each `.app` and `.dmg`
+      # is judged by Gatekeeper with the quarantine bit a browser download carries: a
+      # signed-but-not-notarised app passes `codesign --verify` and is refused there.
+      - name: Assert and check the macOS packages
+        working-directory: app/ship/out
+        run: |
+          set -eu
+          version=$(node -p "require('$GITHUB_WORKSPACE/app/package.json').version")
+          for pair in arm64:koffi-darwin-arm64 x86_64:koffi-darwin-x64; do
+            arch=${pair%%:*} native=${pair#*:}
+            zip="steuererklaerung-${version}-1.macos.$arch.zip"
+            dmg="steuererklaerung-${version}-1.$arch.dmg"
+            for f in "$zip" "$dmg"; do
+              [ -s "$f" ] && [ -s "$f.gjsify-release.json" ] \
+                || { echo "::error::missing or empty artifact or release record: $f"; exit 1; }
+            done
+            listing=$(unzip -Z1 "$zip")
+            for need in "node_modules/koffi/package.json" "node_modules/koffi/src/koffi/src/static.cjs" "node_modules/@koromix/$native/"; do
+              echo "$listing" | grep -q "$need" || { echo "::error::$zip lacks $need"; exit 1; }
+            done
+            echo "$listing" | grep -q "node_modules/@koromix/$native/.*koffi\.node" || { echo "::error::$zip has no koffi.node for $native"; exit 1; }
+            echo "$listing" | grep -qE '/gtk/lib/libgtk-4[^/]*\.dylib$' || { echo "::error::$zip carries no GTK closure"; exit 1; }
+            echo "$listing" | grep -q '/gtk/share/icons/Adwaita/index.theme' || { echo "::error::$zip carries no Adwaita icon theme"; exit 1; }
+            [ -n "${SIGN_IDENTITY:-}" ] || continue
+            quarantine="0083;$(printf %x "$(date +%s)");Safari;"
+            check="$RUNNER_TEMP/check-$arch"
+            rm -rf "$check" && mkdir "$check"
+            ditto -x -k "$zip" "$check"
+            app=$(ls -d "$check"/*.app)
+            codesign --verify --deep --strict "$app"
+            xattr -w com.apple.quarantine "$quarantine" "$app"
+            spctl --assess --type execute -vv "$app" 2>&1 | tee "$check.log"
+            grep -q "source=Notarized Developer ID" "$check.log" \
+              || { echo "::error::$arch is signed but Gatekeeper does not see it as notarised"; exit 1; }
+            xcrun stapler validate "$dmg"
+            xattr -w com.apple.quarantine "$quarantine" "$dmg"
+            spctl --assess --type open --context context:primary-signature -vv "$dmg" 2>&1 | tee "$check.log"
+            grep -q "source=Notarized Developer ID" "$check.log" \
+              || { echo "::error::the $arch dmg is not seen as notarised"; exit 1; }
+            rm -rf "$check" "$check.log"
+          done
+
+      - name: Remove the signing keychain
+        if: ${{ always() && env.CAN_SIGN == '1' }}
+        run: |
+          security default-keychain -d user -s login.keychain-db || true
+          security delete-keychain "$RUNNER_TEMP/build.keychain-db" || true
+
+      - uses: actions/upload-artifact@v4
+        if: steps.eric.outputs.fetched != 'true'
+        with:
+          name: ship-macos
+          path: |
+            app/ship/out/*.zip
+            app/ship/out/*.dmg
+            app/ship/out/*.gjsify-release.json
+          compression-level: 0
+
+      # Only for a tag — a manual run exercises the chain without publishing anything.
+      - name: Attach to the release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          tag="${GITHUB_REF_NAME}"
+          # The first job to get here creates the release; the others find it. A parallel job may
+          # win the race between view and create, so "already exists" is not an error.
+          gh release view -R "$GITHUB_REPOSITORY" "$tag" >/dev/null 2>&1 \
+            || gh release create -R "$GITHUB_REPOSITORY" "$tag" --verify-tag --title "Steuererklärung ${tag#v}" --notes "" \
+            || gh release view -R "$GITHUB_REPOSITORY" "$tag" >/dev/null
+          gh release upload -R "$GITHUB_REPOSITORY" "$tag" app/ship/out/*.zip app/ship/out/*.dmg app/ship/out/*.gjsify-release.json --clobber
+
+  # Windows packages, assembled on Linux (ADR 0024 § A1: assembly is not host-bound, the PE payload
+  # is only RUN on Windows). They carry the NODE bundle (`build:app:node`) on node-gi + the GTK
+  # closure `gjsify ship` fetches into its cache, not the GJS one. Order matters: the Linux smoke
+  # start needs the Linux node_modules, and `gjsify install --os win32` below replaces them, so it
+  # comes first.
+  package-windows:
     if: ${{ !inputs.tag }}
     runs-on: ubuntu-latest
     container:
@@ -440,7 +693,7 @@ jobs:
           chmod +x /tmp/prove.sh
           xvfb-run -a dbus-run-session -- /tmp/prove.sh
 
-      # ERiC for macOS and Windows (see the header): fetch once, stage per platform before each ship.
+      # ERiC for Windows (see the header), staged before the ship.
       - name: Fetch ERiC
         id: eric
         env:
@@ -459,12 +712,10 @@ jobs:
           chmod 600 "$key"
           export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
           git clone --quiet --depth 1 --filter=blob:none --sparse "git@github.com:${ERIC_REPO}.git" /tmp/eric-repo
-          git -C /tmp/eric-repo sparse-checkout set --no-cone "/${ERIC_VERSION}/eric-${ERIC_VERSION}-Darwin-universal.tar.gz" "/${ERIC_VERSION}/eric-${ERIC_VERSION}-Windows-x86_64.tar.gz"
+          git -C /tmp/eric-repo sparse-checkout set --no-cone "/${ERIC_VERSION}/eric-${ERIC_VERSION}-Windows-x86_64.tar.gz"
           rm -f "$key"
-          for id in Darwin-universal Windows-x86_64; do
-            mkdir -p "app/.eric-stage/$id"
-            tar -xzf "/tmp/eric-repo/${ERIC_VERSION}/eric-${ERIC_VERSION}-$id.tar.gz" -C "app/.eric-stage/$id"
-          done
+          mkdir -p app/.eric-stage/Windows-x86_64
+          tar -xzf "/tmp/eric-repo/${ERIC_VERSION}/eric-${ERIC_VERSION}-Windows-x86_64.tar.gz" -C app/.eric-stage/Windows-x86_64
           rm -rf /tmp/eric-repo
           echo "fetched=true" >> "$GITHUB_OUTPUT"
           echo "ERIC_FETCHED=true" >> "$GITHUB_ENV"
@@ -488,20 +739,6 @@ jobs:
 
       # Naming the target installs the os/cpu-gated optionalDependencies (node-runtime, node-gi
       # prebuild) that a plain Linux install skips. The GTK closure is not one: `ship` fetches it.
-      - name: Ship macOS (arm64)
-        env:
-          ERIC_HERSTELLER_ID: ${{ secrets.ERIC_HERSTELLER_ID }}
-        run: |
-          gjsify install --os darwin --cpu arm64 --immutable
-          cd app && with_eric Darwin-universal arm64 dev/with-koffi.sh darwin arm64 gjsify ship darwin --arch arm64 --skip-build --target macos-app-zip
-
-      - name: Ship macOS (x64)
-        env:
-          ERIC_HERSTELLER_ID: ${{ secrets.ERIC_HERSTELLER_ID }}
-        run: |
-          gjsify install --os darwin --cpu x64 --immutable
-          cd app && with_eric Darwin-universal x64 dev/with-koffi.sh darwin x64 gjsify ship darwin --arch x64 --skip-build --target macos-app-zip
-
       - name: Ship Windows (x64)
         env:
           ERIC_HERSTELLER_ID: ${{ secrets.ERIC_HERSTELLER_ID }}
@@ -517,11 +754,10 @@ jobs:
           ls -la
           version=$(node -p "require('$GITHUB_WORKSPACE/app/package.json').version")
           for f in \
-            "steuererklaerung-${version}-1.macos.arm64.zip" \
-            "steuererklaerung-${version}-1.macos.x86_64.zip" \
             "steuererklaerung-${version}-1.windows.x64.zip" \
             "steuererklaerung-${version}-1.x64.msi"; do
-            [ -s "$f" ] || { echo "::error::missing or empty artifact: $f"; exit 1; }
+            [ -s "$f" ] && [ -s "$f.gjsify-release.json" ] \
+              || { echo "::error::missing or empty artifact or release record: $f"; exit 1; }
           done
 
       # koffi loads ERiC (also a user-supplied one), so every package must carry it with the native
@@ -540,8 +776,6 @@ jobs:
             echo "$listing" | grep -q "node_modules/@koromix/$native/.*koffi\.node" || { echo "::error::$zip has no koffi.node for $native"; exit 1; }
           }
           check "steuererklaerung-${version}-1.windows.x64.zip" koffi-win32-x64
-          check "steuererklaerung-${version}-1.macos.arm64.zip" koffi-darwin-arm64
-          check "steuererklaerung-${version}-1.macos.x86_64.zip" koffi-darwin-x64
 
       # `gjsify ship` writes the package even when it could not fetch the GTK closure. Up to 0.1.6
       # every macOS and Windows package shipped without one and started only where Homebrew had GTK
@@ -551,10 +785,7 @@ jobs:
         run: |
           set -eu
           version=$(node -p "require('$GITHUB_WORKSPACE/app/package.json').version")
-          for zip in \
-            "steuererklaerung-${version}-1.windows.x64.zip" \
-            "steuererklaerung-${version}-1.macos.arm64.zip" \
-            "steuererklaerung-${version}-1.macos.x86_64.zip"; do
+          for zip in "steuererklaerung-${version}-1.windows.x64.zip"; do
             unzip -Z1 "$zip" | grep -qE '/gtk/(lib|bin)/(lib)?gtk-4[^/]*\.(dylib|dll)$' \
               || { echo "::error::$zip carries no GTK closure"; exit 1; }
             unzip -Z1 "$zip" | grep -q '/gtk/share/icons/Adwaita/index.theme' \
@@ -564,10 +795,11 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: steps.eric.outputs.fetched != 'true'
         with:
-          name: ship-macos-windows
+          name: ship-windows
           path: |
             app/ship/out/*.zip
             app/ship/out/*.msi
+            app/ship/out/*.gjsify-release.json
           compression-level: 0
 
       # Only for a tag — a manual run exercises the chain without publishing anything.
@@ -583,7 +815,7 @@ jobs:
           gh release view -R "$GITHUB_REPOSITORY" "$tag" >/dev/null 2>&1 \
             || gh release create -R "$GITHUB_REPOSITORY" "$tag" --verify-tag --title "Steuererklärung ${tag#v}" --notes "" \
             || gh release view -R "$GITHUB_REPOSITORY" "$tag" >/dev/null
-          gh release upload -R "$GITHUB_REPOSITORY" "$tag" app/ship/out/*.zip app/ship/out/*.msi --clobber
+          gh release upload -R "$GITHUB_REPOSITORY" "$tag" app/ship/out/*.zip app/ship/out/*.msi app/ship/out/*.gjsify-release.json --clobber
 
   # The Flatpak bundle (`.flatpak`) for a plain `flatpak install`. Same manifest as ci.yml's
   # `flatpak` job, but this one exports and bundles it. The Flathub manifest stays free of ERiC (it

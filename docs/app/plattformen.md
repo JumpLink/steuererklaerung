@@ -2,16 +2,22 @@
 
 Neben Linux (deb, rpm, AppImage, Flatpak) baut `gjsify ship` die App auch für macOS und Windows.
 Beide Pakete tragen das **Node-Bundle** (`build:app:node`) auf node-gi samt GTK-Laufzeit, nicht das
-GJS-Bundle. Sie entstehen in CI auf Linux (`ship-macos-windows` in `ci.yml`, `package-macos-windows`
-in `release.yml`); gestartet wird auf den Zielsystemen selbst.
+GJS-Bundle. In `ci.yml` entstehen beide unsigniert auf Linux (`ship-macos-windows`). Für ein Release
+baut `release.yml` Windows auf Linux (`package-windows`) und macOS komplett auf macOS
+(`package-macos`): Ein Build mit ERiC darf den Job nicht als Artifact verlassen, und Signieren geht
+nur auf einem Mac.
 
 | Artefakt | Inhalt |
 |---|---|
-| `steuererklaerung-<version>-1.macos.arm64.zip` / `…macos.x86_64.zip` | `.app` für Apple Silicon bzw. Intel |
+| `steuererklaerung-<version>-1.arm64.dmg` / `…x86_64.dmg` | Disk-Image für Apple Silicon bzw. Intel, der Haupt-Download |
+| `steuererklaerung-<version>-1.macos.arm64.zip` / `…macos.x86_64.zip` | dieselbe `.app` als Zip |
 | `steuererklaerung-<version>-1.windows.x64.zip` | Programmverzeichnis |
 | `steuererklaerung-<version>-1.x64.msi` | Windows-Installer |
 
-Die Pakete sind unsigniert.
+Neben jedem Artefakt liegt `<artefakt>.gjsify-release.json` mit Prüfsumme und Herkunft.
+
+Die macOS-Pakete eines Releases sind mit einer Developer ID signiert und von Apple notarisiert. Die
+Windows-Pakete sind unsigniert.
 
 Bis einschließlich 0.1.6 fehlte den macOS- und Windows-Paketen die GTK-Laufzeit: `gjsify ship` konnte
 sie beim Bau auf Linux nicht holen und schrieb die Pakete trotzdem. Die App startete nur auf einem Mac
@@ -20,10 +26,12 @@ mit Homebrew-GTK und beendete sich sonst sofort. Behoben in gjsify#2386; seither
 
 ## macOS: erster Start
 
-Ein im Browser geladenes Zip trägt das Quarantäne-Attribut, und Gatekeeper lässt eine unsignierte
-App dann nicht starten: Es erscheint „„Steuererklärung“ nicht geöffnet", und jeder weitere Start
-endet sofort ohne Meldung. Nach dem Entpacken und Verschieben nach „Programme" hebt dieser Befehl
-die Sperre auf:
+Das `.dmg` öffnen und die App nach „Programme" ziehen. Die signierten Pakete startet Gatekeeper
+ohne Rückfrage.
+
+Ältere, unsignierte Pakete (bis 0.1.6 und aus `ci.yml`) startet Gatekeeper nach einem Download im
+Browser nicht: Es erscheint „„Steuererklärung“ nicht geöffnet", und jeder weitere Start endet sofort
+ohne Meldung. Nach dem Entpacken und Verschieben nach „Programme" hebt dieser Befehl die Sperre auf:
 
 ```sh
 xattr -dr com.apple.quarantine /Applications/Steuererklärung.app
