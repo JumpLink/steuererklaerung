@@ -440,12 +440,13 @@ jobs:
         run: gjsify install --immutable
 
       # `i18n.sh compile` runs msgfmt; Homebrew's gettext is keg-only, so put it on PATH. `ship`
-      # renders the SVG app icon into the `.icns` sizes with gjs, which a Linux stage would bring.
+      # renders the SVG app icon into the `.icns` sizes with gjs + Rsvg, which a Linux stage would bring.
       - name: Install gettext and gjs
         run: |
           command -v msgfmt >/dev/null || brew install gettext
           echo "$(brew --prefix gettext)/bin" >> "$GITHUB_PATH"
-          command -v gjs >/dev/null || brew install gjs
+          brew list gjs >/dev/null 2>&1 || brew install gjs
+          brew list librsvg >/dev/null 2>&1 || brew install librsvg
 
       # BEFORE ship: `gjsify.ship.localeDir` points at dist/locale, nothing else creates it.
       - name: Compile the catalogues and build the node bundle
