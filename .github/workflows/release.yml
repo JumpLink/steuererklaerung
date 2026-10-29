@@ -445,8 +445,10 @@ jobs:
         run: |
           command -v msgfmt >/dev/null || brew install gettext
           echo "$(brew --prefix gettext)/bin" >> "$GITHUB_PATH"
-          brew list gjs >/dev/null 2>&1 || brew install gjs
-          brew list librsvg >/dev/null 2>&1 || brew install librsvg
+          # cairo-1.0.typelib comes from gobject-introspection, which gjs does not pull in at runtime.
+          for f in gjs librsvg gobject-introspection; do
+            brew list "$f" >/dev/null 2>&1 || brew install "$f"
+          done
 
       # BEFORE ship: `gjsify.ship.localeDir` points at dist/locale, nothing else creates it.
       - name: Compile the catalogues and build the node bundle
