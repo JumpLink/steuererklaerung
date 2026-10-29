@@ -7,6 +7,7 @@
 // Multi-entity: the header has a firm switcher; the sidebar shows the active firm's
 // identity; the Steuer nav appears only for entities with an ELSTER config.
 
+import { GjsifyOptionList } from '@gjsify/adwaita-core';
 import type { Adw, Gtk } from '@gjsify/adwaita-web';
 import { api, type EntityMeta } from '../lib/api.ts';
 import { esc } from '../lib/format.ts';
@@ -326,7 +327,7 @@ export class BhApp extends HTMLElement {
         this.year = urlYear && years.includes(urlYear) ? urlYear : years.includes(saved) ? saved : e.defaultYear;
         const yearDrop = this.yearDrop;
         if (yearDrop) {
-            yearDrop.model = years.map((y) => ({ value: String(y), label: String(y) }));
+            yearDrop.model = GjsifyOptionList.new(years.map((y) => ({ value: String(y), label: String(y) })));
             yearDrop.selectedValue = String(this.year);
         }
 
@@ -428,7 +429,7 @@ export class BhApp extends HTMLElement {
             if (entityDrop) {
                 // {value,label}: the label is rendered as text by the widget, so names like
                 // an entity name like "Meier & Schulz" is safe without manual escaping.
-                entityDrop.model = meta.entities.map((e) => ({ value: e.id, label: e.name }));
+                entityDrop.model = GjsifyOptionList.new(meta.entities.map((e) => ({ value: e.id, label: e.name })));
                 entityDrop.selectedValue = this.entityId;
                 // A lone entity (no manifest) needs no switcher.
                 entityDrop.style.display = meta.entities.length > 1 ? '' : 'none';
