@@ -24,7 +24,7 @@ import { countZuPruefen } from './zu-pruefen.ts';
 import { countErstattungenOffen } from './erstattungen.ts';
 import { countLaufendeKostenOffen } from './laufende-kosten.ts';
 import { loadUste, loadGewst, loadFeststellung } from './steuer.ts';
-import { timed } from '../lib/timing.ts';
+import { timed } from '@steuererklaerung/shared';
 import type { PresenterSession } from './session.ts';
 import type { EntityModel } from './workspace.ts';
 

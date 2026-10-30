@@ -13,7 +13,7 @@ import GLib from '@girs/glib-2.0';
 import { showToast } from '../toast.ts';
 import { isDmsUnsupported, isManifestMissing, isPaperlessSetupRequired } from '../../../core/lib/errors.ts';
 import { navigateTo } from '../nav.ts';
-import { stopwatch, timed } from '../../../core/lib/timing.ts';
+import { stopwatch, timed } from '@steuererklaerung/shared';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 import { wrappingLabel } from '../widgets/responsive.ts';
 import { _, _p, fmt } from '../i18n.ts';

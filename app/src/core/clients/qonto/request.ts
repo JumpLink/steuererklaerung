@@ -6,7 +6,7 @@
  * Optional QONTO_BASE_URL overrides the env-specific base URL.
  */
 
-import { httpErrorSnippet } from '@steuererklaerung/shared';
+import { httpErrorSnippet, timed } from '@steuererklaerung/shared';
 import type { QontoListMeta, QontoListResponse } from './types.ts';
 
 const DEFAULT_BASE_URL_PRODUCTION = 'https://thirdparty.qonto.com';
@@ -150,7 +150,9 @@ function timeoutSignal(): AbortSignal | undefined {
 async function fetchWithTimeout(input: string, init: RequestInit): Promise<Response> {
     const signal = timeoutSignal();
     try {
-        return await fetch(input, signal ? { ...init, signal } : init);
+        return await timed(`qonto ${init.method ?? 'GET'} ${new URL(input).pathname}`, () =>
+            fetch(input, signal ? { ...init, signal } : init),
+        );
     } catch (error) {
         const name = (error as { name?: string } | null)?.name;
         if (name === 'TimeoutError' || name === 'AbortError') {

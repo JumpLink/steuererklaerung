@@ -3,7 +3,7 @@
  * Requires PAPERLESS_BASE_URL and PAPERLESS_API_TOKEN.
  */
 
-import { httpErrorSnippet } from '@steuererklaerung/shared';
+import { httpErrorSnippet, timed } from '@steuererklaerung/shared';
 
 export interface PaperlessConfig {
     baseUrl: string;
@@ -161,7 +161,9 @@ export function describeRequestError(error: unknown, url: string): Error {
 async function fetchWithTimeout(url: string, init: RequestInit): Promise<Response> {
     const signal = timeoutSignal();
     try {
-        return await fetch(url, signal ? { ...init, signal } : init);
+        return await timed(`paperless ${init.method ?? 'GET'} ${new URL(url).pathname}`, () =>
+            fetch(url, signal ? { ...init, signal } : init),
+        );
     } catch (error) {
         throw describeRequestError(error, url);
     }

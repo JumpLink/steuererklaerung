@@ -4,6 +4,7 @@
  * injected, so the scheduler is tested with a fake clock and the runners with a fake fetch.
  */
 
+import { timed } from '@steuererklaerung/shared';
 import {
     applicableSources,
     dueSources,
@@ -112,7 +113,7 @@ export function createSyncService(deps: SyncServiceDeps): SyncService {
             h.lastAttemptAt = deps.now();
             result.ran.push(source);
             try {
-                const { changed } = await deps.runners[source](request.entity);
+                const { changed } = await timed(`sync ${source}`, () => deps.runners[source](request.entity));
                 h.failures = 0;
                 if (changed) result.changed.push(source);
             } catch (err) {
