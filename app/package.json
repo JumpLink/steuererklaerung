@@ -219,8 +219,8 @@
             "releases": [
                 {
                     "version": "0.1.7",
-                    "date": "2026-10-25",
-                    "description": "The macOS and Windows packages now include GTK, so the app starts without a separately installed GTK. Empty totals no longer show a minus sign."
+                    "date": "2026-10-30",
+                    "description": "The macOS packages are now signed and notarised by Apple, and the macOS and Windows packages include GTK, so the app starts without a separately installed GTK. A USt-VA can be saved as XML for the ELSTER portal without ERiC, monthly periods included. Empty totals no longer show a minus sign."
                 },
                 {
                     "version": "0.1.6",

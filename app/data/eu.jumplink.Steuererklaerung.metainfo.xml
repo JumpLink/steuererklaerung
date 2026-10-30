@@ -55,9 +55,9 @@
   <url type="donation">https://jumplink.eu/steuererklaerung/en/support/</url>
   <content_rating type="oars-1.1"/>
   <releases>
-    <release version="0.1.7" date="2026-10-25">
+    <release version="0.1.7" date="2026-10-30">
       <description>
-        <p>The macOS and Windows packages now include GTK, so the app starts without a separately installed GTK. Empty totals no longer show a minus sign.</p>
+        <p>The macOS packages are now signed and notarised by Apple, and the macOS and Windows packages include GTK, so the app starts without a separately installed GTK. A USt-VA can be saved as XML for the ELSTER portal without ERiC, monthly periods included. Empty totals no longer show a minus sign.</p>
       </description>
     </release>
     <release version="0.1.6" date="2026-10-24">
