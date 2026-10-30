@@ -77,7 +77,9 @@ launch() {
   OBJ="/$(printf '%s' "$ID" | tr . /)/devtools"
   ( cd "$T" && exec setsid env -i LANG="${E2E_LANG:-de_DE.UTF-8}" PATH="$PATH" HOME="$T/home" XDG_CONFIG_HOME="$T/cfg" XDG_DATA_HOME="$T/data" \
       XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-}" DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-}" \
-      WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}" DISPLAY="${DISPLAY:-:0}" \
+      WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}" ${DISPLAY+DISPLAY="$DISPLAY"} \
+      ${GDK_BACKEND:+GDK_BACKEND="$GDK_BACKEND"} ${GTK_A11Y:+GTK_A11Y="$GTK_A11Y"} \
+      ${ADW_DEBUG_COLOR_SCHEME:+ADW_DEBUG_COLOR_SCHEME="$ADW_DEBUG_COLOR_SCHEME"} \
       DOTENV_CONFIG_PATH="$T/empty.env" PAPERLESS_BASE_URL=http://127.0.0.1:$STUB_PORT PAPERLESS_API_TOKEN=demo GJSIFY_DEVTOOLS=1 STEUER_APP_ID="$ID" STEUER_DEMO=1 \
       STEUER_WORKSPACE="$T/demo/steuererklaerung.json" TRANSACTIONS_DATA_DIR="$T/demo/transactions-data" \
       LEDGER_DB_PATH="$T/demo/ledger.db" STEUER_APP_SIZE="1280 860" STEUER_APP_ENTITY=gbr "$@" \
@@ -136,7 +138,10 @@ step "task opens the invoice dialog with the warning"
 
 launch STEUER_APP_VIEW=rechnungen STEUER_APP_YEAR=2025 STEUER_APP_INVOICE_DETAIL=RE-2025-0004
 await "1 Zahlung zu viel eingegangen — 285,60 €"
-click "03.12.2025 · 285,60 €" AdwExpanderRow
+# Click the expander's header AdwActionRow, not the AdwExpanderRow: devtools' ActivateWidget only emits the
+# list box's row-activated for a row inside a list box (skips activate()), and the expander toggles from
+# its header row's activate — so activating the AdwExpanderRow itself never opens it.
+click "03.12.2025 · 285,60 €" AdwActionRow
 await "Ist eine Doppelzahlung"
 await "Gehört zu einer anderen Rechnung"
 await "Ist in Ordnung"
@@ -147,7 +152,7 @@ await "Rückzahlung offen"
 absent "Zahlung zu viel eingegangen —"
 [ "$(adjustments doppelzahlungen)" != "[]" ] || fail "no doppelzahlung recorded in the config"
 step "Doppelzahlung recorded → Rückzahlung offen"
-click "03.12.2025 · 285,60 €" AdwExpanderRow
+click "03.12.2025 · 285,60 €" AdwActionRow
 await "Rückzahlung verknüpfen"
 await "Außerhalb zurückgezahlt"
 shot rueckzahlung
@@ -168,7 +173,7 @@ step "task for the partial case opens the invoice dialog"
 
 launch STEUER_APP_VIEW=rechnungen STEUER_APP_YEAR=2026 STEUER_APP_INVOICE_DETAIL=RE-2026-0003
 await "1 Zahlung zu viel eingegangen — 100,00 €"
-click "15.07.2026 · 695,00 €" AdwExpanderRow
+click "15.07.2026 · 695,00 €" AdwActionRow
 await "Ist eine Doppelzahlung"
 click "Ist eine Doppelzahlung" AdwButtonRow
 await "Entscheidung nicht gespeichert"
