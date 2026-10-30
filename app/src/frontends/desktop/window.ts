@@ -62,7 +62,7 @@ import Template from './window.blp';
 import type { PortedView } from './view.ts';
 import { _, fmt } from './i18n.ts';
 import { errorText } from './error-text.ts';
-import { logTiming, timingOn } from '../../core/lib/timing.ts';
+import { logTiming, timingOn } from '@steuererklaerung/shared';
 
 // window.blp names these three as `$BhEntitySwitcher`, `$BhYearSwitcher` and `$BhAssistentPanel`,
 // which GtkBuilder resolves by GType at instantiation — so each class has to be REGISTERED before

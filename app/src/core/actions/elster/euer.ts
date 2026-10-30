@@ -26,7 +26,7 @@ import {
 import { loadManualOverrides } from '../classifications.ts';
 import { loadEuerErstattungen } from '../erstattungen.ts';
 import { loadAufteilungen } from '../aufteilungen.ts';
-import { lapwatch } from '../../lib/timing.ts';
+import { lapwatch } from '@steuererklaerung/shared';
 import { getCustomFieldValue, parseMonetaryValue } from '@steuererklaerung/paperless';
 import {
     getSelectFieldLabel,

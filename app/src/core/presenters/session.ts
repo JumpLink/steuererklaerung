@@ -27,7 +27,7 @@ import type { EuerTxAggregate } from '../elster/euer-transactions.ts';
 import { type DmsProvider, type DmsDocument } from '@steuererklaerung/dms';
 import { dmsProviderForEntity } from '../dms-provider.ts';
 import { _, fmt } from '../lib/i18n.ts';
-import { timed } from '../lib/timing.ts';
+import { timed } from '@steuererklaerung/shared';
 import { loadWorkspaceModel, entityOf, type EntityModel, type WorkspaceModel } from './workspace.ts';
 
 /** An entity, by id (resolved against the workspace, falling back to the default) or as a model. */
