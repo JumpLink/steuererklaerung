@@ -41,6 +41,7 @@ import {
     type FormSubmissionState,
     type SubmissionOverview,
     type SubmissionTarget,
+    ustvaPortalXml,
 } from '../data/submission.ts';
 import type { AppEntity } from '../entities.ts';
 import { appSession } from '../data/session.ts';
@@ -228,6 +229,17 @@ export class SubmissionSection {
                 : statusPill({ icon: 'dialog-warning-symbolic', css: 'warning', label: _('not available') }),
         );
         group.add(row);
+        if (!overview.ericAvailable) {
+            const fallback = new Adw.ActionRow({
+                title: _('Without ERiC: upload the XML yourself'),
+                subtitle: _(
+                    'The USt-VA XML can be saved below and uploaded in Mein ELSTER (XML import). The annual returns are typed into the Mein ELSTER forms — use the check PDF as the template.',
+                ),
+            });
+            fallback.set_subtitle_lines(0);
+            fallback.add_prefix(new Gtk.Image({ iconName: 'document-save-symbolic', valign: Gtk.Align.CENTER }));
+            group.add(fallback);
+        }
         for (const warning of overview.ericWarnings) group.add(ericWarningRow(warning, overview.ericBundled));
         return group;
     }
@@ -447,6 +459,20 @@ export class SubmissionSection {
         live.connect('clicked', () => void this.onLiveSend(form));
         box.append(live);
 
+        // Without ERiC nothing can be sent from here: the way out is the XML, uploaded in Mein ELSTER.
+        if (!ericAvailable && form.form === 'ustva') {
+            const xml = new Gtk.Button({
+                label: _('Save XML for Mein ELSTER'),
+                cssClasses: ['suggested-action'],
+                valign: Gtk.Align.CENTER,
+            });
+            xml.set_tooltip_text(
+                _('Save the XML, then upload it in Mein ELSTER — no ERiC or Hersteller-ID needed on your side'),
+            );
+            xml.connect('clicked', () => void this.onExportXml(form));
+            box.append(xml);
+        }
+
         row.add_suffix(box);
         return row;
     }
@@ -460,6 +486,16 @@ export class SubmissionSection {
             saveFileViaDialog(this.root, filename, bytes, fmt(_('{form} check sheet'), { form: form.title }));
         } catch (err) {
             await errorDialog(this.root, _('Check PDF not available'), msg(err));
+        }
+    }
+
+    /** Save the XML for the Mein-ELSTER upload (the no-ERiC path). Read-only — no reload afterwards. */
+    private async onExportXml(form: FormSubmissionState): Promise<void> {
+        try {
+            const { filename, bytes } = await ustvaPortalXml(this.entity, this.year, form.period);
+            saveFileViaDialog(this.root, filename, bytes, fmt(_('{form} XML'), { form: form.title }));
+        } catch (err) {
+            await errorDialog(this.root, _('XML not available'), msg(err));
         }
     }
 

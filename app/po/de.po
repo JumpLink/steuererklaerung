@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-30 19:49+0100\n"
+"POT-Creation-Date: 2026-10-30 20:16+0100\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -1337,7 +1337,7 @@ msgid "Abschlusszahlung"
 msgstr "Abschlusszahlung"
 
 #: src/core/actions/elster/wizard.ts:203 src/core/actions/elster/wizard.ts:618
-#: src/frontends/desktop/views/absenden-section.ts:568
+#: src/frontends/desktop/views/absenden-section.ts:604
 #: src/frontends/desktop/views/erstattung-group.ts:95
 #: src/frontends/desktop/views/steuer-view.ts:316
 msgid "Refund"
@@ -1696,7 +1696,7 @@ msgid "Tax reduction §35a"
 msgstr "Steuerermäßigung §35a"
 
 #: src/core/actions/elster/wizard.ts:618
-#: src/frontends/desktop/views/absenden-section.ts:568
+#: src/frontends/desktop/views/absenden-section.ts:604
 msgid "Additional payment"
 msgstr "Nachzahlung"
 
@@ -5554,12 +5554,12 @@ msgstr ""
 "verworfen (Testmerker). Es wird nichts verbindlich abgegeben."
 
 #: src/frontends/desktop/views/absenden-dialog.ts:219
-#: src/frontends/desktop/views/absenden-section.ts:413
+#: src/frontends/desktop/views/absenden-section.ts:425
 msgid "Send a test"
 msgstr "Test senden"
 
 #: src/frontends/desktop/views/absenden-dialog.ts:238
-#: src/frontends/desktop/views/absenden-section.ts:433
+#: src/frontends/desktop/views/absenden-section.ts:445
 msgid "Submit bindingly"
 msgstr "Verbindlich absenden"
 
@@ -5580,7 +5580,7 @@ msgstr "Jetzt verbindlich senden"
 
 #: src/frontends/desktop/views/absenden-dialog.ts:262
 #: src/frontends/desktop/views/absenden-dialog.ts:276
-#: src/frontends/desktop/views/absenden-section.ts:393
+#: src/frontends/desktop/views/absenden-section.ts:405
 msgctxt "button"
 msgid "Release"
 msgstr "Freigeben"
@@ -5598,43 +5598,43 @@ msgstr ""
 msgid "Note (optional)"
 msgstr "Notiz (optional)"
 
-#: src/frontends/desktop/views/absenden-section.ts:86
+#: src/frontends/desktop/views/absenden-section.ts:87
 #: src/frontends/desktop/views/mahnung-dialog.ts:175
 msgid "Draft"
 msgstr "Entwurf"
 
-#: src/frontends/desktop/views/absenden-section.ts:87
+#: src/frontends/desktop/views/absenden-section.ts:88
 msgid "validated (passed the ERiC check)"
 msgstr "validiert (ERiC-Prüfung bestanden)"
 
-#: src/frontends/desktop/views/absenden-section.ts:88
+#: src/frontends/desktop/views/absenden-section.ts:89
 msgid "submission open"
 msgstr "Versand offen"
 
-#: src/frontends/desktop/views/absenden-section.ts:89
+#: src/frontends/desktop/views/absenden-section.ts:90
 msgid "submitted"
 msgstr "übermittelt"
 
-#: src/frontends/desktop/views/absenden-section.ts:90
+#: src/frontends/desktop/views/absenden-section.ts:91
 msgid "superseded"
 msgstr "ersetzt"
 
-#: src/frontends/desktop/views/absenden-section.ts:162
-#: src/frontends/desktop/views/absenden-section.ts:174
-#: src/frontends/desktop/views/absenden-section.ts:201
+#: src/frontends/desktop/views/absenden-section.ts:163
+#: src/frontends/desktop/views/absenden-section.ts:175
+#: src/frontends/desktop/views/absenden-section.ts:202
 msgid "Submit"
 msgstr "Absenden"
 
-#: src/frontends/desktop/views/absenden-section.ts:165
+#: src/frontends/desktop/views/absenden-section.ts:166
 #: src/frontends/desktop/views/home-view.ts:68
 msgid "Could not load the overview"
 msgstr "Übersicht konnte nicht geladen werden"
 
-#: src/frontends/desktop/views/absenden-section.ts:175
+#: src/frontends/desktop/views/absenden-section.ts:176
 msgid "Loading the submission status …"
 msgstr "Übermittlungs-Status wird geladen …"
 
-#: src/frontends/desktop/views/absenden-section.ts:203
+#: src/frontends/desktop/views/absenden-section.ts:204
 msgid ""
 "Per form: capture a snapshot → release it → send it to ELSTER as a test. The "
 "live submission happens separately, with your ELSTER certificate."
@@ -5642,99 +5642,113 @@ msgstr ""
 "Pro Formular: Snapshot erfassen → freigeben → testweise an ELSTER senden. "
 "Der Echt-Versand erfolgt separat mit deinem ELSTER-Zertifikat."
 
-#: src/frontends/desktop/views/absenden-section.ts:211
 #: src/frontends/desktop/views/absenden-section.ts:212
-#: src/frontends/desktop/views/absenden-section.ts:227
+#: src/frontends/desktop/views/absenden-section.ts:213
+#: src/frontends/desktop/views/absenden-section.ts:228
 #: src/frontends/desktop/views/konten-view.ts:157
 msgid "available"
 msgstr "verfügbar"
 
-#: src/frontends/desktop/views/absenden-section.ts:215
+#: src/frontends/desktop/views/absenden-section.ts:216
 msgid "not available — set it up in the accounts view"
 msgstr "nicht verfügbar — in der Konten-Ansicht einrichten"
 
-#: src/frontends/desktop/views/absenden-section.ts:216
+#: src/frontends/desktop/views/absenden-section.ts:217
 msgid "there is no ERiC for this architecture — upload the XML in Mein ELSTER"
 msgstr "für diese Architektur gibt es kein ERiC — XML in Mein ELSTER hochladen"
 
-#: src/frontends/desktop/views/absenden-section.ts:228
+#: src/frontends/desktop/views/absenden-section.ts:229
 msgid "not available"
 msgstr "nicht verfügbar"
 
-#: src/frontends/desktop/views/absenden-section.ts:240
+#: src/frontends/desktop/views/absenden-section.ts:234
+msgid "Without ERiC: upload the XML yourself"
+msgstr "Ohne ERiC: XML selbst hochladen"
+
+#: src/frontends/desktop/views/absenden-section.ts:236
+msgid ""
+"The USt-VA XML can be saved below and uploaded in Mein ELSTER (XML import). "
+"The annual returns are typed into the Mein ELSTER forms — use the check PDF "
+"as the template."
+msgstr ""
+"Das XML der USt-VA lässt sich unten speichern und in Mein ELSTER hochladen "
+"(XML-Import). Die Jahreserklärungen werden in die Formulare von Mein ELSTER "
+"eingetragen – nimm das Prüf-PDF als Vorlage."
+
+#: src/frontends/desktop/views/absenden-section.ts:252
 msgid "✓ unlocked"
 msgstr "✓ freigeschaltet"
 
-#: src/frontends/desktop/views/absenden-section.ts:241
+#: src/frontends/desktop/views/absenden-section.ts:253
 msgid "✗ locked"
 msgstr "✗ gesperrt"
 
-#: src/frontends/desktop/views/absenden-section.ts:250
+#: src/frontends/desktop/views/absenden-section.ts:262
 msgid "⚠ outdated"
 msgstr "⚠ veraltet"
 
-#: src/frontends/desktop/views/absenden-section.ts:251
+#: src/frontends/desktop/views/absenden-section.ts:263
 msgid "captured {when}"
 msgstr "erfasst {when}"
 
-#: src/frontends/desktop/views/absenden-section.ts:253
+#: src/frontends/desktop/views/absenden-section.ts:265
 msgid "No snapshot captured"
 msgstr "Kein Snapshot erfasst"
 
-#: src/frontends/desktop/views/absenden-section.ts:255
+#: src/frontends/desktop/views/absenden-section.ts:267
 msgid "State"
 msgstr "Stand"
 
-#: src/frontends/desktop/views/absenden-section.ts:272
+#: src/frontends/desktop/views/absenden-section.ts:284
 msgid "Release"
 msgstr "Freigeben"
 
-#: src/frontends/desktop/views/absenden-section.ts:273
+#: src/frontends/desktop/views/absenden-section.ts:285
 msgid "released"
 msgstr "freigegeben"
 
-#: src/frontends/desktop/views/absenden-section.ts:273
+#: src/frontends/desktop/views/absenden-section.ts:285
 msgid "no release"
 msgstr "keine Freigabe"
 
-#: src/frontends/desktop/views/absenden-section.ts:278
+#: src/frontends/desktop/views/absenden-section.ts:290
 msgid "✓ released"
 msgstr "✓ freigegeben"
 
-#: src/frontends/desktop/views/absenden-section.ts:287
+#: src/frontends/desktop/views/absenden-section.ts:299
 msgid "Submission unlocked"
 msgstr "Absenden freigeschaltet"
 
-#: src/frontends/desktop/views/absenden-section.ts:320
-#: src/frontends/desktop/views/absenden-section.ts:609
+#: src/frontends/desktop/views/absenden-section.ts:332
+#: src/frontends/desktop/views/absenden-section.ts:645
 msgid "Live submission"
 msgstr "Echt-Versand"
 
-#: src/frontends/desktop/views/absenden-section.ts:321
+#: src/frontends/desktop/views/absenden-section.ts:333
 msgid "separate, with your ELSTER certificate — deliberately not offered here."
 msgstr "separat, mit deinem ELSTER-Zertifikat — hier bewusst nicht angeboten."
 
-#: src/frontends/desktop/views/absenden-section.ts:352
+#: src/frontends/desktop/views/absenden-section.ts:364
 msgid "Check PDF"
 msgstr "Prüf-PDF"
 
-#: src/frontends/desktop/views/absenden-section.ts:353
+#: src/frontends/desktop/views/absenden-section.ts:365
 msgid "Save the check sheet as a PDF (read it through before the release)"
 msgstr "Prüf-Datenblatt als PDF speichern (vor der Freigabe gegenlesen)"
 
-#: src/frontends/desktop/views/absenden-section.ts:360
+#: src/frontends/desktop/views/absenden-section.ts:372
 msgid "Capture again"
 msgstr "Neu erfassen"
 
-#: src/frontends/desktop/views/absenden-section.ts:360
+#: src/frontends/desktop/views/absenden-section.ts:372
 msgid "Capture snapshot"
 msgstr "Snapshot erfassen"
 
-#: src/frontends/desktop/views/absenden-section.ts:371
+#: src/frontends/desktop/views/absenden-section.ts:383
 msgid "Check locally"
 msgstr "Lokal prüfen"
 
-#: src/frontends/desktop/views/absenden-section.ts:378
+#: src/frontends/desktop/views/absenden-section.ts:390
 msgid ""
 "Check the snapshot locally against ERiC (no submission) — on success it is "
 "set to “validated”"
@@ -5742,80 +5756,101 @@ msgstr ""
 "Snapshot lokal gegen ERiC prüfen (kein Versand) — setzt bei Erfolg "
 "„validiert\""
 
-#: src/frontends/desktop/views/absenden-section.ts:380
-#: src/frontends/desktop/views/absenden-section.ts:421
-#: src/frontends/desktop/views/absenden-section.ts:442
+#: src/frontends/desktop/views/absenden-section.ts:392
+#: src/frontends/desktop/views/absenden-section.ts:433
+#: src/frontends/desktop/views/absenden-section.ts:454
 msgid "ERiC not available"
 msgstr "ERiC nicht verfügbar"
 
-#: src/frontends/desktop/views/absenden-section.ts:382
-#: src/frontends/desktop/views/absenden-section.ts:401
+#: src/frontends/desktop/views/absenden-section.ts:394
+#: src/frontends/desktop/views/absenden-section.ts:413
 msgid "Capture a snapshot first"
 msgstr "Zuerst einen Snapshot erfassen"
 
-#: src/frontends/desktop/views/absenden-section.ts:384
-#: src/frontends/desktop/views/absenden-section.ts:403
+#: src/frontends/desktop/views/absenden-section.ts:396
+#: src/frontends/desktop/views/absenden-section.ts:415
 msgid "Snapshot outdated — capture it again"
 msgstr "Snapshot veraltet — neu erfassen"
 
-#: src/frontends/desktop/views/absenden-section.ts:385
+#: src/frontends/desktop/views/absenden-section.ts:397
 msgid "The snapshot is already validated"
 msgstr "Snapshot ist bereits validiert"
 
-#: src/frontends/desktop/views/absenden-section.ts:404
+#: src/frontends/desktop/views/absenden-section.ts:416
 msgid "Already released"
 msgstr "Bereits freigegeben"
 
-#: src/frontends/desktop/views/absenden-section.ts:422
+#: src/frontends/desktop/views/absenden-section.ts:434
 msgid "A test submission is not possible yet"
 msgstr "Test-Versand noch nicht möglich"
 
-#: src/frontends/desktop/views/absenden-section.ts:440
+#: src/frontends/desktop/views/absenden-section.ts:452
 msgid "Transmit bindingly to the Finanzamt (irreversible)"
 msgstr "Verbindlich ans Finanzamt übermitteln (unwiderruflich)"
 
-#: src/frontends/desktop/views/absenden-section.ts:444
+#: src/frontends/desktop/views/absenden-section.ts:456
 msgid "Already submitted bindingly"
 msgstr "Bereits verbindlich übermittelt"
 
-#: src/frontends/desktop/views/absenden-section.ts:445
+#: src/frontends/desktop/views/absenden-section.ts:457
 msgid "A live submission is not possible yet"
 msgstr "Echt-Versand noch nicht möglich"
 
-#: src/frontends/desktop/views/absenden-section.ts:460
+#: src/frontends/desktop/views/absenden-section.ts:465
+msgid "Save XML for Mein ELSTER"
+msgstr "XML für Mein ELSTER speichern"
+
+#: src/frontends/desktop/views/absenden-section.ts:470
+msgid ""
+"Save the XML, then upload it in Mein ELSTER — no ERiC or Hersteller-ID "
+"needed on your side"
+msgstr ""
+"XML speichern und in Mein ELSTER hochladen – ERiC und Hersteller-ID sind "
+"dafür nicht nötig"
+
+#: src/frontends/desktop/views/absenden-section.ts:486
 #: src/frontends/desktop/views/steuererklaerung-view.ts:548
 msgid "{form} check sheet"
 msgstr "{form}-Prüfblatt"
 
-#: src/frontends/desktop/views/absenden-section.ts:462
+#: src/frontends/desktop/views/absenden-section.ts:488
 msgid "Check PDF not available"
 msgstr "Prüf-PDF nicht verfügbar"
 
-#: src/frontends/desktop/views/absenden-section.ts:469
+#: src/frontends/desktop/views/absenden-section.ts:496
+msgid "{form} XML"
+msgstr "{form}-XML"
+
+#: src/frontends/desktop/views/absenden-section.ts:498
+#: src/frontends/desktop/views/ustva-view.ts:248
+msgid "XML not available"
+msgstr "XML nicht verfügbar"
+
+#: src/frontends/desktop/views/absenden-section.ts:505
 msgid "Snapshot captured: {form}"
 msgstr "Snapshot erfasst: {form}"
 
-#: src/frontends/desktop/views/absenden-section.ts:471
+#: src/frontends/desktop/views/absenden-section.ts:507
 msgid "Snapshot failed"
 msgstr "Snapshot fehlgeschlagen"
 
-#: src/frontends/desktop/views/absenden-section.ts:480
+#: src/frontends/desktop/views/absenden-section.ts:516
 msgid "Validated locally: {form}"
 msgstr "Lokal validiert: {form}"
 
-#: src/frontends/desktop/views/absenden-section.ts:481
+#: src/frontends/desktop/views/absenden-section.ts:517
 msgid "(with ERiC notices)"
 msgstr "(mit ERiC-Hinweisen)"
 
-#: src/frontends/desktop/views/absenden-section.ts:483
+#: src/frontends/desktop/views/absenden-section.ts:519
 msgid "ERiC validation"
 msgstr "ERiC-Validierung"
 
-#: src/frontends/desktop/views/absenden-section.ts:486
+#: src/frontends/desktop/views/absenden-section.ts:522
 msgid "Validation failed"
 msgstr "Validierung fehlgeschlagen"
 
-#: src/frontends/desktop/views/absenden-section.ts:505
+#: src/frontends/desktop/views/absenden-section.ts:541
 msgid "Released — but {n} cross-check has an error; clear it before filing."
 msgid_plural ""
 "Released — but {n} cross-checks have errors; clear them before filing."
@@ -5824,39 +5859,39 @@ msgstr[0] ""
 msgstr[1] ""
 "Freigegeben — aber {n} Querprüfung(en) mit Fehler; vor Abgabe klären."
 
-#: src/frontends/desktop/views/absenden-section.ts:515
+#: src/frontends/desktop/views/absenden-section.ts:551
 msgid "Released — cross-checks clean ({ok} ok · {warn} warning)."
 msgstr "Freigegeben — Querprüfungen sauber ({ok} ok · {warn} Warnung)."
 
-#: src/frontends/desktop/views/absenden-section.ts:518
+#: src/frontends/desktop/views/absenden-section.ts:554
 msgid "Released: {form}"
 msgstr "Freigegeben: {form}"
 
-#: src/frontends/desktop/views/absenden-section.ts:521
+#: src/frontends/desktop/views/absenden-section.ts:557
 msgid "Release failed"
 msgstr "Freigabe fehlgeschlagen"
 
-#: src/frontends/desktop/views/absenden-section.ts:550
+#: src/frontends/desktop/views/absenden-section.ts:586
 msgid "Test submission"
 msgstr "Test-Versand"
 
-#: src/frontends/desktop/views/absenden-section.ts:553
+#: src/frontends/desktop/views/absenden-section.ts:589
 msgid "Test submission failed"
 msgstr "Test-Versand fehlgeschlagen"
 
-#: src/frontends/desktop/views/absenden-section.ts:594
+#: src/frontends/desktop/views/absenden-section.ts:630
 msgid "Successfully submitted"
 msgstr "Erfolgreich übermittelt"
 
-#: src/frontends/desktop/views/absenden-section.ts:596
+#: src/frontends/desktop/views/absenden-section.ts:632
 msgid "“{form}” has arrived bindingly at the Finanzamt."
 msgstr "„{form}“ ist verbindlich beim Finanzamt eingegangen."
 
-#: src/frontends/desktop/views/absenden-section.ts:598
+#: src/frontends/desktop/views/absenden-section.ts:634
 msgid "Transfer ticket: {ticket}"
 msgstr "Transferticket: {ticket}"
 
-#: src/frontends/desktop/views/absenden-section.ts:612
+#: src/frontends/desktop/views/absenden-section.ts:648
 msgid "Live submission failed"
 msgstr "Echt-Versand fehlgeschlagen"
 
@@ -13314,10 +13349,6 @@ msgstr ""
 #: src/frontends/desktop/views/ustva-view.ts:237
 msgid "The rates could not be loaded"
 msgstr "Kurse konnten nicht geladen werden"
-
-#: src/frontends/desktop/views/ustva-view.ts:248
-msgid "XML not available"
-msgstr "XML nicht verfügbar"
 
 #: src/frontends/desktop/views/util.ts:54
 msgid "{what} saved"

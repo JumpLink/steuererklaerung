@@ -15,6 +15,7 @@ import {
 } from '../../../core/actions/elster/submission-overview.ts';
 import { createFilingSnapshot } from '../../../core/actions/elster/snapshots.ts';
 import { signOffFiling } from '../../../core/actions/elster/signoffs.ts';
+import { buildUstvaPortalXml } from '../../../core/actions/elster/portal-xml.ts';
 import { submitFiling, validateFilingSnapshot } from '../../../core/actions/elster/submit.ts';
 import type { AppEntity } from '../entities.ts';
 import type { SubmissionTarget } from '../../../core/actions/elster/submission-overview.ts';
@@ -152,4 +153,11 @@ export function sendLive(
         // Who filed it, for the audit trail — the entity's configured Datenlieferant.
         submittedBy: entity.elster?.datenlieferant ?? entity.name,
     });
+}
+
+export type { PortalXmlFile } from '../../../core/actions/elster/portal-xml.ts';
+
+/** The USt-VA XML to upload in Mein ELSTER — the way out when ERiC is not available. */
+export function ustvaPortalXml(entity: AppEntity, year: number, period?: string) {
+    return buildUstvaPortalXml(entity.id, year, period);
 }
