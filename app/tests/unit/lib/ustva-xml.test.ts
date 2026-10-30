@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@gjsify/unit';
-import { buildUstvaEds, buildUstvaPortalUpload } from '../../../src/core/elster/ustva-xml.ts';
+import { buildUstvaEds, buildUstvaPortalUpload, buildUstvaPortalUploadForPeriod, parseUstvaPeriodLabel } from '../../../src/core/elster/ustva-xml.ts';
 import type { UstvaAggregate } from '../../../src/core/elster/ustva-aggregate.ts';
 import type { ElsterConfig } from '../../../src/core/config/index.ts';
 
@@ -150,6 +150,28 @@ export default async () => {
             const { xml, bytes } = buildUstvaPortalUpload(aggregate, config, 2025, 1);
             expect(bytes.length).toBe(xml.length); // pure ASCII: one byte per char
             expect(String.fromCharCode(...bytes)).toBe(xml);
+        });
+    });
+
+    await describe('parseUstvaPeriodLabel / buildUstvaPortalUploadForPeriod', async () => {
+        await it('parses quarter and month labels, rejects the rest', async () => {
+            const q = parseUstvaPeriodLabel('2025-Q3');
+            expect(q?.year).toBe(2025);
+            expect(q?.quarter).toBe(3);
+            expect(q?.month).toBe(undefined);
+            const m = parseUstvaPeriodLabel('2025-07');
+            expect(m?.year).toBe(2025);
+            expect(m?.month).toBe(7);
+            expect(m?.quarter).toBe(undefined);
+            expect(parseUstvaPeriodLabel('2025-Q5')).toBe(null);
+            expect(parseUstvaPeriodLabel('2025-13')).toBe(null);
+            expect(parseUstvaPeriodLabel('2025')).toBe(null);
+        });
+
+        await it('builds a monthly upload file with the matching Zeitraum', async () => {
+            const { filename, xml } = buildUstvaPortalUploadForPeriod(aggregate, config, { year: 2025, month: 3 });
+            expect(filename).toBe('ustva-2025-03.xml');
+            expect(xml).toContain('<Zeitraum>03</Zeitraum>');
         });
     });
 };
