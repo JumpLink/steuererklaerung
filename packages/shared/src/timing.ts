@@ -10,7 +10,9 @@ function now(): number {
 
 /** Whether timing output is requested (read per call so tests and the env can flip it). */
 export function timingOn(): boolean {
-    const v = process.env.STEUER_DEBUG_TIMING;
+    // `shared` carries no Node types; reach `process` through globalThis so the package stays runtime-neutral.
+    const v = (globalThis as { process?: { env: Record<string, string | undefined> } }).process?.env
+        .STEUER_DEBUG_TIMING;
     return v === '1' || v === 'true';
 }
 
