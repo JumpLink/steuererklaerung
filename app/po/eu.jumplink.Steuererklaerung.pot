@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-25 14:17+0100\n"
+"POT-Creation-Date: 2026-10-30 19:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,7 +30,7 @@ msgstr ""
 
 #: src/core/actions/classification-rules.ts:48
 #: src/frontends/desktop/views/setup-assistant.ts:64
-#: src/frontends/desktop/views/setup-assistant.ts:469
+#: src/frontends/desktop/views/setup-assistant.ts:480
 #: src/frontends/desktop/window.ts:727
 msgid "Private"
 msgstr ""
@@ -1495,7 +1495,7 @@ msgid "The tax assessment is what binds; these figures are an estimate."
 msgstr ""
 
 #: src/core/actions/elster/wizard.ts:656
-#: src/frontends/desktop/views/setup-assistant.ts:591
+#: src/frontends/desktop/views/setup-assistant.ts:602
 msgid "Summary"
 msgstr ""
 
@@ -1525,7 +1525,7 @@ msgid "KiSt {owed} − withheld {withheld} = {result}"
 msgstr ""
 
 #: src/core/actions/elster/wizard.ts:714
-#: src/frontends/desktop/views/setup-assistant.ts:454
+#: src/frontends/desktop/views/setup-assistant.ts:465
 msgid "Income tax"
 msgstr ""
 
@@ -2058,8 +2058,8 @@ msgid "Receipt #{id}"
 msgstr ""
 
 #: src/core/elster/euer-transactions.ts:260
-#: src/frontends/desktop/views/beleg-eingang-view.ts:345
-#: src/frontends/desktop/views/beleg-eingang-view.ts:625
+#: src/frontends/desktop/views/beleg-eingang-view.ts:346
+#: src/frontends/desktop/views/beleg-eingang-view.ts:626
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:154
 #: src/frontends/desktop/views/herleitung-dialog.ts:606
 #: src/frontends/desktop/views/tx-detail-dialog.ts:37
@@ -4777,7 +4777,7 @@ msgid "dates · payments · open items"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:68
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:103
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:104
 msgid "Tax"
 msgstr ""
 
@@ -4954,7 +4954,8 @@ msgstr ""
 #: src/frontends/desktop/views/absenden-dialog.ts:244
 msgid ""
 "“{form}” is transmitted BINDINGLY to the Finanzamt. The step can NOT be "
-"undone — please read the figures in the check sheet first."
+"undone — please read the figures in the check sheet first. This is an early "
+"version: check every figure yourself before you file."
 msgstr ""
 
 #: src/frontends/desktop/views/absenden-dialog.ts:250
@@ -5528,7 +5529,7 @@ msgid "Split"
 msgstr ""
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:147
-#: src/frontends/desktop/views/beleg-eingang-view.ts:454
+#: src/frontends/desktop/views/beleg-eingang-view.ts:455
 #: src/frontends/desktop/views/tx-detail-dialog.ts:63
 #: src/frontends/desktop/views/umbuchen-dialog.ts:119
 msgid "Transaction"
@@ -5674,13 +5675,13 @@ msgstr ""
 msgid "Could not load the receipt inbox"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:194
-#: src/frontends/desktop/views/beleg-eingang-view.ts:350
+#: src/frontends/desktop/views/beleg-eingang-view.ts:195
+#: src/frontends/desktop/views/beleg-eingang-view.ts:351
 #: src/frontends/desktop/views/dokumente-view.ts:186
 msgid "(untitled)"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:198
+#: src/frontends/desktop/views/beleg-eingang-view.ts:199
 #: src/frontends/desktop/views/beleg-link-dialog.ts:226
 #: src/frontends/desktop/views/dokumente-view.ts:180
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:152
@@ -5689,99 +5690,99 @@ msgstr ""
 msgid "No. {number}"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:309
-#: src/frontends/desktop/views/beleg-eingang-view.ts:396
-#: src/frontends/desktop/views/beleg-eingang-view.ts:433
+#: src/frontends/desktop/views/beleg-eingang-view.ts:310
+#: src/frontends/desktop/views/beleg-eingang-view.ts:397
+#: src/frontends/desktop/views/beleg-eingang-view.ts:434
 msgid "Match transaction"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:311
+#: src/frontends/desktop/views/beleg-eingang-view.ts:312
 msgid "Could not determine candidate transactions"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:316
+#: src/frontends/desktop/views/beleg-eingang-view.ts:317
 #: src/frontends/desktop/views/util.ts:448
 msgid "Try again"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:330
+#: src/frontends/desktop/views/beleg-eingang-view.ts:331
 #: src/frontends/desktop/views/herleitung-dialog.ts:620
 msgid "AI note"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:332
+#: src/frontends/desktop/views/beleg-eingang-view.ts:333
 msgid "Not matched to a transaction yet"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:333
+#: src/frontends/desktop/views/beleg-eingang-view.ts:334
 msgid "Choose the matching transaction, then confirm."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:363
+#: src/frontends/desktop/views/beleg-eingang-view.ts:364
 #: src/frontends/desktop/views/herleitung-dialog.ts:453
 msgid "Date"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:364
+#: src/frontends/desktop/views/beleg-eingang-view.ts:365
 msgid "Invoice no."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:366
+#: src/frontends/desktop/views/beleg-eingang-view.ts:367
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:100
 #: src/frontends/desktop/views/steuerkonto-view.ts:102
 #: src/frontends/desktop/views/tx-detail-dialog.ts:204
 msgid "Net"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:367
+#: src/frontends/desktop/views/beleg-eingang-view.ts:368
 msgctxt "receipt"
 msgid "VAT"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:381
+#: src/frontends/desktop/views/beleg-eingang-view.ts:382
 #: src/frontends/desktop/views/herleitung-dialog.ts:468
 #: src/frontends/desktop/views/tx-detail-dialog.ts:184
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:144
 msgid "Source"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:386
+#: src/frontends/desktop/views/beleg-eingang-view.ts:387
 msgid "Open original"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:386
+#: src/frontends/desktop/views/beleg-eingang-view.ts:387
 msgid "Show the receipt file"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:397
+#: src/frontends/desktop/views/beleg-eingang-view.ts:398
 msgid "Looking for matching transactions …"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:416
+#: src/frontends/desktop/views/beleg-eingang-view.ts:417
 msgid "Unknown error"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:434
+#: src/frontends/desktop/views/beleg-eingang-view.ts:435
 msgid "The receipt is linked to the chosen transaction."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:439
+#: src/frontends/desktop/views/beleg-eingang-view.ts:440
 msgid "No matching transaction found"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:440
+#: src/frontends/desktop/views/beleg-eingang-view.ts:441
 msgid "No unlinked transaction matches amount, date and counterparty — skip."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:476
+#: src/frontends/desktop/views/beleg-eingang-view.ts:477
 msgid "Check & confirm"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:477
+#: src/frontends/desktop/views/beleg-eingang-view.ts:478
 msgid "Leave the category unchanged (accept the AI suggestion) or correct it."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:484
+#: src/frontends/desktop/views/beleg-eingang-view.ts:485
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:120
 #: src/frontends/desktop/views/herleitung-dialog.ts:464
 #: src/frontends/desktop/views/herleitung-dialog.ts:507
@@ -5794,101 +5795,101 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:491
+#: src/frontends/desktop/views/beleg-eingang-view.ts:492
 msgid "derived VAT rate: {rate} %"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:493
+#: src/frontends/desktop/views/beleg-eingang-view.ts:494
 msgid "The VAT rate is derived from the category"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:505
+#: src/frontends/desktop/views/beleg-eingang-view.ts:506
 msgid "Reason (optional)"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:520
+#: src/frontends/desktop/views/beleg-eingang-view.ts:521
 msgid "Skip"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:524
-#: src/frontends/desktop/views/zu-pruefen-view.ts:361
+#: src/frontends/desktop/views/beleg-eingang-view.ts:525
+#: src/frontends/desktop/views/zu-pruefen-view.ts:362
 msgid "Confirm and continue"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:531
-#: src/frontends/desktop/views/zu-pruefen-view.ts:371
+#: src/frontends/desktop/views/beleg-eingang-view.ts:532
+#: src/frontends/desktop/views/zu-pruefen-view.ts:372
 msgid "Tip: ←/→ to browse · Enter confirms"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:549
+#: src/frontends/desktop/views/beleg-eingang-view.ts:550
 #: src/frontends/desktop/views/laufende-kosten-view.ts:158
 msgid "Confirmed"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:550
+#: src/frontends/desktop/views/beleg-eingang-view.ts:551
 msgid "This receipt was confirmed and booked in this session."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:557
+#: src/frontends/desktop/views/beleg-eingang-view.ts:558
 msgctxt "confirmed receipt"
 msgid "Undo"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:570
+#: src/frontends/desktop/views/beleg-eingang-view.ts:571
 msgid "All matched"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:570
+#: src/frontends/desktop/views/beleg-eingang-view.ts:571
 msgid "All checked"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:573
+#: src/frontends/desktop/views/beleg-eingang-view.ts:574
 msgid ""
 "Every receipt in {year} is matched to a transaction. New receipts appear "
 "here."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:577
+#: src/frontends/desktop/views/beleg-eingang-view.ts:578
 msgid ""
 "Every receipt in the inbox is confirmed and booked. New receipts from "
 "Paperless and the mail import appear here automatically."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:584
+#: src/frontends/desktop/views/beleg-eingang-view.ts:585
 msgid "Go to transactions"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:628
+#: src/frontends/desktop/views/beleg-eingang-view.ts:629
 msgid "Receipt “{vendor}” booked — marking it in Paperless failed"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:632
+#: src/frontends/desktop/views/beleg-eingang-view.ts:633
 msgid "Receipt “{vendor}” booked"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:645
-#: src/frontends/desktop/views/zu-pruefen-view.ts:438
+#: src/frontends/desktop/views/beleg-eingang-view.ts:646
+#: src/frontends/desktop/views/zu-pruefen-view.ts:439
 msgid "Confirming failed"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:661
+#: src/frontends/desktop/views/beleg-eingang-view.ts:662
 msgid "Undo is no longer possible"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:666
+#: src/frontends/desktop/views/beleg-eingang-view.ts:667
 #: src/frontends/desktop/views/offene-belege-view.ts:220
 msgid "Undone"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:679
+#: src/frontends/desktop/views/beleg-eingang-view.ts:680
 msgid "Undo failed"
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:694
+#: src/frontends/desktop/views/beleg-eingang-view.ts:695
 msgid "The receipt file is not available."
 msgstr ""
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:709
+#: src/frontends/desktop/views/beleg-eingang-view.ts:710
 msgid "Could not open the original"
 msgstr ""
 
@@ -6183,8 +6184,8 @@ msgid "Loading receipts …"
 msgstr ""
 
 #: src/frontends/desktop/views/dokumente-view.blp:57
-#: src/frontends/desktop/views/setup-assistant.ts:582
-#: src/frontends/desktop/views/setup-assistant.ts:627
+#: src/frontends/desktop/views/setup-assistant.ts:593
+#: src/frontends/desktop/views/setup-assistant.ts:638
 #: src/frontends/desktop/views/ustva-view.ts:164
 msgid "Receipts"
 msgstr ""
@@ -6612,9 +6613,9 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/privat.ts:51
 #: src/frontends/desktop/views/entity-dialogs.ts:38
 #: src/frontends/desktop/views/projekt-form-dialog.ts:74
-#: src/frontends/desktop/views/setup-assistant.ts:259
-#: src/frontends/desktop/views/setup-assistant.ts:335
-#: src/frontends/desktop/views/setup-assistant.ts:592
+#: src/frontends/desktop/views/setup-assistant.ts:270
+#: src/frontends/desktop/views/setup-assistant.ts:346
+#: src/frontends/desktop/views/setup-assistant.ts:603
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:167
 msgid "Name"
 msgstr ""
@@ -6687,10 +6688,10 @@ msgid "Code {code}"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:172
-#: src/frontends/desktop/views/setup-assistant.ts:289
-#: src/frontends/desktop/views/setup-assistant.ts:594
-#: src/frontends/desktop/views/setup-assistant.ts:676
-#: src/frontends/desktop/views/setup-assistant.ts:679
+#: src/frontends/desktop/views/setup-assistant.ts:300
+#: src/frontends/desktop/views/setup-assistant.ts:605
+#: src/frontends/desktop/views/setup-assistant.ts:687
+#: src/frontends/desktop/views/setup-assistant.ts:690
 msgid "Tax number"
 msgstr ""
 
@@ -6713,9 +6714,9 @@ msgid "The USt-IdNr must be DE + 9 digits."
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:228
-#: src/frontends/desktop/views/setup-assistant.ts:387
+#: src/frontends/desktop/views/setup-assistant.ts:398
 #: src/frontends/desktop/views/zeit-rechnung-dialog.ts:49
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:107
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:108
 msgid "VAT"
 msgstr ""
 
@@ -6820,7 +6821,7 @@ msgid "Paperless was already fully set up."
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/dms-invoicing.ts:110
-#: src/frontends/desktop/views/setup-assistant.ts:649
+#: src/frontends/desktop/views/setup-assistant.ts:660
 msgid "Setup failed: {error}"
 msgstr ""
 
@@ -7311,7 +7312,7 @@ msgid "Turn off"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:48
-#: src/frontends/desktop/views/setup-assistant.ts:354
+#: src/frontends/desktop/views/setup-assistant.ts:365
 msgid "Country & taxes"
 msgstr ""
 
@@ -7322,30 +7323,30 @@ msgid ""
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:53
-#: src/frontends/desktop/views/setup-assistant.ts:356
-#: src/frontends/desktop/views/setup-assistant.ts:622
+#: src/frontends/desktop/views/setup-assistant.ts:367
+#: src/frontends/desktop/views/setup-assistant.ts:633
 msgid "Country"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:54
-#: src/frontends/desktop/views/setup-assistant.ts:357
-#: src/frontends/desktop/views/setup-assistant.ts:620
+#: src/frontends/desktop/views/setup-assistant.ts:368
+#: src/frontends/desktop/views/setup-assistant.ts:631
 msgid "Germany"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:54
-#: src/frontends/desktop/views/setup-assistant.ts:357
-#: src/frontends/desktop/views/setup-assistant.ts:620
+#: src/frontends/desktop/views/setup-assistant.ts:368
+#: src/frontends/desktop/views/setup-assistant.ts:631
 msgid "Other (bookkeeping only)"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:58
-#: src/frontends/desktop/views/setup-assistant.ts:361
+#: src/frontends/desktop/views/setup-assistant.ts:372
 msgid "German tax features"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:59
-#: src/frontends/desktop/views/setup-assistant.ts:362
+#: src/frontends/desktop/views/setup-assistant.ts:373
 msgid "ELSTER returns, tax forecast, tax deadlines and the Tax area"
 msgstr ""
 
@@ -7569,20 +7570,20 @@ msgid "Phone (for queries)"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/privat.ts:76
-#: src/frontends/desktop/views/setup-assistant.ts:461
-#: src/frontends/desktop/views/setup-assistant.ts:617
+#: src/frontends/desktop/views/setup-assistant.ts:472
+#: src/frontends/desktop/views/setup-assistant.ts:628
 msgid "Assessment"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/privat.ts:77
-#: src/frontends/desktop/views/setup-assistant.ts:458
-#: src/frontends/desktop/views/setup-assistant.ts:615
+#: src/frontends/desktop/views/setup-assistant.ts:469
+#: src/frontends/desktop/views/setup-assistant.ts:626
 msgid "Individual assessment"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/privat.ts:77
-#: src/frontends/desktop/views/setup-assistant.ts:459
-#: src/frontends/desktop/views/setup-assistant.ts:613
+#: src/frontends/desktop/views/setup-assistant.ts:470
+#: src/frontends/desktop/views/setup-assistant.ts:624
 msgid "Joint assessment (splitting)"
 msgstr ""
 
@@ -8107,9 +8108,9 @@ msgid "Refund assigned: {category}"
 msgstr ""
 
 #: src/frontends/desktop/views/erstattung-group.ts:111
-#: src/frontends/desktop/views/setup-assistant.ts:405
-#: src/frontends/desktop/views/setup-assistant.ts:596
+#: src/frontends/desktop/views/setup-assistant.ts:416
 #: src/frontends/desktop/views/setup-assistant.ts:607
+#: src/frontends/desktop/views/setup-assistant.ts:618
 msgid "No"
 msgstr ""
 
@@ -8118,13 +8119,13 @@ msgid "Does not belong to: {booking}"
 msgstr ""
 
 #: src/frontends/desktop/views/erstattung-group.ts:114
-#: src/frontends/desktop/views/setup-assistant.ts:505
+#: src/frontends/desktop/views/setup-assistant.ts:516
 msgid "Not assigned"
 msgstr ""
 
 #: src/frontends/desktop/views/erstattung-group.ts:117
-#: src/frontends/desktop/views/setup-assistant.ts:596
 #: src/frontends/desktop/views/setup-assistant.ts:607
+#: src/frontends/desktop/views/setup-assistant.ts:618
 msgid "Yes"
 msgstr ""
 
@@ -8638,7 +8639,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/herleitung-dialog.ts:455
 #: src/frontends/desktop/views/tx-detail-dialog.ts:127
-#: src/frontends/desktop/views/zu-pruefen-view.ts:308
+#: src/frontends/desktop/views/zu-pruefen-view.ts:309
 msgid "Purpose"
 msgstr ""
 
@@ -9617,12 +9618,12 @@ msgstr ""
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:303
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:396
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:454
-#: src/frontends/desktop/views/setup-assistant.ts:298
-#: src/frontends/desktop/views/setup-assistant.ts:345
-#: src/frontends/desktop/views/setup-assistant.ts:428
-#: src/frontends/desktop/views/setup-assistant.ts:472
-#: src/frontends/desktop/views/setup-assistant.ts:522
-#: src/frontends/desktop/views/setup-assistant.ts:582
+#: src/frontends/desktop/views/setup-assistant.ts:309
+#: src/frontends/desktop/views/setup-assistant.ts:356
+#: src/frontends/desktop/views/setup-assistant.ts:439
+#: src/frontends/desktop/views/setup-assistant.ts:483
+#: src/frontends/desktop/views/setup-assistant.ts:533
+#: src/frontends/desktop/views/setup-assistant.ts:593
 #: src/frontends/desktop/views/welcome.ts:151
 #: src/frontends/desktop/views/welcome.ts:310
 msgid "Next"
@@ -9757,20 +9758,20 @@ msgstr ""
 
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:505
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:517
-#: src/frontends/desktop/views/setup-assistant.ts:297
+#: src/frontends/desktop/views/setup-assistant.ts:308
 msgid "Entity"
 msgstr ""
 
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:506
 #: src/frontends/desktop/views/setup-assistant.ts:78
 #: src/frontends/desktop/views/setup-assistant.ts:200
-#: src/frontends/desktop/views/setup-assistant.ts:590
+#: src/frontends/desktop/views/setup-assistant.ts:601
 #: src/frontends/desktop/views/welcome.ts:100
 msgid "Later"
 msgstr ""
 
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:511
-#: src/frontends/desktop/views/setup-assistant.ts:505
+#: src/frontends/desktop/views/setup-assistant.ts:516
 msgid "Currently: {entity}"
 msgstr ""
 
@@ -10538,7 +10539,7 @@ msgstr ""
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
 #: src/frontends/desktop/views/rechnungen-view.ts:549
 #: src/frontends/desktop/views/zeiten-view.ts:314
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:108
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:109
 msgid "Invoice"
 msgstr ""
 
@@ -11321,7 +11322,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:50
 #: src/frontends/desktop/views/zu-pruefen-view.blp:96
-#: src/frontends/desktop/views/zu-pruefen-view.ts:229
+#: src/frontends/desktop/views/zu-pruefen-view.ts:230
 msgid "Rule from selection"
 msgstr ""
 
@@ -11421,7 +11422,7 @@ msgstr ""
 
 #. TRANSLATORS: Primary menu item reopening the first-run introduction
 #: src/frontends/desktop/views/setup-assistant.ts:224
-#: src/frontends/desktop/views/setup-assistant.ts:243
+#: src/frontends/desktop/views/setup-assistant.ts:254
 #: src/frontends/desktop/views/welcome.ts:58
 #: src/frontends/desktop/views/welcome.ts:150
 #: src/frontends/desktop/window.blp:13
@@ -11439,7 +11440,7 @@ msgid "Where your data will be stored"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:239
-#: src/frontends/desktop/views/setup-assistant.ts:631
+#: src/frontends/desktop/views/setup-assistant.ts:642
 msgid "Configuration"
 msgstr ""
 
@@ -11447,198 +11448,213 @@ msgstr ""
 msgid "Transactions and receipts"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:244
-msgid "Let’s go"
+#: src/frontends/desktop/views/setup-assistant.ts:245
+#: src/frontends/desktop/views/welcome.ts:198
+msgid "Please note"
+msgstr ""
+
+#: src/frontends/desktop/views/setup-assistant.ts:248
+msgid "Early version (0.x)"
+msgstr ""
+
+#: src/frontends/desktop/views/setup-assistant.ts:249
+msgid ""
+"This is an early version: check every return before you send it, since "
+"mistakes are possible."
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:255
+msgid "Let’s go"
+msgstr ""
+
+#: src/frontends/desktop/views/setup-assistant.ts:266
 msgid "Who are we filing for?"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:256
+#: src/frontends/desktop/views/setup-assistant.ts:267
 msgid "Name and kind can be changed at any time."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:264
-#: src/frontends/desktop/views/setup-assistant.ts:344
-#: src/frontends/desktop/views/setup-assistant.ts:593
+#: src/frontends/desktop/views/setup-assistant.ts:275
+#: src/frontends/desktop/views/setup-assistant.ts:355
+#: src/frontends/desktop/views/setup-assistant.ts:604
 msgid "Kind"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:283
+#: src/frontends/desktop/views/setup-assistant.ts:294
 msgid "Tax details"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:285
+#: src/frontends/desktop/views/setup-assistant.ts:296
 msgid ""
 "Optional — you can add them later in the settings. The tax office is already "
 "part of the tax number and is not asked for separately."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:312
+#: src/frontends/desktop/views/setup-assistant.ts:323
 msgid "Private or business?"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:313
+#: src/frontends/desktop/views/setup-assistant.ts:324
 msgid "This decides which questions follow. Everything can be changed later."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:388
+#: src/frontends/desktop/views/setup-assistant.ts:399
 msgid "If you are not sure yet, choose “Later” — nothing is assumed for it."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:391
+#: src/frontends/desktop/views/setup-assistant.ts:402
 msgid "No, I charge VAT"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:392
+#: src/frontends/desktop/views/setup-assistant.ts:403
 msgid "Yes, small business (§ 19 UStG)"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:394
-#: src/frontends/desktop/views/setup-assistant.ts:597
+#: src/frontends/desktop/views/setup-assistant.ts:405
+#: src/frontends/desktop/views/setup-assistant.ts:608
 msgid "Small business"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:397
-#: src/frontends/desktop/views/setup-assistant.ts:600
+#: src/frontends/desktop/views/setup-assistant.ts:408
+#: src/frontends/desktop/views/setup-assistant.ts:611
 msgid "Monthly"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:398
-#: src/frontends/desktop/views/setup-assistant.ts:602
+#: src/frontends/desktop/views/setup-assistant.ts:409
+#: src/frontends/desktop/views/setup-assistant.ts:613
 msgid "Quarterly"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:399
-#: src/frontends/desktop/views/setup-assistant.ts:604
+#: src/frontends/desktop/views/setup-assistant.ts:410
+#: src/frontends/desktop/views/setup-assistant.ts:615
 msgid "None, annual return only"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:401
-#: src/frontends/desktop/views/setup-assistant.ts:606
+#: src/frontends/desktop/views/setup-assistant.ts:412
+#: src/frontends/desktop/views/setup-assistant.ts:617
 msgid "VAT return period"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:402
+#: src/frontends/desktop/views/setup-assistant.ts:413
 msgid ""
 "As set by the tax office. “None” only if it released you from VAT returns."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:406
+#: src/frontends/desktop/views/setup-assistant.ts:417
 msgid "Yes, granted"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:408
-#: src/frontends/desktop/views/setup-assistant.ts:608
+#: src/frontends/desktop/views/setup-assistant.ts:419
+#: src/frontends/desktop/views/setup-assistant.ts:619
 msgid "Permanent deadline extension"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:409
+#: src/frontends/desktop/views/setup-assistant.ts:420
 msgid "Dauerfristverlängerung: every VAT return is due one month later."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:425
+#: src/frontends/desktop/views/setup-assistant.ts:436
 #: src/frontends/desktop/window.ts:727
 msgid "Business"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:455
+#: src/frontends/desktop/views/setup-assistant.ts:466
 msgid ""
 "Joint assessment is for married couples and civil partners filing together."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:492
+#: src/frontends/desktop/views/setup-assistant.ts:503
 msgid "Which bank accounts belong to it?"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:494
+#: src/frontends/desktop/views/setup-assistant.ts:505
 msgid ""
 "A ticked account moves to the new entity. New accounts are added under "
 "Accounts → Connections & import."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:513
+#: src/frontends/desktop/views/setup-assistant.ts:524
 msgid "No bank accounts yet"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:513
+#: src/frontends/desktop/views/setup-assistant.ts:524
 msgid "Add one under Accounts once the entity exists."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:519
-#: src/frontends/desktop/views/setup-assistant.ts:623
+#: src/frontends/desktop/views/setup-assistant.ts:530
+#: src/frontends/desktop/views/setup-assistant.ts:634
 msgid "Bank accounts"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:542
+#: src/frontends/desktop/views/setup-assistant.ts:553
 msgid "Where do the receipts come from?"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:544
+#: src/frontends/desktop/views/setup-assistant.ts:555
 msgid "Same as your other entities. You can still choose differently."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:546
+#: src/frontends/desktop/views/setup-assistant.ts:557
 msgid ""
 "The built-in document management needs nothing else. Use Paperless-ngx if "
 "you already keep your receipts there."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:552
+#: src/frontends/desktop/views/setup-assistant.ts:563
 msgid "Receipt source"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:553
-#: src/frontends/desktop/views/setup-assistant.ts:628
+#: src/frontends/desktop/views/setup-assistant.ts:564
+#: src/frontends/desktop/views/setup-assistant.ts:639
 msgid "Built-in document management"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:562
+#: src/frontends/desktop/views/setup-assistant.ts:573
 msgid "Leave the token empty to use the one your other entities use."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:563
+#: src/frontends/desktop/views/setup-assistant.ts:574
 msgid ""
 "URL and API token. The token is stored in the configuration file only you "
 "can read."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:565
+#: src/frontends/desktop/views/setup-assistant.ts:576
 msgid "URL"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:568
+#: src/frontends/desktop/views/setup-assistant.ts:579
 msgid "API token"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:621
+#: src/frontends/desktop/views/setup-assistant.ts:632
 msgid "German tax features on"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:621
+#: src/frontends/desktop/views/setup-assistant.ts:632
 msgid "German tax features off"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:637
+#: src/frontends/desktop/views/setup-assistant.ts:648
 #: src/frontends/desktop/views/transactions-view.ts:300
 msgid "Done"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:638
+#: src/frontends/desktop/views/setup-assistant.ts:649
 #: src/frontends/desktop/window.blp:217
 msgid "Finish setup"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:638
+#: src/frontends/desktop/views/setup-assistant.ts:649
 msgid "Add entity"
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:666
+#: src/frontends/desktop/views/setup-assistant.ts:677
 msgid "Please enter a name."
 msgstr ""
 
-#: src/frontends/desktop/views/setup-assistant.ts:677
+#: src/frontends/desktop/views/setup-assistant.ts:688
 msgid "Optional. The tax office is already part of the tax number."
 msgstr ""
 
@@ -11976,7 +11992,7 @@ msgid "All receipts"
 msgstr ""
 
 #: src/frontends/desktop/views/tab-hub.ts:199
-#: src/frontends/desktop/views/zu-pruefen-view.ts:321
+#: src/frontends/desktop/views/zu-pruefen-view.ts:322
 msgid "To review"
 msgstr ""
 
@@ -12096,7 +12112,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/tx-detail-dialog.ts:151
 #: src/frontends/desktop/views/umbuchen-dialog.ts:72
-#: src/frontends/desktop/views/zu-pruefen-view.ts:358
+#: src/frontends/desktop/views/zu-pruefen-view.ts:359
 msgid "Mark as transfer"
 msgstr ""
 
@@ -13332,10 +13348,6 @@ msgstr ""
 msgid "Report a problem"
 msgstr ""
 
-#: src/frontends/desktop/views/welcome.ts:198
-msgid "Please note"
-msgstr ""
-
 #: src/frontends/desktop/views/welcome.ts:199
 msgid "Understood"
 msgstr ""
@@ -13863,82 +13875,82 @@ msgstr ""
 msgid "Mark for “Rule from selection”: {name} · {date}"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:229
+#: src/frontends/desktop/views/zu-pruefen-view.ts:230
 msgid "Rule from selection ({n})"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:312
+#: src/frontends/desktop/views/zu-pruefen-view.ts:313
 msgid "All details"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:326
+#: src/frontends/desktop/views/zu-pruefen-view.ts:327
 msgid "No rule and no receipt"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:328
+#: src/frontends/desktop/views/zu-pruefen-view.ts:329
 msgid ""
 "Neither a receipt nor a rule classifies this transaction — please mark it as "
 "a transfer."
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:330
+#: src/frontends/desktop/views/zu-pruefen-view.ts:331
 msgid "{origin} — only a guess, not recognised by the counterparty"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:349
+#: src/frontends/desktop/views/zu-pruefen-view.ts:350
 msgid "Previous transaction (←)"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:351
+#: src/frontends/desktop/views/zu-pruefen-view.ts:352
 msgid "Next transaction (→)"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:364
+#: src/frontends/desktop/views/zu-pruefen-view.ts:365
 msgid "Without a category there is nothing to confirm"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:382
+#: src/frontends/desktop/views/zu-pruefen-view.ts:383
 msgctxt "reviewed item"
 msgid "Done"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:396
+#: src/frontends/desktop/views/zu-pruefen-view.ts:397
 msgid "All reviewed"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:399
+#: src/frontends/desktop/views/zu-pruefen-view.ts:400
 msgid ""
 "Every transaction in {year} is classified by a receipt, an own rule or by "
 "hand."
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:403
+#: src/frontends/desktop/views/zu-pruefen-view.ts:404
 msgid ""
 "All transactions in this list are confirmed or reclassified. New "
 "transactions that are only classified by a guess show up here."
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:409
+#: src/frontends/desktop/views/zu-pruefen-view.ts:410
 msgid "All transactions"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:427
+#: src/frontends/desktop/views/zu-pruefen-view.ts:428
 msgid "confirmed: {category}"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:430
+#: src/frontends/desktop/views/zu-pruefen-view.ts:431
 msgid "Confirmed: {category}"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:460
+#: src/frontends/desktop/views/zu-pruefen-view.ts:461
 msgid "reclassified"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:477
+#: src/frontends/desktop/views/zu-pruefen-view.ts:478
 msgid "changed"
 msgstr ""
 
-#: src/frontends/desktop/views/zu-pruefen-view.ts:486
+#: src/frontends/desktop/views/zu-pruefen-view.ts:487
 msgid "by rule"
 msgstr ""
 
@@ -14048,67 +14060,72 @@ msgstr ""
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:13
 msgid ""
 "The tax logic follows German law, so the interface keeps the official German "
-"terms. The app is an early version and a preparation aid, not tax advice: "
-"check every return before you send it."
+"terms."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:23
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:14
+msgid ""
+"The app is an early version and a preparation aid, not tax advice: check "
+"every return before you send it."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:24
 msgid "Overview with key figures and what to do next"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:28
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:29
 msgid "Receipts, linked to transactions"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:33
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:34
 msgid "All transactions of all accounts, searchable"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:38
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:39
 msgid "Outgoing invoices with status and recurring billing"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:43
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:44
 msgid "Anlage EÜR, every line down to its transactions"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:48
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:49
 msgid "Tax return with checks before filing"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:59
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:60
 msgid ""
 "The macOS and Windows packages now include GTK, so the app starts without a "
 "separately installed GTK. Empty totals no longer show a minus sign."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:64
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:65
 msgid ""
 "The About dialog now links to the privacy policy and the legal notice. The "
 "MCP server binds to loopback by default."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:69
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:70
 msgid ""
 "The README now names which parts of the app are written with AI. The Flatpak "
 "from Flathub comes without ERiC: export the return as XML and upload it in "
 "Mein ELSTER."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:74
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:75
 msgid ""
 "The Flatpak bundle on the GitHub release page includes ERiC, so validating "
 "and submitting a return through ELSTER works from that download too."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:79
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:80
 msgid ""
 "Restarting into the demo workspace works on macOS again, and the Flatpak "
 "builds with the current assistant libraries. The AI assistant stays switched "
 "off in this release."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:84
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:85
 msgid ""
 "The AI assistant is optional and can be connected through the built-in MCP "
 "server — every provider supported by Lotse can be used, and free hosted "
@@ -14117,27 +14134,27 @@ msgid ""
 "the box."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:89
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:90
 msgid ""
 "Commands work in the installed app on Windows and macOS, Back up now no "
 "longer opens a second window, and error messages follow the interface "
 "language."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:94
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:95
 msgid ""
 "First public release: receipts, transactions and invoices, the EÜR and VAT "
 "returns, and filing through ELSTER."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:104
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:105
 msgid "Accounting"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:105
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:106
 msgid "ELSTER"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:106
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:107
 msgid "EÜR"
 msgstr ""
