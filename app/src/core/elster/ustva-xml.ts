@@ -217,7 +217,25 @@ export function buildUstvaPortalUpload(
     year: number,
     quarter: number,
 ): { filename: string; xml: string; bytes: Uint8Array } {
-    const config: ElsterConfig = { ...baseConfig, schema_version: year, period: { year, quarter } };
+    return buildUstvaPortalUploadForPeriod(aggregate, baseConfig, { year, quarter });
+}
+
+/** `2025-Q3` → `{year: 2025, quarter: 3}`, `2025-07` → `{year: 2025, month: 7}`; anything else → null. */
+export function parseUstvaPeriodLabel(label: string): ElsterConfig['period'] | null {
+    const quarter = /^(\d{4})-Q([1-4])$/.exec(label);
+    if (quarter) return { year: Number(quarter[1]), quarter: Number(quarter[2]) };
+    const month = /^(\d{4})-(0[1-9]|1[0-2])$/.exec(label);
+    if (month) return { year: Number(month[1]), month: Number(month[2]) };
+    return null;
+}
+
+/** Like {@link buildUstvaPortalUpload}, for a quarterly OR monthly period. */
+export function buildUstvaPortalUploadForPeriod(
+    aggregate: UstvaAggregate,
+    baseConfig: ElsterConfig,
+    period: ElsterConfig['period'],
+): { filename: string; xml: string; bytes: Uint8Array } {
+    const config: ElsterConfig = { ...baseConfig, schema_version: period.year, period };
     const xml = buildUstvaXml(aggregate, config);
     const filename = getUstvaOutputFilename(config.period);
     const bytes = Uint8Array.from(xml, (ch) => ch.charCodeAt(0));
