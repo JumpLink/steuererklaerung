@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-30 20:17+0100\n"
+"POT-Creation-Date: 2026-10-30 20:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14121,8 +14121,10 @@ msgstr ""
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:60
 msgid ""
-"The macOS and Windows packages now include GTK, so the app starts without a "
-"separately installed GTK. Empty totals no longer show a minus sign."
+"The macOS packages are now signed and notarised by Apple, and the macOS and "
+"Windows packages include GTK, so the app starts without a separately "
+"installed GTK. A USt-VA can be saved as XML for the ELSTER portal without "
+"ERiC, monthly periods included. Empty totals no longer show a minus sign."
 msgstr ""
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:65
