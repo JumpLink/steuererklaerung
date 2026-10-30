@@ -13,8 +13,7 @@
  * and the XML scan uses indexOf and anchored patterns only, so no input can make it backtrack.
  */
 
-import Gio from '@girs/gio-2.0';
-import GLib from '@girs/glib-2.0';
+import { inflateRawSync } from 'node:zlib';
 
 export type CellValue = string | number | boolean | null;
 
@@ -433,33 +432,18 @@ function isZip(b: Uint8Array): boolean {
 }
 
 /**
- * Inflate a raw deflate stream chunk by chunk, aborting once it yields more than `limit` bytes — the
- * size the zip directory declared — so an entry that lies about its size cannot allocate past it.
+ * Inflate a raw deflate stream, aborting once it yields more than `limit` bytes — the size the zip
+ * directory declared — so an entry that lies about its size cannot allocate past it.
  */
-// fixed upstream in gjsify: zlib maxOutputLength — then `inflateRawSync(raw, { maxOutputLength })`
 function inflateAtMost(raw: Uint8Array, limit: number): Uint8Array {
-    const stream = new Gio.ConverterInputStream({
-        base_stream: Gio.MemoryInputStream.new_from_bytes(new GLib.Bytes(raw)),
-        converter: new Gio.ZlibDecompressor({ format: Gio.ZlibCompressorFormat.RAW }),
-    });
-    const parts: Uint8Array[] = [];
-    let total = 0;
     try {
-        for (;;) {
-            const chunk = stream.read_bytes(65536, null);
-            const n = chunk.get_size();
-            if (n === 0) break;
-            total += n;
-            if (total > limit) fail('.xlsx part too large');
-            parts.push(chunk.toArray());
-        }
+        return inflateRawSync(raw, { maxOutputLength: Math.max(limit, 1) });
     } catch (e) {
-        if (e instanceof GLib.Error) fail('corrupt .xlsx (zip entry)');
-        throw e;
-    } finally {
-        stream.close(null);
+        if (e instanceof RangeError && (e as { code?: unknown }).code === 'ERR_BUFFER_TOO_LARGE') {
+            fail('.xlsx part too large');
+        }
+        fail('corrupt .xlsx (zip entry)');
     }
-    return concat(parts);
 }
 
 function readZip(buf: Uint8Array): Map<string, () => Uint8Array> {
