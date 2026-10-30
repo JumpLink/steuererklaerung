@@ -1,0 +1,135 @@
+name: Diagnose macOS seal
+
+# Throwaway: finds which nested code breaks `codesign --verify --deep --strict` when the .app is
+# signed with the named Developer ID (run 41046012440). Signs arm64 only, never notarises, never
+# uploads anything — the ERiC build stays on the runner. Delete this branch once the cause is known.
+on:
+  push:
+    branches: ['diag/macos-seal']
+
+env:
+  ERIC_REPO: JumpLink/steuererklaerung-eric
+  ERIC_VERSION: "44.3.6.0"
+
+permissions:
+  contents: read
+
+jobs:
+  seal:
+    runs-on: macos-latest
+    env:
+      P12_BASE64: ${{ secrets.APPLE_DEVELOPER_ID_P12_BASE64 }}
+      P12_PASSWORD: ${{ secrets.APPLE_DEVELOPER_ID_P12_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Bootstrap the gjsify CLI
+        run: npm install -g "@gjsify/cli@$(node -p "require('./app/package.json').devDependencies['@gjsify/cli']")"
+
+      - run: gjsify install --immutable
+
+      - name: Install gettext and gjs
+        run: |
+          command -v msgfmt >/dev/null || brew install gettext
+          echo "$(brew --prefix gettext)/bin" >> "$GITHUB_PATH"
+          for f in gjs librsvg gobject-introspection; do
+            brew list "$f" >/dev/null 2>&1 || brew install "$f"
+          done
+
+      - run: cd app && gjsify run i18n:compile && gjsify run build:app:node
+
+      - name: Fetch ERiC
+        env:
+          ERIC_DEPLOY_KEY: ${{ secrets.ERIC_DEPLOY_KEY }}
+        run: |
+          set -eu
+          key=$(mktemp)
+          trap 'rm -f "$key"' EXIT
+          printf '%s\n' "$ERIC_DEPLOY_KEY" > "$key"
+          chmod 600 "$key"
+          export GIT_SSH_COMMAND="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+          repo="$RUNNER_TEMP/eric-repo"
+          git clone --quiet --depth 1 --filter=blob:none --sparse "git@github.com:${ERIC_REPO}.git" "$repo"
+          git -C "$repo" sparse-checkout set --no-cone "/${ERIC_VERSION}/eric-${ERIC_VERSION}-Darwin-universal.tar.gz"
+          mkdir -p app/.eric-stage/Darwin-universal
+          tar -xzf "$repo/${ERIC_VERSION}/eric-${ERIC_VERSION}-Darwin-universal.tar.gz" -C app/.eric-stage/Darwin-universal
+          rm -rf "$repo"
+
+      - name: How ERiC arrives signed
+        run: |
+          cd app/.eric-stage/Darwin-universal
+          for f in $(find lib -name '*.dylib' | head -3); do
+            echo "== $f"; lipo -archs "$f"; codesign -dvv "$f" 2>&1 | grep -E 'Authority|TeamIdentifier|Signature|flags' || true
+          done
+
+      - name: Import the signing identity
+        run: |
+          set -eu
+          keychain="$RUNNER_TEMP/build.keychain-db"
+          password=$(openssl rand -base64 24)
+          printf '%s' "$P12_BASE64" | base64 --decode > "$RUNNER_TEMP/identity.p12"
+          security create-keychain -p "$password" "$keychain"
+          security set-keychain-settings -lut 21600 "$keychain"
+          security unlock-keychain -p "$password" "$keychain"
+          security import "$RUNNER_TEMP/identity.p12" -k "$keychain" -P "$P12_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$password" "$keychain" >/dev/null
+          security list-keychains -d user -s "$keychain" login.keychain-db
+          security default-keychain -d user -s "$keychain"
+          rm -f "$RUNNER_TEMP/identity.p12"
+          identity=$(security find-identity -v -p codesigning "$keychain" | awk '/Developer ID Application/ { print $2; exit }')
+          echo "SIGN_IDENTITY=$identity" >> "$GITHUB_ENV"
+
+      - name: Sign variants and verify every nested image
+        run: |
+          gjsify install --os darwin --cpu arm64 --immutable
+          cd app
+          cp package.json "$RUNNER_TEMP/pkg.json"
+          inspect() {
+            app=$(ls -d ship/signed/macos-app-zip/*.app)
+            echo "### $1: top level"
+            codesign --verify --deep --strict -vvvv "$app" 2>&1 | grep -v '^--' | tail -5
+            codesign --verify --strict -vv "$app" 2>&1 | tail -2
+            echo "### $1: nested images failing on their own"
+            n=0
+            while IFS= read -r f; do
+              file -b "$f" | grep -q Mach-O || continue
+              n=$((n + 1))
+              out=$(codesign --verify --strict -vv "$f" 2>&1) || echo "FAIL ${f#$app/}: $(echo "$out" | tail -1)"
+            done < <(find "$app/Contents" -type f)
+            echo "checked $n images"
+            echo "### $1: an ERiC entry in CodeResources"
+            python3 - "$app" <<'PY' || true
+          import plistlib, sys
+          p = plistlib.load(open(sys.argv[1] + "/Contents/_CodeSignature/CodeResources", "rb"))
+          for k, v in p["files2"].items():
+              if "eric" in k and k.endswith(".dylib"):
+                  print(k, v); break
+          for k, v in p["rules2"].items():
+              print("rule", k, v)
+          PY
+          }
+          variant() {
+            name=$1 eric=$2
+            rm -rf ship
+            cp "$RUNNER_TEMP/pkg.json" package.json
+            [ "$eric" = yes ] && ERIC_HERSTELLER_ID=00000 node dev/ship-eric.ts .eric-stage/Darwin-universal Darwin-universal arm64 | tail -1
+            dev/with-koffi.sh darwin arm64 gjsify ship darwin --arch arm64 --skip-build --target macos-app-zip --sign "$SIGN_IDENTITY" > "$RUNNER_TEMP/$name.log" 2>&1 \
+              || { echo "ship failed"; grep -v 'replacing existing' "$RUNNER_TEMP/$name.log" | tail -20; return; }
+            grep -a 'codesign signed' "$RUNNER_TEMP/$name.log" | cut -c1-140 || true
+            inspect "$name"
+          }
+          variant with-eric yes
+          variant without-eric no
+          chmod 644 .eric-stage/Darwin-universal/lizenz.pdf .eric-stage/Darwin-universal/Liesmich.txt
+          variant eric-docs-644 yes
+          cp "$RUNNER_TEMP/pkg.json" package.json
+
+      - name: Remove the signing keychain
+        if: always()
+        run: |
+          security default-keychain -d user -s login.keychain-db || true
+          security delete-keychain "$RUNNER_TEMP/build.keychain-db" || true
