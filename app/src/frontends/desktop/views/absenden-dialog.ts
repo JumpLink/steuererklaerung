@@ -241,7 +241,7 @@ export function promptLiveSend(
             css: 'error',
             text: fmt(
                 _(
-                    '“{form}” is transmitted BINDINGLY to the Finanzamt. The step can NOT be undone — please read the figures in the check sheet first.',
+                    '“{form}” is transmitted BINDINGLY to the Finanzamt. The step can NOT be undone — please read the figures in the check sheet first. This is an early version: check every figure yourself before you file.',
                 ),
                 { form: formTitle },
             ),

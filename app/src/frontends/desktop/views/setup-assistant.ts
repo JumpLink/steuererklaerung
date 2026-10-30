@@ -240,6 +240,17 @@ export class BhSetupAssistant extends Adw.Dialog {
         where.add(this.readOnlyRow(_('Transactions and receipts'), getStoreDir()));
         box.append(where);
 
+        // The welcome's notice page can be skipped with „Later", so the setup assistant carries the
+        // same warning: whoever configures here must know the results still need checking.
+        const notice = new Adw.PreferencesGroup({ title: _('Please note') });
+        notice.add(
+            this.readOnlyRow(
+                _('Early version (0.x)'),
+                _('This is an early version: check every return before you send it, since mistakes are possible.'),
+            ),
+        );
+        box.append(notice);
+
         return this.page('welcome', _('Welcome'), box, {
             label: _('Let’s go'),
             run: () => this.advance('welcome'),
