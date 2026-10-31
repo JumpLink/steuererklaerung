@@ -1,7 +1,7 @@
 {
     "name": "steuererklaerung-cli",
     "description": "CLI for steuererklaerung: Qonto, Paperless-NGX, ELSTER, FinTS",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "license": "AGPL-3.0-or-later",
     "author": "Pascal Garber",
     "private": true,
@@ -217,6 +217,11 @@
             },
             "contentRating": "oars-1.1",
             "releases": [
+                {
+                    "version": "0.1.8",
+                    "date": "2026-10-31",
+                    "description": "The macOS disk images pass Apple's signature check again: the umlaut in the app name no longer breaks the seal of the app inside the image."
+                },
                 {
                     "version": "0.1.7",
                     "date": "2026-10-30",
