@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-31 10:12+0100\n"
+"POT-Creation-Date: 2026-10-31 22:14+0100\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -5387,7 +5387,7 @@ msgid "dates · payments · open items"
 msgstr "Termine · Zahlungen · offene Posten"
 
 #: src/frontends/desktop/nav.ts:68
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:109
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:114
 msgid "Tax"
 msgstr "Steuer"
 
@@ -7421,7 +7421,7 @@ msgstr "USt-IdNr muss DE + 9 Ziffern sein."
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:228
 #: src/frontends/desktop/views/setup-assistant.ts:398
 #: src/frontends/desktop/views/zeit-rechnung-dialog.ts:49
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:113
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:118
 msgid "VAT"
 msgstr "Umsatzsteuer"
 
@@ -11428,7 +11428,7 @@ msgstr "Lade Details …"
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
 #: src/frontends/desktop/views/rechnungen-view.ts:549
 #: src/frontends/desktop/views/zeiten-view.ts:314
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:114
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:119
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -15150,7 +15150,11 @@ msgstr "Anlage EÜR, jede Zeile bis zu den Buchungen"
 msgid "Tax return with checks before filing"
 msgstr "Steuererklärung mit Prüfungen vor der Abgabe"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:60
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:54
+msgid "The same overview on a phone"
+msgstr "Dieselbe Übersicht auf dem Smartphone"
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:65
 msgid ""
 "The macOS disk images pass Apple's signature check again: the umlaut in the "
 "app name no longer breaks the seal of the app inside the image."
@@ -15158,7 +15162,7 @@ msgstr ""
 "Die macOS-Disk-Images bestehen Apples Signaturprüfung wieder: Der Umlaut im "
 "App-Namen bricht das Siegel der App im Image nicht mehr."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:65
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:70
 msgid ""
 "The macOS packages are now signed and notarised by Apple, and the macOS and "
 "Windows packages include GTK, so the app starts without a separately "
@@ -15171,7 +15175,7 @@ msgstr ""
 "ELSTER-Portal speichern, auch für monatliche Zeiträume. Leere Summen zeigen "
 "kein Minuszeichen mehr."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:70
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:75
 msgid ""
 "The About dialog now links to the privacy policy and the legal notice. The "
 "MCP server binds to loopback by default."
@@ -15179,7 +15183,7 @@ msgstr ""
 "Der Über-Dialog verlinkt jetzt die Datenschutzerklärung und das Impressum. "
 "Der MCP-Server lauscht standardmäßig nur auf Loopback."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:75
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:80
 msgid ""
 "The README now names which parts of the app are written with AI. The Flatpak "
 "from Flathub comes without ERiC: export the return as XML and upload it in "
@@ -15189,7 +15193,7 @@ msgstr ""
 "Flatpak von Flathub kommt ohne ERiC: Exportiere die Erklärung als XML und "
 "lade sie in Mein ELSTER hoch."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:80
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:85
 msgid ""
 "The Flatpak bundle on the GitHub release page includes ERiC, so validating "
 "and submitting a return through ELSTER works from that download too."
@@ -15198,7 +15202,7 @@ msgstr ""
 "Prüfen und Absenden einer Steuererklärung über ELSTER auch aus diesem "
 "Download funktioniert."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:85
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:90
 msgid ""
 "Restarting into the demo workspace works on macOS again, and the Flatpak "
 "builds with the current assistant libraries. The AI assistant stays switched "
@@ -15208,7 +15212,7 @@ msgstr ""
 "das Flatpak baut mit den aktuellen Assistenten-Bibliotheken. Der KI-"
 "Assistent bleibt in dieser Version ausgeschaltet."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:90
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:95
 msgid ""
 "The AI assistant is optional and can be connected through the built-in MCP "
 "server — every provider supported by Lotse can be used, and free hosted "
@@ -15222,7 +15226,7 @@ msgstr ""
 "Die Linux-Pakete bringen ihre Datenbankbibliotheken mit und das Flatpak "
 "enthält die Demo-Workspace, installieren und der erste Start funktionieren."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:95
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:100
 msgid ""
 "Commands work in the installed app on Windows and macOS, Back up now no "
 "longer opens a second window, and error messages follow the interface "
@@ -15232,7 +15236,7 @@ msgstr ""
 "„Jetzt sichern“ öffnet kein zweites Fenster mehr, und Fehlermeldungen folgen "
 "der Sprache der Oberfläche."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:100
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:105
 msgid ""
 "First public release: receipts, transactions and invoices, the EÜR and VAT "
 "returns, and filing through ELSTER."
@@ -15240,15 +15244,15 @@ msgstr ""
 "Erste öffentliche Version: Belege, Buchungen und Rechnungen, EÜR und "
 "Umsatzsteuererklärungen sowie die Übermittlung über ELSTER."
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:110
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:115
 msgid "Accounting"
 msgstr "Buchhaltung"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:111
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:116
 msgid "ELSTER"
 msgstr "ELSTER"
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:112
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:117
 msgid "EÜR"
 msgstr "EÜR"
 
