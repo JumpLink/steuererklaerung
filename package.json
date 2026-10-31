@@ -1,6 +1,6 @@
 {
  "name": "steuererklaerung",
- "version": "0.1.7",
+ "version": "0.1.8",
  "license": "AGPL-3.0-or-later",
  "author": "Pascal Garber",
  "private": true,
@@ -11,8 +11,8 @@
   "packages/*"
  ],
  "devDependencies": {
-  "@gjsify/cli": "0.64.13",
-  "@gjsify/site": "0.64.13"
+  "@gjsify/cli": "0.64.14",
+  "@gjsify/site": "0.64.14"
  },
  "gjsify": {
   "site": {
@@ -210,6 +210,16 @@
     ]
    },
    "releases": [
+    {
+     "version": "0.1.8",
+     "date": "2026-10-31",
+     "description": [
+      {
+       "p": "The macOS disk images pass Apple's signature check again: the umlaut in the app name no longer breaks the seal of the app inside the image.",
+       "translatorHint": "Release notes for 0.1.8 — the one-line summary"
+      }
+     ]
+    },
     {
      "version": "0.1.7",
      "date": "2026-10-30",

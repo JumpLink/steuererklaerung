@@ -7,7 +7,7 @@
 // Multi-entity: the header has a firm switcher; the sidebar shows the active firm's
 // identity; the Steuer nav appears only for entities with an ELSTER config.
 
-import { GjsifyOptionList } from '@gjsify/adwaita-core';
+import { buildMenu, GjsifyOptionList } from '@gjsify/adwaita-core';
 import type { Adw, Gtk } from '@gjsify/adwaita-web';
 import { api, type EntityMeta } from '../lib/api.ts';
 import { esc } from '../lib/format.ts';
@@ -389,10 +389,10 @@ export class BhApp extends HTMLElement {
     private updateAppMenu() {
         const menu = q<Gtk.MenuButton>(this, '[data-act="appmenu"]');
         if (!menu) return;
-        menu.menuModel = [
+        menu.menuModel = buildMenu([
             { id: 'theme', label: 'Thema wechseln' },
             { id: 'about', label: 'Über Steuererklärung' },
-        ];
+        ]);
     }
 
     /**
