@@ -2,6 +2,7 @@
 # Retake the screenshots the metainfo points at: English, light, demo data, 1000x700 logical at 2x.
 #
 #   app/dev/metainfo-screenshots.sh [outdir]     default outdir: ../docs/screenshots
+#   STEUER_SHOT_PASS=desktop|mobile              take only that pass (default: both)
 #
 # Flathub's quality guidelines want the app's DEFAULT size, never upscaled, English first, and the
 # plain window with its shadow and rounded corners — nothing else in the frame. So every shot runs
@@ -21,11 +22,14 @@
 # The German catalogue is compiled first and GJSIFY_LOCALE_DIR set explicitly: `gjsify run` sets
 # none, and without it the app silently falls back to English.
 set -euo pipefail
+PASS="${STEUER_SHOT_PASS:-all}"
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
 APP="$(cd "$HERE/.." && pwd)"
 OUT="$(mkdir -p "${1:-$APP/../docs/screenshots}" && cd "${1:-$APP/../docs/screenshots}" && pwd)"
 HEADLESS="${HEADLESS_RUN:-$HERE/../../../werkstatt/scripts/headless-run}"
+# A checkout beside werkstatt, or the one werkstatt carries as projects/steuererklaerung.
+[ -x "$HEADLESS" ] || [ -n "${HEADLESS_RUN:-}" ] || HEADLESS="$HERE/../../../../scripts/headless-run"
 command -v headless-run >/dev/null 2>&1 && HEADLESS=headless-run
 # The checkout's own CLI, like welcome-e2e.sh: a globally installed one can be a different version.
 GJSIFY="$APP/../node_modules/.bin/gjsify"
@@ -54,7 +58,7 @@ shot() { # <file> <view> [tab] — LOCALE defaults to English, the msgid languag
   rm -f "$OUT/$1"
   local loc="${LOCALE:-en_US.UTF-8}"
   env LANG="$loc" LANGUAGE="${loc%%_*}" LC_ALL="$loc" \
-    "$HEADLESS" --scale 2 --size 2400x1800 --window-shot "$OUT/$1" \
+    "$HEADLESS" --scale 2 --size "${MONITOR:-2400x1800}" ${DARK:+--dark} --window-shot "$OUT/$1" \
     -- "$HERE/screenshot.sh" "$2" "$OUT/$1" ${3:+"$3"} 2>&1 | grep -E '^(wrote|window-matte)' || true
   [ -s "$OUT/$1" ] || { echo "missing $1" >&2; exit 1; }
 }
@@ -72,7 +76,23 @@ views() { # <suffix> — the metainfo's six views in the order it lists them, th
     shot "08-auswertungen$1.png" auswertungen
 }
 
-views ""
-LOCALE=de_DE.UTF-8 views -de
+if [ "$PASS" != mobile ]; then
+    views ""
+    LOCALE=de_DE.UTF-8 views -de
+fi
 
-if command -v oxipng >/dev/null 2>&1; then oxipng -q -o 4 --strip safe "$OUT"/{01,02,04,05,06,08,09,10}-*.png; fi
+# The phone pass: 360 logical wide, the <requires><display_length> the metainfo declares, so the
+# store shows the app at its narrowest. Light goes into the metainfo (with a German twin like every
+# other view); dark is for pages that follow the reader's colour scheme, so it has no twin.
+mobile() { # <suffix>
+    purge_demo
+    shot "mobile-01-uebersicht$1.png" home
+}
+if [ "$PASS" != desktop ]; then
+    export STEUER_SHOT_SIZE="360 760" MONITOR=1000x1800
+    mobile ""
+    LOCALE=de_DE.UTF-8 mobile -de
+    DARK=1 mobile -dark
+fi
+
+if command -v oxipng >/dev/null 2>&1; then oxipng -q -o 4 --strip safe "$OUT"/{01,02,04,05,06,08,09,10,mobile}-*.png; fi

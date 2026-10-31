@@ -11,13 +11,21 @@ cd "$(dirname "$0")/.."
 ID='eu.jumplink.Steuererklaerung'
 BUNDLE='dist/app/steuer-app.gjs.mjs'
 STAGE="$(mktemp -d)"
-trap 'rm -rf "$STAGE"; [ -z "${PLACEHOLDER:-}" ] || rm -f "$BUNDLE"' EXIT
+trap 'rm -rf "$STAGE"; [ -z "${PLACEHOLDER:-}" ] || rm -f "$BUNDLE"; [ -z "${GDA_PLACEHOLDER:-}" ] || rm -rf .gda-stage' EXIT
 
 # Staging only needs a bundle to exist; the metainfo does not depend on its contents.
 if [ ! -f "$BUNDLE" ]; then
     mkdir -p "$(dirname "$BUNDLE")"
     echo 'print("placeholder");' > "$BUNDLE"
     PLACEHOLDER=1
+fi
+# The same for the .deb's libgda stage (dev/ship-gda-deb.sh): ship refuses a missing input.
+if [ ! -d .gda-stage ]; then
+    GDA_PLACEHOLDER=1
+    mkdir -p .gda-stage/gi
+    grep -oE '"\.gda-stage/tree/[^"]+"' package.json | tr -d '"' | while read -r f; do
+        mkdir -p "$(dirname "$f")" && : > "$f"
+    done
 fi
 mkdir -p dist/locale
 gjsify ship --stage --skip-build --out "$STAGE" > /dev/null
