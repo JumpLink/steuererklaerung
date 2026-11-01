@@ -69,8 +69,12 @@ jobs:
       - name: Install dependencies
         run: gjsify install --immutable
 
+      # Without the token the release lookup shares the runner IP's anonymous rate limit, gets a 403
+      # and the page ships with no downloads; the build only warns.
       - name: Build the site
         run: npx gjsify site build --out _site
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Pages is served without Jekyll; the marker has to survive every deploy.
       - name: Keep .nojekyll
