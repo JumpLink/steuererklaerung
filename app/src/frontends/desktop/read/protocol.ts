@@ -21,6 +21,12 @@ import type { HomeModel } from '../../../core/elster/home.ts';
 import type { FreiVerfuegbarModel } from '../../../core/elster/frei-verfuegbar.ts';
 import type { AuswertungenData } from '../data/auswertungen.ts';
 import type { EntityModel } from '../../../core/presenters/workspace.ts';
+import type { EnrichedTxData } from '../../../core/presenters/buchungen.ts';
+import type { ProjektAnsicht } from '../../../core/presenters/projekt.ts';
+import type { EuerData } from '../../../core/presenters/steuer.ts';
+import type { UsteAggregate } from '../../../core/elster/uste-aggregate.ts';
+import type { GewstReport } from '../../../core/actions/elster/gewst.ts';
+import type { FeststellungReport } from '../../../core/actions/elster/feststellung.ts';
 
 export interface SerializedError {
     name: string;
@@ -37,11 +43,30 @@ export interface SerializedError {
 
 export type Reply<T> = { ok: true; value: T } | { ok: false; error: SerializedError };
 
+/** The Transaktionen page: the bookings plus, for a business entity, the project of each. */
+export interface TransaktionenData {
+    data: EnrichedTxData;
+    /** Null for a privat entity, or when the project view failed (an extra that must not hide the bookings). */
+    projekte: ProjektAnsicht | null;
+    /** Why `projekte` is null for a business entity, for the log; undefined otherwise. */
+    projekteFehler?: string;
+}
+
+/** The four tax reports the Steuer page shows; the last three are null when they don't apply. */
+export interface SteuerData {
+    euer: EuerData;
+    uste: UsteAggregate | null;
+    gewst: GewstReport | null;
+    fest: FeststellungReport | null;
+}
+
 /** The worker's whole API, exposed through Comlink. Every read is a plain function of its arguments. */
 export interface ReadApi {
     home(entity: EntityModel, year: number): Promise<Reply<HomeModel>>;
     freiVerfuegbar(entity: EntityModel, year: number): Promise<Reply<FreiVerfuegbarModel>>;
     auswertungen(entity: EntityModel, year: number): Promise<Reply<AuswertungenData>>;
+    transaktionen(entity: EntityModel, year: number): Promise<Reply<TransaktionenData>>;
+    steuer(entity: EntityModel, year: number): Promise<Reply<SteuerData>>;
     /** Drop the worker session's memos after a write on the main thread (see PresenterSession.invalidate). */
     invalidate(entityId?: string, year?: number): Promise<void>;
     /** Rebuild one entity's DMS provider after a DMS switch in the settings. */

@@ -22,18 +22,10 @@ import Gtk from '@girs/gtk-4.0';
 import GObject from '@girs/gobject-2.0';
 
 import Template from './transactions-view.blp';
-import {
-    loadEnrichedTransactions,
-    loadRawTransactions,
-    type EnrichedTxData,
-    type EnrichedTxRow,
-} from '../../../core/presenters/buchungen.ts';
-import {
-    loadProjektAnsicht,
-    nimmProjektZuordnungZurueck,
-    type ProjektAnsicht,
-} from '../../../core/presenters/projekt.ts';
+import type { EnrichedTxData, EnrichedTxRow } from '../../../core/presenters/buchungen.ts';
+import { nimmProjektZuordnungZurueck, type ProjektAnsicht } from '../../../core/presenters/projekt.ts';
 import { appSession } from '../data/session.ts';
+import { reads } from '../read/index.ts';
 import { loadDms } from '../data/settings.ts';
 import { loadEntityProjects } from '../data/projects.ts';
 import type { AppEntity } from '../entities.ts';
@@ -131,19 +123,9 @@ export class BhTransactionsView extends Adw.Bin {
             errorPage: this._error_page,
             token: this.token,
             errorContext: _('Could not load the transactions'),
-            load: async () => ({
-                data: business
-                    ? await loadEnrichedTransactions(appSession(), entity, year)
-                    : loadRawTransactions(entity, year),
-                // The project of each expense is an extra: a failure here must not hide the bookings.
-                projekte: business
-                    ? await loadProjektAnsicht(appSession(), entity, year).catch((err: unknown) => {
-                          console.error(`[app] Projekte: ${err instanceof Error ? err.message : err}`);
-                          return null;
-                      })
-                    : null,
-            }),
-            fill: ({ data, projekte }) => {
+            load: () => reads.transaktionen(entity, year),
+            fill: ({ data, projekte, projekteFehler }) => {
+                if (projekteFehler) console.error(`[app] Projekte: ${projekteFehler}`);
                 this.projekte = projekte;
                 this.fill(data, year);
             },

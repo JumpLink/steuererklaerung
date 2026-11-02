@@ -18,7 +18,7 @@ import '../i18n-init.ts';
 import * as Comlink from 'comlink';
 import { createPresenterSession, type PresenterSession } from '../../../core/presenters/session.ts';
 import { guard, type ReadApi } from './protocol.ts';
-import { auswertungenQuery, freiVerfuegbarQuery, homeQuery } from './queries.ts';
+import { auswertungenQuery, freiVerfuegbarQuery, homeQuery, steuerQuery, transaktionenQuery } from './queries.ts';
 
 let session: PresenterSession | undefined;
 const sess = (): PresenterSession => (session ??= createPresenterSession());
@@ -27,6 +27,8 @@ const api: ReadApi = {
     home: (entity, year) => guard(() => homeQuery(sess(), entity, year)),
     freiVerfuegbar: (entity, year) => guard(() => freiVerfuegbarQuery(sess(), entity, year)),
     auswertungen: (entity, year) => guard(() => auswertungenQuery(sess(), entity, year)),
+    transaktionen: (entity, year) => guard(() => transaktionenQuery(sess(), entity, year)),
+    steuer: (entity, year) => guard(() => steuerQuery(sess(), entity, year)),
     invalidate: async (entityId, year) => {
         session?.invalidate(entityId, year);
     },
