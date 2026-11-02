@@ -17,17 +17,15 @@ import GObject from '@girs/gobject-2.0';
 
 import Template from './steuer-view.blp';
 import {
-    loadEuer,
     loadEuerPdf,
-    loadUste,
-    loadGewst,
-    loadFeststellung,
     loadUstePdf,
     loadGewstPdf,
     loadFeststellungPdf,
     type EuerData,
 } from '../../../core/presenters/steuer.ts';
 import { appSession } from '../data/session.ts';
+import { reads } from '../read/index.ts';
+import type { SteuerData } from '../read/protocol.ts';
 import type { EuerCategoryTotal } from '../../../core/elster/euer-aggregate.ts';
 import { UNKLASSIFIZIERT } from '../../../core/elster/euer-classify.ts';
 import type { EuerTotalId, FigureKind, FigureRef } from '../../../core/actions/elster/explain.ts';
@@ -36,14 +34,6 @@ import type { GewstReport } from '../../../core/actions/elster/gewst.ts';
 import type { FeststellungReport } from '../../../core/actions/elster/feststellung.ts';
 import type { AppEntity } from '../entities.ts';
 import { eur, pct } from '../../../core/lib/format.ts';
-
-/** The four tax reports the Steuer view shows; the last three are null when they don't apply. */
-interface SteuerViewData {
-    euer: EuerData;
-    uste: UsteAggregate | null;
-    gewst: GewstReport | null;
-    fest: FeststellungReport | null;
-}
 
 /** One report → its PDF loader + save-toast label (for the shared exportPdf). */
 type PdfLoader = (entity: AppEntity, year: number) => Promise<{ filename: string; bytes: Uint8Array }>;
@@ -157,21 +147,12 @@ export class BhSteuerView extends Adw.Bin {
             // The EÜR is required; the annual USt/GewSt/Feststellung derive from the SAME cached
             // aggregate (one Paperless fetch) and are optional — an Einzelunternehmer has no
             // Feststellung, a services entity may lack a Gewerbe block, so those resolve to null.
-            load: async (): Promise<SteuerViewData> => {
-                const session = appSession();
-                const euer = await loadEuer(session, entity, year);
-                const [uste, gewst, fest] = await Promise.all([
-                    loadUste(session, entity, year).catch(() => null),
-                    loadGewst(session, entity, year).catch(() => null),
-                    loadFeststellung(session, entity, year).catch(() => null),
-                ]);
-                return { euer, uste, gewst, fest };
-            },
+            load: () => reads.steuer(entity, year),
             fill: (data) => this.fill(data, year),
         });
     }
 
-    private fill(data: SteuerViewData, year: number): void {
+    private fill(data: SteuerData, year: number): void {
         const { euer, uste, gewst, fest } = data;
         this.pdfButton.set_sensitive(true);
         const t = euer.aggregate.totals;

@@ -25,4 +25,6 @@ export const reads = {
     home: (entity: EntityModel, year: number) => readClient().call((api) => api.home(entity, year)),
     freiVerfuegbar: (entity: EntityModel, year: number) => readClient().call((api) => api.freiVerfuegbar(entity, year)),
     auswertungen: (entity: EntityModel, year: number) => readClient().call((api) => api.auswertungen(entity, year)),
+    transaktionen: (entity: EntityModel, year: number) => readClient().call((api) => api.transaktionen(entity, year)),
+    steuer: (entity: EntityModel, year: number) => readClient().call((api) => api.steuer(entity, year)),
 };
