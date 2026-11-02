@@ -923,8 +923,8 @@ jobs:
         run: |
           set -eu
           flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-          flatpak install --system --noninteractive org.gnome.Platform//50 org.gnome.Sdk//50
-          fdo=$(flatpak info --show-metadata org.gnome.Sdk//50 \
+          flatpak install --system --noninteractive org.gnome.Platform//51 org.gnome.Sdk//51
+          fdo=$(flatpak info --show-metadata org.gnome.Sdk//51 \
             | sed -n '/^\[Extension org.freedesktop.Sdk.Extension\]/,/^\[/s/^version *= *//p')
           test -n "$fdo"
           flatpak install --system --noninteractive \

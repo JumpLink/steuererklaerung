@@ -124,7 +124,7 @@
    "name": "Steuererklärung",
    "command": "steuererklaerung",
    "runtime": "gnome",
-   "runtimeVersion": "50",
+   "runtimeVersion": "51",
    "sdkExtensions": [
     "org.freedesktop.Sdk.Extension.node24",
     "org.freedesktop.Sdk.Extension.typescript"
