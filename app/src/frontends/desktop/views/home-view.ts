@@ -12,11 +12,9 @@ import Adw from '@girs/adw-1';
 import Pango from '@girs/pango-1.0';
 import Template from './home-view.blp';
 
-import { loadHome } from '../../../core/presenters/home.ts';
-import { loadFreiVerfuegbar } from '../../../core/presenters/frei-verfuegbar.ts';
+import { reads } from '../read/index.ts';
 import { loadCapabilities, loadOutgoingInvoices } from '../../../core/presenters/rechnungen.ts';
 import { loadAppSettings } from '../../../core/config/index.ts';
-import { appSession } from '../data/session.ts';
 import { BhChart } from '../widgets/chart.ts';
 import { BhGlossaryHelp } from '../widgets/glossary-help.ts';
 import { loadIntoStack, LoadToken } from './util.ts';
@@ -68,11 +66,11 @@ export class BhHomeView extends Adw.Bin {
             errorContext: _('Could not load the overview'),
             load: () =>
                 Promise.all([
-                    loadHome(appSession(), entity, year),
+                    reads.home(entity, year),
                     // Fail-soft: a broken Frei-verfügbar load shows its reason in the cards, not an error page.
-                    loadFreiVerfuegbar(appSession(), entity, { year }).catch((err: unknown) =>
-                        err instanceof Error ? err : new Error(String(err)),
-                    ),
+                    reads
+                        .freiVerfuegbar(entity, year)
+                        .catch((err: unknown) => (err instanceof Error ? err : new Error(String(err)))),
                 ]),
             fill: ([m, frei]) => this.fill(m, frei),
         });

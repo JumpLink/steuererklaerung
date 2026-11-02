@@ -15,13 +15,8 @@ import Gtk from '@girs/gtk-4.0';
 import GObject from '@girs/gobject-2.0';
 
 import Template from './auswertungen-view.blp';
-import {
-    loadAuswertungen,
-    type AuswertungenData,
-    type BwaLine,
-    type BwaResult,
-    type Hinweis,
-} from '../data/auswertungen.ts';
+import { type AuswertungenData, type BwaLine, type BwaResult, type Hinweis } from '../data/auswertungen.ts';
+import { reads } from '../read/index.ts';
 import type { AppEntity } from '../entities.ts';
 import { eur, pct } from '../../../core/lib/format.ts';
 import { LoadToken, MONTHS, applyScrollHook, kpiFlow, loadIntoStack, markup } from './util.ts';
@@ -66,7 +61,7 @@ export class BhAuswertungenView extends Adw.Bin {
             errorPage: this._error_page,
             token: this.token,
             errorContext: _('The reports could not be calculated'),
-            load: () => loadAuswertungen(entity, year),
+            load: () => reads.auswertungen(entity, year),
             fill: (data) => this.fill(data),
         });
     }

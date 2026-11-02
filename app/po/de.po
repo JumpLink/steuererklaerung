@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-10-31 22:14+0100\n"
+"POT-Creation-Date: 2026-11-02 20:25+0100\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -1584,8 +1584,8 @@ msgid "Income & Lohnsteuerbescheinigung"
 msgstr "Einkünfte & Lohnsteuerbescheinigung"
 
 #: src/core/actions/elster/wizard.ts:515 src/core/actions/elster/wizard.ts:715
-#: src/frontends/desktop/views/home-view.ts:160
-#: src/frontends/desktop/views/home-view.ts:376
+#: src/frontends/desktop/views/home-view.ts:159
+#: src/frontends/desktop/views/home-view.ts:375
 #: src/frontends/desktop/views/steuer-view.blp:61
 #: src/frontends/desktop/views/transactions-view.ts:55
 #: src/frontends/desktop/views/transactions-view.ts:177
@@ -2708,8 +2708,8 @@ msgstr ""
 "Keine Gewerbesteuer-Zahlung {year} auf den Konten dieser Firma gefunden."
 
 #: src/core/elster/frei-verfuegbar.ts:719
-#: src/frontends/desktop/views/home-view.ts:187
-#: src/frontends/desktop/views/home-view.ts:197
+#: src/frontends/desktop/views/home-view.ts:186
+#: src/frontends/desktop/views/home-view.ts:196
 msgid "Free to spend"
 msgstr "Frei verfügbar"
 
@@ -2730,7 +2730,7 @@ msgstr ""
 "abgezogen."
 
 #: src/core/elster/frei-verfuegbar.ts:734
-#: src/frontends/desktop/views/home-view.ts:209
+#: src/frontends/desktop/views/home-view.ts:208
 msgid "Tax reserve {year} (estimate)"
 msgstr "Steuerrücklage {year} (Schätzung)"
 
@@ -5431,6 +5431,18 @@ msgstr "Einstellungen"
 msgid "assistant · connections · master data"
 msgstr "Assistent · Anbindungen · Stammdaten"
 
+#: src/frontends/desktop/read/client.ts:60
+msgid "The reader was closed."
+msgstr "Der Leser wurde beendet."
+
+#: src/frontends/desktop/read/client.ts:78
+msgid "The reader did not answer within {seconds} seconds and was restarted."
+msgstr "Der Leser hat nicht innerhalb von {seconds} Sekunden geantwortet und wurde neu gestartet."
+
+#: src/frontends/desktop/read/client.ts:142
+msgid "The reader stopped while it was working."
+msgstr "Der Leser wurde bei der Arbeit angehalten."
+
 #: src/frontends/desktop/shortcuts.ts:51
 msgid "Search"
 msgstr "Suchen"
@@ -5626,7 +5638,7 @@ msgid "Submit"
 msgstr "Absenden"
 
 #: src/frontends/desktop/views/absenden-section.ts:166
-#: src/frontends/desktop/views/home-view.ts:68
+#: src/frontends/desktop/views/home-view.ts:67
 msgid "Could not load the overview"
 msgstr "Übersicht konnte nicht geladen werden"
 
@@ -9355,9 +9367,9 @@ msgstr "keine Buchungen"
 
 #: src/frontends/desktop/views/herleitung-dialog.ts:193
 #: src/frontends/desktop/views/herleitung-dialog.ts:229
-#: src/frontends/desktop/views/home-view.ts:187
-#: src/frontends/desktop/views/home-view.ts:198
-#: src/frontends/desktop/views/home-view.ts:210
+#: src/frontends/desktop/views/home-view.ts:186
+#: src/frontends/desktop/views/home-view.ts:197
+#: src/frontends/desktop/views/home-view.ts:209
 msgid "not computable"
 msgstr "nicht berechenbar"
 
@@ -9588,7 +9600,7 @@ msgid "The transaction was not found in this year."
 msgstr "Die Buchung wurde in diesem Jahr nicht gefunden."
 
 #: src/frontends/desktop/views/hinweis-handlung.ts:109
-#: src/frontends/desktop/views/home-view.ts:348
+#: src/frontends/desktop/views/home-view.ts:347
 msgid "The invoice was not found."
 msgstr "Die Rechnung wurde nicht gefunden."
 
@@ -9619,92 +9631,92 @@ msgstr[1] "und {n} weitere"
 msgid "Loading overview …"
 msgstr "Lade Übersicht …"
 
-#: src/frontends/desktop/views/home-view.ts:153
+#: src/frontends/desktop/views/home-view.ts:152
 msgid "Profit {year}"
 msgstr "Gewinn {year}"
 
-#: src/frontends/desktop/views/home-view.ts:155
+#: src/frontends/desktop/views/home-view.ts:154
 msgid "Income − expenses"
 msgstr "Einnahmen − Ausgaben"
 
+#: src/frontends/desktop/views/home-view.ts:159
 #: src/frontends/desktop/views/home-view.ts:160
-#: src/frontends/desktop/views/home-view.ts:161
 #: src/frontends/desktop/views/transactions-view.ts:177
 #: src/frontends/desktop/views/transactions-view.ts:182
 msgid "net {year}"
 msgstr "netto {year}"
 
-#: src/frontends/desktop/views/home-view.ts:161
-#: src/frontends/desktop/views/home-view.ts:377
+#: src/frontends/desktop/views/home-view.ts:160
+#: src/frontends/desktop/views/home-view.ts:376
 #: src/frontends/desktop/views/steuer-view.blp:66
 #: src/frontends/desktop/views/transactions-view.ts:56
 #: src/frontends/desktop/views/transactions-view.ts:179
 msgid "Expenses"
 msgstr "Ausgaben"
 
-#: src/frontends/desktop/views/home-view.ts:164
+#: src/frontends/desktop/views/home-view.ts:163
 msgid "Tax forecast {year}"
 msgstr "Steuer-Prognose {year}"
 
-#: src/frontends/desktop/views/home-view.ts:166
+#: src/frontends/desktop/views/home-view.ts:165
 msgid "expected additional payment"
 msgstr "vsl. Nachzahlung"
 
-#: src/frontends/desktop/views/home-view.ts:166
-#: src/frontends/desktop/views/home-view.ts:213
+#: src/frontends/desktop/views/home-view.ts:165
+#: src/frontends/desktop/views/home-view.ts:212
 msgid "expected refund"
 msgstr "vsl. Erstattung"
 
-#: src/frontends/desktop/views/home-view.ts:200
+#: src/frontends/desktop/views/home-view.ts:199
 msgid "As of {date} · a calculation, not advice"
 msgstr "Stand {date} · eine Rechnung, keine Empfehlung"
 
-#: src/frontends/desktop/views/home-view.ts:201
-#: src/frontends/desktop/views/home-view.ts:216
+#: src/frontends/desktop/views/home-view.ts:200
+#: src/frontends/desktop/views/home-view.ts:215
 msgid "incomplete — see derivation"
 msgstr "unvollständig — siehe Herleitung"
 
-#: src/frontends/desktop/views/home-view.ts:215
+#: src/frontends/desktop/views/home-view.ts:214
 msgid "ESt + GewSt − prepayments"
 msgstr "ESt + GewSt − Vorauszahlungen"
 
-#: src/frontends/desktop/views/home-view.ts:252
+#: src/frontends/desktop/views/home-view.ts:251
 msgid "Derivation: {label}"
 msgstr "Herleitung: {label}"
 
-#: src/frontends/desktop/views/home-view.ts:294
+#: src/frontends/desktop/views/home-view.ts:293
 msgid "Up next"
 msgstr "Als Nächstes"
 
-#: src/frontends/desktop/views/home-view.ts:308
+#: src/frontends/desktop/views/home-view.ts:307
 msgid "Open “To review”"
 msgstr "Zu prüfen öffnen"
 
-#: src/frontends/desktop/views/home-view.ts:313
+#: src/frontends/desktop/views/home-view.ts:312
 msgid "Open receivables"
 msgstr "Offene Forderungen öffnen"
 
-#: src/frontends/desktop/views/home-view.ts:318
+#: src/frontends/desktop/views/home-view.ts:317
 msgid "Open recurring costs"
 msgstr "Laufende Kosten öffnen"
 
-#: src/frontends/desktop/views/home-view.ts:353
+#: src/frontends/desktop/views/home-view.ts:352
 msgid "Could not load the invoice"
 msgstr "Rechnung nicht ladbar"
 
-#: src/frontends/desktop/views/home-view.ts:372
+#: src/frontends/desktop/views/home-view.ts:371
 msgid "Income and expenses"
 msgstr "Einnahmen und Ausgaben"
 
-#: src/frontends/desktop/views/home-view.ts:396
+#: src/frontends/desktop/views/home-view.ts:395
 msgid "Expenses by category"
 msgstr "Ausgaben nach Kategorie"
 
-#: src/frontends/desktop/views/home-view.ts:407
+#: src/frontends/desktop/views/home-view.ts:406
 msgid "No expenses recorded"
 msgstr "Keine Ausgaben erfasst"
 
-#: src/frontends/desktop/views/home-view.ts:415
+#: src/frontends/desktop/views/home-view.ts:414
 msgid "Liquidity"
 msgstr "Liquidität"
 
