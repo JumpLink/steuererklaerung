@@ -11,7 +11,7 @@
 
 import { computeBwa, type BwaResult } from '../../../core/elster/bwa.ts';
 import { loadHinweise, type YearHinweis } from '../../../core/presenters/hinweise.ts';
-import { appSession } from './session.ts';
+import type { PresenterSession } from '../../../core/presenters/session.ts';
 import type { AppEntity } from '../entities.ts';
 
 export type { BwaLine, BwaResult } from '../../../core/elster/bwa.ts';
@@ -23,10 +23,13 @@ export interface AuswertungenData {
 }
 
 /** Load + compute the BWA matrix and the advisory Hinweise for one entity-year (async; may fetch Paperless). */
-export async function loadAuswertungen(entity: AppEntity, year: number): Promise<AuswertungenData> {
+export async function loadAuswertungen(
+    session: PresenterSession,
+    entity: AppEntity,
+    year: number,
+): Promise<AuswertungenData> {
     // The BWA needs the aggregate detail; the Hinweise need the aggregate AND the period's documents
     // (the Beleg-Lücke). Both come from the shared, memoised session caches — one Paperless fetch.
-    const session = appSession();
     const [agg, hinweise] = await Promise.all([session.aggregate(entity, year), loadHinweise(session, entity, year)]);
     return { bwa: computeBwa(agg, year), hinweise };
 }
