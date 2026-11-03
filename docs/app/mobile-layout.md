@@ -1,0 +1,414 @@
+# Phone layout — design specification
+
+How the GTK-4/libadwaita front-end (`app/src/frontends/desktop`) should behave on a phone-sized
+window: roughly **360 × 760 logical pixels**, the GNOME reference for mobile.
+
+This is a **design document, not a change log**. It describes the target; nothing here is
+implemented yet unless a section says so. The desktop layout at wide widths is unchanged by every
+proposal below — each one hangs off a breakpoint that never fires on a desktop window.
+
+- **Measured against the real app.** Every finding comes from a screenshot of the demo entity at
+  360 × 760 and the same view at 1280 × 860, taken with `app/dev/screenshot.sh`. Reproduce them
+  with `STEUER_SHOT_SIZE="360 760"`; see [the screenshot section of the tour](README.md#die-bilder-neu-erzeugen).
+- **Binding reference:** the [GNOME HIG](https://developer.gnome.org/hig/) and the libadwaita
+  adaptive widgets (1.9 is what we build against). Where the HIG leaves a question open, this
+  document borrows a settled answer from iOS or Material 3 and **translates it into Adwaita
+  vocabulary** — the idea, never the platform's chrome.
+- **Related:** the architecture of the front-end is in
+  [`app/src/frontends/desktop/README.md`](../../app/src/frontends/desktop/README.md), the
+  screen-by-screen tour in [README.md](README.md), the string rules in
+  [i18n-status.md](i18n-status.md).
+
+## The breakpoint ladder
+
+Four widths, and only four. A new breakpoint needs a reason that one of these cannot carry.
+
+| Name | Condition | What changes |
+|------|-----------|--------------|
+| **Phone** | `max-width: 480px` | One column everywhere; KPI cards become a two-up grid; row actions collapse into a menu; the view's own toolbar scrolls. |
+| **Collapsed** | `max-width: 720px` | The `Adw.NavigationSplitView` collapses: the section list becomes the root page of a navigation stack. *(exists today)* |
+| **Desktop** | — (default) | Sidebar beside content, assistant as an overlay. |
+| **Wide** | `min-width: 1180px` | The assistant docks beside the content at 390 px. *(exists today)* |
+
+**The in-view breakpoints are a different measurement and keep their own numbers.** The
+`Adw.BreakpointBin` conditions inside the views (`max-width: 450px` in most `.blp` files) measure
+the **content pane**, which is only 537 px wide inside a 1280 px desktop window — not the window.
+A view-local condition of 560 px would fire on a perfectly ordinary desktop. Whenever a rule below
+says "phone", it means the **window** is narrow; whenever it names a view-local pane width, it
+means the pane. Mixing the two is the single easiest way to break the desktop from a mobile
+change.
+
+## The navigation model
+
+### Decision
+
+**The phone keeps the collapsed `Adw.NavigationSplitView`: the thirteen-item section list becomes
+the root page of the navigation stack, and a section is a page pushed on top of it.** No bottom
+tab bar. The work goes into making that root page worth landing on, and into giving every content
+page the context the sidebar used to supply.
+
+### Why not a bottom tab bar
+
+An `Adw.ViewSwitcherBar` across the bottom is the obvious transfer from iOS's tab bar and
+Material's navigation bar, and it is the wrong shape here:
+
+- **Thirteen sections do not fit five slots.** A tab bar tops out at five before the labels
+  ellipsize, so eight sections would land behind a "More" entry — and they are not the forgettable
+  eight. Deadlines, Tax and Contracts are exactly the sections that carry a date you must not
+  miss. Burying the dated work behind a generic label to keep the undated work one tap away
+  inverts the app's own priorities.
+- **The set is not fixed.** `visibleNavItems` in [`nav.ts`](../../app/src/frontends/desktop/nav.ts)
+  hides the purely business sections for a `privat` entity, and shows **Tax** only when an ELSTER
+  or income-tax configuration exists. A tab bar whose tabs appear and disappear when you switch
+  entity is a tab bar you cannot build muscle memory for; a list that grows and shrinks is just a
+  list.
+- **It would cost a structural rewrite for nothing.** `Adw.ViewSwitcherBar` needs an
+  `Adw.ViewStack`; the window holds a plain `Gtk.Stack` (`window.blp`), and the views are added
+  imperatively from `window.ts`. Converting that is a real refactor of the part of the window that
+  three other workstreams touch — and it buys one tap.
+- **The HIG already answers this.** The collapsed split view *is* the GNOME pattern for a sidebar
+  with many sections, and it is what every GNOME app with a long sidebar does. Bottom switchers
+  are for the handful-of-peers case (Clocks, Weather), not for an index.
+
+### What the decision costs, and the three things that pay for it
+
+Collapsing has a real price, visible in the screenshots: **a content page on a phone shows a back
+arrow and nothing else of the app's structure.** The entity card and the year selector live in the
+sidebar, so on a phone the answer to "whose books, which year?" is one page away from every number
+on screen. Three additions settle that.
+
+**1. The section list becomes a real home, not a menu.** Rows keep their title and subtitle and
+gain a **badge on the right** with the number that makes the section urgent: receipts to check,
+bookings to review, overdue invoices, deadlines inside the notice period. The count is what
+`home-view` already computes for *Up next*; here it just sits where you choose. This is Material's
+navigation-drawer badge and iOS's inset-grouped list with trailing detail text, in an Adwaita
+`Adw.ActionRow` with a `.numeric` suffix label — no new widget, no new colour.
+
+**2. A context button in every content header.** Where the desktop header shows the view title, the
+phone header's title widget becomes a `Gtk.MenuButton` reading `Fischer & Weber GbR · 2025`, which
+opens an `Adw.Dialog` (a bottom sheet at this width) holding the same `BhEntitySwitcher` and
+`BhYearSwitcher` widgets the sidebar uses. One tap to see the scope, two to change it, from
+anywhere. This is the iOS "title as a picker" idea; the Adwaita form is the dropdown title, which
+GNOME apps already use for a document or a mailbox.
+
+**3. The app reopens where you left it.** With the list as root, a cold start that always lands on
+*Overview* means one extra tap on every launch for anyone who lives in *Receipt inbox*. Persist
+the last `NavViewId` per entity in `GSettings` and push that page on top of the list at startup —
+back still goes to the list, so nothing is hidden.
+
+**Gestures.** `Adw.NavigationView` gives back-swipe from the left edge for free once the split
+view is collapsed; it needs no code and must not be disabled by a horizontally scrolling child at
+the edge. Sub-tab pages inside a section (Receipt inbox, Tax) are **not** navigation pages — they
+stay in their `Adw.ViewStack`, so the back gesture always means "leave this section", never
+"previous tab". That consistency is worth more than the swipe-between-tabs gesture iOS offers.
+
+## Shared building blocks
+
+These recur on most pages. Each is one helper, built once, used everywhere — the alternative is
+thirteen slightly different answers to the same question.
+
+### KPI cards — two-up, not one-up
+
+Today `kpiFlow` ([`views/util.ts`](../../app/src/frontends/desktop/views/util.ts)) wraps
+`kpiCard`s in a `Gtk.FlowBox`. At 360 px every card takes the full width, so a view with five
+cards (Overview) spends **the entire first screen and then some** on numbers before any list
+appears — the phone shots of Overview, Transactions, Contracts and Reports all show it.
+
+On a phone, cards go **two per row** with the big number scaled down one step (`title-2` instead
+of `title-1`) and the caption clipped to one line. Four cards then cost ~180 px instead of ~500,
+and the list below them starts above the fold. The mechanism is the flow box's own
+`min-children-per-line: 2` under the phone breakpoint; no new widget.
+
+Where a view has a single headline figure (Time's running timer, Receipt inbox's count), it stays
+full width — one card per row is right when there is one card.
+
+*Borrowed from:* iOS's two-column widget grid and Material's compact metric tiles. Both settled on
+two columns at this width for the same reason: a number plus a short caption needs about 160 px,
+and 360 minus margins gives you exactly two of those.
+
+### Row actions — menu, not buttons
+
+`rowActions` already puts suffix buttons in an `Adw.WrapBox` so they wrap instead of clipping.
+Wrapping is the right desktop answer and the wrong phone answer: the Contacts shot shows every row
+grown to three lines because `Supplier` and `Delete` stacked under each other, and the Accounts
+shot shows a full-width `Sync` button sitting inside a card.
+
+On a phone, a row with **more than one** action collapses its actions into a single
+`Gtk.MenuButton` with `view-more-symbolic`, 48 × 48, opening a `Gtk.PopoverMenu`. The row then has
+one line of text, one trailing control, and a predictable height. A row with exactly one action
+keeps it as a button — a menu containing one item is a tax on the common case.
+
+`pinnableCluster` already carries the narrow/wide switch; this is the same switch with a third
+state, so the call sites do not change.
+
+*Borrowed from:* iOS's trailing ellipsis button and Material's overflow menu. Deliberately **not**
+borrowed: swipe-to-delete. There is no Adwaita idiom for it, it hides destructive actions behind
+an undiscoverable gesture, and the rows here delete tax-relevant records.
+
+### Filter chips — one scrolling row
+
+`chipScroller` ([`widgets/responsive.ts`](../../app/src/frontends/desktop/widgets/responsive.ts))
+already wraps chip rows in a horizontally scrolling box. On a phone that stays, with two
+corrections visible in the shots: the Contracts row (`All · Active · Deadline near · Archived`)
+and the Transactions row both reach the right edge with no sign that more exists, and neither
+shows the selected chip first when the selection is off-screen.
+
+The phone rule: chips scroll horizontally in **one** row, never wrap to two; the scroller gets a
+fade at both edges when content overflows; and selecting a chip scrolls it into view. The row sits
+**directly above the list it filters** and scrolls away with the content — a filter row pinned to
+a 760 px viewport spends screen space on a control you touch once.
+
+*Borrowed from:* Material 3's filter chips, which are the same shape and the same scroll
+behaviour. The fade is Adwaita's own (`.undershoot-start` / `.undershoot-end`).
+
+### Primary action — one header-bar button
+
+Several views end their toolbar with a full-width suggested-action button: `New contract`,
+`New invoice`, `Add a contact`, `Add account`. Stacked with the chips and the export button above
+them, the Contracts shot spends 140 px of a 760 px screen on buttons before the first contract.
+
+On a phone, the **single most important creating action** of a view becomes an
+`Adw.HeaderBar` end button with a `+` icon — not a floating overlay. GNOME puts the primary
+creating action in the header bar, and the header bar is already there, already 48 px tall,
+already reachable. Secondary actions (`Export deadlines`, `Import`) move into the header's
+`view-more-symbolic` menu.
+
+*Borrowed from:* the FAB's **premise** — one action per screen deserves permanent placement — not
+its form. An Adwaita app with a circular overlay button would look like a port.
+
+### Dialogs — already right, two fixes
+
+Every dialog the app opens is an `Adw.Dialog`, which libadwaita presents as a **bottom sheet**
+below 450 px on its own. The seven phone dialog shots confirm it: Transaction detail, Edit
+receipt, Invoice detail, Add account and Set up entity all arrive as sheets with a drag handle and
+swipe-down dismissal, with no mobile-specific code.
+
+Two things need attention:
+
+1. **The sheet opens at full height.** `Add account` has three rows and still covers the screen.
+   Short dialogs should size to their content and leave the page visible behind them, which is
+   what the sheet's own `content-height: -1` does once the inner `Gtk.ScrolledWindow` stops
+   claiming `vexpand`.
+2. **Header buttons clip.** `Classificatio…` in the Transaction-detail shot is a header label
+   losing to two buttons beside it. Inside a sheet, a group header and its actions follow the same
+   rule as rows: one line of text, actions in a menu.
+
+### Touch targets and spacing
+
+- **48 × 48 minimum** for anything tappable, per the HIG. Today's icon-only suffix buttons
+  (`Delete` trash, `Edit` pencil) render at 32 px. On a phone they get `48` width/height requests.
+- **12 px** between adjacent targets so a thumb cannot hit both.
+- **Side margins 12 px**, not the desktop's 18 — at 360 px, 36 px of margin is a tenth of the
+  screen.
+- `Adw.Clamp` stays at its desktop maximum; it simply never clamps at this width.
+
+## Page by page
+
+Each entry: what the 360 px shot shows today, what the phone layout should be, and which widget
+carries it. Sections marked *no change* already behave; they are listed so the sweep is complete.
+
+### 1. Overview (`home`)
+
+**Today:** five KPI cards one-up fill the whole viewport; *Up next* — the list that tells you what
+to do — starts below the fold, after the demo banner has taken 110 px.
+
+**Phone:** cards two-up (above); the KPI block capped at **four** cards with the rest reachable by
+scrolling, so *Up next* begins around 400 px. *Up next* rows keep their warning icon, title and
+one-line subtitle and get the 48 px chevron.
+
+The **demo banner** is the other half of this: at 1280 px it is one line, at 360 px it wraps to
+two and adds a centred button, costing 110 px on every page of the app. On a phone it becomes a
+one-line `Adw.Banner` with its button as the banner's own action ("Use my own data" → "My data").
+
+*Borrowed from:* iOS's widget stack — the summary is two-up and the actionable list is the page.
+
+### 2. Receipt inbox (`review`)
+
+**Today:** the best-behaved view. The inner `Adw.OverlaySplitView` collapses, the queue hides
+behind a toggle button, and the detail fills the page. The `Adw.InlineViewSwitcher`
+(`Inbox · Open receipts · All receipts`) scrolls.
+
+**Phone:** keep the structure; two corrections. The queue toggle is a bare 32 px icon floating
+above the content with no label — it becomes a header-bar toggle with `sidebar-show-symbolic` at
+48 px. And when a receipt is confirmed, the overlay should **re-open the queue** so the next item
+is in reach, which is the one-handed version of the desktop's "the list is always there".
+
+The `Check & confirm` action area at the bottom of the detail becomes a pinned
+`Gtk.ActionBar` — this is the one place where pinning is right, because it is the action the page
+exists for and the page scrolls past it.
+
+*Borrowed from:* Mail's list/detail collapse on iOS, which is also what `OverlaySplitView` is.
+
+### 3. Transactions (`transactions`)
+
+**Today:** switcher, four KPI cards one-up, search entry, four filter chips — the first
+transaction is roughly 900 px down, past the bottom of the screen.
+
+**Phone:** KPI cards two-up and **collapsed into an `Adw.ExpanderRow`** labelled with the balance,
+closed by default. Transactions is a list view; its numbers are context, not content. Search stays
+a `Gtk.SearchEntry` but moves into a `Gtk.SearchBar` toggled from the header bar, which is the
+GNOME pattern and reclaims 60 px. Chips directly above the list.
+
+Row text (`Jahresabschluss` / `31.12.2025 · AfA · 4830 Abschreibungen`) already wraps via
+`boundRowText`; on a phone the subtitle is capped at two lines with ellipsis — a three-line
+subtitle makes a 40-row list unscannable.
+
+### 4. Invoices (`rechnungen`)
+
+**Today:** the worst overlap in the sweep — the `New invoice` button floats over the filter chips,
+hiding `Overdue`. Three KPI cards, a recurring-invoices block with two full-width
+`Create draft` buttons, then the list.
+
+**Phone:** `New invoice` moves to the header bar (above), which removes the overlap outright.
+KPI cards two-up. The recurring block becomes an `Adw.ExpanderRow` titled with its summary
+("2 overdue · 2 total"), so the page opens on the invoice list.
+
+### 5. Time (`zeiten`)
+
+**Today:** already close. The timer reads 00:00:00 at `title-1`, the `Adw.WrapBox` form stacks its
+four controls into three rows, unbilled entries and tracked time follow.
+
+**Phone:** the timer block is the one full-width card. The form keeps wrapping but the project
+dropdown and the label entry share a row at 360 px (they fit: 140 + 190). The play button stays 48
+px and moves to the end of the description row, which it already does.
+
+`Invoice` buttons on unbilled rows are a single action — they stay buttons, per the row rule.
+
+### 6. Contacts (`kontakte`)
+
+**Today:** a four-paragraph explanatory text eats the top third; `Add a contact` and `Import` sit
+above the list; every row is three lines tall because `Supplier` and `Delete` stacked.
+
+**Phone:** the explanation becomes a `Gtk.Label` inside an `Adw.ExpanderRow` ("What is this?"),
+collapsed. `Add a contact` to the header bar, `Import` to its menu. Row actions to a menu (above),
+which returns rows to two lines with the avatar, name, and the open amount as a suffix.
+
+*Borrowed from:* iOS Contacts — avatar, name, one detail, nothing else.
+
+### 7. Reports (`auswertungen`)
+
+**Today:** four KPI cards, then the BWA table — a twelve-month grid that is **cut off at March**
+with no indication that nine more months exist.
+
+**Phone:** the table is the hard case, and a 12 × 10 grid genuinely does not fit 360 px. Two
+changes, in order:
+
+1. The table scrolls horizontally with the **item column frozen** (`Gtk.ScrolledWindow` plus a
+   sticky first column), so a row stays identifiable while you scroll months.
+2. Above it, a month `chipScroller` jumps the scroll position, and the default position is the
+   **current month**, not January.
+
+The insights list below needs nothing beyond the row rules.
+
+*Borrowed from:* Material's data-table guidance for compact widths (freeze the identifying column,
+scroll the rest) — the only honest answer for a wide table on a narrow screen.
+
+### 8. Deadlines (`fristen`)
+
+**Today:** works. Three grouped lists, each row with a date, a relative hint and one action.
+
+**Phone:** *no structural change.* Only the shared rules: 48 px for `Paid` / `Filed`, and the
+group descriptions ("Filed, but not yet recorded as paid. Amounts and dates are estimated …")
+capped at two lines with the rest behind the expander, because at 360 px that paragraph is four
+lines above the first deadline.
+
+### 9. Tax (`steuer`)
+
+**Today:** four sub-tabs in a scrolling switcher; the EÜR tab is a clean boxed list; the USt-VA
+tab is readable. The unclassified-bookings banner wraps to two centred lines.
+
+**Phone:** keep the tabs in the `Adw.ViewStack`. The EÜR figure rows are already
+title-plus-value-plus-chevron, which is the right phone row. The download icon next to
+"Anlage EÜR 2025" is 32 px and moves to the header bar.
+
+Long notice texts in USt-VA ("1 payment to Hetzner … went to an IBAN never paid before") stay full
+— this is the one place where truncation would hide the reasoning, and the HIG's advice to
+summarise loses to the app's own rule that every figure carries its derivation.
+
+### 10. Projects (`projekte`)
+
+**Today:** explanation paragraph, one KPI card, `+ Add a project` beside a heading, two rows.
+Half the screen is empty.
+
+**Phone:** explanation into an expander, `Add a project` to the header bar. With two projects the
+page is short — the empty state below the list is the right place for the explanation, via the
+existing `emptyState` helper.
+
+### 11. Contracts (`vertraege`)
+
+**Today:** four KPI cards one-up (500 px), chips, `Export deadlines`, `New contract` — **not a
+single contract is visible on the first screen.**
+
+**Phone:** the sharpest case for the shared rules, and they are enough: cards two-up (180 px),
+`New contract` to the header bar, `Export deadlines` to the header menu, chips directly above the
+list. The first contract then sits around 320 px, above the fold.
+
+### 12. Accounts (`konten`)
+
+**Today:** `Add account` is a full-width pill under the heading; each connection card carries a
+full-width `Sync` button and a 32 px trash icon on its own line.
+
+**Phone:** `Add account` to the header bar. Connection cards keep their two-line identity (name,
+owner · account) with the balance as a suffix; `Sync` and `Delete` go into the row menu. The
+`live` / `File` badge stays — it is the one piece of state that tells you whether the number is
+current.
+
+### 13. Settings (`einstellungen`)
+
+**Today:** the most phone-ready view — boxed lists of `Adw.ActionRow`s throughout.
+
+**Phone:** *no structural change.* Two row-level fixes: paths like
+`/home/jumplink/.local/share/eu.jumplink.Steuererklaerung/backups/2026-10-20T09-37-41-476Z` wrap
+to four lines, so they get `ellipsize: middle` with the full value in the tooltip and on long
+press; and `Back up now` stays full width, because it is this page's primary action and there is
+no list for it to crowd.
+
+## Implementation plan
+
+Ordered so each step is a reviewable PR that leaves the app working, and so the steps that help
+every page come before the ones that help one.
+
+| # | PR | Scope | Why here |
+|---|----|-------|----------|
+| 1 | **Breakpoint ladder** | Add the `max-width: 480px` phone breakpoint to `window.blp` and expose it to views as a `narrow` property on the window, so no view invents its own window-width condition. | Everything below needs one place to ask "are we on a phone?". |
+| 2 | **Shared helpers** | `kpiFlow` two-up, `rowActions` → menu, 48 px targets, `chipScroller` fade + scroll-to-selection, in `views/util.ts` and `widgets/responsive.ts`, with tests. | One change fixes thirteen pages; every later PR gets smaller. |
+| 3 | **Header-bar primary action** | A per-view declaration of "the one creating action" and "the secondary ones"; `window.ts` renders them into the content header on a phone. Removes the Invoices button/chip overlap. | Unblocks the per-view PRs, which otherwise each re-solve it. |
+| 4 | **Context button** | Title widget becomes a `Gtk.MenuButton` on a phone, opening an `Adw.Dialog` with the existing entity and year switchers. | The one real gap the collapse leaves; independent of the view work. |
+| 5 | **Section list as home** | Badges on the nav rows, fed by the counts `home-view` already computes. | Makes the root page worth landing on. Needs 1, nothing else. |
+| 6 | **Overview, Contracts, Invoices** | Apply 2 + 3; demo banner one-line on a phone. | The three worst pages in the sweep, and they need no new mechanism. |
+| 7 | **Transactions, Contacts, Projects, Accounts** | Expander for KPI/explanation blocks, search bar, row menus. | Same pattern, four pages. |
+| 8 | **Reports table** | Frozen item column, horizontal scroll, month chips defaulting to the current month. | The only genuinely new widget work; isolated, so it can take its time. |
+| 9 | **Receipt inbox polish** | Queue toggle into the header, re-open the queue after confirming, `Check & confirm` in a pinned `Gtk.ActionBar`. | Behavioural, needs the review flow's own tests. |
+| 10 | **Dialog sizing** | Sheets size to content; group headers follow the row rule. | Small, affects every dialog, safest last. |
+| 11 | **Remember the last section** | Persist `NavViewId` per entity in `GSettings`. | Pure convenience; worth nothing until 5 exists. |
+| 12 | **Mobile screenshots** | Extend `app/dev/metainfo-screenshots.sh` to cover the reworked pages; add the 360 px pass to the screenshot docs. | Proves the result and feeds the Flathub listing. |
+
+**Verification for every step:** `gjsify run check` in `app/`, plus a 360 × 760 screenshot of each
+touched page under `scripts/headless-run`, compared against the same page at 1280 × 860 to show
+the desktop is untouched.
+
+## What this costs in strings
+
+New user-visible strings are English msgids with a German catalogue entry, per
+[i18n-status.md](i18n-status.md) and `CONTRIBUTING.md`. The German stays **gender-neutral**: no
+`der Nutzer`, no `Benutzer:innen` — address the reader directly (`Sie`/imperative) or name the
+thing, which is what the existing catalogue already does.
+
+| Where | English msgid | German | Note |
+|-------|---------------|--------|------|
+| Row overflow button | `More actions` | `Weitere Aktionen` | Tooltip; one string for all thirteen pages. |
+| Context button a11y | `Entity and year` | `Entität und Jahr` | Accessible name of the title menu button. |
+| Demo banner, short | `My data` | `Eigene Daten` | Phone variant of `Use my own data`; a second msgid, not a shortened translation, because only the phone wants it. |
+| Contacts / Projects explainer | `What is this?` | `Was ist das?` | Expander title. |
+| Transactions KPI expander | `Figures` | `Zahlen` | Expander title over the collapsed KPI block. |
+| Reports month chips | *(none)* | — | Month names come from the locale, not the catalogue. |
+| Nav row badges | *(none)* | — | Numbers only; the count's meaning is the row's existing subtitle. |
+
+Three strings change context rather than text: the primary creating actions (`New invoice`,
+`New contract`, `Add a contact`, `Add account`) become icon buttons on a phone and need a
+`tooltip-text` with the same msgid — no new entries, but the `TRANSLATORS` comment should say the
+label is also used as a tooltip, since German tooltips and buttons differ in register elsewhere.
+
+**No string may be shortened for the phone by truncating the German.** Where a phone needs a
+shorter label, it gets its own msgid (as `My data` does), so the translator sees both and can
+choose per language.

@@ -465,3 +465,4 @@ eigene Shell mit; zum Beenden `ActivateAction 'app' 'quit'` verwenden.
 
 - [PDF-Kontoauszüge per FinTS ins DMS](fints-kontoauszuege.md)
 - [macOS und Windows: Pakete, Geheimnisse, Grenzen](plattformen.md)
+- [Telefon-Breite: Entwurf für 360 × 760](mobile-layout.md)
