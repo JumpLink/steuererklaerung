@@ -19,6 +19,7 @@ import desktopReadClient from './unit/desktop/read-client.test.ts';
 import desktopReadQueries from './unit/desktop/read-queries.test.ts';
 import launchModeSuite from './unit/desktop/launch-mode.test.ts';
 import breakpointOrder from './unit/desktop/breakpoint-order.test.ts';
+import phoneRules from './unit/desktop/phone-rules.test.ts';
 import privacyAck from './unit/elster/privacy-ack.test.ts';
 import kredit from './unit/finanzierung/kredit.test.ts';
 import finanzierung from './unit/finanzierung/finanzierung.test.ts';
@@ -469,6 +470,7 @@ run({
     desktopReadQueries,
     launchModeSuite,
     breakpointOrder,
+    phoneRules,
     privacyAck,
     testIsolation,
     fieldCoverageScan,

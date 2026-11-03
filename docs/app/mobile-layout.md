@@ -134,13 +134,23 @@ Today `kpiFlow` ([`views/util.ts`](../../app/src/frontends/desktop/views/util.ts
 cards (Overview) spends **the entire first screen and then some** on numbers before any list
 appears — the phone shots of Overview, Transactions, Contracts and Reports all show it.
 
-On a phone, cards go **two per row** with the big number scaled down one step (`title-2` instead
-of `title-1`) and the caption clipped to one line. Four cards then cost ~180 px instead of ~500,
-and the list below them starts above the fold. The mechanism is the flow box's own
-`min-children-per-line: 2` under the phone breakpoint; no new widget.
+On a phone, cards go **two per row** and the caption wraps instead of being clipped. Four cards
+then cost ~180 px instead of ~500, and the list below them starts above the fold. The mechanism
+is the flow box's own `min-children-per-line: 2` under the phone breakpoint; no new widget.
 
 Where a view has a single headline figure (Time's running timer, Receipt inbox's count), it stays
 full width — one card per row is right when there is one card.
+
+*Built, with two corrections to the paragraph above.* The value step `title-1` → `title-2` was
+already stale when this was written: `kpiCard` has used `title-2` since the app shipped, so there
+is nothing to scale down. And clipping the caption is the wrong half of the pair — an ellipsizing
+label has a tiny minimum but keeps its full NATURAL width, which is what sets the flow box's
+column. Overview's captions go through `wrappingLabel` instead; with clipping the window still
+demanded 486 px and the view cut off at 360.
+
+Overview needed one further change to reach two-up: the 90 px sparkline in the revenue card is
+**hidden while the window is narrow**. It is a trend at a glance, not a number, and at half width
+it is the single widest thing in the card.
 
 *Borrowed from:* iOS's two-column widget grid and Material's compact metric tiles. Both settled on
 two columns at this width for the same reason: a number plus a short caption needs about 160 px,
@@ -160,6 +170,22 @@ keeps it as a button — a menu containing one item is a tax on the common case.
 
 `pinnableCluster` already carries the narrow/wide switch; this is the same switch with a third
 state, so the call sites do not change.
+
+*Built, with three deviations.* **The popover is a plain `Gtk.Popover` of flat buttons with the
+`.menu` style class, not a `Gtk.PopoverMenu`.** A `Gtk.PopoverMenu` needs a `Gio.MenuModel`, which
+needs every entry to be a named `Gio.Action`; all five call sites connect closures to `clicked`.
+Rewriting five views' row actions into action groups is a change of its own, and the plain popover
+is visually identical.
+
+**The collapse is not driven by the view's `narrow` flag** but by the window's `narrow` property
+via `onNarrow`. The flag the call sites pass comes from an in-view `Adw.BreakpointBin`, which
+measures the content pane — 537 px inside a 1280 px window — so a desktop user with a narrow
+sidebar would get a phone's menu.
+
+**Rows with no desktop pinning call the phone half directly.** `pinnableCluster` is about keeping a
+multi-button cluster on one line; Contacts rows have a single `Delete` button and never needed it,
+so the 48 px target would never have been applied there. The phone half is exported as
+`phoneRowActions` for exactly that case.
 
 *Borrowed from:* iOS's trailing ellipsis button and Material's overflow menu. Deliberately **not**
 borrowed: swipe-to-delete. There is no Adwaita idiom for it, it hides destructive actions behind
@@ -391,7 +417,7 @@ every page come before the ones that help one.
 | # | PR | Scope | Why here |
 |---|----|-------|----------|
 | 1 | **Breakpoint ladder** *(done)* | Add the `max-width: 480px` phone breakpoint to `window.blp` and expose it to views as a `narrow` property on the window, so no view invents its own window-width condition. | Everything below needs one place to ask "are we on a phone?". |
-| 2 | **Shared helpers** | `kpiFlow` two-up, `rowActions` → menu, 48 px targets, `chipScroller` fade + scroll-to-selection, in `views/util.ts` and `widgets/responsive.ts`, with tests. | One change fixes thirteen pages; every later PR gets smaller. |
+| 2 | **Shared helpers** *(done)* | `kpiFlow` two-up, `rowActions` → menu, 48 px targets, `chipScroller` fade + scroll-to-selection, in `views/util.ts` and `widgets/responsive.ts`, with tests. | One change fixes thirteen pages; every later PR gets smaller. |
 | 3 | **Header-bar primary action** | A per-view declaration of "the one creating action" and "the secondary ones"; `window.ts` renders them into the content header on a phone. Removes the Invoices button/chip overlap. | Unblocks the per-view PRs, which otherwise each re-solve it. |
 | 4 | **Context button** | Title widget becomes a `Gtk.MenuButton` on a phone, opening an `Adw.Dialog` with the existing entity and year switchers. | The one real gap the collapse leaves; independent of the view work. |
 | 5 | **Section list as home** | Badges on the nav rows, fed by the counts `home-view` already computes. | Makes the root page worth landing on. Needs 1, nothing else. |

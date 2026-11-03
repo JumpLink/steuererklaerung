@@ -36,7 +36,7 @@ import { showToast } from '../toast.ts';
 import { errorDialog } from './dialogs.ts';
 import { BhTxDetailDialog } from './tx-detail-dialog.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
-import { pinnableCluster, rowActions } from '../widgets/responsive.ts';
+import { overflowLabel, pinnableCluster, rowActions } from '../widgets/responsive.ts';
 
 const ABSTAENDE: SerienAbstand[] = ['monatlich', 'vierteljaehrlich', 'halbjaehrlich', 'jaehrlich'];
 
@@ -216,7 +216,9 @@ export class BhLaufendeKostenView extends Adw.Bin {
             // An icon label keeps the row's title readable next to three buttons and the amount.
             const icon = label.endsWith('-symbolic');
             const b = new Gtk.Button({ valign: Gtk.Align.CENTER, tooltipText: `${tip}: ${k.empfaenger}` });
-            if (icon) b.set_icon_name(label);
+            // The tooltip names the row because every row has these buttons; a phone's overflow
+            // menu already belongs to one row, so there it is the bare verb.
+            if (icon) overflowLabel(b, tip).set_icon_name(label);
             else b.set_label(label);
             if (css) b.add_css_class(css);
             b.connect('clicked', run);

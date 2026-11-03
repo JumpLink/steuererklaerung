@@ -43,7 +43,7 @@ import { errorText } from '../error-text.ts';
 import { showToast } from '../toast.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { amountLabel, GroupRows, LoadToken, loadIntoStack, markup } from './util.ts';
-import { pinnableCluster, rowActions } from '../widgets/responsive.ts';
+import { overflowLabel, pinnableCluster, rowActions } from '../widgets/responsive.ts';
 import { BhZeitProjektDialog } from './zeit-projekt-dialog.ts';
 import { BhZeitRechnungDialog } from './zeit-rechnung-dialog.ts';
 import { plainActionRow } from './plain-rows.ts';
@@ -448,7 +448,9 @@ export class BhZeitenView extends Adw.Bin {
             cssClasses: ['flat'],
         });
         edit.connect('clicked', () => this.onEditProject(entry, this.model as TimeViewModel));
-        actions.append(edit);
+        // Both tooltips read "Already invoiced" once an entry is locked, which is no help at all
+        // in a phone's overflow menu — so each button says there what it does.
+        actions.append(overflowLabel(edit, _('Assign project')));
         const del = new Gtk.Button({
             iconName: 'user-trash-symbolic',
             valign: Gtk.Align.CENTER,
@@ -457,7 +459,7 @@ export class BhZeitenView extends Adw.Bin {
             cssClasses: ['flat'],
         });
         del.connect('clicked', () => void this.onDelete(entry));
-        actions.append(del);
+        actions.append(overflowLabel(del, _('Delete entry')));
         return row;
     }
 
