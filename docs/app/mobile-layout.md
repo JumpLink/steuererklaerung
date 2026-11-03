@@ -25,10 +25,30 @@ Four widths, and only four. A new breakpoint needs a reason that one of these ca
 
 | Name | Condition | What changes |
 |------|-----------|--------------|
-| **Phone** | `max-width: 480px` | One column everywhere; KPI cards become a two-up grid; row actions collapse into a menu; the view's own toolbar scrolls. |
-| **Collapsed** | `max-width: 720px` | The `Adw.NavigationSplitView` collapses: the section list becomes the root page of a navigation stack. *(exists today)* |
-| **Desktop** | — (default) | Sidebar beside content, assistant as an overlay. |
 | **Wide** | `min-width: 1180px` | The assistant docks beside the content at 390 px. *(exists today)* |
+| **Desktop** | — (default) | Sidebar beside content, assistant as an overlay. |
+| **Collapsed** | `max-width: 720px` | The `Adw.NavigationSplitView` collapses: the section list becomes the root page of a navigation stack. *(exists today)* |
+| **Phone** | `max-width: 480px` | Everything Collapsed does, **restated**, plus: one column everywhere; KPI cards become a two-up grid; row actions collapse into a menu; the view's own toolbar scrolls. *(exists today, step 1)* |
+
+**The ladder is not cumulative, and the order in `window.blp` is load-bearing.** This table used to
+read bottom-up and imply that Phone stacks on top of Collapsed. It does not:
+`adw_breakpoint_bin_size_allocate` walks the breakpoints in **reverse order of addition** and stops
+at the **first** whose condition holds, so exactly one rung is ever in force and
+`current-breakpoint` is a single breakpoint. Two consequences, both now enforced by
+`gjsify run check:breakpoints` (`app/dev/check-breakpoints.js`, unit-tested in
+`tests/unit/desktop/breakpoint-order.test.ts`):
+
+- **Every rung restates what it needs.** Phone repeats `split_view.collapsed: true`; Collapsed's
+  setters do not reach it.
+- **`max-width` rungs are declared widest first, narrowest last** (and `min-width` rungs the other
+  way round). The phone rung written above the 720 px one compiles, builds and runs — and a 360 px
+  window simply matches `max-width: 720px` first and keeps the wider layout, which reads like a bug
+  in the view rather than in the template.
+
+Views do not re-derive this. The window exposes a read-only **`narrow`** property, fed by the named
+`phone_breakpoint` rung, and a view subscribes with `onNarrow()` from
+[`widgets/narrow.ts`](../../app/src/frontends/desktop/widgets/narrow.ts) — which waits for the
+widget to be rooted, because a view is built before it is added to the window.
 
 **The in-view breakpoints are a different measurement and keep their own numbers.** The
 `Adw.BreakpointBin` conditions inside the views (`max-width: 450px` in most `.blp` files) measure
@@ -370,7 +390,7 @@ every page come before the ones that help one.
 
 | # | PR | Scope | Why here |
 |---|----|-------|----------|
-| 1 | **Breakpoint ladder** | Add the `max-width: 480px` phone breakpoint to `window.blp` and expose it to views as a `narrow` property on the window, so no view invents its own window-width condition. | Everything below needs one place to ask "are we on a phone?". |
+| 1 | **Breakpoint ladder** *(done)* | Add the `max-width: 480px` phone breakpoint to `window.blp` and expose it to views as a `narrow` property on the window, so no view invents its own window-width condition. | Everything below needs one place to ask "are we on a phone?". |
 | 2 | **Shared helpers** | `kpiFlow` two-up, `rowActions` → menu, 48 px targets, `chipScroller` fade + scroll-to-selection, in `views/util.ts` and `widgets/responsive.ts`, with tests. | One change fixes thirteen pages; every later PR gets smaller. |
 | 3 | **Header-bar primary action** | A per-view declaration of "the one creating action" and "the secondary ones"; `window.ts` renders them into the content header on a phone. Removes the Invoices button/chip overlap. | Unblocks the per-view PRs, which otherwise each re-solve it. |
 | 4 | **Context button** | Title widget becomes a `Gtk.MenuButton` on a phone, opening an `Adw.Dialog` with the existing entity and year switchers. | The one real gap the collapse leaves; independent of the view work. |
