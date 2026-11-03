@@ -14,6 +14,7 @@
 import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 import GObject from '@girs/gobject-2.0';
+import Pango from '@girs/pango-1.0';
 
 import Template from './steuererklaerung-view.blp';
 import {
@@ -29,6 +30,7 @@ import { navigateTo, type NavViewId } from '../nav.ts';
 import { snapshotFormsFromPlan, ustvaTargetsForYear } from '../data/submission.ts';
 import { SubmissionSection } from './absenden-section.ts';
 import { BhToggleTabs } from '../widgets/toggle-tabs.ts';
+import { wrappingLabel } from '../widgets/responsive.ts';
 import type {
     TaxReturnPlan,
     TaxReturnSummary,
@@ -242,7 +244,7 @@ export class BhSteuererklaerungView extends Adw.Bin {
             hexpand: true,
             valign: Gtk.Align.CENTER,
         });
-        left.append(new Gtk.Label({ label: s.primary.label, xalign: 0, cssClasses: ['dim-label', 'caption'] }));
+        left.append(wrappingLabel({ label: s.primary.label, xalign: 0, cssClasses: ['dim-label', 'caption'] }));
         const accent = s.primary.kind === 'payment' ? 'warning' : 'success';
         left.append(
             new Gtk.Label({
@@ -251,14 +253,20 @@ export class BhSteuererklaerungView extends Adw.Bin {
                 cssClasses: ['title-1', 'numeric', accent],
             }),
         );
-        left.append(new Gtk.Label({ label: s.context, xalign: 0, cssClasses: ['dim-label', 'caption'] }));
+        left.append(wrappingLabel({ label: s.context, xalign: 0, cssClasses: ['dim-label', 'caption'] }));
         content.append(left);
 
         const right = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 4, valign: Gtk.Align.CENTER });
         for (const line of s.secondary) {
             const row = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 16 });
             row.append(
-                new Gtk.Label({ label: line.label, xalign: 0, hexpand: true, cssClasses: ['dim-label', 'caption'] }),
+                new Gtk.Label({
+                    label: line.label,
+                    xalign: 0,
+                    hexpand: true,
+                    ellipsize: Pango.EllipsizeMode.END,
+                    cssClasses: ['dim-label', 'caption'],
+                }),
             );
             row.append(
                 new Gtk.Label({ label: `${fmtDe(line.amount)} €`, xalign: 1, cssClasses: ['numeric', 'caption'] }),
