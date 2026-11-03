@@ -46,6 +46,7 @@ import { amountLabel, GroupRows, LoadToken, loadIntoStack, markup } from './util
 import { pinnableCluster, rowActions } from '../widgets/responsive.ts';
 import { BhZeitProjektDialog } from './zeit-projekt-dialog.ts';
 import { BhZeitRechnungDialog } from './zeit-rechnung-dialog.ts';
+import { plainActionRow } from './plain-rows.ts';
 
 /** Status label + colour class per row status — the invoice list's vocabulary (open = amber, done = green). */
 const STATUS_META: Record<TimeRowStatus, { label: () => string; css: string }> = {
@@ -297,14 +298,13 @@ export class BhZeitenView extends Adw.Bin {
 
         for (const row of model.unbilled) {
             const who = row.contactId ? (model.names.get(row.contactId) ?? row.contactId) : _('no customer');
-            const action = new Adw.ActionRow({
+            const action = plainActionRow({
                 title: timeProjectLabel(row, model.projectList),
                 subtitle: [
                     fmt(_('{hours} h'), { hours: toHours(row.seconds) }),
                     fmt(_n('{n} entry', '{n} entries', row.entries), { n: row.entries }),
                     who,
                 ].join(' · '),
-                useMarkup: false,
             });
             action.add_suffix(
                 new Gtk.Label({ label: formatDuration(row.seconds), cssClasses: ['numeric', 'dim-label'] }),

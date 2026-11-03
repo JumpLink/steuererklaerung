@@ -23,6 +23,7 @@ import type { AppEntity } from '../../entities.ts';
 import { comboRow, entryRow, removeRow, spinRow, spliceRow, type SettingsHost } from './rows.ts';
 import { helpFor } from '../../widgets/glossary-help.ts';
 import { _ } from '../../i18n.ts';
+import { plainExpanderRow } from '../plain-rows.ts';
 
 /** The widgets backing one Anlagegut expander (kept in a parallel array, not stashed on the row). */
 interface AnlageRowWidgets {
@@ -89,7 +90,7 @@ function addAnlageRow(
     rows: AnlageRowWidgets[],
     item: ElsterAnlagegut,
 ): void {
-    const row = new Adw.ExpanderRow({ title: item.bezeichnung.trim() || _('New asset'), useMarkup: false });
+    const row = plainExpanderRow({ title: item.bezeichnung.trim() || _('New asset') });
     const save = () => saveAnlagen(host, entity, rows);
     const w: AnlageRowWidgets = {
         row,
@@ -190,7 +191,7 @@ function addPrivatanteilRow(
     rows: PrivatanteilRowWidgets[],
     item: ElsterPrivatanteil,
 ): void {
-    const row = new Adw.ExpanderRow({ title: item.bezeichnung.trim() || _('New private share'), useMarkup: false });
+    const row = plainExpanderRow({ title: item.bezeichnung.trim() || _('New private share') });
     const save = () => savePrivatanteile(host, entity, rows);
     const w: PrivatanteilRowWidgets = {
         row,
@@ -261,9 +262,8 @@ function addSonderRow(
     partners: Partner[],
     item: ElsterSonderbetriebsausgabe,
 ): void {
-    const row = new Adw.ExpanderRow({
+    const row = plainExpanderRow({
         title: item.bezeichnung.trim() || _('New special partner expense'),
-        useMarkup: false,
     });
     const save = () => saveSonder(host, entity, rows, partners);
     const idx = Math.max(

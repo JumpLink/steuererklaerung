@@ -46,6 +46,7 @@ import { herkunftSatz as mailHerkunftSatz, neueBelegeSatz } from '../../../core/
 import { wrapButtonLabel } from '../widgets/responsive.ts';
 import { _, _p, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
+import { plainActionRow } from './plain-rows.ts';
 
 const DMS_LABEL: Record<string, string> = { builtin: _('built-in DMS'), paperless: 'Paperless' };
 
@@ -357,7 +358,7 @@ export class BhBelegEingangView extends Adw.Bin {
 
         const fact = (label: string, value: string | null) => {
             if (!value) return;
-            const row = new Adw.ActionRow({ title: label, useMarkup: false });
+            const row = plainActionRow({ title: label });
             row.add_suffix(new Gtk.Label({ label: value, cssClasses: ['dim-label'], valign: Gtk.Align.CENTER }));
             group.add(row);
         };

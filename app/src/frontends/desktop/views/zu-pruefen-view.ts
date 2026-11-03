@@ -34,6 +34,7 @@ import { navigateTo } from '../nav.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 import { _, _p, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
+import { plainActionRow } from './plain-rows.ts';
 
 interface QueueRow {
     row: Gtk.ListBoxRow;
@@ -379,10 +380,9 @@ export class BhZuPruefenView extends Adw.Bin {
 
     private renderDoneDetail(item: ZuPruefenRow): void {
         const group = new Adw.PreferencesGroup();
-        const row = new Adw.ActionRow({
+        const row = plainActionRow({
             title: _p('reviewed item', 'Done'),
             subtitle: this.done.get(item.id) ?? '',
-            useMarkup: false,
         });
         row.add_prefix(new Gtk.Image({ iconName: 'object-select-symbolic', cssClasses: ['success'] }));
         group.add(row);

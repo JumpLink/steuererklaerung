@@ -29,6 +29,7 @@ import type { HomeModel, HomeTask } from '../../../core/elster/home.ts';
 import type { FreiErgebnis, FreiVerfuegbarModel } from '../../../core/elster/frei-verfuegbar.ts';
 import { _, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
+import { plainActionRow } from './plain-rows.ts';
 
 const ACCENT = '#3584e4';
 const EXPENSE = '#c25d52';
@@ -291,7 +292,7 @@ export class BhHomeView extends Adw.Bin {
     private tasksGroup(m: HomeModel): Gtk.Widget {
         const group = new Adw.PreferencesGroup({ title: _('Up next') });
         for (const t of m.tasks) {
-            const row = new Adw.ActionRow({ title: t.title, subtitle: t.sub, useMarkup: false });
+            const row = plainActionRow({ title: t.title, subtitle: t.sub });
             // Leading marker tinted by the task tone (warn = amber) — same signal as the web badge.
             const meta = TASK_TONE[t.tone] ?? TASK_TONE.neutral;
             row.add_prefix(new Gtk.Image({ iconName: meta.icon, cssClasses: [meta.css], valign: Gtk.Align.CENTER }));

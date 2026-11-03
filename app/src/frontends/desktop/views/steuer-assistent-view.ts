@@ -24,6 +24,7 @@ import { comboRow, spinRow, toggleRow, type SettingsHost } from './einstellungen
 import { _, _p } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
 import { markup } from './util.ts';
+import { plainActionRow } from './plain-rows.ts';
 
 /** Full month names for the month combo — a function so the translator is already registered. */
 function monate(): string[] {
@@ -159,7 +160,7 @@ export class BhSteuerAssistentView extends Adw.Bin {
         const gateIds = new Set(this.topic.fragen.filter((q) => q.wennId).map((q) => q.wennId as string));
         for (const q of aktiveFragen(this.topic.fragen, this.answers)) group.add(this.questionRow(q, gateIds));
 
-        const preview = new Adw.ActionRow({ title: _('Preview'), subtitleLines: 0, useMarkup: false });
+        const preview = plainActionRow({ title: _('Preview'), subtitleLines: 0 });
         this.previewRow = preview;
         group.add(preview);
 

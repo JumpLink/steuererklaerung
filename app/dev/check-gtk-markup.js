@@ -6,7 +6,9 @@
 //
 // So every such property in src/frontends/desktop must be a literal, a translation call
 // (`_()` / `_p()` / `_n()`), wrapped in `markup()` (views/util.ts), or sit in a constructor that
-// sets `useMarkup: false`. Put `// markup-ok` on the line when a computed value is known safe.
+// is built through `plainActionRow` / `plainExpanderRow` (views/plain-rows.ts). A constructor that
+// passes `useMarkup: false` AND computed text is flagged too: GTK can parse the text before the flag
+// lands and logs `Failed to set text … from markup`. Put `// markup-ok` on the line when a computed value is known safe.
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -15,6 +17,9 @@ const DIR = join(ROOT, 'src/frontends/desktop');
 const WIDGETS =
     'ActionRow|ExpanderRow|SwitchRow|ComboRow|SpinRow|EntryRow|PreferencesGroup|PreferencesRow|Banner|Toast|StatusPage|ButtonRow';
 const PROPS = new Set(['title', 'subtitle', 'description']);
+// A string literal or a bare translation call: no data, so nothing for GTK to choke on.
+const STATIC =
+    /^(?:'(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"|_[pn]?\(\s*'(?:[^'\\\n]|\\.)*'\s*(?:,\s*'(?:[^'\\\n]|\\.)*'\s*)*\))$/;
 
 /**
  * Does the expression read a field off a record (`contact.name`, `h.title`, `this.topic.titel`)?
@@ -95,7 +100,16 @@ for (const file of walk(DIR)) {
         seen++;
         const body = text.slice(open + 1, end);
         const list = entries(body);
-        if (list.some((e) => e.key === 'useMarkup' && e.value === 'false')) continue;
+        if (list.some((e) => e.key === 'useMarkup' && e.value === 'false')) {
+            for (const e of list) {
+                if (!PROPS.has(e.key) || STATIC.test(e.value.trim())) continue;
+                const abs = text.slice(0, open + 1 + e.at + body.slice(e.at).search(/\S/)).split('\n').length;
+                problems.push(
+                    `${file.slice(ROOT.length)}:${abs}: ${m[0].slice(4, -2)} ${e.key}: ${e.value.slice(0, 60).replace(/\s+/g, ' ')} — useMarkup: false im Konstruktor reicht nicht (GTK parst den Text ggf. vor dem Flag und warnt „Failed to set text … from markup"): plainActionRow() / plainExpanderRow() aus views/plain-rows.ts nehmen`,
+                );
+            }
+            continue;
+        }
         for (const e of list) {
             if (!PROPS.has(e.key) || !readsData(e.value)) continue;
             const abs = text.slice(0, open + 1 + e.at + body.slice(e.at).search(/\S/)).split('\n').length;

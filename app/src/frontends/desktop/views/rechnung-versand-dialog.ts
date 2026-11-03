@@ -38,6 +38,7 @@ import { showToast } from '../toast.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { _, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
+import { plainActionRow } from './plain-rows.ts';
 
 const kib = (bytes: number): string => `${Math.max(1, Math.round(bytes / 1024))} KB`;
 
@@ -127,9 +128,8 @@ export class BhRechnungVersandDialog {
             );
         if (this.setup.account && this.storedPassword) {
             accounts.add(
-                new Adw.ActionRow({
+                plainActionRow({
                     title: fmt(_('From: {sender} (SMTP)'), { sender: this.setup.account.from }),
-                    useMarkup: false,
                 }),
             );
         } else {
@@ -207,13 +207,12 @@ export class BhRechnungVersandDialog {
             const hist = new Adw.PreferencesGroup({ title: _('Previous sends') });
             for (const h of this.setup.history) {
                 hist.add(
-                    new Adw.ActionRow({
+                    plainActionRow({
                         title: `${deDateTime(h.at)} · ${h.result === 'sent' ? _('sent') : _('failed')}`,
                         subtitle:
                             h.result === 'sent'
                                 ? fmt(_('to {recipients}'), { recipients: h.to.join(', ') })
                                 : (h.error ?? ''),
-                        useMarkup: false,
                     }),
                 );
             }
