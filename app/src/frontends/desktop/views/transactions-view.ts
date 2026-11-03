@@ -20,6 +20,7 @@
 import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 import GObject from '@girs/gobject-2.0';
+import GLib from '@girs/glib-2.0';
 
 import Template from './transactions-view.blp';
 import type { EnrichedTxData, EnrichedTxRow } from '../../../core/presenters/buchungen.ts';
@@ -40,6 +41,13 @@ import { _, fmt } from '../i18n.ts';
 
 /** Cap the rendered rows — a non-virtualised boxed list stays snappy up to a few hundred. */
 const MAX_ROWS = 400;
+
+/**
+ * Rows built per main-loop turn. Building and laying out 400 ActionRows in one go held the loop for
+ * ~450 ms after the page reported ready; in batches each turn is a frame or two and the window keeps
+ * painting (and the first screenful is there at once).
+ */
+const ROW_BATCH = 40;
 
 type TxFilter = 'all' | 'income' | 'expense' | 'ohneBeleg';
 const FILTERS: { id: TxFilter; label: string }[] = [
@@ -88,6 +96,8 @@ export class BhTransactionsView extends Adw.Bin {
     private selecting = false;
     private readonly marked = new Set<string>();
     private zuordnenButton: Gtk.Button | null = null;
+    /** The idle source that builds the remaining rows; replaced or removed by the next render. */
+    private rowSource = 0;
 
     constructor() {
         super();
@@ -230,6 +240,7 @@ export class BhTransactionsView extends Adw.Bin {
     }
 
     private fillList(rows: EnrichedTxRow[]): void {
+        this.cancelRowBuild();
         this.list.clear();
         const shown = rows.slice(0, MAX_ROWS);
         this._list_group.set_title(_('Transactions'));
@@ -261,8 +272,28 @@ export class BhTransactionsView extends Adw.Bin {
             );
             return;
         }
-        for (const r of shown) this.list.add(this.buildRow(r));
+        const first = shown.slice(0, ROW_BATCH);
+        for (const r of first) this.list.add(this.buildRow(r));
         this.applyDetailHook(shown);
+        this.buildRestInBatches(shown, first.length);
+    }
+
+    private cancelRowBuild(): void {
+        if (this.rowSource) GLib.source_remove(this.rowSource);
+        this.rowSource = 0;
+    }
+
+    /** Build `shown[from…]` ROW_BATCH at a time on idle; a newer render cancels what is left. */
+    private buildRestInBatches(shown: EnrichedTxRow[], from: number): void {
+        let next = from;
+        if (next >= shown.length) return;
+        this.rowSource = GLib.idle_add(GLib.PRIORITY_LOW, () => {
+            const end = Math.min(next + ROW_BATCH, shown.length);
+            for (; next < end; next++) this.list.add(this.buildRow(shown[next]));
+            if (next < shown.length) return GLib.SOURCE_CONTINUE;
+            this.rowSource = 0;
+            return GLib.SOURCE_REMOVE;
+        });
     }
 
     /** The header of the list: „Auswählen“, and while selecting „Projekt zuordnen (N)“ and „Fertig“. Business entities only. */
