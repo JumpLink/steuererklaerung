@@ -46,7 +46,6 @@ import {
     type SetupGapEntity,
 } from '../../core/actions/setup-gaps.ts';
 import { canRestart, rememberMode, restartInMode } from './restart.ts';
-import { loadDocuments } from '../../core/presenters/belege.ts';
 import { appSession } from './data/session.ts';
 import { reloadEst } from './data/settings.ts';
 import { VIEW_FACTORIES } from './views/registry.ts';
@@ -565,12 +564,6 @@ export class MainWindow extends Adw.ApplicationWindow {
             Number.isInteger(wantedYear) && this.currentEntity.years.includes(wantedYear)
                 ? wantedYear
                 : this.currentEntity.defaultYear;
-        // Warm the shared EÜR aggregate for the default entity-year in the background, so the first
-        // tax-family view the user opens (Steuer · EÜR · Steuererklärung · BWA · Einblicke · Offene
-        // Belege) is already loaded instead of blocking on the ~10 s Paperless fetch. Fire-and-forget:
-        // loadAggregate caches + dedupes, so the view's own reload reuses this in-flight fetch. Errors
-        // are surfaced by the view (which re-runs it), so they're swallowed here.
-        this.prefetchAggregate();
 
         this.renderEntitySwitcher();
         this.renderYearSwitcher();
@@ -866,20 +859,6 @@ export class MainWindow extends Adw.ApplicationWindow {
         if (fresh) this.currentEntity.est = fresh;
         appSession().invalidate(this.currentEntity.id);
         this.reloadVisibleView();
-    }
-
-    /** Warm the shared EÜR aggregate + DMS docs for the active entity-year in the background (best-effort). */
-    private prefetchAggregate(): void {
-        if (!this.currentEntity) return;
-        // Only a business entity (ELSTER config) has an EÜR aggregate to warm. A `privat` entity has
-        // none — prefetching it would kick off a pointless Paperless fetch that can stall the GTK loop.
-        if (!this.currentEntity.elster) return;
-        void appSession()
-            .aggregate(this.currentEntity, this.currentYear)
-            .catch(() => {});
-        // The DMS docs feed the enriched Buchungen (receipts) + Offene Belege; warm them too so
-        // Buchungen opens without a fresh Paperless fetch (shares documents.ts's cache).
-        void loadDocuments(appSession(), this.currentEntity, this.currentYear).catch(() => {});
     }
 
     private onEntityChanged(id: string): void {
