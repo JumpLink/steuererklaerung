@@ -5,6 +5,7 @@ import { estSubcommand } from './est.ts';
 import { euerSubcommand } from './euer.ts';
 import { explainSubcommand, reclassifySubcommand } from './explain.ts';
 import { feststellungSubcommand } from './feststellung.ts';
+import { aufgabebilanzSubcommand } from './aufgabebilanz.ts';
 import { stammdatenSubcommand } from './stammdaten.ts';
 import { steuerkontoSubcommand } from './steuerkonto.ts';
 import { crosscheckSubcommand } from './crosscheck.ts';
@@ -31,7 +32,7 @@ export const elsterCommand: CommandModule = {
         yargs
             .demandCommand(
                 1,
-                'Choose a subcommand: setup, datenschutz, ustva, euer, explain, reclassify, uste, gewst, feststellung, stammdaten, wizard, est, steuerkonto, kontoabfrage, pin, crosscheck, snapshot, signoff, submit, filing, lock',
+                'Choose a subcommand: setup, datenschutz, ustva, euer, explain, reclassify, uste, gewst, feststellung, aufgabebilanz, stammdaten, wizard, est, steuerkonto, kontoabfrage, pin, crosscheck, snapshot, signoff, submit, filing, lock',
             )
             .option('entity', {
                 type: 'string',
@@ -45,6 +46,7 @@ export const elsterCommand: CommandModule = {
             .command(explainSubcommand)
             .command(reclassifySubcommand)
             .command(feststellungSubcommand)
+            .command(aufgabebilanzSubcommand)
             .command(stammdatenSubcommand)
             .command(steuerkontoSubcommand)
             .command(crosscheckSubcommand)

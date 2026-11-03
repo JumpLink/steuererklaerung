@@ -377,6 +377,19 @@ keine Steuer; die App rechnet **nur die Regelverjährung** und nennt das Ergebni
 
 ---
 
+## Betriebsaufgabe — Aufgabebilanz und Übergangsgewinn
+
+Abrufstand 2026-11-03. Umgesetzt in `app/src/core/elster/aufgabebilanz.ts`
+(`steuer elster aufgabebilanz report`).
+
+| Regel | App-Umsetzung | Quelle |
+|---|---|---|
+| Wer den Betrieb veräußert oder aufgibt, wird so behandelt, als wäre er im Augenblick der Aufgabe zum Bestandsvergleich übergegangen | Bilanz zum Aufgabedatum aus Restbuchwerten, Banksalden, Forderungen, Verbindlichkeiten, Rückstellungen; Eigenkapital als Saldo | R 4.5 Abs. 6 EStR |
+| Korrekturen beim Übergang § 4 Abs. 3 → § 4 Abs. 1: + Forderungen, − Verbindlichkeiten, − Rückstellungen | Übergangsgewinn netto (die EÜR rechnet netto; USt in Forderungen und Vorsteuer in Verbindlichkeiten stehen nur in der Bilanz) | Anlage zu R 4.6 EStR, [EStH Anlage](https://esth.bundesfinanzministerium.de/esth/2019/B-Anlage-zu-den-EstR-2012/inhalt.html) |
+| Der Übergangsgewinn ist laufender Gewinn des letzten Wirtschaftsjahres, nicht Teil des Aufgabegewinns; keine Verteilung auf drei Jahre | Überleitung: EÜR bis zur Aufgabe + Übergangsgewinn = laufender Gewinn | R 4.6 Abs. 1 Satz 5 EStR; H 4.5 (6) EStH „Übergangsgewinn"; H 4.6 EStH „Keine Verteilung des Übergangsgewinns" |
+| Was erst nach der Aufgabe entsteht, bleibt nachträgliche Einkünfte, ermittelt nach § 4 Abs. 3 | Posten mit `entstanden` nach dem Aufgabedatum bleiben § 24 | § 24 Nr. 2 EStG; BFH 22.02.1978, I R 137/74, BStBl II 1978, 430 |
+| Rückstellung für eine Leistung vor der Aufgabe, deren Rechnung danach kommt | netto (der Vorsteuerabzug folgt mit der Rechnung) | § 249 Abs. 1 HGB i. V. m. § 5 Abs. 1 EStG |
+
 ## Weitere maßgebliche Quellen (allgemein)
 
 - **ELSTER / ERiC**: die verbindliche Übermittlung + Plausibilitätsprüfung; lokale Schemata unter
