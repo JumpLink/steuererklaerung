@@ -22,6 +22,7 @@ import {
 } from '../../../core/actions/classifications.ts';
 import { createAppContext } from '../../../core/context.ts';
 import { appSession } from './session.ts';
+import { reads } from '../read/index.ts';
 import { dmsProviderFor } from './dms.ts';
 import type { AppEntity } from '../entities.ts';
 
@@ -64,9 +65,7 @@ export function loadDecisionLog(_entity: AppEntity, txId: string): DecisionLogEn
  * the year's numbers are built from.
  */
 export async function loadEuerCategories(entity: AppEntity, year: number): Promise<string[]> {
-    const agg = await appSession().aggregate(entity, year);
-    const labels = [...agg.income, ...agg.expenses].map((c) => c.category);
-    return [...new Set(labels)].sort((a, b) => a.localeCompare(b, 'de'));
+    return reads.euerCategories(entity, year);
 }
 
 /**

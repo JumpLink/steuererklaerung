@@ -29,7 +29,6 @@ import {
     captureSnapshot,
     keyringAvailable,
     loadKeystorePath,
-    loadSubmissionOverview,
     lookupElsterPin,
     releaseSignoff,
     sendLive,
@@ -45,6 +44,7 @@ import {
 } from '../data/submission.ts';
 import type { AppEntity } from '../entities.ts';
 import { appSession } from '../data/session.ts';
+import { reads } from '../read/index.ts';
 import {
     loadEstPdf,
     loadEuerPdf,
@@ -52,9 +52,7 @@ import {
     loadGewstPdf,
     loadUstePdf,
 } from '../../../core/presenters/steuer.ts';
-import { doppelzahlungHinweisCounts } from '../../../core/actions/invoices/doppelzahlung.ts';
-import { loadVorAbgabeHinweise, type YearHinweis } from '../../../core/presenters/hinweise.ts';
-import { abgabeWarnungen } from '../../../core/invoices/doppelzahlung-text.ts';
+import type { YearHinweis } from '../../../core/presenters/hinweise.ts';
 import { deDateTime, eur } from '../../../core/lib/format.ts';
 import { LoadToken, applyScrollToHook, currentOperator, markup, saveFileViaDialog } from './util.ts';
 import { errorDialog } from './dialogs.ts';
@@ -140,15 +138,7 @@ export class SubmissionSection {
         const token = this.token.next();
         Promise.resolve()
             .then(async () => {
-                const overview = await loadSubmissionOverview(this.entity, this.year, this.targets);
-                const counts = await doppelzahlungHinweisCounts(this.entity.id, this.year);
-                const hinweise = await loadVorAbgabeHinweise(appSession(), this.entity, this.year).catch(
-                    (err: unknown) => {
-                        console.error(`[app] Vor der Abgabe: ${msg(err)}`);
-                        return [];
-                    },
-                );
-                return { overview, warnings: abgabeWarnungen(counts), hinweise };
+                return await reads.absenden(this.entity, this.year, [...this.targets]);
             })
             .then(({ overview, warnings, hinweise }) => {
                 if (token !== this.token.current) return; // superseded by a newer reload
