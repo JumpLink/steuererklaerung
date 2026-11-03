@@ -339,9 +339,10 @@ export class SubmissionSection {
         // as three dots is worse than none — the buttons say what they do, and the group above says
         // which form they belong to.
         const row = new Adw.ActionRow({ title: '' });
-        const box = new Gtk.Box({
-            orientation: Gtk.Orientation.HORIZONTAL,
-            spacing: 6,
+        // A wrapping cluster: six labelled buttons are ~714 px in one line, which a phone cannot give.
+        const box = new Adw.WrapBox({
+            childSpacing: 6,
+            lineSpacing: 6,
             valign: Gtk.Align.CENTER,
             hexpand: true,
             halign: Gtk.Align.START,

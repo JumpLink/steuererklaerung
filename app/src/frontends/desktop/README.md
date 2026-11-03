@@ -121,6 +121,8 @@ verlangten. Deshalb immer `natural-wrap-mode: none` dazu (in TS: `wrappingLabel`
 soll. Bei `Gtk.Entry` ist es umgekehrt herum richtig: `width-chars` ist das Minimum,
 `max-width-chars` hält die natürliche Desktop-Breite.
 
+**Wächter: `gjsify run check:mobile-width`** (`app/dev/mobile-width-check.sh`) öffnet jede Seite, die Hub-Reiter und die wichtigsten Dialoge mit Demo-Daten bei 360×760 unter `headless-run` und schlägt bei jeder `exceeds … width`-Warnung von libadwaita fehl. Er braucht einen Compositor und gehört deshalb nicht in `check`.
+
 **`STEUER_DEBUG_MEASURE=<px>`** läuft den Widget-Baum ab und meldet jedes Widget, dessen Minimum
 über `<px>` liegt, mit Pfad und zugeteilter Breite (`window.ts`). Drei Fallen, jede hat einmal
 „alles sauber" gemeldet, während die Screenshots sichtbar abgeschnitten waren:

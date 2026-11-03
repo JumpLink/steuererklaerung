@@ -7,11 +7,19 @@ template $BhToggleTabs: Gtk.Box {
   orientation: vertical;
   spacing: 14;
 
-  Gtk.Box bar {
-    homogeneous: true;
-    hexpand: true;
+  // Sideways scroller: the chips (four tabs with status icons) want ~665 px, which on a phone was
+  // the minimum width of the whole window. Overlay scrollbar, natural width kept: no desktop change.
+  Gtk.ScrolledWindow {
+    hscrollbar-policy: automatic;
+    vscrollbar-policy: never;
+    propagate-natural-width: true;
 
-    styles ["linked"]
+    child: Gtk.Box bar {
+      homogeneous: true;
+      hexpand: true;
+
+      styles ["linked"]
+    };
   }
 
   Gtk.Stack stack {
