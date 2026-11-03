@@ -154,6 +154,15 @@
             "fields": [
                 "entity.ts:entschieden_am"
             ]
+        },
+        "aufgabebilanz-nur-cli": {
+            "reason": "Die Aufgabebilanz hat heute nur die CLI (`elster aufgabebilanz report`); sie wird einmal je Betriebsaufgabe gebraucht. Die Felder klassifizieren einzelne Buchungen um bzw. tragen Steuerkonto-Stände nach — eine Ansicht dafür gehört in die Gewerbe-Aufgabe-Seite, wenn sie kommt.",
+            "fields": [
+                "elster.ts:kasse",
+                "elster.ts:seite",
+                "elster.ts:entstanden",
+                "elster.ts:als"
+            ]
         }
     }
 }

@@ -148,6 +148,41 @@ const NachtraeglicherPostenSchema = z.object({
     ust_satz: z.number().min(0).max(1).default(0.19),
     /** Optional: the successor-account transaction id this relates to (audit trail / de-dup). */
     quell_transaktion_id: z.string().optional(),
+    /**
+     * When the claim/obligation arose (YYYY-MM-DD). Before the Aufgabe ⇒ the Aufgabebilanz carries it
+     * as Forderung/Verbindlichkeit (Übergangsgewinn); after ⇒ it stays §24. Default: before.
+     */
+    entstanden: z.string().optional(),
+    /** Explicit Aufgabebilanz classification; wins over `art`/`entstanden`. */
+    als: z.enum(['forderung', 'verbindlichkeit', 'rueckstellung', 'nachtraeglich']).optional(),
+});
+
+/**
+ * Aufgabebilanz on the Aufgabe date (R 4.5 Abs. 6 EStR): what the bank rows alone cannot tell.
+ * Post-Aufgabe §24 bank rows default to Forderung (income) / Verbindlichkeit (expense).
+ */
+const AufgabebilanzSchema = z.object({
+    /** Cash on hand at the Aufgabe date. */
+    kasse: z.number().nonnegative().default(0),
+    /** Reclassify a post-Aufgabe bank row, e.g. an invoice issued after the Aufgabe → Rückstellung. */
+    zuordnung: z
+        .array(
+            z.object({
+                transaktion_id: z.string(),
+                als: z.enum(['forderung', 'verbindlichkeit', 'rueckstellung', 'nachtraeglich']),
+            }),
+        )
+        .default([]),
+    /** Tax balances at the Aufgabe date (USt-Verbindlichkeit, GewSt-Erstattungsanspruch); erfolgsneutral. */
+    steuerposten: z
+        .array(
+            z.object({
+                bezeichnung: z.string(),
+                betrag: z.number().nonnegative(),
+                seite: z.enum(['aktiv', 'passiv']),
+            }),
+        )
+        .default([]),
 });
 
 /** Per-asset gemeiner Wert at the Betriebsaufgabe (else defaults to the Restbuchwert). */
@@ -181,6 +216,8 @@ const AdjustmentsSchema = z.object({
     sonderbetriebsausgaben: z.array(SonderbetriebsausgabeSchema).default([]),
     /** Betriebsaufgabe (Aufgabegewinn/-verlust from the remaining Anlagevermögen). */
     betriebsaufgabe: BetriebsaufgabeSchema.optional(),
+    /** Aufgabebilanz + Übergangsgewinn at the Betriebsaufgabe (`elster aufgabebilanz report`). */
+    aufgabebilanz: AufgabebilanzSchema.optional(),
     /** Nachträgliche Betriebseinnahmen/-ausgaben (§24 Nr. 2 EStG) after the Aufgabe. */
     nachtraegliche_posten: z.array(NachtraeglicherPostenSchema).default([]),
     /**
