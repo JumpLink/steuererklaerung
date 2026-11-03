@@ -31,6 +31,7 @@ import { showToast } from '../../toast.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../../widgets/glossary-help.ts';
 import { errorDialog } from '../dialogs.ts';
 import type { SettingsHost } from './rows.ts';
+import { plainActionRow } from '../plain-rows.ts';
 
 const SECURITY = ['tls', 'none'] as const;
 const securityLabels = (): string[] => ['TLS (Port 993)', _('None (local only)')];
@@ -123,7 +124,7 @@ export function buildBelegeMailGroup(host: SettingsHost, entity: AppEntity, pare
     });
     group.add(save);
 
-    const result = new Adw.ActionRow({ title: _('Last fetch'), subtitle: lastLine(entity.id), useMarkup: false });
+    const result = plainActionRow({ title: _('Last fetch'), subtitle: lastLine(entity.id) });
     result.set_subtitle_lines(0);
     const refreshResult = (): void => result.set_subtitle(lastLine(entity.id));
 

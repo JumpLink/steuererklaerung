@@ -18,6 +18,7 @@ import type { AppEntity } from '../../entities.ts';
 import { _, fmt } from '../../i18n.ts';
 import { confirmDialog, errorDialog } from '../dialogs.ts';
 import type { SettingsHost } from './rows.ts';
+import { plainActionRow } from '../plain-rows.ts';
 
 const none = (): string => _('— Built-in text —');
 
@@ -205,7 +206,7 @@ export function buildMailTemplatesGroup(
     if (templates.length) group.add(defaultRow);
 
     for (const t of templates) {
-        const row = new Adw.ActionRow({ title: t.name, subtitle: t.subject, activatable: true, useMarkup: false });
+        const row = plainActionRow({ title: t.name, subtitle: t.subject, activatable: true });
         const del = new Gtk.Button({ iconName: 'user-trash-symbolic', valign: Gtk.Align.CENTER });
         del.add_css_class('flat');
         del.set_tooltip_text(_('Delete template'));

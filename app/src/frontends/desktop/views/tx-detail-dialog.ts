@@ -31,6 +31,7 @@ import { nimmProjektZuordnungZurueck, type BuchungProjektAnsicht } from '../../.
 import { BhProjektZuordnenDialog, type ProjektOption } from './projekt-zuordnen-dialog.ts';
 import { _, _p, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
+import { plainActionRow } from './plain-rows.ts';
 
 /** ClassSource → German label (mirrors the web view-helpers SOURCE_LABEL). */
 const SOURCE_LABEL: Record<string, string> = {
@@ -93,7 +94,7 @@ export class BhTxDetailDialog {
     /** One "label → value" row; returns null (skipped) when the value is empty. */
     private row(label: string, value: string | null | undefined): Adw.ActionRow | null {
         if (value == null || value === '') return null;
-        const r = new Adw.ActionRow({ title: label, subtitle: value, useMarkup: false });
+        const r = plainActionRow({ title: label, subtitle: value });
         r.set_subtitle_selectable(true);
         r.set_subtitle_lines(0);
         return r;
@@ -186,10 +187,9 @@ export class BhTxDetailDialog {
         ]);
         // The parts of a split booking, each with what it books (Idee 13).
         for (const p of r.aufteilung ?? []) {
-            const part = new Adw.ActionRow({
+            const part = plainActionRow({
                 title: p.rest ? fmt(_('Part {n} · remainder'), { n: p.nr }) : fmt(_('Part {n}'), { n: p.nr }),
                 subtitle: `${p.category} · ${Math.round(p.vatRate * 100)} %${p.betrieblich ? '' : ` · ${_('private, no input VAT')}`}`,
-                useMarkup: false,
             });
             part.set_subtitle_lines(0);
             part.add_suffix(new Gtk.Label({ label: eur(p.betrag), cssClasses: ['numeric'], valign: Gtk.Align.CENTER }));
@@ -283,7 +283,7 @@ export class BhTxDetailDialog {
         const danach = wasGiltDanach(r);
         if (!danach) return null;
         if (istAufteilung(r)) {
-            const row = new Adw.ActionRow({ title: _('Remove split'), subtitle: danach, useMarkup: false });
+            const row = plainActionRow({ title: _('Remove split'), subtitle: danach });
             row.set_subtitle_lines(0);
             const button = new Gtk.Button({ label: _p('split', 'Remove'), valign: Gtk.Align.CENTER });
             button.add_css_class('destructive-action');
@@ -299,7 +299,7 @@ export class BhTxDetailDialog {
         // A linked Erstattung is undone by lifting the link; the sentence says what applies then.
         const erstattung = istErstattung(r);
         const title = erstattung ? _p('refund', 'Unlink') : _('Take back transfer');
-        const row = new Adw.ActionRow({ title, subtitle: danach, useMarkup: false });
+        const row = plainActionRow({ title, subtitle: danach });
         row.set_subtitle_lines(0);
         const button = new Gtk.Button({
             label: erstattung ? _p('button', 'Unlink') : _('Take back'),
