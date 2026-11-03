@@ -161,7 +161,7 @@ a 760 px viewport spends screen space on a control you touch once.
 *Borrowed from:* Material 3's filter chips, which are the same shape and the same scroll
 behaviour. The fade is Adwaita's own (`.undershoot-start` / `.undershoot-end`).
 
-### Primary action — one floating button
+### Primary action — one header-bar button
 
 Several views end their toolbar with a full-width suggested-action button: `New contract`,
 `New invoice`, `Add a contact`, `Add account`. Stacked with the chips and the export button above
