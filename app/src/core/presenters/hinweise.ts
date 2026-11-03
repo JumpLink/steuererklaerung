@@ -16,7 +16,7 @@ import {
     ohneErledigte,
     type YearHinweis,
 } from '../actions/elster/hinweise.ts';
-import { doppelzahlungHinweisCounts } from '../actions/invoices/doppelzahlung.ts';
+import { doppelzahlungHinweisCounts, listDoppelzahlungVerdacht } from '../actions/invoices/doppelzahlung.ts';
 import { forderungenHinweisDaten } from '../actions/forderungen.ts';
 import type { ForderungenHinweisDaten } from '../invoices/forderungen-hinweis.ts';
 import { vorAbgabeHinweise } from '../elster/vor-abgabe.ts';
@@ -75,7 +75,11 @@ async function loadAlleHinweise(
         return ohneErledigte(hints, year, entity.id, opts.alle);
     }
     const [agg, documents] = await Promise.all([session.aggregate(entity, year), session.documents(entity, year)]);
-    const doppelzahlung = await doppelzahlungHinweisCounts(elster.entity_id, year);
+    // Same memo slot as the Übersicht's own Doppelzahlung task: one invoice-list read serves both.
+    const verdacht = session.memo(entity, year, 'home.doppelzahlung', () =>
+        listDoppelzahlungVerdacht(entity.id, { year }),
+    );
+    const doppelzahlung = await doppelzahlungHinweisCounts(elster.entity_id, year, undefined, verdacht);
     const forderungen = opts.forderungen ?? (await forderungenHinweisDaten(elster.entity_id, { today: opts.today }));
     // History for the USt-Abweichung across January; without it the check simply sees fewer periods.
     const vorjahr = entity.years.includes(year - 1)

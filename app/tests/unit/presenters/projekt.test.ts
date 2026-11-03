@@ -40,6 +40,7 @@ const session = {
     elster: () => ({ account_labels: {} }) as unknown as ElsterConfig,
     aggregate: async () => aggregateEuerByTransactions(txs, new Map(), 2026, { detail: true }),
     documents: async () => ({ docs: [], dmsKind: 'builtin' as const }),
+    memo: (_entity: unknown, _year: number, _key: string, build: () => Promise<unknown>) => build(),
     invalidate: () => {},
 } as unknown as PresenterSession;
 

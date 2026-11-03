@@ -292,9 +292,10 @@ export async function doppelzahlungHinweisCounts(
     entityId: string,
     year: number,
     path?: string,
+    vorberechnet?: Promise<DoppelzahlungVerdachtDetail[]>,
 ): Promise<DoppelzahlungHinweisDaten> {
     try {
-        const verdachte = await listDoppelzahlungVerdacht(entityId, { year, path });
+        const verdachte = await (vorberechnet ?? listDoppelzahlungVerdacht(entityId, { year, path }));
         const prefix = `${year}-`;
         const offen = listOffeneRueckzahlungen(entityId, { path }).filter(
             (r) => !r.bookingDate || r.bookingDate.startsWith(prefix),

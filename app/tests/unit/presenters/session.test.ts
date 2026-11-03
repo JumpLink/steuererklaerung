@@ -5,6 +5,9 @@ import { join } from 'node:path';
 import { upsertAccount, type UnifiedTransaction } from '@steuererklaerung/store';
 import { BuiltinDmsProvider } from '@steuererklaerung/dms';
 import { createPresenterSession } from '../../../src/core/presenters/session.ts';
+import { loadEnrichedTransactions } from '../../../src/core/presenters/buchungen.ts';
+import type { EntityModel } from '../../../src/core/presenters/workspace.ts';
+import type { EuerTxAggregate } from '../../../src/core/elster/euer-transactions.ts';
 
 function tx(over: Partial<UnifiedTransaction>): UnifiedTransaction {
     return {
@@ -141,6 +144,32 @@ export default async () => {
 
             s.invalidate();
             expect(await s.memo('test', 2024, 'k', build)).toBe(5);
+        });
+
+        await it('loadEnrichedTransactions(): one build for repeated asks; invalidate and a store write rebuild', async () => {
+            const real = createPresenterSession();
+            const entity = real.workspace.entities.find((e) => e.id === 'test') as EntityModel;
+            let aggregates = 0;
+            const agg = {
+                detail: [],
+                totals: { incomeNet: 0, expenseNet: 0, profit: 0 },
+            } as unknown as EuerTxAggregate;
+            const s = {
+                ...real,
+                aggregate: async () => (++aggregates, agg),
+                documents: () => real.documents(entity, 2025),
+            };
+            await loadEnrichedTransactions(s, entity, 2025);
+            await loadEnrichedTransactions(s, entity, 2025);
+            expect(aggregates).toBe(1);
+
+            real.invalidate('test', 2025);
+            await loadEnrichedTransactions(s, entity, 2025);
+            expect(aggregates).toBe(2);
+
+            upsertAccount('camt:test', [tx({ id: 'd', bookingDate: '2025-08-01', purpose: 'another write' })]);
+            await loadEnrichedTransactions(s, entity, 2025);
+            expect(aggregates).toBe(3);
         });
 
         await it('memo(): a rejected build is not cached', async () => {

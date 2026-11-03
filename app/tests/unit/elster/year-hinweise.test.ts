@@ -8,7 +8,10 @@ import { DEFAULT_SYNC_CONFIG, ElsterConfigRawSchema, normalizeElsterConfig } fro
 import { euerReportByTransactions } from '../../../src/core/actions/elster/euer.ts';
 import { buildYearCache, type YearCache } from '../../../src/core/presenters/year-snapshot.ts';
 import { computeYearHinweise } from '../../../src/core/actions/elster/hinweise.ts';
-import { doppelzahlungHinweisCounts } from '../../../src/core/actions/invoices/doppelzahlung.ts';
+import {
+    doppelzahlungHinweisCounts,
+    type listDoppelzahlungVerdacht,
+} from '../../../src/core/actions/invoices/doppelzahlung.ts';
 import { computeHinweise } from '../../../src/core/elster/hinweise.ts';
 
 let n = 0;
@@ -144,6 +147,18 @@ export default async () => {
             const yc: YearCache = await buildYearCache(config, cfg, 2025, KEYS, dms);
 
             expect(JSON.stringify(yc.hinweise)).toBe(JSON.stringify(shared));
+        });
+
+        await it('doppelzahlungHinweisCounts uses a precomputed suspicion list instead of reading again', async () => {
+            const verdacht = [{ rechnungId: 'r1', rechnungNummer: 'R-1', zuViel: 10, txs: [] }] as unknown as Awaited<
+                ReturnType<typeof listDoppelzahlungVerdacht>
+            >;
+            const out = await doppelzahlungHinweisCounts('test', 2025, undefined, Promise.resolve(verdacht));
+            expect(out.verdacht).toBe(1);
+            expect(out.verdachtListe?.[0]?.rechnungId).toBe('r1');
+            // A rejected precomputation stays fail-soft, like a failed read.
+            const failed = await doppelzahlungHinweisCounts('test', 2025, undefined, Promise.reject(new Error('x')));
+            expect(failed.verdacht).toBe(0);
         });
 
         await it('skips the Paperless fetch for an entity on the built-in DMS', async () => {

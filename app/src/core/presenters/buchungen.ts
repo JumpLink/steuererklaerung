@@ -88,7 +88,18 @@ export function enrichRows<T extends EuerTxDetailRow>(
 
 /** Load + enrich one BUSINESS entity-year's bookings (async; shares the session's aggregate + docs
  * caches, so an already-open entity opens Buchungen without a fresh fetch). Newest first. */
-export async function loadEnrichedTransactions(
+export function loadEnrichedTransactions(
+    session: PresenterSession,
+    entity: EntityModel,
+    year: number,
+): Promise<EnrichedTxData> {
+    // Memoized: the Übersicht alone asks for it through Zu prüfen and Erstattungen (this + last year),
+    // and the Transaktionen page again. Callers only read the rows; the memo is dropped by
+    // `invalidate` and when the store changes on disk, like the aggregate it derives from.
+    return session.memo(entity, year, 'enriched-transactions', () => buildEnrichedTransactions(session, entity, year));
+}
+
+async function buildEnrichedTransactions(
     session: PresenterSession,
     entity: EntityModel,
     year: number,
