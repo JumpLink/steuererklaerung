@@ -43,6 +43,7 @@ function makeSession(aggregate: PresenterSession['aggregate']): PresenterSession
         elster: () => ({ account_labels: {} }) as unknown as ElsterConfig,
         aggregate,
         documents: async () => ({ docs: [], dmsKind: 'builtin' as const }),
+        memo: (_entity: unknown, _year: number, _key: string, build: () => Promise<unknown>) => build(),
         invalidate: () => {},
     } as unknown as PresenterSession;
 }

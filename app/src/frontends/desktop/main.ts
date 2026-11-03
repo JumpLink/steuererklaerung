@@ -25,6 +25,7 @@ import 'dotenv/config';
 import Gtk from '@girs/gtk-4.0';
 import { AdwaitaApp, runApplication } from '@gjsify/adwaita-app';
 import { donationsAllowed } from '@gjsify/distribution';
+import { readClient } from './read/index.ts';
 import { installMigrationBackup, runConfiguredBackup } from '../../core/actions/backup.ts';
 import { applyDemoEnv } from '../../core/config/demo.ts';
 import { loadUserSettings } from '../../core/config/user-settings.ts';
@@ -148,6 +149,11 @@ if (mode === 'cli') {
         // Not the `about` option: the plain dialog has no room for the edition badges.
         onStartup: (app) => installAbout(app, about),
         createWindow: (app) => {
+            // Boot the read worker now: its module evaluation runs while the window is still being
+            // built, instead of after it as the first page load's latency.
+            readClient()
+                .call(async (api) => ({ ok: true, value: await api.ping() }))
+                .catch(() => undefined); // a dead worker surfaces on the first real page load
             return new MainWindow(app);
         },
     });
