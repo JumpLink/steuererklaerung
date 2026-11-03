@@ -60,6 +60,7 @@ die belegten Referenzen, gegen die ihre Zahlen geprüft werden.
 | [app/mcp-clients.md](app/mcp-clients.md) | Externe Agenten verbinden: Startbefehl je Installation (Flatpak, Paket, Checkout) und das Konfigurationsformat von Claude Desktop/Code, opencode, Cursor, VS Code |
 | [app/lotse-entwicklung.md](app/lotse-entwicklung.md) | `@lotse/*` kommt von npm; `gjsify link ../lotse` als optionaler Dev-Weg (und Entlinken vor `--immutable`), `preserveSymlinks`, geplanter, noch nicht gebauter Flatpak |
 | [app/i18n-status.md](app/i18n-status.md) | Übersetzung der Oberfläche (Englisch/Deutsch): übersetzte und offene Ansichten, Terminologie, was Deutsch bleibt |
+| [app/mobile-layout.md](app/mobile-layout.md) | Entwurf für die Telefon-Breite (360 × 760): Navigationsmodell, gemeinsame Bausteine, Ansicht für Ansicht, Umsetzungsplan |
 | [ideen-nutzerfuehrung.md](ideen-nutzerfuehrung.md) | Ideenliste nach Priorität: einfacher bedienen, früher warnen, ohne KI nutzbar (Konzepte, keine Aufträge) |
 
 ## Warum die Quellenpflicht
