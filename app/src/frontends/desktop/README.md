@@ -169,8 +169,24 @@ Navigation und Assistenz-Spalte **537 px** übrig (am Screenshot gemessen, der I
 x=320 bis x=856). Vier Haltepunkte standen auf `max-width: 560px` — gedacht für das Telefon,
 ausgelöst auf dem Desktop: Kontakte verlor seinen Gruppentitel, der Beleg-Eingang klappte seine
 Warteschlange zu. Darum liegt jeder Haltepunkt in einer Ansicht bei **450 px**, unter den 537. Nur
-die zwei in `window.blp` (720 / 1180) messen wirklich das Fenster. Wer einen neuen setzt, misst
+die drei in `window.blp` (1180 / 720 / 480) messen wirklich das Fenster. Wer einen neuen setzt, misst
 erst die Spaltenbreite — rechnen reicht nicht, die 390 aus `min-sidebar-width` sind nur der Boden.
+
+**Es gilt immer GENAU EIN Haltepunkt, und zwar der zuletzt hinzugefügte, dessen Bedingung passt.**
+`adw_breakpoint_bin_size_allocate` läuft die Haltepunkte in UMGEKEHRTER Reihenfolge ab und hält beim
+ersten Treffer an; `current-breakpoint` ist einer, keine Menge. Eine Leiter ist also **nicht
+kumulativ**: jede Stufe wiederholt, was sie braucht (die 480er in `window.blp` setzt
+`split_view.collapsed` noch einmal, obwohl die 720er das schon tut), und eine schmalere Stufe muss
+NACH einer breiteren stehen, sonst wird sie nie erreicht. Falsch herum notiert übersetzt Blueprint
+anstandslos, GtkBuilder baut, die App läuft — und das 360-px-Fenster behält einfach das breitere
+Layout. Wächter: `gjsify run check:breakpoints` (`dev/check-breakpoints.js`, Regel und Tests in
+`dev/breakpoint-scan.ts`), Teil von `gjsify run check`.
+
+**„Sind wir auf einem Telefon?" beantwortet das Fenster, nicht die Ansicht.** `window.ts` meldet die
+480er Stufe als schreibgeschützte Eigenschaft `narrow`; eine Ansicht abonniert sie mit `onNarrow()`
+aus `widgets/narrow.ts`. Die Helferin wartet auf `get_root()` — eine Ansicht wird gebaut, bevor sie
+im Fenster hängt, ein einmaliges Lesen im Konstruktor meldet also immer „Desktop". Die Spezifikation
+dazu: [docs/app/mobile-layout.md](../../../docs/app/mobile-layout.md).
 
 ## Status / roadmap
 

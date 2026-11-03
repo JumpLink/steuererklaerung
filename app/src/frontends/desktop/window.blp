@@ -38,17 +38,20 @@ template $BhMainWindow: Adw.ApplicationWindow {
   width-request: 360;
   height-request: 480;
 
-  // Collapse to a single pane on narrow widths (phone/tablet), like the web sidebar overlay.
-  // In TypeScript each of these needed a boxed GObject.Value: `add_setter` takes one, and the
+  // THE BREAKPOINT LADDER — ONLY ONE RUNG EVER APPLIES, AND THE LAST MATCH WINS.
+  //
+  // `adw_breakpoint_bin_size_allocate` walks the breakpoints in REVERSE order of addition and
+  // stops at the first whose condition holds, so `current-breakpoint` is singular: the setters of
+  // the rungs above it never run. A ladder is therefore NOT cumulative — every rung restates
+  // everything it needs, and a narrower rung has to be declared AFTER a wider one or it is never
+  // reached. Appending the 480px rung in the obvious place (before 720px) would have left a phone
+  // window matching `max-width: 720px` first, with its own setters silently unused.
+  //
+  // Enforced by `dev/check-breakpoints.js` (`gjsify run check:breakpoints`): among the max-width
+  // conditions of one template, the limits must descend in document order.
+  //
+  // In TypeScript each setter needed a boxed GObject.Value: `add_setter` takes one, and the
   // looser @girs typings happened to accept a raw boolean while the stricter ones do not.
-  [breakpoint]
-  Adw.Breakpoint {
-    condition ("max-width: 720px")
-
-    setters {
-      split_view.collapsed: true;
-    }
-  }
 
   // The assistant panel docks side-by-side at >=1180px and overlays below that.
   //
@@ -70,6 +73,29 @@ template $BhMainWindow: Adw.ApplicationWindow {
     setters {
       assistant_split.collapsed: false;
       assistant_split.min-sidebar-width: 390;
+    }
+  }
+
+  // Collapse to a single pane on narrow widths (phone/tablet), like the web sidebar overlay.
+  [breakpoint]
+  Adw.Breakpoint {
+    condition ("max-width: 720px")
+
+    setters {
+      split_view.collapsed: true;
+    }
+  }
+
+  // Phone. Named, because what it is FOR is not its setters — it is the window's `narrow`
+  // property (window.ts), which views read instead of inventing a window-width condition of their
+  // own. The repeated `split_view.collapsed` is the non-cumulative rule above, not a copy-paste
+  // slip: at 360px this rung is the only one that runs.
+  [breakpoint]
+  Adw.Breakpoint phone_breakpoint {
+    condition ("max-width: 480px")
+
+    setters {
+      split_view.collapsed: true;
     }
   }
 

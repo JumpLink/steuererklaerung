@@ -91,8 +91,20 @@ export class MainWindow extends Adw.ApplicationWindow {
             {
                 GTypeName: 'BhMainWindow',
                 Template,
+                Properties: {
+                    // Read-only: the window owns the answer, a view only ever asks. See `narrow`
+                    // below and `widgets/narrow.ts` for the subscription side.
+                    narrow: GObject.ParamSpec.boolean(
+                        'narrow',
+                        'Narrow',
+                        'Whether the window is phone-sized (the max-width: 480px breakpoint)',
+                        GObject.ParamFlags.READABLE,
+                        false,
+                    ),
+                },
                 InternalChildren: [
                     'split_view',
+                    'phone_breakpoint',
                     'sidebar_page',
                     'sidebar_title',
                     'entity_switcher',
@@ -126,10 +138,11 @@ export class MainWindow extends Adw.ApplicationWindow {
     /** The lotse pane, once {@link buildLotsePane} built one. `null` = no agent pane, no subprocess. */
     private lotse: BhLotsePanel | null = null;
 
-    // Every widget below comes from window.blp — the whole tree is declared there, including both
-    // breakpoints (which needed four lines of boxed GObject.Value each in TypeScript) and the
+    // Every widget below comes from window.blp — the whole tree is declared there, including all
+    // three breakpoints (which needed four lines of boxed GObject.Value each in TypeScript) and the
     // Assistent toggle's two-way binding.
     declare private _split_view: Adw.NavigationSplitView;
+    declare private _phone_breakpoint: Adw.Breakpoint;
     declare private _sidebar_page: Adw.NavigationPage;
     declare private _sidebar_title: Adw.WindowTitle;
     declare private _entity_switcher: BhEntitySwitcher;
@@ -152,6 +165,23 @@ export class MainWindow extends Adw.ApplicationWindow {
 
     // Ported native views by view id (rebuilt per entity); placeholders aren't tracked here.
     private readonly ported = new Map<string, PortedView>();
+
+    /** Backs the `narrow` property; `notify` is emitted by hand, see {@link watchBreakpoint}. */
+    private narrowState = false;
+
+    /**
+     * Whether the window is phone-sized — the `max-width: 480px` rung of the ladder in window.blp.
+     *
+     * The ONE place that answers "are we on a phone?". A view that measures the window itself
+     * measures the wrong thing sooner or later: an in-view `Adw.BreakpointBin` sees the content
+     * pane (537 px inside a 1280 px window), and a hand-rolled width check sees whatever GTK
+     * happens to have allocated at that moment. Subscribe with `onNarrow()` from
+     * `widgets/narrow.ts` rather than reading this once at build time — a view is built before it
+     * is rooted, and the window resizes afterwards.
+     */
+    get narrow(): boolean {
+        return this.narrowState;
+    }
 
     constructor(application: Adw.Application) {
         super({
@@ -181,6 +211,7 @@ export class MainWindow extends Adw.ApplicationWindow {
                 });
             });
         }
+        this.watchBreakpoint();
         this.buildUi();
         this.installNavAction();
         this.installSetupAction();
@@ -458,11 +489,30 @@ export class MainWindow extends Adw.ApplicationWindow {
     }
 
     /**
+     * Keep {@link narrow} in step with the breakpoint the window is actually on.
+     *
+     * Identity against the named rung from window.blp, not a width comparison: the condition lives
+     * in one place that way, and a change to the 480px number cannot leave a stale copy behind in
+     * TypeScript. `current-breakpoint` is a single breakpoint (see the ladder comment in the
+     * template), so `=== phone` is exactly "the phone rung is the one in force".
+     */
+    private watchBreakpoint(): void {
+        const sync = () => {
+            const next = this.get_current_breakpoint() === this._phone_breakpoint;
+            if (next === this.narrowState) return;
+            this.narrowState = next;
+            this.notify('narrow');
+        };
+        this.connect('notify::current-breakpoint', sync);
+        sync();
+    }
+
+    /**
      * Wire the tree that window.blp declares.
      *
      * What is NOT here any more is the point: the split view, both header bars, the primary menu,
      * the identity block, the scroller, both navigation pages, the toast overlay and the assistant
-     * split are all declared in the template. So are the two breakpoints — each of which needed a
+     * split are all declared in the template. So are the three breakpoints — each of which needed a
      * boxed `GObject.Value` here, because `add_setter` takes one and the looser @girs typings
      * happened to accept a raw boolean — and the Assistent toggle's bidirectional binding.
      *
