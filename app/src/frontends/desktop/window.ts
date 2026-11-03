@@ -512,6 +512,15 @@ export class MainWindow extends Adw.ApplicationWindow {
         // Dev/testing hook: open the panel on launch (pairs with STEUER_APP_ASSIST_DEMO's seeded
         // chat). Not even for a screenshot in a build that does not offer the assistant.
         if (process.env.STEUER_APP_ASSIST_DEMO && isAssistantEnabled()) this._assistant_split.set_show_sidebar(true);
+        // The wide-window breakpoint un-collapses the split view, and an un-collapsed one with
+        // `pin-sidebar` off opens the sidebar by itself — a one-off `set_show_sidebar(false)` in
+        // applyAssistantPreference() does not survive that. So the preference is enforced on every
+        // change, not applied once.
+        this._assistant_split.connect('notify::show-sidebar', () => {
+            if (!isAssistantEnabled() && this._assistant_split.get_show_sidebar()) {
+                this._assistant_split.set_show_sidebar(false);
+            }
+        });
         this.applyAssistantPreference();
         this.buildLotsePane();
         this._banner.connect('button-clicked', () => this.confirmSwitchMode('own'));
