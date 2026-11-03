@@ -16,6 +16,7 @@ import selfLaunch from './unit/actions/self-launch.test.ts';
 import desktopMarkup from './unit/desktop/markup.test.ts';
 import desktopErrorText from './unit/desktop/error-text.test.ts';
 import desktopReadClient from './unit/desktop/read-client.test.ts';
+import desktopReadQueries from './unit/desktop/read-queries.test.ts';
 import launchModeSuite from './unit/desktop/launch-mode.test.ts';
 import privacyAck from './unit/elster/privacy-ack.test.ts';
 import kredit from './unit/finanzierung/kredit.test.ts';
@@ -462,6 +463,7 @@ run({
     desktopMarkup,
     desktopErrorText,
     desktopReadClient,
+    desktopReadQueries,
     launchModeSuite,
     privacyAck,
     testIsolation,

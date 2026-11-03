@@ -27,6 +27,12 @@ import type { EuerData } from '../../../core/presenters/steuer.ts';
 import type { UsteAggregate } from '../../../core/elster/uste-aggregate.ts';
 import type { GewstReport } from '../../../core/actions/elster/gewst.ts';
 import type { FeststellungReport } from '../../../core/actions/elster/feststellung.ts';
+import type { TaxReturnPlan } from '../../../core/actions/elster/wizard.ts';
+import type { CrossCheckResult } from '../../../core/actions/elster/cross-checks.ts';
+import type { FigureExplanation, FigureRef } from '../../../core/actions/elster/explain.ts';
+import type { DocumentsResult } from '../../../core/presenters/belege.ts';
+import type { SubmissionOverview, SubmissionTarget } from '../../../core/actions/elster/submission-overview.ts';
+import type { YearHinweis } from '../../../core/actions/elster/hinweise.ts';
 
 export interface SerializedError {
     name: string;
@@ -60,6 +66,19 @@ export interface SteuerData {
     fest: FeststellungReport | null;
 }
 
+/** The Steuererklärung page: the plan and the machine cross-checks derived from the same aggregate. */
+export interface SteuererklaerungData {
+    plan: TaxReturnPlan;
+    checks: CrossCheckResult[];
+}
+
+/** The Absenden section: the per-form filing state plus what to clear before filing. */
+export interface AbsendenData {
+    overview: SubmissionOverview;
+    warnings: string[];
+    hinweise: YearHinweis[];
+}
+
 /** The worker's whole API, exposed through Comlink. Every read is a plain function of its arguments. */
 export interface ReadApi {
     home(entity: EntityModel, year: number): Promise<Reply<HomeModel>>;
@@ -67,6 +86,12 @@ export interface ReadApi {
     auswertungen(entity: EntityModel, year: number): Promise<Reply<AuswertungenData>>;
     transaktionen(entity: EntityModel, year: number): Promise<Reply<TransaktionenData>>;
     steuer(entity: EntityModel, year: number): Promise<Reply<SteuerData>>;
+    steuererklaerung(entity: EntityModel, year: number): Promise<Reply<SteuererklaerungData>>;
+    absenden(entity: EntityModel, year: number, targets: SubmissionTarget[]): Promise<Reply<AbsendenData>>;
+    figureExplanation(entity: EntityModel, year: number, ref: FigureRef | string): Promise<Reply<FigureExplanation>>;
+    euerCategories(entity: EntityModel, year: number): Promise<Reply<string[]>>;
+    enrichedTransactions(entity: EntityModel, year: number): Promise<Reply<EnrichedTxData>>;
+    documents(entity: EntityModel, year: number): Promise<Reply<DocumentsResult>>;
     /** Drop the worker session's memos after a write on the main thread (see PresenterSession.invalidate). */
     invalidate(entityId?: string, year?: number): Promise<void>;
     /** Rebuild one entity's DMS provider after a DMS switch in the settings. */

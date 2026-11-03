@@ -21,7 +21,7 @@ import type {
 } from '../../../core/elster/hinweise.ts';
 import type { YearHinweis } from '../../../core/presenters/hinweise.ts';
 import { markHinweisInOrdnung } from '../../../core/presenters/hinweise.ts';
-import { loadEnrichedTransactions, type EnrichedTxRow } from '../../../core/presenters/buchungen.ts';
+import type { EnrichedTxRow } from '../../../core/presenters/buchungen.ts';
 import { loadCapabilities, loadOutgoingInvoices } from '../../../core/presenters/rechnungen.ts';
 import { appSession } from '../data/session.ts';
 import { loadDms } from '../data/settings.ts';
@@ -35,7 +35,7 @@ import { BhRechnungDetailDialog } from './rechnung-detail-dialog.ts';
 import { BhAddAccountDialog } from './konto-hinzufuegen-dialog.ts';
 import { BhBelegMetadatenDialog } from './beleg-metadaten-dialog.ts';
 import { openAnlagegutErfassen } from './anlagen-view.ts';
-import { loadDocuments } from '../../../core/presenters/belege.ts';
+import { reads } from '../read/index.ts';
 import { prefillRecordOf } from '../../../core/invoices/e-rechnung/index.ts';
 import { errorDialog } from './dialogs.ts';
 import { BhGlossaryHelp } from '../widgets/glossary-help.ts';
@@ -75,7 +75,7 @@ export function statusZeile(h: { status?: HinweisStatus; geprueft?: string; weil
 
 /** One booking of the entity-year as the booking sheet needs it. */
 async function findTx(ctx: HinweisKontext, id: string): Promise<EnrichedTxRow> {
-    const { rows } = await loadEnrichedTransactions(appSession(), ctx.entity, ctx.year);
+    const { rows } = await reads.enrichedTransactions(ctx.entity, ctx.year);
     const row = rows.find((r) => r.id === id);
     if (!row) throw new Error(_('The transaction was not found in this year.'));
     return row;
@@ -114,7 +114,7 @@ async function openInvoice(parent: Gtk.Widget, ctx: HinweisKontext, id: string):
 
 /** One document of the entity-year in its metadata editor — the Beleg's own detail in the app. */
 async function openBeleg(parent: Gtk.Widget, ctx: HinweisKontext, id: string): Promise<void> {
-    const { docs } = await loadDocuments(appSession(), ctx.entity, ctx.year);
+    const { docs } = await reads.documents(ctx.entity, ctx.year);
     const doc = docs.find((d) => d.id === id);
     if (!doc) throw new Error(_('The receipt was not found in this year.'));
     const done = changed(ctx);

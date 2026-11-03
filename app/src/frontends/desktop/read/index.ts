@@ -5,6 +5,8 @@
  * main thread only awaits the plain result.
  */
 
+import type { SubmissionTarget } from '../../../core/actions/elster/submission-overview.ts';
+import type { FigureRef } from '../../../core/actions/elster/explain.ts';
 import type { EntityModel } from '../../../core/presenters/workspace.ts';
 import { ReadClient } from './client.ts';
 import { workerChannel } from './channel.ts';
@@ -27,4 +29,14 @@ export const reads = {
     auswertungen: (entity: EntityModel, year: number) => readClient().call((api) => api.auswertungen(entity, year)),
     transaktionen: (entity: EntityModel, year: number) => readClient().call((api) => api.transaktionen(entity, year)),
     steuer: (entity: EntityModel, year: number) => readClient().call((api) => api.steuer(entity, year)),
+    steuererklaerung: (entity: EntityModel, year: number) =>
+        readClient().call((api) => api.steuererklaerung(entity, year)),
+    absenden: (entity: EntityModel, year: number, targets: SubmissionTarget[]) =>
+        readClient().call((api) => api.absenden(entity, year, targets)),
+    figureExplanation: (entity: EntityModel, year: number, ref: FigureRef | string) =>
+        readClient().call((api) => api.figureExplanation(entity, year, ref)),
+    euerCategories: (entity: EntityModel, year: number) => readClient().call((api) => api.euerCategories(entity, year)),
+    enrichedTransactions: (entity: EntityModel, year: number) =>
+        readClient().call((api) => api.enrichedTransactions(entity, year)),
+    documents: (entity: EntityModel, year: number) => readClient().call((api) => api.documents(entity, year)),
 };

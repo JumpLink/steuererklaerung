@@ -18,7 +18,19 @@ import '../i18n-init.ts';
 import * as Comlink from 'comlink';
 import { createPresenterSession, type PresenterSession } from '../../../core/presenters/session.ts';
 import { guard, type ReadApi } from './protocol.ts';
-import { auswertungenQuery, freiVerfuegbarQuery, homeQuery, steuerQuery, transaktionenQuery } from './queries.ts';
+import {
+    absendenQuery,
+    auswertungenQuery,
+    documentsQuery,
+    enrichedTransactionsQuery,
+    euerCategoriesQuery,
+    figureExplanationQuery,
+    freiVerfuegbarQuery,
+    homeQuery,
+    steuerQuery,
+    steuererklaerungQuery,
+    transaktionenQuery,
+} from './queries.ts';
 
 let session: PresenterSession | undefined;
 const sess = (): PresenterSession => (session ??= createPresenterSession());
@@ -29,6 +41,12 @@ const api: ReadApi = {
     auswertungen: (entity, year) => guard(() => auswertungenQuery(sess(), entity, year)),
     transaktionen: (entity, year) => guard(() => transaktionenQuery(sess(), entity, year)),
     steuer: (entity, year) => guard(() => steuerQuery(sess(), entity, year)),
+    steuererklaerung: (entity, year) => guard(() => steuererklaerungQuery(sess(), entity, year)),
+    absenden: (entity, year, targets) => guard(() => absendenQuery(sess(), entity, year, targets)),
+    figureExplanation: (entity, year, ref) => guard(() => figureExplanationQuery(sess(), entity, year, ref)),
+    euerCategories: (entity, year) => guard(() => euerCategoriesQuery(sess(), entity, year)),
+    enrichedTransactions: (entity, year) => guard(() => enrichedTransactionsQuery(sess(), entity, year)),
+    documents: (entity, year) => guard(() => documentsQuery(sess(), entity, year)),
     invalidate: async (entityId, year) => {
         session?.invalidate(entityId, year);
     },

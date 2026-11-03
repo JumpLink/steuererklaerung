@@ -17,8 +17,6 @@ import GObject from '@girs/gobject-2.0';
 
 import Template from './steuererklaerung-view.blp';
 import {
-    loadTaxReturnPlan,
-    loadCrossChecks,
     loadEuerPdf,
     loadUstePdf,
     loadGewstPdf,
@@ -26,6 +24,7 @@ import {
     loadEstPdf,
 } from '../../../core/presenters/steuer.ts';
 import { appSession } from '../data/session.ts';
+import { reads } from '../read/index.ts';
 import { navigateTo, type NavViewId } from '../nav.ts';
 import { snapshotFormsFromPlan, ustvaTargetsForYear } from '../data/submission.ts';
 import { SubmissionSection } from './absenden-section.ts';
@@ -114,12 +113,7 @@ export class BhSteuererklaerungView extends Adw.Bin {
             // Plan + machine cross-checks in one load: both derive from the SAME cached EÜR aggregate,
             // so the second call is a cache hit (no extra Paperless fetch) and fill() renders the
             // Gegenprüfung + honest readiness with full knowledge — no post-hoc widget shuffling.
-            load: async () => {
-                const session = appSession();
-                const plan = await loadTaxReturnPlan(session, entity, year);
-                const checks = await loadCrossChecks(session, entity, year);
-                return { plan, checks };
-            },
+            load: () => reads.steuererklaerung(entity, year),
             fill: ({ plan, checks }) => this.fill(plan, checks, entity, year),
         });
     }

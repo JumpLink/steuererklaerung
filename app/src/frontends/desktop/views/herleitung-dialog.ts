@@ -14,7 +14,7 @@
  * stack or nav rail. Each figure is one `Adw.NavigationPage`; tapping a drillable child term pushes
  * a fresh page for that ref. This mirrors the invoice detail dialog's self-contained overlay idiom.
  *
- * Numbers are rendered straight from the core resolver ({@link loadFigureExplanation}) — no
+ * Numbers are rendered straight from the core resolver ({@link loadFigureExplanation} in the read worker) — no
  * recomputation here. A booking row is ACTIVATABLE: tapping it pushes the S2 "Buchungs-Detail" leaf
  * ({@link buildLeafPage}) onto this same NavigationView, an evidence-and-edit surface where the owner
  * can inspect the linked Beleg + KI-Hinweis and CORRECT the booking's classification. Every decision
@@ -28,8 +28,8 @@ import GObject from '@girs/gobject-2.0';
 
 import Template from './herleitung-dialog.blp';
 
-import { loadFigureExplanation } from '../../../core/presenters/steuer.ts';
 import { appSession } from '../data/session.ts';
+import { reads } from '../read/index.ts';
 import {
     loadDecision,
     loadDecisionLog,
@@ -277,7 +277,7 @@ export class BhHerleitungDialog {
                 errorPage,
                 token,
                 errorContext: _('Could not calculate the derivation'),
-                load: () => loadFigureExplanation(appSession(), this.entity, this.year, ref),
+                load: () => reads.figureExplanation(this.entity, this.year, ref),
                 fill: (ex) => {
                     page.set_title(ex.label);
                     const content = this.buildContent(ex, page);
