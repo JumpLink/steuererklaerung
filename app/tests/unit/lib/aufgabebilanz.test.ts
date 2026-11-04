@@ -46,6 +46,7 @@ export default async () => {
             const r = computeAufgabebilanz(base);
             // Aktiva: PC 1 + Forderung 1190 + Vorsteuer 57 + Bank 500 = 1748
             expect(r.summeAktiva).toBe(1748);
+            expect(r.summePassiva).toBe(r.summeAktiva);
             // Fremdkapital: Verbindlichkeit 357 + Rückstellung 200 (netto) + USt 190 = 747
             expect(r.eigenkapital).toBe(1001);
             const passiva = r.passiva.reduce((s, z) => s + z.betrag, 0);

@@ -136,7 +136,7 @@ export function printAufgabebilanz(report: AufgabebilanzReport, elster: ElsterCo
     console.log(line('Summe Aktiva', b.summeAktiva));
     console.log('\nPassiva:');
     for (const z of b.passiva) console.log(line(z.bezeichnung, z.betrag));
-    console.log(line('Summe Passiva', b.summeAktiva));
+    console.log(line('Summe Passiva', b.summePassiva));
 
     printPosten('Forderungen (Rechnung vor, Zahlung nach der Aufgabe)', b.forderungen);
     printPosten('Verbindlichkeiten', b.verbindlichkeiten);
