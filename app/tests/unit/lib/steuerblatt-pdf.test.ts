@@ -5,6 +5,7 @@ import {
     gewstToSteuerblatt,
     ustvaToSteuerblatt,
 } from '../../../src/core/actions/elster/steuerblatt-pdf.ts';
+import { tableColumnLayout } from '@steuererklaerung/invoice-pdf';
 import type { UsteAggregate } from '../../../src/core/elster/uste-aggregate.ts';
 import type { EuerTxAggregate } from '../../../src/core/elster/euer-transactions.ts';
 import type { UstvaAggregate } from '../../../src/core/elster/ustva-aggregate.ts';
@@ -219,6 +220,23 @@ export default async () => {
                 missingBmfRates: [{ id: 42, currency: 'USD', month: '2025-05' }],
             });
             expect(withGap.warnings.some((w) => w.includes('Fremdwährungsbeleg'))).toBe(true);
+        });
+    });
+
+    await describe('tableColumnLayout', async () => {
+        await it('keeps no-wrap columns at their natural width and splits the rest by weight', async () => {
+            const cols = tableColumnLayout([null, 40, null], [2, 1, 1], 400, 10);
+            // free = 400 − 40 − 2·10 = 340 → 2/3 and 1/3
+            expect(Math.round(cols[0].width)).toBe(227);
+            expect(cols[1].width).toBe(40);
+            expect(Math.round(cols[2].width)).toBe(113);
+            expect(cols[1].x).toBeCloseTo(cols[0].width + 10, 5);
+            expect(cols[2].x).toBeCloseTo(cols[1].x + 40 + 10, 5);
+        });
+
+        await it('never gives a flexible column a negative width when the fixed ones overflow', async () => {
+            const cols = tableColumnLayout([300, null], [1, 1], 200, 8);
+            expect(cols[1].width).toBe(0);
         });
     });
 };
