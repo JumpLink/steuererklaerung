@@ -89,6 +89,8 @@ export interface AufgabebilanzResult {
     aktiva: AufgabeBilanzZeile[];
     passiva: AufgabeBilanzZeile[];
     summeAktiva: number;
+    /** Sum of the Passiva rows as listed, Eigenkapital included. */
+    summePassiva: number;
     /** Balancing figure: Aktiva − Fremdkapital (negative = negatives Kapital). */
     eigenkapital: number;
     forderungen: AufgabeBilanzPosten[];
@@ -187,6 +189,7 @@ export function computeAufgabebilanz(input: AufgabebilanzInput): AufgabebilanzRe
     const summeAktiva = sum(aktiva.map((z) => z.betrag));
     const eigenkapital = round2(summeAktiva - sum(passiva.map((z) => z.betrag)));
     passiva.unshift({ bezeichnung: 'Eigenkapital', betrag: eigenkapital });
+    const summePassiva = sum(passiva.map((z) => z.betrag));
 
     const ueForderungen = sum(forderungen.map((p) => p.netto));
     const ueVerbindlichkeiten = sum(verbindlichkeiten.map((p) => p.netto));
@@ -203,6 +206,7 @@ export function computeAufgabebilanz(input: AufgabebilanzInput): AufgabebilanzRe
         aktiva,
         passiva,
         summeAktiva,
+        summePassiva,
         eigenkapital,
         forderungen,
         verbindlichkeiten,

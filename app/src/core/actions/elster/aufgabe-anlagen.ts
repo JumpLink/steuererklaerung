@@ -166,7 +166,7 @@ export function aufgabebilanzAnlage(report: AufgabebilanzReport, elster: ElsterC
                 value: eur(z.betrag),
                 indent: 1,
             })),
-            { label: 'Summe Passiva', value: eur(b.summeAktiva), emphasis: true },
+            { label: 'Summe Passiva', value: eur(b.summePassiva), emphasis: true },
         ],
     });
     if (report.bank.some((k) => k.quelle === 'buchungen')) {
