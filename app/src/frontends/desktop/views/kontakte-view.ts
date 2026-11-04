@@ -28,7 +28,7 @@ import { eur } from '../../../core/lib/format.ts';
 import type { AppEntity } from '../entities.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
-import { rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
+import { phoneRowActions, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
 import { BhKontaktFormDialog } from './kontakt-form-dialog.ts';
 import { GroupRows, LoadToken, emptyState, loadIntoStack, markup } from './util.ts';
 import { _, fmt } from '../i18n.ts';
@@ -248,6 +248,10 @@ export class BhKontakteView extends Adw.Bin {
         // letters on a phone.
         const actions = rowActions([]);
         row.add_suffix(actions);
+        // No pinnableCluster here: with one button there is nothing to fold away on a desktop, and
+        // the wrap is what lets the badges drop under the name. The phone half still applies — it
+        // is what gives Delete a thumb-sized target.
+        phoneRowActions(actions);
 
         // Open receivables (filled in the background) — the amber "N € offen" pill from the design.
         const open = this.openByContact.get(c.id);

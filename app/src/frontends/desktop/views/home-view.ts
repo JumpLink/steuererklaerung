@@ -17,7 +17,9 @@ import { loadCapabilities, loadOutgoingInvoices } from '../../../core/presenters
 import { loadAppSettings } from '../../../core/config/index.ts';
 import { BhChart } from '../widgets/chart.ts';
 import { BhGlossaryHelp } from '../widgets/glossary-help.ts';
-import { loadIntoStack, LoadToken } from './util.ts';
+import { loadIntoStack, LoadToken, phoneKpiColumns } from './util.ts';
+import { wrappingLabel } from '../widgets/responsive.ts';
+import { onNarrow } from '../widgets/narrow.ts';
 import { BhRechnungDetailDialog } from './rechnung-detail-dialog.ts';
 import { BhHerleitungDialog } from './herleitung-dialog.ts';
 import { errorDialog } from './dialogs.ts';
@@ -87,8 +89,14 @@ export class BhHomeView extends Adw.Bin {
         // Lernmodus is read once per build (the "?" glossar buttons stay hidden when it is off).
         // STEUER_APP_LERNMODUS (dev/testing hook) forces the learn-mode glossary "?" on, for screenshots.
         const lernmodus = !!process.env.STEUER_APP_LERNMODUS || loadAppSettings().lernmodus;
-        this._content_box.append(this.kpiRow(m, lernmodus));
-        this._content_box.append(this.freiRow(frei, lernmodus));
+        // Two-up on a phone, wired here rather than inside the builders: each of them has an early
+        // return for a capability the entity may not have, and the rule needs the finished row.
+        const kpis = this.kpiRow(m, lernmodus);
+        this._content_box.append(kpis);
+        phoneKpiColumns(kpis, 4);
+        const freiCards = this.freiRow(frei, lernmodus);
+        this._content_box.append(freiCards);
+        phoneKpiColumns(freiCards, 2);
         if (m.tasks.length) this._content_box.append(this.tasksGroup(m));
         this._content_box.append(this.barsCard(m));
         // Design: Kategorien + Liquidität sit side by side on a wide window, stacking when narrow.
@@ -121,8 +129,13 @@ export class BhHomeView extends Adw.Bin {
         return new Gtk.Label({ label: text, xalign: 0, cssClasses: ['heading'] });
     }
 
+    /**
+     * A dim caption — wrapping, because two KPI cards side by side on a phone are each ~160 px and
+     * "As of 03.11.2026 · a calculation, not advice" on one line is three times that. The natural
+     * width is untouched (see wrappingLabel), so a desktop card is laid out exactly as before.
+     */
     private dim(text: string): Gtk.Label {
-        return new Gtk.Label({ label: text, xalign: 0, cssClasses: ['dim-label', 'caption'] });
+        return wrappingLabel({ label: text, xalign: 0, cssClasses: ['dim-label', 'caption'] });
     }
 
     /** A dim caption label followed by the Lernmodus "?" glossar button (hidden unless Lernmodus is on). */
@@ -136,7 +149,7 @@ export class BhHomeView extends Adw.Bin {
     }
 
     // ── KPI cards ──
-    private kpiRow(m: HomeModel, lernmodus: boolean): Gtk.Widget {
+    private kpiRow(m: HomeModel, lernmodus: boolean): Gtk.FlowBox {
         const fb = new Gtk.FlowBox({
             selectionMode: Gtk.SelectionMode.NONE,
             homogeneous: true,
@@ -171,7 +184,7 @@ export class BhHomeView extends Adw.Bin {
     }
 
     // ── Frei verfügbar + Steuerrücklage: two activatable cards, each opening its Herleitung ──
-    private freiRow(frei: FreiVerfuegbarModel | Error, lernmodus: boolean): Gtk.Widget {
+    private freiRow(frei: FreiVerfuegbarModel | Error, lernmodus: boolean): Gtk.FlowBox {
         const fb = new Gtk.FlowBox({
             selectionMode: Gtk.SelectionMode.NONE,
             homogeneous: true,
@@ -281,6 +294,10 @@ export class BhHomeView extends Adw.Bin {
             chart.set_size_request(90, 30);
             chart.set_halign(Gtk.Align.END);
             chart.set_valign(Gtk.Align.CENTER);
+            // 90 px of sparkline is more than half a two-up phone card, and it is the hard floor
+            // that kept the whole window at 486 px — a trend line nobody can read is worth less
+            // than the number beside it, so a phone keeps the number.
+            onNarrow(chart, (narrow) => chart.set_visible(!narrow));
             row.append(chart);
         }
         content.append(row);

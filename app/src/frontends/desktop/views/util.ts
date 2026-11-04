@@ -16,6 +16,8 @@ import { navigateTo } from '../nav.ts';
 import { stopwatch, timed } from '@steuererklaerung/shared';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 import { wrappingLabel } from '../widgets/responsive.ts';
+import { onNarrow } from '../widgets/narrow.ts';
+import { kpiColumns } from '../widgets/phone-rules.ts';
 import { _, _p, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
 
@@ -137,7 +139,14 @@ export function kpiCard(k: Kpi): Gtk.Widget {
     return card;
 }
 
-/** A responsive row of KPI cards (design's leading metric row) — 1-up narrow, up to `max`-up wide. */
+/**
+ * A responsive row of KPI cards (design's leading metric row) — up to `max`-up wide, two-up on a
+ * phone, one-up in between.
+ *
+ * The phone rule is a floor AND a ceiling, see {@link kpiColumns}: at 360 px one card per line
+ * spends the whole first screen on numbers before any list starts, and a flow box left to itself
+ * will fit three of them instead and make none readable.
+ */
 export function kpiFlow(kpis: Kpi[], max = 4): Gtk.Widget {
     const fb = new Gtk.FlowBox({
         selectionMode: Gtk.SelectionMode.NONE,
@@ -149,7 +158,30 @@ export function kpiFlow(kpis: Kpi[], max = 4): Gtk.Widget {
         activateOnSingleClick: false,
     });
     for (const k of kpis) fb.append(kpiCard(k));
+    phoneKpiColumns(fb, max);
     return fb;
+}
+
+/**
+ * Put an EXISTING flow box of KPI cards under the phone's two-up rule.
+ *
+ * Separate from {@link kpiFlow} because `home-view.ts` — the view the rule was written for, with
+ * five cards filling a 360 px screen — builds its own rows: its cards carry a sparkline and a
+ * "derivation" click target, so they are not {@link kpiCard}s. The box differs, the rule does not.
+ *
+ * Only for rows of NUMBERS. The Overview's Categories-and-Liquidity pair is also a two-column flow
+ * box and must stay one-up on a phone: those are charts, and half a phone screen is not a chart.
+ *
+ * Call it once the cards are in: the count decides whether a lone card keeps the full width.
+ */
+export function phoneKpiColumns(fb: Gtk.FlowBox, max: number): void {
+    let count = 0;
+    for (let child = fb.get_first_child(); child; child = child.get_next_sibling()) count++;
+    onNarrow(fb, (narrow) => {
+        const columns = kpiColumns(count, narrow, max);
+        fb.set_min_children_per_line(columns.min);
+        fb.set_max_children_per_line(columns.max);
+    });
 }
 
 /**
