@@ -178,6 +178,23 @@ template $BhMainWindow: Adw.ApplicationWindow {
             tooltip-text: _("Sync");
           }
 
+          // The phone's primary action and its overflow — both hidden on a desktop, where the
+          // same actions sit in the view's own toolbar with their captions. Filled per view by
+          // widgets/header-actions.ts; declared here so the header owns its own children.
+          [end]
+          Gtk.Button view_action {
+            icon-name: "list-add-symbolic";
+            visible: false;
+          }
+
+          [end]
+          Gtk.MenuButton view_menu {
+            icon-name: "view-more-symbolic";
+            visible: false;
+            // TRANSLATORS: Tooltip on the headerbar button holding a page's secondary actions
+            tooltip-text: _("More actions");
+          }
+
           [end]
           Gtk.ToggleButton assistant_toggle {
             icon-name: "starred-symbolic";

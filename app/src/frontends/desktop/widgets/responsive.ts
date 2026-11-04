@@ -303,24 +303,55 @@ export function phoneRowActions(cluster: Adw.WrapBox, after: () => void = () => 
  * view connected still runs, including anything connected after this menu was built.
  */
 function overflowItem(action: Gtk.Button, popover: Gtk.Popover): Gtk.Button {
-    const item = new Gtk.Button({
-        cssClasses: ['flat'],
-        heightRequest: TOUCH_TARGET,
-        child: new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 12 }),
+    const item = menuItem(popover, {
+        label: overflowText(action),
+        iconName: action.get_icon_name(),
+        // `zeiten-view.ts` disables both row buttons once an entry is invoiced.
+        cssClasses: ['destructive-action', 'suggested-action'].filter((css) => action.has_css_class(css)),
+        run: () => action.emit('clicked'),
     });
-    const box = item.get_child() as Gtk.Box;
-    const icon = action.get_icon_name();
-    if (icon) box.append(new Gtk.Image({ iconName: icon }));
-    box.append(new Gtk.Label({ label: overflowText(action), xalign: 0, hexpand: true }));
-    // Mirrored, not copied: `zeiten-view.ts` disables both row buttons once an entry is invoiced.
+    // Mirrored, not copied — see above; the binding keeps the entry in step with later changes.
     action.bind_property('sensitive', item, 'sensitive', GObject.BindingFlags.SYNC_CREATE);
-    for (const css of ['destructive-action', 'suggested-action'])
-        if (action.has_css_class(css)) item.add_css_class(css);
+    return item;
+}
+
+/**
+ * One entry of a `.menu` popover: a flat, thumb-high button with an optional icon and a left-aligned
+ * caption.
+ *
+ * Shared by the row overflow above and the content header's own menu
+ * ([`header-actions.ts`](./header-actions.ts)), which is the point — the two menus are the same
+ * surface at two sizes, and a user who learns one has learned the other.
+ */
+export function menuItem(
+    popover: Gtk.Popover,
+    opts: { label: string; iconName?: string | null; cssClasses?: readonly string[]; run: () => void },
+): Gtk.Button {
+    const box = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 12 });
+    if (opts.iconName) box.append(new Gtk.Image({ iconName: opts.iconName }));
+    box.append(new Gtk.Label({ label: opts.label, xalign: 0, hexpand: true }));
+    const item = new Gtk.Button({
+        cssClasses: ['flat', ...(opts.cssClasses ?? [])],
+        heightRequest: TOUCH_TARGET,
+        child: box,
+    });
     item.connect('clicked', () => {
         popover.popdown();
-        action.emit('clicked');
+        opts.run();
     });
     return item;
+}
+
+/**
+ * Hide a control while the window is phone-sized, because the content header bar carries it there.
+ *
+ * Hidden rather than skipped at build time: the toolbar is rebuilt on reload, not on resize, so a
+ * window dragged narrow after the view was built would keep whatever width state it was born with.
+ * The subscription dies with the widget — see {@link onNarrow}.
+ */
+export function hideOnPhone<T extends Gtk.Widget>(widget: T): T {
+    onNarrow(widget, (narrow) => widget.set_visible(!narrow));
+    return widget;
 }
 
 /**

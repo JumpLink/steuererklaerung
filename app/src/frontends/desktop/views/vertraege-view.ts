@@ -31,7 +31,8 @@ import type { AppEntity } from '../entities.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
 import { showToast } from '../toast.ts';
-import { chipScroller, pinnableCluster, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
+import { chipScroller, hideOnPhone, pinnableCluster, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
+import type { ViewAction } from '../view.ts';
 import Template from './vertraege-view.blp';
 import { errorDialog } from './dialogs.ts';
 import {
@@ -174,6 +175,23 @@ export class BhVertraegeView extends Adw.Bin {
         );
     }
 
+    /**
+     * What the content header offers on a phone: create a contract, export the deadlines.
+     *
+     * The same two closures the toolbar buttons carry, which is why those buttons can simply be
+     * hidden at this width instead of moved — see {@link fillToolbar}.
+     */
+    headerActions(): ViewAction[] {
+        return [
+            { label: _('New contract'), primary: true, run: () => this.edit(null) },
+            {
+                label: _('Export deadlines'),
+                iconName: 'x-office-calendar-symbolic',
+                run: () => this.exportDeadlines(),
+            },
+        ];
+    }
+
     /** The filter chips plus "New contract" and the calendar export, above the group (see the .blp). */
     private fillToolbar(): void {
         clearBox(this._list_toolbar);
@@ -183,14 +201,16 @@ export class BhVertraegeView extends Adw.Bin {
         const ics = new Gtk.Button({ label: _('Export deadlines'), valign: Gtk.Align.CENTER });
         ics.set_tooltip_text(_('Save the upcoming notice deadlines as a calendar file (.ics)'));
         ics.connect('clicked', () => this.exportDeadlines());
-        this._list_toolbar.append(wrapButtonLabel(ics));
+        this._list_toolbar.append(hideOnPhone(wrapButtonLabel(ics)));
         const add = new Gtk.Button({
             label: _('New contract'),
             cssClasses: ['suggested-action'],
             valign: Gtk.Align.CENTER,
         });
         add.connect('clicked', () => this.edit(null));
-        this._list_toolbar.append(wrapButtonLabel(add));
+        // Both live in the header bar on a phone (headerActions above); a second copy here would
+        // be the 140 px of buttons the spec is removing.
+        this._list_toolbar.append(hideOnPhone(wrapButtonLabel(add)));
     }
 
     private buildFilterToggle(): Gtk.Box {
