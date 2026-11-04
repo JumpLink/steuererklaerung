@@ -146,6 +146,7 @@ export default async () => {
                     { id: 'g', bezeichnung: 'Einbau', anschaffung: '2020-01-01', ahk: 1200, nutzungsdauer_jahre: 10, restbuchwert_anfang: 600, erinnerungswert: 0, art: 'gebaeude' },
                     { id: 'b', bezeichnung: 'Möbel', anschaffung: '2022-01-01', ahk: 1000, nutzungsdauer_jahre: 5, restbuchwert_anfang: 400, erinnerungswert: 0, art: 'beweglich' },
                 ],
+                gwg: [],
                 privatanteile: [],
                 sonderbetriebsausgaben: [],
                 nachtraegliche_posten: [],

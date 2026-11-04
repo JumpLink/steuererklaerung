@@ -62,7 +62,9 @@ export function usteEntnahme(elster: ElsterConfig, year: number): UsteEntnahme |
     if (!aufgabe) return undefined;
     if (!aufgabe.datum.startsWith(String(year))) return undefined;
     const ohneVorsteuer = new Set(
-        (elster.adjustments?.anlageverzeichnis ?? []).filter((a) => a.vorsteuerabzug === false).map((a) => a.id),
+        [...(elster.adjustments?.anlageverzeichnis ?? []), ...(elster.adjustments?.gwg ?? [])]
+            .filter((a) => a.vorsteuerabzug === false)
+            .map((a) => a.id),
     );
     return {
         assets: aufgabe.assets

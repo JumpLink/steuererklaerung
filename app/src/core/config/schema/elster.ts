@@ -112,6 +112,24 @@ const AnlagegutSchema = z.object({
     buchung_ids: z.array(z.string()).optional(),
 });
 
+/**
+ * A geringwertiges Wirtschaftsgut (§6 Abs. 2/2a EStG), expensed in full when bought. It has no AfA
+ * and never appears in the Anlage AVEÜR, but it is still Betriebsvermögen: at the Betriebsaufgabe
+ * it is withdrawn at its gemeiner Wert against a Buchwert of 0, and its Entnahme is a §3 Abs. 1b
+ * supply like any other asset's. Kept apart from the Anlageverzeichnis so the AVEÜR stays as filed.
+ */
+const GwgSchema = z.object({
+    /** Matched by `betriebsaufgabe.gemeine_werte[].anlagegut_id`. */
+    id: z.string(),
+    bezeichnung: z.string(),
+    /** Anschaffungsdatum (YYYY-MM-DD). A GWG bought after the Aufgabe is not part of it. */
+    anschaffung: z.string(),
+    /** Anschaffungskosten (net), as expensed. */
+    ahk: z.number().nonnegative(),
+    /** As on {@link AnlagegutSchema}: `false` keeps its Entnahme out of the UStE. */
+    vorsteuerabzug: z.boolean().optional(),
+});
+
 /** Deemed income / unentgeltliche Wertabgabe, e.g. private telephone use (Privatanteil). */
 const PrivatanteilSchema = z.object({
     bezeichnung: z.string(),
@@ -212,6 +230,8 @@ const AdjustmentsSchema = z.object({
     /** Depreciable assets → AfA. If `afa_override` is set, it wins over the computed AfA. */
     anlageverzeichnis: z.array(AnlagegutSchema).default([]),
     afa_override: z.number().nonnegative().optional(),
+    /** GWG — expensed, no AfA, but withdrawn at the Betriebsaufgabe. */
+    gwg: z.array(GwgSchema).default([]),
     privatanteile: z.array(PrivatanteilSchema).default([]),
     sonderbetriebsausgaben: z.array(SonderbetriebsausgabeSchema).default([]),
     /** Betriebsaufgabe (Aufgabegewinn/-verlust from the remaining Anlagevermögen). */
