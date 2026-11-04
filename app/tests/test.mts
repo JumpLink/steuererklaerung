@@ -114,6 +114,7 @@ import estXml from './unit/lib/est-xml.test.ts';
 import betriebsaufgabe from './unit/lib/betriebsaufgabe.test.ts';
 import betriebsaufgabeGwg from './unit/elster/betriebsaufgabe-gwg.test.ts';
 import aufgabebilanz from './unit/lib/aufgabebilanz.test.ts';
+import aufgabeAnlagen from './unit/lib/aufgabe-anlagen.test.ts';
 import bwa from './unit/lib/bwa.test.ts';
 import chartsGeometry from './unit/lib/charts-geometry.test.ts';
 import dateUtils from './unit/lib/date-utils.test.ts';
@@ -333,6 +334,7 @@ run({
     betriebsaufgabe,
     betriebsaufgabeGwg,
     aufgabebilanz,
+    aufgabeAnlagen,
     bwa,
     chartsGeometry,
     dateUtils,
