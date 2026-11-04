@@ -3,7 +3,7 @@ import { ElsterConfigRawSchema, normalizeElsterConfig } from '../../../src/core/
 import { buildAufgabegewinn } from '../../../src/core/actions/elster/euer.ts';
 import { usteEntnahme } from '../../../src/core/actions/elster/uste.ts';
 
-function config(gwg: unknown[], gemeineWerte: { anlagegut_id: string; gemeiner_wert: number }[]) {
+function config(gwg: unknown[], gemeineWerte: Record<string, unknown>[]) {
     return normalizeElsterConfig(
         ElsterConfigRawSchema.parse({
             tax_number: '',
@@ -70,6 +70,73 @@ export default async () => {
             const namen = e.assets.map((a) => a.bezeichnung);
             expect(namen.includes('Monitor')).toBe(true);
             expect(namen.includes('Ohne Vorsteuer')).toBe(false);
+        });
+    });
+
+    await describe('Betriebsaufgabe — Realteilung', async () => {
+        await it('carries a part taken into a partner business at Buchwert, with no gain', async () => {
+            const r = buildAufgabegewinn(
+                config(GWG, [
+                    { anlagegut_id: 'monitor', gemeiner_wert: 50, uebernehmer: 'p', realteilung: true },
+                    { anlagegut_id: 'privat', gemeiner_wert: 35 },
+                ]),
+                2025,
+            )!;
+            const monitor = r.assets.find((a) => a.id === 'monitor')!;
+            expect(monitor.gewinn).toBe(0);
+            expect(monitor.gemeinerWert).toBe(50);
+            expect(monitor.realteilung).toBe(true);
+            expect(r.aufgabegewinn).toBe(35);
+        });
+
+        await it('splits one asset into parts that share its Restbuchwert', async () => {
+            const r = buildAufgabegewinn(
+                config(
+                    [],
+                    [
+                        { anlagegut_id: 'pc', gemeiner_wert: 400, anteil: 0.7, bezeichnung: 'PC', realteilung: true },
+                        { anlagegut_id: 'pc', gemeiner_wert: 100, anteil: 0.3, bezeichnung: 'Grafikkarte' },
+                    ],
+                ),
+                2025,
+            )!;
+            const ganz = buildAufgabegewinn(config([], [{ anlagegut_id: 'pc', gemeiner_wert: 0 }]), 2025)!;
+            const rbw = ganz.assets[0].restbuchwert;
+            const teile = r.assets.filter((a) => a.id === 'pc');
+            expect(teile.map((a) => a.bezeichnung).join()).toBe('PC,Grafikkarte');
+            expect(Math.round((teile[0].restbuchwert + teile[1].restbuchwert) * 100)).toBe(Math.round(rbw * 100));
+            expect(r.aufgabegewinn).toBe(Math.round((100 - teile[1].restbuchwert) * 100) / 100);
+        });
+
+        await it('refuses parts whose shares do not sum to 1', async () => {
+            let fehler = '';
+            try {
+                buildAufgabegewinn(
+                    config(
+                        [],
+                        [
+                            { anlagegut_id: 'pc', gemeiner_wert: 400, anteil: 0.5 },
+                            { anlagegut_id: 'pc', gemeiner_wert: 100, anteil: 0.3 },
+                        ],
+                    ),
+                    2025,
+                );
+            } catch (e) {
+                fehler = String(e);
+            }
+            expect(fehler.includes('pc')).toBe(true);
+        });
+
+        await it('books a Realteilung as a Lieferung, not as a §3 Abs. 1b Entnahme', async () => {
+            const e = usteEntnahme(
+                config(GWG, [
+                    { anlagegut_id: 'monitor', gemeiner_wert: 50, realteilung: true },
+                    { anlagegut_id: 'privat', gemeiner_wert: 35 },
+                ]),
+                2025,
+            )!;
+            expect(e.assets.some((a) => a.bezeichnung === 'Monitor')).toBe(false);
+            expect(e.lieferungen?.map((a) => a.bezeichnung).join()).toBe('Monitor');
         });
     });
 };

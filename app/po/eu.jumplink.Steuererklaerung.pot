@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-11-04 13:55+0100\n"
+"POT-Creation-Date: 2026-11-04 15:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1128,7 +1128,7 @@ msgid "Refund"
 msgstr ""
 
 #: src/core/actions/elster/wizard.ts:213
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:63
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:64
 msgid "Gewerbesteuer"
 msgstr ""
 
@@ -6315,8 +6315,8 @@ msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:93
 #: src/frontends/desktop/views/einstellungen/abschluss.ts:107
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:182
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:184
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:200
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:202
 msgid "New asset"
 msgstr ""
 
@@ -6982,110 +6982,130 @@ msgstr ""
 msgid "Invoices show no VAT and carry the § 19 notice."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:64
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:65
 msgid "The levying municipality and the Hebesatz for the GewSt 1 A."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:70
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:71
 msgid "Municipality"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:75
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:76
 msgid "Official municipality key (AGS)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:78
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:79
 msgid ""
 "The AGS has 8 digits (e.g. 03459015). Leave it empty if it is not known."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:85
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:86
 msgid "Hebesatz (%)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:91
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:92
 msgid "Add-backs (§ 8 GewStG)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:92
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:111
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:93
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:112
 msgid "Only fill in if there were such items — otherwise 0."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:95
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:96
 msgid "Financing shares (consideration for debts, rents, licences)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:96
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:97
 msgid "Free-float dividends"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:97
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:98
 msgid "Loss shares from partnerships"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:98
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:99
 msgid "Other add-backs"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:110
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:111
 msgid "Reductions (§ 9 GewStG)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:114
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:115
 msgid "Real property (1.2 % of the assessed value)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:115
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:116
 msgid "Profit shares from partnerships"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:116
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:117
 msgid "Donations and membership dues"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:117
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:118
 msgid "Other reductions"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:144
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:152
 msgid "Business cessation"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:146
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:154
 msgid ""
 "Only when the business ceases: the remaining fixed assets move into private "
 "assets at their fair value."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:153
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:161
 msgid "Cessation date (YYYY-MM-DD)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:156
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:164
 msgid "The cessation date must be YYYY-MM-DD, e.g. 2025-12-31."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:165
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:173
 msgid "Cessation costs (€)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:183
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:201
 msgid "Asset ID"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:187
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:207
 msgid "Fair value (€)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:191
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:212
+msgid "Name of this part"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:215
+msgid "Share of the book value (0 = whole asset)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:220
+msgid "Taken over by (partner ID)"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:223
+msgid "Into the partner’s own business"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:224
+msgid "Realteilung: the book value carries over, no cessation gain"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:238
 #: src/frontends/desktop/views/entity-dialogs.ts:103
 #: src/frontends/desktop/views/konten-view.ts:434
 #: src/frontends/desktop/views/projekt-detail-dialog.ts:158
 msgid "Remove"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:201
+#: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:248
 msgid "＋ Add fair value"
 msgstr ""
 

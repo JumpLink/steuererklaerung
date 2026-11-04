@@ -203,11 +203,26 @@ const AufgabebilanzSchema = z.object({
         .default([]),
 });
 
-/** Per-asset gemeiner Wert at the Betriebsaufgabe (else defaults to the Restbuchwert). */
+/**
+ * Per-asset gemeiner Wert at the Betriebsaufgabe (else defaults to the Restbuchwert). An asset
+ * taken over by two partners gets one entry per part, each with its `anteil` of the Restbuchwert.
+ */
 const GemeinerWertSchema = z.object({
     /** Matches an Anlagegut `id`. */
     anlagegut_id: z.string(),
     gemeiner_wert: z.number().nonnegative(),
+    /** Name of this part when the asset is split (else the asset's own Bezeichnung). */
+    bezeichnung: z.string().optional(),
+    /** Share of the asset's Restbuchwert this part carries; the parts of one asset sum to 1. */
+    anteil: z.number().positive().max(1).optional(),
+    /** `gesellschafter[].id` of the partner who took it over. */
+    uebernehmer: z.string().optional(),
+    /**
+     * Taken into the Übernehmer's own Betriebsvermögen (Realteilung, §16 Abs. 3 S. 2 EStG): the
+     * Buchwert carries over, so no Aufgabegewinn — and the transfer is a taxable Lieferung to that
+     * business, not a §3 Abs. 1b Entnahme. See docs/references/tax-sources.md.
+     */
+    realteilung: z.boolean().optional(),
 });
 
 /**

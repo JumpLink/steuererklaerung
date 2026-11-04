@@ -126,7 +126,7 @@ export async function printReport(entity: string, year: number): Promise<void> {
         ${fest.aufgabe.assets
             .map(
                 (a) =>
-                    `<tr><td>${esc(a.bezeichnung)} <span class="bh-pr-sub">gemeiner Wert ${eur(a.gemeinerWert)} − Buchwert ${eur(a.restbuchwert)}</span></td><td class="bh-pr-num ${a.gewinn < 0 ? 'neg' : 'pos'}">${eur(a.gewinn)}</td></tr>`,
+                    `<tr><td>${esc(a.bezeichnung)} <span class="bh-pr-sub">${a.realteilung ? `Realteilung: Buchwert ${eur(a.restbuchwert)} fortgeführt` : `gemeiner Wert ${eur(a.gemeinerWert)} − Buchwert ${eur(a.restbuchwert)}`}</span></td><td class="bh-pr-num ${a.gewinn < 0 ? 'neg' : 'pos'}">${eur(a.gewinn)}</td></tr>`,
             )
             .join('')}
         <tr class="bh-pr-total"><td>${fest.result.aufgabegewinn < 0 ? 'Aufgabeverlust' : 'Aufgabegewinn'} (§16/§34, gewerbesteuerfrei)</td><td class="bh-pr-num">${eur(fest.result.aufgabegewinn)}</td></tr>

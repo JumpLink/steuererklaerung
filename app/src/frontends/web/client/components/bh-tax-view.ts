@@ -224,7 +224,7 @@ export class BhTaxView extends HTMLElement {
           ${r.aufgabe.assets
               .map(
                   (a) =>
-                      `<div class="bh-line"><dt>${esc(a.bezeichnung)} <small>gemeiner Wert ${eur(a.gemeinerWert)} − Buchwert ${eur(a.restbuchwert)}</small></dt><dd>${eur(a.gewinn)}</dd></div>`,
+                      `<div class="bh-line"><dt>${esc(a.bezeichnung)} <small>${a.realteilung ? `Realteilung: Buchwert ${eur(a.restbuchwert)} fortgeführt` : `gemeiner Wert ${eur(a.gemeinerWert)} − Buchwert ${eur(a.restbuchwert)}`}</small></dt><dd>${eur(a.gewinn)}</dd></div>`,
               )
               .join('')}
           ${line(f.aufgabegewinn < 0 ? 'Aufgabeverlust (§16/§34)' : 'Aufgabegewinn (§16/§34)', eur(f.aufgabegewinn), 'total')}
