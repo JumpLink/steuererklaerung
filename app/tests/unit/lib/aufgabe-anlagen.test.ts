@@ -5,6 +5,7 @@ import {
   uebergangsgewinnAnlage,
   steuerblattToMarkdown,
 } from "../../../src/core/actions/elster/aufgabe-anlagen.ts";
+import { fmtDe } from "../../../src/core/lib/money.ts";
 import { computeAufgabegewinn } from "../../../src/core/elster/betriebsaufgabe.ts";
 import { computeAufgabebilanz } from "../../../src/core/elster/aufgabebilanz.ts";
 import { computeFeststellung } from "../../../src/core/elster/feststellung.ts";
@@ -88,15 +89,35 @@ export default async () => {
       }
     });
 
-    await it("lists every asset with its Behandlung and warns about the Sperrfrist", async () => {
+    await it("lists every asset as a table row with its Behandlung and warns about the Sperrfrist", async () => {
       const m = aufgabegewinnAnlage(fest, elster);
-      const labels = m.sections[0].rows.map((r) => r.label).join("\n");
-      expect(labels).toContain("Inventar-ID inv-1");
-      expect(labels).toContain("Realteilung (Buchwert)");
-      expect(labels).toContain("Entnahme, ohne Wert");
-      expect(labels).toContain("Anna Muster");
+      const t = m.sections[0].table!;
+      expect(t.columns.map((c) => c.header).join("|")).toBe(
+        "Gegenstand|Inv.-ID|gemeiner Wert|Restbuchwert|Ergebnis|Übernehmer|Behandlung",
+      );
+      expect(t.rows.length).toBe(3);
+      expect(t.rows.every((r) => r.length === t.columns.length)).toBe(true);
+      const byId = (id: string) => t.rows.find((r) => r[1] === id)!;
+      expect(byId("inv-1")[6]).toBe("Entnahme (gemeiner Wert)");
+      expect(byId("inv-2")[6]).toBe("Realteilung (Buchwert)");
+      expect(byId("inv-2")[5]).toBe("Anna Muster");
+      expect(byId("inv-3")[6]).toBe("Abgang ohne Wert");
+      expect(t.rows.map((r) => r[6]).join()).not.toContain("Entnahme, ohne Wert");
+      expect(t.footer![0]).toBe("Summe");
+      expect(t.footer![4]).toBe(`${fmtDe(aufgabe.entnahmegewinn)} €`);
+      for (const i of [2, 3, 4]) expect(t.columns[i].align).toBe("right");
       expect(m.warnings.join(" ")).toContain("Sperrfrist");
       expect(m.sections[2].rows.length).toBe(2);
+    });
+
+    await it("renders the Wirtschaftsgüter as a multi-column Markdown table", async () => {
+      const md = steuerblattToMarkdown(aufgabegewinnAnlage(fest, elster));
+      expect(md).toContain(
+        "| Gegenstand | Inv.-ID | gemeiner Wert | Restbuchwert | Ergebnis | Übernehmer | Behandlung |",
+      );
+      expect(md).toContain("|---|---|---:|---:|---:|---|---|");
+      expect(md).toContain("| **Summe** |");
+      expect(md).toContain("Abgang ohne Wert");
     });
 
     await it("shows equal Summe Aktiva and Summe Passiva", async () => {

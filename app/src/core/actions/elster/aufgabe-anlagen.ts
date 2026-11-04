@@ -8,13 +8,15 @@
 
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { SteuerblattModel, SteuerblattRow } from '@steuererklaerung/invoice-pdf';
+import type { SteuerblattModel, SteuerblattTable } from '@steuererklaerung/invoice-pdf';
 
 import type { ElsterConfig, SyncConfig } from '../../config/index.ts';
 import { fmtDe as fmt } from '../../lib/money.ts';
 import { feststellungReport, type FeststellungReport } from './feststellung.ts';
 import { aufgabebilanzReport, type AufgabebilanzReport } from './aufgabebilanz.ts';
 import { writeSteuerblattPdf } from './steuerblatt-pdf.ts';
+
+type Asset = NonNullable<FeststellungReport['aufgabe']>['assets'][number];
 
 const eur = (n: number): string => `${fmt(n)} €`;
 
@@ -58,18 +60,47 @@ export function aufgabegewinnAnlage(report: FeststellungReport, elster: ElsterCo
         'Betriebsaufgabe, § 16 Abs. 3 EStG — Wirtschaftsgüter: gemeiner Wert ./. Restbuchwert',
     );
 
-    const behandlung = (a: (typeof aufgabe.assets)[number]): string =>
-        a.realteilung ? 'Realteilung (Buchwert)' : a.gemeinerWert === 0 ? 'Entnahme, ohne Wert' : 'Entnahme';
+    model.landscape = true;
+    const behandlung = (a: Asset): string =>
+        a.realteilung
+            ? 'Realteilung (Buchwert)'
+            : a.gemeinerWert === 0 && !a.uebernehmer
+              ? 'Abgang ohne Wert'
+              : 'Entnahme (gemeiner Wert)';
+    const sum = (pick: (a: Asset) => number): number =>
+        Math.round(aufgabe.assets.reduce((s, a) => s + pick(a), 0) * 100) / 100;
     model.sections.push({
         heading: 'Wirtschaftsgüter',
-        rows: aufgabe.assets.flatMap((a): SteuerblattRow[] => [
-            { label: `${a.bezeichnung} (Inventar-ID ${a.id})`, value: eur(a.gewinn) },
-            {
-                label: `gemeiner Wert ${eur(a.gemeinerWert)} · Restbuchwert ${eur(a.restbuchwert)} · Übernehmer ${name(a.uebernehmer)} · ${behandlung(a)}`,
-                value: '',
-                indent: 1,
-            },
-        ]),
+        table: {
+            columns: [
+                { header: 'Gegenstand', weight: 1.4 },
+                { header: 'Inv.-ID', nowrap: true },
+                { header: 'gemeiner Wert', align: 'right', nowrap: true },
+                { header: 'Restbuchwert', align: 'right', nowrap: true },
+                { header: 'Ergebnis', align: 'right', nowrap: true },
+                { header: 'Übernehmer', weight: 1.2 },
+                { header: 'Behandlung', weight: 1.4 },
+            ],
+            rows: aufgabe.assets.map((a) => [
+                a.bezeichnung,
+                a.id,
+                eur(a.gemeinerWert),
+                eur(a.restbuchwert),
+                eur(a.gewinn),
+                name(a.uebernehmer),
+                behandlung(a),
+            ]),
+            footer: [
+                'Summe',
+                '',
+                eur(sum((a) => a.gemeinerWert)),
+                eur(sum((a) => a.restbuchwert)),
+                eur(aufgabe.entnahmegewinn),
+                '',
+                '',
+            ],
+        },
+        rows: [],
     });
 
     model.sections.push({
@@ -102,7 +133,7 @@ export function aufgabegewinnAnlage(report: FeststellungReport, elster: ElsterCo
         );
     }
     model.note =
-        'Die gemeinen Werte sind eine Schätzung des Steuerpflichtigen; Wirtschaftsgüter ohne Wert werden ohne Gegenleistung entnommen oder aufgegeben.';
+        'Die gemeinen Werte sind eine Schätzung des Steuerpflichtigen; Wirtschaftsgüter ohne Wert gehen ohne Gegenleistung ab (Ausbuchung).';
     return model;
 }
 
@@ -187,13 +218,29 @@ export function uebergangsgewinnAnlage(report: AufgabebilanzReport, elster: Elst
     return model;
 }
 
+/** A {@link SteuerblattTable} as a Markdown table; the footer is set bold. */
+function tableToMarkdown(table: SteuerblattTable, cell: (s: string) => string): string[] {
+    const row = (cells: string[], bold = false): string =>
+        `| ${cells.map((c) => (bold && c ? `**${cell(c)}**` : cell(c))).join(' | ')} |`;
+    return [
+        row(table.columns.map((c) => c.header)),
+        `|${table.columns.map((c) => (c.align === 'right' ? '---:' : '---')).join('|')}|`,
+        ...table.rows.map((r) => row(r)),
+        ...(table.footer ? [row(table.footer, true)] : []),
+    ];
+}
+
 /** Render a datasheet model as Markdown (headings, one table per section). */
 export function steuerblattToMarkdown(model: SteuerblattModel): string {
     const cell = (s: string): string => s.replace(/\|/g, '\\|');
     const out: string[] = [`# ${model.title}`, '', `_${model.subtitle}_`, ''];
     for (const m of model.meta) out.push(`- **${m.label}:** ${m.value}`);
     for (const s of model.sections) {
-        out.push('', `## ${s.heading}`, '', '| Position | Betrag |', '|---|---:|');
+        out.push('', `## ${s.heading}`, '');
+        if (s.table) out.push(...tableToMarkdown(s.table, cell));
+        if (!s.rows.length) continue;
+        if (s.table) out.push('');
+        out.push('| Position | Betrag |', '|---|---:|');
         for (const r of s.rows) {
             const label = `${r.indent ? '&nbsp;&nbsp;' : ''}${cell(r.label)}`;
             out.push(

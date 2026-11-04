@@ -14,10 +14,18 @@ export * from './qr.ts';
 export * from './umsatz-model.ts';
 export * from './steuerblatt-model.ts';
 
-import { contentWidth, itemColumns, LAYOUT, PAGE_HEIGHT, PAGE_WIDTH, paginateItems } from './layout.ts';
+import {
+    contentWidth,
+    itemColumns,
+    LAYOUT,
+    PAGE_HEIGHT,
+    PAGE_WIDTH,
+    paginateItems,
+    tableColumnLayout,
+} from './layout.ts';
 import type { InvoicePdfModel, PdfItemRow } from './model.ts';
 import type { UmsatzPdfModel } from './umsatz-model.ts';
-import type { SteuerblattModel } from './steuerblatt-model.ts';
+import type { SteuerblattModel, SteuerblattTable } from './steuerblatt-model.ts';
 import { qrMatrix } from './qr.ts';
 
 // ── Minimal structural typings for the GJS cairo + Pango runtime we use ──────────────
@@ -496,7 +504,11 @@ export async function renderSteuerblattPdf(model: SteuerblattModel): Promise<Uin
     const { GLib, Pango, PangoCairo } = gi;
 
     const tmp = GLib.build_filenamev([GLib.get_tmp_dir(), `bh-steuerblatt-${PROC_TOKEN}-${tmpCounter++}.pdf`]);
-    const surface = new cairo.PDFSurface(tmp, PAGE_WIDTH, PAGE_HEIGHT);
+    const surface = new cairo.PDFSurface(
+        tmp,
+        model.landscape ? PAGE_HEIGHT : PAGE_WIDTH,
+        model.landscape ? PAGE_WIDTH : PAGE_HEIGHT,
+    );
     const ctx = new cairo.Context(surface);
 
     const setInk = (rgb: readonly number[]) => ctx.setSourceRGB(rgb[0], rgb[1], rgb[2]);
@@ -525,10 +537,12 @@ export async function renderSteuerblattPdf(model: SteuerblattModel): Promise<Uin
     };
 
     const left = LAYOUT.marginLeft;
-    const w = contentWidth();
+    const pageW = model.landscape ? PAGE_HEIGHT : PAGE_WIDTH;
+    const pageH = model.landscape ? PAGE_WIDTH : PAGE_HEIGHT;
+    const w = pageW - LAYOUT.marginLeft - LAYOUT.marginRight;
     const right = left + w;
     const valueW = 150; // right-aligned value column
-    const bottomLimit = PAGE_HEIGHT - LAYOUT.marginBottom - 20;
+    const bottomLimit = pageH - LAYOUT.marginBottom - 20;
 
     let y = LAYOUT.marginTop;
     const breakIfNeeded = (needed: number) => {
@@ -536,6 +550,74 @@ export async function renderSteuerblattPdf(model: SteuerblattModel): Promise<Uin
             ctx.showPage();
             y = LAYOUT.marginTop;
         }
+    };
+
+    const measure = (str: string, size: number, bold: boolean): number => {
+        const layout = PangoCairo.create_layout(ctx);
+        layout.set_font_description(Pango.FontDescription.from_string(`Sans ${bold ? 'Bold ' : ''}${size}`));
+        layout.set_text(str, -1);
+        return layout.get_pixel_size()[0];
+    };
+    const tableFont = 8;
+    const tableGap = 10;
+    /** Header + body + bold footer; no-wrap columns are measured, flexible ones wrap. Advances `y`. */
+    const drawTable = (table: SteuerblattTable): void => {
+        const cols = table.columns;
+        const natural = cols.map((c, i) =>
+            c.nowrap
+                ? Math.ceil(
+                      Math.max(
+                          measure(c.header, tableFont, true),
+                          ...table.rows.map((r) => measure(r[i] ?? '', tableFont, false)),
+                          measure(table.footer?.[i] ?? '', tableFont, true),
+                      ),
+                  ) + 1
+                : null,
+        );
+        const geo = tableColumnLayout(
+            natural,
+            cols.map((c) => c.weight ?? 1),
+            w,
+            tableGap,
+        );
+        const drawRow = (cells: string[], bold: boolean, grey = false): number => {
+            let rowH = 0;
+            cells.forEach((cell, i) => {
+                const h = text(left + geo[i].x, y, cell, {
+                    size: tableFont,
+                    bold,
+                    width: geo[i].width,
+                    align: cols[i].align,
+                    color: grey ? INK.grey : INK.black,
+                });
+                rowH = Math.max(rowH, h);
+            });
+            return Math.max(rowH, 12);
+        };
+        const drawHead = (): void => {
+            y += drawRow(
+                cols.map((c) => c.header),
+                true,
+                true,
+            );
+            hline(left, right, y + 1);
+            y += 5;
+        };
+        drawHead();
+        for (const r of table.rows) {
+            if (y + 28 > bottomLimit) {
+                ctx.showPage();
+                y = LAYOUT.marginTop;
+                drawHead();
+            }
+            y += drawRow(r, false) + 2;
+        }
+        if (table.footer) {
+            hline(left, right, y);
+            y += 4;
+            y += drawRow(table.footer, true) + 2;
+        }
+        y += 4;
     };
 
     // Give the title/subtitle the content width so long headings (e.g. a USt-VA period title)
@@ -554,6 +636,7 @@ export async function renderSteuerblattPdf(model: SteuerblattModel): Promise<Uin
         hline(left, right, y);
         y += 8;
         y += text(left, y, section.heading, { size: 10, bold: true }) + 6;
+        if (section.table) drawTable(section.table);
         for (const r of section.rows) {
             breakIfNeeded(18);
             const x = left + (r.indent ? 16 : 0);

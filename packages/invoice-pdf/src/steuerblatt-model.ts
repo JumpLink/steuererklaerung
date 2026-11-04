@@ -17,9 +17,29 @@ export interface SteuerblattRow {
     emphasis?: boolean;
 }
 
-/** A titled group of rows (e.g. "Gesamthand", "Anlage EÜR — Kennzahlen"). */
+/** One column of a {@link SteuerblattTable}. */
+export interface SteuerblattColumn {
+    header: string;
+    /** Default 'left'. Amount columns are 'right'. */
+    align?: 'left' | 'right';
+    /** Never wrap: the column is as wide as its widest cell (amounts, IDs). Default false = flexible, wraps. */
+    nowrap?: boolean;
+    /** Share of the leftover width among the flexible columns. Default 1. */
+    weight?: number;
+}
+
+/** A multi-column table: header row, body rows, optional bold footer (Summe). Cells are display strings. */
+export interface SteuerblattTable {
+    columns: SteuerblattColumn[];
+    rows: string[][];
+    footer?: string[];
+}
+
+/** A titled group of rows (e.g. "Gesamthand", "Anlage EÜR — Kennzahlen"), optionally led by a table. */
 export interface SteuerblattSection {
     heading: string;
+    /** Drawn before `rows`; use `rows: []` for a table-only section. */
+    table?: SteuerblattTable;
     rows: SteuerblattRow[];
 }
 
@@ -36,4 +56,6 @@ export interface SteuerblattModel {
     warnings: string[];
     /** Closing methodology / source note, or null. */
     note: string | null;
+    /** A4 landscape instead of portrait — for wide tables. Default false. */
+    landscape?: boolean;
 }

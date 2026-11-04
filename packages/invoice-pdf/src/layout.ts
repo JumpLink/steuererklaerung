@@ -39,6 +39,29 @@ export function contentWidth(): number {
     return PAGE_WIDTH - LAYOUT.marginLeft - LAYOUT.marginRight;
 }
 
+/**
+ * Column geometry of a generic table. `natural[i]` is the measured width of a no-wrap column
+ * (null = flexible); flexible columns split what is left of `total` after the no-wrap columns and
+ * the `gap` between all columns, by `weights`. Pure, so the layout is testable without cairo.
+ */
+export function tableColumnLayout(
+    natural: (number | null)[],
+    weights: number[],
+    total: number,
+    gap: number,
+): { x: number; width: number }[] {
+    const fixed = natural.reduce<number>((sum, n) => sum + (n ?? 0), 0);
+    const flexWeight = natural.reduce<number>((sum, n, i) => sum + (n == null ? weights[i] : 0), 0);
+    const free = Math.max(0, total - fixed - gap * (natural.length - 1));
+    let x = 0;
+    return natural.map((n, i) => {
+        const width = n ?? (flexWeight > 0 ? (free * weights[i]) / flexWeight : 0);
+        const col = { x, width };
+        x += width + gap;
+        return col;
+    });
+}
+
 /** Item-table column x-offsets (from marginLeft) + widths, tuned for A4 Form B. */
 export function itemColumns(): { key: keyof PdfItemRow | 'x'; x: number; width: number; align: 'left' | 'right' }[] {
     const w = contentWidth();
