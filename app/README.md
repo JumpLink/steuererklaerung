@@ -299,6 +299,17 @@ GewSt/ESt = laut Bescheid; Wochenenden → Montag §108 Abs. 3 AO, Feiertage nic
 **Kommende Steuertermine** (Regelfristen aus den `elster`-/`est`-Configs, inkl. privater ESt).
 Optionen: `--json`, `--ics <datei>` (Kalender-Export inkl. Zahlungs-Fristen).
 
+**`aufgabebilanz`** — Betriebsaufgabe: `report --year` druckt Aufgabebilanz + Übergangsgewinn;
+`export --year --out <verzeichnis>` schreibt die Anlagen zur Feststellungserklärung für eine
+Finanzamts-Rückfrage als PDF **und** Markdown (`--out` ist Pflicht, das Verzeichnis wird angelegt):
+`1-aufgabegewinn-<jahr>` (je Wirtschaftsgut gemeiner Wert, Restbuchwert, Übernehmer, Behandlung;
+Aufgabekosten; Aufteilung je Gesellschafter; Sperrfrist-Hinweis bei Realteilung),
+`2-aufgabebilanz-<jahr>` (Aktiva/Passiva zum Stichtag), `3-uebergangsgewinn-<jahr>`. Jedes Dokument
+trägt Entität, Steuernummer, Stichtag und „Anlage zur Feststellungserklärung <Jahr>". Das PDF nutzt
+denselben Cairo/Pango-Weg wie die Prüf-Datenblätter (`--pdf`), braucht also keine zusätzliche
+Abhängigkeit; die Dokumente bleiben wie alle Steuerdokumente deutsch. Die Dateien enthalten echte
+Steuerdaten — in ein Verzeichnis außerhalb des Repos schreiben.
+
 **`filing`** — das Einreichungs-Register („erledigt"-Seite): welche Erklärung/Zahlung ist wann
 eingereicht/bezahlt. Einmal erfasst, zeigen die Steuertermine ✓ statt zu mahnen.
 
