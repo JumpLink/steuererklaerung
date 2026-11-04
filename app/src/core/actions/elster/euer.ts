@@ -125,24 +125,31 @@ export function totalSonderbetriebsausgaben(elster: ElsterConfig): number {
 /**
  * The Betriebsaufgabe Aufgabegewinn/-verlust from the config: the Anlageverzeichnis is
  * depreciated to the Aufgabe date (same AfA computation as the EÜR), then each asset's
- * Restbuchwert is compared to its configured gemeiner Wert. Returns null if no
- * Betriebsaufgabe is configured.
+ * Restbuchwert is compared to its configured gemeiner Wert. The GWG bought up to the
+ * Aufgabe join at a Buchwert of 0. Returns null if no Betriebsaufgabe is configured.
  */
 export function buildAufgabegewinn(elster: ElsterConfig, year: number): AufgabegewinnResult | null {
     const ba = elster.adjustments?.betriebsaufgabe;
     if (!ba) return null;
+    const datum = ba.datum ?? elster.business_end_date ?? '';
     const afa = computeAfa(
         (elster.adjustments?.anlageverzeichnis ?? []).map(toAnlagegut),
         year,
         elster.business_end_date,
     );
+    const gwg = (elster.adjustments?.gwg ?? [])
+        .filter((g) => !datum || g.anschaffung <= datum)
+        .map((g) => ({ id: g.id, bezeichnung: g.bezeichnung, restbuchwertEnde: 0 }));
     const gemeineWerte: Record<string, number> = {};
     for (const g of ba.gemeine_werte) gemeineWerte[g.anlagegut_id] = g.gemeiner_wert;
     return computeAufgabegewinn(
-        afa.assets.map((a) => ({ id: a.id, bezeichnung: a.bezeichnung, restbuchwertEnde: a.restbuchwertEnde })),
+        [
+            ...afa.assets.map((a) => ({ id: a.id, bezeichnung: a.bezeichnung, restbuchwertEnde: a.restbuchwertEnde })),
+            ...gwg,
+        ],
         gemeineWerte,
         ba.aufgabekosten,
-        ba.datum ?? elster.business_end_date ?? '',
+        datum,
     );
 }
 

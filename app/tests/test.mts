@@ -111,6 +111,7 @@ import estIntake from './unit/lib/est-intake.test.ts';
 import estPlan from './unit/lib/est-plan.test.ts';
 import estXml from './unit/lib/est-xml.test.ts';
 import betriebsaufgabe from './unit/lib/betriebsaufgabe.test.ts';
+import betriebsaufgabeGwg from './unit/elster/betriebsaufgabe-gwg.test.ts';
 import aufgabebilanz from './unit/lib/aufgabebilanz.test.ts';
 import bwa from './unit/lib/bwa.test.ts';
 import chartsGeometry from './unit/lib/charts-geometry.test.ts';
@@ -329,6 +330,7 @@ run({
     estPlan,
     estXml,
     betriebsaufgabe,
+    betriebsaufgabeGwg,
     aufgabebilanz,
     bwa,
     chartsGeometry,
