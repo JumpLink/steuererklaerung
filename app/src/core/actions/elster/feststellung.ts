@@ -98,8 +98,17 @@ export function printFeststellungDatenblatt(report: FeststellungReport, elster: 
             `\nBetriebsaufgabe ${report.aufgabe.datum} — Entnahme Anlagevermögen (gemeiner Wert ./. Restbuchwert):`,
         );
         for (const a of report.aufgabe.assets) {
+            const wer = a.uebernehmer ? ` → ${a.uebernehmer}` : '';
             console.log(
-                `  ${a.bezeichnung.padEnd(32)} gW ${fmt(a.gemeinerWert).padStart(10)} € − RBW ${fmt(a.restbuchwert).padStart(10)} € = ${fmt(a.gewinn).padStart(10)} €`,
+                a.realteilung
+                    ? `  ${a.bezeichnung.padEnd(32)} Realteilung: Buchwert ${fmt(a.restbuchwert).padStart(10)} € fortgeführt (gW ${fmt(a.gemeinerWert)} €)${wer}`
+                    : `  ${a.bezeichnung.padEnd(32)} gW ${fmt(a.gemeinerWert).padStart(10)} € − RBW ${fmt(a.restbuchwert).padStart(10)} € = ${fmt(a.gewinn).padStart(10)} €${wer}`,
+            );
+        }
+        if (report.aufgabe.assets.some((a) => a.realteilung)) {
+            console.log(
+                '  ⚠ Realteilung (§16 Abs. 3 S. 2 EStG): Sperrfrist bis 3 Jahre nach Abgabe dieser Feststellungserklärung —\n' +
+                    '    wer ein solches Wirtschaftsgut vorher veräußert oder entnimmt, versteuert rückwirkend den gemeinen Wert (S. 3).',
             );
         }
         if (report.aufgabe.aufgabekosten)

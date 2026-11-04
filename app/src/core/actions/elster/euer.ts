@@ -13,7 +13,7 @@ import { searchTransactions, searchAccountKeys, transactionsSummary } from '../t
 import { aggregateEuer, type EuerAggregate, type EuerCategoryTotal } from '../../elster/euer-aggregate.ts';
 import { enrichWithPaypal } from '../../lib/transactions/paypal-enrich.ts';
 import { computeAfa, type Anlagegut } from '../../elster/afa.ts';
-import { computeAufgabegewinn, type AufgabegewinnResult } from '../../elster/betriebsaufgabe.ts';
+import { computeAufgabegewinn, type AufgabeAnsatz, type AufgabegewinnResult } from '../../elster/betriebsaufgabe.ts';
 import {
     aggregateEuerByTransactions,
     apportionDocAcrossTransactions,
@@ -140,8 +140,16 @@ export function buildAufgabegewinn(elster: ElsterConfig, year: number): Aufgabeg
     const gwg = (elster.adjustments?.gwg ?? [])
         .filter((g) => !datum || g.anschaffung <= datum)
         .map((g) => ({ id: g.id, bezeichnung: g.bezeichnung, restbuchwertEnde: 0 }));
-    const gemeineWerte: Record<string, number> = {};
-    for (const g of ba.gemeine_werte) gemeineWerte[g.anlagegut_id] = g.gemeiner_wert;
+    const gemeineWerte: Record<string, AufgabeAnsatz[]> = {};
+    for (const g of ba.gemeine_werte) {
+        (gemeineWerte[g.anlagegut_id] ??= []).push({
+            gemeinerWert: g.gemeiner_wert,
+            anteil: g.anteil,
+            bezeichnung: g.bezeichnung,
+            uebernehmer: g.uebernehmer,
+            realteilung: g.realteilung,
+        });
+    }
     return computeAufgabegewinn(
         [
             ...afa.assets.map((a) => ({ id: a.id, bezeichnung: a.bezeichnung, restbuchwertEnde: a.restbuchwertEnde })),

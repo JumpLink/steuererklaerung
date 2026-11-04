@@ -199,6 +199,8 @@ export interface UsteAnpassungenInput {
     privatanteile?: Array<{ bezeichnung: string; netto: number; ust_satz?: number }>;
     /** The Betriebsaufgabe assets withdrawn to private (§ 3 Abs. 1b) — from the UStE aggregate. */
     entnahmeAssets?: Array<{ bezeichnung: string; gemeinerWert: number }>;
+    /** The Betriebsaufgabe assets taken into a partner's Betriebsvermögen (Realteilung) — Zeile 22. */
+    realteilungAssets?: Array<{ bezeichnung: string; gemeinerWert: number }>;
     /** `adjustments.sonderbetriebsausgaben` — per-partner, a Feststellung matter (no USt). */
     sonderbetriebsausgaben?: Array<{ gesellschafter_id: string; bezeichnung: string; betrag: number }>;
 }
@@ -232,6 +234,19 @@ export function buildUsteAnpassungen(input: UsteAnpassungenInput, year: number):
             zeile: z23?.zeile,
             ziel: z23 ? `UStE Zeile ${z23.zeile} — ${z23.label}` : 'UStE (Zeile im ERiC-Mapping nicht gefunden)',
             rechtsgrund: '§ 3 Abs. 1b Nr. 1 UStG (Entnahme ins Privatvermögen bei Betriebsaufgabe)',
+            ustWirksam: true,
+        });
+    }
+
+    const z22 = usteVordruckLine(year, 'lieferungen19');
+    for (const a of (input.realteilungAssets ?? []).filter((asset) => asset.gemeinerWert > 0)) {
+        out.push({
+            bezeichnung: a.bezeichnung,
+            betrag: a.gemeinerWert,
+            zeile: z22?.zeile,
+            ziel: z22 ? `UStE Zeile ${z22.zeile} — ${z22.label}` : 'UStE (Zeile im ERiC-Mapping nicht gefunden)',
+            rechtsgrund:
+                '§ 1 Abs. 1 Nr. 1 UStG (Lieferung in das Betriebsvermögen des Gesellschafters bei Realteilung) — Rechnung an den Übernehmer',
             ustWirksam: true,
         });
     }

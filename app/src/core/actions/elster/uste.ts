@@ -66,10 +66,15 @@ export function usteEntnahme(elster: ElsterConfig, year: number): UsteEntnahme |
             .filter((a) => a.vorsteuerabzug === false)
             .map((a) => a.id),
     );
+    const steuerbar = aufgabe.assets.filter((a) => !ohneVorsteuer.has(a.id));
+    const realteilung = steuerbar.filter((a) => a.realteilung);
     return {
-        assets: aufgabe.assets
-            .filter((a) => !ohneVorsteuer.has(a.id))
+        assets: steuerbar
+            .filter((a) => !a.realteilung)
             .map((a) => ({ bezeichnung: a.bezeichnung, gemeinerWert: a.gemeinerWert })),
+        ...(realteilung.length
+            ? { lieferungen: realteilung.map((a) => ({ bezeichnung: a.bezeichnung, gemeinerWert: a.gemeinerWert })) }
+            : {}),
     };
 }
 
@@ -102,6 +107,9 @@ export function printUsteReport(u: UsteAggregate): void {
 
     console.log('Steuerpflichtige Umsätze / unentgeltliche Wertabgaben');
     line(f.lieferungen19, 'Z22 Lieferungen/sonst. Leistungen 19 %');
+    for (const a of u.realteilungAssets ?? []) {
+        console.log(`        · ${a.bezeichnung.padEnd(38)} ${eurInt(a.gemeinerWert).padStart(8)} € Realteilung`);
+    }
     if (f.wertabgabeLieferung19) {
         line(f.wertabgabeLieferung19, 'Z23 unentgeltl. Wertabgabe §3 Abs. 1b 19 %');
         for (const a of u.entnahmeAssets ?? []) {
@@ -149,6 +157,7 @@ export function usteAnpassungen(u: UsteAggregate, elster: ElsterConfig, year: nu
         {
             privatanteile: elster.adjustments?.privatanteile,
             entnahmeAssets: u.entnahmeAssets,
+            realteilungAssets: u.realteilungAssets,
             sonderbetriebsausgaben: elster.adjustments?.sonderbetriebsausgaben,
         },
         year,

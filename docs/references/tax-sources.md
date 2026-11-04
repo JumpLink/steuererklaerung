@@ -390,6 +390,19 @@ Abrufstand 2026-11-03. Umgesetzt in `app/src/core/elster/aufgabebilanz.ts`
 | Was erst nach der Aufgabe entsteht, bleibt nachträgliche Einkünfte, ermittelt nach § 4 Abs. 3 | Posten mit `entstanden` nach dem Aufgabedatum bleiben § 24 | § 24 Nr. 2 EStG; BFH 22.02.1978, I R 137/74, BStBl II 1978, 430 |
 | Rückstellung für eine Leistung vor der Aufgabe, deren Rechnung danach kommt | netto (der Vorsteuerabzug folgt mit der Rechnung) | § 249 Abs. 1 HGB i. V. m. § 5 Abs. 1 EStG |
 
+## Betriebsaufgabe — Realteilung einzelner Wirtschaftsgüter
+
+Abrufstand 2026-11-04. Umgesetzt in `app/src/core/elster/betriebsaufgabe.ts` (`realteilung` je
+`gemeine_werte`-Eintrag) und `app/src/core/elster/uste-aggregate.ts`.
+
+| Regel | App-Umsetzung | Quelle |
+|---|---|---|
+| Übernimmt ein Gesellschafter bei der Auflösung Wirtschaftsgüter in sein eigenes Betriebsvermögen, sind zwingend die Buchwerte anzusetzen; einzelne Wirtschaftsgüter genügen, eigenes Betriebsvermögen vorher ist nicht nötig | Teil mit `realteilung: true` trägt 0 zum Aufgabegewinn bei | [§ 16 Abs. 3 S. 2 EStG](https://www.gesetze-im-internet.de/estg/__16.html); BMF 19.12.2018, IV C 6 - S 2242/07/10002, BStBl I 2019, 6 |
+| Wirtschaftsgüter, die ins Privatvermögen gehen, sind Entnahmen zum gemeinen Wert; der Gewinn folgt dem allgemeinen Schlüssel, abweichend nur bei Vereinbarung | Teil ohne `realteilung` wie bisher (gemeiner Wert ./. Restbuchwert) | BMF 19.12.2018, Rz. 29 |
+| Sperrfrist: Veräußerung oder Entnahme innerhalb von drei Jahren nach Abgabe der Feststellungserklärung für das Jahr der Realteilung → rückwirkend gemeiner Wert | Hinweis im Feststellungsbericht; der gemeine Wert bleibt je Teil gespeichert | § 16 Abs. 3 S. 3 EStG |
+| Ein Wirtschaftsgut, das zu mehr als 50 % betrieblich genutzt wird, ist notwendiges Betriebsvermögen | Grundlage der Entscheidung je Gerät, nicht der Berechnung | R 4.2 Abs. 1 EStR |
+| Umsatzsteuer: die Sachwertabfindung ist eine steuerbare Lieferung (§ 3 Abs. 1 UStG) gegen Minderung des Auseinandersetzungsanspruchs; Bemessungsgrundlage = gemeiner Wert; der Übernehmer zieht die Vorsteuer aus der Rechnung der Gesellschaft | Realteilungs-Teile in UStE Zeile 22 statt Zeile 23 | [steuerkurse.de, Personengesellschaften in den Verkehrssteuern](https://www.steuerkurse.de/besteuerung-der-personengesellschaften/personengesellschaften-verkehrssteuern.html); [HLBS, Nehls 2025](https://hlbs.de/wp-content/uploads/2025/11/Nehls_Vortrag.pdf) |
+
 ## Weitere maßgebliche Quellen (allgemein)
 
 - **ELSTER / ERiC**: die verbindliche Übermittlung + Plausibilitätsprüfung; lokale Schemata unter

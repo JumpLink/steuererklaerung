@@ -163,7 +163,9 @@ export function feststellungToSteuerblatt(report: FeststellungReport, elster: El
         sections.push({
             heading: `Betriebsaufgabe ${report.aufgabe.datum} — Entnahme Anlagevermögen (gW ./. RBW)`,
             rows: report.aufgabe.assets.map((a) => ({
-                label: `${a.bezeichnung}  (gW ${fmt(a.gemeinerWert)} − RBW ${fmt(a.restbuchwert)})`,
+                label: a.realteilung
+                    ? `${a.bezeichnung}  (Realteilung: Buchwert ${fmt(a.restbuchwert)} fortgeführt, gW ${fmt(a.gemeinerWert)})`
+                    : `${a.bezeichnung}  (gW ${fmt(a.gemeinerWert)} − RBW ${fmt(a.restbuchwert)})`,
                 value: eur(a.gewinn),
                 indent: 1,
             })),
@@ -203,6 +205,8 @@ export function usteToSteuerblatt(u: UsteAggregate, elster: ElsterConfig): Steue
         rows.push({ label: `${label} · BMG ${eurInt(l.bmg)}`, value: eur(l.tax), emphasis });
 
     lineRow(f.lieferungen19, 'Z22 Lieferungen/sonst. Leistungen 19 %');
+    for (const a of u.realteilungAssets ?? [])
+        rows.push({ label: `${a.bezeichnung} (Realteilung, gemeiner Wert)`, value: eurInt(a.gemeinerWert), indent: 1 });
     if (f.wertabgabeLieferung19) {
         lineRow(f.wertabgabeLieferung19, 'Z23 unentgeltl. Wertabgabe §3 Abs. 1b 19 %');
         for (const a of u.entnahmeAssets ?? [])

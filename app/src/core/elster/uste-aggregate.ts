@@ -25,6 +25,12 @@ export interface UsteEntnahmeAsset {
 /** The Betriebsaufgabe input for the UStE: the assets deemed supplied under §3 Abs. 1b at 19 %. */
 export interface UsteEntnahme {
     assets: UsteEntnahmeAsset[];
+    /**
+     * Assets a partner took into their own Betriebsvermögen (Realteilung): a Lieferung against
+     * the Auseinandersetzungsanspruch at 19 % (Zeile 22), Entgelt = gemeiner Wert. The Übernehmer
+     * deducts it as Vorsteuer once the business invoices them.
+     */
+    lieferungen?: UsteEntnahmeAsset[];
 }
 
 export interface UsteAggregate {
@@ -53,6 +59,8 @@ export interface UsteAggregate {
     wertabgabeSonstige_19: number;
     /** The assets behind {@link wertabgabeLieferung_19} — for the Prüfblatt and a human check. */
     entnahmeAssets?: Array<{ bezeichnung: string; gemeinerWert: number }>;
+    /** Realteilung assets inside {@link lieferungenSonstLeistungen_19} — each needs an invoice. */
+    realteilungAssets?: Array<{ bezeichnung: string; gemeinerWert: number }>;
     /** Steuerpflichtige Umsätze zu 7 % (net) — Kz 86. */
     net_7: number;
     /** Übrige (steuerfrei / 0 %) Umsätze (net), informational. */
@@ -112,10 +120,13 @@ export function aggregateUsteFromEuerTx(agg: EuerTxAggregate, prepaidVat = 0, en
 
     const entnahmeAssets = (entnahme?.assets ?? []).filter((a) => a.gemeinerWert > 0);
     const wertabgabeLieferung19 = round2(entnahmeAssets.reduce((s, a) => s + a.gemeinerWert, 0));
+    const realteilungAssets = (entnahme?.lieferungen ?? []).filter((a) => a.gemeinerWert > 0);
+    const realteilung19 = round2(realteilungAssets.reduce((s, a) => s + a.gemeinerWert, 0));
+    net19 += realteilung19;
 
     // The Entnahme is additional taxable revenue that the EÜR totals never saw → its USt has to be
     // added to the output VAT (and thus the Zahllast) explicitly.
-    const entnahmeVat = round2(wertabgabeLieferung19 * 0.19);
+    const entnahmeVat = round2((wertabgabeLieferung19 + realteilung19) * 0.19);
     const vatOut = round2(agg.totals.outputVat + entnahmeVat);
     const vatPayable = round2(agg.totals.vatPayable + entnahmeVat);
     const prepaid = round2(prepaidVat);
@@ -126,6 +137,7 @@ export function aggregateUsteFromEuerTx(agg: EuerTxAggregate, prepaidVat = 0, en
         wertabgabeLieferung_19: wertabgabeLieferung19,
         wertabgabeSonstige_19: round2(wertabgabeSonstige19),
         ...(entnahmeAssets.length ? { entnahmeAssets } : {}),
+        ...(realteilungAssets.length ? { realteilungAssets } : {}),
         net_7: round2(net7),
         net_0: round2(net0),
         vat_out: vatOut,
