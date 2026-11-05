@@ -9,7 +9,7 @@
 #   RESPONSIVE_SETTLE=s                   seconds to wait after a navigation (default 3)
 #   HEADLESS_RUN=path                     run inside werkstatt's headless-run (a private mutter);
 #                                         without it the script expects a display and a session bus
-#                                         already, as in CI: `xvfb-run -a dbus-run-session -- <this>`
+#                                         already, as in CI (mutter --headless in dbus-run-session)
 #
 # Sizes: 360×760 is a phone; 481×800 is one pixel above the 480 px phone breakpoint, where the desktop
 # layout must still hold; 768×1024 a tablet; 1280×860 the default desktop window.
@@ -56,7 +56,7 @@ if [ -z "$INNER" ] && [ -n "${HEADLESS_RUN:-}" ]; then
     bash "$0" --inner "$@"
 fi
 if [ -z "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ] || [ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]; then
-  echo "no display/session bus: set HEADLESS_RUN=…/headless-run, or run under 'xvfb-run -a dbus-run-session --'" >&2
+  echo "no display/session bus: set HEADLESS_RUN=…/headless-run, or run inside a Wayland compositor with a session bus (CI: mutter --headless, see ci.yml)" >&2
   exit 2
 fi
 
@@ -94,11 +94,6 @@ start_app() {
   APP_ID="eu.jumplink.Steuererklaerung.Resp$$x${RANDOM}"
   OBJ="/$(printf '%s' "$APP_ID" | tr . /)/devtools"
   mkdir -p "$TMP/xdg/data" "$TMP/xdg/config" "$TMP/xdg/cache"
-  # Without a compositor (Xvfb) GTK still reserves the CSD shadow margin, so the content would be ~10 px
-  # narrower than the window and the 481 px case would cross the 480 px phone breakpoint. A compositor
-  # (the local mutter) draws no such margin; matching that keeps the sizes honest in CI.
-  mkdir -p "$TMP/xdg/config/gtk-4.0"
-  printf 'window.csd { box-shadow: none; margin: 0; }\n' >"$TMP/xdg/config/gtk-4.0/gtk.css"
   # The app rewrites demo data while it runs; a copy keeps the tracked app/demo untouched.
   rm -rf "$TMP/demo" && cp -r "$APP/demo" "$TMP/demo"
   # setsid: the trap can reap the whole tree (subshell → gjsify → gjs), see screenshot.sh.

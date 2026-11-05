@@ -164,7 +164,7 @@ else {
     );
     const d = bytes.get_data();
     const pngWidth = (d[16] << 24) | (d[17] << 16) | (d[18] << 8) | d[19];
-    // the window screenshot omits the client-side shadow margin (10 px under Xvfb without a compositor)
+    // the window screenshot may omit a client-side shadow margin (10 px under X11 without a compositor)
     if (pngWidth > width || pngWidth < width - 24) problem(`the screenshot is ${pngWidth} px wide, asked for ${width}`);
 }
 

@@ -135,14 +135,14 @@ jobs:
   # every page, hub tab and main dialog on the demo data, asserting no "exceeds … width" warning, the
   # real window width, no widget allocated less width than its minimum, and the phone/desktop
   # row-action rules. Screenshots of every case are uploaded; nothing is compared pixel by pixel.
-  # Under Xvfb without a window manager, so a window gets exactly the size it asks for.
+  # Under a headless mutter, so the content width equals the window width (no CSD shadow margin).
   responsive:
     runs-on: ubuntu-latest
     container:
       image: quay.io/fedora/fedora:44
     steps:
-      # The runtime libraries of build-and-test (store, native prebuilds), plus GTK + libadwaita, an
-      # X server, a session bus, and fonts + icons: without them text measures differently and the
+      # The runtime libraries of build-and-test (store, native prebuilds), plus GTK + libadwaita, a
+      # headless compositor, a session bus, and fonts + icons: without them text measures differently and the
       # widths asserted here would not be the ones a user sees. `gdbus` comes with glib2.
       - name: Install system prerequisites
         run: >
@@ -152,7 +152,7 @@ jobs:
           libsoup3 json-glib gnutls libnghttp2
           libgda libgda-sqlite
           pango cairo gtk4 libadwaita glib2
-          xorg-x11-server-Xvfb dbus-daemon libglvnd-gles libglvnd-egl mesa-dri-drivers
+          mutter dbus-daemon libglvnd-gles libglvnd-egl mesa-dri-drivers
           adwaita-icon-theme adwaita-sans-fonts google-noto-sans-fonts
 
       - uses: actions/checkout@v4
@@ -185,9 +185,17 @@ jobs:
         working-directory: app
         env:
           GSK_RENDERER: cairo
-          GDK_BACKEND: x11
           RESPONSIVE_OUT: ${{ github.workspace }}/responsive-shots
-        run: xvfb-run -a -s "-screen 0 1600x1200x24" dbus-run-session -- bash dev/responsive-check.sh
+        # mutter, not Xvfb: without a compositor X11 GTK reserves the CSD shadow margin, so the content
+        # is ~10 px narrower than the window and 481 px would land in the phone layout.
+        run: |
+          dbus-run-session -- bash -c '
+            export XDG_RUNTIME_DIR="$(mktemp -d)"; chmod 700 "$XDG_RUNTIME_DIR"
+            mutter --headless --wayland --no-x11 --wayland-display=resp-wl --virtual-monitor 1600x1200 >"$RUNNER_TEMP/mutter.log" 2>&1 &
+            M=$!; trap "kill $M" EXIT
+            for _ in $(seq 100); do [ -S "$XDG_RUNTIME_DIR/resp-wl" ] && break; sleep 0.1; done
+            unset DISPLAY; export WAYLAND_DISPLAY=resp-wl GDK_BACKEND=wayland GTK_A11Y=none GSETTINGS_BACKEND=memory
+            bash dev/responsive-check.sh'
 
       - name: Upload the screenshots
         if: always()
@@ -265,7 +273,7 @@ jobs:
           libsoup3 json-glib gnutls libnghttp2
           pango cairo gtk4 libadwaita
           gettext glib2 msitools zip unzip
-          xorg-x11-server-Xvfb dbus-daemon libglvnd-gles libglvnd-egl mesa-dri-drivers
+          mutter dbus-daemon libglvnd-gles libglvnd-egl mesa-dri-drivers
 
       - uses: actions/checkout@v4
 
