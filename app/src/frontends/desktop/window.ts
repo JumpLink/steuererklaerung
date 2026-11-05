@@ -893,8 +893,7 @@ export class MainWindow extends Adw.ApplicationWindow {
         const wanted = process.env.STEUER_APP_VIEW;
         const index = wanted ? items.findIndex((i) => i.view === wanted) : -1;
         const row = this._nav_list.get_row_at_index(index >= 0 ? index : 0);
-        if (row)
-            this._nav_list.select_row(row); // fires row-selected → sets the active view
+        if (row) this._nav_list.select_row(row); // fires row-selected → sets the active view
         else this.refreshHeaderActions(); // nothing selected: the header must not keep the old view's actions
         // `collapsed` is still false while the constructor runs (breakpoints only apply after the
         // first allocation), so row-selected cannot decide this yet. A view asked for by name is an
