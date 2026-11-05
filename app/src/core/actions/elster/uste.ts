@@ -48,7 +48,15 @@ export async function usteReport(
     const fromRegister = entityId ? prepaidVatFromFilings(entityId, year) : null;
     const prepaidVat = fromRegister ?? elster.uste?.prepaid_vat ?? 0;
     const source: 'register' | 'config' = fromRegister != null ? 'register' : 'config';
-    return { ...aggregateUsteFromEuerTx(euer, prepaidVat, usteEntnahme(elster, year)), prepaidVatSource: source };
+    return {
+        ...aggregateUsteFromEuerTx(
+            euer,
+            prepaidVat,
+            usteEntnahme(elster, year),
+            elster.adjustments?.vorsteuer_ohne_zahlung,
+        ),
+        prepaidVatSource: source,
+    };
 }
 
 /**
@@ -130,6 +138,9 @@ export function printUsteReport(u: UsteAggregate): void {
 
     console.log('\nAbziehbare Vorsteuer');
     console.log(usteLine('Z79 Vorsteuer aus Rechnungen', '', fmt(f.vorsteuer)));
+    for (const i of u.vorsteuerOhneZahlung ?? []) {
+        console.log(`        · ${i.datum} ${i.bezeichnung} ${fmt(i.vorsteuer)} € ohne Zahlung (§ 15 Abs. 1 Nr. 1)`);
+    }
     if (f.vorsteuer13b) console.log(usteLine('Z83 Vorsteuer aus §13b (zahllastneutral)', '', fmt(f.vorsteuer13b)));
     console.log(usteLine('Z87 Summe Vorsteuer', '', fmt(f.vorsteuerSumme)));
 

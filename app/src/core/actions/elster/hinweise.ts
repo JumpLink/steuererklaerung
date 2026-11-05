@@ -175,7 +175,9 @@ export function computeYearHinweise(input: YearHinweiseInput): YearHinweis[] {
     // USt-Jahr figures (Zahllast/Abschluss/Vorauszahlungen) — register-backed prepaid VAT when filed,
     // else the manual config, same precedence as usteReport.
     const prepaidVat = elster ? (prepaidVatFromFilings(elster.entity_id, year) ?? elster.uste?.prepaid_vat ?? 0) : 0;
-    const uste = elster ? aggregateUsteFromEuerTx(agg, prepaidVat) : null;
+    const uste = elster
+        ? aggregateUsteFromEuerTx(agg, prepaidVat, undefined, elster.adjustments?.vorsteuer_ohne_zahlung)
+        : null;
 
     // Gewerbeertrag → Messbetrag (only the Messbetrag drives a hint; 0 € ⇒ under the Freibetrag).
     const messbetrag = elster?.gewerbe

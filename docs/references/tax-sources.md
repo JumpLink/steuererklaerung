@@ -377,6 +377,19 @@ keine Steuer; die App rechnet **nur die Regelverjährung** und nennt das Ergebni
 
 ---
 
+## Vorsteuer ohne Zahlung (Verrechnung)
+
+Code: `app/src/core/elster/vorsteuer-ohne-zahlung.ts`, Config `adjustments.vorsteuer_ohne_zahlung`
+(`datum`, `bezeichnung`, `netto`, `vorsteuer`, `rechnungsnummer?`, `dokument_id?`). Abrufstand: **2026-11-05**, gilt ab VZ 2025 unverändert.
+
+| Annahme | Regel der App | Art | Grundlage |
+|---|---|---|---|
+| Vorsteuer einer Eingangsrechnung ohne Banktransaktion (z. B. Sachwertabfindung, Verrechnung bei Auflösung einer Gesellschaft) | Der Posten zählt in der USt-VA des Zeitraums, der `datum` (Rechnungseingang) enthält, und im Vorsteuerbetrag der USt-Jahreserklärung — unabhängig von einer Zahlung, auch bei Ist-Versteuerung | Gesetz | Der Abzug entsteht, wenn die Leistung ausgeführt und die Rechnung beim Empfänger eingegangen ist: [§ 15 Abs. 1 Satz 1 Nr. 1 UStG](https://www.gesetze-im-internet.de/ustg_1980/__15.html), Voranmeldungszeitraum [§ 18 Abs. 1 und 2 UStG](https://www.gesetze-im-internet.de/ustg_1980/__18.html). Die Ist-Versteuerung ([§ 20 UStG](https://www.gesetze-im-internet.de/ustg_1980/__20.html)) betrifft nur die Umsatzsteuer des Leistenden, nicht den Vorsteuerabzug des Empfängers. |
+| `datum` ist der Tag, an dem Leistung und Rechnung beide vorliegen | Die App prüft das nicht; wer die Leistung später erhält, trägt den späteren Tag ein | App-Regel | Eintrag liegt in der Hand des Nutzers; die Rechnung muss die Pflichtangaben des § 14 Abs. 4 UStG tragen. |
+| Wirkung auf die EÜR | Keine — nur Kz 66 / Zeile 79 | App-Regel | Die Ausgabe selbst (Betriebsausgabe oder Anschaffungskosten) bucht der Nutzer über die übrigen `adjustments`. |
+
+---
+
 ## Betriebsaufgabe — Aufgabebilanz und Übergangsgewinn
 
 Abrufstand 2026-11-03. Umgesetzt in `app/src/core/elster/aufgabebilanz.ts`

@@ -53,6 +53,7 @@ import { buildKlassifizierungGroup } from './einstellungen/klassifizierung.ts';
 import { buildBetriebGroup, buildUstGroup } from './einstellungen/betrieb-ust.ts';
 import { buildAufgabeGroup, buildGewerbeGroup } from './einstellungen/gewerbe-aufgabe.ts';
 import { buildAnlagenGroup, buildPrivatanteileGroup, buildSonderbetriebGroup } from './einstellungen/abschluss.ts';
+import { buildVorsteuerOhneZahlungGroup } from './einstellungen/vorsteuer-ohne-zahlung.ts';
 import {
     buildPersonGroup,
     buildLohnGroup,
@@ -353,6 +354,7 @@ export class BhEinstellungenView extends Adw.Bin {
                     this._entity_groups.append(buildGewerbeGroup(this.host, entity, elster));
                     this._entity_groups.append(buildAnlagenGroup(this.host, entity, elster));
                     this._entity_groups.append(buildPrivatanteileGroup(this.host, entity, elster));
+                    this._entity_groups.append(buildVorsteuerOhneZahlungGroup(this.host, entity, elster));
                     // The counterparty knowledge that classifies a booking with no receipt — the
                     // part of the app that stands in for the AI, and until now the one part of the
                     // config only a terminal or an agent could write.

@@ -13,6 +13,8 @@
 
 import { round2 } from '../lib/money.ts';
 import { impliedRate, PRIVATANTEIL_CATEGORY, type EuerTxAggregate } from './euer-transactions.ts';
+import type { ElsterVorsteuerOhneZahlung } from '../config/index.ts';
+import { summeVorsteuerOhneZahlung, vorsteuerOhneZahlungDesJahres } from './vorsteuer-ohne-zahlung.ts';
 import { hasReverseCharge, type ReverseChargeTotals } from './reverse-charge.ts';
 
 /** One asset withdrawn at Betriebsaufgabe that is a §3 Abs. 1b supply (see {@link UsteEntnahme}). */
@@ -69,6 +71,8 @@ export interface UsteAggregate {
     vat_out: number;
     /** Abziehbare Vorsteuerbeträge (input VAT) — Kz 66. */
     vat_in: number;
+    /** Invoices settled without a payment (config) of the year — already in {@link vat_in}; for the Prüfblatt. */
+    vorsteuerOhneZahlung?: ElsterVorsteuerOhneZahlung[];
     /** Annual USt-Zahllast (vat_out − vat_in). */
     vatPayable: number;
     /**
@@ -101,8 +105,16 @@ export interface UsteAggregate {
  * deemed supply (§3 Abs. 1b Nr. 1 UStG). This does NOT come from the EÜR aggregate: the
  * Aufgabegewinn is a §16-EStG figure that never touches the cash-basis Betriebseinnahmen, so
  * without this the UStE would silently omit the tax on the withdrawal.
+ *
+ * `vorsteuerOhneZahlung` (config) are invoices settled without a bank payment: the EÜR totals never saw
+ * their Vorsteuer, so the items of `agg.year` are added to the input VAT (§ 15 Abs. 1 Nr. 1 UStG).
  */
-export function aggregateUsteFromEuerTx(agg: EuerTxAggregate, prepaidVat = 0, entnahme?: UsteEntnahme): UsteAggregate {
+export function aggregateUsteFromEuerTx(
+    agg: EuerTxAggregate,
+    prepaidVat = 0,
+    entnahme?: UsteEntnahme,
+    vorsteuerOhneZahlung?: readonly ElsterVorsteuerOhneZahlung[],
+): UsteAggregate {
     let net19 = 0;
     let net7 = 0;
     let net0 = 0;
@@ -128,7 +140,9 @@ export function aggregateUsteFromEuerTx(agg: EuerTxAggregate, prepaidVat = 0, en
     // added to the output VAT (and thus the Zahllast) explicitly.
     const entnahmeVat = round2((wertabgabeLieferung19 + realteilung19) * 0.19);
     const vatOut = round2(agg.totals.outputVat + entnahmeVat);
-    const vatPayable = round2(agg.totals.vatPayable + entnahmeVat);
+    const ohneZahlung = vorsteuerOhneZahlungDesJahres(vorsteuerOhneZahlung, agg.year);
+    const vorsteuerPlus = summeVorsteuerOhneZahlung(ohneZahlung);
+    const vatPayable = round2(agg.totals.vatPayable + entnahmeVat - vorsteuerPlus);
     const prepaid = round2(prepaidVat);
     return {
         year: agg.year,
@@ -141,7 +155,8 @@ export function aggregateUsteFromEuerTx(agg: EuerTxAggregate, prepaidVat = 0, en
         net_7: round2(net7),
         net_0: round2(net0),
         vat_out: vatOut,
-        vat_in: round2(agg.totals.inputVat),
+        vat_in: round2(agg.totals.inputVat + vorsteuerPlus),
+        ...(ohneZahlung.length ? { vorsteuerOhneZahlung: ohneZahlung } : {}),
         vatPayable,
         prepaidVat: prepaid,
         closingBalance: round2(vatPayable - prepaid),
