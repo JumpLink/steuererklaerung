@@ -123,6 +123,8 @@ soll. Bei `Gtk.Entry` ist es umgekehrt herum richtig: `width-chars` ist das Mini
 
 **Wächter: `gjsify run check:mobile-width`** (`app/dev/mobile-width-check.sh`) öffnet jede Seite, die Hub-Reiter und die wichtigsten Dialoge mit Demo-Daten bei 360×760 unter `headless-run` und schlägt bei jeder `exceeds … width`-Warnung von libadwaita fehl. Er braucht einen Compositor und gehört deshalb nicht in `check`.
 
+**Wächter in der CI: `gjsify run check:responsive`** (`app/dev/responsive-check.sh`, Job `responsive`) fährt dieselben Fälle bei vier Fenstergrößen — 360×760, 481×800 (einen Pixel über dem Telefon-Breakpoint), 768×1024, 1280×860 — mit Demo-Daten und prüft je Fall: keine `exceeds … width`-Warnung, die Fensterbreite stimmt wirklich (Allokation und PNG; `ResizeWindow` gibt nur die Anfrage zurück), kein gemapptes Widget schmaler als sein Minimum (`geometry.short` aus `DumpTree`; Ausnahmen nur mit Einzeiler-Begründung in `dev/responsive.allow.json`), bis 480 px sind Zeilenaktionen (`.row-action`, `.row-overflow`) mindestens 48 px groß, darüber gibt es kein Überlauf-Menü. Pro Fall ein Screenshot (CI-Artefakt `responsive-screenshots`, kein Pixelvergleich). Lokal: `HEADLESS_RUN=…/scripts/headless-run gjsify run check:responsive`; `check:mobile-width` ist nur noch dessen 360-px-Ausschnitt.
+
 **`STEUER_DEBUG_MEASURE=<px>`** läuft den Widget-Baum ab und meldet jedes Widget, dessen Minimum
 über `<px>` liegt, mit Pfad und zugeteilter Breite (`window.ts`). Drei Fallen, jede hat einmal
 „alles sauber" gemeldet, während die Screenshots sichtbar abgeschnitten waren:

@@ -3,7 +3,7 @@
  *
  * These are the decisions of `docs/app/mobile-layout.md`, separated from the GTK calls that carry
  * them out so they can be checked without a display. The widget side is covered by
- * `dev/mobile-width-check.sh`, which measures the real window.
+ * `dev/responsive-check.sh`, which measures the real window.
  */
 
 import { describe, expect, it } from '@gjsify/unit';
