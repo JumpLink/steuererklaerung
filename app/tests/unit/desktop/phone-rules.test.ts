@@ -16,9 +16,12 @@ import {
     badgeLabel,
     chipScrollTarget,
     contextTitle,
+    demoBannerVariant,
     headerActionPlan,
     kpiColumns,
     navBadgeCounts,
+    overviewSections,
+    recurringSummaryParts,
     undershoot,
 } from '../../../src/frontends/desktop/widgets/phone-rules.ts';
 
@@ -226,6 +229,48 @@ export default async () => {
 
         await it('maps open deadlines to Deadlines', async () => {
             expect(navBadgeCounts({ ...none, fristenOffen: 2 }).fristen).toBe(2);
+        });
+    });
+
+    await describe('phone-rules: demoBannerVariant', async () => {
+        await it('keeps the full wording on a desktop', async () => {
+            expect(demoBannerVariant(false)).toBe('full');
+        });
+
+        await it('shortens it on a phone', async () => {
+            expect(demoBannerVariant(true)).toBe('short');
+        });
+    });
+
+    await describe('phone-rules: overviewSections', async () => {
+        await it('keeps the desktop order', async () => {
+            expect(overviewSections(false, true).join()).toBe('kpis,frei,tasks,bars,split');
+        });
+
+        await it('moves the derived figures below Up next on a phone', async () => {
+            expect(overviewSections(true, true).join()).toBe('kpis,tasks,frei,bars,split');
+        });
+
+        await it('drops Up next when there is nothing to do', async () => {
+            expect(overviewSections(true, false).join()).toBe('kpis,frei,bars,split');
+            expect(overviewSections(false, false).join()).toBe('kpis,frei,bars,split');
+        });
+    });
+
+    await describe('phone-rules: recurringSummaryParts', async () => {
+        const text = (parts: { kind: string; n: number }[]): string => parts.map((p) => `${p.n} ${p.kind}`).join(' · ');
+
+        await it('leaves zero counts out', async () => {
+            expect(text(recurringSummaryParts(2, 0, 2))).toBe('2 overdue · 2 total');
+            expect(text(recurringSummaryParts(0, 1, 4))).toBe('1 soon · 4 total');
+        });
+
+        await it('names all three when all are open', async () => {
+            expect(text(recurringSummaryParts(1, 2, 5))).toBe('1 overdue · 2 soon · 5 total');
+        });
+
+        await it('always ends on the total', async () => {
+            expect(text(recurringSummaryParts(0, 0, 3))).toBe('3 total');
         });
     });
 };

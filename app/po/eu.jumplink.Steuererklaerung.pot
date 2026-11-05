@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-11-05 12:38+0100\n"
+"POT-Creation-Date: 2026-11-05 14:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,7 @@ msgstr ""
 #: src/core/actions/classification-rules.ts:48
 #: src/frontends/desktop/views/setup-assistant.ts:64
 #: src/frontends/desktop/views/setup-assistant.ts:480
-#: src/frontends/desktop/window.ts:815 src/frontends/desktop/window.ts:846
+#: src/frontends/desktop/window.ts:829 src/frontends/desktop/window.ts:860
 msgid "Private"
 msgstr ""
 
@@ -1362,8 +1362,8 @@ msgid "Income & Lohnsteuerbescheinigung"
 msgstr ""
 
 #: src/core/actions/elster/wizard.ts:515 src/core/actions/elster/wizard.ts:715
-#: src/frontends/desktop/views/home-view.ts:172
-#: src/frontends/desktop/views/home-view.ts:392
+#: src/frontends/desktop/views/home-view.ts:212
+#: src/frontends/desktop/views/home-view.ts:432
 #: src/frontends/desktop/views/steuer-view.blp:61
 #: src/frontends/desktop/views/transactions-view.ts:55
 #: src/frontends/desktop/views/transactions-view.ts:169
@@ -2217,12 +2217,12 @@ msgstr ""
 msgid "not computable because no amount is recorded — not deducted"
 msgstr ""
 
-#: src/core/elster/frei-verfuegbar.ts:487 src/core/elster/home.ts:350
+#: src/core/elster/frei-verfuegbar.ts:487 src/core/elster/home.ts:372
 #: src/frontends/desktop/views/forderungen-view.ts:215
 #: src/frontends/desktop/views/fristen-view.ts:158
 #: src/frontends/desktop/views/fristen-view.ts:200
 #: src/frontends/desktop/views/fristen-view.ts:236
-#: src/frontends/desktop/views/rechnungen-view.ts:568
+#: src/frontends/desktop/views/rechnungen-view.ts:614
 msgid "due {date}"
 msgstr ""
 
@@ -2368,8 +2368,8 @@ msgid "No Gewerbesteuer payment {year} found on this company’s accounts."
 msgstr ""
 
 #: src/core/elster/frei-verfuegbar.ts:719
-#: src/frontends/desktop/views/home-view.ts:199
-#: src/frontends/desktop/views/home-view.ts:209
+#: src/frontends/desktop/views/home-view.ts:239
+#: src/frontends/desktop/views/home-view.ts:249
 msgid "Free to spend"
 msgstr ""
 
@@ -2386,7 +2386,7 @@ msgid ""
 msgstr ""
 
 #: src/core/elster/frei-verfuegbar.ts:734
-#: src/frontends/desktop/views/home-view.ts:221
+#: src/frontends/desktop/views/home-view.ts:261
 msgid "Tax reserve {year} (estimate)"
 msgstr ""
 
@@ -2649,93 +2649,93 @@ msgid_plural "and {n} more"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/core/elster/home.ts:202 src/frontends/desktop/views/util.ts:68
+#: src/core/elster/home.ts:224 src/frontends/desktop/views/util.ts:68
 msgctxt "month abbreviation"
 msgid "Jan"
 msgstr ""
 
-#: src/core/elster/home.ts:203 src/frontends/desktop/views/util.ts:69
+#: src/core/elster/home.ts:225 src/frontends/desktop/views/util.ts:69
 msgctxt "month abbreviation"
 msgid "Feb"
 msgstr ""
 
-#: src/core/elster/home.ts:204 src/frontends/desktop/views/util.ts:70
+#: src/core/elster/home.ts:226 src/frontends/desktop/views/util.ts:70
 msgctxt "month abbreviation"
 msgid "Mar"
 msgstr ""
 
-#: src/core/elster/home.ts:205 src/frontends/desktop/views/util.ts:71
+#: src/core/elster/home.ts:227 src/frontends/desktop/views/util.ts:71
 msgctxt "month abbreviation"
 msgid "Apr"
 msgstr ""
 
-#: src/core/elster/home.ts:206 src/frontends/desktop/views/util.ts:72
+#: src/core/elster/home.ts:228 src/frontends/desktop/views/util.ts:72
 msgctxt "month abbreviation"
 msgid "May"
 msgstr ""
 
-#: src/core/elster/home.ts:207 src/frontends/desktop/views/util.ts:73
+#: src/core/elster/home.ts:229 src/frontends/desktop/views/util.ts:73
 msgctxt "month abbreviation"
 msgid "Jun"
 msgstr ""
 
-#: src/core/elster/home.ts:208 src/frontends/desktop/views/util.ts:74
+#: src/core/elster/home.ts:230 src/frontends/desktop/views/util.ts:74
 msgctxt "month abbreviation"
 msgid "Jul"
 msgstr ""
 
-#: src/core/elster/home.ts:209 src/frontends/desktop/views/util.ts:75
+#: src/core/elster/home.ts:231 src/frontends/desktop/views/util.ts:75
 msgctxt "month abbreviation"
 msgid "Aug"
 msgstr ""
 
-#: src/core/elster/home.ts:210 src/frontends/desktop/views/util.ts:76
+#: src/core/elster/home.ts:232 src/frontends/desktop/views/util.ts:76
 msgctxt "month abbreviation"
 msgid "Sep"
 msgstr ""
 
-#: src/core/elster/home.ts:211 src/frontends/desktop/views/util.ts:77
+#: src/core/elster/home.ts:233 src/frontends/desktop/views/util.ts:77
 msgctxt "month abbreviation"
 msgid "Oct"
 msgstr ""
 
-#: src/core/elster/home.ts:212 src/frontends/desktop/views/util.ts:78
+#: src/core/elster/home.ts:234 src/frontends/desktop/views/util.ts:78
 msgctxt "month abbreviation"
 msgid "Nov"
 msgstr ""
 
-#: src/core/elster/home.ts:213 src/frontends/desktop/views/util.ts:79
+#: src/core/elster/home.ts:235 src/frontends/desktop/views/util.ts:79
 msgctxt "month abbreviation"
 msgid "Dec"
 msgstr ""
 
-#: src/core/elster/home.ts:240
+#: src/core/elster/home.ts:262
 msgid "Bank account"
 msgstr ""
 
-#: src/core/elster/home.ts:242 src/frontends/desktop/views/konten-view.ts:60
+#: src/core/elster/home.ts:264 src/frontends/desktop/views/konten-view.ts:60
 msgid "CAMT file"
 msgstr ""
 
 #. TRANSLATORS: Chart slice for expenses with no category of their own.
-#: src/core/elster/home.ts:266
+#: src/core/elster/home.ts:288
 msgctxt "expense category"
 msgid "Other"
 msgstr ""
 
-#: src/core/elster/home.ts:316
+#: src/core/elster/home.ts:338
 msgid "Invoice {number} paid twice?"
 msgstr ""
 
-#: src/core/elster/home.ts:318
+#: src/core/elster/home.ts:340
 msgid "{amount} € received too much"
 msgstr ""
 
-#: src/core/elster/home.ts:319
+#: src/core/elster/home.ts:341
 msgid "partly too much"
 msgstr ""
 
-#: src/core/elster/home.ts:320
+#: src/core/elster/home.ts:342
 msgid "clarify"
 msgstr ""
 
@@ -4008,28 +4008,28 @@ msgid "Draft"
 msgstr ""
 
 #: src/core/invoices/status.ts:46
-#: src/frontends/desktop/views/rechnungen-view.ts:69
-#: src/frontends/desktop/views/rechnungen-view.ts:438
+#: src/frontends/desktop/views/rechnungen-view.ts:78
+#: src/frontends/desktop/views/rechnungen-view.ts:484
 msgctxt "invoice status"
 msgid "Open"
 msgstr ""
 
 #: src/core/invoices/status.ts:48
-#: src/frontends/desktop/views/rechnungen-view.ts:70
-#: src/frontends/desktop/views/rechnungen-view.ts:443
+#: src/frontends/desktop/views/rechnungen-view.ts:79
+#: src/frontends/desktop/views/rechnungen-view.ts:489
 msgctxt "invoice status"
 msgid "Overdue"
 msgstr ""
 
 #: src/core/invoices/status.ts:50
-#: src/frontends/desktop/views/rechnungen-view.ts:71
-#: src/frontends/desktop/views/rechnungen-view.ts:449
+#: src/frontends/desktop/views/rechnungen-view.ts:80
+#: src/frontends/desktop/views/rechnungen-view.ts:495
 msgctxt "invoice status"
 msgid "Paid"
 msgstr ""
 
 #: src/core/invoices/status.ts:52
-#: src/frontends/desktop/views/rechnungen-view.ts:72
+#: src/frontends/desktop/views/rechnungen-view.ts:81
 msgctxt "invoice status"
 msgid "Cancelled"
 msgstr ""
@@ -4617,7 +4617,7 @@ msgstr ""
 #: src/frontends/desktop/views/laufende-kosten-view.ts:303
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:466
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:76
-#: src/frontends/desktop/window.ts:300
+#: src/frontends/desktop/window.ts:309
 msgid "Cancel"
 msgstr ""
 
@@ -5019,7 +5019,7 @@ msgid "Submit"
 msgstr ""
 
 #: src/frontends/desktop/views/absenden-section.ts:156
-#: src/frontends/desktop/views/home-view.ts:69
+#: src/frontends/desktop/views/home-view.ts:103
 msgid "Could not load the overview"
 msgstr ""
 
@@ -5729,7 +5729,7 @@ msgstr ""
 #: src/frontends/desktop/views/dokumente-view.ts:180
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:152
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:423
-#: src/frontends/desktop/views/rechnungen-view.ts:566
+#: src/frontends/desktop/views/rechnungen-view.ts:612
 msgid "No. {number}"
 msgstr ""
 
@@ -6415,7 +6415,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:41
 #: src/frontends/desktop/views/welcome.ts:229
-#: src/frontends/desktop/window.ts:748
+#: src/frontends/desktop/window.ts:762
 msgid "Use my own data"
 msgstr ""
 
@@ -8310,9 +8310,9 @@ msgstr ""
 #: src/frontends/desktop/views/forderungen-view.ts:157
 #: src/frontends/desktop/views/projekt-detail-dialog.ts:111
 #: src/frontends/desktop/views/projekte-view.ts:152
-#: src/frontends/desktop/views/rechnungen-view.ts:440
-#: src/frontends/desktop/views/rechnungen-view.ts:446
-#: src/frontends/desktop/views/rechnungen-view.ts:452
+#: src/frontends/desktop/views/rechnungen-view.ts:486
+#: src/frontends/desktop/views/rechnungen-view.ts:492
+#: src/frontends/desktop/views/rechnungen-view.ts:498
 msgid "{n} invoice"
 msgid_plural "{n} invoices"
 msgstr[0] ""
@@ -8468,7 +8468,7 @@ msgid "due tomorrow"
 msgstr ""
 
 #: src/frontends/desktop/views/fristen-view.ts:48
-#: src/frontends/desktop/views/rechnungen-view.ts:263
+#: src/frontends/desktop/views/rechnungen-view.ts:305
 msgid "in {n} day"
 msgid_plural "in {n} days"
 msgstr[0] ""
@@ -8664,9 +8664,9 @@ msgstr ""
 
 #: src/frontends/desktop/views/herleitung-dialog.ts:193
 #: src/frontends/desktop/views/herleitung-dialog.ts:229
-#: src/frontends/desktop/views/home-view.ts:199
-#: src/frontends/desktop/views/home-view.ts:210
-#: src/frontends/desktop/views/home-view.ts:222
+#: src/frontends/desktop/views/home-view.ts:239
+#: src/frontends/desktop/views/home-view.ts:250
+#: src/frontends/desktop/views/home-view.ts:262
 msgid "not computable"
 msgstr ""
 
@@ -8892,7 +8892,7 @@ msgid "The transaction was not found in this year."
 msgstr ""
 
 #: src/frontends/desktop/views/hinweis-handlung.ts:109
-#: src/frontends/desktop/views/home-view.ts:364
+#: src/frontends/desktop/views/home-view.ts:404
 msgid "The invoice was not found."
 msgstr ""
 
@@ -8923,92 +8923,92 @@ msgstr[1] ""
 msgid "Loading overview …"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:165
+#: src/frontends/desktop/views/home-view.ts:205
 msgid "Profit {year}"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:167
+#: src/frontends/desktop/views/home-view.ts:207
 msgid "Income − expenses"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:172
-#: src/frontends/desktop/views/home-view.ts:173
+#: src/frontends/desktop/views/home-view.ts:212
+#: src/frontends/desktop/views/home-view.ts:213
 #: src/frontends/desktop/views/transactions-view.ts:169
 #: src/frontends/desktop/views/transactions-view.ts:174
 msgid "net {year}"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:173
-#: src/frontends/desktop/views/home-view.ts:393
+#: src/frontends/desktop/views/home-view.ts:213
+#: src/frontends/desktop/views/home-view.ts:433
 #: src/frontends/desktop/views/steuer-view.blp:66
 #: src/frontends/desktop/views/transactions-view.ts:56
 #: src/frontends/desktop/views/transactions-view.ts:171
 msgid "Expenses"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:176
+#: src/frontends/desktop/views/home-view.ts:216
 msgid "Tax forecast {year}"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:178
+#: src/frontends/desktop/views/home-view.ts:218
 msgid "expected additional payment"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:178
-#: src/frontends/desktop/views/home-view.ts:225
+#: src/frontends/desktop/views/home-view.ts:218
+#: src/frontends/desktop/views/home-view.ts:265
 msgid "expected refund"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:212
+#: src/frontends/desktop/views/home-view.ts:252
 msgid "As of {date} · a calculation, not advice"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:213
-#: src/frontends/desktop/views/home-view.ts:228
+#: src/frontends/desktop/views/home-view.ts:253
+#: src/frontends/desktop/views/home-view.ts:268
 msgid "incomplete — see derivation"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:227
+#: src/frontends/desktop/views/home-view.ts:267
 msgid "ESt + GewSt − prepayments"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:264
+#: src/frontends/desktop/views/home-view.ts:304
 msgid "Derivation: {label}"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:310
+#: src/frontends/desktop/views/home-view.ts:350
 msgid "Up next"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:324
+#: src/frontends/desktop/views/home-view.ts:364
 msgid "Open “To review”"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:329
+#: src/frontends/desktop/views/home-view.ts:369
 msgid "Open receivables"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:334
+#: src/frontends/desktop/views/home-view.ts:374
 msgid "Open recurring costs"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:369
+#: src/frontends/desktop/views/home-view.ts:409
 msgid "Could not load the invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:388
+#: src/frontends/desktop/views/home-view.ts:428
 msgid "Income and expenses"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:412
+#: src/frontends/desktop/views/home-view.ts:452
 msgid "Expenses by category"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:423
+#: src/frontends/desktop/views/home-view.ts:463
 msgid "No expenses recorded"
 msgstr ""
 
-#: src/frontends/desktop/views/home-view.ts:431
+#: src/frontends/desktop/views/home-view.ts:471
 msgid "Liquidity"
 msgstr ""
 
@@ -9041,7 +9041,7 @@ msgid "Organisation"
 msgstr ""
 
 #: src/frontends/desktop/views/kontakte-view.ts:50
-#: src/frontends/desktop/views/rechnungen-view.ts:67
+#: src/frontends/desktop/views/rechnungen-view.ts:76
 #: src/frontends/desktop/views/tab-hub.ts:214
 #: src/frontends/desktop/views/transactions-view.ts:54
 #: src/frontends/desktop/views/vertraege-view.ts:63
@@ -10646,7 +10646,7 @@ msgid "Loading details …"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
-#: src/frontends/desktop/views/rechnungen-view.ts:564
+#: src/frontends/desktop/views/rechnungen-view.ts:610
 #: src/frontends/desktop/views/zeiten-view.ts:314
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:119
 msgid "Invoice"
@@ -10852,7 +10852,7 @@ msgid "Not sent by email yet."
 msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:517
-#: src/frontends/desktop/views/rechnungen-view.ts:577
+#: src/frontends/desktop/views/rechnungen-view.ts:623
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:211
 msgid "sent"
 msgstr ""
@@ -11008,162 +11008,171 @@ msgstr ""
 msgid "All invoices"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:49
+#: src/frontends/desktop/views/rechnungen-view.ts:58
 msgctxt "recurring status"
 msgid "overdue"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:50
+#: src/frontends/desktop/views/rechnungen-view.ts:59
 msgctxt "recurring status"
 msgid "due soon"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:51
+#: src/frontends/desktop/views/rechnungen-view.ts:60
 msgctxt "recurring status"
 msgid "planned"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:52
+#: src/frontends/desktop/views/rechnungen-view.ts:61
 msgctxt "recurring status"
 msgid "paused"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:53
+#: src/frontends/desktop/views/rechnungen-view.ts:62
 msgctxt "recurring status"
 msgid "cancelled"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:68
+#: src/frontends/desktop/views/rechnungen-view.ts:77
 msgid "Drafts"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:183
+#: src/frontends/desktop/views/rechnungen-view.ts:202
 msgid "Invoices could not be loaded"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:206
+#: src/frontends/desktop/views/rechnungen-view.ts:229
 msgid "{overdue} overdue · {soon} due soon · {total} total"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:211
+#: src/frontends/desktop/views/rechnungen-view.ts:234
 msgid "none recorded"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:217
+#: src/frontends/desktop/views/rechnungen-view.ts:240
 msgid "No recurring invoices"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:219
+#: src/frontends/desktop/views/rechnungen-view.ts:242
 msgid ""
 "What is billed the same every year or month — hosting, maintenance, rent — "
 "is set up here once and then reminds you by itself."
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:222
+#: src/frontends/desktop/views/rechnungen-view.ts:245
 msgid "Add recurring invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:243
-msgid "Recurring item “{id}” not found."
+#: src/frontends/desktop/views/rechnungen-view.ts:257
+msgid "{n} overdue"
 msgstr ""
 
 #: src/frontends/desktop/views/rechnungen-view.ts:258
+msgid "{n} due soon"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:259
+#: src/frontends/desktop/views/rechnungen-view.ts:553
+msgid "{n} total"
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:285
+msgid "Recurring item “{id}” not found."
+msgstr ""
+
+#: src/frontends/desktop/views/rechnungen-view.ts:300
 msgid "{n} day overdue"
 msgid_plural "{n} days overdue"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:262
+#: src/frontends/desktop/views/rechnungen-view.ts:304
 msgid "today"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:267
+#: src/frontends/desktop/views/rechnungen-view.ts:309
 msgid "due {date} ({when})"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:268
+#: src/frontends/desktop/views/rechnungen-view.ts:310
 msgid "last {number}"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:281
-#: src/frontends/desktop/views/rechnungen-view.ts:320
+#: src/frontends/desktop/views/rechnungen-view.ts:327
+#: src/frontends/desktop/views/rechnungen-view.ts:366
 msgid "Create draft"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:292
+#: src/frontends/desktop/views/rechnungen-view.ts:338
 msgid "Edit recurring item"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:307
+#: src/frontends/desktop/views/rechnungen-view.ts:353
 msgid "Creating draft …"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:312
+#: src/frontends/desktop/views/rechnungen-view.ts:358
 msgid "Draft {number} created"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:313
+#: src/frontends/desktop/views/rechnungen-view.ts:359
 msgid "Draft created"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:321
+#: src/frontends/desktop/views/rechnungen-view.ts:367
 msgid "Draft failed"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:327
+#: src/frontends/desktop/views/rechnungen-view.ts:373
 msgid "Loading invoices from the back end …"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:358
+#: src/frontends/desktop/views/rechnungen-view.ts:404
 msgid "Invoices not available"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:464
-#: src/frontends/desktop/views/rechnungen-view.ts:473
+#: src/frontends/desktop/views/rechnungen-view.ts:510
+#: src/frontends/desktop/views/rechnungen-view.ts:519
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:118
 msgid "New invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:507
-msgid "{n} total"
-msgstr ""
-
-#: src/frontends/desktop/views/rechnungen-view.ts:514
+#: src/frontends/desktop/views/rechnungen-view.ts:560
 msgid "Nothing in this status"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:515
+#: src/frontends/desktop/views/rechnungen-view.ts:561
 msgid "No invoice has this status — another filter shows more."
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:516
+#: src/frontends/desktop/views/rechnungen-view.ts:562
 #: src/frontends/desktop/views/vertraege-view.ts:289
 msgid "Show all"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:520
+#: src/frontends/desktop/views/rechnungen-view.ts:566
 msgid "No invoices yet"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:521
+#: src/frontends/desktop/views/rechnungen-view.ts:567
 msgid ""
 "Outgoing invoices are created here — as PDF and as e-invoice (XRechnung)."
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:522
+#: src/frontends/desktop/views/rechnungen-view.ts:568
 msgid "Create invoice"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:567
+#: src/frontends/desktop/views/rechnungen-view.ts:613
 msgid "issued {date}"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:578
+#: src/frontends/desktop/views/rechnungen-view.ts:624
 #: src/frontends/desktop/views/rechnung-versand-dialog.ts:390
 msgid "Sending failed"
 msgstr ""
 
-#: src/frontends/desktop/views/rechnungen-view.ts:579
+#: src/frontends/desktop/views/rechnungen-view.ts:625
 msgid "not sent"
 msgstr ""
 
@@ -11665,7 +11674,7 @@ msgid "Dauerfristverlängerung: every VAT return is due one month later."
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:436
-#: src/frontends/desktop/window.ts:815 src/frontends/desktop/window.ts:846
+#: src/frontends/desktop/window.ts:829 src/frontends/desktop/window.ts:860
 msgid "Business"
 msgstr ""
 
@@ -14109,48 +14118,56 @@ msgstr ""
 msgid "About Steuererklärung"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:294
+#: src/frontends/desktop/window.ts:303
 msgid "Switch to the demo?"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:294
+#: src/frontends/desktop/window.ts:303
 msgid "Switch to your own data?"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:297
+#: src/frontends/desktop/window.ts:306
 msgid ""
 "The app restarts with fictional sample data. Your own data is not changed."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:298
+#: src/frontends/desktop/window.ts:307
 msgid "The app restarts with your own data. The demo data stays separate."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:301
+#: src/frontends/desktop/window.ts:310
 msgid "Restart"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:315
+#: src/frontends/desktop/window.ts:324
 msgid "Please restart the app yourself to switch."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:740
+#: src/frontends/desktop/window.ts:750
 msgid "Data could not be loaded completely: {error}"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:747
+#: src/frontends/desktop/window.ts:760
+msgid "Demo data"
+msgstr ""
+
+#: src/frontends/desktop/window.ts:760
 msgid "Demo data – fictional examples, no real financial data"
 msgstr ""
 
-#: src/frontends/desktop/window.ts:777
+#: src/frontends/desktop/window.ts:762
+msgid "My data"
+msgstr ""
+
+#: src/frontends/desktop/window.ts:791
 msgid "Setup is not finished: no business or private tax return is set up yet."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:778
+#: src/frontends/desktop/window.ts:792
 msgid "Setup is not finished: “{entity}” has no bank account yet."
 msgstr ""
 
-#: src/frontends/desktop/window.ts:919
+#: src/frontends/desktop/window.ts:966
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."

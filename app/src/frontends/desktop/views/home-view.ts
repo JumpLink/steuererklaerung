@@ -20,6 +20,7 @@ import { BhGlossaryHelp } from '../widgets/glossary-help.ts';
 import { loadIntoStack, LoadToken, phoneKpiColumns } from './util.ts';
 import { wrappingLabel } from '../widgets/responsive.ts';
 import { onNarrow } from '../widgets/narrow.ts';
+import { overviewSections, type OverviewSection } from '../widgets/phone-rules.ts';
 import { BhRechnungDetailDialog } from './rechnung-detail-dialog.ts';
 import { BhHerleitungDialog } from './herleitung-dialog.ts';
 import { errorDialog } from './dialogs.ts';
@@ -51,6 +52,9 @@ export class BhHomeView extends Adw.Bin {
     private readonly token = new LoadToken();
     private entity: AppEntity | null = null;
     private year = 0;
+    /** The blocks of the current model, so a resize can re-order them without a reload. */
+    private sections: Partial<Record<OverviewSection, Gtk.Widget>> = {};
+    private phone = false;
     /**
      * Told about every model this view loads. The window turns its `counts` into the sidebar badges,
      * so the badge and the "Up next" task it summarises come from one load, not two.
@@ -62,6 +66,31 @@ export class BhHomeView extends Adw.Bin {
             { GTypeName: 'BhHomeView', Template, InternalChildren: ['stack', 'error_page', 'content_box'] },
             this,
         );
+    }
+
+    constructor() {
+        super();
+        // Once, not per fill: the subscription is on this view, which outlives every reload.
+        onNarrow(this, (narrow) => {
+            this.phone = narrow;
+            this.layoutSections();
+        });
+    }
+
+    /** Append the blocks in the order the current width wants — see overviewSections(). */
+    private layoutSections(): void {
+        const present = Object.keys(this.sections) as OverviewSection[];
+        if (present.length === 0) return;
+        let child = this._content_box.get_first_child();
+        while (child) {
+            const next = child.get_next_sibling();
+            this._content_box.remove(child);
+            child = next;
+        }
+        for (const id of overviewSections(this.phone, 'tasks' in this.sections)) {
+            const widget = this.sections[id];
+            if (widget) this._content_box.append(widget);
+        }
     }
 
     reload(entity: AppEntity, year: number): void {
@@ -100,13 +129,9 @@ export class BhHomeView extends Adw.Bin {
         // Two-up on a phone, wired here rather than inside the builders: each of them has an early
         // return for a capability the entity may not have, and the rule needs the finished row.
         const kpis = this.kpiRow(m, lernmodus);
-        this._content_box.append(kpis);
         phoneKpiColumns(kpis, 4);
         const freiCards = this.freiRow(frei, lernmodus);
-        this._content_box.append(freiCards);
         phoneKpiColumns(freiCards, 2);
-        if (m.tasks.length) this._content_box.append(this.tasksGroup(m));
-        this._content_box.append(this.barsCard(m));
         // Design: Kategorien + Liquidität sit side by side on a wide window, stacking when narrow.
         const split = new Gtk.FlowBox({
             selectionMode: Gtk.SelectionMode.NONE,
@@ -119,7 +144,14 @@ export class BhHomeView extends Adw.Bin {
         });
         split.append(this.catsCard(m));
         split.append(this.liqCard(m));
-        this._content_box.append(split);
+        this.sections = {
+            kpis,
+            frei: freiCards,
+            ...(m.tasks.length ? { tasks: this.tasksGroup(m) } : {}),
+            bars: this.barsCard(m),
+            split,
+        };
+        this.layoutSections();
     }
 
     /** Wrap a content box in an Adwaita `.card` with inner padding. */
