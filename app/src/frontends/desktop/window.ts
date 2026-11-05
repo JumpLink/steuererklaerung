@@ -23,7 +23,10 @@ import { registerAppIcons } from './icons.ts';
 import { registerToastOverlay } from './toast.ts';
 import { SyncController } from './sync-controller.ts';
 import { installShortcuts } from './shortcuts.ts';
-import { NAV_ITEMS, isTabHost, visibleNavItems, type NavItem } from './nav.ts';
+import { NAV_ITEMS, isTabHost, visibleNavItems, type NavItem, type NavViewId } from './nav.ts';
+import { BhHomeView } from './views/home-view.ts';
+import { reads } from './read/index.ts';
+import type { HomeCounts } from '../../core/elster/home.ts';
 import { isFirstRun } from '../../core/actions/entities.ts';
 import { belegeAusMailAbrufenFuer } from '../../core/actions/mail-eingang.ts';
 import { gioMailConnector } from '../../core/clients/imap/index.ts';
@@ -54,7 +57,7 @@ import { renderHeaderActions } from './widgets/header-actions.ts';
 import { BhEntitySwitcher } from './widgets/entity-switcher.ts';
 import { BhYearSwitcher } from './widgets/year-switcher.ts';
 import { presentContextDialog } from './widgets/context-dialog.ts';
-import { contextTitle } from './widgets/phone-rules.ts';
+import { badgeLabel, contextTitle, navBadgeCounts } from './widgets/phone-rules.ts';
 import { BhAssistentPanel } from './assistent-panel.ts';
 import { BhLotsePanel } from './lotse-panel.ts';
 import { lotseEmbedPlan } from '../../core/actions/assistant/lotse-embed.ts';
@@ -178,6 +181,9 @@ export class MainWindow extends Adw.ApplicationWindow {
 
     // Ported native views by view id (rebuilt per entity); placeholders aren't tracked here.
     private readonly ported = new Map<string, PortedView>();
+
+    /** The badge label of each sidebar row by view id; rebuilt with the rows. */
+    private readonly navBadges = new Map<string, Gtk.Label>();
 
     /** Backs the `narrow` property; `notify` is emitted by hand, see {@link watchBreakpoint}. */
     private narrowState = false;
@@ -869,6 +875,7 @@ export class MainWindow extends Adw.ApplicationWindow {
         this.clearChildren(this._nav_list);
         this.clearChildren(this._stack);
         this.ported.clear();
+        this.navBadges.clear();
 
         const items = visibleNavItems({
             kind: this.currentEntity.kind,
@@ -883,6 +890,9 @@ export class MainWindow extends Adw.ApplicationWindow {
             if (factory) {
                 const view = factory();
                 this.ported.set(item.view, view);
+                if (view instanceof BhHomeView) {
+                    view.onModel = (model, entity, year) => this.applyNavBadges(model.counts, entity, year);
+                }
                 this._stack.add_titled(view, item.view, item.label);
             } else {
                 this._stack.add_titled(this.buildPlaceholder(item), item.view, item.label);
@@ -907,7 +917,36 @@ export class MainWindow extends Adw.ApplicationWindow {
         const row = new Adw.ActionRow({ title: markup(item.label), subtitle: markup(item.sub) });
         row.add_prefix(new Gtk.Image({ iconName: item.icon }));
         row.set_name(item.view);
+        // Numbers only (docs/app/mobile-layout.md): the count's meaning is the row's own subtitle.
+        const badge = new Gtk.Label({ visible: false, valign: Gtk.Align.CENTER, cssClasses: ['numeric', 'dim-label'] });
+        row.add_suffix(badge);
+        this.navBadges.set(item.view, badge);
         return row;
+    }
+
+    /** Show the open-work counts on the sidebar rows — only for the entity/year still on screen. */
+    private applyNavBadges(counts: HomeCounts, entity: AppEntity, year: number): void {
+        if (entity !== this.currentEntity || year !== this.currentYear) return;
+        const byView = navBadgeCounts(counts);
+        for (const [view, label] of this.navBadges) {
+            const text = badgeLabel(byView[view as NavViewId] ?? 0);
+            label.set_label(text ?? '');
+            label.set_visible(text !== null);
+        }
+    }
+
+    /**
+     * Refresh the badges from the Overview's own model. While the Overview is the visible view it
+     * reports its load itself (see {@link applyNavBadges}), so only another view needs the read.
+     */
+    private refreshNavBadges(): void {
+        const entity = this.currentEntity;
+        const year = this.currentYear;
+        if (!entity || this._stack.get_visible_child_name() === 'home') return;
+        reads.home(entity, year).then(
+            (model) => this.applyNavBadges(model.counts, entity, year),
+            (err: unknown) => console.error(`[app] nav badges: ${err instanceof Error ? err.message : err}`),
+        );
     }
 
     /** Placeholder body for a not-yet-ported view (Adwaita status page). */
@@ -976,6 +1015,7 @@ export class MainWindow extends Adw.ApplicationWindow {
         if (!this.currentEntity) return;
         const view = this._stack.get_visible_child_name();
         if (view) this.ported.get(view)?.reload(this.currentEntity, this.currentYear);
+        this.refreshNavBadges();
     }
 
     /** Point the AI panel at the active entity-year (resets its conversation on entity/year change). */

@@ -9,13 +9,16 @@
 import { describe, expect, it } from '@gjsify/unit';
 
 import {
+    BADGE_CAP,
     TOUCH_GAP,
     TOUCH_TARGET,
     actionOverflow,
+    badgeLabel,
     chipScrollTarget,
     contextTitle,
     headerActionPlan,
     kpiColumns,
+    navBadgeCounts,
     undershoot,
 } from '../../../src/frontends/desktop/widgets/phone-rules.ts';
 
@@ -176,6 +179,53 @@ export default async () => {
         await it('falls back to the plain title while no entity is loaded', async () => {
             expect(contextTitle(null, 2025, true) === null).toBe(true);
             expect(contextTitle('', 2025, true) === null).toBe(true);
+        });
+    });
+
+    await describe('phone-rules: badgeLabel', async () => {
+        await it('hides zero, negative and non-finite counts', async () => {
+            expect(badgeLabel(0) === null).toBe(true);
+            expect(badgeLabel(-2) === null).toBe(true);
+            expect(badgeLabel(Number.NaN) === null).toBe(true);
+        });
+
+        await it('spells small counts out', async () => {
+            expect(badgeLabel(1)).toBe('1');
+            expect(badgeLabel(BADGE_CAP)).toBe('99');
+        });
+
+        await it('caps large counts', async () => {
+            expect(badgeLabel(BADGE_CAP + 1)).toBe('99+');
+            expect(badgeLabel(12345)).toBe('99+');
+        });
+    });
+
+    await describe('phone-rules: navBadgeCounts', async () => {
+        const none = {
+            zuPruefen: 0,
+            erstattungen: 0,
+            laufendeKosten: 0,
+            forderungen: 0,
+            doppelzahlung: 0,
+            fristenOffen: 0,
+        };
+
+        await it('is empty when nothing is open', async () => {
+            expect(Object.keys(navBadgeCounts(none)).length).toBe(0);
+        });
+
+        await it('sums everything that opens Transactions', async () => {
+            const b = navBadgeCounts({ ...none, zuPruefen: 4, erstattungen: 2, laufendeKosten: 1 });
+            expect(b.transactions).toBe(7);
+            expect(b.rechnungen === undefined).toBe(true);
+        });
+
+        await it('sums overdue invoices and double payments for Invoices', async () => {
+            expect(navBadgeCounts({ ...none, forderungen: 3, doppelzahlung: 1 }).rechnungen).toBe(4);
+        });
+
+        await it('maps open deadlines to Deadlines', async () => {
+            expect(navBadgeCounts({ ...none, fristenOffen: 2 }).fristen).toBe(2);
         });
     });
 };

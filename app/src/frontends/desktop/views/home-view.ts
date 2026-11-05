@@ -51,6 +51,11 @@ export class BhHomeView extends Adw.Bin {
     private readonly token = new LoadToken();
     private entity: AppEntity | null = null;
     private year = 0;
+    /**
+     * Told about every model this view loads. The window turns its `counts` into the sidebar badges,
+     * so the badge and the "Up next" task it summarises come from one load, not two.
+     */
+    onModel: ((model: HomeModel, entity: AppEntity, year: number) => void) | null = null;
 
     static {
         GObject.registerClass(
@@ -75,7 +80,10 @@ export class BhHomeView extends Adw.Bin {
                         .freiVerfuegbar(entity, year)
                         .catch((err: unknown) => (err instanceof Error ? err : new Error(String(err)))),
                 ]),
-            fill: ([m, frei]) => this.fill(m, frei),
+            fill: ([m, frei]) => {
+                this.fill(m, frei);
+                this.onModel?.(m, entity, year);
+            },
         });
     }
 

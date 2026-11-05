@@ -454,7 +454,7 @@ every page come before the ones that help one.
 | 2 | **Shared helpers** *(done)* | `kpiFlow` two-up, `rowActions` → menu, 48 px targets, `chipScroller` fade + scroll-to-selection, in `views/util.ts` and `widgets/responsive.ts`, with tests. | One change fixes thirteen pages; every later PR gets smaller. |
 | 3 | **Header-bar primary action** *(done)* | A per-view declaration of "the one creating action" and "the secondary ones"; `window.ts` renders them into the content header on a phone. Removes the Invoices button/chip overlap. | Unblocks the per-view PRs, which otherwise each re-solve it. |
 | 4 | **Context button** *(done)* | Title widget becomes a `Gtk.MenuButton` on a phone, opening an `Adw.Dialog` with the existing entity and year switchers. | The one real gap the collapse leaves; independent of the view work. |
-| 5 | **Section list as home** | Badges on the nav rows, fed by the counts `home-view` already computes. | Makes the root page worth landing on. Needs 1, nothing else. |
+| 5 | **Section list as home** *(done)* | Badges on the nav rows, fed by the counts `home-view` already computes. | Makes the root page worth landing on. Needs 1, nothing else. |
 | 6 | **Overview, Contracts, Invoices** | Apply 2 + 3; demo banner one-line on a phone. | The three worst pages in the sweep, and they need no new mechanism. |
 | 7 | **Transactions, Contacts, Projects, Accounts** | Expander for KPI/explanation blocks, search bar, row menus. | Same pattern, four pages. |
 | 8 | **Reports table** | Frozen item column, horizontal scroll, month chips defaulting to the current month. | The only genuinely new widget work; isolated, so it can take its time. |

@@ -12,6 +12,9 @@
  * a design document in the first place.
  */
 
+import type { HomeCounts } from '../../../core/elster/home.ts';
+import type { NavViewId } from '../nav.ts';
+
 /**
  * The HIG's minimum for anything tappable, in logical pixels.
  *
@@ -156,4 +159,44 @@ export function headerActionPlan(kinds: readonly ('primary' | 'secondary')[], na
 export function contextTitle(entityName: string | null | undefined, year: number, narrow: boolean): string | null {
     if (!narrow || !entityName) return null;
     return year > 0 ? `${entityName} · ${year}` : entityName;
+}
+
+/** The largest number a nav badge spells out; above it the row says `99+`. */
+export const BADGE_CAP = 99;
+
+/**
+ * The text of a nav row's badge, or `null` when the row shows none.
+ *
+ * Zero hides the badge: a row full of `0`s trains the eye to skip the column, and then the one `3`
+ * that matters is skipped too. The cap keeps the badge a fixed, narrow width — on a phone the
+ * subtitle beside it is the line that would otherwise lose a word to a four-digit count.
+ */
+export function badgeLabel(count: number): string | null {
+    const n = Math.floor(count);
+    if (!Number.isFinite(n) || n <= 0) return null;
+    return n > BADGE_CAP ? `${BADGE_CAP}+` : String(n);
+}
+
+/**
+ * Which nav row each of the Overview's open-work counts belongs to, summed per row.
+ *
+ * The mapping follows where the matching "Up next" task sends you: „Zu prüfen", refund candidates
+ * and recurring costs all open Transactions; overdue invoices and suspected double payments open
+ * Invoices; open declaration deadlines open Deadlines. A row with no open work is absent, so the
+ * caller can clear every other row's badge by looking only at this result.
+ *
+ * Not mapped: Receipt inbox and Contracts. Their numbers are not part of the Overview's model, and a
+ * second computation beside it would be exactly the drift the shared model exists to prevent.
+ */
+export function navBadgeCounts(counts: HomeCounts): Partial<Record<NavViewId, number>> {
+    const all: Partial<Record<NavViewId, number>> = {
+        transactions: counts.zuPruefen + counts.erstattungen + counts.laufendeKosten,
+        rechnungen: counts.forderungen + counts.doppelzahlung,
+        fristen: counts.fristenOffen,
+    };
+    const out: Partial<Record<NavViewId, number>> = {};
+    for (const [view, n] of Object.entries(all) as [NavViewId, number][]) {
+        if (n > 0) out[view] = n;
+    }
+    return out;
 }
