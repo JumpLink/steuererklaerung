@@ -164,7 +164,8 @@ else {
     );
     const d = bytes.get_data();
     const pngWidth = (d[16] << 24) | (d[17] << 16) | (d[18] << 8) | d[19];
-    if (pngWidth !== width) problem(`the screenshot is ${pngWidth} px wide, asked for ${width}`);
+    // the window screenshot omits the client-side shadow margin (10 px under Xvfb without a compositor)
+    if (pngWidth > width || pngWidth < width - 24) problem(`the screenshot is ${pngWidth} px wide, asked for ${width}`);
 }
 
 for (const p of problems) print(`problem: ${p}`);
