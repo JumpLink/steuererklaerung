@@ -32,6 +32,7 @@
         "build:web": "vite build",
         "dev:browse": "gjsify browse http://127.0.0.1:3000 --devtools",
         "check:mobile-width": "bash dev/mobile-width-check.sh",
+        "check:responsive": "bash dev/responsive-check.sh",
         "build:app": "gjsify build src/frontends/desktop/main.ts --app gjs --outfile dist/app/steuer-app.gjs.mjs --external koffi --external @anthropic-ai/claude-agent-sdk --exclude-globals document,navigator,HTMLElement,location,Image,HTMLCanvasElement,HTMLImageElement,FontFace,matchMedia,MutationObserver,ResizeObserver,IntersectionObserver",
         "build:app:node": "gjsify build src/frontends/desktop/main.ts --app node --outfile dist/app/steuer-app.node.mjs --external koffi --external @anthropic-ai/claude-agent-sdk --exclude-globals document,navigator,HTMLElement,location,Image,HTMLCanvasElement,HTMLImageElement,FontFace,matchMedia,MutationObserver,ResizeObserver,IntersectionObserver",
         "build:app:flathub": "gjsify build src/frontends/desktop/main.ts --app gjs --outfile dist/app/steuer-app.gjs.mjs --channel flathub --external koffi --external @anthropic-ai/claude-agent-sdk --exclude-globals document,navigator,HTMLElement,location,Image,HTMLCanvasElement,HTMLImageElement,FontFace,matchMedia,MutationObserver,ResizeObserver,IntersectionObserver",

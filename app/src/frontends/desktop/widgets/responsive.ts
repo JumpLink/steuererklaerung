@@ -247,7 +247,8 @@ export function phoneRowActions(cluster: Adw.WrapBox, after: () => void = () => 
             iconName: 'view-more-symbolic',
             popover,
             valign: Gtk.Align.CENTER,
-            cssClasses: ['flat'],
+            // `row-overflow` / `row-action` are markers for dev/responsive-check.sh, no styling hangs on them.
+            cssClasses: ['flat', 'row-overflow'],
             tooltipText: _('More actions'),
             widthRequest: TOUCH_TARGET,
             heightRequest: TOUCH_TARGET,
@@ -259,6 +260,7 @@ export function phoneRowActions(cluster: Adw.WrapBox, after: () => void = () => 
         expand();
         const visible = childrenOf(cluster).filter((c) => c.get_visible());
         const kinds = visible.map((c) => (c instanceof Gtk.Button ? ('action' as const) : ('static' as const)));
+        for (const [i, kind] of kinds.entries()) if (kind === 'action') visible[i]?.add_css_class('row-action');
         const indices = actionOverflow(kinds, phone);
         if (indices.length > 0) {
             cluster.set_child_spacing(TOUCH_GAP);

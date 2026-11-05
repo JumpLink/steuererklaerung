@@ -44,11 +44,12 @@ template $BhZuPruefenView: Adw.Bin {
         width-request: 300;
         height-request: 300;
 
-        // 450 px, not 560: this condition measures the CONTENT PANE, not the window. At a 1280 px
-        // desktop window that pane is only 537 px wide (see kontakte-view.blp), so a 560 px
-        // condition collapsed the queue on the desktop too.
+        // 500 px: this condition measures the CONTENT PANE, not the window. At a 1280 px desktop
+        // window that pane is only 537 px wide (see kontakte-view.blp), so a 560 px condition
+        // collapsed the queue on the desktop too. 450 was too low the other way: the expanded split
+        // view asks ~486 px with Adwaita Sans, so a 481 px window overflowed (check:responsive).
         Adw.Breakpoint {
-          condition ("max-width: 450px")
+          condition ("max-width: 500px")
 
           setters {
             split_view.collapsed: true;
