@@ -169,7 +169,47 @@ template $BhMainWindow: Adw.ApplicationWindow {
       child: Adw.ToolbarView {
         [top]
         Adw.HeaderBar {
-          title-widget: Adw.WindowTitle content_title {};
+          // Two shapes of the same slot: the view title on a desktop, and on a phone the context
+          // button (whose books, which year) opening the entity and year switchers. Not
+          // homogeneous, or the stack would keep the wider of the two as its width.
+          title-widget: Gtk.Stack title_stack {
+            hhomogeneous: false;
+            vhomogeneous: false;
+
+            Gtk.StackPage {
+              name: "title";
+
+              child: Adw.WindowTitle content_title {};
+            }
+
+            Gtk.StackPage {
+              name: "context";
+
+              child: Gtk.MenuButton context_button {
+                height-request: 48;
+                valign: center;
+                // TRANSLATORS: Accessible name of the phone header's button that opens the entity and year switchers
+                tooltip-text: _("Entity and year");
+
+                child: Gtk.Box {
+                  spacing: 6;
+
+                  Gtk.Label context_label {
+                    // Middle, not end: when the name does not fit, the year is what must survive.
+                    ellipsize: middle;
+
+                    styles ["heading"]
+                  }
+
+                  Gtk.Image {
+                    icon-name: "pan-down-symbolic";
+                  }
+                };
+
+                styles ["flat"]
+              };
+            }
+          };
 
           [end]
           Gtk.Button sync_button {
