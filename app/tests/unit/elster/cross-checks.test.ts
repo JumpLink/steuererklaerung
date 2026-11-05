@@ -191,26 +191,26 @@ export default async () => {
             expect(r.delta).toBe(20);
         });
 
-        await it('flags the Säumniszuschlag-in-Soll bug: 444,57 € recorded vs 440,57 € computed (warn, Δ +4,00)', async () => {
-            // The concrete GbR 2025-Q4 case: the payment (Zahllast 440,57 + 4,00 Säumniszuschlag)
-            // was recorded as the Soll. The register then declares 444,57 while the independent
-            // Paperless-driven quarters recompute to 440,57 → the check surfaces the 4,00 € Nebenleistung.
+        await it('flags the Säumniszuschlag-in-Soll bug: 428,30 € recorded vs 420,30 € computed (warn, Δ +8,00)', async () => {
+            // A quarter case: the payment (Zahllast 420,30 + 8,00 Säumniszuschlag)
+            // was recorded as the Soll. The register then declares 428,30 while the independent
+            // Paperless-driven quarters recompute to 420,30 → the check surfaces the 8,00 € Nebenleistung.
             const computed = checkUstvaVsUste({
                 ...reconciling,
-                uste: usteFixture({ prepaidVat: 444.57 }),
-                ustvaQuarters: quarters([110, 110, 110, 110.57]), // Σ 440,57
+                uste: usteFixture({ prepaidVat: 428.3 }),
+                ustvaQuarters: quarters([100, 100, 100, 120.3]), // Σ 420,30
             });
             expect(computed.status).toBe('warn');
-            expect(computed.expected).toBe(440.57); // computed Σ quarters
-            expect(computed.actual).toBe(444.57); // register Σ declared (the wrong Soll)
-            expect(computed.delta).toBe(4);
+            expect(computed.expected).toBe(420.3); // computed Σ quarters
+            expect(computed.actual).toBe(428.3); // register Σ declared (the wrong Soll)
+            expect(computed.delta).toBe(8);
             expect(computed.detail).toContain('Säumniszuschlag');
 
-            // With the corrected declared Soll (440,57) the check reconciles cleanly.
+            // With the corrected declared Soll (420,30) the check reconciles cleanly.
             const fixed = checkUstvaVsUste({
                 ...reconciling,
-                uste: usteFixture({ prepaidVat: 440.57 }),
-                ustvaQuarters: quarters([110, 110, 110, 110.57]),
+                uste: usteFixture({ prepaidVat: 420.3 }),
+                ustvaQuarters: quarters([100, 100, 100, 120.3]),
             });
             expect(fixed.status).toBe('ok');
             expect(fixed.delta).toBe(0);

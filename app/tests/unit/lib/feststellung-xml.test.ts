@@ -48,15 +48,15 @@ const eq = (actual: unknown[], expected: unknown[]): void => expect(actual.join(
 
 export default async () => {
     await describe('buildFeststellungEds — Anlage FE-G + per-Beteiligter Aufteilung', async () => {
-        // The real GbR case: 50/50, per-head Sonderbetriebsausgaben 630 €, Betriebsaufgabe
-        // with an odd-cent Aufgabeverlust → Prüfblatt Partner A −9,06 € / Partner B −9,05 €.
+        // An example GbR case: 50/50, per-head Sonderbetriebsausgaben 400 €, Betriebsaufgabe
+        // with an odd-cent Aufgabeverlust → Prüfblatt Partner A −50,01 € / Partner B −50,00 €.
         const config = makeConfig([0.5, 0.5]);
         const result = computeFeststellung(
-            2533.74,
+            1800.00,
             config.gesellschafter.map((g) => ({ id: g.id, name: g.name, steuerId: g.steuer_id, quote: g.quote })),
             2025,
-            { a: 630, b: 630 },
-            -1291.85,
+            { a: 400, b: 400 },
+            -1100.01,
         );
         const xml = buildFeststellungEds(result, config, betrieb);
 
@@ -91,36 +91,36 @@ export default async () => {
         });
 
         await it('emits the Gesamthand rows: laufend nach Schlüssel, SBA-Saldo, Aufgabe + Zeitpunkt', async () => {
-            expect(xml).toContain('<E9014100>2533,74</E9014100>'); // laufende Einkünfte nach Schlüssel
+            expect(xml).toContain('<E9014100>1800,00</E9014100>'); // laufende Einkünfte nach Schlüssel
             expect(xml).not.toContain('E9014102'); // no "abweichend" row in Bruchteil mode
-            expect(xml).toContain('<E9014113>-1260,00</E9014113>'); // Saldo SBE − SBA (Gesamthand)
+            expect(xml).toContain('<E9014113>-800,00</E9014113>'); // Saldo SBE − SBA (Gesamthand)
             expect(xml).toContain('<E9014134>31.10.2025</E9014134>'); // Zeitpunkt der Aufgabe (ganzer Betrieb)
-            expect(xml).toContain('<E9014130>-1291,85</E9014130>'); // Aufgabeverlust Gesamthand (§16)
+            expect(xml).toContain('<E9014130>-1100,01</E9014130>'); // Aufgabeverlust Gesamthand (§16)
         });
 
         await it('emits one <Bet> per Beteiligtem carrying only the partner-specific SBA saldo', async () => {
             expect((xml.match(/<Bet>/g) ?? []).length).toBe(2);
             // FB Beteiligter 1,2 then FE_G Bet Beteiligter 1,2 — same numbering.
             eq(fieldValues(xml, 'Beteiligter'), ['1', '2', '1', '2']);
-            eq(fieldValues(xml, 'E9114113'), ['-630,00', '-630,00']); // −SBA per head
+            eq(fieldValues(xml, 'E9114113'), ['-400,00', '-400,00']); // −SBA per head
             expect(xml).not.toContain('E9114102'); // no explicit per-Bet laufend in Bruchteil mode
             expect(xml).not.toContain('E9114130'); // Aufgabe stays at Gesamthand in Bruchteil mode
         });
 
-        await it('reconciles the XML decomposition to the Prüfblatt −9,06 / −9,05 per head', async () => {
-            const lfdGes = deAmt(fieldValues(xml, 'E9014100')[0]); // 2533,74
-            const aufgGes = deAmt(fieldValues(xml, 'E9014130')[0]); // −1291,85
-            const sba = fieldValues(xml, 'E9114113').map(deAmt); // [−630, −630]
-            // Per head: laufend×½ + Aufgabe×½ + SBA-Saldo = −9,055 → rounds to {−9,06, −9,05}.
+        await it('reconciles the XML decomposition to the Prüfblatt −50,01 / −50,00 per head', async () => {
+            const lfdGes = deAmt(fieldValues(xml, 'E9014100')[0]); // 1800,00
+            const aufgGes = deAmt(fieldValues(xml, 'E9014130')[0]); // −1100,01
+            const sba = fieldValues(xml, 'E9114113').map(deAmt); // [−400, −400]
+            // Per head: laufend×½ + Aufgabe×½ + SBA-Saldo = −50,005 → rounds to {−50,01, −50,00}.
             const rawPerHead = result.allocations.map(
                 (a, i) => lfdGes * a.gesellschafter.quote + aufgGes * a.gesellschafter.quote + sba[i],
             );
-            for (const r of rawPerHead) expect(Math.round(r * 1000) / 1000).toBe(-9.055);
+            for (const r of rawPerHead) expect(Math.round(r * 1000) / 1000).toBe(-50.005);
             // The two heads together carry the full Gesamthand (no cent lost).
-            expect(round2(rawPerHead[0] + rawPerHead[1])).toBe(result.einkuenfteGesamt); // −18,11
-            // The computed allocation (what the Prüfblatt prints) is exactly Partner A −9,06 / Partner B −9,05.
-            eq(result.allocations.map((a) => a.gesamtAnteil), [-9.06, -9.05]);
-            expect(round2(result.allocations[0].gesamtAnteil + result.allocations[1].gesamtAnteil)).toBe(-18.11);
+            expect(round2(rawPerHead[0] + rawPerHead[1])).toBe(result.einkuenfteGesamt); // −100,01
+            // The computed allocation (what the Prüfblatt prints) is exactly Partner A −50,01 / Partner B −50,00.
+            eq(result.allocations.map((a) => a.gesamtAnteil), [-50.01, -50.00]);
+            expect(round2(result.allocations[0].gesamtAnteil + result.allocations[1].gesamtAnteil)).toBe(-100.01);
         });
 
         await it('omits the rejected Nat_Pers-IdNr and Kommanditisten-Kapitalkonten', async () => {

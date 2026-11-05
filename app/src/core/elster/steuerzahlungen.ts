@@ -7,7 +7,7 @@
  * WHICH Soll: the Finanzamt's own assessment wins over ours whenever one is recorded
  * (`assessedAmount`), because it is the amount actually owed — it settles against the Finanzamt's
  * Vorauszahlungssoll, which knows payments this register never saw. A declared Abschlusszahlung of
- * 1.091,16 € came back as a 354,98 € REFUND that way, and the tracker kept demanding the 1.091,16 €
+ * 800,40 € came back as a 210,20 € REFUND that way, and the tracker kept demanding the 800,40 €
  * until the Bescheid figure was allowed to override it. The declared figure is never overwritten
  * (Z119 must keep summing what we sent) — the divergence is reported instead, via
  * {@link zahlungsAbweichung}.
@@ -232,7 +232,7 @@ export function computeOffeneSteuerzahlungen(
  *
  * The reason this is its own report rather than a line in the open-payments list: once the
  * Finanzamt assesses a refund, the obligation stops being an open payment and drops out of that
- * list entirely — taking the divergence with it. A 1.446,14 € gap between our declaration and the
+ * list entirely — taking the divergence with it. A 1.010,60 € gap between our declaration and the
  * Finanzamt's own settlement would then have been visible nowhere at all. Every divergence is
  * worth a look, in BOTH directions: a Bescheid demanding more than we declared may be wrong, and
  * one demanding less usually means our Vorauszahlungssoll was incomplete — which is a defect in

@@ -5,8 +5,8 @@ import type { YearCache } from '../../../src/core/presenters/year-snapshot.ts';
 const yc = {
     year: 2025,
     transactions: { rows: [1, 2, 3], coverage: { unclassified: [1] } },
-    euer: { aggregate: { totals: { incomeNet: 15230.53, expenseNet: 11553.13, profit: 3677.4, vatPayable: 1196.82 } } },
-    uste: { net_19: 15230.53, vat_out: 2893.82, vat_in: 1697, vatPayable: 1196.82, closingBalance: 1196.82 },
+    euer: { aggregate: { totals: { incomeNet: 18460.4, expenseNet: 14783.0, profit: 3677.4, vatPayable: 1196.82 } } },
+    uste: { net_19: 18460.4, vat_out: 3507.48, vat_in: 1697, vatPayable: 1196.82, closingBalance: 1196.82 },
     gewst: { result: { messbetrag: 0, gewerbesteuer: 0 } },
     feststellung: {
         result: {
@@ -15,7 +15,7 @@ const yc = {
         },
     },
     bwa: {
-        totals: { gesamtleistung: 15230.53, rohertrag: 15230.53, betriebskosten: 11553.13, betriebsergebnis: 3677.4 },
+        totals: { gesamtleistung: 18460.4, rohertrag: 18460.4, betriebskosten: 14783.0, betriebsergebnis: 3677.4 },
     },
     dashboard: {
         fristen: [

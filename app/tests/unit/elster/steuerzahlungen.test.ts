@@ -74,7 +74,7 @@ export default async () => {
 
         await it('uses the early base deadline without Dauerfrist', async () => {
             const z = computeOffeneSteuerzahlungen(
-                [filing({ entityId: 'gbr', period: '2025-Q4', declaredAmount: 440.57 })],
+                [filing({ entityId: 'gbr', period: '2025-Q4', declaredAmount: 420.3 })],
                 ENTITIES,
                 TODAY,
             );
@@ -96,7 +96,7 @@ export default async () => {
     await describe('computeOffeneSteuerzahlungen — USt-Jahr', async () => {
         await it('falls due one month after Eingang (§18 Abs. 4 UStG), weekend-shifted', async () => {
             const z = computeOffeneSteuerzahlungen(
-                [filing({ entityId: 'gbr', kind: 'ust-jahr', period: '2025', declaredAmount: 1091.16 })],
+                [filing({ entityId: 'gbr', kind: 'ust-jahr', period: '2025', declaredAmount: 800.4 })],
                 ENTITIES,
                 TODAY,
             );
@@ -132,7 +132,7 @@ export default async () => {
             const z = computeOffeneSteuerzahlungen(
                 [
                     filing({ kind: 'est', period: '2025', declaredAmount: 500 }),
-                    filing({ entityId: 'gbr', kind: 'ust-jahr', period: '2025', declaredAmount: 1091.16 }),
+                    filing({ entityId: 'gbr', kind: 'ust-jahr', period: '2025', declaredAmount: 800.4 }),
                 ],
                 ENTITIES,
                 TODAY,
@@ -160,10 +160,10 @@ export default async () => {
     /**
      * The Finanzamt's own figure decides what is owed.
      *
-     * The live case: the GbR declared an Abschlusszahlung of 1.091,16 € for USt 2025, and the
-     * Finanzamt's Abrechnung came back with a 354,98 € REFUND — it had counted 1.886,71 € as
-     * already paid where the declaration named a Vorauszahlungssoll of 440,57 €. Before the
-     * assessed figure existed, the tracker kept demanding 1.091,16 € that nobody owed, and the
+     * Example: an entity declared an Abschlusszahlung of 800,40 € for USt 2025, and the
+     * Finanzamt's Abrechnung came back with a 210,20 € REFUND — it had counted 1.430,90 € as
+     * already paid where the declaration named a Vorauszahlungssoll of 420,30 €. Before the
+     * assessed figure existed, the tracker kept demanding 800,40 € that nobody owed, and the
      * only way to silence it would have been to overwrite the declared figure — destroying the
      * Z119 basis and the comparison in one move.
      */
@@ -174,8 +174,8 @@ export default async () => {
                 kind: 'ust-jahr',
                 period: '2025',
                 filedAt: '2025-07-15',
-                declaredAmount: 1091.16,
-                assessedAmount: -354.98,
+                declaredAmount: 800.4,
+                assessedAmount: -210.2,
                 assessedAt: '2026-09-01',
             });
             expect(computeOffeneSteuerzahlungen([f], ENTITIES, TODAY).length).toBe(0);
@@ -187,11 +187,11 @@ export default async () => {
                 kind: 'ust-jahr',
                 period: '2025',
                 filedAt: '2025-07-15',
-                declaredAmount: 1091.16,
+                declaredAmount: 800.4,
             });
             const out = computeOffeneSteuerzahlungen([f], ENTITIES, TODAY);
             expect(out.length).toBe(1);
-            expect(out[0].amount).toBe(1091.16);
+            expect(out[0].amount).toBe(800.4);
             expect(out[0].amountSource).toBe('declared');
         });
 
@@ -204,8 +204,8 @@ export default async () => {
         });
 
         await it('leaves the declared figure untouched — Z119 must keep summing what we sent', async () => {
-            const f = filing({ declaredAmount: 1091.16, assessedAmount: -354.98 });
-            expect(f.declaredAmount).toBe(1091.16);
+            const f = filing({ declaredAmount: 800.4, assessedAmount: -210.2 });
+            expect(f.declaredAmount).toBe(800.4);
         });
     });
 
@@ -215,26 +215,26 @@ export default async () => {
                 entityId: 'gbr',
                 kind: 'ust-jahr',
                 period: '2025',
-                declaredAmount: 1091.16,
-                assessedAmount: -354.98,
+                declaredAmount: 800.4,
+                assessedAmount: -210.2,
                 assessedAt: '2026-09-01',
             });
             const out = computeBescheidAbweichungen([f], ENTITIES);
             expect(out.length).toBe(1);
-            expect(out[0].difference).toBe(-1446.14);
+            expect(out[0].difference).toBe(-1010.6);
             expect(out[0].entityName).toBe('Muster & Partner GbR');
             expect(out[0].assessedAt).toBe('2026-09-01');
         });
 
         await it('reports a settled filing too — that is why it is not part of the open list', async () => {
             // The refund case is PAID/closed and vanishes from every payment view. If the
-            // divergence were only reported there, a 1.446,14 € gap would be visible nowhere.
+            // divergence were only reported there, a 1.010,60 € gap would be visible nowhere.
             const f = filing({
                 kind: 'ust-jahr',
                 period: '2025',
                 paidAt: '2026-09-09',
-                declaredAmount: 1091.16,
-                assessedAmount: -354.98,
+                declaredAmount: 800.4,
+                assessedAmount: -210.2,
             });
             expect(computeOffeneSteuerzahlungen([f], ENTITIES, TODAY).length).toBe(0);
             expect(computeBescheidAbweichungen([f], ENTITIES).length).toBe(1);
@@ -254,7 +254,7 @@ export default async () => {
             expect(computeBescheidAbweichungen([filing({})], ENTITIES).length).toBe(0);
             // A legacy row carries a PAYMENT in `amount`; "Bescheid ≠ payment" is a different
             // statement and must not be reported as a divergence from a declaration.
-            const legacy = filing({ declaredAmount: null, amount: 440.57, assessedAmount: 500 });
+            const legacy = filing({ declaredAmount: null, amount: 420.3, assessedAmount: 500 });
             expect(computeBescheidAbweichungen([legacy], ENTITIES).length).toBe(0);
         });
     });

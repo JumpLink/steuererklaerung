@@ -20,17 +20,17 @@ const elster = {
 
 const uste = {
     year: 2025,
-    net_19: 15230.53,
-    lieferungenSonstLeistungen_19: 15230.53,
+    net_19: 18460.40,
+    lieferungenSonstLeistungen_19: 18460.40,
     wertabgabeLieferung_19: 0,
     wertabgabeSonstige_19: 0,
     net_7: 0,
     net_0: 0,
-    vat_out: 2893.82,
-    vat_in: 1852.23,
-    vatPayable: 1041.59,
-    prepaidVat: 444.57,
-    closingBalance: 597.02,
+    vat_out: 3507.48,
+    vat_in: 2210.65,
+    vatPayable: 1296.83,
+    prepaidVat: 528.30,
+    closingBalance: 768.53,
     prepaidVatSource: 'register',
 } as UsteAggregate;
 
@@ -45,9 +45,9 @@ const euerAgg = {
             kz: '112',
             kind: 'income',
             count: 4,
-            net: 15230.53,
-            vat: 2893.82,
-            gross: 18124.35,
+            net: 18460.40,
+            vat: 3507.48,
+            gross: 21967.88,
         },
     ],
     expenses: [
@@ -66,8 +66,8 @@ const euerAgg = {
         { category: 'Privatentnahme', bucket: 'Privat', kz: '', kind: 'neutral', count: 2, net: 0, vat: 0, gross: 500 },
     ],
     totals: {
-        incomeNet: 15230.53,
-        outputVat: 2893.82,
+        incomeNet: 18460.40,
+        outputVat: 3507.48,
         expenseNet: 1000,
         inputVat: 190,
         profit: 14230.53,
@@ -128,14 +128,14 @@ export default async () => {
             const rows = model.sections[0].rows;
             // Z22 carries the BMG rounded DOWN to full euro in the label + the tax derived from it.
             const z22 = rows.find((r) => r.label.startsWith('Z22'));
-            expect(z22?.label).toContain('BMG 15.230 €');
-            expect(z22?.value).toBe('2.893,70 €'); // 15.230 × 19 %, NOT the per-receipt 2.893,82
+            expect(z22?.label).toContain('BMG 18.460 €');
+            expect(z22?.value).toBe('3.507,40 €'); // 18.460 × 19 %, NOT the per-receipt 3.507,48
             // Vorauszahlungssoll flagged as the register value, not the FA's authoritative Soll (Gap 4).
             expect(
                 rows.some((r) => r.label.includes('Vorauszahlungssoll') && r.label.includes('nicht amtl. Soll')),
             ).toBe(true);
             const abschluss = rows.find((r) => r.label.startsWith('Z120 = Abschlusszahlung'));
-            expect(abschluss?.value).toBe('596,90 €'); // 2.893,70 − 1.852,23 − 444,57 (form logic)
+            expect(abschluss?.value).toBe('768,45 €'); // 3.507,40 − 2.210,65 − 528,30 (form logic)
             expect(abschluss?.emphasis).toBe(true);
         });
 

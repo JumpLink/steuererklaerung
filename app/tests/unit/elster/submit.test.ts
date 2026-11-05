@@ -247,13 +247,13 @@ export default async function () {
         it('reads the annual USt Abschlusszahlung, not its Zahllast', () => {
             // vatPayable is the year's tax; closingBalance is what is left to pay after the
             // advance payments — only the latter is a payment obligation.
-            const figures = { headline: { vatPayable: 1531.73, closingBalance: 1091.16 } };
-            expect(declaredAmountFromSnapshot('uste', figures)).toBe(1091.16);
+            const figures = { headline: { vatPayable: 1220.7, closingBalance: 800.4 } };
+            expect(declaredAmountFromSnapshot('uste', figures)).toBe(800.4);
         });
 
         it('declares nothing for the forms whose money follows from a Bescheid', () => {
             // EÜR/GewSt/Feststellung establish figures; the payment comes later and elsewhere.
-            expect(declaredAmountFromSnapshot('euer', { headline: { profit: 2533.74 } })).toBe(undefined);
+            expect(declaredAmountFromSnapshot('euer', { headline: { profit: 3000.4 } })).toBe(undefined);
             expect(declaredAmountFromSnapshot('gewst', { headline: { messbetrag: 0 } })).toBe(undefined);
             expect(declaredAmountFromSnapshot('feststellung', { headline: { totalProfit: 1 } })).toBe(undefined);
         });
