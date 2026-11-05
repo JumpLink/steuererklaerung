@@ -6,7 +6,7 @@
  * helpers capture that so the view classes stay about their data.
  */
 
-import type Adw from '@girs/adw-1';
+import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 import Gio from '@girs/gio-2.0';
 import GLib from '@girs/glib-2.0';
@@ -182,6 +182,23 @@ export function phoneKpiColumns(fb: Gtk.FlowBox, max: number): void {
         fb.set_min_children_per_line(columns.min);
         fb.set_max_children_per_line(columns.max);
     });
+}
+
+/**
+ * A page's explanatory paragraph as one closed `Adw.ExpanderRow` ("What is this?"), for a phone.
+ *
+ * Four paragraphs above the list eat the top third of a 360 px screen; they are context the second
+ * time you open the page, so they sit one tap away instead. The label wraps freely inside the row.
+ */
+export function explainerRow(text: string): Adw.ExpanderRow {
+    const row = new Adw.ExpanderRow({ title: _('What is this?') });
+    const label = wrappingLabel({ label: text, xalign: 0, cssClasses: ['dim-label'] });
+    label.set_margin_top(8);
+    label.set_margin_bottom(8);
+    label.set_margin_start(12);
+    label.set_margin_end(12);
+    row.add_row(new Gtk.ListBoxRow({ child: label, activatable: false, selectable: false }));
+    return row;
 }
 
 /**

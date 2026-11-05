@@ -51,7 +51,9 @@ import { errorText } from '../error-text.ts';
 import { ericSourceLabel, ericVersionLabel } from '../../../core/actions/elster/eric-warnings.ts';
 import { ericWarningRow } from './eric-warning-rows.ts';
 import { showToast } from '../toast.ts';
-import { hideOnPhone, wrapButtonLabel, wrappingLabel } from '../widgets/responsive.ts';
+import { hideOnPhone, menuItem, wrapButtonLabel, wrappingLabel } from '../widgets/responsive.ts';
+import { onNarrow } from '../widgets/narrow.ts';
+import { TOUCH_TARGET } from '../widgets/phone-rules.ts';
 import type { ViewAction } from '../view.ts';
 
 const SOURCE_LABEL: Record<string, string> = {
@@ -651,11 +653,15 @@ export class BhKontenView extends Adw.Bin {
         meta.append(amountLabel(eur(a.net), { heading: true }));
         content.append(meta);
 
-        // Actions: Sync (live only) + destructive Disconnect (trash).
+        // Actions: Sync (live only) + destructive Disconnect (trash). On a phone a live card folds
+        // both into one overflow menu beside the balance — they stay in the card, hidden, because
+        // the menu entries drive them (Sync relabels and disables itself while it runs).
         const actions = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 8 });
+        let sync: Gtk.Button | null = null;
         if (a.live) {
-            const sync = new Gtk.Button({ label: _('Sync'), hexpand: true, valign: Gtk.Align.CENTER });
-            sync.connect('clicked', () => void this.onSync(a, sync));
+            sync = new Gtk.Button({ label: _('Sync'), hexpand: true, valign: Gtk.Align.CENTER });
+            const syncButton = sync;
+            syncButton.connect('clicked', () => void this.onSync(a, syncButton));
             actions.append(sync);
         } else {
             // File source: no live sync — keep the trash right-aligned with a spacer.
@@ -671,9 +677,47 @@ export class BhKontenView extends Adw.Bin {
         actions.append(trash);
         content.append(actions);
 
+        const menuButton = sync ? this.cardMenu(sync, trash) : null;
+        if (menuButton) meta.append(menuButton);
+        onNarrow(content, (narrow) => {
+            actions.set_visible(!(narrow && menuButton));
+            menuButton?.set_visible(narrow);
+            // A lone Disconnect stays a button, but at thumb size.
+            if (!menuButton) trash.set_size_request(narrow ? TOUCH_TARGET : -1, narrow ? TOUCH_TARGET : -1);
+        });
+
         const card = new Gtk.Box({ cssClasses: ['card'] });
         card.append(content);
         return card;
+    }
+
+    /** The phone's overflow menu of a live connection card: Sync and Disconnect. */
+    private cardMenu(sync: Gtk.Button, trash: Gtk.Button): Gtk.MenuButton {
+        const popover = new Gtk.Popover({ hasArrow: true, cssClasses: ['menu'] });
+        const box = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 0 });
+        popover.set_child(box);
+        box.append(
+            menuItem(popover, { label: _('Sync'), iconName: 'view-refresh-symbolic', run: () => sync.emit('clicked') }),
+        );
+        box.append(
+            menuItem(popover, {
+                label: _('Disconnect'),
+                iconName: 'user-trash-symbolic',
+                cssClasses: ['destructive-action'],
+                run: () => trash.emit('clicked'),
+            }),
+        );
+        return new Gtk.MenuButton({
+            iconName: 'view-more-symbolic',
+            popover,
+            valign: Gtk.Align.CENTER,
+            visible: false,
+            // `row-overflow` is the marker dev/responsive-check.sh counts, no styling hangs on it.
+            cssClasses: ['flat', 'row-overflow'],
+            tooltipText: _('More actions'),
+            widthRequest: TOUCH_TARGET,
+            heightRequest: TOUCH_TARGET,
+        });
     }
 
     /**

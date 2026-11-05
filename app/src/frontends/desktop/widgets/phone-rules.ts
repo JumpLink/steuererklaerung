@@ -251,3 +251,45 @@ export function recurringSummaryParts(overdue: number, soon: number, total: numb
     parts.push({ kind: 'total', n: total });
     return parts;
 }
+
+/**
+ * How many lines a list row's subtitle may use: two on a phone, unbounded elsewhere.
+ *
+ * A three-line subtitle makes a 40-row list unscannable at 360 px; on a desktop the row is wide
+ * enough that the subtitle rarely wraps, and capping it there would only hide text.
+ */
+export function phoneSubtitleLines(narrow: boolean): number {
+    return narrow ? 2 : 0;
+}
+
+/**
+ * Where a page's explanatory paragraph lives: as the group's description, or folded into an
+ * expander row that opens on demand.
+ *
+ * Contacts' four-paragraph text ate the top third of a phone screen; the text is context the
+ * second time you open the page, not content. No text means nothing to fold.
+ */
+export function explainerPlacement(narrow: boolean, hasText: boolean): 'description' | 'expander' {
+    return narrow && hasText ? 'expander' : 'description';
+}
+
+/**
+ * Whether a view's KPI block is a flow of cards or one collapsed expander row.
+ *
+ * Only for list views, whose numbers are context rather than content (Transactions). Pages that
+ * ARE their numbers keep the two-up cards.
+ */
+export function kpiBlockMode(narrow: boolean, cards: number): 'cards' | 'expander' {
+    return narrow && cards > 0 ? 'expander' : 'cards';
+}
+
+/**
+ * Whether the search entry shows.
+ *
+ * Always on a desktop. On a phone it hides until the header menu's `Search` asks for it — and stays
+ * while it holds a query, because a hidden entry that is still filtering the list is a list that
+ * looks broken.
+ */
+export function searchVisible(narrow: boolean, requested: boolean, query: string): boolean {
+    return !narrow || requested || query.trim() !== '';
+}
