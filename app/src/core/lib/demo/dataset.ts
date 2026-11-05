@@ -110,10 +110,10 @@ const ONEOFFS: OneOff[] = [
     // ── Fischer & Weber GbR — one-off expenses (Qonto), 2025 ──
     { acc: QONTO, date: '2025-01-10', amount: -44.62, counterparty: 'Adobe Systems', purpose: 'Creative Cloud (anteilig)', category: 'Software-Lizenzen' },
     { acc: QONTO, date: '2025-02-16', amount: -23.8, counterparty: 'KI-Labs LLC', purpose: 'KI-API (Reverse Charge)', category: 'Fremdleistungen' },
-    { acc: QONTO, date: '2025-03-11', amount: -23.58, counterparty: 'INWX GmbH', purpose: 'Domainverlängerung', category: 'Software-Lizenzen' },
+    { acc: QONTO, date: '2025-03-11', amount: -23.58, counterparty: 'Domainwerk GmbH', purpose: 'Domainverlängerung', category: 'Software-Lizenzen' },
     { acc: QONTO, date: '2025-04-09', amount: -42.9, counterparty: 'Amazon EU S.à r.l.', purpose: 'USB-Hub & Kabel', category: 'Bürobedarf' },
     { acc: QONTO, date: '2025-08-16', amount: -23.8, counterparty: 'KI-Labs LLC', purpose: 'KI-API (Reverse Charge)', category: 'Fremdleistungen' },
-    { acc: QONTO, date: '2025-09-11', amount: -23.58, counterparty: 'INWX GmbH', purpose: 'Domainverlängerung', category: 'Software-Lizenzen' },
+    { acc: QONTO, date: '2025-09-11', amount: -23.58, counterparty: 'Domainwerk GmbH', purpose: 'Domainverlängerung', category: 'Software-Lizenzen' },
     // Quarterly USt-Vorauszahlung (Qonto)
     { acc: QONTO, date: '2025-04-10', amount: -1303.59, counterparty: 'Finanzamt Musterstadt', purpose: 'USt-Vorauszahlung Q1/2025', category: 'Umsatzsteuer-Vorauszahlung' },
     { acc: QONTO, date: '2025-07-10', amount: -558.8, counterparty: 'Finanzamt Musterstadt', purpose: 'USt-Vorauszahlung Q2/2025', category: 'Umsatzsteuer-Vorauszahlung' },
@@ -134,7 +134,7 @@ const ONEOFFS: OneOff[] = [
     { acc: CAMT, date: '2024-04-05', amount: -49.95, counterparty: 'Deutsche Telekom AG', purpose: 'Internet & Telefon', category: 'Telefon/Internet' },
     { acc: CAMT, date: '2024-05-18', amount: 1190.0, counterparty: 'Kundin Musterfrau', purpose: 'Projektabschluss', category: 'Umsatzerlöse' },
     { acc: CAMT, date: '2024-06-11', amount: -457.43, counterparty: 'Hausverwaltung Musterstadt', purpose: 'Miete Büro', category: 'Miete/Raumkosten' },
-    { acc: CAMT, date: '2024-07-09', amount: -23.58, counterparty: 'INWX GmbH', purpose: 'Domainverlängerung', category: 'Software-Lizenzen' },
+    { acc: CAMT, date: '2024-07-09', amount: -23.58, counterparty: 'Domainwerk GmbH', purpose: 'Domainverlängerung', category: 'Software-Lizenzen' },
     { acc: CAMT, date: '2024-08-22', amount: 476.0, counterparty: 'Praxis Dr. Nele Brandt', purpose: 'SEO-Paket', category: 'Umsatzerlöse' },
     { acc: CAMT, date: '2024-09-14', amount: -42.9, counterparty: 'Amazon EU S.à r.l.', purpose: 'Bürobedarf', category: 'Bürobedarf' },
     { acc: CAMT, date: '2024-10-30', amount: -281.30, counterparty: 'Finanzamt Musterstadt', purpose: 'USt-Vorauszahlung Q3/2024', category: 'Umsatzsteuer-Vorauszahlung' },
@@ -189,7 +189,7 @@ const ONEOFFS: OneOff[] = [
     // first two are assigned by hand (multi-select), the domain by the project rule „Relaunch Wattküste“.
     { acc: QONTO, date: '2026-05-12', amount: -59.5, counterparty: 'Bildagentur Küstenlicht', purpose: 'Bürobedarf Bildlizenzen Startseite Wattküste KL-2026-0512', category: 'Bürobedarf' },
     { acc: QONTO, date: '2026-05-14', amount: -35.7, counterparty: 'Schriftgießerei Nordtype', purpose: 'Bürobedarf Schriftlizenz Webfonts Wattküste NT-2026-0514', category: 'Bürobedarf' },
-    { acc: QONTO, date: '2026-05-18', amount: -14.28, counterparty: 'INWX GmbH', purpose: 'Domain wattkueste-neu.example Relaunch Wattküste', category: 'Software-Lizenzen' },
+    { acc: QONTO, date: '2026-05-18', amount: -14.28, counterparty: 'Domainwerk GmbH', purpose: 'Domain wattkueste-neu.example Relaunch Wattküste', category: 'Software-Lizenzen' },
     // ── ERiC-Prüfung der Demodaten, appended like the others ──
     // The payment of „Website-Relaunch, Abschlag 1" (paid 2026-03-12), which the bookings lacked.
     { acc: QONTO, date: '2026-03-12', amount: 952.0, counterparty: 'Wattküste Naturtouren', purpose: 'Rechnungsnr. Abschlag 1 Website', category: 'Umsatzerlöse' },
@@ -309,7 +309,7 @@ export function buildDemoContacts(): ContactInput[] {
         { id: 'demo-c-leuchtfeuer', entityId: 'gbr', kind: 'company', name: 'Leuchtfeuer Medien OHG', email: 'office@leuchtfeuer.example', isCustomer: true },
         { id: 'demo-c-segelschule', entityId: 'gbr', kind: 'company', name: 'Segelschule Nordwind', email: 'buero@nordwind-segeln.example', address: 'Am Yachthafen 3', zip: '24937', city: 'Flensburg', countryCode: 'DE', isCustomer: true },
         { id: 'demo-c-hetzner', entityId: 'gbr', kind: 'company', name: 'Hetzner Online GmbH', email: 'billing@hetzner.example', isSupplier: true },
-        { id: 'demo-c-inwx', entityId: 'gbr', kind: 'company', name: 'INWX GmbH', email: 'rechnung@inwx.example', isSupplier: true },
+        { id: 'demo-c-domainwerk', entityId: 'gbr', kind: 'company', name: 'Domainwerk GmbH', email: 'rechnung@domainwerk.example', isSupplier: true },
         { id: 'demo-c-telekom', entityId: 'gbr', kind: 'company', name: 'Deutsche Telekom AG', email: 'rechnung@telekom.example', isSupplier: true },
     ];
 }
@@ -410,7 +410,7 @@ export function buildDemoDocuments(): DemoDocument[] {
         { correspondent: 'Deutsche Telekom AG', date: '2026-01-05', gross: 49.95, invoiceNumber: 'TK-2026-01', docType: 'Rechnung', category: '4921 Telefon/Internet', link: false },
         { correspondent: 'Büro Nordlicht GmbH', date: '2026-02-12', gross: 238, invoiceNumber: 'BN-2026-0212', docType: 'Rechnung', link: false, eInvoice: true },
         { correspondent: 'Cloud-Provider EU', date: '2026-02-07', gross: 12.44, invoiceNumber: 'CP-2026-02', docType: 'Rechnung', link: false },
-        { correspondent: 'INWX GmbH', date: '2025-03-11', gross: 23.58, invoiceNumber: 'inwx-2025-0311', docType: 'Rechnung' },
+        { correspondent: 'Domainwerk GmbH', date: '2025-03-11', gross: 23.58, invoiceNumber: 'DW-2025-0311', docType: 'Rechnung' },
         { correspondent: 'Adobe Systems', date: '2025-01-10', gross: 44.62, invoiceNumber: 'ADBE-2025-01', docType: 'Rechnung' },
         { correspondent: 'Amazon EU S.à r.l.', date: '2025-04-09', gross: 42.9, invoiceNumber: 'AMZ-302-1234567', docType: 'Rechnung', link: false },
         // Doppelte Rechnung: the same print job invoiced twice within two weeks under two numbers.

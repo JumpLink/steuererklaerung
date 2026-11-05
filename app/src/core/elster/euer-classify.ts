@@ -362,7 +362,7 @@ interface ExpenseKeyword {
     /**
      * True for the generic category words a bank writes into the purpose (Qonto: „Reisekosten",
      * „Marketing", …) — a guess about the booking, not knowledge about the counterparty. A merchant
-     * name (`telekom`, `inwx`) is not an Auffangregel.
+     * name (`telekom`, `domainwerk`) is not an Auffangregel.
      */
     auffang?: boolean;
 }

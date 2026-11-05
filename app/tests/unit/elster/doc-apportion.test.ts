@@ -10,7 +10,7 @@ import type { UnifiedTransaction } from '@steuererklaerung/store';
  * `qonto_transaction_id` then names every booking. The mapping used to give each of them the
  * document's full net and VAT, so the expense was counted once per payment.
  *
- * The fixture mirrors the case that exposed it: INWX invoice 2025111419, 19,82 € net / 23,58 €
+ * The fixture mirrors the case that exposed it: Domainwerk invoice DW-2025-4711, 19,82 € net / 23,58 €
  * gross for three domain renewals, paid as 9,30 € and 14,28 €. The EÜR booked 39,64 € — in a
  * declaration that goes to the Finanzamt.
  */
@@ -24,7 +24,7 @@ function tx(id: string, amount: number): UnifiedTransaction {
         valueDate: '2025-12-22',
         amount,
         currency: 'EUR',
-        counterparty: 'WWW.INWX.DE',
+        counterparty: 'WWW.DOMAINWERK.EXAMPLE',
     } as UnifiedTransaction;
 }
 

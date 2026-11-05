@@ -2,7 +2,7 @@
 
 /** A single invoice in a listing. */
 export interface InvoiceListItem {
-    /** Source-specific unique identifier (e.g. INWX invoiceId). */
+    /** Source-specific unique identifier (e.g. provider invoiceId). */
     id: string;
     /** Invoice date as YYYY-MM-DD. */
     date: string;
@@ -21,7 +21,7 @@ export interface InvoiceDownloadResult {
     id: string;
     /** PDF content as a Buffer. */
     pdf: Buffer;
-    /** Suggested filename (e.g. "inwx-invoice-2026013856.pdf"). */
+    /** Suggested filename (e.g. "provider-invoice-2026013856.pdf"). */
     filename: string;
     /** Structured metadata from the API (not from OCR/LLM). */
     metadata: InvoiceListItem;
@@ -37,7 +37,7 @@ export interface InvoiceListFilter {
 
 /** Interface that each invoice source provider must implement. */
 export interface InvoiceProvider {
-    /** Human-readable name for display (e.g. "INWX"). */
+    /** Human-readable name for display (e.g. "Domainwerk"). */
     readonly name: string;
     /** List invoices, optionally filtered by date range. */
     listInvoices(filter?: InvoiceListFilter): Promise<InvoiceListItem[]>;

@@ -140,7 +140,7 @@ print(",".join(r[0] for r in db.execute("SELECT action FROM audit_log WHERE acti
 
 LIZENZ_BILD="Bildagentur Küstenlicht"
 LIZENZ_FONT="Schriftgießerei Nordtype"
-DOMAIN="INWX GmbH"
+DOMAIN="Domainwerk GmbH"
 PROJEKT="Website-Relaunch Wattküste"
 BUCHUNGEN=(STEUER_APP_VIEW=transactions STEUER_APP_TAB=buchungen STEUER_APP_SEARCH=Wattküste)
 BILD_ID="demo-qonto-161"
