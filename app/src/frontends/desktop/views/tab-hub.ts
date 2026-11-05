@@ -14,7 +14,7 @@ import GObject from '@girs/gobject-2.0';
 import Gtk from '@girs/gtk-4.0';
 import Adw from '@girs/adw-1';
 
-import type { PortedView } from '../view.ts';
+import type { PortedView, ViewAction } from '../view.ts';
 import type { AppEntity } from '../entities.ts';
 import { BhSteuererklaerungView } from './steuererklaerung-view.ts';
 import { BhSteuerAssistentView } from './steuer-assistent-view.ts';
@@ -32,6 +32,7 @@ import { BhRechnungenView } from './rechnungen-view.ts';
 import { BhForderungenView } from './forderungen-view.ts';
 import { isSearchable } from '../shortcuts.ts';
 import { pinNaturalWidth } from '../widgets/responsive.ts';
+import { headerActionsChanged } from '../widgets/header-actions.ts';
 import { _ } from '../i18n.ts';
 
 import Template from './tab-hub.blp';
@@ -76,6 +77,8 @@ export class BhTabHub extends Adw.Bin {
         this._stack.connect('notify::visible-child-name', () => {
             this.reloadActive();
             this.revealActiveTab();
+            // A hub's header actions are whichever tab is showing — see headerActions().
+            headerActionsChanged(this);
         });
         this.repinSwitcher = pinNaturalWidth(this._switcher);
         this._switcher.connect('map', () => this.revealActiveTab());
@@ -107,6 +110,19 @@ export class BhTabHub extends Adw.Bin {
             }
         }
         this.reloadActive();
+    }
+
+    /**
+     * Pass the visible tab's header actions through.
+     *
+     * The window only ever talks to the nav entry, and for four of the nine that entry is a hub —
+     * so without this, `Invoices` could never put its `New invoice` in the header, and the one
+     * overlap the spec names (button over chips) would stay. The hub itself creates nothing.
+     */
+    headerActions(): ViewAction[] {
+        const id = this._stack.get_visible_child_name();
+        const view = id ? this.views.get(id) : undefined;
+        return view?.headerActions?.() ?? [];
     }
 
     /** Show one tab by id (`win.navigate("view/tab")`); unknown or hidden ids are ignored. */

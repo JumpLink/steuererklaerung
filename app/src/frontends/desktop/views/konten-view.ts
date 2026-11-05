@@ -51,7 +51,8 @@ import { errorText } from '../error-text.ts';
 import { ericSourceLabel, ericVersionLabel } from '../../../core/actions/elster/eric-warnings.ts';
 import { ericWarningRow } from './eric-warning-rows.ts';
 import { showToast } from '../toast.ts';
-import { wrapButtonLabel, wrappingLabel } from '../widgets/responsive.ts';
+import { hideOnPhone, wrapButtonLabel, wrappingLabel } from '../widgets/responsive.ts';
+import type { ViewAction } from '../view.ts';
 
 const SOURCE_LABEL: Record<string, string> = {
     qonto: 'Qonto',
@@ -88,6 +89,25 @@ export class BhKontenView extends Adw.Bin {
     /** True while programmatically filling the certificate-path row — suppresses its apply-driven save. */
     private certFilling = false;
     private submitterFilling = false;
+    /** The connections row's probe button — the header menu drives it rather than duplicating it. */
+    private probeBtn: Gtk.Button | null = null;
+
+    /**
+     * What the content header offers on a phone: connect an account, check the connections.
+     *
+     * The probe disables itself while it runs, so the menu entry goes through the same button the
+     * connections row builds — hidden at this width, but still the thing that holds that state.
+     */
+    headerActions(): ViewAction[] {
+        return [
+            { label: _('Add account'), primary: true, run: () => this.presentAddAccount() },
+            {
+                label: _('Check connections'),
+                iconName: 'network-transmit-receive-symbolic',
+                run: () => void this.onCheckConnections(this.probeBtn),
+            },
+        ];
+    }
 
     constructor() {
         super();
@@ -512,7 +532,8 @@ export class BhKontenView extends Adw.Bin {
             cssClasses: ['flat'],
         });
         probe.connect('clicked', () => void this.onCheckConnections(probe));
-        head.append(probe);
+        this.probeBtn = probe;
+        head.append(hideOnPhone(probe));
 
         // The way IN. Without it the view could sync and disconnect what was already there and
         // nothing else — connecting a bank meant editing .env, importing meant a CLI command.
@@ -520,7 +541,9 @@ export class BhKontenView extends Adw.Bin {
         add.add_css_class('suggested-action');
         add.add_css_class('pill');
         add.connect('clicked', () => this.presentAddAccount());
-        head.append(wrapButtonLabel(add));
+        // Both are in the content header on a phone — see headerActions(). The empty state's own
+        // `Add account` stays: a page with no accounts is nothing BUT that invitation.
+        head.append(hideOnPhone(wrapButtonLabel(add)));
         this._connections_box.append(head);
 
         if (accounts.length === 0) {
@@ -673,8 +696,8 @@ export class BhKontenView extends Adw.Bin {
      * four green ones — a message that disappears after four seconds cannot carry that, and the
      * user came here precisely because something is not working.
      */
-    private async onCheckConnections(btn: Gtk.Button): Promise<void> {
-        btn.set_sensitive(false);
+    private async onCheckConnections(btn: Gtk.Button | null): Promise<void> {
+        btn?.set_sensitive(false);
         try {
             const report = await checkApiConnections();
             const lines = report.services
@@ -689,7 +712,7 @@ export class BhKontenView extends Adw.Bin {
         } catch (err) {
             showToast(fmt(_('Check failed: {error}'), { error: msg(err) }));
         } finally {
-            btn.set_sensitive(true);
+            btn?.set_sensitive(true);
         }
     }
 

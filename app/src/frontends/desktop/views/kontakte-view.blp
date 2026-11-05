@@ -8,23 +8,16 @@ template $BhKontakteView: Adw.Bin {
     width-request: 300;
     height-request: 200;
 
-    // "Alle Kontakte" and the two header actions share one line, and the actions win: on a phone
-    // the title was allocated its ellipsis and nothing else, so the section read "…". The actions
-    // are self-explanatory and the window header already says Kontakte, so the narrow layout drops
-    // the section title and gives the row to the buttons.
+    // No rung any more, and that is the point: "Alle Kontakte" and the two header actions used to
+    // share one line and the actions won — the title was allocated its ellipsis and nothing else,
+    // so the section read "…", and a `max-width: 450px` rung blanked it. Since the header-bar
+    // primary action (docs/app/mobile-layout.md) both actions are in the window header on a phone
+    // and the row is the title's alone, so blanking it would leave an empty band instead.
     //
-    // 450 px, not 560: an in-view breakpoint measures the CONTENT PANE, not the window. At a
-    // 1280 px desktop window that pane is 537 px — measured off a screenshot, the content runs
-    // x=320…856 between the navigation and the assistant panel — so a 560 px condition fires on
-    // the desktop. Every in-view breakpoint here stays below 537.
-    Adw.Breakpoint {
-      condition ("max-width: 450px")
-
-      setters {
-        list_group.title: "";
-      }
-    }
-
+    // The bin stays for its size request. Should a rung come back here, mind that an in-view
+    // breakpoint measures the CONTENT PANE, not the window: at a 1280 px desktop window that pane
+    // is 537 px — measured off a screenshot, the content runs x=320…856 between the navigation and
+    // the assistant panel — so a 560 px condition fires on the desktop. Stay below 537.
     child: Gtk.Stack stack {
       Gtk.StackPage {
         name: "loading";

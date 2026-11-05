@@ -38,7 +38,9 @@ import { BhRechnungVersandDialog } from './rechnung-versand-dialog.ts';
 import { BhRechnungFormDialog } from './rechnung-form-dialog.ts';
 import { errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
-import { boundRowText, chipScroller, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
+import { boundRowText, chipScroller, hideOnPhone, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
+import { headerActionsChanged } from '../widgets/header-actions.ts';
+import type { ViewAction } from '../view.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
 
@@ -171,6 +173,9 @@ export class BhRechnungenView extends Adw.Bin {
         } catch {
             this.capabilities = null;
         }
+        // Whether this entity can create a draft at all is what headerActions() answers, and the
+        // window asked before this line ran.
+        headerActionsChanged(this);
         loadIntoStack({
             stack: this._stack,
             errorPage: this._error_page,
@@ -450,6 +455,15 @@ export class BhRechnungenView extends Adw.Bin {
         );
     }
 
+    /**
+     * What the content header offers on a phone — nothing until the back-end says a draft can be
+     * created, which is why {@link reload} calls `headerActionsChanged` once it knows.
+     */
+    headerActions(): ViewAction[] {
+        if (!this.capabilities?.createDraft) return [];
+        return [{ label: _('New invoice'), primary: true, run: () => this.newInvoice() }];
+    }
+
     /** The invoices-group header suffix: the status filter + a capability-gated "Neue Rechnung". */
     private buildHeaderSuffix(): Gtk.Box {
         const box = new Gtk.Box({ spacing: 8, valign: Gtk.Align.CENTER });
@@ -461,7 +475,8 @@ export class BhRechnungenView extends Adw.Bin {
                 valign: Gtk.Align.CENTER,
             });
             btn.connect('clicked', () => this.newInvoice());
-            box.append(wrapButtonLabel(btn));
+            // The chips have the row to themselves on a phone; the button is in the header bar.
+            box.append(hideOnPhone(wrapButtonLabel(btn)));
         }
         return box;
     }

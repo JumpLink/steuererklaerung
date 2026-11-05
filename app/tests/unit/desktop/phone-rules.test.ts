@@ -13,6 +13,7 @@ import {
     TOUCH_TARGET,
     actionOverflow,
     chipScrollTarget,
+    headerActionPlan,
     kpiColumns,
     undershoot,
 } from '../../../src/frontends/desktop/widgets/phone-rules.ts';
@@ -20,6 +21,8 @@ import {
 /** @gjsify/unit's `toEqual` is `==`, so a pair of numbers is asserted field by field. */
 const columns = (c: { min: number; max: number }): string => `${c.min}-${c.max}`;
 const edges = (e: { start: boolean; end: boolean }): string => `${e.start ? 'start' : ''}|${e.end ? 'end' : ''}`;
+const plan = (p: { button: number | null; menu: number[] }): string =>
+    `${p.button === null ? '-' : p.button}|${p.menu.join(',')}`;
 
 export default async () => {
     await describe('phone-rules: touch metrics', async () => {
@@ -124,6 +127,35 @@ export default async () => {
             // Adjustments land on 0.9999 often enough that a one-pixel tolerance is the point.
             expect(undershoot(0.5, 300, 800).start).toBe(false);
             expect(undershoot(499.5, 300, 800).end).toBe(false);
+        });
+    });
+
+    await describe('phone-rules: headerActionPlan', async () => {
+        await it('leaves a wide window alone — the view toolbar still has them', async () => {
+            expect(plan(headerActionPlan(['primary', 'secondary'], false))).toBe('-|');
+            expect(plan(headerActionPlan(['primary'], false))).toBe('-|');
+        });
+
+        await it('puts the creating action on the button and the rest in the menu', async () => {
+            expect(plan(headerActionPlan(['primary', 'secondary'], true))).toBe('0|1');
+            expect(plan(headerActionPlan(['secondary', 'primary'], true))).toBe('1|0');
+        });
+
+        await it('shows a lone primary without opening a menu', async () => {
+            expect(plan(headerActionPlan(['primary'], true))).toBe('0|');
+        });
+
+        await it('menus everything when no action claims to be primary', async () => {
+            expect(plan(headerActionPlan(['secondary', 'secondary'], true))).toBe('-|0,1');
+        });
+
+        await it('keeps a second primary rather than dropping it', async () => {
+            // One button's worth of room; an action a view declared is never silently lost.
+            expect(plan(headerActionPlan(['primary', 'primary', 'secondary'], true))).toBe('0|1,2');
+        });
+
+        await it('has nothing to place for a view that offers nothing', async () => {
+            expect(plan(headerActionPlan([], true))).toBe('-|');
         });
     });
 };

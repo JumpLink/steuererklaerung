@@ -28,7 +28,8 @@ import { eur } from '../../../core/lib/format.ts';
 import type { AppEntity } from '../entities.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
-import { phoneRowActions, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
+import { hideOnPhone, phoneRowActions, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
+import type { ViewAction } from '../view.ts';
 import { BhKontaktFormDialog } from './kontakt-form-dialog.ts';
 import { GroupRows, LoadToken, emptyState, loadIntoStack, markup } from './util.ts';
 import { _, fmt } from '../i18n.ts';
@@ -80,6 +81,8 @@ export class BhKontakteView extends Adw.Bin {
     private openByContact = new Map<string, number>();
     /** Guards a slow receivables fetch against an entity switch (mirrors LoadToken). */
     private receivablesToken = 0;
+    /** The toolbar's Import button — the header menu drives it rather than duplicating it. */
+    private importBtn: Gtk.Button | null = null;
 
     constructor() {
         super();
@@ -207,6 +210,20 @@ export class BhKontakteView extends Adw.Bin {
         for (const c of contacts) this.list.add(this.buildRow(c));
     }
 
+    /**
+     * What the content header offers on a phone: add a contact, import from the connected services.
+     *
+     * `Import` goes through the toolbar's own button even though that button is hidden at this
+     * width — it is the thing that carries the "Importing …" state and gets re-enabled on failure,
+     * and a second copy of that state machine for the menu entry would be the one that drifts.
+     */
+    headerActions(): ViewAction[] {
+        return [
+            { label: _('Add a contact'), primary: true, run: () => this.openForm(null) },
+            { label: _('Import'), iconName: 'document-save-symbolic', run: () => void this.runImport(this.importBtn) },
+        ];
+    }
+
     /** The list-group header actions: add a contact (suggested) + import from the connected services. */
     private buildListActions(): Gtk.Box {
         const box = new Gtk.Box({ spacing: 8, valign: Gtk.Align.CENTER });
@@ -219,10 +236,12 @@ export class BhKontakteView extends Adw.Bin {
         const importBtn = new Gtk.Button({ label: _('Import'), valign: Gtk.Align.CENTER });
         importBtn.set_tooltip_text(_('Import and link customers from Qonto and correspondents from Paperless'));
         importBtn.connect('clicked', () => void this.runImport(importBtn));
+        this.importBtn = importBtn;
         // A header suffix takes its width from the group's TITLE (see the README's "header_suffix
         // width theft"): unwrapped, these two captions squeezed "Alle Kontakte" down to "A…".
-        box.append(wrapButtonLabel(add));
-        box.append(wrapButtonLabel(importBtn));
+        // On a phone both move into the header bar — see headerActions().
+        box.append(hideOnPhone(wrapButtonLabel(add)));
+        box.append(hideOnPhone(wrapButtonLabel(importBtn)));
         return box;
     }
 
@@ -309,18 +328,18 @@ export class BhKontakteView extends Adw.Bin {
     }
 
     /** Pull + link contacts from the connected back-ends; toast the per-source result, then reload. */
-    private async runImport(btn: Gtk.Button): Promise<void> {
+    private async runImport(btn: Gtk.Button | null): Promise<void> {
         if (!this.entity) return;
-        btn.set_sensitive(false);
-        btn.set_label(_('Importing …'));
+        btn?.set_sensitive(false);
+        btn?.set_label(_('Importing …'));
         try {
             const res = await importContacts(this.entity.id);
             showToast(this.importSummary(res), 5);
             // refresh() rebuilds the header (fresh, enabled Importieren button), so no manual restore.
             this.refresh();
         } catch (err) {
-            btn.set_sensitive(true);
-            btn.set_label(_('Import'));
+            btn?.set_sensitive(true);
+            btn?.set_label(_('Import'));
             showToast(fmt(_('Import failed: {error}'), { error: errorText(err) }), 5);
         }
     }

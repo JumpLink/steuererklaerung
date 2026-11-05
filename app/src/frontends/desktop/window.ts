@@ -50,6 +50,7 @@ import { appSession } from './data/session.ts';
 import { reloadEst } from './data/settings.ts';
 import { VIEW_FACTORIES } from './views/registry.ts';
 import { bumpViewEpoch, markup } from './views/util.ts';
+import { renderHeaderActions } from './widgets/header-actions.ts';
 import { BhEntitySwitcher } from './widgets/entity-switcher.ts';
 import { BhYearSwitcher } from './widgets/year-switcher.ts';
 import { BhAssistentPanel } from './assistent-panel.ts';
@@ -115,6 +116,8 @@ export class MainWindow extends Adw.ApplicationWindow {
                     'assistant_split',
                     'toast_overlay',
                     'sync_button',
+                    'view_action',
+                    'view_menu',
                     'assistant_toggle',
                     'assistant_stack',
                     'assistant_panel',
@@ -153,6 +156,8 @@ export class MainWindow extends Adw.ApplicationWindow {
     declare private _assistant_split: Adw.OverlaySplitView;
     declare private _toast_overlay: Adw.ToastOverlay;
     declare private _sync_button: Gtk.Button;
+    declare private _view_action: Gtk.Button;
+    declare private _view_menu: Gtk.MenuButton;
     declare private _assistant_toggle: Gtk.ToggleButton;
     declare private _assistant_stack: Gtk.Stack;
     declare private _assistant_panel: BhAssistentPanel;
@@ -502,9 +507,28 @@ export class MainWindow extends Adw.ApplicationWindow {
             if (next === this.narrowState) return;
             this.narrowState = next;
             this.notify('narrow');
+            this.refreshHeaderActions();
         };
         this.connect('notify::current-breakpoint', sync);
         sync();
+    }
+
+    /**
+     * Re-ask the visible view what it offers from the header bar, and render that.
+     *
+     * Asked rather than cached because the answer moves under us: Invoices only knows whether the
+     * back-end can create a draft once it has loaded the entity's capabilities, and a tab hub's
+     * actions are whichever tab is showing. Views call this through `headerActionsChanged` in
+     * `widgets/header-actions.ts`; the window calls it on every view switch and breakpoint change.
+     */
+    refreshHeaderActions(): void {
+        const view = this._stack.get_visible_child_name();
+        const ported = view ? this.ported.get(view) : undefined;
+        renderHeaderActions(
+            { button: this._view_action, menu: this._view_menu },
+            ported?.headerActions?.() ?? [],
+            this.narrowState,
+        );
     }
 
     /**
@@ -820,6 +844,7 @@ export class MainWindow extends Adw.ApplicationWindow {
         const index = wanted ? items.findIndex((i) => i.view === wanted) : -1;
         const row = this._nav_list.get_row_at_index(index >= 0 ? index : 0);
         if (row) this._nav_list.select_row(row); // fires row-selected → sets the active view
+        else this.refreshHeaderActions(); // nothing selected: the header must not keep the old view's actions
         // `collapsed` is still false while the constructor runs (breakpoints only apply after the
         // first allocation), so row-selected cannot decide this yet. A view asked for by name is an
         // explicit request for THAT view, not for the sidebar — show it on a phone too.
@@ -893,6 +918,7 @@ export class MainWindow extends Adw.ApplicationWindow {
         this._assistant_panel.setViewContext(item?.label ?? '', item?.sub ?? '');
         if (this._split_view.get_collapsed()) this._split_view.set_show_content(true);
         this.reloadVisibleView();
+        this.refreshHeaderActions();
     }
 
     /** Reload the visible ported view for the active entity/year (no-op for placeholder views). */

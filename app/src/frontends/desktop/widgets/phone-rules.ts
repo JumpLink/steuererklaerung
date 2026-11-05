@@ -114,3 +114,31 @@ export function undershoot(value: number, page: number, upper: number): { start:
     if (page <= 0 || upper <= page + 1) return { start: false, end: false };
     return { start: value > 1, end: value < upper - page - 1 };
 }
+
+/** Where each of a view's declared header actions goes. */
+export interface HeaderActionPlan {
+    /** Index of the action that becomes the header's `+` button, or `null` for none. */
+    button: number | null;
+    /** Indices of the actions that go into the header's overflow menu, in declared order. */
+    menu: number[];
+}
+
+/**
+ * Which of a view's declared actions the content header shows, and as what.
+ *
+ * `kinds` is the view's actions in declared order. The FIRST `'primary'` becomes the `+` button;
+ * everything else — including any further `'primary'` — goes to the menu, because the header has
+ * one button's worth of room and silently dropping an action a view declared is worse than putting
+ * it one tap deeper.
+ *
+ * Nothing at all on a desktop: the actions are still in the view's own toolbar there, where they
+ * read with their captions, and a second copy in the header would be two ways to do one thing.
+ */
+export function headerActionPlan(kinds: readonly ('primary' | 'secondary')[], narrow: boolean): HeaderActionPlan {
+    if (!narrow) return { button: null, menu: [] };
+    const button = kinds.indexOf('primary');
+    return {
+        button: button === -1 ? null : button,
+        menu: kinds.flatMap((_kind, index) => (index === button ? [] : [index])),
+    };
+}

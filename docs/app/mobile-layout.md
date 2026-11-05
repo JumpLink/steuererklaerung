@@ -222,6 +222,39 @@ already reachable. Secondary actions (`Export deadlines`, `Import`) move into th
 *Borrowed from:* the FAB's **premise** — one action per screen deserves permanent placement — not
 its form. An Adwaita app with a circular overlay button would look like a port.
 
+*Built, with five deviations.* **A view declares, it does not build.** `PortedView` grows an
+optional `headerActions(): ViewAction[]`, where a `ViewAction` is a label, an optional icon, a
+`primary` flag and a closure. The window asks and renders; `headerActionPlan` in
+[`widgets/phone-rules.ts`](../../app/src/frontends/desktop/widgets/phone-rules.ts) decides which
+one becomes the `+` button and which go to the menu, and is testable without a display. A view
+handing over widgets would make that decision untestable and put the header's look in thirteen
+places.
+
+**The toolbar buttons are hidden, not moved** — `hideOnPhone` in `responsive.ts`, the same
+subscription shape as the row collapse, for the same reason: a toolbar is rebuilt on reload, not
+on resize, so a build-time skip would leave a window dragged narrow with whatever width it was
+born with. The secondary menu entries then *drive those hidden buttons* rather than calling the
+action a second time: `Import` and `Check connections` disable themselves while they run and
+re-enable on failure, and a copy of that state machine for the menu is the copy that drifts.
+
+**A hub forwards to its visible tab.** The window only ever talks to the nav entry, and four of
+the nine entries are `BhTabHub`s — so Invoices, the one overlap this step is named after, could
+not reach the header at all without `BhTabHub.headerActions()` passing the active tab's answer
+through and firing `headerActionsChanged` on a tab switch. That helper exists for the same class
+of problem: Invoices only knows whether the back-end can create a draft after it has loaded the
+entity's capabilities, so the answer has to be re-asked rather than cached.
+
+**Accounts keeps the `Add account` button in its empty state.** The rule removes buttons that
+crowd a list; a page with no accounts is nothing but that invitation. The menu is a plain
+`Gtk.Popover` with `.menu` again, sharing one `menuItem` factory with the row overflow — the two
+menus are the same surface at two sizes.
+
+**Contacts gets its section title back.** `kontakte-view.blp` carried a `max-width: 450px` rung
+that blanked `All contacts`, because the title shared that row with `Add a contact` and `Import`
+and lost — it was allocated its ellipsis and nothing else, so the section read "…". With both
+actions in the window header the row is the title's alone, and blanking it leaves a 70 px empty
+band instead. The rung is gone; the `Adw.BreakpointBin` stays for its size request.
+
 ### Dialogs — already right, two fixes
 
 Every dialog the app opens is an `Adw.Dialog`, which libadwaita presents as a **bottom sheet**
@@ -326,7 +359,8 @@ px and moves to the end of the description row, which it already does.
 above the list; every row is three lines tall because `Supplier` and `Delete` stacked.
 
 **Phone:** the explanation becomes a `Gtk.Label` inside an `Adw.ExpanderRow` ("What is this?"),
-collapsed. `Add a contact` to the header bar, `Import` to its menu. Row actions to a menu (above),
+collapsed. `Add a contact` to the header bar, `Import` to its menu *(done, step 3 — and `All contacts` stays,
+see there)*. Row actions to a menu (above),
 which returns rows to two lines with the avatar, name, and the open amount as a suffix.
 
 *Borrowed from:* iOS Contacts — avatar, name, one detail, nothing else.
@@ -418,7 +452,7 @@ every page come before the ones that help one.
 |---|----|-------|----------|
 | 1 | **Breakpoint ladder** *(done)* | Add the `max-width: 480px` phone breakpoint to `window.blp` and expose it to views as a `narrow` property on the window, so no view invents its own window-width condition. | Everything below needs one place to ask "are we on a phone?". |
 | 2 | **Shared helpers** *(done)* | `kpiFlow` two-up, `rowActions` → menu, 48 px targets, `chipScroller` fade + scroll-to-selection, in `views/util.ts` and `widgets/responsive.ts`, with tests. | One change fixes thirteen pages; every later PR gets smaller. |
-| 3 | **Header-bar primary action** | A per-view declaration of "the one creating action" and "the secondary ones"; `window.ts` renders them into the content header on a phone. Removes the Invoices button/chip overlap. | Unblocks the per-view PRs, which otherwise each re-solve it. |
+| 3 | **Header-bar primary action** *(done)* | A per-view declaration of "the one creating action" and "the secondary ones"; `window.ts` renders them into the content header on a phone. Removes the Invoices button/chip overlap. | Unblocks the per-view PRs, which otherwise each re-solve it. |
 | 4 | **Context button** | Title widget becomes a `Gtk.MenuButton` on a phone, opening an `Adw.Dialog` with the existing entity and year switchers. | The one real gap the collapse leaves; independent of the view work. |
 | 5 | **Section list as home** | Badges on the nav rows, fed by the counts `home-view` already computes. | Makes the root page worth landing on. Needs 1, nothing else. |
 | 6 | **Overview, Contracts, Invoices** | Apply 2 + 3; demo banner one-line on a phone. | The three worst pages in the sweep, and they need no new mechanism. |
