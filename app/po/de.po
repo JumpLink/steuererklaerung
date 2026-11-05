@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-11-05 12:23+0100\n"
+"POT-Creation-Date: 2026-11-05 12:38+0100\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -27,7 +27,7 @@ msgstr ""
 #: src/core/actions/classification-rules.ts:48
 #: src/frontends/desktop/views/setup-assistant.ts:64
 #: src/frontends/desktop/views/setup-assistant.ts:480
-#: src/frontends/desktop/window.ts:803
+#: src/frontends/desktop/window.ts:815 src/frontends/desktop/window.ts:846
 msgid "Private"
 msgstr "Privat"
 
@@ -4921,7 +4921,7 @@ msgstr "Prüf-Plugins: {count}"
 #: src/frontends/desktop/lotse-panel.blp:26
 #: src/frontends/desktop/views/einstellungen-view.blp:55
 #: src/frontends/desktop/views/tab-hub.ts:198
-#: src/frontends/desktop/window.blp:202
+#: src/frontends/desktop/window.blp:242
 msgid "Assistant"
 msgstr "Assistent"
 
@@ -4930,7 +4930,7 @@ msgstr "Assistent"
 #: src/frontends/desktop/lotse-panel.blp:36
 #: src/frontends/desktop/views/beleg-upload.ts:131
 #: src/frontends/desktop/views/konten-view.ts:710
-#: src/frontends/desktop/window.blp:249
+#: src/frontends/desktop/window.blp:289
 msgid "Close"
 msgstr "Schließen"
 
@@ -5216,7 +5216,7 @@ msgstr "Kein Fenster offen, in dem die Bank gefragt werden könnte."
 #: src/frontends/desktop/views/laufende-kosten-view.ts:303
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:466
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:76
-#: src/frontends/desktop/window.ts:295
+#: src/frontends/desktop/window.ts:300
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -7075,7 +7075,7 @@ msgstr "Eigene Daten"
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:41
 #: src/frontends/desktop/views/welcome.ts:229
-#: src/frontends/desktop/window.ts:736
+#: src/frontends/desktop/window.ts:748
 msgid "Use my own data"
 msgstr "Eigene Daten verwenden"
 
@@ -10307,7 +10307,7 @@ msgstr "Importiert {range}"
 #. TRANSLATORS: Tooltip on the headerbar button that syncs Qonto and Paperless
 #: src/frontends/desktop/views/konten-view.ts:657
 #: src/frontends/desktop/views/konten-view.ts:746
-#: src/frontends/desktop/window.blp:178
+#: src/frontends/desktop/window.blp:218
 msgid "Sync"
 msgstr "Abgleichen"
 
@@ -12568,7 +12568,7 @@ msgid "Dauerfristverlängerung: every VAT return is due one month later."
 msgstr "Jede Voranmeldung ist einen Monat später fällig."
 
 #: src/frontends/desktop/views/setup-assistant.ts:436
-#: src/frontends/desktop/window.ts:803
+#: src/frontends/desktop/window.ts:815 src/frontends/desktop/window.ts:846
 msgid "Business"
 msgstr "Unternehmen"
 
@@ -12662,7 +12662,7 @@ msgid "Done"
 msgstr "Fertig"
 
 #: src/frontends/desktop/views/setup-assistant.ts:649
-#: src/frontends/desktop/window.blp:260
+#: src/frontends/desktop/window.blp:300
 msgid "Finish setup"
 msgstr "Einrichtung abschließen"
 
@@ -15081,6 +15081,13 @@ msgstr "geändert"
 msgid "by rule"
 msgstr "per Regel"
 
+#. TRANSLATORS: Title of the phone sheet holding the entity and year switchers (also the context button's tooltip)
+#. TRANSLATORS: Accessible name of the phone header's button that opens the entity and year switchers
+#: src/frontends/desktop/widgets/context-dialog.ts:39
+#: src/frontends/desktop/window.blp:192
+msgid "Entity and year"
+msgstr "Entität und Jahr"
+
 #: src/frontends/desktop/widgets/entity-switcher.ts:100
 msgid "New entity …"
 msgstr "Neue Entität …"
@@ -15100,7 +15107,7 @@ msgstr "Erklärung: %s"
 
 #. TRANSLATORS: Tooltip on the headerbar button holding a page's secondary actions
 #: src/frontends/desktop/widgets/responsive.ts:252
-#: src/frontends/desktop/window.blp:195
+#: src/frontends/desktop/window.blp:235
 msgid "More actions"
 msgstr "Weitere Aktionen"
 
@@ -15115,54 +15122,54 @@ msgstr "Entität einrichten …"
 msgid "About Steuererklärung"
 msgstr "Über Steuererklärung"
 
-#: src/frontends/desktop/window.ts:289
+#: src/frontends/desktop/window.ts:294
 msgid "Switch to the demo?"
 msgstr "Zur Demo wechseln?"
 
-#: src/frontends/desktop/window.ts:289
+#: src/frontends/desktop/window.ts:294
 msgid "Switch to your own data?"
 msgstr "Zu eigenen Daten wechseln?"
 
-#: src/frontends/desktop/window.ts:292
+#: src/frontends/desktop/window.ts:297
 msgid ""
 "The app restarts with fictional sample data. Your own data is not changed."
 msgstr ""
 "Die App startet mit erfundenen Beispieldaten neu. Deine eigenen Daten "
 "bleiben unverändert."
 
-#: src/frontends/desktop/window.ts:293
+#: src/frontends/desktop/window.ts:298
 msgid "The app restarts with your own data. The demo data stays separate."
 msgstr ""
 "Die App startet mit deinen eigenen Daten neu. Die Demodaten bleiben getrennt."
 
-#: src/frontends/desktop/window.ts:296
+#: src/frontends/desktop/window.ts:301
 msgid "Restart"
 msgstr "Neu starten"
 
-#: src/frontends/desktop/window.ts:310
+#: src/frontends/desktop/window.ts:315
 msgid "Please restart the app yourself to switch."
 msgstr "Bitte starte die App selbst neu, um zu wechseln."
 
-#: src/frontends/desktop/window.ts:728
+#: src/frontends/desktop/window.ts:740
 msgid "Data could not be loaded completely: {error}"
 msgstr "Daten konnten nicht vollständig geladen werden: {error}"
 
-#: src/frontends/desktop/window.ts:735
+#: src/frontends/desktop/window.ts:747
 msgid "Demo data – fictional examples, no real financial data"
 msgstr "Demodaten – fiktive Beispieldaten, keine echten Finanzdaten"
 
-#: src/frontends/desktop/window.ts:765
+#: src/frontends/desktop/window.ts:777
 msgid "Setup is not finished: no business or private tax return is set up yet."
 msgstr ""
 "Die Einrichtung ist nicht abgeschlossen: Es ist noch kein Betrieb und keine "
 "private Steuererklärung eingerichtet."
 
-#: src/frontends/desktop/window.ts:766
+#: src/frontends/desktop/window.ts:778
 msgid "Setup is not finished: “{entity}” has no bank account yet."
 msgstr ""
 "Die Einrichtung ist nicht abgeschlossen: „{entity}“ hat noch kein Bankkonto."
 
-#: src/frontends/desktop/window.ts:872
+#: src/frontends/desktop/window.ts:919
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."

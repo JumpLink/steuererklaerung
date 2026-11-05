@@ -53,6 +53,8 @@ import { bumpViewEpoch, markup } from './views/util.ts';
 import { renderHeaderActions } from './widgets/header-actions.ts';
 import { BhEntitySwitcher } from './widgets/entity-switcher.ts';
 import { BhYearSwitcher } from './widgets/year-switcher.ts';
+import { presentContextDialog } from './widgets/context-dialog.ts';
+import { contextTitle } from './widgets/phone-rules.ts';
 import { BhAssistentPanel } from './assistent-panel.ts';
 import { BhLotsePanel } from './lotse-panel.ts';
 import { lotseEmbedPlan } from '../../core/actions/assistant/lotse-embed.ts';
@@ -113,6 +115,9 @@ export class MainWindow extends Adw.ApplicationWindow {
                     'nav_list',
                     'content_page',
                     'content_title',
+                    'title_stack',
+                    'context_button',
+                    'context_label',
                     'assistant_split',
                     'toast_overlay',
                     'sync_button',
@@ -153,6 +158,9 @@ export class MainWindow extends Adw.ApplicationWindow {
     declare private _nav_list: Gtk.ListBox;
     declare private _content_page: Adw.NavigationPage;
     declare private _content_title: Adw.WindowTitle;
+    declare private _title_stack: Gtk.Stack;
+    declare private _context_button: Gtk.MenuButton;
+    declare private _context_label: Gtk.Label;
     declare private _assistant_split: Adw.OverlaySplitView;
     declare private _toast_overlay: Adw.ToastOverlay;
     declare private _sync_button: Gtk.Button;
@@ -508,6 +516,7 @@ export class MainWindow extends Adw.ApplicationWindow {
             this.narrowState = next;
             this.notify('narrow');
             this.refreshHeaderActions();
+            this.renderContextButton();
         };
         this.connect('notify::current-breakpoint', sync);
         sync();
@@ -556,6 +565,12 @@ export class MainWindow extends Adw.ApplicationWindow {
         this._entity_switcher.onChanged = (id) => this.onEntityChanged(id);
         this._entity_switcher.onManage = (action, id) => this.onEntityManage(action, id);
         this._year_switcher.onChanged = (year) => this.onYearChanged(year);
+        // The button only opens a sheet: no popover to show, so the "popup" IS the dialog. The
+        // toggle is released straight away, or the button would stay pressed behind the sheet.
+        this._context_button.set_create_popup_func(() => {
+            this._context_button.set_active(false);
+            this.presentContext();
+        });
 
         // Views and dialogs reach the overlay through this registration rather than through the
         // window, so a toast works from code that never sees the window.
@@ -811,6 +826,41 @@ export class MainWindow extends Adw.ApplicationWindow {
         if (!this.currentEntity) return;
         const years = this.currentEntity.years.length ? this.currentEntity.years : [this.currentEntity.defaultYear];
         this._year_switcher.setYears(years, this.currentYear);
+        this.renderContextButton();
+    }
+
+    /** Show the phone's context button (or the plain view title) and keep its text current. */
+    private renderContextButton(): void {
+        const text = contextTitle(this.currentEntity?.name, this.currentYear, this.narrowState);
+        if (text !== null) this._context_label.set_label(text);
+        this._title_stack.set_visible_child_name(text === null ? 'title' : 'context');
+    }
+
+    /** Open the entity/year sheet from the context button. */
+    private presentContext(): void {
+        if (!this.workspace || !this.currentEntity) return;
+        const years = this.currentEntity.years.length ? this.currentEntity.years : [this.currentEntity.defaultYear];
+        presentContextDialog(
+            this,
+            {
+                entities: this.workspace.entities.map((e) => ({
+                    id: e.id,
+                    name: e.name,
+                    sub: e.kind === 'privat' ? _('Private') : _('Business'),
+                })),
+                entityId: this.currentEntity.id,
+                years,
+                year: this.currentYear,
+            },
+            {
+                onEntity: (id) => this.onEntityChanged(id),
+                onYear: (year) => {
+                    this.onYearChanged(year);
+                    this.renderYearSwitcher(); // the sidebar's own segments did not see this choice
+                },
+                onManage: (action, id) => this.onEntityManage(action, id),
+            },
+        );
     }
 
     /** Rebuild the sidebar rows + the content stack for the active entity's visible views. */
@@ -843,7 +893,8 @@ export class MainWindow extends Adw.ApplicationWindow {
         const wanted = process.env.STEUER_APP_VIEW;
         const index = wanted ? items.findIndex((i) => i.view === wanted) : -1;
         const row = this._nav_list.get_row_at_index(index >= 0 ? index : 0);
-        if (row) this._nav_list.select_row(row); // fires row-selected → sets the active view
+        if (row)
+            this._nav_list.select_row(row); // fires row-selected → sets the active view
         else this.refreshHeaderActions(); // nothing selected: the header must not keep the old view's actions
         // `collapsed` is still false while the constructor runs (breakpoints only apply after the
         // first allocation), so row-selected cannot decide this yet. A view asked for by name is an

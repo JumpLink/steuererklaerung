@@ -13,6 +13,7 @@ import {
     TOUCH_TARGET,
     actionOverflow,
     chipScrollTarget,
+    contextTitle,
     headerActionPlan,
     kpiColumns,
     undershoot,
@@ -156,6 +157,25 @@ export default async () => {
 
         await it('has nothing to place for a view that offers nothing', async () => {
             expect(plan(headerActionPlan([], true))).toBe('-|');
+        });
+    });
+
+    await describe('phone-rules: contextTitle', async () => {
+        await it('keeps the view title on a desktop — the sidebar already says it', async () => {
+            expect(contextTitle('Fischer & Weber GbR', 2025, false) === null).toBe(true);
+        });
+
+        await it('reads entity and year on a phone', async () => {
+            expect(contextTitle('Fischer & Weber GbR', 2025, true)).toBe('Fischer & Weber GbR · 2025');
+        });
+
+        await it('drops an unknown year rather than printing 0', async () => {
+            expect(contextTitle('Fischer & Weber GbR', 0, true)).toBe('Fischer & Weber GbR');
+        });
+
+        await it('falls back to the plain title while no entity is loaded', async () => {
+            expect(contextTitle(null, 2025, true) === null).toBe(true);
+            expect(contextTitle('', 2025, true) === null).toBe(true);
         });
     });
 };

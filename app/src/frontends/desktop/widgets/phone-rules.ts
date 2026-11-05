@@ -142,3 +142,18 @@ export function headerActionPlan(kinds: readonly ('primary' | 'secondary')[], na
         menu: kinds.flatMap((_kind, index) => (index === button ? [] : [index])),
     };
 }
+
+/**
+ * The text of the phone header's context button, or `null` when the header keeps its view title.
+ *
+ * On a phone the entity card and the year selector live a page away in the sidebar, so a content
+ * page would otherwise never say whose books and which year its numbers belong to. The button
+ * answers that in the header's own space: `Fischer & Weber GbR · 2025`.
+ *
+ * `null` on a desktop (the sidebar is on screen, so repeating it would only crowd the title) and
+ * while no entity is loaded yet (a button reading ` · 0` would be worse than the plain title).
+ */
+export function contextTitle(entityName: string | null | undefined, year: number, narrow: boolean): string | null {
+    if (!narrow || !entityName) return null;
+    return year > 0 ? `${entityName} · ${year}` : entityName;
+}
