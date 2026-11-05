@@ -9,7 +9,7 @@
 /** One label/value line inside a section. */
 export interface SteuerblattRow {
     label: string;
-    /** Pre-formatted value (e.g. "1.196,82 €"); '' draws a label-only sub-heading line. */
+    /** Pre-formatted value (e.g. "1.403,18 €"); '' draws a label-only sub-heading line. */
     value: string;
     /** 0 = flush left (default), 1 = indented sub-item. */
     indent?: number;

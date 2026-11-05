@@ -5,8 +5,8 @@ import type { YearCache } from '../../../src/core/presenters/year-snapshot.ts';
 const yc = {
     year: 2025,
     transactions: { rows: [1, 2, 3], coverage: { unclassified: [1] } },
-    euer: { aggregate: { totals: { incomeNet: 18460.4, expenseNet: 14783.0, profit: 3677.4, vatPayable: 1196.82 } } },
-    uste: { net_19: 18460.4, vat_out: 3507.48, vat_in: 1697, vatPayable: 1196.82, closingBalance: 1196.82 },
+    euer: { aggregate: { totals: { incomeNet: 18460.4, expenseNet: 15020.0, profit: 3440.4, vatPayable: 1403.18 } } },
+    uste: { net_19: 18460.4, vat_out: 3507.48, vat_in: 2104.3, vatPayable: 1403.18, closingBalance: 1403.18 },
     gewst: { result: { messbetrag: 0, gewerbesteuer: 0 } },
     feststellung: {
         result: {
@@ -15,13 +15,13 @@ const yc = {
         },
     },
     bwa: {
-        totals: { gesamtleistung: 18460.4, rohertrag: 18460.4, betriebskosten: 14783.0, betriebsergebnis: 3677.4 },
+        totals: { gesamtleistung: 18460.4, rohertrag: 18460.4, betriebskosten: 15020.0, betriebsergebnis: 3440.4 },
     },
     dashboard: {
         fristen: [
-            { label: 'USt-Jahreserklärung', dueDate: '2026-08-31', amount: 1196.82, amountLabel: 'Abschlusszahlung' },
+            { label: 'USt-Jahreserklärung', dueDate: '2026-08-31', amount: 1403.18, amountLabel: 'Abschlusszahlung' },
         ],
-        load: { ust: 1196.82, gewst: 0, total: 1196.82 },
+        load: { ust: 1403.18, gewst: 0, total: 1403.18 },
     },
     hinweise: [
         { key: 'k', level: 'tipp', title: 'Kleinunternehmerregelung wäre möglich', text: 'Umsatz unter 25.000 €.' },
@@ -36,9 +36,9 @@ export default async () => {
         await it('includes the entity, year and the EÜR/USt/BWA figures', async () => {
             expect(ctx.includes('Muster & Partner GbR')).toBe(true);
             expect(ctx.includes('Wirtschaftsjahr: 2025')).toBe(true);
-            expect(ctx.includes('Gewinn 3.677,40')).toBe(true);
-            expect(ctx.includes('Zahllast 1.196,82')).toBe(true);
-            expect(ctx.includes('Betriebsergebnis 3.677,40')).toBe(true);
+            expect(ctx.includes('Gewinn 3.440,40')).toBe(true);
+            expect(ctx.includes('Zahllast 1.403,18')).toBe(true);
+            expect(ctx.includes('Betriebsergebnis 3.440,40')).toBe(true);
         });
 
         await it('includes the deadlines, the Feststellung split and the hints', async () => {

@@ -35,7 +35,7 @@ export default async () => {
                 year: 2025,
                 umsatz: 15000,
                 outputVat: 2850,
-                uste: { vatPayable: 1196.82, closingBalance: 1196.82, prepaidVat: 0 },
+                uste: { vatPayable: 1403.18, closingBalance: 1403.18, prepaidVat: 0 },
             });
             expect(find(hs, 'ust-vorauszahlungen')?.level).toBe('warnung');
         });

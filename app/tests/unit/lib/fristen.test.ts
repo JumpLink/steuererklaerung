@@ -15,7 +15,7 @@ export default async () => {
     await describe('computeSteuerDashboard', async () => {
         const dash = computeSteuerDashboard({
             year: 2025,
-            uste: { vatPayable: 1196.82, closingBalance: 1196.82, prepaidVat: 0 },
+            uste: { vatPayable: 1403.18, closingBalance: 1403.18, prepaidVat: 0 },
             gewst: { messbetrag: 0, gewerbesteuer: 0 },
             feststellung: {
                 einkuenfteGesamt: 1125.55,
@@ -24,7 +24,7 @@ export default async () => {
                     { name: 'B', anteil: 562.78 },
                 ],
             },
-            euerGewinn: 3677.4,
+            euerGewinn: 3440.4,
         });
 
         await it('lists the three annual declarations, all due 31.07.2026', async () => {
@@ -33,9 +33,9 @@ export default async () => {
         });
 
         await it('estimates the own load as USt + GewSt (ESt excluded)', async () => {
-            expect(dash.load.ust).toBe(1196.82);
+            expect(dash.load.ust).toBe(1403.18);
             expect(dash.load.gewst).toBe(0);
-            expect(dash.load.total).toBe(1196.82);
+            expect(dash.load.total).toBe(1403.18);
         });
 
         await it('flags the USt prepayments-not-yet-recorded and the 0-Messbetrag GewSt', async () => {
