@@ -162,6 +162,7 @@ import storeRoot from './unit/lib/store-root.test.ts';
 import kontoabfrage from './unit/elster/kontoabfrage.test.ts';
 import docApportion from './unit/elster/doc-apportion.test.ts';
 import filings from './unit/lib/filings.test.ts';
+import uebertragungsprotokoll from './unit/elster/uebertragungsprotokoll.test.ts';
 import snapshotPeriod from './unit/lib/snapshot-period.test.ts';
 import zve from './unit/lib/zve.test.ts';
 import umsatzAufstellung from './unit/lib/umsatz-aufstellung.test.ts';
@@ -384,6 +385,7 @@ run({
     kontoabfrage,
     docApportion,
     filings,
+    uebertragungsprotokoll,
     snapshotPeriod,
     zve,
     umsatzAufstellung,

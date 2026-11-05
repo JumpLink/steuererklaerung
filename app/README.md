@@ -320,6 +320,7 @@ eingereicht/bezahlt. Einmal erfasst, zeigen die Steuertermine ✓ statt zu mahne
 | `filing attach-doc` | Ein DMS-Dokument einer Einreichung zuordnen — Bescheid/Antwortschreiben des Finanzamts oder Nachweis: `--doc paperless:<id>` + `--role bescheid\|mahnung\|uebertragungsprotokoll\|zahlungsbeleg\|schreiben\|sonstiges`. Verlangt einen vorhandenen Register-Eintrag. |
 | `filing docs` / `filing detach-doc` | Zuordnungen auflisten / entfernen. |
 | `filing remove` | Register-Eintrag löschen. |
+| `filing import-protokoll <pdf..>` | Übertragungsprotokoll(e) aus Mein ELSTER (PDF, braucht `pdftotext`) ins Register übernehmen: Art, Periode, Eingangsdatum (`filedAt`), Transferticket (Notiz) und — USt-VA Kz 83 / USt-Jahr Zeile 118 — das Anmeldungssoll; die Entität folgt der Steuernummer. Bei mehreren Protokollen derselben Erklärung gewinnt der späteste Eingang. `--dry-run` schreibt nichts, `--json`. |
 | `elster filing record-web` | Eine in **Mein ELSTER** (Web-Formular) abgegebene Erklärung erfassen: frischer Snapshot, als `submitted` (`source=web-form`) markiert, mit **Transferticket** vom Übertragungsprotokoll + Register-Eintrag in einem Schritt. |
 
 **`frei-verfuegbar`** — was vom Kontostand einer Entität nicht schon dem Finanzamt oder Lieferanten

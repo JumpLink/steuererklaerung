@@ -11,6 +11,7 @@
  *   filing attach-doc --entity gbr --kind ust-jahr --period 2025 --doc paperless:2900 --role bescheid
  *   filing docs [--entity gbr] [--kind ust-jahr] [--period 2025]
  *   filing detach-doc --entity gbr --kind ust-jahr --period 2025 --doc paperless:2900
+ *   filing import-protokoll <pdf..> [--dry-run] [--json]
  *
  * A USt-VA Zahllast is three DISTINCT numbers, so `record` takes them separately:
  *   --declared  = Anmeldungssoll (the declared Zahllast, Kz 83) → drives the annual Z119
@@ -19,6 +20,7 @@
  */
 
 import type { CommandModule } from 'yargs';
+import { importProtokolle } from '../../core/actions/filing-import.ts';
 import {
     attachFilingDocument,
     detachFilingDocument,
@@ -83,7 +85,7 @@ export const filingCommand: CommandModule = {
     describe: 'Einreichungs-Register: Steuererklärungen/-zahlungen als erledigt erfassen',
     builder: (yargs) =>
         yargs
-            .demandCommand(1, 'Choose: record, list, remove, attach-doc, docs, or detach-doc')
+            .demandCommand(1, 'Choose: record, list, remove, attach-doc, docs, detach-doc, or import-protokoll')
             .command({
                 command: 'record',
                 describe: 'Eine Einreichung/Zahlung erfassen oder aktualisieren (merge)',
@@ -273,6 +275,43 @@ export const filingCommand: CommandModule = {
                             String(argv.doc),
                         );
                         console.log(removed ? 'Zuordnung entfernt.' : 'Keine passende Zuordnung gefunden.');
+                        process.exit(0);
+                    } catch (err) {
+                        console.error(err instanceof Error ? err.message : err);
+                        process.exit(1);
+                    }
+                },
+            })
+            .command({
+                command: 'import-protokoll <pdf..>',
+                describe: 'ELSTER-Übertragungsprotokoll(e) (PDF) ins Register übernehmen',
+                builder: (y) =>
+                    y
+                        .positional('pdf', { type: 'string', array: true, demandOption: true })
+                        .option('dry-run', {
+                            type: 'boolean',
+                            default: false,
+                            describe: 'Nur anzeigen, nichts schreiben',
+                        })
+                        .option('json', { type: 'boolean', default: false, describe: 'Rohes JSON' }),
+                handler: (argv) => {
+                    try {
+                        const files = (argv.pdf as string[]).map(String);
+                        const dryRun = Boolean(argv.dryRun);
+                        const plan = importProtokolle(files, { dryRun });
+                        if (argv.json) {
+                            console.log(JSON.stringify({ dryRun, filings: plan }, null, 2));
+                        } else {
+                            for (const item of plan) {
+                                const i = item.input;
+                                const soll = i.declaredAmount != null ? ` · Soll ${eur(i.declaredAmount)}` : '';
+                                console.log(
+                                    `${dryRun ? 'Würde erfassen' : 'Erfasst'}: ${i.entityId} · ${i.kind} · ${i.period} — eingereicht ${i.filedAt}${soll} · ${i.note}  (${item.file})`,
+                                );
+                                if (item.supersedes.length > 0)
+                                    console.log(`    ersetzt frühere Übertragung(en): ${item.supersedes.join(', ')}`);
+                            }
+                        }
                         process.exit(0);
                     } catch (err) {
                         console.error(err instanceof Error ? err.message : err);
