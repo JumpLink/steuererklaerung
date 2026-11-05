@@ -94,6 +94,11 @@ start_app() {
   APP_ID="eu.jumplink.Steuererklaerung.Resp$$x${RANDOM}"
   OBJ="/$(printf '%s' "$APP_ID" | tr . /)/devtools"
   mkdir -p "$TMP/xdg/data" "$TMP/xdg/config" "$TMP/xdg/cache"
+  # Without a compositor (Xvfb) GTK still reserves the CSD shadow margin, so the content would be ~10 px
+  # narrower than the window and the 481 px case would cross the 480 px phone breakpoint. A compositor
+  # (the local mutter) draws no such margin; matching that keeps the sizes honest in CI.
+  mkdir -p "$TMP/xdg/config/gtk-4.0"
+  printf 'window.csd { box-shadow: none; margin: 0; }\n' >"$TMP/xdg/config/gtk-4.0/gtk.css"
   # The app rewrites demo data while it runs; a copy keeps the tracked app/demo untouched.
   rm -rf "$TMP/demo" && cp -r "$APP/demo" "$TMP/demo"
   # setsid: the trap can reap the whole tree (subshell → gjsify → gjs), see screenshot.sh.
