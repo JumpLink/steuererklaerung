@@ -59,7 +59,12 @@ export type {
 } from '../../../core/config/index.ts';
 export { estJahr };
 export type { EstConfig, EstJahr, ElsterBetrieb, ElsterConfig };
-export type { ElsterAnlagegut, ElsterPrivatanteil, ElsterSonderbetriebsausgabe } from '../../../core/config/index.ts';
+export type {
+    ElsterAnlagegut,
+    ElsterPrivatanteil,
+    ElsterSonderbetriebsausgabe,
+    ElsterVorsteuerOhneZahlung,
+} from '../../../core/config/index.ts';
 
 // ── App settings (global — assistant + MCP), persisted to steuererklaerung.json ────────────────────────
 

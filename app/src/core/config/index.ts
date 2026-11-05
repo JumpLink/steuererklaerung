@@ -145,6 +145,7 @@ export {
     type ElsterBetriebsaufgabe,
     type ElsterNachtraeglicherPosten,
     type ElsterAdjustments,
+    type ElsterVorsteuerOhneZahlung,
     type ElsterKlassifizierung,
     type ElsterKlassifizierungProjektRegel,
     type ElsterKlassifizierungRegel,

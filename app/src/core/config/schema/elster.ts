@@ -237,6 +237,26 @@ const BetriebsaufgabeSchema = z.object({
 });
 
 /**
+ * An incoming invoice whose Vorsteuer is deductible although NO bank payment ever backs it — settled by
+ * Verrechnung (e.g. a Sachwertabfindung when a partnership is dissolved and assets go to a partner's own
+ * business). The USt-VA / USt-Jahr read Vorsteuer from the bookings, so such an invoice would never show.
+ * § 15 Abs. 1 Nr. 1 UStG: the deduction falls in the period in which Leistung AND Rechnung are both
+ * received, independent of payment — also for an Ist-Versteuerer. See docs/references/tax-sources.md.
+ */
+const VorsteuerOhneZahlungSchema = z.object({
+    /** Date the Rechnung was received (YYYY-MM-DD) — decides the USt-VA period, assuming the Leistung is done. */
+    datum: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    bezeichnung: z.string().min(1),
+    /** Net amount of the invoice (informational; the deduction is `vorsteuer`). */
+    netto: z.number().nonnegative(),
+    /** The invoiced VAT to deduct. */
+    vorsteuer: z.number().nonnegative(),
+    rechnungsnummer: z.string().optional(),
+    /** The receipt in the DMS (Paperless or built-in id), for tracing. */
+    dokument_id: z.string().optional(),
+});
+
+/**
  * Year-end adjustments that are NOT derivable from cash transactions: non-cash AfA
  * (Anlageverzeichnis), deemed income (Privatanteile), and partner-level
  * Sonderbetriebsausgaben. Folded into the EÜR / Feststellung at report time.
@@ -249,6 +269,8 @@ const AdjustmentsSchema = z.object({
     gwg: z.array(GwgSchema).default([]),
     privatanteile: z.array(PrivatanteilSchema).default([]),
     sonderbetriebsausgaben: z.array(SonderbetriebsausgabeSchema).default([]),
+    /** Vorsteuer of incoming invoices settled without a bank payment → USt-VA of `datum`'s period + USt-Jahr. */
+    vorsteuer_ohne_zahlung: z.array(VorsteuerOhneZahlungSchema).default([]),
     /** Betriebsaufgabe (Aufgabegewinn/-verlust from the remaining Anlagevermögen). */
     betriebsaufgabe: BetriebsaufgabeSchema.optional(),
     /** Aufgabebilanz + Übergangsgewinn at the Betriebsaufgabe (`elster aufgabebilanz report`). */
@@ -538,6 +560,7 @@ export type ElsterPrivatanteil = z.infer<typeof PrivatanteilSchema>;
 export type ElsterSonderbetriebsausgabe = z.infer<typeof SonderbetriebsausgabeSchema>;
 export type ElsterBetriebsaufgabe = z.infer<typeof BetriebsaufgabeSchema>;
 export type ElsterNachtraeglicherPosten = z.infer<typeof NachtraeglicherPostenSchema>;
+export type ElsterVorsteuerOhneZahlung = z.infer<typeof VorsteuerOhneZahlungSchema>;
 export type ElsterAdjustments = z.infer<typeof AdjustmentsSchema>;
 export type ElsterKlassifizierungRegel = z.infer<typeof KlassifizierungRegelSchema>;
 export type ElsterKlassifizierungProjektRegel = z.infer<typeof KlassifizierungProjektRegelSchema>;

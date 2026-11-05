@@ -146,6 +146,7 @@ import zuPruefen from './unit/elster/zu-pruefen.test.ts';
 import erstattung from './unit/elster/erstattung.test.ts';
 import splitbuchung from './unit/elster/splitbuchung.test.ts';
 import ustvaBuchungen from './unit/elster/ustva-buchungen.test.ts';
+import vorsteuerOhneZahlung from './unit/elster/vorsteuer-ohne-zahlung.test.ts';
 import projektErgebnis from './unit/elster/projekt-ergebnis.test.ts';
 import vorAbgabe from './unit/elster/vor-abgabe.test.ts';
 import crossChecks from './unit/elster/cross-checks.test.ts';
@@ -369,6 +370,7 @@ run({
     erstattung,
     splitbuchung,
     ustvaBuchungen,
+    vorsteuerOhneZahlung,
     projektErgebnis,
     vorAbgabe,
     crossChecks,

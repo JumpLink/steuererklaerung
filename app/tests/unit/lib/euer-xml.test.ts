@@ -153,6 +153,7 @@ export default async () => {
                 nachtraeglich_gbr_ausgaben_gegenseiten: [],
                 doppelzahlungen: [],
                 zahlungen_geprueft: [],
+                vorsteuer_ohne_zahlung: [],
             },
         };
         const xml = buildEuerEds(aggAfa, cfg, betrieb);
