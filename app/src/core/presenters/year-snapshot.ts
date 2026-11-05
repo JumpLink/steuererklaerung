@@ -115,7 +115,9 @@ export async function buildYearCache(
     // Prepaid VAT: register-backed (filed USt-VA) when available, else the manual config —
     // same precedence as usteReport, so the dashboard and the CLI/XML agree on the closing balance.
     const prepaidVat = elster ? (prepaidVatFromFilings(elster.entity_id, year) ?? elster.uste?.prepaid_vat ?? 0) : 0;
-    const usteRes = elster ? aggregateUsteFromEuerTx(agg, prepaidVat) : null;
+    const usteRes = elster
+        ? aggregateUsteFromEuerTx(agg, prepaidVat, undefined, elster.adjustments?.vorsteuer_ohne_zahlung)
+        : null;
     const gewstRes = elster?.gewerbe
         ? computeGewst({
               profit: round2(profit - sbvTotal - nachtraeglichNet),

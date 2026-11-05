@@ -15,6 +15,7 @@ import {
     type UstvaYearQuarter,
 } from '../../elster/ustva-aggregate.ts';
 import { ustvaAusBuchungen } from '../../elster/ustva-buchungen.ts';
+import { mitVorsteuerOhneZahlung, vorsteuerOhneZahlungImZeitraum } from '../../elster/vorsteuer-ohne-zahlung.ts';
 import { round2 } from '../../lib/money.ts';
 import { vorsteuerKorrekturenDerPeriode } from '../erstattungen.ts';
 import { euerReportByTransactions } from './euer.ts';
@@ -63,13 +64,15 @@ export async function aggregateUstvaDerPeriode(config: ElsterConfig): Promise<Us
     const { dateFrom, dateTo } = getPeriodDateRange(config.period);
     const von = periodenBeginn(config, dateFrom);
     const rows = await buchungenDesJahres(config, config.period.year);
+    const ohneZahlung = vorsteuerOhneZahlungImZeitraum(config.adjustments?.vorsteuer_ohne_zahlung, von, dateTo);
     return {
-        aggregate: ustvaAusBuchungen(rows, von, dateTo),
+        aggregate: mitVorsteuerOhneZahlung(ustvaAusBuchungen(rows, von, dateTo), ohneZahlung),
         dateFrom: von,
         dateTo,
         outgoing: [],
         incoming: [],
         missingBmfRates: [],
+        vorsteuerOhneZahlung: ohneZahlung,
     };
 }
 
@@ -78,7 +81,9 @@ export async function ustvaJahrAusBuchungen(config: ElsterConfig, year: number):
     const rows = await buchungenDesJahres(config, year);
     return ([1, 2, 3, 4] as const).map((quarter) => {
         const { dateFrom, dateTo } = getPeriodDateRange({ year, quarter });
-        const aggregate = ustvaAusBuchungen(rows, periodenBeginn(config, dateFrom), dateTo);
+        const von = periodenBeginn(config, dateFrom);
+        const ohneZahlung = vorsteuerOhneZahlungImZeitraum(config.adjustments?.vorsteuer_ohne_zahlung, von, dateTo);
+        const aggregate = mitVorsteuerOhneZahlung(ustvaAusBuchungen(rows, von, dateTo), ohneZahlung);
         return {
             quarter,
             aggregate,
@@ -86,6 +91,7 @@ export async function ustvaJahrAusBuchungen(config: ElsterConfig, year: number):
             outgoing: [],
             incoming: [],
             missingBmfRates: [],
+            vorsteuerOhneZahlung: ohneZahlung,
         };
     });
 }

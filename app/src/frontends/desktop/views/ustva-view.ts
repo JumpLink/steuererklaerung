@@ -88,7 +88,9 @@ export class BhUstvaView extends Adw.Bin {
 
     private fill(quarters: UstvaQuarter[], year: number): void {
         this.clearBox();
-        const withData = quarters.filter((q) => q.outgoing.length > 0 || q.incoming.length > 0);
+        const withData = quarters.filter(
+            (q) => q.outgoing.length > 0 || q.incoming.length > 0 || (q.vorsteuerOhneZahlung?.length ?? 0) > 0,
+        );
 
         if (withData.length === 0) {
             const group = new Adw.PreferencesGroup({ title: `USt-VA ${year}` });
@@ -171,6 +173,22 @@ export class BhUstvaView extends Adw.Bin {
         for (const d of q.outgoing) belege.add_row(this.docRow(d, _('Outgoing')));
         for (const d of q.incoming) belege.add_row(this.docRow(d, _('Incoming')));
         group.add(belege);
+
+        const ohneZahlung = q.vorsteuerOhneZahlung ?? [];
+        if (ohneZahlung.length > 0) {
+            const offset = new Adw.ExpanderRow({
+                title: _('Input VAT without payment'),
+                subtitle: fmt(_('{n} invoices settled by offset'), { n: ohneZahlung.length }),
+            });
+            for (const i of ohneZahlung) {
+                const parts = [deDate(i.datum), fmt(_('net {amount}'), { amount: eur(i.netto) })];
+                if (i.rechnungsnummer) parts.push(i.rechnungsnummer);
+                const row = new Adw.ActionRow({ title: markup(i.bezeichnung), subtitle: markup(parts.join(' · ')) });
+                row.add_suffix(amountLabel(eur(i.vorsteuer)));
+                offset.add_row(row);
+            }
+            group.add(offset);
+        }
 
         this._quarters_box.append(group);
     }

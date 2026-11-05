@@ -136,6 +136,16 @@ export async function printReport(result: UstvaAggregateWithDetails, config: Els
         }
     }
 
+    if (result.vorsteuerOhneZahlung?.length) {
+        console.log('\nVorsteuer ohne Zahlung (Verrechnung, § 15 Abs. 1 Nr. 1 UStG; config adjustments):');
+        for (const i of result.vorsteuerOhneZahlung) {
+            const nr = i.rechnungsnummer ? `  Nr. ${i.rechnungsnummer}` : '';
+            console.log(
+                `  ${i.datum}  Netto: ${i.netto.toFixed(2)} €  Vorsteuer: ${i.vorsteuer.toFixed(2)} €${nr}  ${i.bezeichnung}`,
+            );
+        }
+    }
+
     const detailsValidation = validateUstvaDetails(result);
     printValidation(detailsValidation);
 

@@ -27,7 +27,8 @@ import {
 } from './reverse-charge.ts';
 import { loadPaperlessConfig } from '../config/index.ts';
 import { PaperlessSetupError, SETUP_HINT } from '../lib/errors.ts';
-import type { ElsterConfig } from '../config/index.ts';
+import type { ElsterConfig, ElsterVorsteuerOhneZahlung } from '../config/index.ts';
+import { vorsteuerOhneZahlungImZeitraum } from './vorsteuer-ohne-zahlung.ts';
 import { getPeriodDateRange } from '../config/index.ts';
 import { round2 as cents } from '../lib/money.ts';
 import { loadBmfRates, convertToEur, monthKey } from '../config/bmf-rates.ts';
@@ -86,6 +87,8 @@ export interface UstvaAggregateWithDetails {
     missingBmfRates: Array<{ id: number; currency: string; month: string }>;
     /** Corrections of the period (linked refunds, private parts of splits), already in `aggregate.vat_in`. */
     erstattungen?: VorsteuerKorrektur[];
+    /** Invoices settled without a payment (config) that fall into the period, already in `aggregate.vat_in`. */
+    vorsteuerOhneZahlung?: ElsterVorsteuerOhneZahlung[];
 }
 
 interface TagFilter {
@@ -399,6 +402,8 @@ export async function aggregateUstvaFromPaperlessWithDetails(
         k.art === 'aufteilung' ? belegTxIds.has(k.refundTxId) : k.date >= dateFrom && k.date <= dateTo,
     );
     for (const k of erstattungen) vat_in -= cents(k.vat);
+    const ohneZahlung = vorsteuerOhneZahlungImZeitraum(config.adjustments?.vorsteuer_ohne_zahlung, dateFrom, dateTo);
+    for (const i of ohneZahlung) vat_in += cents(i.vorsteuer);
 
     const aggregate: UstvaAggregate = {
         net_19: cents(net_19),
@@ -406,7 +411,7 @@ export async function aggregateUstvaFromPaperlessWithDetails(
         vat_out: cents(vat_out),
         vat_in: cents(vat_in),
         outgoing_count: outgoingDetails.length,
-        incoming_count: incomingDetails.length,
+        incoming_count: incomingDetails.length + ohneZahlung.length,
         reverseCharge,
         reverseChargeReview,
     };
@@ -419,6 +424,7 @@ export async function aggregateUstvaFromPaperlessWithDetails(
         incoming: incomingDetails,
         missingBmfRates,
         erstattungen,
+        vorsteuerOhneZahlung: ohneZahlung,
     };
 }
 
@@ -431,6 +437,8 @@ export interface UstvaYearQuarter {
     outgoing: UstvaDocumentDetail[];
     incoming: UstvaDocumentDetail[];
     missingBmfRates: Array<{ id: number; currency: string; month: string }>;
+    /** Invoices settled without a payment (config) inside this quarter — already in `aggregate.vat_in`. */
+    vorsteuerOhneZahlung?: ElsterVorsteuerOhneZahlung[];
 }
 
 /**
@@ -488,6 +496,7 @@ export async function aggregateUstvaYear(
                 outgoing: r.outgoing,
                 incoming: r.incoming,
                 missingBmfRates: r.missingBmfRates,
+                vorsteuerOhneZahlung: r.vorsteuerOhneZahlung,
             };
         }),
     );
