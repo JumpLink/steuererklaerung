@@ -200,3 +200,54 @@ export function navBadgeCounts(counts: HomeCounts): Partial<Record<NavViewId, nu
     }
     return out;
 }
+
+/**
+ * Which wording the demo banner uses.
+ *
+ * The desktop banner is one line at 1280 px and two at 360, and the second line is a centred button
+ * that costs 110 px on every page of the app. `Adw.Banner` already puts a one-word button beside
+ * its title — what breaks that on a phone is the length of both texts, so the phone gets its own
+ * short msgids (a second string, not a shortened translation: the translator sees both).
+ */
+export function demoBannerVariant(narrow: boolean): 'full' | 'short' {
+    return narrow ? 'short' : 'full';
+}
+
+/** The blocks of the Overview, top to bottom. */
+export type OverviewSection = 'kpis' | 'frei' | 'tasks' | 'bars' | 'split';
+
+/**
+ * The order of the Overview's blocks.
+ *
+ * On a desktop the two "Free to spend" cards follow the KPI row. On a phone the KPI block is capped
+ * at its four cards and the two derived figures move below *Up next* — still reachable by scrolling,
+ * but the list that tells you what to do starts around 400 px instead of after three rows of
+ * numbers. `tasks` is dropped when there is nothing to do, so the caller can append in order.
+ */
+export function overviewSections(narrow: boolean, hasTasks: boolean): OverviewSection[] {
+    const order: OverviewSection[] = narrow
+        ? ['kpis', 'tasks', 'frei', 'bars', 'split']
+        : ['kpis', 'frei', 'tasks', 'bars', 'split'];
+    return hasTasks ? order : order.filter((s) => s !== 'tasks');
+}
+
+/** One part of the recurring-invoices summary line. */
+export interface RecurringSummaryPart {
+    kind: 'overdue' | 'soon' | 'total';
+    n: number;
+}
+
+/**
+ * The parts of the phone's recurring-invoices title, e.g. `2 overdue · 2 total`.
+ *
+ * The expander row is the whole block on a phone, so its title has to say what is inside without
+ * opening it: zero counts are left out ("0 due soon" is noise next to the one number that is not
+ * zero), and the total is always last so an empty-looking line still counts the schedules.
+ */
+export function recurringSummaryParts(overdue: number, soon: number, total: number): RecurringSummaryPart[] {
+    const parts: RecurringSummaryPart[] = [];
+    if (overdue > 0) parts.push({ kind: 'overdue', n: overdue });
+    if (soon > 0) parts.push({ kind: 'soon', n: soon });
+    parts.push({ kind: 'total', n: total });
+    return parts;
+}

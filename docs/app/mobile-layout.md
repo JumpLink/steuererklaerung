@@ -443,6 +443,15 @@ to four lines, so they get `ellipsize: middle` with the full value in the toolti
 press; and `Back up now` stays full width, because it is this page's primary action and there is
 no list for it to crowd.
 
+**Built (step 6), with deviations.** Contracts needed only the banner; steps 2 and 3 had already
+given it two-up KPIs, chips and header actions. Overview keeps all blocks but reorders them on a
+phone (KPI cards, Up next, then the two "Free to spend" cards) via `overviewSections()`; nothing is
+hidden. Invoices folds the recurring block into one `Adw.ExpanderRow` titled with its summary, driven
+by the window's `narrow`, and its two row buttons fold into the row menu (`pinnableCluster`). The
+banner gets a short title (`Demo data`) as well as `My data`, because the long title cannot share a
+line with the button. The 48 px chevron on Up next rows was not added: the rows are fully
+activatable and already at least 56 px tall.
+
 ## Implementation plan
 
 Ordered so each step is a reviewable PR that leaves the app working, and so the steps that help
@@ -455,7 +464,7 @@ every page come before the ones that help one.
 | 3 | **Header-bar primary action** *(done)* | A per-view declaration of "the one creating action" and "the secondary ones"; `window.ts` renders them into the content header on a phone. Removes the Invoices button/chip overlap. | Unblocks the per-view PRs, which otherwise each re-solve it. |
 | 4 | **Context button** *(done)* | Title widget becomes a `Gtk.MenuButton` on a phone, opening an `Adw.Dialog` with the existing entity and year switchers. | The one real gap the collapse leaves; independent of the view work. |
 | 5 | **Section list as home** *(done)* | Badges on the nav rows, fed by the counts `home-view` already computes. | Makes the root page worth landing on. Needs 1, nothing else. |
-| 6 | **Overview, Contracts, Invoices** | Apply 2 + 3; demo banner one-line on a phone. | The three worst pages in the sweep, and they need no new mechanism. |
+| 6 | **Overview, Contracts, Invoices** *(done)* | Apply 2 + 3; demo banner one-line on a phone. | The three worst pages in the sweep, and they need no new mechanism. |
 | 7 | **Transactions, Contacts, Projects, Accounts** | Expander for KPI/explanation blocks, search bar, row menus. | Same pattern, four pages. |
 | 8 | **Reports table** | Frozen item column, horizontal scroll, month chips defaulting to the current month. | The only genuinely new widget work; isolated, so it can take its time. |
 | 9 | **Receipt inbox polish** | Queue toggle into the header, re-open the queue after confirming, `Check & confirm` in a pinned `Gtk.ActionBar`. | Behavioural, needs the review flow's own tests. |
@@ -478,6 +487,8 @@ thing, which is what the existing catalogue already does.
 |-------|---------------|--------|------|
 | Row overflow button | `More actions` | `Weitere Aktionen` | Tooltip; one string for all thirteen pages. |
 | Context button a11y | `Entity and year` | `Entität und Jahr` | Accessible name of the title menu button. |
+| Demo banner title, short | `Demo data` | `Demodaten` | The full sentence plus the button wraps to two lines at 360 px, so the phone gets a title of its own. |
+| Recurring summary | `{n} overdue` / `{n} due soon` | `{n} überfällig` / `{n} bald fällig` | Parts of the expander row's title on a phone; `{n} total` already existed. |
 | Demo banner, short | `My data` | `Eigene Daten` | Phone variant of `Use my own data`; a second msgid, not a shortened translation, because only the phone wants it. |
 | Contacts / Projects explainer | `What is this?` | `Was ist das?` | Expander title. |
 | Transactions KPI expander | `Figures` | `Zahlen` | Expander title over the collapsed KPI block. |

@@ -38,7 +38,16 @@ import { BhRechnungVersandDialog } from './rechnung-versand-dialog.ts';
 import { BhRechnungFormDialog } from './rechnung-form-dialog.ts';
 import { errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
-import { boundRowText, chipScroller, hideOnPhone, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
+import {
+    boundRowText,
+    chipScroller,
+    hideOnPhone,
+    pinnableCluster,
+    rowActions,
+    wrapButtonLabel,
+} from '../widgets/responsive.ts';
+import { onNarrow } from '../widgets/narrow.ts';
+import { recurringSummaryParts } from '../widgets/phone-rules.ts';
 import { headerActionsChanged } from '../widgets/header-actions.ts';
 import type { ViewAction } from '../view.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
@@ -111,6 +120,9 @@ export class BhRechnungenView extends Adw.Bin {
     private entity: AppEntity | null = null;
     private year = new Date().getFullYear();
     private capabilities: InvoiceCapabilities | null = null;
+    /** Kept so a resize across the phone width can rebuild the block without a reload. */
+    private recurringEntries: RecurringDueEntry[] | null = null;
+    private phone = false;
     private allInvoices: OutgoingInvoiceSummary[] = [];
     /** Latest mail attempt per invoice id, for the list badge. */
     private mailStatus = new Map<string, InvoiceMailRecord>();
@@ -136,6 +148,13 @@ export class BhRechnungenView extends Adw.Bin {
         super();
         this.recurring = new GroupRows(this._recurring_group);
         this.invoices = new GroupRows(this._invoices_group);
+        // The window's width, not the pane's: the recurring block folds into one expander row on a
+        // phone, and a desktop window with a narrow content pane must keep the group.
+        onNarrow(this, (narrow) => {
+            if (narrow === this.phone) return;
+            this.phone = narrow;
+            if (this.recurringEntries) this.fillRecurring(this.recurringEntries);
+        });
         // Both lists are rebuilt on every reload, so the switch is re-applied per row rather than
         // connected once: `current-breakpoint` fires only when the width crosses 450 px, and a row
         // built afterwards would never hear it (same reasoning as laufende-kosten-view).
@@ -196,19 +215,23 @@ export class BhRechnungenView extends Adw.Bin {
     }
 
     private fillRecurring(entries: RecurringDueEntry[]): void {
+        this.recurringEntries = entries;
         this.recurring.clear();
         // The rows are gone, so are their pins — recurringRow() registers the new ones.
         this.textPins.recurring.length = 0;
         const overdue = entries.filter((e) => e.status === 'overdue').length;
         const soon = entries.filter((e) => e.status === 'due-soon').length;
+        const collapse = this.phone && entries.length > 0;
         this._recurring_group.set_description(
-            entries.length
-                ? fmt(_('{overdue} overdue · {soon} due soon · {total} total'), {
-                      overdue,
-                      soon,
-                      total: entries.length,
-                  })
-                : _('none recorded'),
+            collapse
+                ? null
+                : entries.length
+                  ? fmt(_('{overdue} overdue · {soon} due soon · {total} total'), {
+                        overdue,
+                        soon,
+                        total: entries.length,
+                    })
+                  : _('none recorded'),
         );
         if (entries.length === 0) {
             this.recurring.add(
@@ -224,7 +247,26 @@ export class BhRechnungenView extends Adw.Bin {
             );
             return;
         }
-        for (const e of entries) this.recurring.add(this.recurringRow(e));
+        if (!collapse) {
+            for (const e of entries) this.recurring.add(this.recurringRow(e));
+            return;
+        }
+        // On a phone the block is one row titled with its summary, so the page opens on the invoice
+        // list instead of two draft buttons.
+        const labels = {
+            overdue: (n: number) => fmt(_('{n} overdue'), { n }),
+            soon: (n: number) => fmt(_('{n} due soon'), { n }),
+            total: (n: number) => fmt(_('{n} total'), { n }),
+        };
+        const expander = new Adw.ExpanderRow({
+            title: markup(
+                recurringSummaryParts(overdue, soon, entries.length)
+                    .map((p) => labels[p.kind](p.n))
+                    .join(' · '),
+            ),
+        });
+        for (const e of entries) expander.add_row(this.recurringRow(e));
+        this.recurring.add(expander);
     }
 
     /**
@@ -272,6 +314,10 @@ export class BhRechnungenView extends Adw.Bin {
         // Amount, badge and the two buttons as one wrapping cluster — see rowActions().
         const actions = rowActions([amountLabel(eur(e.totals.gross)), this.badge(meta.label, meta.css)]);
         row.add_suffix(actions);
+        // On a phone the two buttons fold into one overflow menu, see phoneRowActions().
+        const pin = pinnableCluster(actions);
+        pin(this.narrow);
+        this.textPins.recurring.push(pin);
         // A paused/cancelled schedule stays read-only; the rest get a one-click "draft from template"
         // button. This uses the recurring path (createRecurringInvoiceDraft → provider.createDraft
         // directly), so it works for the Qonto back-end too — unlike the form-based "Neue Rechnung",

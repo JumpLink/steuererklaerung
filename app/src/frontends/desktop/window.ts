@@ -57,7 +57,7 @@ import { renderHeaderActions } from './widgets/header-actions.ts';
 import { BhEntitySwitcher } from './widgets/entity-switcher.ts';
 import { BhYearSwitcher } from './widgets/year-switcher.ts';
 import { presentContextDialog } from './widgets/context-dialog.ts';
-import { badgeLabel, contextTitle, navBadgeCounts } from './widgets/phone-rules.ts';
+import { badgeLabel, contextTitle, demoBannerVariant, navBadgeCounts } from './widgets/phone-rules.ts';
 import { BhAssistentPanel } from './assistent-panel.ts';
 import { BhLotsePanel } from './lotse-panel.ts';
 import { lotseEmbedPlan } from '../../core/actions/assistant/lotse-embed.ts';
@@ -523,6 +523,7 @@ export class MainWindow extends Adw.ApplicationWindow {
             this.notify('narrow');
             this.refreshHeaderActions();
             this.renderContextButton();
+            this.refreshBanner();
         };
         this.connect('notify::current-breakpoint', sync);
         sync();
@@ -753,8 +754,12 @@ export class MainWindow extends Adw.ApplicationWindow {
             return;
         }
         if (this.currentEntity?.demo) {
-            this._banner.set_title(markup(_('Demo data – fictional examples, no real financial data')));
-            this._banner.set_button_label(_('Use my own data'));
+            // One line on a phone: the full sentence plus a button wraps to two lines and 110 px.
+            const short = demoBannerVariant(this.narrowState) === 'short';
+            this._banner.set_title(
+                markup(short ? _('Demo data') : _('Demo data – fictional examples, no real financial data')),
+            );
+            this._banner.set_button_label(short ? _('My data') : _('Use my own data'));
             this._banner.set_revealed(true);
             return;
         }
