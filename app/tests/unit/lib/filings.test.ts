@@ -68,7 +68,7 @@ export default async () => {
         });
 
         await it('stores declared_amount + surcharge distinctly from the paid amount (v10)', async () => {
-            // The concrete GbR 2025-Q4 shape: declared 440,57 · paid 444,57 · Säumniszuschlag 4,00.
+            // A quarter shape: declared 420,30 · paid 428,30 · Säumniszuschlag 8,00.
             const db = openLedger(':memory:');
             migrate(db);
             const saved = upsertFiling(
@@ -79,19 +79,19 @@ export default async () => {
                     period: '2025-Q4',
                     filedAt: '2026-03-20',
                     paidAt: '2026-04-29',
-                    declaredAmount: 440.57,
-                    amount: 444.57,
-                    surcharge: 4.0,
+                    declaredAmount: 420.30,
+                    amount: 428.30,
+                    surcharge: 8.0,
                 },
                 AT,
             );
-            expect(saved.declaredAmount).toBe(440.57);
-            expect(saved.amount).toBe(444.57);
-            expect(saved.surcharge).toBe(4.0);
+            expect(saved.declaredAmount).toBe(420.30);
+            expect(saved.amount).toBe(428.30);
+            expect(saved.surcharge).toBe(8.0);
             // A later payment-only patch preserves the declared Soll + surcharge (merge).
             const patched = upsertFiling(db, { entityId: 'gbr', kind: 'ustva', period: '2025-Q4', paidAt: '2026-05-01' }, AT);
-            expect(patched.declaredAmount).toBe(440.57);
-            expect(patched.surcharge).toBe(4.0);
+            expect(patched.declaredAmount).toBe(420.30);
+            expect(patched.surcharge).toBe(8.0);
             expect(patched.paidAt).toBe('2026-05-01');
             db.close();
         });
@@ -163,11 +163,11 @@ export default async () => {
             // The declared/paid/surcharge columns still work after the re-migration.
             const saved = upsertFiling(
                 db,
-                { entityId: 'gbr', kind: 'ustva', period: '2025-Q4', declaredAmount: 440.57, surcharge: 4.0 },
+                { entityId: 'gbr', kind: 'ustva', period: '2025-Q4', declaredAmount: 420.30, surcharge: 8.0 },
                 AT,
             );
-            expect(saved.declaredAmount).toBe(440.57);
-            expect(saved.surcharge).toBe(4.0);
+            expect(saved.declaredAmount).toBe(420.30);
+            expect(saved.surcharge).toBe(8.0);
             db.close();
         });
     });
@@ -211,11 +211,11 @@ export default async () => {
         });
 
         await it('sums the DECLARED Anmeldungssoll, NOT the payment — a Säumniszuschlag never enters Z119', async () => {
-            // GbR 2025-Q4: declared 440,57 · paid 444,57 · Säumniszuschlag 4,00 → Z119 must be 440,57.
+            // A quarter: declared 420,30 · paid 428,30 · Säumniszuschlag 8,00 → Z119 must be 420,30.
             const filings = [
-                filing({ period: '2025-Q4', declaredAmount: 440.57, amount: 444.57, surcharge: 4.0 }),
+                filing({ period: '2025-Q4', declaredAmount: 420.30, amount: 428.30, surcharge: 8.0 }),
             ];
-            expect(sumFiledUstvaVat(filings, 'gbr')).toBe(440.57);
+            expect(sumFiledUstvaVat(filings, 'gbr')).toBe(420.30);
         });
 
         await it('falls back to the legacy amount when declaredAmount is null (pre-v10 rows)', async () => {
@@ -231,7 +231,7 @@ export default async () => {
             expect(sumFiledUstvaVat([filing({ entityId: 'jumplink' })], 'gbr')).toBeNull();
             expect(sumFiledUstvaVat([filing({ filedAt: null })], 'gbr')).toBeNull();
             // A row with only a surcharge (no declared, no amount) is not a Soll → null.
-            expect(sumFiledUstvaVat([filing({ amount: null, declaredAmount: null, surcharge: 4.0 })], 'gbr')).toBeNull();
+            expect(sumFiledUstvaVat([filing({ amount: null, declaredAmount: null, surcharge: 8.0 })], 'gbr')).toBeNull();
         });
     });
 

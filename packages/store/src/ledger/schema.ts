@@ -188,8 +188,8 @@ const STATEMENTS: readonly string[] = [
   //     read off its Abrechnung/Bescheid: positive = still owed, negative = Erstattung. It is a
   //     THIRD number because it routinely differs from what we declared — the Finanzamt settles
   //     against ITS OWN Vorauszahlungssoll, which knows payments our register never saw. A real
-  //     case: a declared Abschlusszahlung of 1.091,16 € came back as a 354,98 € refund, because
-  //     the Finanzamt counted 1.886,71 € as already paid where the declaration named 440,57 €.
+  //     case: a declared Abschlusszahlung of 800,40 € came back as a 210,20 € refund, because
+  //     the Finanzamt counted 1.430,90 € as already paid where the declaration named 420,30 €.
   //     Overwriting declared_amount with that would erase the very comparison that proves a
   //     Bescheid right or wrong, so the assessed figure gets its own column and declared_amount
   //     stays what we sent. assessed_at is the Bescheid date; attach the document itself via

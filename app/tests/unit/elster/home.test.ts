@@ -27,10 +27,10 @@ export default async () => {
         await it('keeps the USt+GewSt load KPI + business fristen for a business entity', async () => {
             const dashboard = computeSteuerDashboard({
                 year: 2025,
-                uste: { vatPayable: 1196.82, closingBalance: 1196.82, prepaidVat: 0 },
+                uste: { vatPayable: 1403.18, closingBalance: 1403.18, prepaidVat: 0 },
             });
             const m = buildHomeModel({ year: 2025, txs: [], dashboard });
-            expect(m.kpis.tax).toStrictEqual({ total: 1196.82, label: 'est. tax due' });
+            expect(m.kpis.tax).toStrictEqual({ total: 1403.18, label: 'est. tax due' });
             expect(m.tasks.some((t) => t.title === 'USt-Jahreserklärung')).toBe(true);
         });
 

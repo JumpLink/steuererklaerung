@@ -14,12 +14,12 @@ function euer(over: Partial<EuerTxAggregate> = {}): EuerTxAggregate {
         expenses: [],
         neutral: [],
         totals: {
-            incomeNet: 15230.53,
-            outputVat: 2893.82,
-            expenseNet: 12380.13,
-            inputVat: 1852.23,
-            profit: 2850.4,
-            vatPayable: 1041.59,
+            incomeNet: 18460.40,
+            outputVat: 3507.48,
+            expenseNet: 15200.00,
+            inputVat: 2210.65,
+            profit: 3260.4,
+            vatPayable: 1296.83,
             nachtraeglichNet: 0,
         },
         coverage: {
@@ -39,17 +39,17 @@ function euer(over: Partial<EuerTxAggregate> = {}): EuerTxAggregate {
 function uste(over: Partial<UsteAggregate> = {}): UsteAggregate {
     return {
         year: 2025,
-        net_19: 15230.53,
-        lieferungenSonstLeistungen_19: 15230.53,
+        net_19: 18460.40,
+        lieferungenSonstLeistungen_19: 18460.40,
         wertabgabeLieferung_19: 0,
         wertabgabeSonstige_19: 0,
         net_7: 0,
         net_0: 0,
-        vat_out: 2893.82,
-        vat_in: 1852.23,
-        vatPayable: 1041.59,
-        prepaidVat: 444.57,
-        closingBalance: 597.02,
+        vat_out: 3507.48,
+        vat_in: 2210.65,
+        vatPayable: 1296.83,
+        prepaidVat: 528.30,
+        closingBalance: 768.53,
         ...over,
     };
 }
@@ -86,7 +86,7 @@ const gewstFixture: GewstReport = {
 const feststellungFixture: FeststellungReport = {
     result: {
         year: 2025,
-        totalProfit: 2850.4,
+        totalProfit: 3260.4,
         festgestellteEinkuenfte: 1590.4,
         aufgabegewinn: 0,
         einkuenfteGesamt: 1590.4,
@@ -100,7 +100,7 @@ const feststellungFixture: FeststellungReport = {
                 gesamtAnteil: 795.2,
             },
         ],
-        rounding: { rawSum: 2850.4, residual: 0 },
+        rounding: { rawSum: 3260.4, residual: 0 },
     },
     euer: euer(),
 };
@@ -119,8 +119,8 @@ export default async () => {
 
         await it('exposes the monetary summary hero (USt closing balance + key figures)', async () => {
             const plan = assembleTaxReturnPlan(inputs({ gewst: gewstFixture, feststellung: feststellungFixture }));
-            expect(plan.summary?.primary.kind).toBe('payment'); // closingBalance 597,02 ≥ 0 → Nachzahlung
-            expect(plan.summary?.primary.amount).toBe(597.02);
+            expect(plan.summary?.primary.kind).toBe('payment'); // closingBalance 768,53 ≥ 0 → Nachzahlung
+            expect(plan.summary?.primary.amount).toBe(768.53);
             expect(plan.summary?.primary.label).toBe('Expected additional payment');
             const labels = (plan.summary?.secondary ?? []).map((l) => l.label);
             expect(labels.join(',')).toBe('Profit (EÜR),USt-Zahllast,GewSt-Messbetrag,Festgestellte Einkünfte');

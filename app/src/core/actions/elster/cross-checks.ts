@@ -128,7 +128,7 @@ const noUstDetail = (): string => _('Entity without VAT (private, say) — no US
  * COMPUTED Σ quarterly Zahllast (an independent Paperless-driven derivation, {@link aggregateUstvaYear}).
  * A non-zero delta means the register and the recomputed quarters disagree, i.e. either:
  *   - a WRONG Soll (e.g. the actual payment or a Säumniszuschlag was recorded as the Zahllast instead
- *     of the declared amount — the bug this catches: 444,57 € paid vs 440,57 € declared → Δ +4,00 €), or
+ *     of the declared amount — the bug this catches: 428,30 € paid vs 420,30 € declared → Δ +8,00 €), or
  *   - a MISSING or DUPLICATE quarter in the register (a quarter never recorded, or recorded twice).
  *
  * NOTE: a true ELSTER-side Doppelabgabe (the SAME period submitted to the Finanzamt twice) is NOT
@@ -159,7 +159,7 @@ export function checkUstvaVsUste(i: CrossCheckInputs): CrossCheckResult {
     // reconstructs only a fraction of the year's Vorsteuer, so every quarterly Zahllast comes out
     // too high and the Δ says nothing about the register. Measured on gbr 2025: the quarters saw
     // 183,60 € of the year's 1.447,47 € Vorsteuer and thus claimed a Σ Zahllast of 2.604,86 €
-    // against a declared 440,57 € — a false 'error' that hard-blocked the (unrelated, provably
+    // against a declared 420,30 € — a false 'error' that hard-blocked the (unrelated, provably
     // consistent) Anlage-EÜR submission. So: still report the divergence, but never as an error
     // when our own basis is demonstrably incomplete.
     const docVorsteuer = round2(i.ustvaQuarters.reduce((s, q) => s + q.aggregate.vat_in, 0));

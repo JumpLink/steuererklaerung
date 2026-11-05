@@ -137,7 +137,7 @@ const ONEOFFS: OneOff[] = [
     { acc: CAMT, date: '2024-07-09', amount: -23.58, counterparty: 'INWX GmbH', purpose: 'Domainverlängerung', category: 'Software-Lizenzen' },
     { acc: CAMT, date: '2024-08-22', amount: 476.0, counterparty: 'Praxis Dr. Nele Brandt', purpose: 'SEO-Paket', category: 'Umsatzerlöse' },
     { acc: CAMT, date: '2024-09-14', amount: -42.9, counterparty: 'Amazon EU S.à r.l.', purpose: 'Bürobedarf', category: 'Bürobedarf' },
-    { acc: CAMT, date: '2024-10-30', amount: -296.42, counterparty: 'Finanzamt Musterstadt', purpose: 'USt-Vorauszahlung Q3/2024', category: 'Umsatzsteuer-Vorauszahlung' },
+    { acc: CAMT, date: '2024-10-30', amount: -281.30, counterparty: 'Finanzamt Musterstadt', purpose: 'USt-Vorauszahlung Q3/2024', category: 'Umsatzsteuer-Vorauszahlung' },
     { acc: CAMT, date: '2024-11-08', amount: 833.0, counterparty: 'Hafenkontor GmbH', purpose: 'Wartung', category: 'Umsatzerlöse' },
     { acc: CAMT, date: '2024-12-19', amount: -9.0, counterparty: 'Qonto', purpose: 'Kontoführungsgebühr', category: 'Nebenkosten Geldverkehr' },
     // ── Geld-Prüfungen (Idee 7), appended so the earlier ids stay stable ──

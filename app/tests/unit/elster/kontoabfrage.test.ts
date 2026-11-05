@@ -112,7 +112,7 @@ export default async () => {
     await describe('parseGermanAmount', async () => {
         await it('reads the German decimal form', async () => {
             expect(parseGermanAmount('1.234,56')).toBe(1234.56);
-            expect(parseGermanAmount('-440,57')).toBe(-440.57);
+            expect(parseGermanAmount('-420,30')).toBe(-420.3);
             expect(parseGermanAmount('0,00')).toBe(0);
         });
 

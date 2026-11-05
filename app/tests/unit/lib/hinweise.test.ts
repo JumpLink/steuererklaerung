@@ -6,7 +6,7 @@ const find = (hs: ReturnType<typeof computeHinweise>, key: string) => hs.find((h
 export default async () => {
     await describe('computeHinweise — §19 Kleinunternehmer', async () => {
         await it('tipp: Regelbesteuerung but turnover under the 2025 threshold', async () => {
-            const hs = computeHinweise({ year: 2025, umsatz: 15230.53, outputVat: 2893.82 });
+            const hs = computeHinweise({ year: 2025, umsatz: 18460.40, outputVat: 3507.48 });
             const k = find(hs, 'kleinunternehmer');
             expect(k?.level).toBe('tipp');
             expect(k?.ref).toBe('§ 19 Abs. 1 UStG');
@@ -35,7 +35,7 @@ export default async () => {
                 year: 2025,
                 umsatz: 15000,
                 outputVat: 2850,
-                uste: { vatPayable: 1196.82, closingBalance: 1196.82, prepaidVat: 0 },
+                uste: { vatPayable: 1403.18, closingBalance: 1403.18, prepaidVat: 0 },
             });
             expect(find(hs, 'ust-vorauszahlungen')?.level).toBe('warnung');
         });

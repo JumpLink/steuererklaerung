@@ -10,7 +10,7 @@ import type { UnifiedTransaction } from '@steuererklaerung/store';
  * `qonto_transaction_id` then names every booking. The mapping used to give each of them the
  * document's full net and VAT, so the expense was counted once per payment.
  *
- * The fixture is the live case that exposed it: INWX invoice 2025111419, 19,82 € net / 23,58 €
+ * The fixture mirrors the case that exposed it: INWX invoice 2025111419, 19,82 € net / 23,58 €
  * gross for three domain renewals, paid as 9,30 € and 14,28 €. The EÜR booked 39,64 € — in a
  * declaration that goes to the Finanzamt.
  */
@@ -104,7 +104,7 @@ export default async () => {
     /**
      * The other half of the same question: a document may be BIGGER than the bookings it names.
      *
-     * The live case: the December Qonto invoice over 1,46 € bundles all three account fees
+     * An example: the December Qonto invoice over 1,46 € bundles all three account fees
      * (0,03 + 0,41 + 1,02), but names only the 0,41 booking. That booking took the whole 1,46 €
      * while the other two were classified by rule with their own amounts — 2,51 € of expense for
      * 1,46 € of fees, in an Anlage EÜR about to go to the Finanzamt.

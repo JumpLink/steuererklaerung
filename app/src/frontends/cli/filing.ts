@@ -5,7 +5,7 @@
  *
  *   filing record --entity jumplink --kind ustva --period 2026-Q1 --filed 2026-07-05 --declared 58.17
  *   filing record --entity gbr --kind ustva --period 2025-Q4 --filed 2026-03-20 \
- *     --declared 440.57 --paid 2026-04-29 --amount 444.57 --surcharge 4.00
+ *     --declared 420.30 --paid 2026-04-29 --amount 428.30 --surcharge 8.00
  *   filing list [--entity jumplink] [--year 2026]
  *   filing remove --entity jumplink --kind ustva --period 2026-Q1
  *   filing attach-doc --entity gbr --kind ust-jahr --period 2025 --doc paperless:2900 --role bescheid
