@@ -273,7 +273,7 @@ jobs:
           libsoup3 json-glib gnutls libnghttp2
           pango cairo gtk4 libadwaita
           gettext glib2 msitools zip unzip
-          mutter dbus-daemon libglvnd-gles libglvnd-egl mesa-dri-drivers
+          xorg-x11-server-Xvfb dbus-daemon libglvnd-gles libglvnd-egl mesa-dri-drivers
 
       - uses: actions/checkout@v4
 
