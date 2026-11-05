@@ -174,6 +174,27 @@ export function hinweisTasks(input: HomeModelInput): HomeTask[] {
     return tasks;
 }
 
+/**
+ * The open-work numbers behind the "Up next" tasks, as numbers.
+ *
+ * The tasks carry them as German/English sentences; the sidebar's row badges need the integers. One
+ * assembler yields both, so a badge and the task it summarises cannot disagree.
+ */
+export interface HomeCounts {
+    /** Bookings in „Zu prüfen". */
+    zuPruefen: number;
+    /** Incoming payments with an unlinked refund candidate. */
+    erstattungen: number;
+    /** Detected recurring costs without a decision. */
+    laufendeKosten: number;
+    /** Overdue outgoing invoices. */
+    forderungen: number;
+    /** Suspected double payments. */
+    doppelzahlung: number;
+    /** Declaration deadlines still `offen`. */
+    fristenOffen: number;
+}
+
 export interface HomeModel {
     year: number;
     kpis: HomeKpis;
@@ -185,6 +206,7 @@ export interface HomeModel {
     categories: { name: string; amount: number }[];
     liquidity: { now: number; series: number[]; accounts: HomeAccount[] };
     tasks: HomeTask[];
+    counts: HomeCounts;
 }
 
 /**
@@ -361,5 +383,13 @@ export function buildHomeModel(input: HomeModelInput): HomeModel {
         categories,
         liquidity: { now, series, accounts },
         tasks,
+        counts: {
+            zuPruefen: input.zuPruefen ?? 0,
+            erstattungen: input.erstattungenOffen ?? 0,
+            laufendeKosten: input.laufendeKostenOffen ?? 0,
+            forderungen: input.forderungenUeberfaellig ?? 0,
+            doppelzahlung: doppelzahlungVerdacht?.length ?? 0,
+            fristenOffen: dashboard?.fristen.slice(0, 4).filter((f) => f.status === 'offen').length ?? 0,
+        },
     };
 }

@@ -67,5 +67,29 @@ export default async () => {
             });
             expect(m.tasks[0].sub).toBe('20,00 € received too much (partly too much) — clarify');
         });
+
+        await it('exposes the open-work counts as numbers next to the tasks', async () => {
+            const m = buildHomeModel({
+                year: 2025,
+                txs: [],
+                dashboard: computeSteuerDashboard({ year: 2025, est: { erstattung: 10 } }),
+                zuPruefen: 5,
+                erstattungenOffen: 2,
+                laufendeKostenOffen: 3,
+                forderungenUeberfaellig: 4,
+                doppelzahlungVerdacht: [{ rechnungId: 'inv-1', rechnungNummer: 'RE-1', zuViel: 20 }],
+            });
+            expect(m.counts.zuPruefen).toBe(5);
+            expect(m.counts.erstattungen).toBe(2);
+            expect(m.counts.laufendeKosten).toBe(3);
+            expect(m.counts.forderungen).toBe(4);
+            expect(m.counts.doppelzahlung).toBe(1);
+            expect(m.counts.fristenOffen).toBe(1);
+        });
+
+        await it('counts zero everywhere on an empty model', async () => {
+            const m = buildHomeModel({ year: 2025, txs: [], dashboard: null });
+            expect(m.counts.zuPruefen + m.counts.erstattungen + m.counts.fristenOffen).toBe(0);
+        });
     });
 };
