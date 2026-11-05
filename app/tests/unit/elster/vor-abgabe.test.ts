@@ -406,7 +406,7 @@ export default async () => {
                 befund('ust-abweichung'),
                 befund('anlagegut-kandidat:g1'),
                 befund('reverse-charge-kandidat:x', 'warnung'),
-                befund('iban-wechsel:hetzner', 'warnung'),
+                befund('iban-wechsel:serverhaus', 'warnung'),
                 { ...befund('ust-ohne-angabe'), status: 'ohne_befund' },
                 befund('unklassifiziert', 'warnung'),
                 befund('kleinunternehmer', 'warnung'),
@@ -415,7 +415,7 @@ export default async () => {
                 'ust-abweichung',
                 'anlagegut-kandidat:g1',
                 'reverse-charge-kandidat:x',
-                'iban-wechsel:hetzner',
+                'iban-wechsel:serverhaus',
             ]);
         });
         await it('a finding with an action is a task in Als Nächstes', async () => {

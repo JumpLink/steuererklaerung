@@ -56,16 +56,16 @@ export interface Serie {
 }
 
 /**
- * Comparison key for a name: lower case, letters and digits only. „HETZNER ONLINE GMBH" and „Hetzner
- * Online GmbH" are then the same party; „Hetzner" alone is another.
+ * Comparison key for a name: lower case, letters and digits only. „SERVERHAUS GMBH" and „Serverhaus
+ * Online GmbH" are then the same party; „Serverhaus" alone is another.
  */
 export function parteiSchluessel(name: string | null | undefined): string {
     return (name ?? '').toLowerCase().replace(/[^a-z0-9äöüß]/g, '');
 }
 
 /**
- * Whether two names mean the same party: equal keys, or one contained in the other („Hetzner" on the
- * invoice, „Hetzner Online GmbH" on the debit).
+ * Whether two names mean the same party: equal keys, or one contained in the other („Serverhaus" on the
+ * invoice, „Serverhaus GmbH" on the debit).
  */
 export function gleichePartei(a: string | null | undefined, b: string | null | undefined): boolean {
     const x = parteiSchluessel(a);

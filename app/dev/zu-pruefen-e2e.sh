@@ -152,7 +152,7 @@ await "nur Auffangregel"
 START="$(progress)"
 case "$START" in "0 von "*) ;; *) fail "unexpected start progress: $START" ;; esac
 step "the Zu prüfen tab lists the queue ($START)"
-# Newest first: the demo's newer unclassified bookings (Pixelkraft, Stripe, Cloud-Provider, Hetzner), then the
+# Newest first: the demo's newer unclassified bookings (Pixelkraft, Zahlwerk, Cloud-Provider, Serverhaus), then the
 # December rent — step on until it shows rather than counting, so a new demo booking does not break the run.
 for _ in $(seq 1 12); do
   ui has "via Regel „Stichwort miete“ (Auffangregel)" && break

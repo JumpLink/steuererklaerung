@@ -10,7 +10,7 @@ const ESCAPES: Record<string, string> = {
  * Escape a plain string for the Pango-markup labels Adwaita rows / status pages use.
  *
  * Every `Adw.PreferencesRow` (ActionRow, ExpanderRow …) parses `title` / `subtitle` as markup by
- * default, so a data string like "1&1 Telecom GmbH" is rejected by GTK and the label stays empty.
+ * default, so a data string like "Fon&Net Telecom GmbH" is rejected by GTK and the label stays empty.
  * Data goes through this, or the row is built with `useMarkup: false` (`check:gtk-markup`).
  *
  * Same output as `GLib.markup_escape_text`, written out by hand: on `--app node` a bundle whose only

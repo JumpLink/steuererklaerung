@@ -22,7 +22,7 @@ export default async () => {
     });
 
     await describe('classifyReverseCharge', async () => {
-        await it('classifies an EU service (Adobe IE) as §13b Abs. 1 with 19 % tax', async () => {
+        await it('classifies an EU service (Kreativsoft IE) as §13b Abs. 1 with 19 % tax', async () => {
             const r = classifyReverseCharge({
                 reverseCharge: true,
                 supplierCountry: 'IE',
@@ -35,7 +35,7 @@ export default async () => {
             expect(r.item?.tax).toBe(10.61); // round2(55.84 * 0.19)
         });
 
-        await it('classifies a third-country service (DigitalOcean US) as §13b Abs. 2', async () => {
+        await it('classifies a third-country service (Wolkenrechner US) as §13b Abs. 2', async () => {
             const r = classifyReverseCharge({
                 reverseCharge: true,
                 supplierCountry: 'US',

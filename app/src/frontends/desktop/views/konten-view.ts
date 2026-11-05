@@ -557,7 +557,7 @@ export class BhKontenView extends Adw.Bin {
         this.applyAddAccountHook();
 
         // TODO: available-connections catalog (deferred) — the provider catalog (FinTS/GoCardless/
-        // Stripe/CSV/ELSTER/E-Mail) with connect-credential flows goes here (separate batch).
+        // Zahlwerk/CSV/ELSTER/E-Mail) with connect-credential flows goes here (separate batch).
     }
 
     /** Re-read the store and refill just the cards (no stack reset, no ERiC re-probe). Post-write refresh. */

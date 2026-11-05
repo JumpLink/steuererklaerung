@@ -102,7 +102,7 @@ function capDocToPayments(
  * often settled in more than one card charge. The mapping used to hand EVERY one of them the
  * document's FULL net and VAT, so an invoice paid in two parts was booked twice.
  *
- * Found in a live return: INWX invoice 2025111419 (19,82 net / 23,58 gross, three domain
+ * Found in a live return: Domainwerk invoice DW-2025-4711 (19,82 net / 23,58 gross, three domain
  * renewals) was paid as 9,30 € + 14,28 €. Both bookings link to it correctly — and the EÜR
  * counted 39,64 € of expense. That understates the profit of a declaration, and the same double
  * count reaches the Vorsteuer.

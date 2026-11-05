@@ -367,7 +367,7 @@ tab is readable. The unclassified-bookings banner wraps to two centred lines.
 title-plus-value-plus-chevron, which is the right phone row. The download icon next to
 "Anlage EÜR 2025" is 32 px and moves to the header bar.
 
-Long notice texts in USt-VA ("1 payment to Hetzner … went to an IBAN never paid before") stay full
+Long notice texts in USt-VA ("1 payment to Serverhaus … went to an IBAN never paid before") stay full
 — this is the one place where truncation would hide the reasoning, and the HIG's advice to
 summarise loses to the app's own rule that every figure carries its derivation.
 

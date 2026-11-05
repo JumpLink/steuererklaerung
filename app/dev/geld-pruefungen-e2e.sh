@@ -4,7 +4,7 @@
 #
 #   app/dev/geld-pruefungen-e2e.sh [shots-dir]     (build first: gjsify run build:app)
 #
-# The demo has one case per check in 2025: Hetzner, paid monthly to one IBAN, once paid to a new one
+# The demo has one case per check in 2025: Serverhaus, paid monthly to one IBAN, once paid to a new one
 # (IBAN-Wechsel); two Druckerei Hafenblick invoices over the same amount two weeks apart (Doppelte
 # Rechnung); the Werbetechnik Nordwind invoice paid twice (Lieferant doppelt bezahlt). The run checks the
 # three Einblicke cards with their affected rows and masked IBANs, that IBAN-Wechsel is the first card and
@@ -114,7 +114,7 @@ shot() {
   gjs -m "$HERE/dbus-shot.js" "$ID" "$OBJ" "$SHOTS/geld-pruefungen-$1.png" >/dev/null || fail "screenshot $1"
 }
 
-IBAN="IBAN-Wechsel bei Hetzner Online GmbH: vermutlich neue Bankverbindung"
+IBAN="IBAN-Wechsel bei Serverhaus GmbH: vermutlich neue Bankverbindung"
 DOPPELT="Doppelte Rechnung von Druckerei Hafenblick?"
 LIEFERANT="Lieferant doppelt bezahlt? Werbetechnik Nordwind, Rechnung WN-2025-0812"
 
@@ -141,7 +141,7 @@ first_of() {
 # ── 1. Einblicke: the three findings, IBAN-Wechsel first, IBANs masked ─────────────────────────────
 launch STEUER_APP_VIEW=auswertungen STEUER_APP_YEAR=2025 STEUER_APP_SCROLL=end STEUER_APP_SIZE="1280 1400"
 await "$IBAN"
-await "17.10.2025 · -149,00 € · Hetzner Online GmbH · an DE…4711"
+await "17.10.2025 · -149,00 € · Serverhaus GmbH · an DE…4711"
 await "bisher bekannten"
 await "$DOPPELT"
 await "06.10.2025 · 476,00 € · Druckerei Hafenblick · Nr. DH-2025-311"
@@ -177,7 +177,7 @@ await "$IBAN"
 click click-tip "Als in Ordnung markieren: $IBAN"
 absent "$IBAN"
 await "$DOPPELT"
-geprueft | grep -q '"hinweis":"iban-wechsel:hetzneronlinegmbh","jahr":2025' || fail "dismissal not in the manifest: $(geprueft)"
+geprueft | grep -q '"hinweis":"iban-wechsel:serverhausgmbh","jahr":2025' || fail "dismissal not in the manifest: $(geprueft)"
 step "„Als in Ordnung markieren“ removes the IBAN-Wechsel and stores it with its fingerprint"
 KEEP=1 launch STEUER_APP_VIEW=home STEUER_APP_YEAR=2025
 await "Als Nächstes"

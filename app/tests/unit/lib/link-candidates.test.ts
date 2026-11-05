@@ -24,7 +24,7 @@ function doc(over: Partial<DmsDocument>): DmsDocument {
         id: 'doc',
         dms: 'builtin',
         title: 'Rechnung',
-        correspondent: 'Hetzner Online GmbH',
+        correspondent: 'Serverhaus GmbH',
         documentType: 'incoming_invoice',
         direction: 'incoming',
         created: '2025-03-08',
@@ -51,7 +51,7 @@ export default async () => {
             expect(c?.grossAmount).toBe(119);
             expect(c?.direction).toBe('incoming');
             expect(c?.invoiceDate).toBe('2025-03-08');
-            expect(c?.counterpartyName).toBe('Hetzner Online GmbH');
+            expect(c?.counterpartyName).toBe('Serverhaus GmbH');
         });
 
         await it('falls back to net + vat when gross is missing', async () => {
@@ -67,7 +67,7 @@ export default async () => {
 
     await describe('suggestDocumentsForTransaction', async () => {
         await it('ranks the exact-amount, nearest-date incoming invoice first for a debit', async () => {
-            const debit = tx({ id: 'd', amount: -119, bookingDate: '2025-03-10', counterparty: 'Hetzner Online GmbH' });
+            const debit = tx({ id: 'd', amount: -119, bookingDate: '2025-03-10', counterparty: 'Serverhaus GmbH' });
             const docs = [
                 doc({ id: 'match', gross: 119, created: '2025-03-08' }),
                 doc({ id: 'far', gross: 119, created: '2025-01-01' }),
@@ -117,7 +117,7 @@ export default async () => {
         await it('ranks the matching debit for an incoming invoice', async () => {
             const invoice = doc({ id: 'inv', direction: 'incoming', gross: 119, created: '2025-03-08' });
             const txs = [
-                tx({ id: 'hit', amount: -119, bookingDate: '2025-03-10', counterparty: 'Hetzner Online GmbH' }),
+                tx({ id: 'hit', amount: -119, bookingDate: '2025-03-10', counterparty: 'Serverhaus GmbH' }),
                 tx({ id: 'credit', amount: 119, bookingDate: '2025-03-10' }),
             ];
             const cands = suggestTransactionsForDocument(invoice, txs);

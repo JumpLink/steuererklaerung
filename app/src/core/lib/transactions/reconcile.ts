@@ -175,7 +175,7 @@ export function findStoreMatches(
 
     // Date: up to 30 points, decaying CONTINUOUSLY with distance so the
     // temporally-nearest payment strictly outscores a farther same-amount rival
-    // — this is what resolves recurring same-amount invoices (Hetzner €49/mo …).
+    // — this is what resolves recurring same-amount invoices (Serverhaus €49/mo …).
     let dateScore = 0;
     if (dayGap == null) {
       reasons.push('no document date');

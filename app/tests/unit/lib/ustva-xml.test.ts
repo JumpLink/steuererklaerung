@@ -72,7 +72,7 @@ const EXPECTED_EDS = `<?xml version="1.0" encoding="UTF-8"?>
 </Elster>
 `;
 
-// A §13b case: EU service (Adobe-like, Abs. 1 → Kz 46/47) + third-country service (Abs. 2 → Kz 84/85),
+// A §13b case: EU service (Kreativsoft-like, Abs. 1 → Kz 46/47) + third-country service (Abs. 2 → Kz 84/85),
 // deductible Vorsteuer Kz 67 = Σ tax. The owed tax nets against Kz 67 → Kz 83 stays 154.00.
 const aggregate13b: UstvaAggregate = {
     ...aggregate,

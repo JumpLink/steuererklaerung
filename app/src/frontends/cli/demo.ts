@@ -257,10 +257,10 @@ async function seedDemo(): Promise<DemoSeedResult> {
         // Filings upsert on (entity, kind, period), so re-seeding is idempotent.
         for (const f of buildDemoFilings()) upsertFiling(db, f, SEED_AT);
         // Verträge (ADR 0004): fixed ids, so re-seeding updates the same rows instead of adding more.
-        // One Hetzner debit is pre-linked, so the Abgleich shows a decided booking beside the open ones.
+        // One Serverhaus debit is pre-linked, so the Abgleich shows a decided booking beside the open ones.
         for (const c of buildDemoContracts(new Date().toISOString().slice(0, 10))) saveContract(db, c, SEED_AT);
-        const linkedTx = findTxId(data, 'Hetzner Online GmbH', '2026-06-03');
-        if (linkedTx) setContractTransaction(db, 'demo-v-hetzner', linkedTx, 'linked', SEED_AT, 'demo');
+        const linkedTx = findTxId(data, 'Serverhaus GmbH', '2026-06-03');
+        if (linkedTx) setContractTransaction(db, 'demo-v-serverhaus', linkedTx, 'linked', SEED_AT, 'demo');
     } finally {
         db.close();
     }
@@ -311,8 +311,8 @@ async function seedDemo(): Promise<DemoSeedResult> {
     try {
         migrate(ledger);
         for (const [contractId, invoiceNumber] of [
-            ['demo-v-hetzner', 'HR-2026-0001'],
-            ['demo-v-telekom', 'TK-2026-01'],
+            ['demo-v-serverhaus', 'HR-2026-0001'],
+            ['demo-v-fernmelde', 'TK-2026-01'],
         ] as const) {
             const ref = docRefs.get(invoiceNumber);
             if (ref) setContractDocument(ledger, contractId, ref, 'invoice', SEED_AT);

@@ -30,7 +30,7 @@ const CustomFieldIdsSchema = z.object({
     qonto_transaction_amount: nonNegativeInt,
     qonto_settled_at: nonNegativeInt,
     qonto_currency: nonNegativeInt,
-    /** Qonto transaction label (counterparty name, e.g. "DIGITALOCEAN_COM"). */
+    /** Qonto transaction label (counterparty name, e.g. "WOLKENRECHNER_EXAMPLE"). */
     qonto_label: nonNegativeInt,
     /** Qonto SEPA reference / Verwendungszweck (may contain invoice number). */
     qonto_reference: nonNegativeInt,

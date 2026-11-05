@@ -25,7 +25,7 @@ const incoming: DocMatchCriteria = {
     direction: 'incoming',
     invoiceDate: '2025-03-01',
     dueDate: '2025-03-15',
-    counterpartyName: 'Hetzner Online GmbH',
+    counterpartyName: 'Serverhaus GmbH',
 };
 
 export default async () => {
@@ -43,7 +43,7 @@ export default async () => {
 
     await describe('findStoreMatches', async () => {
         await it('matches a debit of equal amount near the invoice date for an incoming invoice', async () => {
-            const txs = [tx({ id: 'a', amount: -119, bookingDate: '2025-03-10', counterparty: 'Hetzner Online GmbH' })];
+            const txs = [tx({ id: 'a', amount: -119, bookingDate: '2025-03-10', counterparty: 'Serverhaus GmbH' })];
             const [best] = findStoreMatches(incoming, txs);
             expect(best.transaction.id).toBe('a');
             expect(best.amountDiff).toBe(0);
@@ -107,7 +107,7 @@ export default async () => {
 
     await describe('pickBestMatch', async () => {
         await it('is confident with a single clear winner', async () => {
-            const cands = findStoreMatches(incoming, [tx({ id: 'a', amount: -119, bookingDate: '2025-03-10', counterparty: 'Hetzner' })]);
+            const cands = findStoreMatches(incoming, [tx({ id: 'a', amount: -119, bookingDate: '2025-03-10', counterparty: 'Serverhaus' })]);
             const { match, confident } = pickBestMatch(cands);
             expect(confident).toBe(true);
             expect(match?.transaction.id).toBe('a');
@@ -175,10 +175,10 @@ export default async () => {
         await it('matches by supplier name + nearest date, ignoring the amount', async () => {
             const crit: DocMatchCriteria = {
                 grossAmount: 256.40, currency: 'USD', direction: 'incoming',
-                invoiceDate: '2025-03-01', counterpartyName: 'DigitalOcean LLC', foreignCurrency: true,
+                invoiceDate: '2025-03-01', counterpartyName: 'Wolkenrechner LLC', foreignCurrency: true,
             };
             const txs: UnifiedTransaction[] = [
-                tx({ id: 'do', amount: -247.04, bookingDate: '2025-03-02', purpose: 'PP.1555.PP DIGITALOCEAN COM' }),
+                tx({ id: 'do', amount: -247.04, bookingDate: '2025-03-02', purpose: 'PP.1555.PP WOLKENRECHNER COM' }),
                 tx({ id: 'other', amount: -247.04, bookingDate: '2025-03-02', purpose: 'Something else' }),
             ];
             const best = pickBestMatch(findStoreMatches(crit, txs));

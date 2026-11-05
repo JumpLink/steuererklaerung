@@ -241,7 +241,7 @@ export default async () => {
             // unknown card charge — must NOT be guessed as hosting.
             expect(classifyNoDocTransaction(tx({ amount: -50, purpose: 'NONREF 9999' })).source).toBe('unclassified');
             // PayPal-resolved merchants (folded into the purpose by enrichWithPaypal):
-            // DigitalOcean wins over the broad /lizenz/ tag; Kugellager is business; the
+            // DigitalOcean (the real name is needed: it exercises the production cloud-anbieter regex) wins over the broad /lizenz/ tag; Kugellager is business; the
             // municipal Gewerbe fee and the music streaming come from the configured needles.
             expect(
                 classifyNoDocTransaction(tx({ amount: -180, purpose: 'NONREF Software-Lizenzen 7128 ‹PayPal: DigitalOcean ›' }))
@@ -340,7 +340,7 @@ export default async () => {
             const txs = [
                 tx({ amount: 1190, bookingDate: '2025-06-01', purpose: 'Verkaufserlöse RE-1', counterparty: 'Kunde' }),
                 tx({ amount: 595, bookingDate: '2025-11-30', purpose: 'Verkaufserlöse RE-2', counterparty: 'Kunde' }),
-                tx({ amount: -50, bookingDate: '2025-12-02', purpose: 'SaaS Hosting', counterparty: 'Hetzner' }),
+                tx({ amount: -50, bookingDate: '2025-12-02', purpose: 'SaaS Hosting', counterparty: 'Serverhaus' }),
             ];
             const agg = aggregateEuerByTransactions(txs, new Map<string, TxDocInfo>(), 2025, { activeTo: '2025-10-31', detail: true });
             // June 1000 laufend + Nov 500 as §24 income = 1500; the Dec expense is the successor's → excluded.

@@ -16,7 +16,7 @@ function exampleText(id: AssistantExampleId, year: number): string {
         case 'missing-receipts':
             return 'Welche Buchungen haben noch keinen Beleg?';
         case 'find-receipts':
-            return 'Finde die Hetzner-Rechnungen in Paperless.';
+            return 'Finde die Serverhaus-Rechnungen in Paperless.';
         case 'vat-due':
             return 'Wie viel Umsatzsteuer muss ich zahlen?';
         case 'deadlines':
