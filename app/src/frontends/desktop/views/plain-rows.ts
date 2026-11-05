@@ -6,7 +6,7 @@ type ExpanderRowProps = Partial<Adw.ExpanderRow.ConstructorProps>;
 /**
  * Adwaita rows parse `title` / `subtitle` as Pango markup unless `use-markup` is off. Passing
  * `useMarkup: false` TOGETHER with the text to the constructor does not help: the text can be set
- * before the flag lands, GTK parses "1&1 Telecom GmbH" as markup and logs `Failed to set text …
+ * before the flag lands, GTK parses "Fon&Net Telecom GmbH" as markup and logs `Failed to set text …
  * from markup` (the final label is right, the warning is not — libadwaita 1.9, `check:gtk-markup`).
  * So the flag goes in at construction and the text follows through the setters.
  */

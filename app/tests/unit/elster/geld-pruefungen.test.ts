@@ -84,7 +84,7 @@ export default async () => {
             expect(findeSerien([posten('2025-01-03'), posten('2025-02-15'), posten('2025-03-27')]).length).toBe(0);
         });
         await it('compares names by their normalised key', async () => {
-            expect(parteiSchluessel('HETZNER ONLINE GMBH')).toBe(parteiSchluessel('Hetzner Online GmbH'));
+            expect(parteiSchluessel('SERVERHAUS GMBH')).toBe(parteiSchluessel('Serverhaus GmbH'));
             const s = findeSerien([
                 posten('2025-01-03', -5, 'ABO AG'),
                 posten('2025-02-03', -5, 'Abo AG'),

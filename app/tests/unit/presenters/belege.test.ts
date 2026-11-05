@@ -62,8 +62,8 @@ export default async () => {
         const docs = [
             doc({
                 id: '1',
-                title: 'Adobe Rechnung',
-                correspondent: 'Adobe',
+                title: 'Kreativsoft Rechnung',
+                correspondent: 'Kreativsoft',
                 direction: 'incoming',
                 created: '2025-03-10',
                 linkedTxIds: ['a'],
@@ -92,7 +92,7 @@ export default async () => {
         });
 
         await it('query matches title, correspondent, invoiceNumber, OCR text and tags (case-insensitive)', async () => {
-            expect(ids(filterDocuments(docs, { query: 'adobe' }))).toBe('1'); // correspondent + title
+            expect(ids(filterDocuments(docs, { query: 'kreativsoft' }))).toBe('1'); // correspondent + title
             expect(ids(filterDocuments(docs, { query: 'RE-2025' }))).toBe('2'); // invoiceNumber
             expect(ids(filterDocuments(docs, { query: 'beratung' }))).toBe('2'); // ocrText
             expect(ids(filterDocuments(docs, { query: 'bewirtung' }))).toBe('3'); // tag

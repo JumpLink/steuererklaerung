@@ -91,13 +91,13 @@ export default async () => {
                     bookingDate: '2025-09-02',
                     amount: -179.57,
                     currency: 'EUR',
-                    counterparty: 'DigitalOcean',
+                    counterparty: 'Wolkenrechner',
                     purpose: 'Server',
                     reference: '1000000000022',
                 },
             ];
             const out = enrichViewRows(rows, { paypalTxs: pp });
-            expect(out[0].paypal?.merchant).toBe('DigitalOcean');
+            expect(out[0].paypal?.merchant).toBe('Wolkenrechner');
         });
     });
 };

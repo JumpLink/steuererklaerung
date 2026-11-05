@@ -4,8 +4,8 @@ import { suggestPattern } from '../../../src/core/actions/classification-rules.t
 export default async () => {
     await describe('suggestPattern', async () => {
         await it('takes the counterparty, the stable half of a bank booking', async () => {
-            expect(suggestPattern({ counterparty: 'Hetzner Online GmbH', purpose: 'RG 12345 vom 03.06.' })).toBe(
-                'Hetzner Online GmbH',
+            expect(suggestPattern({ counterparty: 'Serverhaus GmbH', purpose: 'RG 12345 vom 03.06.' })).toBe(
+                'Serverhaus GmbH',
             );
         });
 
@@ -28,7 +28,7 @@ export default async () => {
         });
 
         await it('trims, so a padded counterparty does not become a rule that never matches', async () => {
-            expect(suggestPattern({ counterparty: '  Stripe Payments UG  ' })).toBe('Stripe Payments UG');
+            expect(suggestPattern({ counterparty: '  Zahlwerk Payments UG  ' })).toBe('Zahlwerk Payments UG');
         });
     });
 };

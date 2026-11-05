@@ -4,7 +4,7 @@
 #
 #   app/dev/dokumentregel-e2e.sh [shots-dir]     (build first: gjsify run build)
 #
-# Opens the demo Beleg of Deutsche Telekom AG (category 4921 Telefon/Internet) in „Beleg bearbeiten",
+# Opens the demo Beleg of Fernmelde AG (category 4921 Telefon/Internet) in „Beleg bearbeiten",
 # turns on „Als Regel merken" and saves → the rule is written to the manifest (elster.klassifizierung.
 # beleg_regeln). A second Beleg of the same sender is then stored through the CLI (`belege hinzufuegen`,
 # the upload path of every surface): its sender, type, category and direction are set by the rule, the
@@ -85,7 +85,7 @@ launch() {
 ui() { gjs -m "$HERE/dbus-ui.js" "$ID" "$OBJ" "$@"; }
 await() {
   for _ in $(seq 1 40); do ui has "$1" && return 0; sleep 0.5; done
-  ui texts 2>/dev/null | grep -i "telekom\|Regel" | head -8 >&2 || true
+  ui texts 2>/dev/null | grep -i "fernmelde\|Regel" | head -8 >&2 || true
   fail "never saw \"$1\""
 }
 absent() {
@@ -143,36 +143,36 @@ step "the Beleg dialog offers „Als Regel merken“ next to Dokumenttyp and Kat
 click "Als Regel merken" AdwSwitchRow
 click "Speichern"
 for _ in $(seq 1 20); do [ "$(rules)" != "[]" ] && break; sleep 0.5; done
-[ "$(rules)" = '[{"dokumenttyp": "Rechnung", "kategorie": "4921 Telefon/Internet", "korrespondent": "Deutsche Telekom AG", "muster": "Deutsche Telekom AG", "richtung": "incoming"}]' ] \
+[ "$(rules)" = '[{"dokumenttyp": "Rechnung", "kategorie": "4921 Telefon/Internet", "korrespondent": "Fernmelde AG", "muster": "Fernmelde AG", "richtung": "incoming"}]' ] \
   || fail "rule not written as expected: $(rules)"
 step "„Als Regel merken“ wrote the rule into elster.klassifizierung.beleg_regeln"
 stop_app
 
 # ── 2. A second Beleg of the same sender arrives → the rule sets its fields ───────────────────────────
-printf '%%PDF-1.4\ndemo\n' > "$T/Deutsche Telekom AG 2026-02.pdf"
-cli belege hinzufuegen "$T/Deutsche Telekom AG 2026-02.pdf" --entity gbr --year 2026 > "$T/cli.out" 2>"$T/cli.err" \
+printf '%%PDF-1.4\ndemo\n' > "$T/Fernmelde AG 2026-02.pdf"
+cli belege hinzufuegen "$T/Fernmelde AG 2026-02.pdf" --entity gbr --year 2026 > "$T/cli.out" 2>"$T/cli.err" \
   || { cat "$T/cli.err" >&2; fail "belege hinzufuegen"; }
-grep -q 'via Regel „Deutsche Telekom AG“ gesetzt' "$T/cli.out" || { cat "$T/cli.out" >&2; fail "CLI does not report the rule"; }
-ROW="$(docrow 'Deutsche Telekom AG 2026-02.pdf')"
+grep -q 'via Regel „Fernmelde AG“ gesetzt' "$T/cli.out" || { cat "$T/cli.out" >&2; fail "CLI does not report the rule"; }
+ROW="$(docrow 'Fernmelde AG 2026-02.pdf')"
 case "$ROW" in
-  "Deutsche Telekom AG|Rechnung|4921 Telefon/Internet|incoming|"*'beleg:regeln:deutsche telekom ag'*) ;;
+  "Fernmelde AG|Rechnung|4921 Telefon/Internet|incoming|"*'beleg:regeln:deutsche fernmelde ag'*) ;;
   *) fail "ledger row not set by the rule: $ROW" ;;
 esac
 step "the upload path set sender, type, category and direction via the rule (ledger row names it)"
 
 # ── 3. The Belege list shows the origin ────────────────────────────────────────────────────────────────
 KEEP=1 launch STEUER_APP_VIEW=review STEUER_APP_TAB=alle
-await "via Regel „Deutsche Telekom AG“"
-step "the Belege list reads „via Regel „Deutsche Telekom AG““"
-click "Deutsche Telekom AG 2026-02" AdwActionRow
-await "via Regel „Deutsche Telekom AG“ gesetzt: Korrespondent, Dokumenttyp, Kategorie und Richtung"
+await "via Regel „Fernmelde AG“"
+step "the Belege list reads „via Regel „Fernmelde AG““"
+click "Fernmelde AG 2026-02" AdwActionRow
+await "via Regel „Fernmelde AG“ gesetzt: Korrespondent, Dokumenttyp, Kategorie und Richtung"
 await "Zurücknehmen"
 shot herkunft
 
 # ── 4. Zurücknehmen → values gone, receipt left out of the rule ───────────────────────────────────────
 click "Zurücknehmen"
-for _ in $(seq 1 20); do case "$(docrow 'Deutsche Telekom AG 2026-02.pdf')" in *"|None") break ;; esac; sleep 0.5; done
-ROW="$(docrow 'Deutsche Telekom AG 2026-02.pdf')"
+for _ in $(seq 1 20); do case "$(docrow 'Fernmelde AG 2026-02.pdf')" in *"|None") break ;; esac; sleep 0.5; done
+ROW="$(docrow 'Fernmelde AG 2026-02.pdf')"
 [ "$ROW" = "None|None|None|None|None" ] || fail "values not taken back: $ROW"
 rules | grep -q '"ausnahmen"' || fail "receipt not added to the rule's ausnahmen"
 step "„Zurücknehmen“ cleared the rule's values and left the receipt out of the rule"

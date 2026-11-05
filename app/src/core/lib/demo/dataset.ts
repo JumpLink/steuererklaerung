@@ -64,11 +64,11 @@ interface OneOff {
     counterpartyIban?: string;
 }
 
-// Invented supplier IBANs (DE00 …) for the Geld-Prüfungen; Hetzner's second one is the IBAN-Wechsel.
+// Invented supplier IBANs (DE00 …) for the Geld-Prüfungen; Serverhaus's second one is the IBAN-Wechsel.
 const IBAN_HAUSVERWALTUNG = 'DE00200000000000045743';
-const IBAN_HETZNER = 'DE00100000000000006819';
-const IBAN_HETZNER_NEU = 'DE00990000000000004711';
-const IBAN_TELEKOM = 'DE00300000000000004995';
+const IBAN_SERVERHAUS = 'DE00100000000000006819';
+const IBAN_SERVERHAUS_NEU = 'DE00990000000000004711';
+const IBAN_FERNMELDE = 'DE00300000000000004995';
 const IBAN_NORDWIND = 'DE00400000000000059500';
 // A Danish SaaS supplier (Prüfungen vor der Abgabe): the foreign IBAN is the only sign of § 13b.
 const IBAN_NORDLYS = 'DK0000000000004242';
@@ -80,12 +80,12 @@ const RUN_YEARS = [2025, 2026];
 const RECURRING: Recurring[] = [
     // ── Fischer & Weber GbR — recurring operating expenses (Qonto) ──
     { acc: QONTO, day: 1, amount: -457.43, counterparty: 'Hausverwaltung Musterstadt', purpose: 'Miete Büro Musterstraße 1', category: 'Miete/Raumkosten', months: M_ALL, years: RUN_YEARS, counterpartyIban: IBAN_HAUSVERWALTUNG },
-    { acc: QONTO, day: 3, amount: -68.19, counterparty: 'Hetzner Online GmbH', purpose: 'Server & Backup', category: 'EDV/Hosting', months: M_ALL, years: RUN_YEARS, counterpartyIban: IBAN_HETZNER },
-    { acc: QONTO, day: 5, amount: -49.95, counterparty: 'Deutsche Telekom AG', purpose: 'Internet & Telefon', category: 'Telefon/Internet', months: M_ALL, years: RUN_YEARS, counterpartyIban: IBAN_TELEKOM },
+    { acc: QONTO, day: 3, amount: -68.19, counterparty: 'Serverhaus GmbH', purpose: 'Server & Backup', category: 'EDV/Hosting', months: M_ALL, years: RUN_YEARS, counterpartyIban: IBAN_SERVERHAUS },
+    { acc: QONTO, day: 5, amount: -49.95, counterparty: 'Fernmelde AG', purpose: 'Internet & Telefon', category: 'Telefon/Internet', months: M_ALL, years: RUN_YEARS, counterpartyIban: IBAN_FERNMELDE },
     { acc: QONTO, day: 7, amount: -12.44, counterparty: 'Cloud-Provider EU', purpose: 'Cloud-Dienste', category: 'Software-Lizenzen', months: M_ALL, years: RUN_YEARS },
     { acc: QONTO, day: 27, amount: -9.0, counterparty: 'Qonto', purpose: 'Kontoführungsgebühr', category: 'Nebenkosten Geldverkehr', months: M_ALL, years: RUN_YEARS },
     // ── Fischer & Weber GbR — recurring income (Qonto) ──
-    { acc: QONTO, day: 15, amount: 1204.0, counterparty: 'Stripe Payments UG', purpose: 'Auszahlung SaaS-Abonnements', category: 'Umsatzerlöse', months: M_ALL, years: RUN_YEARS },
+    { acc: QONTO, day: 15, amount: 1204.0, counterparty: 'Zahlwerk Payments UG', purpose: 'Auszahlung SaaS-Abonnements', category: 'Umsatzerlöse', months: M_ALL, years: RUN_YEARS },
     // ── Privat household (Musterbank Giro / FinTS) ──
     { acc: GIRO, day: 28, amount: 2850.0, counterparty: 'Nordsee IT GmbH', purpose: 'Gehalt', category: 'Einnahmen (privat)', months: M_ALL, years: RUN_YEARS },
     { acc: GIRO, day: 1, amount: -995.0, counterparty: 'Hausverwaltung Musterstadt', purpose: 'Miete Wohnung', category: 'Miete (privat)', months: M_ALL, years: RUN_YEARS },
@@ -108,7 +108,7 @@ const ONEOFFS: OneOff[] = [
     { acc: QONTO, date: '2025-12-03', amount: 285.6, counterparty: 'Restaurant Seeblick', purpose: 'RE-2025-0004 Website-Pflege November', category: 'Umsatzerlöse' },
     { acc: QONTO, date: '2026-07-15', amount: 695.0, counterparty: 'Praxis Dr. Nele Brandt', purpose: 'RE-2026-0003 SEO-Paket Juli', category: 'Umsatzerlöse' },
     // ── Fischer & Weber GbR — one-off expenses (Qonto), 2025 ──
-    { acc: QONTO, date: '2025-01-10', amount: -44.62, counterparty: 'Adobe Systems', purpose: 'Creative Cloud (anteilig)', category: 'Software-Lizenzen' },
+    { acc: QONTO, date: '2025-01-10', amount: -44.62, counterparty: 'Kreativsoft Inc.', purpose: 'Creative Cloud (anteilig)', category: 'Software-Lizenzen' },
     { acc: QONTO, date: '2025-02-16', amount: -23.8, counterparty: 'KI-Labs LLC', purpose: 'KI-API (Reverse Charge)', category: 'Fremdleistungen' },
     { acc: QONTO, date: '2025-03-11', amount: -23.58, counterparty: 'Domainwerk GmbH', purpose: 'Domainverlängerung', category: 'Software-Lizenzen' },
     { acc: QONTO, date: '2025-04-09', amount: -42.9, counterparty: 'Amazon EU S.à r.l.', purpose: 'USB-Hub & Kabel', category: 'Bürobedarf' },
@@ -128,10 +128,10 @@ const ONEOFFS: OneOff[] = [
     { acc: GIRO, date: '2025-09-03', amount: -714.0, counterparty: 'Malermeister Voss', purpose: 'Malerarbeiten Wohnung', category: 'Handwerkerleistungen' },
     { acc: GIRO, date: '2025-12-06', amount: -150.0, counterparty: 'Seenotretter e.V.', purpose: 'Spende', category: 'Spenden' },
     // ── CAMT-Datei 2024 — historical Fischer & Weber GbR bookings (12) ──
-    { acc: CAMT, date: '2024-01-31', amount: 980.0, counterparty: 'Stripe Payments UG', purpose: 'Auszahlung SaaS-Abonnements', category: 'Umsatzerlöse' },
-    { acc: CAMT, date: '2024-02-15', amount: -68.19, counterparty: 'Hetzner Online GmbH', purpose: 'Server & Backup', category: 'EDV/Hosting' },
+    { acc: CAMT, date: '2024-01-31', amount: 980.0, counterparty: 'Zahlwerk Payments UG', purpose: 'Auszahlung SaaS-Abonnements', category: 'Umsatzerlöse' },
+    { acc: CAMT, date: '2024-02-15', amount: -68.19, counterparty: 'Serverhaus GmbH', purpose: 'Server & Backup', category: 'EDV/Hosting' },
     { acc: CAMT, date: '2024-03-20', amount: 357.0, counterparty: 'Wattküste Naturtouren', purpose: 'Webdesign', category: 'Umsatzerlöse' },
-    { acc: CAMT, date: '2024-04-05', amount: -49.95, counterparty: 'Deutsche Telekom AG', purpose: 'Internet & Telefon', category: 'Telefon/Internet' },
+    { acc: CAMT, date: '2024-04-05', amount: -49.95, counterparty: 'Fernmelde AG', purpose: 'Internet & Telefon', category: 'Telefon/Internet' },
     { acc: CAMT, date: '2024-05-18', amount: 1190.0, counterparty: 'Kundin Musterfrau', purpose: 'Projektabschluss', category: 'Umsatzerlöse' },
     { acc: CAMT, date: '2024-06-11', amount: -457.43, counterparty: 'Hausverwaltung Musterstadt', purpose: 'Miete Büro', category: 'Miete/Raumkosten' },
     { acc: CAMT, date: '2024-07-09', amount: -23.58, counterparty: 'Domainwerk GmbH', purpose: 'Domainverlängerung', category: 'Software-Lizenzen' },
@@ -141,8 +141,8 @@ const ONEOFFS: OneOff[] = [
     { acc: CAMT, date: '2024-11-08', amount: 833.0, counterparty: 'Hafenkontor GmbH', purpose: 'Wartung', category: 'Umsatzerlöse' },
     { acc: CAMT, date: '2024-12-19', amount: -9.0, counterparty: 'Qonto', purpose: 'Kontoführungsgebühr', category: 'Nebenkosten Geldverkehr' },
     // ── Geld-Prüfungen (Idee 7), appended so the earlier ids stay stable ──
-    // IBAN-Wechsel: Hetzner, paid to the same IBAN every month, once goes to an IBAN never used before.
-    { acc: QONTO, date: '2025-10-17', amount: -149.0, counterparty: 'Hetzner Online GmbH', purpose: 'Dedicated Server HR-2025-1017', category: 'EDV/Hosting', counterpartyIban: IBAN_HETZNER_NEU },
+    // IBAN-Wechsel: Serverhaus, paid to the same IBAN every month, once goes to an IBAN never used before.
+    { acc: QONTO, date: '2025-10-17', amount: -149.0, counterparty: 'Serverhaus GmbH', purpose: 'Dedicated Server HR-2025-1017', category: 'EDV/Hosting', counterpartyIban: IBAN_SERVERHAUS_NEU },
     // Lieferant doppelt bezahlt: the Messewand invoice WN-2025-0812 paid twice.
     { acc: QONTO, date: '2025-08-12', amount: -595.0, counterparty: 'Werbetechnik Nordwind', purpose: 'WN-2025-0812 Messewand', category: 'Werbekosten', counterpartyIban: IBAN_NORDWIND },
     { acc: QONTO, date: '2025-08-26', amount: -595.0, counterparty: 'Werbetechnik Nordwind', purpose: 'Rechnung WN-2025-0812', category: 'Werbekosten', counterpartyIban: IBAN_NORDWIND },
@@ -308,9 +308,9 @@ export function buildDemoContacts(): ContactInput[] {
         { id: 'demo-c-strandperle', entityId: 'gbr', kind: 'company', name: 'Gasthof Strandperle', email: 'wirt@strandperle.example', isCustomer: true },
         { id: 'demo-c-leuchtfeuer', entityId: 'gbr', kind: 'company', name: 'Leuchtfeuer Medien OHG', email: 'office@leuchtfeuer.example', isCustomer: true },
         { id: 'demo-c-segelschule', entityId: 'gbr', kind: 'company', name: 'Segelschule Nordwind', email: 'buero@nordwind-segeln.example', address: 'Am Yachthafen 3', zip: '24937', city: 'Flensburg', countryCode: 'DE', isCustomer: true },
-        { id: 'demo-c-hetzner', entityId: 'gbr', kind: 'company', name: 'Hetzner Online GmbH', email: 'billing@hetzner.example', isSupplier: true },
+        { id: 'demo-c-serverhaus', entityId: 'gbr', kind: 'company', name: 'Serverhaus GmbH', email: 'billing@serverhaus.example', isSupplier: true },
         { id: 'demo-c-domainwerk', entityId: 'gbr', kind: 'company', name: 'Domainwerk GmbH', email: 'rechnung@domainwerk.example', isSupplier: true },
-        { id: 'demo-c-telekom', entityId: 'gbr', kind: 'company', name: 'Deutsche Telekom AG', email: 'rechnung@telekom.example', isSupplier: true },
+        { id: 'demo-c-fernmelde', entityId: 'gbr', kind: 'company', name: 'Fernmelde AG', email: 'rechnung@fernmelde.example', isSupplier: true },
     ];
 }
 
@@ -406,12 +406,12 @@ export interface DemoDocument {
 /** Demo Belege — most auto-linked to a tx; two stay unlinked so the guided Beleg-Eingang has a queue. */
 export function buildDemoDocuments(): DemoDocument[] {
     return [
-        { correspondent: 'Hetzner Online GmbH', date: '2026-01-03', gross: 68.19, invoiceNumber: 'HR-2026-0001', docType: 'Rechnung' },
-        { correspondent: 'Deutsche Telekom AG', date: '2026-01-05', gross: 49.95, invoiceNumber: 'TK-2026-01', docType: 'Rechnung', category: '4921 Telefon/Internet', link: false },
+        { correspondent: 'Serverhaus GmbH', date: '2026-01-03', gross: 68.19, invoiceNumber: 'HR-2026-0001', docType: 'Rechnung' },
+        { correspondent: 'Fernmelde AG', date: '2026-01-05', gross: 49.95, invoiceNumber: 'TK-2026-01', docType: 'Rechnung', category: '4921 Telefon/Internet', link: false },
         { correspondent: 'Büro Nordlicht GmbH', date: '2026-02-12', gross: 238, invoiceNumber: 'BN-2026-0212', docType: 'Rechnung', link: false, eInvoice: true },
         { correspondent: 'Cloud-Provider EU', date: '2026-02-07', gross: 12.44, invoiceNumber: 'CP-2026-02', docType: 'Rechnung', link: false },
         { correspondent: 'Domainwerk GmbH', date: '2025-03-11', gross: 23.58, invoiceNumber: 'DW-2025-0311', docType: 'Rechnung' },
-        { correspondent: 'Adobe Systems', date: '2025-01-10', gross: 44.62, invoiceNumber: 'ADBE-2025-01', docType: 'Rechnung' },
+        { correspondent: 'Kreativsoft Inc.', date: '2025-01-10', gross: 44.62, invoiceNumber: 'KS-2025-01', docType: 'Rechnung' },
         { correspondent: 'Amazon EU S.à r.l.', date: '2025-04-09', gross: 42.9, invoiceNumber: 'AMZ-302-1234567', docType: 'Rechnung', link: false },
         // Doppelte Rechnung: the same print job invoiced twice within two weeks under two numbers.
         { correspondent: 'Druckerei Hafenblick', date: '2025-10-06', gross: 476, invoiceNumber: 'DH-2025-311', docType: 'Rechnung', link: false },
@@ -480,10 +480,10 @@ export function buildDemoSegelschuleTimeEntries(): DemoTimeEntry[] {
 export function buildDemoContracts(today: string = DEMO_REFERENCE_DATE): ContractInput[] {
     return [
         {
-            id: 'demo-v-hetzner',
+            id: 'demo-v-serverhaus',
             entityId: 'gbr',
             name: 'Server & Backup',
-            counterparty: 'Hetzner Online GmbH',
+            counterparty: 'Serverhaus GmbH',
             contractNumber: 'HR-2024-10041',
             accountKey: QONTO.key,
             category: 'EDV/Hosting',
@@ -497,14 +497,14 @@ export function buildDemoContracts(today: string = DEMO_REFERENCE_DATE): Contrac
             noticeUnit: 'months',
             autoRenewal: true,
             paymentMethod: 'lastschrift',
-            counterpartyIban: IBAN_HETZNER,
+            counterpartyIban: IBAN_SERVERHAUS,
             notes: 'Produktionsserver und Backup-Speicher. Der Dedicated Server im Oktober 2025 lief über denselben Vertrag.',
         },
         {
-            id: 'demo-v-telekom',
+            id: 'demo-v-fernmelde',
             entityId: 'gbr',
             name: 'Internet & Telefon Büro',
-            counterparty: 'Deutsche Telekom AG',
+            counterparty: 'Fernmelde AG',
             contractNumber: 'TK-2024-88213',
             accountKey: QONTO.key,
             category: 'Telefon/Internet',
@@ -519,7 +519,7 @@ export function buildDemoContracts(today: string = DEMO_REFERENCE_DATE): Contrac
             paymentMethod: 'lastschrift',
             creditorId: 'DE00ZZZ00000000001',
             mandateReference: 'FW-TK-2024-0105',
-            counterpartyIban: IBAN_TELEKOM,
+            counterpartyIban: IBAN_FERNMELDE,
         },
         {
             id: 'demo-v-hanse',
@@ -613,10 +613,10 @@ export function buildDemoContracts(today: string = DEMO_REFERENCE_DATE): Contrac
             matchText: 'Kontoführungsgebühr',
         },
         {
-            id: 'demo-v-adobe',
+            id: 'demo-v-kreativsoft',
             entityId: 'gbr',
             name: 'Creative Cloud (Einzelplatz)',
-            counterparty: 'Adobe Systems',
+            counterparty: 'Kreativsoft Inc.',
             accountKey: QONTO.key,
             category: 'Software-Lizenzen',
             amount: 44.62,

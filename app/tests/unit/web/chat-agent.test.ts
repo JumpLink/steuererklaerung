@@ -5,7 +5,7 @@ const rows: Row[] = [
     {
         id: 'a',
         bookingDate: '2025-02-10',
-        counterparty: 'Hetzner',
+        counterparty: 'Serverhaus',
         purpose: 'Server',
         amount: -119,
         kind: 'expense',

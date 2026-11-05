@@ -11,23 +11,23 @@ liest sie aus der laufenden Instanz aus.
 * `Buchhaltung`: Übergeordneter Tag.
 * `Eingangsrechnung`: Rechnungen, die wir bezahlen müssen.
 * `Ausgangsrechnung`: Rechnungen, die wir gestellt haben.
-* `Einnahme`: Einnahmen, Auszahlungsbestätigungen (z.B. Shopify Payouts, Affiliate-Provisionen).
-* `Referral`: Empfehlungsprovisionen / Referral-Commissions (z.B. Shopify Development Store Referrals).
+* `Einnahme`: Einnahmen, Auszahlungsbestätigungen (z.B. Shopfront Payouts, Affiliate-Provisionen).
+* `Referral`: Empfehlungsprovisionen / Referral-Commissions (z.B. Shopfront Development Store Referrals).
 * `Steuer`: Steuerbescheide, Korrespondenz mit dem Finanzamt.
 * `Bezahlt`: Status-Tag für erledigte Zahlungen.
-* `Shopify`: Tag für Shopify-bezogene Dokumente.
+* `Shopfront`: Tag für Shopfront-bezogene Dokumente.
 * `2025`, `2026`: Jahres-Tags zur schnellen Filterung.
 
 ## Korrespondenten
 * Namen der Lieferanten und Kunden pflegen.
-* Beispiele: `Shopify`, `PayPal`, `Stripe`, etc.
+* Beispiele: `Shopfront`, `PayPal`, `Zahlwerk`, etc.
 
 ## Dokumententypen
 * `Rechnung`
 * `Vertrag`
 * `Bescheid`
 * `Kontoauszug`
-* `Einnahmenübersicht`: Für Einnahmen-Dokumente wie Shopify Payouts, Affiliate-Provisionen, etc.
+* `Einnahmenübersicht`: Für Einnahmen-Dokumente wie Shopfront Payouts, Affiliate-Provisionen, etc.
 
 ## Speicherpfade (Storage Paths)
 * Es empfiehlt sich, Buchhaltungsdokumente in einer festen Struktur auf dem Dateisystem abzulegen (z.B. `Jahre/2025/Eingang`), falls Paperless die Dateien exportiert.

@@ -28,7 +28,7 @@ export interface TransactionMatchItem {
     /** Transaction currency (e.g. EUR). */
     amount_currency: string;
     side: 'credit' | 'debit';
-    /** Transaction label / counterparty name (e.g. "DIGITALOCEAN_COM"). */
+    /** Transaction label / counterparty name (e.g. "WOLKENRECHNER_EXAMPLE"). */
     label?: string;
     /** SEPA reference / Verwendungszweck. */
     reference?: string | null;

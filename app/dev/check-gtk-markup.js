@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Desktop counterpart of check-adwaita-markup.js: Adwaita rows, groups, banners and toasts parse
 // `title` / `subtitle` / `description` as Pango markup (`use-markup` defaults to true). A data
-// string with `&` or `<` — a supplier called "1&1 Telecom GmbH" — is rejected by GTK, which logs
+// string with `&` or `<` — a supplier called "Fon&Net Telecom GmbH" — is rejected by GTK, which logs
 // `Failed to set text … from markup` and leaves the label EMPTY. Nothing else notices.
 //
 // So every such property in src/frontends/desktop must be a literal, a translation call

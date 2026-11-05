@@ -32,7 +32,7 @@ export interface ImportAttachmentToPaperlessParams {
     settled_at?: string | null;
     /** Transaction currency (e.g. EUR) for Qonto Währung. Optional. */
     amount_currency?: string;
-    /** Transaction label / counterparty name from Qonto (e.g. "DIGITALOCEAN_COM"). */
+    /** Transaction label / counterparty name from Qonto (e.g. "WOLKENRECHNER_EXAMPLE"). */
     label?: string;
     /** SEPA reference / Verwendungszweck from Qonto. May contain invoice number. */
     reference?: string | null;

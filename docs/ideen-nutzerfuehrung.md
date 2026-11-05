@@ -227,7 +227,7 @@ App-Schwelle) und `lieferant-doppelt-bezahlt.ts` (verknüpfte Zahlungen + Rechnu
 Serien erkennt `serie.ts`, das Idee 8 weiterverwendet. Jede Prüfung meldet Befund, „ohne Befund" mit den Ausschlüssen
 oder „nicht prüfbar". Handlungen: Buchung bzw. Beleg öffnen, „Als in Ordnung markieren" (Fingerabdruck mit neuer
 IBAN bzw. allen Belegen/Zahlungen). Keine Neutralisierung der zweiten Lieferantenzahlung (siehe Abschnitt 6). Einblicke,
-Als Nächstes, CLI `hinweise`, MCP `hinweise_list`; Demo-Fälle Hetzner (neue IBAN), Druckerei Hafenblick, Werbetechnik
+Als Nächstes, CLI `hinweise`, MCP `hinweise_list`; Demo-Fälle Serverhaus (neue IBAN), Druckerei Hafenblick, Werbetechnik
 Nordwind; E2E `app/dev/geld-pruefungen-e2e.sh`. Die Warnung vor der Abgabe bleibt Idee 10.
 
 **8. Laufende Kosten erkennen.** Abbuchungen im festen Abstand (Miete, Software, Versicherung) werden

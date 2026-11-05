@@ -223,7 +223,7 @@ export default async () => {
 
         await it('knows the key pattern a new connection will produce', async () => {
             expect(connectionAccountPattern('qonto')).toBe('qonto:*');
-            expect(connectionAccountPattern('fints', ' Sparkasse ')).toBe('fints:Sparkasse:*');
+            expect(connectionAccountPattern('fints', ' Beispielsparkasse ')).toBe('fints:Beispielsparkasse:*');
             expect(
                 importedAccountKeys({
                     format: 'camt',
@@ -239,8 +239,10 @@ export default async () => {
         });
 
         await it('routes a connection pattern to an entity', async () => {
-            const res = assignAccount(connectionAccountPattern('fints', 'Sparkasse'), 'privat', path);
-            expect(res.manifest.entities.find((e) => e.id === 'privat')?.accounts).toStrictEqual(['fints:Sparkasse:*']);
+            const res = assignAccount(connectionAccountPattern('fints', 'Beispielsparkasse'), 'privat', path);
+            expect(res.manifest.entities.find((e) => e.id === 'privat')?.accounts).toStrictEqual([
+                'fints:Beispielsparkasse:*',
+            ]);
             expect(res.sharedWith).toStrictEqual([]);
         });
 

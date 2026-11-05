@@ -2,7 +2,7 @@
  * The origin line of a receipt's classification (Idee 11): which Dokumentregel set its fields.
  *
  * Built-in DMS: the rule is stored on the receipt (`ruleOrigin`), so the row states it as a fact —
- * „via Regel „Deutsche Telekom AG“ gesetzt: Dokumenttyp und Kategorie".
+ * „via Regel „Fernmelde AG“ gesetzt: Dokumenttyp und Kategorie".
  *
  * Paperless: the matching is Paperless' own and it does not record which rule assigned a value, so
  * the row asks `paperlessZuordnung` (re-runs the rules against the document's text) and says

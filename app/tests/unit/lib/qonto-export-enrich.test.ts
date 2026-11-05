@@ -9,14 +9,14 @@ function tx(over: Partial<UnifiedTransaction>): UnifiedTransaction {
 export default async () => {
     await describe('enrichCamtFromMerchants', async () => {
         const merchants = [
-            { iban: 'DE15', dates: ['2025-11-28', '2025-11-29'], amount: -48.29, merchant: 'DIGITALOCEAN.COM', method: 'Karte' },
+            { iban: 'DE15', dates: ['2025-11-28', '2025-11-29'], amount: -48.29, merchant: 'WOLKENRECHNER.COM', method: 'Karte' },
         ];
 
         await it('folds the merchant into a camt tx matched by iban+date+amount', async () => {
             const { enriched, matched } = enrichCamtFromMerchants([tx({ purpose: 'NONREF 9999' })], merchants);
             expect(matched).toBe(1);
-            expect(enriched[0].counterparty).toBe('DIGITALOCEAN.COM');
-            expect(enriched[0].purpose).toContain('DIGITALOCEAN.COM');
+            expect(enriched[0].counterparty).toBe('WOLKENRECHNER.COM');
+            expect(enriched[0].purpose).toContain('WOLKENRECHNER.COM');
             expect(enriched[0].purpose).toContain('Karte');
         });
 
