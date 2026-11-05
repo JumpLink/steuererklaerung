@@ -172,11 +172,15 @@ export function parseUebertragungsprotokoll(text: string): Uebertragungsprotokol
     };
 }
 
-/** The declared amount the register stores: USt-VA Kz 83, USt-Jahr Zeile 118; none otherwise. */
+/**
+ * The declared amount the register stores: USt-VA Kz 83, USt-Jahr Zeile 120 (the Abschlusszahlung,
+ * same as `declaredAmountFromSnapshot` on the ERiC path — not Zeile 118, the year's whole tax,
+ * which the open-payments tracker would demand again); none otherwise.
+ */
 export function declaredAmountOf(p: Uebertragungsprotokoll): number | undefined {
     if (p.kind === 'ustva') return p.kennzahlen.find((k) => k.kz === 83)?.value;
     if (p.kind === 'ust-jahr') {
-        const v = p.zeilen.find((z) => z.zeile === 118)?.values.at(-1);
+        const v = p.zeilen.find((z) => z.zeile === 120)?.values.at(-1);
         return typeof v === 'number' ? v : undefined;
     }
     return undefined;

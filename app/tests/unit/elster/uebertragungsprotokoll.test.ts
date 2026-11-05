@@ -16,11 +16,11 @@ const UST_JAHR = `${HEAD}
 Umsatzsteuererklärung 2025
 Kalenderjahr   2025
  3 Berichtigte Steuererklärung
- 22      Lieferungen und sonstige Leistungen zu 19 %           15.030                                                 2.855,70
- 35 Veräußerungs- / Aufgabegewinne aus dem Gesamthandsvermögen -1.291,85
- 43 Ende der Gesellschaft / Gemeinschaft 31.10.2025
- 118     Verbleibende Umsatzsteuer                                                                            1.091,16
- 120     Noch an die Finanzkasse zu entrichten – Abschlusszahlung - Erstattungsanspruch                            1.091,16
+ 22      Lieferungen und sonstige Leistungen zu 19 %           12.400                                                 2.356,00
+ 35 Veräußerungs- / Aufgabegewinne aus dem Gesamthandsvermögen -1.234,56
+ 43 Ende der Gesellschaft / Gemeinschaft 30.09.2025
+ 118     Verbleibende Umsatzsteuer                                                                            1.800,00
+ 120     Noch an die Finanzkasse zu entrichten – Abschlusszahlung - Erstattungsanspruch                            1.200,00
 Seite 1 von 3
 ${HEAD}
 `;
@@ -29,18 +29,18 @@ const USTVA = `${HEAD}
 Umsatzsteuer-Voranmeldung
 Jahr   2025
 Zeitraum   IV. Kalendervierteljahr
-zum Steuersatz von 19 Prozent                                     81                             2.708 €
-Vorsteuerbeträge aus Rechnungen von anderen Unternehmern (§ 15 Absatz 1 Satz 1 Nummer 1                  66            73,95 €
-Verbleibende Umsatzsteuer-Vorauszahlung beziehungsweise verbleibender Überschuss                    83               440,57 €
+zum Steuersatz von 19 Prozent                                     81                             3.100 €
+Vorsteuerbeträge aus Rechnungen von anderen Unternehmern (§ 15 Absatz 1 Satz 1 Nummer 1                  66            81,20 €
+Verbleibende Umsatzsteuer-Vorauszahlung beziehungsweise verbleibender Überschuss                    83               507,80 €
 `;
 
 export default async () => {
     await describe('Übertragungsprotokoll parser', async () => {
         await it('parses German numbers', async () => {
             expect(parseGermanNumber('1.234,56')).toBe(1234.56);
-            expect(parseGermanNumber('-1.291,85')).toBe(-1291.85);
-            expect(parseGermanNumber('15.030')).toBe(15030);
-            expect(parseGermanNumber('31.10.2025')).toBe(null);
+            expect(parseGermanNumber('-1.234,56')).toBe(-1234.56);
+            expect(parseGermanNumber('12.400')).toBe(12400);
+            expect(parseGermanNumber('30.09.2025')).toBe(null);
             expect(parseGermanNumber('abc')).toBe(null);
         });
 
@@ -54,11 +54,12 @@ export default async () => {
             expect(eingangIsoDate(p)).toBe('2026-07-15');
             const z22 = p.zeilen.find((z) => z.zeile === 22)!;
             expect(z22.values.length).toBe(2);
-            expect(z22.values[0]).toBe(15030);
-            expect(z22.values[1]).toBe(2855.7);
-            expect(p.zeilen.find((z) => z.zeile === 35)!.values[0]).toBe(-1291.85);
-            expect(p.zeilen.find((z) => z.zeile === 43)!.values[0]).toBe('31.10.2025');
-            expect(declaredAmountOf(p)).toBe(1091.16);
+            expect(z22.values[0]).toBe(12400);
+            expect(z22.values[1]).toBe(2356);
+            expect(p.zeilen.find((z) => z.zeile === 35)!.values[0]).toBe(-1234.56);
+            expect(p.zeilen.find((z) => z.zeile === 43)!.values[0]).toBe('30.09.2025');
+            // Zeile 120 (Abschlusszahlung), not Zeile 118 (the year's whole tax).
+            expect(declaredAmountOf(p)).toBe(1200);
         });
 
         await it('reads a USt-VA in Kennzahl layout with Quartal', async () => {
@@ -66,9 +67,9 @@ export default async () => {
             expect(p.kind).toBe('ustva');
             expect(p.period).toBe('2025-Q4');
             expect(p.berichtigt).toBe(false);
-            expect(p.kennzahlen.find((k) => k.kz === 81)!.value).toBe(2708);
-            expect(p.kennzahlen.find((k) => k.kz === 66)!.value).toBe(73.95);
-            expect(declaredAmountOf(p)).toBe(440.57);
+            expect(p.kennzahlen.find((k) => k.kz === 81)!.value).toBe(3100);
+            expect(p.kennzahlen.find((k) => k.kz === 66)!.value).toBe(81.2);
+            expect(declaredAmountOf(p)).toBe(507.8);
         });
 
         await it('maps a month name to YYYY-MM', async () => {
@@ -86,7 +87,7 @@ export default async () => {
         await it('keeps a USt-Jahr whose Zeile 119 mentions the Sondervorauszahlung', async () => {
             const text = UST_JAHR.replace(
                 ' 120 ',
-                ' 119     Vorauszahlungssoll 2025 (einschließlich Sondervorauszahlung)          440,57\n 120 ',
+                ' 119     Vorauszahlungssoll 2025 (einschließlich Sondervorauszahlung)          507,80\n 120 ',
             );
             expect(parseUebertragungsprotokoll(text).kind).toBe('ust-jahr');
         });
@@ -135,7 +136,7 @@ export default async () => {
             expect(plan[0].file).toBe('late.pdf');
             expect(plan[0].supersedes[0]).toBe('early.pdf');
             expect(plan[0].input.filedAt).toBe('2026-07-16');
-            expect(plan[0].input.declaredAmount).toBe(1091.16);
+            expect(plan[0].input.declaredAmount).toBe(1200);
             expect(plan[0].input.note).toBe('ELSTER ep0000abcdefghijklmnopqrstuvwxyz · berichtigt');
         });
     });
