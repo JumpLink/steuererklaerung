@@ -17,6 +17,10 @@ import {
     chipScrollTarget,
     contextTitle,
     demoBannerVariant,
+    explainerPlacement,
+    kpiBlockMode,
+    phoneSubtitleLines,
+    searchVisible,
     headerActionPlan,
     kpiColumns,
     navBadgeCounts,
@@ -271,6 +275,33 @@ export default async () => {
 
         await it('always ends on the total', async () => {
             expect(text(recurringSummaryParts(0, 0, 3))).toBe('3 total');
+        });
+    });
+
+    await describe('phone-rules: step 7 list pages', async () => {
+        await it('caps a row subtitle at two lines on a phone only', async () => {
+            expect(phoneSubtitleLines(true)).toBe(2);
+            expect(phoneSubtitleLines(false)).toBe(0);
+        });
+
+        await it('folds an explainer into an expander only on a phone with text', async () => {
+            expect(explainerPlacement(true, true)).toBe('expander');
+            expect(explainerPlacement(true, false)).toBe('description');
+            expect(explainerPlacement(false, true)).toBe('description');
+        });
+
+        await it('collapses a KPI block on a phone when there are cards', async () => {
+            expect(kpiBlockMode(true, 4)).toBe('expander');
+            expect(kpiBlockMode(true, 0)).toBe('cards');
+            expect(kpiBlockMode(false, 4)).toBe('cards');
+        });
+
+        await it('keeps the search entry visible on a desktop and while it filters', async () => {
+            expect(searchVisible(false, false, '')).toBe(true);
+            expect(searchVisible(true, false, '')).toBe(false);
+            expect(searchVisible(true, true, '')).toBe(true);
+            expect(searchVisible(true, false, ' x ')).toBe(true);
+            expect(searchVisible(true, false, '   ')).toBe(false);
         });
     });
 };

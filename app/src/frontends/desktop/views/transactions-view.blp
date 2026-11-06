@@ -55,9 +55,15 @@ template $BhTransactionsView: Adw.Bin {
               orientation: vertical;
             }
 
-            Gtk.SearchEntry search_entry {
-              placeholder-text: _("Search transactions …");
-              hexpand: true;
+            // A revealer, not a Gtk.SearchBar: the bar's toolbar styling would change the desktop,
+            // where the entry is always shown. On a phone the header menu's Search reveals it.
+            Gtk.Revealer search_revealer {
+              reveal-child: true;
+
+              child: Gtk.SearchEntry search_entry {
+                placeholder-text: _("Search transactions …");
+                hexpand: true;
+              };
             }
 
             // Filter chips (Alle · Einnahmen · Ausgaben · Ohne Beleg) — a linked toggle group, filled in TS.

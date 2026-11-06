@@ -27,7 +27,11 @@ import { showToast } from '../toast.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { BhProjektDetailDialog } from './projekt-detail-dialog.ts';
 import { BhProjektFormDialog } from './projekt-form-dialog.ts';
-import { GroupRows, LoadToken, emptyState, loadIntoStack, markup } from './util.ts';
+import { GroupRows, LoadToken, emptyState, explainerRow, loadIntoStack, markup } from './util.ts';
+import { onNarrow } from '../widgets/narrow.ts';
+import { explainerPlacement, phoneSubtitleLines } from '../widgets/phone-rules.ts';
+import { hideOnPhone, phoneRowActions, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
+import type { ViewAction } from '../view.ts';
 import { _, _n, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
 
@@ -55,11 +59,22 @@ export class BhProjekteView extends Adw.Bin {
     private year = new Date().getFullYear();
     private data: ProjectsData | null = null;
     private ansicht: ProjektAnsicht | null = null;
+    private phone = false;
 
     constructor() {
         super();
         this.summary = new GroupRows(this._summary_group);
         this.list = new GroupRows(this._list_group);
+        onNarrow(this, (narrow) => {
+            if (narrow === this.phone) return;
+            this.phone = narrow;
+            if (this.data) this.fill(this.data);
+        });
+    }
+
+    /** `Add a project` lives in the content header bar on a phone. */
+    headerActions(): ViewAction[] {
+        return [{ label: _('Add a project'), primary: true, run: () => this.openForm(null) }];
     }
 
     reload(entity: AppEntity, year: number): void {
@@ -103,11 +118,12 @@ export class BhProjekteView extends Adw.Bin {
     private fillSummary(data: ProjectsData): void {
         this.summary.clear();
         this._summary_group.set_title(_('Projects'));
-        this._summary_group.set_description(
-            _(
-                'A project bundles a customer, their domains and the contact person for the cover letter. Several recurring invoices can belong to the same project. Projects are optional.',
-            ),
+        const explainer = _(
+            'A project bundles a customer, their domains and the contact person for the cover letter. Several recurring invoices can belong to the same project. Projects are optional.',
         );
+        const folded = explainerPlacement(this.phone, true) === 'expander';
+        this._summary_group.set_description(folded ? null : explainer);
+        if (folded) this.summary.add(explainerRow(explainer));
         const contracts = [...data.schedulesByProject.values()].reduce((sum, ids) => sum + ids.length, 0);
         this.summary.add(
             new Adw.ActionRow({
@@ -126,7 +142,8 @@ export class BhProjekteView extends Adw.Bin {
             valign: Gtk.Align.CENTER,
         });
         add.connect('clicked', () => this.openForm(null));
-        this._list_group.set_header_suffix(add);
+        // In the header bar on a phone — see headerActions().
+        this._list_group.set_header_suffix(hideOnPhone(wrapButtonLabel(add)));
         if (data.projects.length === 0) {
             this.list.add(
                 emptyState({
@@ -157,10 +174,15 @@ export class BhProjekteView extends Adw.Bin {
             subtitle: markup(sub.join(' · ')),
             activatable: true,
         });
+        if (this.phone) row.set_subtitle_lines(phoneSubtitleLines(true));
         row.add_prefix(new Adw.Avatar({ size: 32, text: p.name, showInitials: true, valign: Gtk.Align.CENTER }));
+        // One cluster, so the phone half can give Delete a thumb-sized target — see phoneRowActions().
+        const actions = rowActions([]);
+        row.add_suffix(actions);
+        phoneRowActions(actions);
         const greeting = p.contactPerson?.greeting;
         if (greeting) {
-            row.add_suffix(
+            actions.append(
                 new Gtk.Label({
                     label: fmt(_('Salutation: {name}'), { name: greeting }),
                     cssClasses: ['caption', 'dim-label'],
@@ -170,7 +192,7 @@ export class BhProjekteView extends Adw.Bin {
         }
         const del = new Gtk.Button({ label: _('Delete'), cssClasses: ['flat'], valign: Gtk.Align.CENTER });
         del.connect('clicked', () => void this.askDelete(p)); // the button consumes the click → no row activation
-        row.add_suffix(del);
+        actions.append(del);
         row.connect('activated', () => this.openDetail(p));
         return row;
     }

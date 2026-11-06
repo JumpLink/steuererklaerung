@@ -35,7 +35,10 @@ import { UNKLASSIFIZIERT } from '../../../core/elster/euer-classify.ts';
 import { showToast, showUndoToast } from '../toast.ts';
 import { BhProjektZuordnenDialog } from './projekt-zuordnen-dialog.ts';
 import { BhTxDetailDialog } from './tx-detail-dialog.ts';
-import { GroupRows, LoadToken, amountLabel, emptyState, kpiFlow, loadIntoStack, markup } from './util.ts';
+import { GroupRows, LoadToken, amountLabel, emptyState, kpiFlow, loadIntoStack, markup, type Kpi } from './util.ts';
+import { onNarrow } from '../widgets/narrow.ts';
+import { kpiBlockMode, phoneSubtitleLines, searchVisible } from '../widgets/phone-rules.ts';
+import type { ViewAction } from '../view.ts';
 import { navigateTo } from '../nav.ts';
 import { _, fmt } from '../i18n.ts';
 
@@ -64,6 +67,7 @@ export class BhTransactionsView extends Adw.Bin {
     declare private _stack: Gtk.Stack;
     declare private _error_page: Adw.StatusPage;
     declare private _kpi_box: Gtk.Box;
+    declare private _search_revealer: Gtk.Revealer;
     declare private _search_entry: Gtk.SearchEntry;
     declare private _filter_box: Gtk.Box;
     declare private _list_group: Adw.PreferencesGroup;
@@ -73,7 +77,15 @@ export class BhTransactionsView extends Adw.Bin {
             {
                 GTypeName: 'BhTransactionsView',
                 Template,
-                InternalChildren: ['stack', 'error_page', 'kpi_box', 'search_entry', 'filter_box', 'list_group'],
+                InternalChildren: [
+                    'stack',
+                    'error_page',
+                    'kpi_box',
+                    'search_revealer',
+                    'search_entry',
+                    'filter_box',
+                    'list_group',
+                ],
             },
             this,
         );
@@ -98,12 +110,47 @@ export class BhTransactionsView extends Adw.Bin {
     private zuordnenButton: Gtk.Button | null = null;
     /** The idle source that builds the remaining rows; replaced or removed by the next render. */
     private rowSource = 0;
+    /** Mirrors the window's `narrow`; the KPI block, the search entry and the subtitles follow it. */
+    private phone = false;
+    /** The header menu's Search was pressed — the entry stays revealed until the width widens. */
+    private searchRequested = false;
+    private kpis: Kpi[] = [];
+
+    /** On a phone the search entry hides behind the header menu, which is where GNOME puts it. */
+    headerActions(): ViewAction[] {
+        return [
+            {
+                label: _('Search'),
+                iconName: 'edit-find-symbolic',
+                run: () => {
+                    this.searchRequested = true;
+                    this.applySearchVisibility();
+                    this._search_entry.grab_focus();
+                },
+            },
+        ];
+    }
+
+    private applySearchVisibility(): void {
+        this._search_revealer.set_reveal_child(searchVisible(this.phone, this.searchRequested, this.search));
+    }
 
     constructor() {
         super();
         this.list = new GroupRows(this._list_group);
+        onNarrow(this, (narrow) => {
+            if (narrow === this.phone) return;
+            this.phone = narrow;
+            if (!narrow) this.searchRequested = false;
+            this.applySearchVisibility();
+            // Both are rebuilt rather than restyled: a rebuilt block is the simplest way to swap
+            // cards for an expander, and the row cap is cheap to re-apply.
+            if (this.kpis.length) this.renderKpi();
+            if (this.rows.length) this.renderList();
+        });
         this._search_entry.connect('search-changed', () => {
             this.search = (this._search_entry.get_text() ?? '').trim().toLowerCase();
+            this.applySearchVisibility();
             this.renderList();
         });
     }
@@ -154,28 +201,41 @@ export class BhTransactionsView extends Adw.Bin {
     }
 
     private fillKpi(data: EnrichedTxData, year: number): void {
+        const t = data.totals;
+        // The net figures come from the EÜR aggregate (same numbers the Steuer view shows); the count
+        // is the classified rows. Ausgaben is a positive magnitude in the aggregate — show it signed.
+        this.kpis = [
+            { label: fmt(_('Transactions {year}'), { year }), value: String(data.rows.length) },
+            { label: _('Income'), value: eur(t.incomeNet), accent: 'success', sub: fmt(_('net {year}'), { year }) },
+            { label: _('Expenses'), value: eur(-t.expenseNet), accent: 'error', sub: fmt(_('net {year}'), { year }) },
+            { label: _('Balance'), value: eur(t.profit), accent: t.profit >= 0 ? 'success' : 'error' },
+        ];
+        this.renderKpi();
+    }
+
+    private renderKpi(): void {
         let child = this._kpi_box.get_first_child();
         while (child) {
             const next = child.get_next_sibling();
             this._kpi_box.remove(child);
             child = next;
         }
-        const t = data.totals;
-        // The net figures come from the EÜR aggregate (same numbers the Steuer view shows); the count
-        // is the classified rows. Ausgaben is a positive magnitude in the aggregate — show it signed.
-        this._kpi_box.append(
-            kpiFlow([
-                { label: fmt(_('Transactions {year}'), { year }), value: String(data.rows.length) },
-                { label: _('Income'), value: eur(t.incomeNet), accent: 'success', sub: fmt(_('net {year}'), { year }) },
-                {
-                    label: _('Expenses'),
-                    value: eur(-t.expenseNet),
-                    accent: 'error',
-                    sub: fmt(_('net {year}'), { year }),
-                },
-                { label: _('Balance'), value: eur(t.profit), accent: t.profit >= 0 ? 'success' : 'error' },
-            ]),
-        );
+        const cards = kpiFlow(this.kpis);
+        if (kpiBlockMode(this.phone, this.kpis.length) === 'cards') {
+            this._kpi_box.append(cards);
+            return;
+        }
+        // A list view's numbers are context, not content: one closed row titled with the balance
+        // keeps them reachable without pushing the first booking below the fold.
+        const balance = this.kpis[this.kpis.length - 1];
+        const expander = new Adw.ExpanderRow({
+            title: _('Figures'),
+            subtitle: markup(`${balance.label}: ${balance.value}`),
+        });
+        expander.add_row(new Gtk.ListBoxRow({ child: cards, activatable: false, selectable: false }));
+        const group = new Adw.PreferencesGroup();
+        group.add(expander);
+        this._kpi_box.append(group);
     }
 
     /**
@@ -358,6 +418,8 @@ export class BhTransactionsView extends Adw.Bin {
         if (projekt?.length)
             sub.push(fmt(_('Project {names}'), { names: [...new Set(projekt.map((p) => p.projektName))].join(', ') }));
         const row = new Adw.ActionRow({ title: markup(title), subtitle: markup(sub.join('  ·  ')), activatable: true });
+        // A three-line subtitle makes a 40-row list unscannable at phone width.
+        if (this.phone) row.set_subtitle_lines(phoneSubtitleLines(true));
 
         if (this.selecting && r.amount < 0) {
             const check = new Gtk.CheckButton({ active: this.marked.has(r.id), valign: Gtk.Align.CENTER });

@@ -31,7 +31,9 @@ import { showToast } from '../toast.ts';
 import { hideOnPhone, phoneRowActions, rowActions, wrapButtonLabel } from '../widgets/responsive.ts';
 import type { ViewAction } from '../view.ts';
 import { BhKontaktFormDialog } from './kontakt-form-dialog.ts';
-import { GroupRows, LoadToken, emptyState, loadIntoStack, markup } from './util.ts';
+import { GroupRows, LoadToken, emptyState, explainerRow, loadIntoStack, markup } from './util.ts';
+import { onNarrow } from '../widgets/narrow.ts';
+import { explainerPlacement, phoneSubtitleLines } from '../widgets/phone-rules.ts';
 import { _, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
 
@@ -83,12 +85,21 @@ export class BhKontakteView extends Adw.Bin {
     private receivablesToken = 0;
     /** The toolbar's Import button — the header menu drives it rather than duplicating it. */
     private importBtn: Gtk.Button | null = null;
+    private phone = false;
 
     constructor() {
         super();
         this.summary = new GroupRows(this._summary_group);
         this.list = new GroupRows(this._list_group);
         this.buildFilterChips();
+        onNarrow(this, (narrow) => {
+            if (narrow === this.phone) return;
+            this.phone = narrow;
+            if (this.contacts.length) {
+                this.fillSummary(this.contacts);
+                this.renderList();
+            }
+        });
     }
 
     reload(entity: AppEntity, _year: number): void {
@@ -166,11 +177,12 @@ export class BhKontakteView extends Adw.Bin {
     private fillSummary(contacts: Contact[]): void {
         this.summary.clear();
         this._summary_group.set_title(_('Contacts'));
-        this._summary_group.set_description(
-            _(
-                'The shared master data for customers (invoices → Qonto) and suppliers/correspondents (receipts → Paperless). “Import” pulls existing records from the connected services and links them.',
-            ),
+        const explainer = _(
+            'The shared master data for customers (invoices → Qonto) and suppliers/correspondents (receipts → Paperless). “Import” pulls existing records from the connected services and links them.',
         );
+        const folded = explainerPlacement(this.phone, true) === 'expander';
+        this._summary_group.set_description(folded ? null : explainer);
+        if (folded) this.summary.add(explainerRow(explainer));
         const kunden = contacts.filter((c) => c.isCustomer).length;
         const lieferanten = contacts.filter((c) => c.isSupplier).length;
         this.summary.add(
@@ -258,6 +270,7 @@ export class BhKontakteView extends Adw.Bin {
             subtitle: markup(sub.join(' · ')),
             activatable: true,
         });
+        if (this.phone) row.set_subtitle_lines(phoneSubtitleLines(true));
         // Adw.Avatar self-derives initials + a stable colour from the name (the native equivalent of
         // the web's initials()/avatarColor(); GTK has no inline seed-colour mechanism).
         row.add_prefix(new Adw.Avatar({ size: 32, text: name, showInitials: true, valign: Gtk.Align.CENTER }));

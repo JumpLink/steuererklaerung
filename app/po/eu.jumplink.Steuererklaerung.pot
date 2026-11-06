@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-11-05 14:02+0100\n"
+"POT-Creation-Date: 2026-11-05 14:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1276,7 +1276,7 @@ msgid "Cross-check"
 msgstr ""
 
 #: src/core/actions/elster/wizard.ts:361 src/core/actions/elster/wizard.ts:637
-#: src/frontends/desktop/views/konten-view.ts:377
+#: src/frontends/desktop/views/konten-view.ts:379
 msgid "Check"
 msgstr ""
 
@@ -1365,8 +1365,8 @@ msgstr ""
 #: src/frontends/desktop/views/home-view.ts:212
 #: src/frontends/desktop/views/home-view.ts:432
 #: src/frontends/desktop/views/steuer-view.blp:61
-#: src/frontends/desktop/views/transactions-view.ts:55
-#: src/frontends/desktop/views/transactions-view.ts:169
+#: src/frontends/desktop/views/transactions-view.ts:58
+#: src/frontends/desktop/views/transactions-view.ts:209
 msgid "Income"
 msgstr ""
 
@@ -2713,7 +2713,7 @@ msgstr ""
 msgid "Bank account"
 msgstr ""
 
-#: src/core/elster/home.ts:264 src/frontends/desktop/views/konten-view.ts:60
+#: src/core/elster/home.ts:264 src/frontends/desktop/views/konten-view.ts:62
 msgid "CAMT file"
 msgstr ""
 
@@ -3032,7 +3032,7 @@ msgid "To clarify whether the change was agreed."
 msgstr ""
 
 #: src/core/elster/lieferant-doppelt-bezahlt.ts:105
-#: src/frontends/desktop/views/kontakte-view.ts:287
+#: src/frontends/desktop/views/kontakte-view.ts:300
 #: src/frontends/desktop/views/kontakt-form-dialog.ts:76
 msgid "Supplier"
 msgstr ""
@@ -4331,7 +4331,7 @@ msgid "ERiC not found under {path}."
 msgstr ""
 
 #: src/frontends/cli/elster/eric.ts:73
-#: src/frontends/desktop/views/konten-view.ts:173
+#: src/frontends/desktop/views/konten-view.ts:175
 msgid "ERiC version unknown"
 msgstr ""
 
@@ -4362,7 +4362,7 @@ msgstr ""
 #: src/frontends/desktop/assistent-panel.blp:40
 #: src/frontends/desktop/lotse-panel.blp:36
 #: src/frontends/desktop/views/beleg-upload.ts:131
-#: src/frontends/desktop/views/konten-view.ts:710
+#: src/frontends/desktop/views/konten-view.ts:754
 #: src/frontends/desktop/window.blp:289
 msgid "Close"
 msgstr ""
@@ -4612,8 +4612,8 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/land-steuer.ts:36
 #: src/frontends/desktop/views/entity-dialogs.ts:43
 #: src/frontends/desktop/views/entity-dialogs.ts:102
-#: src/frontends/desktop/views/konten-view.ts:798
-#: src/frontends/desktop/views/konten-view.ts:879
+#: src/frontends/desktop/views/konten-view.ts:842
+#: src/frontends/desktop/views/konten-view.ts:923
 #: src/frontends/desktop/views/laufende-kosten-view.ts:303
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:466
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:76
@@ -4724,7 +4724,7 @@ msgid "Check & match receipts"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:56
-#: src/frontends/desktop/views/transactions-view.ts:246
+#: src/frontends/desktop/views/transactions-view.ts:306
 msgid "Transactions"
 msgstr ""
 
@@ -4752,7 +4752,7 @@ msgstr ""
 
 #: src/frontends/desktop/nav.ts:59
 #: src/frontends/desktop/views/einstellungen-view.ts:78
-#: src/frontends/desktop/views/kontakte-view.ts:168
+#: src/frontends/desktop/views/kontakte-view.ts:179
 msgid "Contacts"
 msgstr ""
 
@@ -4786,7 +4786,7 @@ msgid "Return · EÜR · USt-VA · account"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:74
-#: src/frontends/desktop/views/projekte-view.ts:105
+#: src/frontends/desktop/views/projekte-view.ts:120
 msgid "Projects"
 msgstr ""
 
@@ -4834,6 +4834,7 @@ msgid "The reader stopped while it was working."
 msgstr ""
 
 #: src/frontends/desktop/shortcuts.ts:51
+#: src/frontends/desktop/views/transactions-view.ts:123
 msgid "Search"
 msgstr ""
 
@@ -4867,7 +4868,7 @@ msgid "Navigation"
 msgstr ""
 
 #: src/frontends/desktop/sync-controller.ts:35
-#: src/frontends/desktop/views/konten-view.ts:828
+#: src/frontends/desktop/views/konten-view.ts:872
 msgid "just now"
 msgstr ""
 
@@ -5036,7 +5037,7 @@ msgstr ""
 #: src/frontends/desktop/views/absenden-section.ts:202
 #: src/frontends/desktop/views/absenden-section.ts:203
 #: src/frontends/desktop/views/absenden-section.ts:218
-#: src/frontends/desktop/views/konten-view.ts:177
+#: src/frontends/desktop/views/konten-view.ts:179
 msgid "available"
 msgstr ""
 
@@ -5549,7 +5550,7 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/klassifizierung.ts:409
 #: src/frontends/desktop/views/kontakt-form-dialog.ts:84
 #: src/frontends/desktop/views/kontakt-form-dialog.ts:120
-#: src/frontends/desktop/views/konten-view.ts:880
+#: src/frontends/desktop/views/konten-view.ts:924
 #: src/frontends/desktop/views/projekt-form-dialog.ts:136
 #: src/frontends/desktop/views/projekt-form-dialog.ts:174
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:467
@@ -5660,8 +5661,8 @@ msgstr ""
 #: src/frontends/desktop/views/steuer-view.blp:32
 #: src/frontends/desktop/views/transactions-view.blp:32
 #: src/frontends/desktop/views/ustva-view.blp:32
-#: src/frontends/desktop/views/util.ts:462
-#: src/frontends/desktop/views/util.ts:465
+#: src/frontends/desktop/views/util.ts:479
+#: src/frontends/desktop/views/util.ts:482
 #: src/frontends/desktop/views/vertraege-view.blp:54
 #: src/frontends/desktop/views/zeiten-view.blp:47
 #: src/frontends/desktop/views/zu-pruefen-view.blp:33
@@ -5744,7 +5745,7 @@ msgid "Could not determine candidate transactions"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:318
-#: src/frontends/desktop/views/util.ts:480
+#: src/frontends/desktop/views/util.ts:497
 msgid "Try again"
 msgstr ""
 
@@ -6258,12 +6259,12 @@ msgid "Add receipt"
 msgstr ""
 
 #: src/frontends/desktop/views/dokumente-view.ts:147
-#: src/frontends/desktop/views/transactions-view.ts:249
+#: src/frontends/desktop/views/transactions-view.ts:309
 msgid "{shown} of {total} shown"
 msgstr ""
 
 #: src/frontends/desktop/views/dokumente-view.ts:148
-#: src/frontends/desktop/views/transactions-view.ts:250
+#: src/frontends/desktop/views/transactions-view.ts:310
 msgid "{total} total"
 msgstr ""
 
@@ -6282,7 +6283,7 @@ msgid "Add receipts"
 msgstr ""
 
 #: src/frontends/desktop/views/dokumente-view.ts:175
-#: src/frontends/desktop/views/konten-view.ts:640
+#: src/frontends/desktop/views/konten-view.ts:642
 msgid "{n} transaction"
 msgid_plural "{n} transactions"
 msgstr[0] ""
@@ -7104,7 +7105,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/gewerbe-aufgabe.ts:238
 #: src/frontends/desktop/views/entity-dialogs.ts:103
-#: src/frontends/desktop/views/konten-view.ts:454
+#: src/frontends/desktop/views/konten-view.ts:456
 #: src/frontends/desktop/views/projekt-detail-dialog.ts:158
 msgid "Remove"
 msgstr ""
@@ -7566,10 +7567,10 @@ msgid "Contracts and projects naming it fall back to the next level."
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:218
-#: src/frontends/desktop/views/kontakte-view.ts:290
-#: src/frontends/desktop/views/kontakte-view.ts:317
-#: src/frontends/desktop/views/projekte-view.ts:171
-#: src/frontends/desktop/views/projekte-view.ts:198
+#: src/frontends/desktop/views/kontakte-view.ts:303
+#: src/frontends/desktop/views/kontakte-view.ts:330
+#: src/frontends/desktop/views/projekte-view.ts:193
+#: src/frontends/desktop/views/projekte-view.ts:220
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:624
 #: src/frontends/desktop/views/zeiten-view.ts:491
 msgid "Delete"
@@ -8309,7 +8310,7 @@ msgstr ""
 #: src/frontends/desktop/views/forderungen-view.ts:127
 #: src/frontends/desktop/views/forderungen-view.ts:157
 #: src/frontends/desktop/views/projekt-detail-dialog.ts:111
-#: src/frontends/desktop/views/projekte-view.ts:152
+#: src/frontends/desktop/views/projekte-view.ts:169
 #: src/frontends/desktop/views/rechnungen-view.ts:486
 #: src/frontends/desktop/views/rechnungen-view.ts:492
 #: src/frontends/desktop/views/rechnungen-view.ts:498
@@ -8933,16 +8934,16 @@ msgstr ""
 
 #: src/frontends/desktop/views/home-view.ts:212
 #: src/frontends/desktop/views/home-view.ts:213
-#: src/frontends/desktop/views/transactions-view.ts:169
-#: src/frontends/desktop/views/transactions-view.ts:174
+#: src/frontends/desktop/views/transactions-view.ts:209
+#: src/frontends/desktop/views/transactions-view.ts:210
 msgid "net {year}"
 msgstr ""
 
 #: src/frontends/desktop/views/home-view.ts:213
 #: src/frontends/desktop/views/home-view.ts:433
 #: src/frontends/desktop/views/steuer-view.blp:66
-#: src/frontends/desktop/views/transactions-view.ts:56
-#: src/frontends/desktop/views/transactions-view.ts:171
+#: src/frontends/desktop/views/transactions-view.ts:59
+#: src/frontends/desktop/views/transactions-view.ts:210
 msgid "Expenses"
 msgstr ""
 
@@ -9020,111 +9021,111 @@ msgstr ""
 msgid "All contacts"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:39
+#: src/frontends/desktop/views/kontakte-view.ts:41
 #: src/frontends/desktop/views/kontakt-form-dialog.ts:25
 msgid "Company"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:40
+#: src/frontends/desktop/views/kontakte-view.ts:42
 #: src/frontends/desktop/views/kontakt-form-dialog.ts:25
 msgid "Individual"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:41
+#: src/frontends/desktop/views/kontakte-view.ts:43
 #: src/frontends/desktop/views/kontakt-form-dialog.ts:25
 msgid "Freelancer"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:42
+#: src/frontends/desktop/views/kontakte-view.ts:44
 #: src/frontends/desktop/views/kontakt-form-dialog.ts:25
 msgid "Organisation"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:50
+#: src/frontends/desktop/views/kontakte-view.ts:52
 #: src/frontends/desktop/views/rechnungen-view.ts:76
 #: src/frontends/desktop/views/tab-hub.ts:214
-#: src/frontends/desktop/views/transactions-view.ts:54
+#: src/frontends/desktop/views/transactions-view.ts:57
 #: src/frontends/desktop/views/vertraege-view.ts:63
 msgid "All"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:51
+#: src/frontends/desktop/views/kontakte-view.ts:53
 msgid "Customers"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:52
+#: src/frontends/desktop/views/kontakte-view.ts:54
 msgid "Suppliers"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:122
+#: src/frontends/desktop/views/kontakte-view.ts:133
 msgid "Contacts could not be loaded"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:171
+#: src/frontends/desktop/views/kontakte-view.ts:181
 msgid ""
 "The shared master data for customers (invoices → Qonto) and suppliers/"
 "correspondents (receipts → Paperless). “Import” pulls existing records from "
 "the connected services and links them."
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:178
-#: src/frontends/desktop/views/projekte-view.ts:115
+#: src/frontends/desktop/views/kontakte-view.ts:190
+#: src/frontends/desktop/views/projekte-view.ts:131
 msgid "{n} in total"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:179
+#: src/frontends/desktop/views/kontakte-view.ts:191
 msgid "{customers} customers · {suppliers} suppliers"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:196
+#: src/frontends/desktop/views/kontakte-view.ts:208
 msgid "No contacts yet"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:198
+#: src/frontends/desktop/views/kontakte-view.ts:210
 msgid ""
 "Customers and suppliers live here — they fill in invoices and match receipts."
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:200
+#: src/frontends/desktop/views/kontakte-view.ts:212
 msgid "Create a contact"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:204
-#: src/frontends/desktop/views/transactions-view.ts:262
+#: src/frontends/desktop/views/kontakte-view.ts:216
+#: src/frontends/desktop/views/transactions-view.ts:322
 msgid "Nothing found"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:205
+#: src/frontends/desktop/views/kontakte-view.ts:217
 msgid "No contact matches the search and the filter."
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:222
+#: src/frontends/desktop/views/kontakte-view.ts:234
 msgid "Add a contact"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:223
-#: src/frontends/desktop/views/kontakte-view.ts:236
-#: src/frontends/desktop/views/kontakte-view.ts:342
+#: src/frontends/desktop/views/kontakte-view.ts:235
+#: src/frontends/desktop/views/kontakte-view.ts:248
+#: src/frontends/desktop/views/kontakte-view.ts:355
 msgid "Import"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:231
+#: src/frontends/desktop/views/kontakte-view.ts:243
 msgid "＋ Add a contact"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:237
+#: src/frontends/desktop/views/kontakte-view.ts:249
 msgid "Import and link customers from Qonto and correspondents from Paperless"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:253
+#: src/frontends/desktop/views/kontakte-view.ts:265
 msgid "VAT ID {number}"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:280
+#: src/frontends/desktop/views/kontakte-view.ts:293
 msgid "{amount} open"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:286
+#: src/frontends/desktop/views/kontakte-view.ts:299
 #: src/frontends/desktop/views/kontakt-form-dialog.ts:74
 #: src/frontends/desktop/views/projekt-form-dialog.ts:76
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:127
@@ -9134,43 +9135,43 @@ msgstr ""
 msgid "Customer"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:313
+#: src/frontends/desktop/views/kontakte-view.ts:326
 msgid "Delete contact"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:314
+#: src/frontends/desktop/views/kontakte-view.ts:327
 msgid ""
 "Really delete “{name}”? The links to Qonto/Paperless are lost locally only."
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:323
+#: src/frontends/desktop/views/kontakte-view.ts:336
 msgid "Contact deleted"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:326
-#: src/frontends/desktop/views/projekte-view.ts:207
+#: src/frontends/desktop/views/kontakte-view.ts:339
+#: src/frontends/desktop/views/projekte-view.ts:229
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:634
 msgid "Deleting failed"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:334
+#: src/frontends/desktop/views/kontakte-view.ts:347
 msgid "Importing …"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:343
+#: src/frontends/desktop/views/kontakte-view.ts:356
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:322
 msgid "Import failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:348
+#: src/frontends/desktop/views/kontakte-view.ts:361
 msgid "No connected services — nothing to import."
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:352
+#: src/frontends/desktop/views/kontakte-view.ts:365
 msgid "{source}: error"
 msgstr ""
 
-#: src/frontends/desktop/views/kontakte-view.ts:353
+#: src/frontends/desktop/views/kontakte-view.ts:366
 msgid "{source}: {imported} new · {linked} linked · {matched} known"
 msgstr ""
 
@@ -9239,119 +9240,119 @@ msgstr ""
 msgid "System libraries (ELSTER/ERiC)"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:103
-#: src/frontends/desktop/views/konten-view.ts:540
-#: src/frontends/desktop/views/konten-view.ts:561
+#: src/frontends/desktop/views/konten-view.ts:105
+#: src/frontends/desktop/views/konten-view.ts:542
+#: src/frontends/desktop/views/konten-view.ts:563
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.blp:7
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:245
 #: src/frontends/desktop/views/konto-hinzufuegen-dialog.ts:518
 msgid "Add account"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:105
-#: src/frontends/desktop/views/konten-view.ts:530
+#: src/frontends/desktop/views/konten-view.ts:107
+#: src/frontends/desktop/views/konten-view.ts:532
 msgid "Check connections"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:124
+#: src/frontends/desktop/views/konten-view.ts:126
 msgid "Accounts could not be loaded"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:152
+#: src/frontends/desktop/views/konten-view.ts:154
 msgid ""
 "Needed to check and send to ELSTER. Official builds include ERiC; otherwise "
 "install it yourself (ELSTER developer area). Empty = ERIC_HOME, bundled ERiC "
 "or the default location."
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:161
+#: src/frontends/desktop/views/konten-view.ts:163
 msgid "ERiC status not available: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:180
+#: src/frontends/desktop/views/konten-view.ts:182
 msgid ""
 "The native FFI module of this installation is missing, so ERiC cannot be "
 "loaded: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:185
+#: src/frontends/desktop/views/konten-view.ts:187
 msgid ""
 "The ERiC binding of this installation is broken. Rebuild it with \"gjsify "
 "run -w @steuererklaerung/eric build:meson\" or reinstall the app."
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:188
+#: src/frontends/desktop/views/konten-view.ts:190
 msgid "Library cannot be loaded: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:189
+#: src/frontends/desktop/views/konten-view.ts:191
 msgid "not found — expected at {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:191
+#: src/frontends/desktop/views/konten-view.ts:193
 msgid " · missing: {names}"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:193
+#: src/frontends/desktop/views/konten-view.ts:195
 msgid " · {n} plugin"
 msgid_plural " · {n} plugins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/konten-view.ts:195
+#: src/frontends/desktop/views/konten-view.ts:197
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:523
 msgid "Error"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:195
+#: src/frontends/desktop/views/konten-view.ts:197
 msgid "not found"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:202
+#: src/frontends/desktop/views/konten-view.ts:204
 msgid "ERiC log files"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:206
+#: src/frontends/desktop/views/konten-view.ts:208
 msgid ""
 "ERiC writes its log files locally to {path}. They stay on this computer and "
 "are passed on only in a support case and only with your explicit permission."
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:218
+#: src/frontends/desktop/views/konten-view.ts:220
 msgid "there is no ERiC for this architecture"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:220
+#: src/frontends/desktop/views/konten-view.ts:222
 msgid "Sending to ELSTER is not possible"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:223
+#: src/frontends/desktop/views/konten-view.ts:225
 msgid ""
 "Generating and checking the XML still works; to send, upload the XML to Mein "
 "ELSTER or start the app on an x86_64 system."
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:233
+#: src/frontends/desktop/views/konten-view.ts:235
 msgid "Own ERiC folder (overrides ERIC_HOME and the bundled one)"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:248
+#: src/frontends/desktop/views/konten-view.ts:250
 msgid "Choose ERiC folder (contains lib/libericapi.so)"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:251
+#: src/frontends/desktop/views/konten-view.ts:253
 msgid "Choose ERiC folder"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:271
+#: src/frontends/desktop/views/konten-view.ts:273
 msgid "Reset to the bundled or detected ERiC"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:284
+#: src/frontends/desktop/views/konten-view.ts:286
 msgid "Download ERiC yourself"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:287
+#: src/frontends/desktop/views/konten-view.ts:289
 msgid ""
 "This build does not bring ERiC with it (the licence allows redistribution "
 "only in the official release). After unpacking, choose the folder here that "
@@ -9360,249 +9361,258 @@ msgid ""
 "it to Mein ELSTER still does."
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:294
+#: src/frontends/desktop/views/konten-view.ts:296
 msgid "Open elster.de"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:305
+#: src/frontends/desktop/views/konten-view.ts:307
 msgid "ELSTER certificate (.pfx)"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:311
+#: src/frontends/desktop/views/konten-view.ts:313
 msgid "Choose certificate file"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:314
+#: src/frontends/desktop/views/konten-view.ts:316
 msgid "Choose ELSTER certificate"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:348
+#: src/frontends/desktop/views/konten-view.ts:350
 msgid "ELSTER Hersteller-ID (bundled with the app, enter your own to override)"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:349
+#: src/frontends/desktop/views/konten-view.ts:351
 msgid "ELSTER Hersteller-ID (elster.de)"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:352
+#: src/frontends/desktop/views/konten-view.ts:354
 msgid "bundled"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:362
+#: src/frontends/desktop/views/konten-view.ts:364
 msgid "DatenLieferant (name)"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:387
+#: src/frontends/desktop/views/konten-view.ts:389
 msgid "Certificate path could not be saved: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:390
+#: src/frontends/desktop/views/konten-view.ts:392
 msgid "Certificate path saved"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:390
+#: src/frontends/desktop/views/konten-view.ts:392
 msgid "Certificate path removed"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:402
+#: src/frontends/desktop/views/konten-view.ts:404
 msgid "{label} could not be saved: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:405
+#: src/frontends/desktop/views/konten-view.ts:407
 msgid "{label} saved"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:417
-#: src/frontends/desktop/views/konten-view.ts:434
-#: src/frontends/desktop/views/konten-view.ts:875
+#: src/frontends/desktop/views/konten-view.ts:419
+#: src/frontends/desktop/views/konten-view.ts:436
+#: src/frontends/desktop/views/konten-view.ts:919
 msgid "Certificate PIN"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:418
+#: src/frontends/desktop/views/konten-view.ts:420
 msgid "Keyring not available — the PIN is asked for when sending."
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:435
+#: src/frontends/desktop/views/konten-view.ts:437
 msgid "stored in the keyring"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:435
+#: src/frontends/desktop/views/konten-view.ts:437
 msgid "no PIN stored"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:446
+#: src/frontends/desktop/views/konten-view.ts:448
 msgid "Change"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:446
+#: src/frontends/desktop/views/konten-view.ts:448
 msgid "Store"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:471
+#: src/frontends/desktop/views/konten-view.ts:473
 msgid "Certificate PIN stored in the keyring"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:472
+#: src/frontends/desktop/views/konten-view.ts:474
 msgid "Certificate PIN could not be saved."
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:481
+#: src/frontends/desktop/views/konten-view.ts:483
 msgid "Certificate PIN removed"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:490
+#: src/frontends/desktop/views/konten-view.ts:492
 msgid "ERiC path could not be saved: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:493
+#: src/frontends/desktop/views/konten-view.ts:495
 msgid "ERiC path saved"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:513
+#: src/frontends/desktop/views/konten-view.ts:515
 msgid "Active connections"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:518
+#: src/frontends/desktop/views/konten-view.ts:520
 msgid "{total} account · {live} live"
 msgid_plural "{total} accounts · {live} live"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/konten-view.ts:554
+#: src/frontends/desktop/views/konten-view.ts:556
 msgid "No accounts yet"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:557
+#: src/frontends/desktop/views/konten-view.ts:559
 msgid ""
 "Import a bank statement (CAMT, PayPal) or connect Qonto or your bank via "
 "FinTS — then the app calculates from your transactions."
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:591
+#: src/frontends/desktop/views/konten-view.ts:593
 msgid "Accounts could not be reloaded: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:627
+#: src/frontends/desktop/views/konten-view.ts:629
 msgctxt "account source"
 msgid "live"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:627
+#: src/frontends/desktop/views/konten-view.ts:629
 msgctxt "account source"
 msgid "File"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:637
+#: src/frontends/desktop/views/konten-view.ts:639
 msgid "Synced {when}"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:639
+#: src/frontends/desktop/views/konten-view.ts:641
 msgid "Imported {range}"
 msgstr ""
 
 #. TRANSLATORS: Tooltip on the headerbar button that syncs Qonto and Paperless
-#: src/frontends/desktop/views/konten-view.ts:657
-#: src/frontends/desktop/views/konten-view.ts:746
+#: src/frontends/desktop/views/konten-view.ts:662
+#: src/frontends/desktop/views/konten-view.ts:700
+#: src/frontends/desktop/views/konten-view.ts:790
 #: src/frontends/desktop/window.blp:218
 msgid "Sync"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:668
-#: src/frontends/desktop/views/konten-view.ts:788
+#: src/frontends/desktop/views/konten-view.ts:674
+#: src/frontends/desktop/views/konten-view.ts:704
+#: src/frontends/desktop/views/konten-view.ts:832
 msgid "Disconnect"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:707
+#. TRANSLATORS: Tooltip on the headerbar button holding a page's secondary actions
+#: src/frontends/desktop/views/konten-view.ts:717
+#: src/frontends/desktop/widgets/responsive.ts:252
+#: src/frontends/desktop/window.blp:235
+msgid "More actions"
+msgstr ""
+
+#: src/frontends/desktop/views/konten-view.ts:751
 msgid "All connections reachable"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:707
+#: src/frontends/desktop/views/konten-view.ts:751
 msgid "Not all connections reachable"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:713
+#: src/frontends/desktop/views/konten-view.ts:757
 msgid "Check failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:737
+#: src/frontends/desktop/views/konten-view.ts:781
 msgid "Syncing …"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:747
+#: src/frontends/desktop/views/konten-view.ts:791
 msgid "Sync failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:765
+#: src/frontends/desktop/views/konten-view.ts:809
 msgid "Disconnected · {n} transaction deleted"
 msgid_plural "Disconnected · {n} transactions deleted"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/konten-view.ts:771
+#: src/frontends/desktop/views/konten-view.ts:815
 msgid "Sync stopped — data kept"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:775
+#: src/frontends/desktop/views/konten-view.ts:819
 msgid "Disconnect failed"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:791
+#: src/frontends/desktop/views/konten-view.ts:835
 msgid "{source} · {ref} — {n} transaction. What should happen?"
 msgid_plural "{source} · {ref} — {n} transactions. What should happen?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/konten-view.ts:799
+#: src/frontends/desktop/views/konten-view.ts:843
 msgid "Only stop syncing"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:800
+#: src/frontends/desktop/views/konten-view.ts:844
 msgid "Delete everything"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:824
+#: src/frontends/desktop/views/konten-view.ts:868
 msgid "never"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:830
+#: src/frontends/desktop/views/konten-view.ts:874
 msgid "{n} minute ago"
 msgid_plural "{n} minutes ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/konten-view.ts:832
+#: src/frontends/desktop/views/konten-view.ts:876
 msgid "{n} hour ago"
 msgid_plural "{n} hours ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/konten-view.ts:834
+#: src/frontends/desktop/views/konten-view.ts:878
 msgid "{n} day ago"
 msgid_plural "{n} days ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/konten-view.ts:835
+#: src/frontends/desktop/views/konten-view.ts:879
 msgid "on {date}"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:841
+#: src/frontends/desktop/views/konten-view.ts:885
 msgid "{label}: nothing to sync"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:844
+#: src/frontends/desktop/views/konten-view.ts:888
 msgid "{label}: error — {errors}"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:847
+#: src/frontends/desktop/views/konten-view.ts:891
 msgid "{label}: +{added} new · {updated} updated"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:871
+#: src/frontends/desktop/views/konten-view.ts:915
 msgid "Store certificate PIN"
 msgstr ""
 
-#: src/frontends/desktop/views/konten-view.ts:872
+#: src/frontends/desktop/views/konten-view.ts:916
 msgid "{note} Never in clear text in the configuration."
 msgstr ""
 
@@ -10331,7 +10341,7 @@ msgid "via time entries"
 msgstr ""
 
 #: src/frontends/desktop/views/projekt-detail-dialog.ts:215
-#: src/frontends/desktop/views/transactions-view.ts:341
+#: src/frontends/desktop/views/transactions-view.ts:401
 #: src/frontends/desktop/views/tx-detail-dialog.ts:262
 msgid "Assignment taken back"
 msgstr ""
@@ -10407,59 +10417,63 @@ msgstr ""
 msgid "All projects"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:76
+#: src/frontends/desktop/views/projekte-view.ts:77
+msgid "Add a project"
+msgstr ""
+
+#: src/frontends/desktop/views/projekte-view.ts:91
 msgid "Projects could not be loaded"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:108
+#: src/frontends/desktop/views/projekte-view.ts:122
 msgid ""
 "A project bundles a customer, their domains and the contact person for the "
 "cover letter. Several recurring invoices can belong to the same project. "
 "Projects are optional."
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:116
+#: src/frontends/desktop/views/projekte-view.ts:132
 msgid "{n} assigned recurring invoices"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:124
+#: src/frontends/desktop/views/projekte-view.ts:140
 msgid "＋ Add a project"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:134
+#: src/frontends/desktop/views/projekte-view.ts:151
 msgid "No projects yet"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:135
+#: src/frontends/desktop/views/projekte-view.ts:152
 msgid ""
 "A project belongs to a customer and sets who the cover letter addresses."
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:136
+#: src/frontends/desktop/views/projekte-view.ts:153
 msgid "Create a project"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:150
+#: src/frontends/desktop/views/projekte-view.ts:167
 msgid "Contact {id} is missing"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:153
+#: src/frontends/desktop/views/projekte-view.ts:170
 msgid "Result {year}: {amount}"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:165
+#: src/frontends/desktop/views/projekte-view.ts:187
 msgid "Salutation: {name}"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:196
+#: src/frontends/desktop/views/projekte-view.ts:218
 msgid "Delete project"
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:197
+#: src/frontends/desktop/views/projekte-view.ts:219
 msgid "Really delete “{name}”? Times already recorded keep their name."
 msgstr ""
 
-#: src/frontends/desktop/views/projekte-view.ts:204
+#: src/frontends/desktop/views/projekte-view.ts:226
 msgid "Project deleted"
 msgstr ""
 
@@ -10532,8 +10546,8 @@ msgid "Project created"
 msgstr ""
 
 #: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:59
-#: src/frontends/desktop/views/transactions-view.ts:307
-#: src/frontends/desktop/views/transactions-view.ts:326
+#: src/frontends/desktop/views/transactions-view.ts:367
+#: src/frontends/desktop/views/transactions-view.ts:386
 #: src/frontends/desktop/views/tx-detail-dialog.ts:227
 msgid "Assign to project"
 msgstr ""
@@ -11756,7 +11770,7 @@ msgid "German tax features off"
 msgstr ""
 
 #: src/frontends/desktop/views/setup-assistant.ts:648
-#: src/frontends/desktop/views/transactions-view.ts:313
+#: src/frontends/desktop/views/transactions-view.ts:373
 msgid "Done"
 msgstr ""
 
@@ -12011,7 +12025,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/frontends/desktop/views/steuer-view.ts:249
-#: src/frontends/desktop/views/transactions-view.ts:353
+#: src/frontends/desktop/views/transactions-view.ts:413
 msgid "(unclassified)"
 msgstr ""
 
@@ -12123,75 +12137,79 @@ msgstr ""
 msgid "Loading transactions …"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.blp:59
+#: src/frontends/desktop/views/transactions-view.blp:64
 msgid "Search transactions …"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:57
+#: src/frontends/desktop/views/transactions-view.ts:60
 msgid "Without receipt"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:135
+#: src/frontends/desktop/views/transactions-view.ts:182
 msgid "Could not load the transactions"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:168
+#: src/frontends/desktop/views/transactions-view.ts:208
 msgid "Transactions {year}"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:176
+#: src/frontends/desktop/views/transactions-view.ts:211
 msgid "Balance"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:263
+#: src/frontends/desktop/views/transactions-view.ts:232
+msgid "Figures"
+msgstr ""
+
+#: src/frontends/desktop/views/transactions-view.ts:323
 msgid "No transaction matches the search and filter."
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:264
+#: src/frontends/desktop/views/transactions-view.ts:324
 msgid "Reset filter"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:268
+#: src/frontends/desktop/views/transactions-view.ts:328
 msgid "No transactions yet"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:269
+#: src/frontends/desktop/views/transactions-view.ts:329
 msgid "Transactions come from a connected account or from an imported file."
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:270
+#: src/frontends/desktop/views/transactions-view.ts:330
 msgid "Connect account"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:308
+#: src/frontends/desktop/views/transactions-view.ts:368
 msgid "Assign the marked expenses to a project"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:313
+#: src/frontends/desktop/views/transactions-view.ts:373
 msgid "Select"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:314
+#: src/frontends/desktop/views/transactions-view.ts:374
 msgid "End selection"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:314
+#: src/frontends/desktop/views/transactions-view.ts:374
 msgid "Mark expenses to assign them to a project"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:326
+#: src/frontends/desktop/views/transactions-view.ts:386
 msgid "Assign to project ({n})"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:359
+#: src/frontends/desktop/views/transactions-view.ts:419
 msgid "Project {names}"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:364
+#: src/frontends/desktop/views/transactions-view.ts:426
 msgid "Select: {title} · {date}"
 msgstr ""
 
-#: src/frontends/desktop/views/transactions-view.ts:378
+#: src/frontends/desktop/views/transactions-view.ts:440
 msgid "no receipt"
 msgstr ""
 
@@ -12521,42 +12539,46 @@ msgstr ""
 msgid "{what} saved"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:380
+#: src/frontends/desktop/views/util.ts:194
+msgid "What is this?"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:397
 msgid "Could not refresh — showing the previous data"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:415
+#: src/frontends/desktop/views/util.ts:432
 msgid "Not set up yet"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:417
+#: src/frontends/desktop/views/util.ts:434
 msgid ""
 "There is no configuration yet. The assistant creates it — entity, "
 "Steuernummer (tax number) and where the data should live."
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:420
+#: src/frontends/desktop/views/util.ts:437
 msgid "Start setup"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:425
+#: src/frontends/desktop/views/util.ts:442
 msgid "{capability} needs Paperless"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:426
+#: src/frontends/desktop/views/util.ts:443
 msgid "Receipt management can be switched in the settings."
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:427
-#: src/frontends/desktop/views/util.ts:437
+#: src/frontends/desktop/views/util.ts:444
+#: src/frontends/desktop/views/util.ts:454
 msgid "Go to settings"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:432
+#: src/frontends/desktop/views/util.ts:449
 msgid "Paperless is not set up yet"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:434
+#: src/frontends/desktop/views/util.ts:451
 msgid ""
 "Paperless lacks the document types and custom fields the figures are read "
 "from. They can be created in the settings."
@@ -14099,12 +14121,6 @@ msgstr ""
 #: src/frontends/desktop/widgets/glossary-help.ts:56
 #, javascript-format
 msgid "Explanation: %s"
-msgstr ""
-
-#. TRANSLATORS: Tooltip on the headerbar button holding a page's secondary actions
-#: src/frontends/desktop/widgets/responsive.ts:252
-#: src/frontends/desktop/window.blp:235
-msgid "More actions"
 msgstr ""
 
 #. TRANSLATORS: Primary menu item opening the assistant that adds a further entity

@@ -452,6 +452,17 @@ banner gets a short title (`Demo data`) as well as `My data`, because the long t
 line with the button. The 48 px chevron on Up next rows was not added: the rows are fully
 activatable and already at least 56 px tall.
 
+**Built (step 7), with deviations.** Transactions folds its KPI cards into one closed
+`Adw.ExpanderRow` (`Figures`, subtitled with the balance). Search hides behind the header menu's
+`Search`, but through a `Gtk.Revealer` rather than a `Gtk.SearchBar`, so the desktop look stays
+identical; the entry stays revealed while it holds a query. Contacts and Projects fold their
+explainer into a `What is this?` expander (`explainerRow`), and all three lists cap row subtitles at
+two lines (`phoneSubtitleLines`). Projects moves `Add a project` into the header bar and gives Delete
+a 48 px target. Contacts rows keep their single Delete button (one action stays a button). Accounts
+did not get the full row restructure (balance as suffix): live connection cards keep their layout
+and get a phone-only overflow menu with Sync and Disconnect beside the balance; a file-source card
+keeps its lone trash button at 48 px.
+
 ## Implementation plan
 
 Ordered so each step is a reviewable PR that leaves the app working, and so the steps that help
@@ -465,7 +476,7 @@ every page come before the ones that help one.
 | 4 | **Context button** *(done)* | Title widget becomes a `Gtk.MenuButton` on a phone, opening an `Adw.Dialog` with the existing entity and year switchers. | The one real gap the collapse leaves; independent of the view work. |
 | 5 | **Section list as home** *(done)* | Badges on the nav rows, fed by the counts `home-view` already computes. | Makes the root page worth landing on. Needs 1, nothing else. |
 | 6 | **Overview, Contracts, Invoices** *(done)* | Apply 2 + 3; demo banner one-line on a phone. | The three worst pages in the sweep, and they need no new mechanism. |
-| 7 | **Transactions, Contacts, Projects, Accounts** | Expander for KPI/explanation blocks, search bar, row menus. | Same pattern, four pages. |
+| 7 | **Transactions, Contacts, Projects, Accounts** *(done)* | Expander for KPI/explanation blocks, search bar, row menus. | Same pattern, four pages. |
 | 8 | **Reports table** | Frozen item column, horizontal scroll, month chips defaulting to the current month. | The only genuinely new widget work; isolated, so it can take its time. |
 | 9 | **Receipt inbox polish** | Queue toggle into the header, re-open the queue after confirming, `Check & confirm` in a pinned `Gtk.ActionBar`. | Behavioural, needs the review flow's own tests. |
 | 10 | **Dialog sizing** | Sheets size to content; group headers follow the row rule. | Small, affects every dialog, safest last. |
