@@ -27,6 +27,18 @@ die belegten Referenzen, gegen die ihre Zahlen geprüft werden.
 | [prozesse/elster-web-formular.md](prozesse/elster-web-formular.md) | Ein Jahresformular in Mein ELSTER eintragen: Ablauf, Fallen, offene Tooling-Lücken |
 | [prozesse/rechnungsstellung.md](prozesse/rechnungsstellung.md) | § 14 UStG — Pflichtangaben und Workflow für Ausgangsrechnungen |
 
+## Für Agenten
+
+Aus [`AGENTS.md`](../AGENTS.md) ausgelagerte Details — dort bleiben nur die harten Regeln.
+
+| Dokument | Beschreibung |
+|----------|-------------|
+| [agents/elster-config.md](agents/elster-config.md) | `--entity`, Manifest, Rename-Fallback, das Setup hinter den Codepfaden, EÜR-Modell (AfA, Privatanteile, Betriebsaufgabe), Berichte |
+| [agents/eric.md](agents/eric.md) | ERiC: Lizenz, wie Release-Builds es mitliefern, Setup, Suchreihenfolge, warum optional |
+| [agents/api-clients.md](agents/api-clients.md) | Konvention für handgeschriebene REST-Clients (Qonto) und Ablauf für einen neuen Endpoint |
+| [agents/ai-enrichment.md](agents/ai-enrichment.md) | Ein Prompt-Quelle, `ai_note`, `dms_*`- und `contracts_*`-Tools, registrierte MCP-Prompts |
+| [agents/check-gates.md](agents/check-gates.md) | `check:fields` und `check:ai`: was sie prüfen und wie man Ausnahmen einträgt |
+
 ## Referenzen
 
 | Dokument | Beschreibung |
