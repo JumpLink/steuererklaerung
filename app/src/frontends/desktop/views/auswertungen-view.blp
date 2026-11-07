@@ -60,23 +60,10 @@ template $BhAuswertungenView: Adw.Bin {
             styles ["title-4"]
           }
 
-          // The monthly matrix can be wider than the window — scroll it horizontally.
-          Gtk.ScrolledWindow {
-            hscrollbar-policy: automatic;
-            vscrollbar-policy: never;
-
-            child: Adw.Bin {
-              styles ["card"]
-
-              child: Gtk.Grid grid {
-                column-spacing: 24;
-                row-spacing: 8;
-                margin-top: 12;
-                margin-bottom: 12;
-                margin-start: 12;
-                margin-end: 12;
-              };
-            };
+          // The monthly matrix can be wider than the window — on desktop it scrolls as one grid,
+          // on a phone the item column freezes and a chip row jumps the month scroll position.
+          Gtk.Box table_box {
+            orientation: vertical;
           }
 
           // ── Einblicke ────────────────────────────────────────
