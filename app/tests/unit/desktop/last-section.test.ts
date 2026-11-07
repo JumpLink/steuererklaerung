@@ -4,14 +4,18 @@
  * The public logic is store-agnostic; real GSettings is never needed here.
  */
 
+import Gio from '@girs/gio-2.0';
+import GLib from '@girs/glib-2.0';
 import { describe, expect, it } from '@gjsify/unit';
 
 import type { NavViewId } from '../../../src/frontends/desktop/nav.ts';
 import {
     buildLastSections,
     encodeLastSection,
+    gioSettingsStore,
     parseLastSections,
     resolveLastSection,
+    schemaIsAvailable,
     type LastSectionStore,
 } from '../../../src/frontends/desktop/last-section.ts';
 
@@ -88,6 +92,22 @@ export default async () => {
             const store = makeStore();
             store.setLastSection('gbr', 'konten');
             expect(store.getLastSection('gbr')).toBe('konten');
+        });
+
+        it('schemaIsAvailable reports whether the default source has the schema', () => {
+            const source = Gio.SettingsSchemaSource.get_default();
+            const has = source !== null && source.lookup('eu.jumplink.Steuererklaerung', true) !== null;
+            expect(schemaIsAvailable()).toBe(has);
+        });
+
+        it('gioSettingsStore returns null when the schema is absent', () => {
+            const source = Gio.SettingsSchemaSource.get_default();
+            const has = source !== null && source.lookup('eu.jumplink.Steuererklaerung', true) !== null;
+            if (has) {
+                expect(gioSettingsStore()).not.toBe(null);
+            } else {
+                expect(gioSettingsStore()).toBe(null);
+            }
         });
     });
 };

@@ -55,8 +55,18 @@ export function buildLastSections(map: ReadonlyMap<string, NavViewId>): string[]
     return out;
 }
 
+/** Whether the compiled GSettings schema is present in the given (or default) source. */
+export function schemaIsAvailable(
+    source: Gio.SettingsSchemaSource | null = Gio.SettingsSchemaSource.get_default(),
+): boolean {
+    return source !== null && source.lookup(SCHEMA_ID, true) !== null;
+}
+
 /** A GSettings-backed store. Returns null when the schema is not installed/compiled. */
 export function gioSettingsStore(): LastSectionStore | null {
+    // `new Gio.Settings({ schema_id })` aborts the process when the schema is missing, so we must
+    // check the schema source first. The try/catch stays as a second line of defence.
+    if (!schemaIsAvailable()) return null;
     let settings: Gio.Settings;
     try {
         settings = new Gio.Settings({ schema_id: SCHEMA_ID });

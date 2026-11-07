@@ -444,6 +444,7 @@ export class MainWindow extends Adw.ApplicationWindow {
         this.renderYearSwitcher();
         this.renderNav();
         if (view) this.selectNavByView(view, { saveLastSection: false });
+        else this.restoreInitialView();
         this.refreshBanner();
         this.syncAssistantContext();
     }
