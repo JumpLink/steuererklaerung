@@ -293,3 +293,76 @@ export function kpiBlockMode(narrow: boolean, cards: number): 'cards' | 'expande
 export function searchVisible(narrow: boolean, requested: boolean, query: string): boolean {
     return !narrow || requested || query.trim() !== '';
 }
+
+/**
+ * How much of a group's description a phone shows before an expander takes over: two lines, counted
+ * in characters. 40 per line is the measured running width of a group's text at 360 px (a 360 px
+ * window, the phone's twelve of margin and the row's own padding) — generous enough not to split a
+ * sentence that already fits, tight enough that the cap actually caps.
+ */
+export const DESCRIPTION_LINE_CHARS = 40;
+
+/**
+ * The split of a group's description at the phone's two-line cap.
+ *
+ * `shown` stays the group's description; `rest` moves behind an expander row — Deadlines' "Filed,
+ * but not yet recorded as paid …" paragraph is four lines above the first deadline at 360 px, and
+ * the list is the content, not the explanation of it. On a desktop nothing splits, so the widget
+ * half of this ([`cappedDescription`](../views/util.ts)) can do no wrong either.
+ *
+ * The cut looks for the last sentence end inside the budget, because a sentence that is ABOUT to
+ * finish reads worse than a shorter first bite; with no sentence end there, it falls back to the
+ * word boundary before the budget and marks the ellipsis itself — the expander then opens with
+ * exactly the words the description swallowed, not with a repeated prefix. A value already shorter
+ * than the budget is returned whole.
+ */
+export function descriptionCap(
+    description: string,
+    narrow: boolean,
+    lineChars = DESCRIPTION_LINE_CHARS,
+): { shown: string; rest: string | null } {
+    if (!narrow) return { shown: description, rest: null };
+    const budget = lineChars * 2;
+    if (description.length <= budget) return { shown: description, rest: null };
+
+    const period = description.lastIndexOf('. ', budget);
+    if (period >= 0) {
+        const end = period + 1; // keep the sentence's own full stop
+        return { shown: description.slice(0, end), rest: description.slice(end).trimStart() };
+    }
+    // No sentence end inside the budget: cut at a word boundary and say so.
+    const space = description.lastIndexOf(' ', budget - 1);
+    const end = space > 0 ? space : budget;
+    return { shown: `${description.slice(0, end)}…`, rest: description.slice(end).trimStart() };
+}
+
+/**
+ * How many characters of one value a phone row shows: those that fit on one line, same arithmetic
+ * as {@link DESCRIPTION_LINE_CHARS} but ONE line — a path in a row subtitle, like Settings'
+ * backup folder, has no expander to open.
+ */
+export const PATH_LINE_CHARS = 40;
+
+/** The separator {@link middleEllipsis} writes into the cut. */
+const ELLIPSIS = '…';
+
+/**
+ * A value too long for a phone row: both ends kept, cut through the middle.
+ *
+ * `ellipsize: middle` on a label does this while the window is sized; the widget half of it
+ * ([`pathSubtitle`](../views/util.ts)) works on TEXT instead — the subtitle it replaces is
+ * libadwaita's private label, and cutting in text is testable without a display. The head keeps
+ * the first components, the tail keeps the timestamp: the only part that differs between backups.
+ */
+export function middleEllipsis(value: string, lineChars = PATH_LINE_CHARS): string {
+    if (value.length <= lineChars) return value;
+    // One character of which pays for the separator itself; the head gets the extra because the
+    // first component of a path carries more orientation than the last.
+    const keep = Math.max(1, lineChars - ELLIPSIS.length);
+    const head = Math.ceil(keep / 2);
+    // `slice(-0)` is `slice(0)` — the whole value — so a budget that leaves no tail just cuts
+    // after the head.
+    const tail = Math.floor(keep / 2);
+    if (tail === 0) return `${value.slice(0, head)}${ELLIPSIS}`;
+    return `${value.slice(0, head)}${ELLIPSIS}${value.slice(-tail)}`;
+}

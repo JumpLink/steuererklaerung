@@ -38,6 +38,8 @@ import { eur, pct } from '../../../core/lib/format.ts';
 /** One report → its PDF loader + save-toast label (for the shared exportPdf). */
 type PdfLoader = (entity: AppEntity, year: number) => Promise<{ filename: string; bytes: Uint8Array }>;
 import { GroupRows, LoadToken, amountLabel, loadIntoStack, markup, saveFileViaDialog } from './util.ts';
+import { hideOnPhone } from '../widgets/responsive.ts';
+import type { ViewAction } from '../view.ts';
 import { _, _n, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
 import { errorDialog } from './dialogs.ts';
@@ -117,6 +119,20 @@ export class BhSteuerView extends Adw.Bin {
         this.festPdfButton = this.makePdfButton(this._fest_group, () =>
             this.exportPdf((e, y) => loadFeststellungPdf(appSession(), e, y), _('Feststellung check sheet')),
         );
+        // On a phone the EÜR button leaves the group header (28 px icon squeezed between title and
+        // edge) and lives in the window's header bar instead — see headerActions().
+        hideOnPhone(this.pdfButton);
+    }
+
+    /** The EÜR "Check PDF" goes into the header bar on a phone (see makePdfButton). */
+    headerActions(): ViewAction[] {
+        return [
+            {
+                label: _('Save the check sheet as a PDF'),
+                iconName: 'document-save-symbolic',
+                run: () => this.exportPdf((e, y) => loadEuerPdf(appSession(), e, y), _('EÜR check sheet')),
+            },
+        ];
     }
 
     /** Create a disabled flat save button, wire its click, and set it as a group's header suffix. */

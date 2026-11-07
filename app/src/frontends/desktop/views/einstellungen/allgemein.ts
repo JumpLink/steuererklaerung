@@ -28,7 +28,7 @@ import { _, fmt } from '../../i18n.ts';
 import { errorText } from '../../error-text.ts';
 import { isBackupRunning, runBackupInBackground } from '../../background-backup.ts';
 import { showToast } from '../../toast.ts';
-import { markup } from '../util.ts';
+import { pathSubtitle } from '../util.ts';
 
 /** Demo/own switch, „Show welcome again", AI opt-in. */
 export function buildGeneralGroup(group: Adw.PreferencesGroup): void {
@@ -115,20 +115,26 @@ export function buildBackupGroup(group: Adw.PreferencesGroup): void {
     last.add_css_class('property');
     const folder = new Adw.ActionRow({ title: _('Backup folder') });
     folder.add_css_class('property');
+    // Both subtitles report a path — `/home/…/backups/2026-…` wraps to four lines on a phone.
+    // `pathSubtitle` cuts through the middle there, one line, full value in the tooltip; the
+    // desktop keeps the wrapped value it always had.
+    const lastSub = pathSubtitle(last);
+    const folderSub = pathSubtitle(folder);
 
     const refresh = () => {
         const s = loadUserSettings();
-        last.set_subtitle(
-            s.backup.lastAt
-                ? markup(
-                      fmt(_('{time} in {path}'), {
-                          time: new Date(s.backup.lastAt).toLocaleString(),
-                          path: s.backup.lastPath ?? '',
-                      }),
-                  )
-                : _('Never'),
-        );
-        folder.set_subtitle(markup(configuredBackupRoot(s)));
+        if (s.backup.lastAt) {
+            lastSub.set(
+                fmt(_('{time} in {path}'), {
+                    time: new Date(s.backup.lastAt).toLocaleString(),
+                    path: s.backup.lastPath ?? '',
+                }),
+                s.backup.lastPath,
+            );
+        } else {
+            lastSub.set(_('Never'));
+        }
+        folderSub.set(configuredBackupRoot(s));
     };
 
     const now = new Adw.ButtonRow({
