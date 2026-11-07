@@ -236,6 +236,12 @@ template $BhMainWindow: Adw.ApplicationWindow {
           }
 
           [end]
+          Gtk.ToggleButton view_toggle {
+            icon-name: "sidebar-show-symbolic";
+            visible: false;
+          }
+
+          [end]
           Gtk.ToggleButton assistant_toggle {
             icon-name: "starred-symbolic";
             // TRANSLATORS: Tooltip on the button revealing the AI assistant side panel
