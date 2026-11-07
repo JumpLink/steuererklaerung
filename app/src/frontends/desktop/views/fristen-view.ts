@@ -27,7 +27,8 @@ import {
     type SteuerTermin,
 } from '../data/fristen.ts';
 import { showToast } from '../toast.ts';
-import { amountLabel, GroupRows, LoadToken, loadIntoStack, markup } from './util.ts';
+import { amountLabel, cappedDescription, GroupRows, LoadToken, loadIntoStack, markup } from './util.ts';
+import { rowActions, phoneRowActions } from '../widgets/responsive.ts';
 import { BhFristErledigenDialog, type FristAction, type FristTarget } from './frist-erledigen-dialog.ts';
 import { _, _n, fmt } from '../i18n.ts';
 
@@ -68,9 +69,16 @@ export class BhFristenView extends Adw.Bin {
     private readonly zahlungenRows: GroupRows;
     private readonly termineRows: GroupRows;
     private readonly postenRows: GroupRows;
+    /** The three layers' descriptions, each under the phone's two-line cap (set once, used per fill). */
+    private readonly zahlungenDescription: ReturnType<typeof cappedDescription>;
+    private readonly termineDescription: ReturnType<typeof cappedDescription>;
+    private readonly postenDescription: ReturnType<typeof cappedDescription>;
 
     constructor() {
         super();
+        this.zahlungenDescription = cappedDescription(this.zahlungen);
+        this.termineDescription = cappedDescription(this.termine);
+        this.postenDescription = cappedDescription(this.posten);
 
         const loading = new Gtk.Box({
             orientation: Gtk.Orientation.VERTICAL,
@@ -138,7 +146,7 @@ export class BhFristenView extends Adw.Bin {
 
     private fillZahlungen(items: OffeneSteuerzahlung[], error?: string): void {
         this.zahlungenRows.clear();
-        this.zahlungen.set_description(
+        this.zahlungenDescription.set(
             _(
                 'Filed, but not yet recorded as paid. Amounts and dates are estimated from the rules — check them against the notice and the bank statement.',
             ),
@@ -160,8 +168,11 @@ export class BhFristenView extends Adw.Bin {
             ].filter(Boolean);
             const row = new Adw.ActionRow({ title: markup(z.label), subtitle: markup(sub.join('  ·  ')) });
             row.set_subtitle_lines(0);
-            row.add_suffix(amountLabel(eur(z.amount), { accent: z.overdue ? 'error' : undefined }));
-            row.add_suffix(
+            // Amount and the `Paid` action as one cluster, so the phone knows both children: the
+            // lone action stays a button there (one action is the row rule) but gets its 48 px
+            // target — see `rowActions()` / `phoneRowActions()`.
+            const cluster = rowActions([amountLabel(eur(z.amount), { accent: z.overdue ? 'error' : undefined })]);
+            cluster.append(
                 this.erledigenButton(
                     _('Paid'),
                     {
@@ -174,6 +185,8 @@ export class BhFristenView extends Adw.Bin {
                     'paid',
                 ),
             );
+            phoneRowActions(cluster);
+            row.add_suffix(cluster);
             this.zahlungenRows.add(row);
         }
     }
@@ -182,7 +195,7 @@ export class BhFristenView extends Adw.Bin {
 
     private fillTermine(items: SteuerTermin[], error?: string): void {
         this.termineRows.clear();
-        this.termine.set_description(
+        this.termineDescription.set(
             _('Standard deadlines from the entities’ master data — not yet recorded as filed.'),
         );
         if (error) {
@@ -200,7 +213,9 @@ export class BhFristenView extends Adw.Bin {
                 subtitle: markup([t.entityName, fmt(_('due {date}'), { date: deDate(t.dueDate) })].join('  ·  ')),
             });
             row.add_suffix(new Gtk.Label({ label: u.text, cssClasses: ['caption', u.css], valign: Gtk.Align.CENTER }));
-            row.add_suffix(
+            // Same envelope as `Paid` above: one action stays a button, but on a phone it is 48 px.
+            const cluster = rowActions([]);
+            cluster.append(
                 this.erledigenButton(
                     _('Filed'),
                     {
@@ -212,6 +227,8 @@ export class BhFristenView extends Adw.Bin {
                     'filed',
                 ),
             );
+            phoneRowActions(cluster);
+            row.add_suffix(cluster);
             this.termineRows.add(row);
         }
     }
@@ -220,7 +237,7 @@ export class BhFristenView extends Adw.Bin {
 
     private fillPosten(items: OpenItem[], error?: string): void {
         this.postenRows.clear();
-        this.posten.set_description(_('Receipts with payment status “open”.'));
+        this.postenDescription.set(_('Receipts with payment status “open”.'));
         if (error) {
             this.postenRows.add(this.errorRow(error));
             return;

@@ -17,7 +17,7 @@ import { stopwatch, timed } from '@steuererklaerung/shared';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 import { wrappingLabel } from '../widgets/responsive.ts';
 import { onNarrow } from '../widgets/narrow.ts';
-import { kpiColumns } from '../widgets/phone-rules.ts';
+import { descriptionCap, kpiColumns, middleEllipsis } from '../widgets/phone-rules.ts';
 import { _, _p, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
 
@@ -190,8 +190,8 @@ export function phoneKpiColumns(fb: Gtk.FlowBox, max: number): void {
  * Four paragraphs above the list eat the top third of a 360 px screen; they are context the second
  * time you open the page, so they sit one tap away instead. The label wraps freely inside the row.
  */
-export function explainerRow(text: string): Adw.ExpanderRow {
-    const row = new Adw.ExpanderRow({ title: _('What is this?') });
+export function explainerRow(text: string, title: string = _('What is this?')): Adw.ExpanderRow {
+    const row = new Adw.ExpanderRow({ title });
     const label = wrappingLabel({ label: text, xalign: 0, cssClasses: ['dim-label'] });
     label.set_margin_top(8);
     label.set_margin_bottom(8);
@@ -199,6 +199,93 @@ export function explainerRow(text: string): Adw.ExpanderRow {
     label.set_margin_end(12);
     row.add_row(new Gtk.ListBoxRow({ child: label, activatable: false, selectable: false }));
     return row;
+}
+
+/**
+ * A group's description under the phone's two-line cap: what {@link descriptionCap} leaves out
+ * moves behind a `More about this` expander row, FIRST child of the group, in the
+ * {@link explainerRow} mould. On a desktop the full text stays the description, as always.
+ *
+ * Returns a setter; call it with the group's description on every fill, while the rows are still
+ * empty — that keeps the expander the first child (PreferencesGroup only appends) and lets the
+ * rows follow it.
+ */
+export function cappedDescription(group: Adw.PreferencesGroup): { set(text: string | null): void } {
+    let text: string | null = null;
+    let phone = false;
+    let expander: Adw.ExpanderRow | null = null;
+
+    // Called on every fill, and the subscription comes from within: the narrow change is worth as
+    // much as the data change. The rows live ABOVE this setter's control, so a flip that happens
+    // with rows already filled re-adds the expander BEHIND them — the next fill puts it right.
+    const apply = (): void => {
+        if (expander) {
+            group.remove(expander);
+            expander = null;
+        }
+        const cap = text ? descriptionCap(text, phone) : { shown: null as string | null, rest: null };
+        group.set_description(cap.shown);
+        if (cap.rest) {
+            expander = explainerRow(cap.rest, _('More about this'));
+            group.add(expander);
+        }
+    };
+
+    onNarrow(group, (narrow) => {
+        phone = narrow;
+        apply();
+    });
+    return {
+        set(next: string | null): void {
+            text = next;
+            apply();
+        },
+    };
+}
+
+/**
+ * A row whose subtitle reports a FILE PATH, phone-shaped: one line cut through the middle
+ * ({@link middleEllipsis}), the full value in the row's tooltip. On a desktop the subtitle keeps
+ * the value it always had, wrapped.
+ *
+ * Returns a setter for the RAW line (entry + `{path}` placeholders); this helper escapes it for
+ * Pango itself, so the tooltip can hold the unescaped reading. Pass `value` for what the tooltip
+ * should say instead of the line — Settings passes the path alone where the line also carries a
+ * timestamp.
+ */
+export function pathSubtitle(row: Adw.ActionRow): { set(line: string, value?: string | null): void } {
+    let line: string | null = null;
+    let value: string | null = null;
+    let narrow = false;
+
+    const apply = (): void => {
+        if (!line) {
+            // Subtitle and tooltip have no null on this type — the empty string clears both.
+            row.set_subtitle('');
+            row.set_tooltip_text('');
+            return;
+        }
+        // The wide subtitle stays markup-escaped the way every other row's is; the phone variant
+        // is cut on the raw text first, so the separator stands where the directory was. The cut
+        // is a guess at the row's real width — one line is the guarantee, libadwaita trims the
+        // rest if the window is even narrower.
+        row.set_subtitle(markup(narrow ? middleEllipsis(line) : line));
+        row.set_subtitle_lines(narrow ? 1 : 0);
+        // Plain text, not markup: GTK tooltips are not parsed as Pango.
+        row.set_tooltip_text(narrow ? (value ?? line) : null);
+    };
+
+    onNarrow(row, (next) => {
+        narrow = next;
+        apply();
+    });
+    return {
+        set(nextLine: string, nextValue?: string | null): void {
+            line = nextLine;
+            value = nextValue ?? null;
+            apply();
+        },
+    };
 }
 
 /**

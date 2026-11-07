@@ -44,6 +44,8 @@ import { showToast } from '../toast.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { amountLabel, GroupRows, LoadToken, loadIntoStack, markup } from './util.ts';
 import { overflowLabel, pinnableCluster, rowActions } from '../widgets/responsive.ts';
+import { onNarrow } from '../widgets/narrow.ts';
+import { TOUCH_TARGET } from '../widgets/phone-rules.ts';
 import { BhZeitProjektDialog } from './zeit-projekt-dialog.ts';
 import { BhZeitRechnungDialog } from './zeit-rechnung-dialog.ts';
 import { plainActionRow } from './plain-rows.ts';
@@ -128,6 +130,11 @@ export class BhZeitenView extends Adw.Bin {
             if (this.selectedProjectId()) this._description_entry.grab_focus();
         });
         this._description_entry.connect('activate', () => this.onStart());
+        // Phone: the play button becomes a 48 px target at the end of the description row — the
+        // form's WrapBox already drops it onto or beside that row (see the blueprints' comment).
+        onNarrow(this, (narrow) => {
+            this._start_button.set_size_request(narrow ? TOUCH_TARGET : -1, narrow ? TOUCH_TARGET : -1);
+        });
         this.connect('destroy', () => this.stopTick());
     }
 

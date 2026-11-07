@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-11-05 14:09+0100\n"
+"POT-Creation-Date: 2026-11-05 15:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -731,12 +731,12 @@ msgid ""
 msgstr ""
 
 #: src/core/actions/elster/explain.ts:264
-#: src/frontends/desktop/views/steuer-view.ts:196
+#: src/frontends/desktop/views/steuer-view.ts:212
 msgid "Business income (net)"
 msgstr ""
 
 #: src/core/actions/elster/explain.ts:266
-#: src/frontends/desktop/views/steuer-view.ts:197
+#: src/frontends/desktop/views/steuer-view.ts:213
 msgid "Business expenses (net)"
 msgstr ""
 
@@ -1123,7 +1123,7 @@ msgstr ""
 #: src/core/actions/elster/wizard.ts:203 src/core/actions/elster/wizard.ts:618
 #: src/frontends/desktop/views/absenden-section.ts:595
 #: src/frontends/desktop/views/erstattung-group.ts:95
-#: src/frontends/desktop/views/steuer-view.ts:297
+#: src/frontends/desktop/views/steuer-view.ts:313
 msgid "Refund"
 msgstr ""
 
@@ -1141,7 +1141,7 @@ msgid "Steuermessbetrag"
 msgstr ""
 
 #: src/core/actions/elster/wizard.ts:227
-#: src/frontends/desktop/views/steuer-view.ts:344
+#: src/frontends/desktop/views/steuer-view.ts:360
 msgid "Feststellung (GbR)"
 msgstr ""
 
@@ -2051,7 +2051,7 @@ msgstr ""
 #: src/core/elster/euer-transactions.ts:260
 #: src/frontends/desktop/views/beleg-link-dialog.ts:231
 #: src/frontends/desktop/views/beleg-link-dialog.ts:247
-#: src/frontends/desktop/views/fristen-view.ts:240
+#: src/frontends/desktop/views/fristen-view.ts:257
 #: src/frontends/desktop/views/herleitung-dialog.ts:367
 #: src/frontends/desktop/views/herleitung-dialog.ts:614
 msgid "Receipt #{id}"
@@ -2219,9 +2219,9 @@ msgstr ""
 
 #: src/core/elster/frei-verfuegbar.ts:487 src/core/elster/home.ts:372
 #: src/frontends/desktop/views/forderungen-view.ts:215
-#: src/frontends/desktop/views/fristen-view.ts:158
-#: src/frontends/desktop/views/fristen-view.ts:200
-#: src/frontends/desktop/views/fristen-view.ts:236
+#: src/frontends/desktop/views/fristen-view.ts:166
+#: src/frontends/desktop/views/fristen-view.ts:213
+#: src/frontends/desktop/views/fristen-view.ts:253
 #: src/frontends/desktop/views/rechnungen-view.ts:614
 msgid "due {date}"
 msgstr ""
@@ -5372,7 +5372,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/anlagen-view.ts:204
 #: src/frontends/desktop/views/steuerkonto-view.ts:119
-#: src/frontends/desktop/views/steuer-view.ts:257
+#: src/frontends/desktop/views/steuer-view.ts:273
 msgid "{n} booking"
 msgid_plural "{n} bookings"
 msgstr[0] ""
@@ -5661,8 +5661,8 @@ msgstr ""
 #: src/frontends/desktop/views/steuer-view.blp:32
 #: src/frontends/desktop/views/transactions-view.blp:32
 #: src/frontends/desktop/views/ustva-view.blp:32
-#: src/frontends/desktop/views/util.ts:479
-#: src/frontends/desktop/views/util.ts:482
+#: src/frontends/desktop/views/util.ts:562
+#: src/frontends/desktop/views/util.ts:565
 #: src/frontends/desktop/views/vertraege-view.blp:54
 #: src/frontends/desktop/views/zeiten-view.blp:47
 #: src/frontends/desktop/views/zu-pruefen-view.blp:33
@@ -5745,7 +5745,7 @@ msgid "Could not determine candidate transactions"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:318
-#: src/frontends/desktop/views/util.ts:497
+#: src/frontends/desktop/views/util.ts:580
 msgid "Try again"
 msgstr ""
 
@@ -6475,44 +6475,44 @@ msgid "Last backup"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:116
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:175
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:181
 msgid "Backup folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:124
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:128
 msgid "{time} in {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:129
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:135
 msgid "Never"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:135
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:143
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:141
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:149
 msgid "Back up now"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:143
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:149
 msgid "Backing up …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:151
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:157
 msgid "Backup saved: {path}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:154
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:160
 msgid "Backup failed: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:169
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:175
 msgid "Choose folder"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:197
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:203
 msgid "Keep backups"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/allgemein.ts:198
+#: src/frontends/desktop/views/einstellungen/allgemein.ts:204
 msgid "Older ones are deleted after each new backup"
 msgstr ""
 
@@ -7572,7 +7572,7 @@ msgstr ""
 #: src/frontends/desktop/views/projekte-view.ts:193
 #: src/frontends/desktop/views/projekte-view.ts:220
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:624
-#: src/frontends/desktop/views/zeiten-view.ts:491
+#: src/frontends/desktop/views/zeiten-view.ts:498
 msgid "Delete"
 msgstr ""
 
@@ -8303,7 +8303,7 @@ msgid ""
 msgstr ""
 
 #: src/frontends/desktop/views/forderungen-view.ts:125
-#: src/frontends/desktop/views/zeiten-view.ts:53
+#: src/frontends/desktop/views/zeiten-view.ts:55
 msgid "Open"
 msgstr ""
 
@@ -8446,93 +8446,93 @@ msgstr ""
 msgid "Trend: {trend}"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:39
+#: src/frontends/desktop/views/fristen-view.ts:40
 msgid "overdue"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:39
+#: src/frontends/desktop/views/fristen-view.ts:40
 msgid "overdue by {n} day"
 msgid_plural "overdue by {n} days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/fristen-view.ts:43
+#: src/frontends/desktop/views/fristen-view.ts:44
 msgid "no deadline"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:44
+#: src/frontends/desktop/views/fristen-view.ts:45
 msgid "due today"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:45
+#: src/frontends/desktop/views/fristen-view.ts:46
 msgid "due tomorrow"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:48
+#: src/frontends/desktop/views/fristen-view.ts:49
 #: src/frontends/desktop/views/rechnungen-view.ts:305
 msgid "in {n} day"
 msgid_plural "in {n} days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/fristen-view.ts:61
-#: src/frontends/desktop/views/fristen-view.ts:279
+#: src/frontends/desktop/views/fristen-view.ts:62
+#: src/frontends/desktop/views/fristen-view.ts:296
 msgid "Deadlines could not be loaded"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:65
+#: src/frontends/desktop/views/fristen-view.ts:66
 msgid "Open tax payments"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:66
+#: src/frontends/desktop/views/fristen-view.ts:67
 msgid "Upcoming tax dates"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:67
+#: src/frontends/desktop/views/fristen-view.ts:68
 msgid "Open items"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:82
+#: src/frontends/desktop/views/fristen-view.ts:90
 msgid "Loading deadlines …"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:131
+#: src/frontends/desktop/views/fristen-view.ts:139
 msgid "Could not be loaded"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:143
+#: src/frontends/desktop/views/fristen-view.ts:151
 msgid ""
 "Filed, but not yet recorded as paid. Amounts and dates are estimated from "
 "the rules — check them against the notice and the bank statement."
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:151
+#: src/frontends/desktop/views/fristen-view.ts:159
 msgid "No open tax payments"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:166
+#: src/frontends/desktop/views/fristen-view.ts:177
 msgid "Paid"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:186
+#: src/frontends/desktop/views/fristen-view.ts:199
 msgid ""
 "Standard deadlines from the entities’ master data — not yet recorded as "
 "filed."
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:193
+#: src/frontends/desktop/views/fristen-view.ts:206
 msgid "No upcoming tax dates"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:205
+#: src/frontends/desktop/views/fristen-view.ts:220
 msgid "Filed"
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:223
+#: src/frontends/desktop/views/fristen-view.ts:240
 msgid "Receipts with payment status “open”."
 msgstr ""
 
-#: src/frontends/desktop/views/fristen-view.ts:229
+#: src/frontends/desktop/views/fristen-view.ts:246
 msgid "No open items"
 msgstr ""
 
@@ -10556,7 +10556,7 @@ msgstr ""
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:269
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:141
 #: src/frontends/desktop/views/tx-detail-dialog.ts:246
-#: src/frontends/desktop/views/zeiten-view.ts:179
+#: src/frontends/desktop/views/zeiten-view.ts:186
 msgid "No project"
 msgstr ""
 
@@ -10661,7 +10661,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:151
 #: src/frontends/desktop/views/rechnungen-view.ts:610
-#: src/frontends/desktop/views/zeiten-view.ts:314
+#: src/frontends/desktop/views/zeiten-view.ts:321
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:119
 msgid "Invoice"
 msgstr ""
@@ -10994,7 +10994,7 @@ msgstr ""
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:749
 #: src/frontends/desktop/views/steuererklaerung-view.ts:552
-#: src/frontends/desktop/views/steuer-view.ts:368
+#: src/frontends/desktop/views/steuer-view.ts:384
 msgid "PDF not available"
 msgstr ""
 
@@ -11970,118 +11970,120 @@ msgstr ""
 msgid "Business expenses by category"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:109
+#: src/frontends/desktop/views/steuer-view.ts:111
+#: src/frontends/desktop/views/steuer-view.ts:133
 msgid "EÜR check sheet"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:112
+#: src/frontends/desktop/views/steuer-view.ts:114
 msgid "VAT check sheet"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:115
+#: src/frontends/desktop/views/steuer-view.ts:117
 msgid "GewSt check sheet"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:118
+#: src/frontends/desktop/views/steuer-view.ts:120
 msgid "Feststellung check sheet"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:126
+#: src/frontends/desktop/views/steuer-view.ts:131
+#: src/frontends/desktop/views/steuer-view.ts:142
 msgid "Save the check sheet as a PDF"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:146
+#: src/frontends/desktop/views/steuer-view.ts:162
 msgid "The EÜR could not be calculated"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:161
+#: src/frontends/desktop/views/steuer-view.ts:177
 msgid "Total income (net)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:166
+#: src/frontends/desktop/views/steuer-view.ts:182
 msgid "Total expenses (net)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:186
+#: src/frontends/desktop/views/steuer-view.ts:202
 msgid "Anlage EÜR {year}"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:187
+#: src/frontends/desktop/views/steuer-view.ts:203
 msgid "Profit determination under §4 (3) EStG"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:199
+#: src/frontends/desktop/views/steuer-view.ts:215
 msgid "Profit"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:203
+#: src/frontends/desktop/views/steuer-view.ts:219
 msgid "VAT payable"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:225
+#: src/frontends/desktop/views/steuer-view.ts:241
 msgid "{n} booking is unclassified — please check"
 msgid_plural "{n} bookings are unclassified — please check"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/steuer-view.ts:249
+#: src/frontends/desktop/views/steuer-view.ts:265
 #: src/frontends/desktop/views/transactions-view.ts:413
 msgid "(unclassified)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:272
+#: src/frontends/desktop/views/steuer-view.ts:288
 msgid "Key figures"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:276
+#: src/frontends/desktop/views/steuer-view.ts:292
 msgid "Anlage EÜR key figures"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:277
+#: src/frontends/desktop/views/steuer-view.ts:293
 msgid "best effort — check against the Anlage EÜR before filing"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:291
+#: src/frontends/desktop/views/steuer-view.ts:307
 msgid "Annual VAT return {year}"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:294
+#: src/frontends/desktop/views/steuer-view.ts:310
 msgid "VAT payable (year)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:295
+#: src/frontends/desktop/views/steuer-view.ts:311
 msgid "− prepayments filed"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:297
+#: src/frontends/desktop/views/steuer-view.ts:313
 msgid "Final payment"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:306
+#: src/frontends/desktop/views/steuer-view.ts:322
 msgid "§13b VAT owed (neutral for the payable)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:316
+#: src/frontends/desktop/views/steuer-view.ts:332
 msgid "Gewerbesteuer (GewSt 1 A)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:320
+#: src/frontends/desktop/views/steuer-view.ts:336
 msgid "Trade income (rounded down)"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:321
+#: src/frontends/desktop/views/steuer-view.ts:337
 msgid "Tax base amount"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:326
+#: src/frontends/desktop/views/steuer-view.ts:342
 msgid "Below the allowance"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:327
+#: src/frontends/desktop/views/steuer-view.ts:343
 msgid "Base amount 0 € — the return is filed anyway"
 msgstr ""
 
-#: src/frontends/desktop/views/steuer-view.ts:348
+#: src/frontends/desktop/views/steuer-view.ts:364
 msgid "Income from a trade or business"
 msgstr ""
 
@@ -12539,46 +12541,50 @@ msgstr ""
 msgid "{what} saved"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:194
+#: src/frontends/desktop/views/util.ts:193
 msgid "What is this?"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:397
+#: src/frontends/desktop/views/util.ts:229
+msgid "More about this"
+msgstr ""
+
+#: src/frontends/desktop/views/util.ts:480
 msgid "Could not refresh — showing the previous data"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:432
+#: src/frontends/desktop/views/util.ts:515
 msgid "Not set up yet"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:434
+#: src/frontends/desktop/views/util.ts:517
 msgid ""
 "There is no configuration yet. The assistant creates it — entity, "
 "Steuernummer (tax number) and where the data should live."
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:437
+#: src/frontends/desktop/views/util.ts:520
 msgid "Start setup"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:442
+#: src/frontends/desktop/views/util.ts:525
 msgid "{capability} needs Paperless"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:443
+#: src/frontends/desktop/views/util.ts:526
 msgid "Receipt management can be switched in the settings."
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:444
-#: src/frontends/desktop/views/util.ts:454
+#: src/frontends/desktop/views/util.ts:527
+#: src/frontends/desktop/views/util.ts:537
 msgid "Go to settings"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:449
+#: src/frontends/desktop/views/util.ts:532
 msgid "Paperless is not set up yet"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:451
+#: src/frontends/desktop/views/util.ts:534
 msgid ""
 "Paperless lacks the document types and custom fields the figures are read "
 "from. They can be created in the settings."
@@ -13780,7 +13786,7 @@ msgid "Loading time entries …"
 msgstr ""
 
 #: src/frontends/desktop/views/zeiten-view.blp:81
-#: src/frontends/desktop/views/zeiten-view.ts:205
+#: src/frontends/desktop/views/zeiten-view.ts:212
 msgid "No timer running"
 msgstr ""
 
@@ -13812,134 +13818,134 @@ msgstr ""
 msgid "Tracked time"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:54
+#: src/frontends/desktop/views/zeiten-view.ts:56
 msgid "Invoiced"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:55
+#: src/frontends/desktop/views/zeiten-view.ts:57
 msgid "Internal"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:148
+#: src/frontends/desktop/views/zeiten-view.ts:155
 msgid "Time entries could not be loaded"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:198
+#: src/frontends/desktop/views/zeiten-view.ts:205
 msgid "Running"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:198
+#: src/frontends/desktop/views/zeiten-view.ts:205
 msgid "Time tracking"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:206
+#: src/frontends/desktop/views/zeiten-view.ts:213
 msgid "Type a project and start. Enter is enough."
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:210
-#: src/frontends/desktop/views/zeiten-view.ts:300
+#: src/frontends/desktop/views/zeiten-view.ts:217
+#: src/frontends/desktop/views/zeiten-view.ts:307
 msgid "no customer"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:265
+#: src/frontends/desktop/views/zeiten-view.ts:272
 msgid "Timer running: {project}"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:268
+#: src/frontends/desktop/views/zeiten-view.ts:275
 msgid "The timer could not be started"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:277
+#: src/frontends/desktop/views/zeiten-view.ts:284
 msgid "Stopped: {project} · {duration}"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:284
+#: src/frontends/desktop/views/zeiten-view.ts:291
 msgid "The timer could not be stopped"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:293
+#: src/frontends/desktop/views/zeiten-view.ts:300
 msgid "Everything invoiced."
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:297
+#: src/frontends/desktop/views/zeiten-view.ts:304
 msgid "{hours} h open"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:304
+#: src/frontends/desktop/views/zeiten-view.ts:311
 msgid "{hours} h"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:305
+#: src/frontends/desktop/views/zeiten-view.ts:312
 msgid "{n} entry"
 msgid_plural "{n} entries"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:316
+#: src/frontends/desktop/views/zeiten-view.ts:323
 msgid "Create an invoice draft from this time"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:323
+#: src/frontends/desktop/views/zeiten-view.ts:330
 msgid "Customer missing"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:347
+#: src/frontends/desktop/views/zeiten-view.ts:354
 msgid "Draft created: {amount} € gross"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:350
+#: src/frontends/desktop/views/zeiten-view.ts:357
 msgid "The invoice could not be created"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:365
+#: src/frontends/desktop/views/zeiten-view.ts:372
 msgid "Nothing tracked yet."
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:380
+#: src/frontends/desktop/views/zeiten-view.ts:387
 msgid "Today"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:382
+#: src/frontends/desktop/views/zeiten-view.ts:389
 msgid "Yesterday"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:402
+#: src/frontends/desktop/views/zeiten-view.ts:409
 msgid "estimated"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:446
 #: src/frontends/desktop/views/zeiten-view.ts:453
+#: src/frontends/desktop/views/zeiten-view.ts:460
 #: src/frontends/desktop/views/zeit-projekt-dialog.ts:30
 msgid "Assign project"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:446
-#: src/frontends/desktop/views/zeiten-view.ts:457
+#: src/frontends/desktop/views/zeiten-view.ts:453
+#: src/frontends/desktop/views/zeiten-view.ts:464
 msgid "Already invoiced"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:457
-#: src/frontends/desktop/views/zeiten-view.ts:462
+#: src/frontends/desktop/views/zeiten-view.ts:464
+#: src/frontends/desktop/views/zeiten-view.ts:469
 msgid "Delete entry"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:477
+#: src/frontends/desktop/views/zeiten-view.ts:484
 msgid "Project assigned"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:477
+#: src/frontends/desktop/views/zeiten-view.ts:484
 msgid "Project removed"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:480
+#: src/frontends/desktop/views/zeiten-view.ts:487
 msgid "The project could not be assigned"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:489
+#: src/frontends/desktop/views/zeiten-view.ts:496
 msgid "Delete entry?"
 msgstr ""
 
-#: src/frontends/desktop/views/zeiten-view.ts:496
+#: src/frontends/desktop/views/zeiten-view.ts:503
 msgid "Entry deleted"
 msgstr ""
 

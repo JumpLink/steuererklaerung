@@ -10,6 +10,8 @@ import { describe, expect, it } from '@gjsify/unit';
 
 import {
     BADGE_CAP,
+    DESCRIPTION_LINE_CHARS,
+    PATH_LINE_CHARS,
     TOUCH_GAP,
     TOUCH_TARGET,
     actionOverflow,
@@ -17,8 +19,10 @@ import {
     chipScrollTarget,
     contextTitle,
     demoBannerVariant,
+    descriptionCap,
     explainerPlacement,
     kpiBlockMode,
+    middleEllipsis,
     phoneSubtitleLines,
     searchVisible,
     headerActionPlan,
@@ -302,6 +306,66 @@ export default async () => {
             expect(searchVisible(true, true, '')).toBe(true);
             expect(searchVisible(true, false, ' x ')).toBe(true);
             expect(searchVisible(true, false, '   ')).toBe(false);
+        });
+    });
+
+    await describe('phone-rules: descriptionCap (step 8b group descriptions)', async () => {
+        const zahlungen =
+            'Filed, but not yet recorded as paid. Amounts and dates are estimated from the rules — ' +
+            'check them against the notice and the bank statement.';
+
+        await it('returns the whole text on a desktop', async () => {
+            expect(descriptionCap(zahlungen, false).rest).toBe(null);
+            expect(descriptionCap(zahlungen, false).shown).toBe(zahlungen);
+        });
+
+        await it('returns the whole text when two lines already fit', async () => {
+            expect(descriptionCap('Standard deadlines from the entities’ master data.', true).rest).toBe(null);
+        });
+
+        await it('splits a long description at a sentence end on a phone', async () => {
+            const cap = descriptionCap(zahlungen, true);
+            expect(cap.shown).toBe('Filed, but not yet recorded as paid.');
+            expect(cap.rest).toBe(
+                'Amounts and dates are estimated from the rules — check them against the notice and the bank statement.',
+            );
+        });
+
+        await it('keeps both halves inside the budget', async () => {
+            const cap = descriptionCap(zahlungen, true);
+            expect(cap.shown.length).toBeLessThanOrEqual(DESCRIPTION_LINE_CHARS * 2);
+            expect(cap.rest?.length).toBeGreaterThan(0);
+        });
+
+        await it('falls back to a word boundary with its own ellipsis when no sentence ends there', async () => {
+            const text = `${'word '.repeat(20)}tail-more`;
+            const cap = descriptionCap(text, true);
+            expect(text.length).toBeGreaterThan(DESCRIPTION_LINE_CHARS * 2);
+            expect(cap.shown.endsWith('…')).toBe(true);
+            expect(cap.rest?.startsWith('word')).toBe(true); // cut at a space, never mid-word
+            expect(cap.rest?.endsWith('tail-more')).toBe(true);
+        });
+    });
+
+    await describe('phone-rules: middleEllipsis (step 8b path rows)', async () => {
+        const path = '/home/jumplink/.local/share/eu.jumplink.Steuererklaerung/backups/2026-10-20T09-37-41-476Z';
+
+        await it('leaves a value that fits on one line whole', async () => {
+            expect(middleEllipsis('/home/demo/backups')).toBe('/home/demo/backups');
+        });
+
+        await it('keeps both ends of a long path', async () => {
+            const cut = middleEllipsis(path);
+            expect(cut.length).toBeLessThanOrEqual(PATH_LINE_CHARS);
+            expect(cut.startsWith('/home/jumplink')).toBe(true);
+            expect(cut.endsWith('-476Z')).toBe(true);
+            expect(cut.includes('…')).toBe(true);
+        });
+
+        await it('stays within one line for any budget', async () => {
+            for (const budget of [4, 5, 6, 20, PATH_LINE_CHARS]) {
+                expect(middleEllipsis(path, budget).length).toBeLessThanOrEqual(budget);
+            }
         });
     });
 };
