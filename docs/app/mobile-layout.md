@@ -495,6 +495,16 @@ phone-sized (≤480 px); on desktop the buttons stay inline above the form. Re-o
 after a confirm is also phone-only, so a desktop user keeps the always-visible list. The layout
 decisions are isolated in `receiptInboxPhoneLayout()` and tested without GTK.
 
+**Built (step 11), with deviations.** The last `NavViewId` is persisted per entity and restored
+both on a cold start and when the active entity changes. Storage is a real `GSettings` schema
+(`eu.jumplink.Steuererklaerung`) when it is compiled and installed; in development or any other
+situation where the schema is unavailable the code falls back to the existing JSON user-settings
+file. The store is accessed through a tiny interface in `last-section.ts`, so the resolver logic
+is unit-tested without GTK. Unknown, empty or no-longer-visible stored values fall back to
+`home`; the dev/testing hook `STEUER_APP_VIEW` still overrides the restore when it names a view
+that is visible for the entity. No layout changed — the only window change is saving the current
+view on every row selection and running a restore pass after the nav is rebuilt.
+
 ## Implementation plan
 
 Ordered so each step is a reviewable PR that leaves the app working, and so the steps that help

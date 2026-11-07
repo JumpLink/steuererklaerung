@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="eu.jumplink.Steuererklaerung" path="/eu/jumplink/Steuererklaerung/">
+    <key name="last-sections" type="as">
+      <default>[]</default>
+      <summary>Last opened section per entity</summary>
+      <description>
+        Each entry stores an entity id and the last NavViewId that was open for it,
+        separated by U+001F (unit separator). On opening that entity the section is
+        restored if it is still visible; otherwise the start page is shown.
+      </description>
+    </key>
+  </schema>
+</schemalist>

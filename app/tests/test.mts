@@ -21,6 +21,7 @@ import launchModeSuite from './unit/desktop/launch-mode.test.ts';
 import breakpointOrder from './unit/desktop/breakpoint-order.test.ts';
 import phoneRules from './unit/desktop/phone-rules.test.ts';
 import tabHubLogic from './unit/desktop/tab-hub-logic.test.ts';
+import lastSection from './unit/desktop/last-section.test.ts';
 import privacyAck from './unit/elster/privacy-ack.test.ts';
 import kredit from './unit/finanzierung/kredit.test.ts';
 import finanzierung from './unit/finanzierung/finanzierung.test.ts';
@@ -481,6 +482,7 @@ run({
     breakpointOrder,
     phoneRules,
     tabHubLogic,
+    lastSection,
     privacyAck,
     testIsolation,
     fieldCoverageScan,
