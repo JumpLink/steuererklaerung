@@ -463,6 +463,20 @@ did not get the full row restructure (balance as suffix): live connection cards 
 and get a phone-only overflow menu with Sync and Disconnect beside the balance; a file-source card
 keeps its lone trash button at 48 px.
 
+**Built (step 8b), with deviations.** Time needed no `.blp` change — the form's `Adw.WrapBox`
+already puts the project dropdown and the label entry on one line at 360 px; only the Play button
+gets a 48 px target on `narrow` (and `-1` again on wide). Deadlines caps each group description at
+the two-line budget with `descriptionCap` (cut at the last sentence end inside the budget, word
+boundary as fallback): the shown text stays as the description, the rest opens the
+`More about this` expander (`explainerRow` gained a title parameter), and the `Paid`/`Filed`
+suffixes sit in a `rowActions` cluster for their 48 px target. Tax (the EÜR tab) hides its
+"Check PDF" header-suffix button on a phone and re-exposes it through `headerActions()` — as a
+labelled item in the header menu, not a second 28 px icon; the USt/GewSt/Feststellung buttons
+keep their places. Settings subtitles the backup paths through `pathSubtitle`: the cut is applied
+to TEXT (`middleEllipsis`, both ends kept) because libadwaita's subtitle label is private, and the
+row additionally gets `subtitle-lines: 1` — a 40-character cut still wraps at 360. The full value
+lives in the row's tooltip (plain text, not markup).
+
 ## Implementation plan
 
 Ordered so each step is a reviewable PR that leaves the app working, and so the steps that help
@@ -478,6 +492,7 @@ every page come before the ones that help one.
 | 6 | **Overview, Contracts, Invoices** *(done)* | Apply 2 + 3; demo banner one-line on a phone. | The three worst pages in the sweep, and they need no new mechanism. |
 | 7 | **Transactions, Contacts, Projects, Accounts** *(done)* | Expander for KPI/explanation blocks, search bar, row menus. | Same pattern, four pages. |
 | 8 | **Reports table** | Frozen item column, horizontal scroll, month chips defaulting to the current month. | The only genuinely new widget work; isolated, so it can take its time. |
+| 8b | **Time, Deadlines, Tax, Settings** *(done)* | One-row timer form + 48 px Play button; sentence-capped group descriptions behind an expander + 48 px `Paid`/`Filed`; EÜR PDF button into the header menu; middle-cut path subtitles. | Helper-only work on four small pages — slotted in before the reports table. |
 | 9 | **Receipt inbox polish** | Queue toggle into the header, re-open the queue after confirming, `Check & confirm` in a pinned `Gtk.ActionBar`. | Behavioural, needs the review flow's own tests. |
 | 10 | **Dialog sizing** | Sheets size to content; group headers follow the row rule. | Small, affects every dialog, safest last. |
 | 11 | **Remember the last section** | Persist `NavViewId` per entity in `GSettings`. | Pure convenience; worth nothing until 5 exists. |
