@@ -14,7 +14,7 @@ import GObject from '@girs/gobject-2.0';
 import Gtk from '@girs/gtk-4.0';
 import Adw from '@girs/adw-1';
 
-import type { PortedView, ViewAction } from '../view.ts';
+import type { PortedView, ViewAction, ViewToggleAction } from '../view.ts';
 import type { AppEntity } from '../entities.ts';
 import { BhSteuererklaerungView } from './steuererklaerung-view.ts';
 import { BhSteuerAssistentView } from './steuer-assistent-view.ts';
@@ -34,6 +34,7 @@ import { isSearchable } from '../shortcuts.ts';
 import { pinNaturalWidth } from '../widgets/responsive.ts';
 import { headerActionsChanged } from '../widgets/header-actions.ts';
 import { _ } from '../i18n.ts';
+import { forwardHeaderToggle } from './tab-hub-logic.ts';
 
 import Template from './tab-hub.blp';
 
@@ -123,6 +124,16 @@ export class BhTabHub extends Adw.Bin {
         const id = this._stack.get_visible_child_name();
         const view = id ? this.views.get(id) : undefined;
         return view?.headerActions?.() ?? [];
+    }
+
+    /**
+     * Pass the visible tab's header toggle through.
+     *
+     * The receipt inbox exposes a queue toggle while its split view is collapsed; without this the
+     * hub would swallow it and the queue would be unreachable on a phone.
+     */
+    headerToggle(): ViewToggleAction | undefined {
+        return forwardHeaderToggle(this.views, this._stack.get_visible_child_name());
     }
 
     /** Show one tab by id (`win.navigate("view/tab")`); unknown or hidden ids are ignored. */
