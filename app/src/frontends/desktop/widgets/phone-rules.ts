@@ -293,3 +293,29 @@ export function kpiBlockMode(narrow: boolean, cards: number): 'cards' | 'expande
 export function searchVisible(narrow: boolean, requested: boolean, query: string): boolean {
     return !narrow || requested || query.trim() !== '';
 }
+
+/** How the receipt inbox adapts its chrome at a given width. */
+export interface ReceiptInboxLayout {
+    /** Show the queue toggle in the window header. */
+    showHeaderToggle: boolean;
+    /** Pin the Check & confirm buttons in a bottom action bar. */
+    pinActionBar: boolean;
+    /** Re-open the queue after confirming a receipt. */
+    reopenQueueAfterConfirm: boolean;
+}
+
+/**
+ * Receipt-inbox mobile layout decisions.
+ *
+ * The view's own `Adw.OverlaySplitView` collapses at 500 px (content pane), so the queue toggle has
+ * to be reachable whenever that happens — including the 481–500 px band where the window itself is
+ * not yet phone-sized. The action bar and the auto-reopen are phone-only (≤480 px window), because
+ * they change the desktop layout.
+ */
+export function receiptInboxPhoneLayout(narrow: boolean, splitCollapsed: boolean): ReceiptInboxLayout {
+    return {
+        showHeaderToggle: splitCollapsed,
+        pinActionBar: narrow,
+        reopenQueueAfterConfirm: narrow,
+    };
+}

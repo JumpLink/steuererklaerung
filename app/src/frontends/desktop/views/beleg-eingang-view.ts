@@ -18,6 +18,10 @@ import GLib from '@girs/glib-2.0';
 import Gio from '@girs/gio-2.0';
 
 import Template from './beleg-eingang-view.blp';
+import type { ViewToggleAction } from '../view.ts';
+import { headerActionsChanged } from '../widgets/header-actions.ts';
+import { onNarrow } from '../widgets/narrow.ts';
+import { receiptInboxPhoneLayout } from '../widgets/phone-rules.ts';
 import {
     loadBelegEingang,
     nextOpenId,
@@ -67,13 +71,24 @@ export class BhBelegEingangView extends Adw.Bin {
     declare private _progress_bar: Gtk.ProgressBar;
     declare private _list_box: Gtk.ListBox;
     declare private _detail_box: Gtk.Box;
+    declare private _split_view: Adw.OverlaySplitView;
+    declare private _action_bar: Gtk.ActionBar;
 
     static {
         GObject.registerClass(
             {
                 GTypeName: 'BhBelegEingangView',
                 Template,
-                InternalChildren: ['stack', 'error_page', 'progress_label', 'progress_bar', 'list_box', 'detail_box'],
+                InternalChildren: [
+                    'stack',
+                    'error_page',
+                    'progress_label',
+                    'progress_bar',
+                    'list_box',
+                    'detail_box',
+                    'split_view',
+                    'action_bar',
+                ],
             },
             this,
         );
@@ -104,9 +119,23 @@ export class BhBelegEingangView extends Adw.Bin {
     private confirmBusy = false;
     /** True while select() drives the list selection — the row-selected handler must not re-enter. */
     private selecting = false;
+    /** The window's `narrow` state, kept so a detail rebuild can place the action bar correctly. */
+    private narrowState = false;
+    /** The inline action box on a desktop; holds the tip while the buttons are pinned to the action bar. */
+    private inlineActions: Gtk.Box | null = null;
+    /** The Skip / Confirm button row, reparented between the inline box and the action bar. */
+    private actionButtons: Gtk.Box | null = null;
+    /** The keyboard-hint label under the inline buttons. */
+    private actionTip: Gtk.Label | null = null;
 
     constructor() {
         super();
+        this._split_view.connect('notify::collapsed', () => headerActionsChanged(this));
+        this._split_view.connect('notify::show-sidebar', () => headerActionsChanged(this));
+        onNarrow(this, (narrow) => {
+            this.narrowState = narrow;
+            this.applyPhoneLayout();
+        });
         this._list_box.connect('row-selected', (_l, row) => {
             if (this.selecting || !row) return;
             const id = row.get_name();
@@ -273,7 +302,21 @@ export class BhBelegEingangView extends Adw.Bin {
             this._detail_box.remove(child);
             child = next;
         }
+        this.clearActionBar();
         this.confirmButton = null;
+        this.inlineActions = null;
+        this.actionButtons = null;
+        this.actionTip = null;
+    }
+
+    private clearActionBar(): void {
+        let child = this._action_bar.get_first_child();
+        while (child) {
+            const next = child.get_next_sibling();
+            this._action_bar.remove(child);
+            child = next;
+        }
+        this._action_bar.set_visible(false);
     }
 
     private renderDetail(): void {
@@ -527,21 +570,55 @@ export class BhBelegEingangView extends Adw.Bin {
         confirm.connect('clicked', () => void this.confirm());
         buttons.append(wrapButtonLabel(confirm));
         this.confirmButton = confirm;
+        const tip = new Gtk.Label({
+            label: _('Tip: ←/→ to browse · Enter confirms'),
+            xalign: 1,
+            cssClasses: ['dim-label', 'caption'],
+        });
+        this.inlineActions = box;
+        this.actionButtons = buttons;
+        this.actionTip = tip;
         box.append(buttons);
-        box.append(
-            new Gtk.Label({
-                label: _('Tip: ←/→ to browse · Enter confirms'),
-                xalign: 1,
-                cssClasses: ['dim-label', 'caption'],
-            }),
-        );
+        box.append(tip);
+        this.applyPhoneLayout();
         return box;
+    }
+
+    /** Move the action buttons into the pinned action bar on a phone, or back inline on desktop. */
+    private applyPhoneLayout(): void {
+        if (!this.actionButtons || !this.inlineActions) return;
+        const layout = receiptInboxPhoneLayout(this.narrowState, this._split_view.get_collapsed());
+        if (this.actionButtons.get_parent()) this.actionButtons.unparent();
+        if (layout.pinActionBar) {
+            this._action_bar.pack_end(this.actionButtons);
+            this._action_bar.set_visible(true);
+            return;
+        }
+        // Desktop: buttons first, then the keyboard hint.
+        if (this.actionTip && this.actionTip.get_parent() === this.inlineActions) {
+            this.actionTip.unparent();
+        }
+        this.inlineActions.append(this.actionButtons);
+        if (this.actionTip) this.inlineActions.append(this.actionTip);
+        this._action_bar.set_visible(false);
     }
 
     private updateConfirmSensitive(): void {
         const doc = this.currentDoc();
         const ready = doc != null && !this.confirmBusy && this.selectedTx.get(doc.id) != null;
         this.confirmButton?.set_sensitive(ready);
+    }
+
+    /** Expose the queue toggle to the window header while the split view is collapsed. */
+    headerToggle(): ViewToggleAction | undefined {
+        const layout = receiptInboxPhoneLayout(this.narrowState, this._split_view.get_collapsed());
+        if (!layout.showHeaderToggle) return undefined;
+        return {
+            label: _('Show the queue'),
+            iconName: 'sidebar-show-symbolic',
+            active: () => this._split_view.get_show_sidebar(),
+            setActive: (value) => this._split_view.set_show_sidebar(value),
+        };
     }
 
     /** A confirmed receipt reopened from the list: the facts + a way back (Undo). */
@@ -642,6 +719,12 @@ export class BhBelegEingangView extends Adw.Bin {
                 this.selectRow(this.currentId);
                 this.renderDetail();
                 this.focusCurrentRow();
+            }
+            // On a phone the queue is an overlay; reopen it so the next receipt is one tap away.
+            const layout = receiptInboxPhoneLayout(this.narrowState, this._split_view.get_collapsed());
+            if (layout.reopenQueueAfterConfirm) {
+                this._split_view.set_show_sidebar(true);
+                headerActionsChanged(this);
             }
         } catch (err) {
             await errorDialog(this, _('Confirming failed'), errorText(err));
