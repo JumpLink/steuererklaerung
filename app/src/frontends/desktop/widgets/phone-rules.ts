@@ -366,3 +366,61 @@ export function middleEllipsis(value: string, lineChars = PATH_LINE_CHARS): stri
     if (tail === 0) return `${value.slice(0, head)}${ELLIPSIS}`;
     return `${value.slice(0, head)}${ELLIPSIS}${value.slice(-tail)}`;
 }
+
+/**
+ * Which BWA month a phone table opens on.
+ *
+ * A twelve-month grid cut off at March on a 360 px screen is useless if the user has to scroll from
+ * January every time. The default is the current calendar month when it exists in the data, else the
+ * nearest previous month, or the first month if the year has not reached the current month yet.
+ */
+export function bwaDefaultMonth(months: readonly number[], today: Date = new Date()): number {
+    if (months.length === 0) return today.getMonth() + 1;
+    const sorted = [...months].sort((a, b) => a - b);
+    const current = today.getMonth() + 1;
+    if (sorted.includes(current)) return current;
+    const previous = sorted.filter((m) => m < current);
+    if (previous.length > 0) return previous[previous.length - 1]!;
+    return sorted[0]!;
+}
+
+/** Where to scroll a phone BWA table so a month column starts at the left edge of the viewport. */
+export interface BwaMonthScroll {
+    /** Column offset from the start of the scrollable content. */
+    start: number;
+    /** Current scroll position. */
+    value: number;
+    /** Visible width. */
+    page: number;
+    /** Total content width. */
+    upper: number;
+}
+
+/**
+ * Left edge of a BWA month column, given uniform column widths.
+ *
+ * A phone table makes the month columns homogeneous so every column has the same width; the scroll
+ * target is then the column index times (width + spacing). Keeping the arithmetic here makes the
+ * offset testable and avoids relying on `compute_bounds`, whose result depends on allocation timing
+ * and can include the previous column's right edge when the label is right-aligned.
+ */
+export function bwaMonthColumnStart(index: number, columnWidth: number, columnSpacing: number): number {
+    if (index <= 0) return 0;
+    return index * (columnWidth + columnSpacing);
+}
+
+/**
+ * Scroll target that aligns a BWA month column to the left edge.
+ *
+ * Unlike {@link chipScrollTarget} this does not merely bring the cell into view — tapping a month
+ * chip should land that month at the start of the scrollable area, so the frozen item column stays
+ * beside the month the user asked for.
+ */
+export function bwaMonthScrollTarget({ start, value, page, upper }: BwaMonthScroll): number | null {
+    if (page <= 0 || upper <= page) return null;
+    const max = upper - page;
+    const target = Math.max(0, Math.min(max, start));
+    if (target === value) return null;
+    return target;
+}
+// test

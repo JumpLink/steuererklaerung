@@ -16,20 +16,23 @@ import {
     TOUCH_TARGET,
     actionOverflow,
     badgeLabel,
+    bwaDefaultMonth,
+    bwaMonthColumnStart,
+    bwaMonthScrollTarget,
     chipScrollTarget,
     contextTitle,
     demoBannerVariant,
     descriptionCap,
     explainerPlacement,
-    kpiBlockMode,
-    middleEllipsis,
-    phoneSubtitleLines,
-    searchVisible,
     headerActionPlan,
+    kpiBlockMode,
     kpiColumns,
+    middleEllipsis,
     navBadgeCounts,
     overviewSections,
+    phoneSubtitleLines,
     recurringSummaryParts,
+    searchVisible,
     undershoot,
 } from '../../../src/frontends/desktop/widgets/phone-rules.ts';
 
@@ -366,6 +369,60 @@ export default async () => {
             for (const budget of [4, 5, 6, 20, PATH_LINE_CHARS]) {
                 expect(middleEllipsis(path, budget).length).toBeLessThanOrEqual(budget);
             }
+        });
+    });
+
+    await describe('phone-rules: step 8 reports table', async () => {
+        const june = new Date(2025, 5, 15);
+
+        await it('starts the first month column at zero', async () => {
+            expect(bwaMonthColumnStart(0, 80, 24)).toBe(0);
+        });
+
+        await it('spaces month columns by width plus spacing', async () => {
+            expect(bwaMonthColumnStart(1, 80, 24)).toBe(104);
+            expect(bwaMonthColumnStart(2, 80, 24)).toBe(208);
+            expect(bwaMonthColumnStart(6, 80, 24)).toBe(624);
+        });
+
+        await it('defaults to the current month when it exists in the data', async () => {
+            expect(bwaDefaultMonth([1, 3, 6, 12], june)).toBe(6);
+        });
+
+        await it('falls back to the nearest previous month', async () => {
+            expect(bwaDefaultMonth([1, 3, 5, 12], june)).toBe(5);
+            expect(bwaDefaultMonth([1, 2, 3], june)).toBe(3);
+        });
+
+        await it('falls back to the first month when the year has not reached the current one', async () => {
+            expect(bwaDefaultMonth([7, 8, 9], june)).toBe(7);
+        });
+
+        await it('falls back to the current month for empty data', async () => {
+            expect(bwaDefaultMonth([], june)).toBe(6);
+        });
+
+        await it('sorts unsorted month lists', async () => {
+            expect(bwaDefaultMonth([12, 6, 1], june)).toBe(6);
+        });
+
+        await it('aligns a month column to the left edge of the viewport', async () => {
+            expect(bwaMonthScrollTarget({ start: 400, value: 0, page: 300, upper: 800 })).toBe(400);
+        });
+
+        await it('does nothing when the column is already aligned', async () => {
+            expect(bwaMonthScrollTarget({ start: 400, value: 400, page: 300, upper: 800 })).toBeNull();
+        });
+
+        await it('does nothing when the content fits', async () => {
+            expect(bwaMonthScrollTarget({ start: 100, value: 0, page: 300, upper: 300 })).toBeNull();
+            expect(bwaMonthScrollTarget({ start: 100, value: 0, page: 0, upper: 800 })).toBeNull();
+        });
+
+        await it('clamps to the scrollable range', async () => {
+            const max = 800 - 300;
+            expect(bwaMonthScrollTarget({ start: -50, value: 100, page: 300, upper: 800 })).toBe(0);
+            expect(bwaMonthScrollTarget({ start: 900, value: 0, page: 300, upper: 800 })).toBe(max);
         });
     });
 };
