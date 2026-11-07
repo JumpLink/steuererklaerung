@@ -463,6 +463,16 @@ did not get the full row restructure (balance as suffix): live connection cards 
 and get a phone-only overflow menu with Sync and Disconnect beside the balance; a file-source card
 keeps its lone trash button at 48 px.
 
+**Built (step 9), with deviations.** The receipt inbox keeps the existing `Adw.OverlaySplitView`
+collapse, but the queue toggle moves from the detail pane into the window header. It is shown
+whenever the view's own split view is collapsed (≤500 px content pane), not only when the window
+hits the 480 px phone breakpoint, because a 481–500 px window would otherwise leave the queue
+inaccessible. The `Check & confirm` buttons and the keyboard hint are reparented into a
+`Gtk.ActionBar` pinned at the bottom of the detail pane, but only while the window itself is
+phone-sized (≤480 px); on desktop the buttons stay inline above the form. Re-opening the queue
+after a confirm is also phone-only, so a desktop user keeps the always-visible list. The layout
+decisions are isolated in `receiptInboxPhoneLayout()` and tested without GTK.
+
 ## Implementation plan
 
 Ordered so each step is a reviewable PR that leaves the app working, and so the steps that help
@@ -478,7 +488,7 @@ every page come before the ones that help one.
 | 6 | **Overview, Contracts, Invoices** *(done)* | Apply 2 + 3; demo banner one-line on a phone. | The three worst pages in the sweep, and they need no new mechanism. |
 | 7 | **Transactions, Contacts, Projects, Accounts** *(done)* | Expander for KPI/explanation blocks, search bar, row menus. | Same pattern, four pages. |
 | 8 | **Reports table** | Frozen item column, horizontal scroll, month chips defaulting to the current month. | The only genuinely new widget work; isolated, so it can take its time. |
-| 9 | **Receipt inbox polish** | Queue toggle into the header, re-open the queue after confirming, `Check & confirm` in a pinned `Gtk.ActionBar`. | Behavioural, needs the review flow's own tests. |
+| 9 | **Receipt inbox polish** *(done)* | Queue toggle into the header, re-open the queue after confirming, `Check & confirm` in a pinned `Gtk.ActionBar`. | Behavioural, needs the review flow's own tests. |
 | 10 | **Dialog sizing** | Sheets size to content; group headers follow the row rule. | Small, affects every dialog, safest last. |
 | 11 | **Remember the last section** | Persist `NavViewId` per entity in `GSettings`. | Pure convenience; worth nothing until 5 exists. |
 | 12 | **Mobile screenshots** | Extend `app/dev/metainfo-screenshots.sh` to cover the reworked pages; add the 360 px pass to the screenshot docs. | Proves the result and feeds the Flathub listing. |

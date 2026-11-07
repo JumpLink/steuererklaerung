@@ -53,7 +53,7 @@ import { appSession } from './data/session.ts';
 import { reloadEst } from './data/settings.ts';
 import { VIEW_FACTORIES } from './views/registry.ts';
 import { bumpViewEpoch, markup } from './views/util.ts';
-import { renderHeaderActions } from './widgets/header-actions.ts';
+import { renderHeaderActions, renderHeaderToggle } from './widgets/header-actions.ts';
 import { BhEntitySwitcher } from './widgets/entity-switcher.ts';
 import { BhYearSwitcher } from './widgets/year-switcher.ts';
 import { presentContextDialog } from './widgets/context-dialog.ts';
@@ -126,6 +126,7 @@ export class MainWindow extends Adw.ApplicationWindow {
                     'sync_button',
                     'view_action',
                     'view_menu',
+                    'view_toggle',
                     'assistant_toggle',
                     'assistant_stack',
                     'assistant_panel',
@@ -169,6 +170,7 @@ export class MainWindow extends Adw.ApplicationWindow {
     declare private _sync_button: Gtk.Button;
     declare private _view_action: Gtk.Button;
     declare private _view_menu: Gtk.MenuButton;
+    declare private _view_toggle: Gtk.ToggleButton;
     declare private _assistant_toggle: Gtk.ToggleButton;
     declare private _assistant_stack: Gtk.Stack;
     declare private _assistant_panel: BhAssistentPanel;
@@ -545,6 +547,7 @@ export class MainWindow extends Adw.ApplicationWindow {
             ported?.headerActions?.() ?? [],
             this.narrowState,
         );
+        renderHeaderToggle(this._view_toggle, ported?.headerToggle?.());
     }
 
     /**

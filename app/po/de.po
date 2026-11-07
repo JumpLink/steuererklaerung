@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-11-05 14:09+0100\n"
+"POT-Creation-Date: 2026-11-05 15:13+0100\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -27,7 +27,7 @@ msgstr ""
 #: src/core/actions/classification-rules.ts:48
 #: src/frontends/desktop/views/setup-assistant.ts:64
 #: src/frontends/desktop/views/setup-assistant.ts:480
-#: src/frontends/desktop/window.ts:829 src/frontends/desktop/window.ts:860
+#: src/frontends/desktop/window.ts:832 src/frontends/desktop/window.ts:863
 msgid "Private"
 msgstr "Privat"
 
@@ -2361,8 +2361,8 @@ msgid "Receipt #{id}"
 msgstr "Beleg #{id}"
 
 #: src/core/elster/euer-transactions.ts:260
-#: src/frontends/desktop/views/beleg-eingang-view.ts:347
-#: src/frontends/desktop/views/beleg-eingang-view.ts:627
+#: src/frontends/desktop/views/beleg-eingang-view.ts:389
+#: src/frontends/desktop/views/beleg-eingang-view.ts:701
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:154
 #: src/frontends/desktop/views/herleitung-dialog.ts:606
 #: src/frontends/desktop/views/tx-detail-dialog.ts:38
@@ -4921,7 +4921,7 @@ msgstr "Prüf-Plugins: {count}"
 #: src/frontends/desktop/lotse-panel.blp:26
 #: src/frontends/desktop/views/einstellungen-view.blp:55
 #: src/frontends/desktop/views/tab-hub.ts:198
-#: src/frontends/desktop/window.blp:242
+#: src/frontends/desktop/window.blp:248
 msgid "Assistant"
 msgstr "Assistent"
 
@@ -4930,7 +4930,7 @@ msgstr "Assistent"
 #: src/frontends/desktop/lotse-panel.blp:36
 #: src/frontends/desktop/views/beleg-upload.ts:131
 #: src/frontends/desktop/views/konten-view.ts:754
-#: src/frontends/desktop/window.blp:289
+#: src/frontends/desktop/window.blp:295
 msgid "Close"
 msgstr "Schließen"
 
@@ -5216,7 +5216,7 @@ msgstr "Kein Fenster offen, in dem die Bank gefragt werden könnte."
 #: src/frontends/desktop/views/laufende-kosten-view.ts:303
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:466
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:76
-#: src/frontends/desktop/window.ts:309
+#: src/frontends/desktop/window.ts:311
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -6210,7 +6210,7 @@ msgid "Split"
 msgstr "Aufteilen"
 
 #: src/frontends/desktop/views/aufteilen-dialog.ts:147
-#: src/frontends/desktop/views/beleg-eingang-view.ts:456
+#: src/frontends/desktop/views/beleg-eingang-view.ts:498
 #: src/frontends/desktop/views/tx-detail-dialog.ts:64
 #: src/frontends/desktop/views/umbuchen-dialog.ts:119
 msgid "Transaction"
@@ -6342,31 +6342,26 @@ msgstr "Keine Hinweise für {year}"
 msgid "Loading receipt inbox …"
 msgstr "Lade Beleg-Eingang …"
 
-#: src/frontends/desktop/views/beleg-eingang-view.blp:110
-#: src/frontends/desktop/views/zu-pruefen-view.blp:122
-msgid "Show the queue"
-msgstr "Liste anzeigen"
-
-#: src/frontends/desktop/views/beleg-eingang-view.ts:51
+#: src/frontends/desktop/views/beleg-eingang-view.ts:54
 #: src/frontends/desktop/views/dokumente-view.ts:31
 msgid "built-in DMS"
 msgstr "eigenes DMS"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:54
+#: src/frontends/desktop/views/beleg-eingang-view.ts:57
 msgid "— unchanged (accept AI suggestion) —"
 msgstr "— unverändert (KI-Vorschlag übernehmen) —"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:131
+#: src/frontends/desktop/views/beleg-eingang-view.ts:159
 msgid "Could not load the receipt inbox"
 msgstr "Beleg-Eingang konnte nicht geladen werden"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:196
-#: src/frontends/desktop/views/beleg-eingang-view.ts:352
+#: src/frontends/desktop/views/beleg-eingang-view.ts:224
+#: src/frontends/desktop/views/beleg-eingang-view.ts:394
 #: src/frontends/desktop/views/dokumente-view.ts:186
 msgid "(untitled)"
 msgstr "(ohne Titel)"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:200
+#: src/frontends/desktop/views/beleg-eingang-view.ts:228
 #: src/frontends/desktop/views/beleg-link-dialog.ts:226
 #: src/frontends/desktop/views/dokumente-view.ts:180
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:152
@@ -6375,102 +6370,102 @@ msgstr "(ohne Titel)"
 msgid "No. {number}"
 msgstr "Nr. {number}"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:311
-#: src/frontends/desktop/views/beleg-eingang-view.ts:398
-#: src/frontends/desktop/views/beleg-eingang-view.ts:435
+#: src/frontends/desktop/views/beleg-eingang-view.ts:353
+#: src/frontends/desktop/views/beleg-eingang-view.ts:440
+#: src/frontends/desktop/views/beleg-eingang-view.ts:477
 msgid "Match transaction"
 msgstr "Buchung zuordnen"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:313
+#: src/frontends/desktop/views/beleg-eingang-view.ts:355
 msgid "Could not determine candidate transactions"
 msgstr "Buchungs-Kandidaten konnten nicht ermittelt werden"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:318
+#: src/frontends/desktop/views/beleg-eingang-view.ts:360
 #: src/frontends/desktop/views/util.ts:497
 msgid "Try again"
 msgstr "Erneut versuchen"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:332
+#: src/frontends/desktop/views/beleg-eingang-view.ts:374
 #: src/frontends/desktop/views/herleitung-dialog.ts:620
 msgid "AI note"
 msgstr "KI-Hinweis"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:334
+#: src/frontends/desktop/views/beleg-eingang-view.ts:376
 msgid "Not matched to a transaction yet"
 msgstr "Noch keiner Buchung zugeordnet"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:335
+#: src/frontends/desktop/views/beleg-eingang-view.ts:377
 msgid "Choose the matching transaction, then confirm."
 msgstr "Passende Buchung wählen, dann bestätigen."
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:365
+#: src/frontends/desktop/views/beleg-eingang-view.ts:407
 #: src/frontends/desktop/views/herleitung-dialog.ts:453
 msgid "Date"
 msgstr "Datum"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:366
+#: src/frontends/desktop/views/beleg-eingang-view.ts:408
 msgid "Invoice no."
 msgstr "Rechnungsnr."
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:368
+#: src/frontends/desktop/views/beleg-eingang-view.ts:410
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:100
 #: src/frontends/desktop/views/steuerkonto-view.ts:102
 #: src/frontends/desktop/views/tx-detail-dialog.ts:204
 msgid "Net"
 msgstr "Netto"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:369
+#: src/frontends/desktop/views/beleg-eingang-view.ts:411
 msgctxt "receipt"
 msgid "VAT"
 msgstr "USt"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:383
+#: src/frontends/desktop/views/beleg-eingang-view.ts:425
 #: src/frontends/desktop/views/herleitung-dialog.ts:468
 #: src/frontends/desktop/views/tx-detail-dialog.ts:185
 #: src/frontends/desktop/views/vertrag-vorschlag-dialog.ts:144
 msgid "Source"
 msgstr "Herkunft"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:388
+#: src/frontends/desktop/views/beleg-eingang-view.ts:430
 msgid "Open original"
 msgstr "Original öffnen"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:388
+#: src/frontends/desktop/views/beleg-eingang-view.ts:430
 msgid "Show the receipt file"
 msgstr "Beleg-Datei anzeigen"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:399
+#: src/frontends/desktop/views/beleg-eingang-view.ts:441
 msgid "Looking for matching transactions …"
 msgstr "Suche passende Buchungen …"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:418
+#: src/frontends/desktop/views/beleg-eingang-view.ts:460
 msgid "Unknown error"
 msgstr "Unbekannter Fehler"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:436
+#: src/frontends/desktop/views/beleg-eingang-view.ts:478
 msgid "The receipt is linked to the chosen transaction."
 msgstr "Der Beleg wird mit der gewählten Buchung verknüpft."
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:441
+#: src/frontends/desktop/views/beleg-eingang-view.ts:483
 msgid "No matching transaction found"
 msgstr "Keine passende Buchung gefunden"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:442
+#: src/frontends/desktop/views/beleg-eingang-view.ts:484
 msgid "No unlinked transaction matches amount, date and counterparty — skip."
 msgstr ""
 "Keine unverknüpfte Buchung passt auf Betrag, Datum und Gegenseite — "
 "überspringen."
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:478
+#: src/frontends/desktop/views/beleg-eingang-view.ts:520
 msgid "Check & confirm"
 msgstr "Prüfen & bestätigen"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:479
+#: src/frontends/desktop/views/beleg-eingang-view.ts:521
 msgid "Leave the category unchanged (accept the AI suggestion) or correct it."
 msgstr ""
 "Kategorie unverändert lassen (KI-Vorschlag übernehmen) oder korrigieren."
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:486
+#: src/frontends/desktop/views/beleg-eingang-view.ts:528
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:120
 #: src/frontends/desktop/views/herleitung-dialog.ts:464
 #: src/frontends/desktop/views/herleitung-dialog.ts:507
@@ -6483,55 +6478,60 @@ msgstr ""
 msgid "Category"
 msgstr "Kategorie"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:493
+#: src/frontends/desktop/views/beleg-eingang-view.ts:535
 msgid "derived VAT rate: {rate} %"
 msgstr "abgeleiteter USt-Satz: {rate} %"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:495
+#: src/frontends/desktop/views/beleg-eingang-view.ts:537
 msgid "The VAT rate is derived from the category"
 msgstr "USt-Satz wird aus der Kategorie abgeleitet"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:507
+#: src/frontends/desktop/views/beleg-eingang-view.ts:549
 msgid "Reason (optional)"
 msgstr "Begründung (optional)"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:522
+#: src/frontends/desktop/views/beleg-eingang-view.ts:564
 msgid "Skip"
 msgstr "Überspringen"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:526
+#: src/frontends/desktop/views/beleg-eingang-view.ts:568
 #: src/frontends/desktop/views/zu-pruefen-view.ts:363
 msgid "Confirm and continue"
 msgstr "Bestätigen und weiter"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:533
+#: src/frontends/desktop/views/beleg-eingang-view.ts:573
 #: src/frontends/desktop/views/zu-pruefen-view.ts:373
 msgid "Tip: ←/→ to browse · Enter confirms"
 msgstr "Tipp: ←/→ blättern · Eingabetaste bestätigt"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:551
+#: src/frontends/desktop/views/beleg-eingang-view.ts:614
+#: src/frontends/desktop/views/zu-pruefen-view.blp:122
+msgid "Show the queue"
+msgstr "Liste anzeigen"
+
+#: src/frontends/desktop/views/beleg-eingang-view.ts:625
 #: src/frontends/desktop/views/laufende-kosten-view.ts:158
 msgid "Confirmed"
 msgstr "Bestätigt"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:552
+#: src/frontends/desktop/views/beleg-eingang-view.ts:626
 msgid "This receipt was confirmed and booked in this session."
 msgstr "Dieser Beleg wurde in dieser Sitzung bestätigt und verbucht."
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:559
+#: src/frontends/desktop/views/beleg-eingang-view.ts:633
 msgctxt "confirmed receipt"
 msgid "Undo"
 msgstr "Rückgängig machen"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:572
+#: src/frontends/desktop/views/beleg-eingang-view.ts:646
 msgid "All matched"
 msgstr "Alles zugeordnet"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:572
+#: src/frontends/desktop/views/beleg-eingang-view.ts:646
 msgid "All checked"
 msgstr "Alles geprüft"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:575
+#: src/frontends/desktop/views/beleg-eingang-view.ts:649
 msgid ""
 "Every receipt in {year} is matched to a transaction. New receipts appear "
 "here."
@@ -6539,7 +6539,7 @@ msgstr ""
 "Jeder Beleg in {year} ist einer Buchung zugeordnet. Neue Belege erscheinen "
 "hier."
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:579
+#: src/frontends/desktop/views/beleg-eingang-view.ts:653
 msgid ""
 "Every receipt in the inbox is confirmed and booked. New receipts from "
 "Paperless and the mail import appear here automatically."
@@ -6547,41 +6547,41 @@ msgstr ""
 "Alle Belege im Eingang sind bestätigt und verbucht. Neue Belege aus "
 "Paperless und E-Mail-Import erscheinen automatisch hier."
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:586
+#: src/frontends/desktop/views/beleg-eingang-view.ts:660
 msgid "Go to transactions"
 msgstr "Zu den Buchungen"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:630
+#: src/frontends/desktop/views/beleg-eingang-view.ts:704
 msgid "Receipt “{vendor}” booked — marking it in Paperless failed"
 msgstr "Beleg „{vendor}\" gebucht — Paperless-Markierung fehlgeschlagen"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:634
+#: src/frontends/desktop/views/beleg-eingang-view.ts:708
 msgid "Receipt “{vendor}” booked"
 msgstr "Beleg „{vendor}\" gebucht"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:647
+#: src/frontends/desktop/views/beleg-eingang-view.ts:726
 #: src/frontends/desktop/views/zu-pruefen-view.ts:439
 msgid "Confirming failed"
 msgstr "Bestätigen fehlgeschlagen"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:663
+#: src/frontends/desktop/views/beleg-eingang-view.ts:742
 msgid "Undo is no longer possible"
 msgstr "Rückgängig nicht mehr möglich"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:668
+#: src/frontends/desktop/views/beleg-eingang-view.ts:747
 #: src/frontends/desktop/views/offene-belege-view.ts:220
 msgid "Undone"
 msgstr "Rückgängig gemacht"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:681
+#: src/frontends/desktop/views/beleg-eingang-view.ts:760
 msgid "Undo failed"
 msgstr "Rückgängig fehlgeschlagen"
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:696
+#: src/frontends/desktop/views/beleg-eingang-view.ts:775
 msgid "The receipt file is not available."
 msgstr "Die Beleg-Datei ist nicht verfügbar."
 
-#: src/frontends/desktop/views/beleg-eingang-view.ts:711
+#: src/frontends/desktop/views/beleg-eingang-view.ts:790
 msgid "Could not open the original"
 msgstr "Original konnte nicht geöffnet werden"
 
@@ -7076,7 +7076,7 @@ msgstr "Eigene Daten"
 
 #: src/frontends/desktop/views/einstellungen/allgemein.ts:41
 #: src/frontends/desktop/views/welcome.ts:229
-#: src/frontends/desktop/window.ts:762
+#: src/frontends/desktop/window.ts:765
 msgid "Use my own data"
 msgstr "Eigene Daten verwenden"
 
@@ -12591,7 +12591,7 @@ msgid "Dauerfristverlängerung: every VAT return is due one month later."
 msgstr "Jede Voranmeldung ist einen Monat später fällig."
 
 #: src/frontends/desktop/views/setup-assistant.ts:436
-#: src/frontends/desktop/window.ts:829 src/frontends/desktop/window.ts:860
+#: src/frontends/desktop/window.ts:832 src/frontends/desktop/window.ts:863
 msgid "Business"
 msgstr "Unternehmen"
 
@@ -12685,7 +12685,7 @@ msgid "Done"
 msgstr "Fertig"
 
 #: src/frontends/desktop/views/setup-assistant.ts:649
-#: src/frontends/desktop/window.blp:300
+#: src/frontends/desktop/window.blp:306
 msgid "Finish setup"
 msgstr "Einrichtung abschließen"
 
@@ -15147,62 +15147,62 @@ msgstr "Entität einrichten …"
 msgid "About Steuererklärung"
 msgstr "Über Steuererklärung"
 
-#: src/frontends/desktop/window.ts:303
+#: src/frontends/desktop/window.ts:305
 msgid "Switch to the demo?"
 msgstr "Zur Demo wechseln?"
 
-#: src/frontends/desktop/window.ts:303
+#: src/frontends/desktop/window.ts:305
 msgid "Switch to your own data?"
 msgstr "Zu eigenen Daten wechseln?"
 
-#: src/frontends/desktop/window.ts:306
+#: src/frontends/desktop/window.ts:308
 msgid ""
 "The app restarts with fictional sample data. Your own data is not changed."
 msgstr ""
 "Die App startet mit erfundenen Beispieldaten neu. Deine eigenen Daten "
 "bleiben unverändert."
 
-#: src/frontends/desktop/window.ts:307
+#: src/frontends/desktop/window.ts:309
 msgid "The app restarts with your own data. The demo data stays separate."
 msgstr ""
 "Die App startet mit deinen eigenen Daten neu. Die Demodaten bleiben getrennt."
 
-#: src/frontends/desktop/window.ts:310
+#: src/frontends/desktop/window.ts:312
 msgid "Restart"
 msgstr "Neu starten"
 
-#: src/frontends/desktop/window.ts:324
+#: src/frontends/desktop/window.ts:326
 msgid "Please restart the app yourself to switch."
 msgstr "Bitte starte die App selbst neu, um zu wechseln."
 
-#: src/frontends/desktop/window.ts:750
+#: src/frontends/desktop/window.ts:753
 msgid "Data could not be loaded completely: {error}"
 msgstr "Daten konnten nicht vollständig geladen werden: {error}"
 
-#: src/frontends/desktop/window.ts:760
+#: src/frontends/desktop/window.ts:763
 msgid "Demo data"
 msgstr "Demodaten"
 
-#: src/frontends/desktop/window.ts:760
+#: src/frontends/desktop/window.ts:763
 msgid "Demo data – fictional examples, no real financial data"
 msgstr "Demodaten – fiktive Beispieldaten, keine echten Finanzdaten"
 
-#: src/frontends/desktop/window.ts:762
+#: src/frontends/desktop/window.ts:765
 msgid "My data"
 msgstr "Eigene Daten"
 
-#: src/frontends/desktop/window.ts:791
+#: src/frontends/desktop/window.ts:794
 msgid "Setup is not finished: no business or private tax return is set up yet."
 msgstr ""
 "Die Einrichtung ist nicht abgeschlossen: Es ist noch kein Betrieb und keine "
 "private Steuererklärung eingerichtet."
 
-#: src/frontends/desktop/window.ts:792
+#: src/frontends/desktop/window.ts:795
 msgid "Setup is not finished: “{entity}” has no bank account yet."
 msgstr ""
 "Die Einrichtung ist nicht abgeschlossen: „{entity}“ hat noch kein Bankkonto."
 
-#: src/frontends/desktop/window.ts:966
+#: src/frontends/desktop/window.ts:969
 msgid ""
 "“{view}” — this view is being ported to native Adwaita widgets step by step. "
 "It is already available in the web interface (steuer web)."
