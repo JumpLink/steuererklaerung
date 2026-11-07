@@ -13,6 +13,7 @@
 import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 import GObject from '@girs/gobject-2.0';
+import GLib from '@girs/glib-2.0';
 
 import Template from './auswertungen-view.blp';
 import { type AuswertungenData, type BwaLine, type BwaResult, type Hinweis } from '../data/auswertungen.ts';
@@ -20,6 +21,9 @@ import { reads } from '../read/index.ts';
 import type { AppEntity } from '../entities.ts';
 import { eur, pct } from '../../../core/lib/format.ts';
 import { LoadToken, MONTHS, applyScrollHook, kpiFlow, loadIntoStack, markup } from './util.ts';
+import { chipScroller } from '../widgets/responsive.ts';
+import { onNarrow } from '../widgets/narrow.ts';
+import { bwaDefaultMonth, bwaMonthScrollTarget } from '../widgets/phone-rules.ts';
 import { _, fmt } from '../i18n.ts';
 import { hinweisDetails } from './hinweis-handlung.ts';
 
@@ -34,7 +38,7 @@ export class BhAuswertungenView extends Adw.Bin {
     declare private _stack: Gtk.Stack;
     declare private _error_page: Adw.StatusPage;
     declare private _kpi_box: Gtk.Box;
-    declare private _grid: Gtk.Grid;
+    declare private _table_box: Gtk.Box;
     declare private _einblicke_box: Gtk.FlowBox;
     declare private _scroller: Gtk.ScrolledWindow;
 
@@ -43,7 +47,7 @@ export class BhAuswertungenView extends Adw.Bin {
             {
                 GTypeName: 'BhAuswertungenView',
                 Template,
-                InternalChildren: ['stack', 'error_page', 'kpi_box', 'grid', 'einblicke_box', 'scroller'],
+                InternalChildren: ['stack', 'error_page', 'kpi_box', 'table_box', 'einblicke_box', 'scroller'],
             },
             this,
         );
@@ -52,6 +56,17 @@ export class BhAuswertungenView extends Adw.Bin {
     private readonly token = new LoadToken();
     private year = 0;
     private entity: AppEntity | null = null;
+    private bwa: BwaResult | null = null;
+    private phone = false;
+
+    constructor() {
+        super();
+        onNarrow(this, (narrow) => {
+            if (narrow === this.phone) return;
+            this.phone = narrow;
+            if (this.bwa) this.fillGrid(this.bwa);
+        });
+    }
 
     reload(entity: AppEntity, year: number): void {
         this.year = year;
@@ -67,6 +82,7 @@ export class BhAuswertungenView extends Adw.Bin {
     }
 
     private fill(data: AuswertungenData): void {
+        this.bwa = data.bwa;
         this.fillKpi(data.bwa);
         this.fillGrid(data.bwa);
         this.fillEinblicke(data.hinweise);
@@ -106,19 +122,155 @@ export class BhAuswertungenView extends Adw.Bin {
 
     // ── BWA · monatlich matrix ───────────────────────────────────────────
     private fillGrid(r: BwaResult): void {
-        this.clearGrid();
+        this.clearTableBox();
+        const table = this.phone ? this.buildPhoneGrid(r) : this.buildDesktopGrid(r);
+        this._table_box.append(table);
+    }
+
+    /** Desktop: one horizontal scroller around a card-wrapped grid. */
+    private buildDesktopGrid(r: BwaResult): Gtk.Widget {
+        const grid = new Gtk.Grid({
+            columnSpacing: 24,
+            rowSpacing: 8,
+            marginTop: 12,
+            marginBottom: 12,
+            marginStart: 12,
+            marginEnd: 12,
+        });
         const lastCol = r.months.length + 1;
-
-        this._grid.attach(this.headerCell(_('Item'), false), 0, 0, 1, 1);
-        r.months.forEach((m, i) => this._grid.attach(this.headerCell(MONTHS[m] ?? String(m), true), i + 1, 0, 1, 1));
-        this._grid.attach(this.headerCell(_('Σ year'), true), lastCol, 0, 1, 1);
-
+        grid.attach(this.headerCell(_('Item'), false), 0, 0, 1, 1);
+        r.months.forEach((m, i) => grid.attach(this.headerCell(MONTHS[m] ?? String(m), true), i + 1, 0, 1, 1));
+        grid.attach(this.headerCell(_('Σ year'), true), lastCol, 0, 1, 1);
         r.lines.forEach((line, idx) => {
             const row = idx + 1;
-            this._grid.attach(this.labelCell(line), 0, row, 1, 1);
-            line.perMonth.forEach((v, i) => this._grid.attach(this.valueCell(v, line), i + 1, row, 1, 1));
-            this._grid.attach(this.valueCell(line.total, line), lastCol, row, 1, 1);
+            grid.attach(this.labelCell(line), 0, row, 1, 1);
+            line.perMonth.forEach((v, i) => grid.attach(this.valueCell(v, line), i + 1, row, 1, 1));
+            grid.attach(this.valueCell(line.total, line), lastCol, row, 1, 1);
         });
+        return new Gtk.ScrolledWindow({
+            hscrollbarPolicy: Gtk.PolicyType.AUTOMATIC,
+            vscrollbarPolicy: Gtk.PolicyType.NEVER,
+            propagateNaturalWidth: false,
+            child: new Adw.Bin({ cssClasses: ['card'], child: grid }),
+        });
+    }
+
+    /**
+     * Phone: frozen item column on the left, horizontally scrollable month + total columns on the
+     * right. A chip row above the table jumps to the selected month; the table opens on the current
+     * month instead of January.
+     */
+    private buildPhoneGrid(r: BwaResult): Gtk.Widget {
+        const itemGrid = new Gtk.Grid({
+            rowHomogeneous: true,
+            rowSpacing: 8,
+            marginTop: 12,
+            marginBottom: 12,
+            marginStart: 12,
+        });
+        itemGrid.attach(this.headerCell(_('Item'), false), 0, 0, 1, 1);
+        r.lines.forEach((line, idx) => itemGrid.attach(this.labelCell(line), 0, idx + 1, 1, 1));
+
+        const monthGrid = new Gtk.Grid({
+            rowHomogeneous: true,
+            columnSpacing: 24,
+            rowSpacing: 8,
+            marginTop: 12,
+            marginBottom: 12,
+            marginEnd: 12,
+        });
+        const totalCol = r.months.length;
+        const monthHeaders: Gtk.Label[] = [];
+        r.months.forEach((m, i) => {
+            const cell = this.headerCell(MONTHS[m] ?? String(m), true);
+            monthHeaders[i] = cell;
+            monthGrid.attach(cell, i, 0, 1, 1);
+        });
+        monthGrid.attach(this.headerCell(_('Σ year'), true), totalCol, 0, 1, 1);
+        r.lines.forEach((line, idx) => {
+            const row = idx + 1;
+            line.perMonth.forEach((v, i) => monthGrid.attach(this.valueCell(v, line), i, row, 1, 1));
+            monthGrid.attach(this.valueCell(line.total, line), totalCol, row, 1, 1);
+        });
+
+        const hscroller = new Gtk.ScrolledWindow({
+            hscrollbarPolicy: Gtk.PolicyType.AUTOMATIC,
+            vscrollbarPolicy: Gtk.PolicyType.NEVER,
+            propagateNaturalWidth: false,
+            hexpand: true,
+            child: monthGrid,
+        });
+
+        const rowBox = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 0 });
+        rowBox.append(itemGrid);
+        rowBox.append(hscroller);
+
+        const sizeGroup = new Gtk.SizeGroup({ mode: Gtk.SizeGroupMode.VERTICAL });
+        sizeGroup.add_widget(itemGrid);
+        sizeGroup.add_widget(hscroller);
+
+        const card = new Gtk.Box({ cssClasses: ['card'], orientation: Gtk.Orientation.VERTICAL });
+        card.append(rowBox);
+
+        const chipBox = this.buildMonthChips(r.months, hscroller, monthHeaders);
+        const chipScrollerWidget = chipScroller(chipBox);
+
+        const box = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 12 });
+        box.append(chipScrollerWidget);
+        box.append(card);
+
+        const defaultMonth = bwaDefaultMonth(r.months);
+        this.scrollToMonthOnMap(hscroller, defaultMonth, r.months, monthHeaders);
+
+        return box;
+    }
+
+    private buildMonthChips(months: number[], hscroller: Gtk.ScrolledWindow, headers: Gtk.Label[]): Gtk.Box {
+        const box = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 6 });
+        const defaultMonth = bwaDefaultMonth(months);
+        let group: Gtk.ToggleButton | null = null;
+        for (const m of months) {
+            const btn = new Gtk.ToggleButton({ label: MONTHS[m] ?? String(m), active: m === defaultMonth });
+            if (group) btn.set_group(group);
+            else group = btn;
+            btn.connect('toggled', () => {
+                if (!btn.get_active()) return;
+                this.scrollToMonth(hscroller, m, months, headers);
+            });
+            box.append(btn);
+        }
+        return box;
+    }
+
+    private scrollToMonthOnMap(
+        hscroller: Gtk.ScrolledWindow,
+        month: number,
+        months: number[],
+        headers: Gtk.Label[],
+    ): void {
+        GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+            this.scrollToMonth(hscroller, month, months, headers);
+            return GLib.SOURCE_REMOVE;
+        });
+    }
+
+    private scrollToMonth(hscroller: Gtk.ScrolledWindow, month: number, months: number[], headers: Gtk.Label[]): void {
+        const adjustment = hscroller.get_hadjustment();
+        const index = months.indexOf(month);
+        if (index < 0) return;
+        const header = headers[index];
+        if (!header) return;
+        const monthGrid = hscroller.get_child() as Gtk.Grid | null;
+        if (!monthGrid) return;
+        const [ok, bounds] = header.compute_bounds(monthGrid);
+        if (!ok) return;
+        const target = bwaMonthScrollTarget({
+            start: bounds.get_x(),
+            value: adjustment.get_value(),
+            page: adjustment.get_page_size(),
+            upper: adjustment.get_upper(),
+        });
+        if (target !== null) adjustment.set_value(target);
     }
 
     private headerCell(text: string, numeric: boolean): Gtk.Label {
@@ -229,11 +381,11 @@ export class BhAuswertungenView extends Adw.Bin {
         }
     }
 
-    private clearGrid(): void {
-        let child = this._grid.get_first_child();
+    private clearTableBox(): void {
+        let child = this._table_box.get_first_child();
         while (child) {
             const next = child.get_next_sibling();
-            this._grid.remove(child);
+            this._table_box.remove(child);
             child = next;
         }
     }
