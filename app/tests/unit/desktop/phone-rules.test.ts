@@ -31,6 +31,7 @@ import {
     navBadgeCounts,
     overviewSections,
     phoneSubtitleLines,
+    receiptInboxPhoneLayout,
     recurringSummaryParts,
     searchVisible,
     undershoot,
@@ -282,6 +283,23 @@ export default async () => {
 
         await it('always ends on the total', async () => {
             expect(text(recurringSummaryParts(0, 0, 3))).toBe('3 total');
+        });
+    });
+
+    await describe('phone-rules: receipt inbox (step 9)', async () => {
+        const layout = (narrow: boolean, collapsed: boolean) => {
+            const l = receiptInboxPhoneLayout(narrow, collapsed);
+            return `${l.showHeaderToggle ? 'toggle' : '-'}/${l.pinActionBar ? 'bar' : '-'}/${l.reopenQueueAfterConfirm ? 'reopen' : '-'}`;
+        };
+
+        await it('shows the queue toggle whenever the split view is collapsed', async () => {
+            expect(layout(false, false)).toBe('-/-/-');
+            expect(layout(false, true)).toBe('toggle/-/-');
+            expect(layout(true, true)).toBe('toggle/bar/reopen');
+        });
+
+        await it('pins the action bar and reopens the queue only on a phone window', async () => {
+            expect(layout(true, false)).toBe('-/bar/reopen');
         });
     });
 

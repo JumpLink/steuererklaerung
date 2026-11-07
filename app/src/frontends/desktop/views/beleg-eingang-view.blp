@@ -55,7 +55,6 @@ template $BhBelegEingangView: Adw.Bin {
           setters {
             split_view.collapsed: true;
             split_view.show-sidebar: false;
-            queue_bar.visible: true;
           }
         }
 
@@ -97,23 +96,6 @@ template $BhBelegEingangView: Adw.Bin {
           content: Gtk.Box {
             orientation: vertical;
 
-            // Only shown once the split view collapses: the queue is an overlay then and needs
-            // a way back.
-            Gtk.Box queue_bar {
-              visible: false;
-              margin-top: 6;
-              margin-start: 12;
-              margin-end: 12;
-
-              Gtk.ToggleButton queue_toggle {
-                icon-name: "sidebar-show-symbolic";
-                tooltip-text: _("Show the queue");
-                active: bind split_view.show-sidebar bidirectional;
-
-                styles ["flat"]
-              }
-            }
-
             Gtk.ScrolledWindow {
               hscrollbar-policy: never;
               vexpand: true;
@@ -131,6 +113,10 @@ template $BhBelegEingangView: Adw.Bin {
                   spacing: 18;
                 };
               };
+            }
+
+            Gtk.ActionBar _action_bar {
+              visible: false;
             }
           };
         };

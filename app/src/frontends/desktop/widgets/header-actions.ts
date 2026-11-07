@@ -12,7 +12,7 @@
 
 import Gtk from '@girs/gtk-4.0';
 
-import type { ViewAction } from '../view.ts';
+import type { ViewAction, ViewToggleAction } from '../view.ts';
 import { headerActionPlan } from './phone-rules.ts';
 import { menuItem } from './responsive.ts';
 
@@ -22,6 +22,8 @@ export interface HeaderActionSlots {
     button: Gtk.Button;
     /** The overflow menu beside it. */
     menu: Gtk.MenuButton;
+    /** The optional toggle button (e.g. the receipt-inbox queue). */
+    toggle?: Gtk.ToggleButton;
 }
 
 /**
@@ -67,6 +69,44 @@ export function renderHeaderActions(slots: HeaderActionSlots, actions: readonly 
     const rest = plan.menu.flatMap((index) => actions[index] ?? []);
     slots.menu.set_visible(rest.length > 0);
     slots.menu.set_popover(rest.length > 0 ? actionPopover(rest) : null);
+    if (slots.toggle) renderHeaderToggle(slots.toggle, undefined);
+}
+
+/**
+ * The `toggled` handler currently on the header toggle button.
+ *
+ * The button is a template child and outlives every view, so the handler for the view that just
+ * went away has to go with it.
+ */
+const wiredToggle = new WeakMap<Gtk.ToggleButton, number>();
+
+/**
+ * Render a header-bar toggle, or hide the slot when the view has none.
+ *
+ * Called from `renderHeaderActions` when no toggle is supplied, and directly from `window.ts`
+ * when one is.
+ */
+export function renderHeaderToggle(button: Gtk.ToggleButton, action: ViewToggleAction | undefined): void {
+    const previous = wiredToggle.get(button);
+    if (previous) {
+        button.disconnect(previous);
+        wiredToggle.delete(button);
+    }
+
+    if (!action) {
+        button.set_visible(false);
+        return;
+    }
+
+    button.set_visible(true);
+    button.set_icon_name(action.iconName ?? 'list-add-symbolic');
+    button.set_tooltip_text(action.label);
+    // Set the state before connecting, so the initial sync does not call the action.
+    button.set_active(action.active());
+    wiredToggle.set(
+        button,
+        button.connect('toggled', () => action.setActive(button.get_active())),
+    );
 }
 
 function actionPopover(actions: readonly ViewAction[]): Gtk.Popover {

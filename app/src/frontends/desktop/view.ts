@@ -34,6 +34,23 @@ export interface ViewAction {
     run(): void;
 }
 
+/**
+ * A toggle a view offers from the content header bar while the window is phone-sized.
+ *
+ * Unlike a `ViewAction`, a toggle has state: the view reports whether it is on and is called back
+ * when the user flips it. Used for the receipt inbox's queue sidebar.
+ */
+export interface ViewToggleAction {
+    /** Translated; the button's tooltip and accessible name. */
+    label: string;
+    /** Symbolic icon. */
+    iconName?: string;
+    /** Whether the toggle is currently on. */
+    active(): boolean;
+    /** Flip the underlying state to `value`. */
+    setActive(value: boolean): void;
+}
+
 export type PortedView = Gtk.Widget & {
     reload(entity: AppEntity, year: number): void;
     /**
@@ -44,6 +61,11 @@ export type PortedView = Gtk.Widget & {
      * from `widgets/header-actions.ts` once it knows. Views with nothing to create omit it.
      */
     headerActions?(): ViewAction[];
+    /**
+     * A toggle this view offers from the content header bar, or `undefined` when the toggle has
+     * nothing to do in the current layout.
+     */
+    headerToggle?(): ViewToggleAction | undefined;
 };
 
 /** Builds a fresh instance of a ported view. */
