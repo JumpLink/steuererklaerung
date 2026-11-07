@@ -87,6 +87,11 @@ export const UserSettingsSchema = z.looseObject({
      * for the same year ({@link shouldPromptSupport}). UNSET = never shown.
      */
     supportPromptYears: z.array(z.number().int()).optional(),
+    /**
+     * Fallback store for the last open desktop section per entity when GSettings is unavailable.
+     * Keys are entity ids, values are NavViewId strings; validation happens at read time.
+     */
+    lastSections: z.record(z.string(), z.string()).optional(),
     backup: BackupSettingsSchema,
 });
 

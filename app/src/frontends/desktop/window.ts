@@ -58,6 +58,7 @@ import { BhEntitySwitcher } from './widgets/entity-switcher.ts';
 import { BhYearSwitcher } from './widgets/year-switcher.ts';
 import { presentContextDialog } from './widgets/context-dialog.ts';
 import { badgeLabel, contextTitle, demoBannerVariant, navBadgeCounts } from './widgets/phone-rules.ts';
+import { lastSectionStore, resolveLastSection } from './last-section.ts';
 import { BhAssistentPanel } from './assistent-panel.ts';
 import { BhLotsePanel } from './lotse-panel.ts';
 import { lotseEmbedPlan } from '../../core/actions/assistant/lotse-embed.ts';
@@ -189,6 +190,12 @@ export class MainWindow extends Adw.ApplicationWindow {
 
     /** Backs the `narrow` property; `notify` is emitted by hand, see {@link watchBreakpoint}. */
     private narrowState = false;
+
+    /** Stores the last open section per entity. */
+    private readonly lastSection = lastSectionStore();
+
+    /** Whether row selection should write to {@link lastSection}; disabled during programmatic restore. */
+    private saveLastSectionOnSelect = true;
 
     /**
      * Whether the window is phone-sized — the `max-width: 480px` rung of the ladder in window.blp.
@@ -384,6 +391,7 @@ export class MainWindow extends Adw.ApplicationWindow {
             if (!changed) return;
             this.loadData();
             this.renderNav();
+            this.restoreInitialView();
         };
         if (action === 'rename') presentRenameEntity(this, entity, done);
         else presentRemoveEntity(this, entity, done);
@@ -435,7 +443,8 @@ export class MainWindow extends Adw.ApplicationWindow {
         this.renderEntitySwitcher();
         this.renderYearSwitcher();
         this.renderNav();
-        if (view) this.selectNavByView(view);
+        if (view) this.selectNavByView(view, { saveLastSection: false });
+        else this.restoreInitialView();
         this.refreshBanner();
         this.syncAssistantContext();
     }
@@ -448,6 +457,7 @@ export class MainWindow extends Adw.ApplicationWindow {
         const assistant = new BhSetupAssistant(() => {
             this.loadData();
             this.renderNav();
+            this.restoreInitialView();
         });
         assistant.present(this);
     }
@@ -485,19 +495,34 @@ export class MainWindow extends Adw.ApplicationWindow {
         this.add_action(navigate);
     }
 
-    /** Select the sidebar row whose view id matches (fires row-selected → switches + reloads). */
-    private selectNavByView(view: string): void {
-        for (let row = this._nav_list.get_first_child(); row; row = row.get_next_sibling()) {
-            if (row instanceof Gtk.ListBoxRow && row.get_name() === view) {
-                this._nav_list.select_row(row);
-                return;
+    /**
+     * Select the sidebar row whose view id matches (fires row-selected → switches + reloads).
+     *
+     * Programmatic callers such as startup restore can pass `{ saveLastSection: false }` so the
+     * store is only updated by an actual user gesture, not by a dev/testing override or by
+     * reselecting the previously stored view.
+     */
+    private selectNavByView(view: string, options: { saveLastSection?: boolean } = {}): void {
+        const save = options.saveLastSection ?? true;
+        const previous = this.saveLastSectionOnSelect;
+        this.saveLastSectionOnSelect = save;
+        try {
+            for (let row = this._nav_list.get_first_child(); row; row = row.get_next_sibling()) {
+                if (row instanceof Gtk.ListBoxRow && row.get_name() === view) {
+                    this._nav_list.select_row(row);
+                    return;
+                }
             }
+            // NOT silent. Returning quietly is what made a mistyped id ('transaktionen' for
+            // 'transactions') look like a button that simply did nothing: no error, no console line, no
+            // failing test. A miss is either a typo — now a red build, via NavViewId — or a view hidden
+            // for this entity, which is a legitimate no-op worth seeing while developing.
+            console.error(
+                `[app] win.navigate("${view}") traf keine Nav-Zeile. Bekannt: ${this.navRowNames().join(', ')}`,
+            );
+        } finally {
+            this.saveLastSectionOnSelect = previous;
         }
-        // NOT silent. Returning quietly is what made a mistyped id ('transaktionen' for
-        // 'transactions') look like a button that simply did nothing: no error, no console line, no
-        // failing test. A miss is either a typo — now a red build, via NavViewId — or a view hidden
-        // for this entity, which is a legitimate no-op worth seeing while developing.
-        console.error(`[app] win.navigate("${view}") traf keine Nav-Zeile. Bekannt: ${this.navRowNames().join(', ')}`);
     }
 
     /** The nav ids currently in the sidebar — for the diagnostic above. */
@@ -676,6 +701,7 @@ export class MainWindow extends Adw.ApplicationWindow {
         this.renderEntitySwitcher();
         this.renderYearSwitcher();
         this.renderNav();
+        this.restoreInitialView();
 
         this.refreshBanner();
         this.syncAssistantContext();
@@ -907,16 +933,36 @@ export class MainWindow extends Adw.ApplicationWindow {
             }
         }
 
-        // Open the first view, or the one named by STEUER_APP_VIEW (dev/testing hook) if visible.
+        // Selection is left empty here; {@link restoreInitialView} picks STEUER_APP_VIEW, the
+        // stored last section, or home once the nav has been rebuilt. Selecting a default row
+        // inside renderNav would write home over a stored section before restore can run.
+        this.refreshHeaderActions();
+    }
+
+    /**
+     * Select the initial view for the current entity after the nav has been rebuilt.
+     *
+     * STEUER_APP_VIEW wins when it names a visible view (dev/testing hook). Otherwise the stored
+     * last section is restored if it is still visible; unknown or hidden values fall back to home.
+     */
+    private restoreInitialView(): void {
+        if (!this.workspace || !this.currentEntity) return;
+        const items = visibleNavItems({
+            kind: this.currentEntity.kind,
+            hasElster: this.currentEntity.hasElster,
+            hasEst: this.currentEntity.hasEst,
+            assistant: this.workspace.assistant,
+        });
+        const visible = items.map((item) => item.view);
         const wanted = process.env.STEUER_APP_VIEW;
-        const index = wanted ? items.findIndex((i) => i.view === wanted) : -1;
-        const row = this._nav_list.get_row_at_index(index >= 0 ? index : 0);
-        if (row) this._nav_list.select_row(row); // fires row-selected → sets the active view
-        else this.refreshHeaderActions(); // nothing selected: the header must not keep the old view's actions
-        // `collapsed` is still false while the constructor runs (breakpoints only apply after the
-        // first allocation), so row-selected cannot decide this yet. A view asked for by name is an
-        // explicit request for THAT view, not for the sidebar — show it on a phone too.
-        if (index >= 0) this._split_view.set_show_content(true);
+        const view: NavViewId =
+            wanted && visible.some((item) => item === wanted)
+                ? (wanted as NavViewId)
+                : resolveLastSection(this.currentEntity.id, visible, this.lastSection);
+        this.selectNavByView(view, { saveLastSection: false });
+        // A view asked for by name is an explicit request for THAT view, not for the sidebar —
+        // show it on a phone too.
+        if (wanted && view === wanted) this._split_view.set_show_content(true);
     }
 
     /** One sidebar row: icon + title + subtitle, carrying its view id as the widget name. */
@@ -1016,6 +1062,14 @@ export class MainWindow extends Adw.ApplicationWindow {
         if (this._split_view.get_collapsed()) this._split_view.set_show_content(true);
         this.reloadVisibleView();
         this.refreshHeaderActions();
+        if (this.saveLastSectionOnSelect && this.currentEntity && this.isNavViewId(view)) {
+            this.lastSection.setLastSection(this.currentEntity.id, view);
+        }
+    }
+
+    /** Whether a string is one of the known view ids. */
+    private isNavViewId(value: string): value is NavViewId {
+        return NAV_ITEMS.some((item) => item.view === value);
     }
 
     /** Reload the visible ported view for the active entity/year (no-op for placeholder views). */
@@ -1055,6 +1109,7 @@ export class MainWindow extends Adw.ApplicationWindow {
         this.renderEntitySwitcher();
         this.renderYearSwitcher();
         this.renderNav();
+        this.restoreInitialView();
         this.refreshBanner();
         this.syncAssistantContext();
     }
