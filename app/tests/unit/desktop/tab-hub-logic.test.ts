@@ -29,7 +29,12 @@ export default async () => {
         });
 
         await it('returns undefined for an unknown visible tab id', async () => {
-            expect(forwardHeaderToggle(new Map([['a', { headerToggle: () => ({ active: () => false, setActive: () => {} }) }]]), 'z')).toBeUndefined();
+            expect(
+                forwardHeaderToggle(
+                    new Map([['a', { headerToggle: () => ({ active: () => false, setActive: () => {} }) }]]),
+                    'z',
+                ),
+            ).toBeUndefined();
         });
     });
 };
