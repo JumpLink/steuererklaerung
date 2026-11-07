@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-11-05 15:13+0100\n"
+"POT-Creation-Date: 2026-11-07 19:38+0100\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -6302,8 +6302,8 @@ msgstr "Berechne Auswertungen …"
 #: src/frontends/desktop/views/steuer-view.blp:32
 #: src/frontends/desktop/views/transactions-view.blp:32
 #: src/frontends/desktop/views/ustva-view.blp:32
-#: src/frontends/desktop/views/util.ts:562
-#: src/frontends/desktop/views/util.ts:565
+#: src/frontends/desktop/views/util.ts:566
+#: src/frontends/desktop/views/util.ts:569
 #: src/frontends/desktop/views/vertraege-view.blp:54
 #: src/frontends/desktop/views/zeiten-view.blp:47
 #: src/frontends/desktop/views/zu-pruefen-view.blp:33
@@ -6314,27 +6314,29 @@ msgstr "Konnte nicht laden"
 msgid "BWA · monthly"
 msgstr "BWA · monatlich"
 
-#: src/frontends/desktop/views/auswertungen-view.blp:89
+#: src/frontends/desktop/views/auswertungen-view.blp:76
 msgid "Insights"
 msgstr "Einblicke"
 
-#: src/frontends/desktop/views/auswertungen-view.blp:95
+#: src/frontends/desktop/views/auswertungen-view.blp:82
 msgid "Hints from your own numbers — not tax advice"
 msgstr "Hinweise aus deinen eigenen Zahlen — keine Steuerberatung"
 
-#: src/frontends/desktop/views/auswertungen-view.ts:63
+#: src/frontends/desktop/views/auswertungen-view.ts:79
 msgid "The reports could not be calculated"
 msgstr "Auswertungen konnten nicht berechnet werden"
 
-#: src/frontends/desktop/views/auswertungen-view.ts:112
+#: src/frontends/desktop/views/auswertungen-view.ts:142
+#: src/frontends/desktop/views/auswertungen-view.ts:172
 msgid "Item"
 msgstr "Position"
 
-#: src/frontends/desktop/views/auswertungen-view.ts:114
+#: src/frontends/desktop/views/auswertungen-view.ts:144
+#: src/frontends/desktop/views/auswertungen-view.ts:191
 msgid "Σ year"
 msgstr "Σ Jahr"
 
-#: src/frontends/desktop/views/auswertungen-view.ts:216
+#: src/frontends/desktop/views/auswertungen-view.ts:386
 msgid "No hints for {year}"
 msgstr "Keine Hinweise für {year}"
 
@@ -6386,7 +6388,7 @@ msgid "Could not determine candidate transactions"
 msgstr "Buchungs-Kandidaten konnten nicht ermittelt werden"
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:318
-#: src/frontends/desktop/views/util.ts:580
+#: src/frontends/desktop/views/util.ts:584
 msgid "Try again"
 msgstr "Erneut versuchen"
 
@@ -13479,15 +13481,15 @@ msgstr "Was ist das?"
 msgid "More about this"
 msgstr "Mehr dazu"
 
-#: src/frontends/desktop/views/util.ts:480
+#: src/frontends/desktop/views/util.ts:484
 msgid "Could not refresh — showing the previous data"
 msgstr "Aktualisieren fehlgeschlagen — die bisherigen Daten werden angezeigt"
 
-#: src/frontends/desktop/views/util.ts:515
+#: src/frontends/desktop/views/util.ts:519
 msgid "Not set up yet"
 msgstr "Noch nicht eingerichtet"
 
-#: src/frontends/desktop/views/util.ts:517
+#: src/frontends/desktop/views/util.ts:521
 msgid ""
 "There is no configuration yet. The assistant creates it — entity, "
 "Steuernummer (tax number) and where the data should live."
@@ -13495,28 +13497,28 @@ msgstr ""
 "Es gibt noch keine Konfiguration. Der Assistent legt sie an — Entität, "
 "Steuernummer und wo die Daten liegen sollen."
 
-#: src/frontends/desktop/views/util.ts:520
+#: src/frontends/desktop/views/util.ts:524
 msgid "Start setup"
 msgstr "Einrichtung starten"
 
-#: src/frontends/desktop/views/util.ts:525
+#: src/frontends/desktop/views/util.ts:529
 msgid "{capability} needs Paperless"
 msgstr "{capability} braucht Paperless"
 
-#: src/frontends/desktop/views/util.ts:526
+#: src/frontends/desktop/views/util.ts:530
 msgid "Receipt management can be switched in the settings."
 msgstr "Die Beleg-Verwaltung lässt sich in den Einstellungen umstellen."
 
-#: src/frontends/desktop/views/util.ts:527
-#: src/frontends/desktop/views/util.ts:537
+#: src/frontends/desktop/views/util.ts:531
+#: src/frontends/desktop/views/util.ts:541
 msgid "Go to settings"
 msgstr "Zu den Einstellungen"
 
-#: src/frontends/desktop/views/util.ts:532
+#: src/frontends/desktop/views/util.ts:536
 msgid "Paperless is not set up yet"
 msgstr "Paperless ist noch nicht eingerichtet"
 
-#: src/frontends/desktop/views/util.ts:534
+#: src/frontends/desktop/views/util.ts:538
 msgid ""
 "Paperless lacks the document types and custom fields the figures are read "
 "from. They can be created in the settings."
@@ -15422,13 +15424,11 @@ msgstr "EÜR"
 #~ msgid "Total operating costs"
 #~ msgstr "Summe Betriebskosten"
 
-#, fuzzy
 #~| msgid "Receipt"
 #~ msgctxt "classification source"
 #~ msgid "Receipt"
 #~ msgstr "Beleg"
 
-#, fuzzy
 #~| msgid "Split into {n} part"
 #~| msgid_plural "Split into {n} parts"
 #~ msgid "split into {n} part"
@@ -15439,77 +15439,66 @@ msgstr "EÜR"
 #~ msgid "Native preview"
 #~ msgstr "Native Vorschau"
 
-#, fuzzy
 #~| msgctxt "month abbreviation"
 #~| msgid "Jan"
 #~ msgctxt "month"
 #~ msgid "Jan"
 #~ msgstr "Jan"
 
-#, fuzzy
 #~| msgctxt "month abbreviation"
 #~| msgid "Feb"
 #~ msgctxt "month"
 #~ msgid "Feb"
 #~ msgstr "Feb"
 
-#, fuzzy
 #~| msgctxt "month abbreviation"
 #~| msgid "Mar"
 #~ msgctxt "month"
 #~ msgid "Mar"
 #~ msgstr "Mär"
 
-#, fuzzy
 #~| msgctxt "month abbreviation"
 #~| msgid "Apr"
 #~ msgctxt "month"
 #~ msgid "Apr"
 #~ msgstr "Apr"
 
-#, fuzzy
 #~| msgctxt "month abbreviation"
 #~| msgid "Jun"
 #~ msgctxt "month"
 #~ msgid "Jun"
 #~ msgstr "Jun"
 
-#, fuzzy
 #~| msgctxt "month abbreviation"
 #~| msgid "Jul"
 #~ msgctxt "month"
 #~ msgid "Jul"
 #~ msgstr "Jul"
 
-#, fuzzy
 #~| msgctxt "month abbreviation"
 #~| msgid "Aug"
 #~ msgctxt "month"
 #~ msgid "Aug"
 #~ msgstr "Aug"
 
-#, fuzzy
 #~| msgctxt "month abbreviation"
 #~| msgid "Sep"
 #~ msgctxt "month"
 #~ msgid "Sep"
 #~ msgstr "Sep"
 
-#, fuzzy
 #~| msgctxt "month abbreviation"
 #~| msgid "Oct"
 #~ msgctxt "month"
 #~ msgid "Oct"
 #~ msgstr "Okt"
 
-#, fuzzy
 #~| msgctxt "month abbreviation"
 #~| msgid "Nov"
 #~ msgctxt "month"
 #~ msgid "Nov"
 #~ msgstr "Nov"
 
-#, fuzzy
 #~| msgctxt "month abbreviation"
 #~| msgid "Dec"
 #~ msgctxt "month"
