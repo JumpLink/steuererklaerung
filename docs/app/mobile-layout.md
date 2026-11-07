@@ -383,6 +383,14 @@ The insights list below needs nothing beyond the row rules.
 *Borrowed from:* Material's data-table guidance for compact widths (freeze the identifying column,
 scroll the rest) — the only honest answer for a wide table on a narrow screen.
 
+*Built (step 8), with deviations.* The desktop table stays a single horizontally-scrolling card;
+the phone path builds two `Gtk.Grid`s inside a horizontal box, with the left grid frozen and the
+right grid inside a `Gtk.ScrolledWindow`. Row heights are kept in sync with a vertical
+`Gtk.SizeGroup`. The month chip row uses the existing `chipScroller`; tapping a chip scrolls the
+table so that month starts at the left edge of the viewport, via `bwaMonthScrollTarget()` in
+`widgets/phone-rules.ts`. The default month rule (current month, nearest previous, or first) is
+likewise in `phone-rules.ts` as `bwaDefaultMonth()` and is unit-tested.
+
 ### 8. Deadlines (`fristen`)
 
 **Today:** works. Three grouped lists, each row with a date, a relative hint and one action.
@@ -477,7 +485,7 @@ every page come before the ones that help one.
 | 5 | **Section list as home** *(done)* | Badges on the nav rows, fed by the counts `home-view` already computes. | Makes the root page worth landing on. Needs 1, nothing else. |
 | 6 | **Overview, Contracts, Invoices** *(done)* | Apply 2 + 3; demo banner one-line on a phone. | The three worst pages in the sweep, and they need no new mechanism. |
 | 7 | **Transactions, Contacts, Projects, Accounts** *(done)* | Expander for KPI/explanation blocks, search bar, row menus. | Same pattern, four pages. |
-| 8 | **Reports table** | Frozen item column, horizontal scroll, month chips defaulting to the current month. | The only genuinely new widget work; isolated, so it can take its time. |
+| 8 | **Reports table** *(done)* | Frozen item column, horizontal scroll, month chips defaulting to the current month. | The only genuinely new widget work; isolated, so it can take its time. |
 | 9 | **Receipt inbox polish** | Queue toggle into the header, re-open the queue after confirming, `Check & confirm` in a pinned `Gtk.ActionBar`. | Behavioural, needs the review flow's own tests. |
 | 10 | **Dialog sizing** | Sheets size to content; group headers follow the row rule. | Small, affects every dialog, safest last. |
 | 11 | **Remember the last section** | Persist `NavViewId` per entity in `GSettings`. | Pure convenience; worth nothing until 5 exists. |
