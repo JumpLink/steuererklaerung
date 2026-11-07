@@ -14,6 +14,7 @@ import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 import GObject from '@girs/gobject-2.0';
 import GLib from '@girs/glib-2.0';
+import Pango from '@girs/pango-1.0';
 
 import Template from './auswertungen-view.blp';
 import { type AuswertungenData, type BwaLine, type BwaResult, type Hinweis } from '../data/auswertungen.ts';
@@ -23,7 +24,7 @@ import { eur, pct } from '../../../core/lib/format.ts';
 import { LoadToken, MONTHS, applyScrollHook, kpiFlow, loadIntoStack, markup } from './util.ts';
 import { chipScroller } from '../widgets/responsive.ts';
 import { onNarrow } from '../widgets/narrow.ts';
-import { bwaDefaultMonth, bwaMonthScrollTarget } from '../widgets/phone-rules.ts';
+import { bwaDefaultMonth, bwaMonthColumnStart, bwaMonthScrollTarget } from '../widgets/phone-rules.ts';
 import { _, fmt } from '../i18n.ts';
 import { hinweisDetails } from './hinweis-handlung.ts';
 
@@ -169,10 +170,11 @@ export class BhAuswertungenView extends Adw.Bin {
             marginStart: 12,
         });
         itemGrid.attach(this.headerCell(_('Item'), false), 0, 0, 1, 1);
-        r.lines.forEach((line, idx) => itemGrid.attach(this.labelCell(line), 0, idx + 1, 1, 1));
+        r.lines.forEach((line, idx) => itemGrid.attach(this.labelCell(line, true), 0, idx + 1, 1, 1));
 
         const monthGrid = new Gtk.Grid({
             rowHomogeneous: true,
+            columnHomogeneous: true,
             columnSpacing: 24,
             rowSpacing: 8,
             marginTop: 12,
@@ -212,7 +214,7 @@ export class BhAuswertungenView extends Adw.Bin {
         const card = new Gtk.Box({ cssClasses: ['card'], orientation: Gtk.Orientation.VERTICAL });
         card.append(rowBox);
 
-        const chipBox = this.buildMonthChips(r.months, hscroller, monthHeaders);
+        const chipBox = this.buildMonthChips(r.months, hscroller, monthHeaders, monthGrid);
         const chipScrollerWidget = chipScroller(chipBox);
 
         const box = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 12 });
@@ -220,12 +222,17 @@ export class BhAuswertungenView extends Adw.Bin {
         box.append(card);
 
         const defaultMonth = bwaDefaultMonth(r.months);
-        this.scrollToMonthOnMap(hscroller, defaultMonth, r.months, monthHeaders);
+        this.scrollToMonthOnMap(hscroller, defaultMonth, r.months, monthHeaders, monthGrid);
 
         return box;
     }
 
-    private buildMonthChips(months: number[], hscroller: Gtk.ScrolledWindow, headers: Gtk.Label[]): Gtk.Box {
+    private buildMonthChips(
+        months: number[],
+        hscroller: Gtk.ScrolledWindow,
+        headers: Gtk.Label[],
+        monthGrid: Gtk.Grid,
+    ): Gtk.Box {
         const box = new Gtk.Box({ orientation: Gtk.Orientation.HORIZONTAL, spacing: 6 });
         const defaultMonth = bwaDefaultMonth(months);
         let group: Gtk.ToggleButton | null = null;
@@ -235,7 +242,7 @@ export class BhAuswertungenView extends Adw.Bin {
             else group = btn;
             btn.connect('toggled', () => {
                 if (!btn.get_active()) return;
-                this.scrollToMonth(hscroller, m, months, headers);
+                this.scrollToMonth(hscroller, m, months, headers, monthGrid);
             });
             box.append(btn);
         }
@@ -247,25 +254,61 @@ export class BhAuswertungenView extends Adw.Bin {
         month: number,
         months: number[],
         headers: Gtk.Label[],
+        monthGrid: Gtk.Grid,
     ): void {
-        GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
-            this.scrollToMonth(hscroller, month, months, headers);
-            return GLib.SOURCE_REMOVE;
-        });
+        // The widget is built before it is added to the widget tree. Scrolling before mapping has
+        // no effect (or is reset by GTK's own allocation), so wait for the first map and then keep
+        // retrying in idle until the scroller has a real allocation.
+        const schedule = () => {
+            GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+                const adjustment = hscroller.get_hadjustment();
+                const index = months.indexOf(month);
+                const header = headers[index];
+                if (
+                    adjustment.get_page_size() <= 0 ||
+                    adjustment.get_upper() <= adjustment.get_page_size() ||
+                    !header ||
+                    header.get_allocated_width() <= 0
+                ) {
+                    return GLib.SOURCE_CONTINUE;
+                }
+                this.scrollToMonth(hscroller, month, months, headers, monthGrid);
+                return GLib.SOURCE_REMOVE;
+            });
+        };
+        if (hscroller.get_mapped()) {
+            schedule();
+        } else {
+            const mapHandler = hscroller.connect('map', () => {
+                hscroller.disconnect(mapHandler);
+                schedule();
+            });
+        }
     }
 
-    private scrollToMonth(hscroller: Gtk.ScrolledWindow, month: number, months: number[], headers: Gtk.Label[]): void {
+    private scrollToMonth(
+        hscroller: Gtk.ScrolledWindow,
+        month: number,
+        months: number[],
+        headers: Gtk.Label[],
+        monthGrid: Gtk.Grid,
+    ): void {
         const adjustment = hscroller.get_hadjustment();
         const index = months.indexOf(month);
         if (index < 0) return;
         const header = headers[index];
         if (!header) return;
-        const monthGrid = hscroller.get_child() as Gtk.Grid | null;
-        if (!monthGrid) return;
-        const [ok, bounds] = header.compute_bounds(monthGrid);
-        if (!ok) return;
+        // With homogeneous columns every month column has the same width. Derive it from the grid's
+        // own allocation: child label allocations are still settling when the first map fires, so
+        // reading a single header gives 18 px while the grid already knows it is 1005 px wide.
+        const spacing = monthGrid.get_column_spacing();
+        const numColumns = months.length + 1; // months + Σ year
+        const gridWidth = monthGrid.get_allocated_width();
+        const totalSpacing = (numColumns - 1) * spacing;
+        const columnWidth = (gridWidth - monthGrid.get_margin_end() - totalSpacing) / numColumns;
+        const start = bwaMonthColumnStart(index, columnWidth, spacing);
         const target = bwaMonthScrollTarget({
-            start: bounds.get_x(),
+            start,
             value: adjustment.get_value(),
             page: adjustment.get_page_size(),
             upper: adjustment.get_upper(),
@@ -282,7 +325,7 @@ export class BhAuswertungenView extends Adw.Bin {
         });
     }
 
-    private labelCell(line: BwaLine): Gtk.Label {
+    private labelCell(line: BwaLine, phone = false): Gtk.Label {
         const emphasised = line.level === 'subtotal' || line.level === 'result';
         return new Gtk.Label({
             label: line.label,
@@ -290,6 +333,10 @@ export class BhAuswertungenView extends Adw.Bin {
             halign: Gtk.Align.START,
             marginStart: line.level === 'line' ? 12 : 0,
             cssClasses: emphasised ? ['heading'] : line.level === 'margin' ? ['dim-label'] : [],
+            maxWidthChars: phone ? 12 : -1,
+            ellipsize: phone ? Pango.EllipsizeMode.END : Pango.EllipsizeMode.NONE,
+            singleLineMode: phone,
+            tooltipText: phone ? line.label : null,
         });
     }
 
