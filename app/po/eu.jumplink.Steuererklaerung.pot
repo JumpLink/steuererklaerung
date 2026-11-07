@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-11-05 15:13+0100\n"
+"POT-Creation-Date: 2026-11-07 19:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5661,8 +5661,8 @@ msgstr ""
 #: src/frontends/desktop/views/steuer-view.blp:32
 #: src/frontends/desktop/views/transactions-view.blp:32
 #: src/frontends/desktop/views/ustva-view.blp:32
-#: src/frontends/desktop/views/util.ts:562
-#: src/frontends/desktop/views/util.ts:565
+#: src/frontends/desktop/views/util.ts:566
+#: src/frontends/desktop/views/util.ts:569
 #: src/frontends/desktop/views/vertraege-view.blp:54
 #: src/frontends/desktop/views/zeiten-view.blp:47
 #: src/frontends/desktop/views/zu-pruefen-view.blp:33
@@ -5673,27 +5673,29 @@ msgstr ""
 msgid "BWA · monthly"
 msgstr ""
 
-#: src/frontends/desktop/views/auswertungen-view.blp:89
+#: src/frontends/desktop/views/auswertungen-view.blp:76
 msgid "Insights"
 msgstr ""
 
-#: src/frontends/desktop/views/auswertungen-view.blp:95
+#: src/frontends/desktop/views/auswertungen-view.blp:82
 msgid "Hints from your own numbers — not tax advice"
 msgstr ""
 
-#: src/frontends/desktop/views/auswertungen-view.ts:63
+#: src/frontends/desktop/views/auswertungen-view.ts:79
 msgid "The reports could not be calculated"
 msgstr ""
 
-#: src/frontends/desktop/views/auswertungen-view.ts:112
+#: src/frontends/desktop/views/auswertungen-view.ts:142
+#: src/frontends/desktop/views/auswertungen-view.ts:172
 msgid "Item"
 msgstr ""
 
-#: src/frontends/desktop/views/auswertungen-view.ts:114
+#: src/frontends/desktop/views/auswertungen-view.ts:144
+#: src/frontends/desktop/views/auswertungen-view.ts:191
 msgid "Σ year"
 msgstr ""
 
-#: src/frontends/desktop/views/auswertungen-view.ts:216
+#: src/frontends/desktop/views/auswertungen-view.ts:386
 msgid "No hints for {year}"
 msgstr ""
 
@@ -5745,7 +5747,7 @@ msgid "Could not determine candidate transactions"
 msgstr ""
 
 #: src/frontends/desktop/views/beleg-eingang-view.ts:318
-#: src/frontends/desktop/views/util.ts:580
+#: src/frontends/desktop/views/util.ts:584
 msgid "Try again"
 msgstr ""
 
@@ -12549,42 +12551,42 @@ msgstr ""
 msgid "More about this"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:480
+#: src/frontends/desktop/views/util.ts:484
 msgid "Could not refresh — showing the previous data"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:515
+#: src/frontends/desktop/views/util.ts:519
 msgid "Not set up yet"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:517
+#: src/frontends/desktop/views/util.ts:521
 msgid ""
 "There is no configuration yet. The assistant creates it — entity, "
 "Steuernummer (tax number) and where the data should live."
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:520
+#: src/frontends/desktop/views/util.ts:524
 msgid "Start setup"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:525
+#: src/frontends/desktop/views/util.ts:529
 msgid "{capability} needs Paperless"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:526
+#: src/frontends/desktop/views/util.ts:530
 msgid "Receipt management can be switched in the settings."
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:527
-#: src/frontends/desktop/views/util.ts:537
+#: src/frontends/desktop/views/util.ts:531
+#: src/frontends/desktop/views/util.ts:541
 msgid "Go to settings"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:532
+#: src/frontends/desktop/views/util.ts:536
 msgid "Paperless is not set up yet"
 msgstr ""
 
-#: src/frontends/desktop/views/util.ts:534
+#: src/frontends/desktop/views/util.ts:538
 msgid ""
 "Paperless lacks the document types and custom fields the figures are read "
 "from. They can be created in the settings."
