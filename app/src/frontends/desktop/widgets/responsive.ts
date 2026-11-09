@@ -17,7 +17,14 @@ import GLib from '@girs/glib-2.0';
 import GObject from '@girs/gobject-2.0';
 import { _ } from '../i18n.ts';
 import { onNarrow } from './narrow.ts';
-import { TOUCH_GAP, TOUCH_TARGET, actionOverflow, chipScrollTarget, undershoot } from './phone-rules.ts';
+import {
+    TOUCH_GAP,
+    TOUCH_TARGET,
+    actionOverflow,
+    chipScrollTarget,
+    dialogContentHeight,
+    undershoot,
+} from './phone-rules.ts';
 
 /** The direct children of a container, in order — GTK4 offers a sibling chain, not a list. */
 function childrenOf(widget: Gtk.Widget): Gtk.Widget[] {
@@ -216,7 +223,7 @@ export function pinnableCluster(cluster: Adw.WrapBox): (narrow: boolean) => void
  * @param cluster the row's action cluster
  * @param after work to run after every collapse or expand
  */
-export function phoneRowActions(cluster: Adw.WrapBox, after: () => void = () => {}): void {
+export function phoneRowActions(cluster: Adw.WrapBox, after: () => void = () => {}, source?: Gtk.Widget): void {
     let phone = false;
     let scheduled = false;
     let menu: Gtk.MenuButton | null = null;
@@ -284,10 +291,14 @@ export function phoneRowActions(cluster: Adw.WrapBox, after: () => void = () => 
         });
     };
 
-    onNarrow(cluster, (next) => {
-        phone = next;
-        schedule();
-    });
+    onNarrow(
+        cluster,
+        (next) => {
+            phone = next;
+            schedule();
+        },
+        source,
+    );
     cluster.connect('map', schedule);
 }
 
@@ -352,6 +363,26 @@ export function menuItem(
 export function hideOnPhone<T extends Gtk.Widget>(widget: T): T {
     onNarrow(widget, (narrow) => widget.set_visible(!narrow));
     return widget;
+}
+
+/**
+ * Size an `Adw.Dialog` to its content on a phone while keeping a fixed height on desktop.
+ *
+ * Dialogs are rooted in their own `Adw.DialogHost`, not in the main window, so {@link onNarrow} is
+ * told to follow the widget the dialog was presented from.
+ */
+export function phoneSizeDialog(dialog: Adw.Dialog, desktopHeight: number, parent: Gtk.Widget): void {
+    onNarrow(dialog, (narrow) => dialog.set_content_height(dialogContentHeight(narrow, desktopHeight)), parent);
+}
+
+/**
+ * Stop a dialog's inner `Gtk.ScrolledWindow` from claiming the full sheet height on a phone.
+ *
+ * A `vexpand` scroller makes the sheet open at full height even when `content_height` is `-1`;
+ * on a desktop the scroller should still fill the fixed dialog height.
+ */
+export function phoneDialogScroller(scroller: Gtk.ScrolledWindow, parent: Gtk.Widget): void {
+    onNarrow(scroller, (narrow) => scroller.set_vexpand(!narrow), parent);
 }
 
 /**
