@@ -43,6 +43,7 @@ const columns = (c: { min: number; max: number }): string => `${c.min}-${c.max}`
 const edges = (e: { start: boolean; end: boolean }): string => `${e.start ? 'start' : ''}|${e.end ? 'end' : ''}`;
 const plan = (p: { button: number | null; menu: number[] }): string =>
     `${p.button === null ? '-' : p.button}|${p.menu.join(',')}`;
+const text = (parts: { kind: string; n: number }[]): string => parts.map((p) => `${p.n} ${p.kind}`).join(' · ');
 
 export default async () => {
     await describe('phone-rules: touch metrics', async () => {
@@ -271,8 +272,6 @@ export default async () => {
     });
 
     await describe('phone-rules: recurringSummaryParts', async () => {
-        const text = (parts: { kind: string; n: number }[]): string => parts.map((p) => `${p.n} ${p.kind}`).join(' · ');
-
         await it('leaves zero counts out', async () => {
             expect(text(recurringSummaryParts(2, 0, 2))).toBe('2 overdue · 2 total');
             expect(text(recurringSummaryParts(0, 1, 4))).toBe('1 soon · 4 total');
@@ -340,6 +339,24 @@ export default async () => {
             expect(searchVisible(true, true, '')).toBe(true);
             expect(searchVisible(true, false, ' x ')).toBe(true);
             expect(searchVisible(true, false, '   ')).toBe(false);
+        });
+    });
+
+    await describe('phone-rules: step 13 recurring-invoice overflow (#76)', async () => {
+        await it('caps the recurring row subtitle at two lines on a phone', async () => {
+            // boundRowText(row, { narrowSubtitleLines: phoneSubtitleLines(true) }) in rechnungen-view.ts
+            expect(phoneSubtitleLines(true)).toBe(2);
+        });
+
+        await it('leaves the recurring row subtitle unbounded on desktop', async () => {
+            expect(phoneSubtitleLines(false)).toBe(0);
+        });
+
+        await it('titles the phone expander with the recurring summary', async () => {
+            expect(text(recurringSummaryParts(2, 0, 2))).toBe('2 overdue · 2 total');
+            expect(text(recurringSummaryParts(0, 1, 4))).toBe('1 soon · 4 total');
+            expect(text(recurringSummaryParts(1, 2, 5))).toBe('1 overdue · 2 soon · 5 total');
+            expect(text(recurringSummaryParts(0, 0, 3))).toBe('3 total');
         });
     });
 
