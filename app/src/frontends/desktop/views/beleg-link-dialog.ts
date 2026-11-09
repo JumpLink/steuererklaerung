@@ -21,6 +21,7 @@ import { deDate, eur } from '../../../core/lib/format.ts';
 import { errorDialog } from './dialogs.ts';
 import { showToast } from '../toast.ts';
 import { LoadToken, amountLabel, loadIntoStack, markup } from './util.ts';
+import { phoneDialogScroller, phoneSizeDialog } from '../widgets/responsive.ts';
 import { _, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
 
@@ -47,6 +48,7 @@ export class BhBelegLinkDialog {
     /** The free-text search group, rebuilt on every query. Null before the first content build. */
     private searchGroup: Adw.PreferencesGroup | null = null;
     private searchToken = 0;
+    private narrowSource!: Gtk.Widget;
 
     constructor() {
         this.dialog.set_title(_('Link receipt'));
@@ -75,6 +77,8 @@ export class BhBelegLinkDialog {
     open(parent: Gtk.Widget, entity: AppEntity, row: BelegGapRow): void {
         this.entity = entity;
         this.row = row;
+        this.narrowSource = parent;
+        phoneSizeDialog(this.dialog, 600, this.narrowSource);
         this.dialog.present(parent);
         this.reload();
     }
@@ -117,7 +121,13 @@ export class BhBelegLinkDialog {
             marginEnd: 12,
             child: box,
         });
-        return new Gtk.ScrolledWindow({ hscrollbarPolicy: Gtk.PolicyType.NEVER, vexpand: true, child: clamp });
+        const scroller = new Gtk.ScrolledWindow({
+            hscrollbarPolicy: Gtk.PolicyType.NEVER,
+            vexpand: true,
+            child: clamp,
+        });
+        phoneDialogScroller(scroller, this.narrowSource);
+        return scroller;
     }
 
     /** The expense we are attaching a receipt to (read-only summary). */

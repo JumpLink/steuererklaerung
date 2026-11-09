@@ -30,6 +30,7 @@ import type { AppEntity } from '../entities.ts';
 import { _, _n, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
 import { showToast } from '../toast.ts';
+import { phoneSizeDialog } from '../widgets/responsive.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
 import { amountLabel, currentOperator, markup } from './util.ts';
 import {
@@ -55,6 +56,7 @@ export class BhVertragDetailDialog {
     private onChanged: () => void = () => {};
     private page: Adw.PreferencesPage | null = null;
     private shownGroups: Adw.PreferencesGroup[] = [];
+    private narrowSource!: Gtk.Widget;
     /** The role a newly attached document gets; remembered across a rebuild of the groups. */
     private documentRole: ContractDocumentRole = 'contract';
 
@@ -67,7 +69,9 @@ export class BhVertragDetailDialog {
         this.entity = entity;
         this.contractId = contractId;
         this.onChanged = hooks.onChanged;
+        this.narrowSource = parent;
         this.dialog = new Adw.Dialog({ title: _('Contract'), contentWidth: 600, contentHeight: 720 });
+        phoneSizeDialog(this.dialog, 720, this.narrowSource);
 
         const toolbar = new Adw.ToolbarView();
         const header = new Adw.HeaderBar();

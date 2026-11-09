@@ -59,6 +59,7 @@ import { aufteilungAufheben } from './aufteilen-dialog.ts';
 import { loeseErstattung } from '../../../core/presenters/erstattungen.ts';
 import { showToast } from '../toast.ts';
 import { LoadToken, amountLabel, currentOperator, loadIntoStack, markup } from './util.ts';
+import { phoneDialogScroller, phoneSizeDialog } from '../widgets/responsive.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
 
@@ -135,6 +136,7 @@ export class BhHerleitungDialog {
     private readonly navView = new Adw.NavigationView();
     private entity!: AppEntity;
     private year = 0;
+    private narrowSource!: Gtk.Widget;
     /** Per Herleitung page: rebuild its content from the (now cache-cleared) aggregate after a decision. */
     private readonly reloaders = new Map<Adw.NavigationPage, () => void>();
 
@@ -149,6 +151,8 @@ export class BhHerleitungDialog {
     open(parent: Gtk.Widget, entity: AppEntity, year: number, ref: FigureRef | string): void {
         this.entity = entity;
         this.year = year;
+        this.narrowSource = parent;
+        phoneSizeDialog(this.dialog, 760, this.narrowSource);
         this.navView.push(this.buildPage(ref));
         this.dialog.present(parent);
     }
@@ -159,6 +163,8 @@ export class BhHerleitungDialog {
      * recomputed here; the figure comes complete from core/elster/frei-verfuegbar.ts.
      */
     openErgebnis(parent: Gtk.Widget, ergebnis: FreiErgebnis): void {
+        this.narrowSource = parent;
+        phoneSizeDialog(this.dialog, 760, this.narrowSource);
         this.dialog.set_title(ergebnis.label);
         this.navView.push(this.staticPage(ergebnis.label, this.ergebnisContent(ergebnis)));
         this.dialog.present(parent);
@@ -181,7 +187,13 @@ export class BhHerleitungDialog {
             marginEnd: 12,
             child: box,
         });
-        return new Gtk.ScrolledWindow({ hscrollbarPolicy: Gtk.PolicyType.NEVER, vexpand: true, child: clamp });
+        const scroller = new Gtk.ScrolledWindow({
+            hscrollbarPolicy: Gtk.PolicyType.NEVER,
+            vexpand: true,
+            child: clamp,
+        });
+        phoneDialogScroller(scroller, this.narrowSource);
+        return scroller;
     }
 
     private ergebnisContent(e: FreiErgebnis): Gtk.Widget {
@@ -332,7 +344,13 @@ export class BhHerleitungDialog {
             marginEnd: 12,
             child: box,
         });
-        return new Gtk.ScrolledWindow({ hscrollbarPolicy: Gtk.PolicyType.NEVER, vexpand: true, child: clamp });
+        const scroller = new Gtk.ScrolledWindow({
+            hscrollbarPolicy: Gtk.PolicyType.NEVER,
+            vexpand: true,
+            child: clamp,
+        });
+        phoneDialogScroller(scroller, this.narrowSource);
+        return scroller;
     }
 
     /** A child term row: `± label   value`, tappable to push its own Herleitung when it has a ref. */
@@ -593,7 +611,13 @@ export class BhHerleitungDialog {
             marginEnd: 12,
             child: box,
         });
-        return new Gtk.ScrolledWindow({ hscrollbarPolicy: Gtk.PolicyType.NEVER, vexpand: true, child: clamp });
+        const scroller = new Gtk.ScrolledWindow({
+            hscrollbarPolicy: Gtk.PolicyType.NEVER,
+            vexpand: true,
+            child: clamp,
+        });
+        phoneDialogScroller(scroller, this.narrowSource);
+        return scroller;
     }
 
     /** The "Beleg" group: the linked document + its KI-Hinweis (accept affordance), or a placeholder. */

@@ -35,6 +35,7 @@ import { markup } from './util.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
 import { _, _n, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
+import { phoneRowActions, phoneSizeDialog, rowActions } from '../widgets/responsive.ts';
 
 const satzLabel = (s: number) => `${Math.round(s * 100)} %`;
 
@@ -112,14 +113,17 @@ export class BhAufteilenDialog extends Adw.Dialog {
     private readonly save = new Gtk.Button({ label: _('Save'), cssClasses: ['suggested-action'], sensitive: false });
     private zeilen: TeilZeile[] = [];
     private ansicht: AufteilungAnsicht | null = null;
+    private readonly narrowSource: Gtk.Widget;
 
     constructor(
         private readonly entity: AppEntity,
         private readonly year: number,
         private readonly txId: string,
         private readonly done: () => void,
+        narrowSource?: Gtk.Widget,
     ) {
         super({ title: _('Split transaction'), contentWidth: 720, contentHeight: 600 });
+        this.narrowSource = narrowSource ?? this;
         const header = new Adw.HeaderBar();
         header.pack_end(this.save);
         this.save.connect('clicked', () => void this.speichern());
@@ -128,6 +132,7 @@ export class BhAufteilenDialog extends Adw.Dialog {
         const loading = new Adw.Spinner({ widthRequest: 32, heightRequest: 32, valign: Gtk.Align.CENTER });
         toolbar.set_content(loading);
         this.set_child(toolbar);
+        phoneSizeDialog(this, 600, this.narrowSource);
 
         aufteilungAnsicht(appSession(), entity, year, txId)
             .then((a) => {
@@ -175,7 +180,7 @@ export class BhAufteilenDialog extends Adw.Dialog {
         }
         page.add(summary);
 
-        const actions = new Gtk.Box({ spacing: 6 });
+        const actions = rowActions([]);
         const bewirtung = new Gtk.Button({ label: _('Business meals 70/30'), cssClasses: ['flat'] });
         bewirtung.set_tooltip_text(
             _('70 % business meals, 30 % not deductible — the input VAT stays fully deductible'),
@@ -190,6 +195,7 @@ export class BhAufteilenDialog extends Adw.Dialog {
         });
         actions.append(bewirtung);
         actions.append(plus);
+        phoneRowActions(actions, () => {}, this.narrowSource);
         this.teileGroup.set_header_suffix(actions);
         page.add(this.teileGroup);
 

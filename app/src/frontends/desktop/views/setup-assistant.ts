@@ -51,6 +51,7 @@ import { getManifestPath, loadManifest, type Manifest } from '../../../core/conf
 import { countryOf, OTHER_COUNTRY, taxModuleOf } from '../../../core/countries/index.ts';
 import { _, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
+import { phoneDialogScroller, phoneSizeDialog } from '../widgets/responsive.ts';
 import { markup } from './util.ts';
 
 interface KindChoice {
@@ -100,10 +101,12 @@ export class BhSetupAssistant extends Adw.Dialog {
     /** Set once setup succeeded, so the caller knows whether to reload rather than guessing. */
     private completed = false;
     private readonly onDone: () => void;
+    private readonly narrowSource: Gtk.Widget;
 
-    constructor(onDone: () => void) {
+    constructor(onDone: () => void, narrowSource: Gtk.Widget) {
         super();
         this.onDone = onDone;
+        this.narrowSource = narrowSource;
         this.mode = isFirstRun() ? 'first-run' : 'new-entity';
         this.manifest = this.mode === 'new-entity' ? loadManifest() : null;
         this.draft = newEntitySetupDraft(this.manifest, this.mode === 'new-entity' ? 'privat' : 'einzelunternehmen');
@@ -111,6 +114,7 @@ export class BhSetupAssistant extends Adw.Dialog {
         this.set_content_width(560);
         this.set_content_height(620);
         this.set_child(this.nav);
+        phoneSizeDialog(this, 620, this.narrowSource);
         const hookPage = this.fillHookPlaceholders();
         this.nav.push(this.build(this.mode === 'first-run' ? 'welcome' : 'kind'));
         if (hookPage && hookPage !== 'welcome' && hookPage !== 'kind') this.nav.push(this.build(hookPage));
@@ -185,6 +189,7 @@ export class BhSetupAssistant extends Adw.Dialog {
 
         const scroller = new Gtk.ScrolledWindow({ hexpand: true, vexpand: true });
         scroller.set_child(body);
+        phoneDialogScroller(scroller, this.narrowSource);
         toolbar.set_content(scroller);
 
         const bottom = new Gtk.Box({

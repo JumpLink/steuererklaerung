@@ -19,6 +19,7 @@ import { deDate, eur } from '../../../core/lib/format.ts';
 import { markup } from './util.ts';
 import type { AppEntity } from '../entities.ts';
 import { showToast } from '../toast.ts';
+import { phoneRowActions, phoneSizeDialog, rowActions } from '../widgets/responsive.ts';
 import { BhUmbuchenDialog } from './umbuchen-dialog.ts';
 import { removeDecision } from '../data/decisions.ts';
 import { appSession } from '../data/session.ts';
@@ -76,8 +77,8 @@ export class BhTxDetailDialog {
                 }),
             );
         }
-        if (row.category) page.add(this.classGroup(row, dialog, edit));
-        if (edit?.projekt && row.category && row.amount < 0) page.add(this.projektGroup(row, dialog, edit));
+        if (row.category) page.add(this.classGroup(row, dialog, parent, edit));
+        if (edit?.projekt && row.category && row.amount < 0) page.add(this.projektGroup(row, dialog, edit, parent));
         const beleg = this.belegGroup(row, paperlessBase);
         if (beleg) page.add(beleg);
         const links = this.linksGroup(row);
@@ -89,6 +90,7 @@ export class BhTxDetailDialog {
         toolbar.set_content(page);
         dialog.set_child(toolbar);
         dialog.present(parent);
+        phoneSizeDialog(dialog, 680, parent);
     }
 
     /** One "label → value" row; returns null (skipped) when the value is empty. */
@@ -133,19 +135,26 @@ export class BhTxDetailDialog {
     private classGroup(
         r: EnrichedTxRow,
         dialog: Adw.Dialog,
+        parent: Gtk.Widget,
         edit?: { entity: AppEntity; year: number; onChanged: () => void },
     ): Adw.PreferencesGroup {
         const group = new Adw.PreferencesGroup({ title: _('Classification (EÜR)') });
         const geteilt = istAufteilung(r);
         if (edit) {
-            const buttons = new Gtk.Box({ spacing: 6, valign: Gtk.Align.CENTER });
+            const buttons = rowActions([]);
             const aufteilen = new Gtk.Button({ label: geteilt ? _('Change split') : _('Split') });
             aufteilen.set_tooltip_text(_('Split the transaction into parts with their own category and tax rate'));
             aufteilen.connect('clicked', () =>
-                new BhAufteilenDialog(edit.entity, edit.year, r.id, () => {
-                    dialog.close();
-                    edit.onChanged();
-                }).present(dialog),
+                new BhAufteilenDialog(
+                    edit.entity,
+                    edit.year,
+                    r.id,
+                    () => {
+                        dialog.close();
+                        edit.onChanged();
+                    },
+                    parent,
+                ).present(dialog),
             );
             buttons.append(aufteilen);
             const button = new Gtk.Button({
@@ -174,10 +183,12 @@ export class BhTxDetailDialog {
                         dialog.close();
                         edit.onChanged();
                     },
+                    parent,
                 );
                 umbuchen.present(dialog);
             });
             buttons.append(button);
+            phoneRowActions(buttons, () => {}, parent);
             group.set_header_suffix(buttons);
         }
         this.fill(group, [
@@ -221,17 +232,26 @@ export class BhTxDetailDialog {
             onChanged: () => void;
             projekt?: { projekte: ProjektOption[]; ansicht: BuchungProjektAnsicht | null };
         },
+        parent: Gtk.Widget,
     ): Adw.PreferencesGroup {
         const projekt = edit.projekt!;
         const group = new Adw.PreferencesGroup({ title: _('Project') });
         const zuordnen = new Gtk.Button({ label: _('Assign to project'), valign: Gtk.Align.CENTER });
         zuordnen.set_tooltip_text(_('Assign this expense to a project'));
         zuordnen.connect('clicked', () =>
-            new BhProjektZuordnenDialog(edit.entity, edit.year, [r.id], projekt.projekte, true, (message) => {
-                showToast(message);
-                dialog.close();
-                edit.onChanged();
-            }).present(dialog),
+            new BhProjektZuordnenDialog(
+                edit.entity,
+                edit.year,
+                [r.id],
+                projekt.projekte,
+                true,
+                (message) => {
+                    showToast(message);
+                    dialog.close();
+                    edit.onChanged();
+                },
+                parent,
+            ).present(dialog),
         );
         group.set_header_suffix(zuordnen);
 
