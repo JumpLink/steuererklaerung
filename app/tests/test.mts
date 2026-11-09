@@ -11,6 +11,7 @@ import ericWarnings from './unit/elster/eric-warnings.test.ts';
 import ericRuntime from './unit/elster/eric-runtime.test.ts';
 import ericBinding from './unit/elster/eric-binding.test.ts';
 import ericAsciiPath from './unit/elster/eric-ascii-path.test.ts';
+import ericStatusCache from './unit/elster/eric-status-cache.test.ts';
 import builtinDmsNoPaperless from './unit/elster/builtin-dms-no-paperless.test.ts';
 import selfLaunch from './unit/actions/self-launch.test.ts';
 import desktopMarkup from './unit/desktop/markup.test.ts';
@@ -472,6 +473,7 @@ run({
     ericRuntime,
     ericAsciiPath,
     ericBinding,
+    ericStatusCache,
     builtinDmsNoPaperless,
     selfLaunch,
     desktopMarkup,

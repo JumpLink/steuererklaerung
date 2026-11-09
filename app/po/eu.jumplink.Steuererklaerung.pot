@@ -14338,3 +14338,11 @@ msgstr ""
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:117
 msgid "EÜR"
 msgstr ""
+
+#: src/frontends/desktop/views/konten-view.ts:211
+msgid "found at {path} — reading version"
+msgstr ""
+
+#: src/frontends/desktop/views/konten-view.ts:213
+msgid "checking"
+msgstr ""

@@ -11,6 +11,7 @@
 import { keyringNote } from '../data/elster-secret.ts';
 import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
+import GLib from '@girs/glib-2.0';
 import GObject from '@girs/gobject-2.0';
 import Pango from '@girs/pango-1.0';
 
@@ -31,11 +32,13 @@ import { errorDialog } from './dialogs.ts';
 import { BhAddAccountDialog } from './konto-hinzufuegen-dialog.ts';
 import {
     clearElsterPin,
+    clearEricStatusCache,
     keyringAvailable,
     loadEricStatus,
     loadKeystorePath,
     loadSubmitter,
     lookupElsterPin,
+    probeEricStatusForEntity,
     saveEricHome,
     saveKeystore,
     saveSubmitter,
@@ -48,6 +51,7 @@ import { displayPath } from '../../../core/paths.ts';
 import { applyScrollHook, GroupRows, LoadToken, amountLabel, loadIntoStack, markup } from './util.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
+import { logTiming as timeLog } from '@steuererklaerung/shared';
 import { ericSourceLabel, ericVersionLabel } from '../../../core/actions/elster/eric-warnings.ts';
 import { ericWarningRow } from './eric-warning-rows.ts';
 import { showToast } from '../toast.ts';
@@ -62,6 +66,9 @@ const SOURCE_LABEL: Record<string, string> = {
     camt: _('CAMT file'),
     paypal: 'PayPal',
 };
+
+/** Module-load time marker for view construction-to-first-paint measurement. */
+const viewConstructionStart = performance.now();
 
 export class BhKontenView extends Adw.Bin {
     declare private _scroller: Gtk.ScrolledWindow;
@@ -93,6 +100,8 @@ export class BhKontenView extends Adw.Bin {
     private submitterFilling = false;
     /** The connections row's probe button — the header menu drives it rather than duplicating it. */
     private probeBtn: Gtk.Button | null = null;
+    /** Idle source that loads the native ERiC binding after the first paint; cancelled on disposal. */
+    private ericIdleSource = 0;
 
     /**
      * What the content header offers on a phone: connect an account, check the connections.
@@ -114,24 +123,38 @@ export class BhKontenView extends Adw.Bin {
     constructor() {
         super();
         this.eric = new GroupRows(this._eric_group);
+        this.connect('unrealize', () => this.cancelEricIdle());
+        timeLog('konten-view.constructor', performance.now() - viewConstructionStart);
+    }
+
+    private cancelEricIdle(): void {
+        if (this.ericIdleSource) {
+            GLib.source_remove(this.ericIdleSource);
+            this.ericIdleSource = 0;
+        }
     }
 
     // The account list is global (every entity); the entity is used only by the ERiC card below.
     reload(entity: AppEntity, _year: number): void {
         this.entity = entity;
+        const t0 = performance.now();
         loadIntoStack({
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
             errorContext: _('Accounts could not be loaded'),
             load: () => loadConnections(),
-            fill: (accounts) => this.fill(accounts),
+            fill: (accounts) => this.fill(accounts, t0),
         });
     }
 
-    private fill(accounts: ConnectionInfo[]): void {
+    private fill(accounts: ConnectionInfo[], reloadStart?: number): void {
+        if (reloadStart != null) timeLog('konten-view.loadConnections', performance.now() - reloadStart);
+        const fillStart = performance.now();
         this.fillConnections(accounts);
-        this.refreshEricStatus(); // independent async probe — must not block the account list
+        timeLog('konten-view.fillConnections', performance.now() - fillStart);
+        // independent async probe — must not block the account list
+        void this.refreshEricStatus();
         if (process.env.STEUER_APP_DEBUG) console.error(`[app] Konten ok: ${accounts.length} Konten`);
     }
 
@@ -139,10 +162,11 @@ export class BhKontenView extends Adw.Bin {
 
     /**
      * Re-probe ERiC for the active entity and rebuild the card. Runs independently of the account
-     * load (the version read touches the native binding, which may be slower than the fs probe). Any
-     * failure surfaces in the banner; it never crashes the view.
+     * load. The file-system probe paints immediately; the potentially slower native init (cached
+     * per `eric_home`) is scheduled on a low-priority idle source so the first paint is not blocked.
+     * The Check button invalidates the cache and runs the same path.
      */
-    private refreshEricStatus(): void {
+    private async refreshEricStatus(invalidate = false): Promise<void> {
         const filing = this.entity?.capabilities.electronicFiling ?? true;
         this._eric_group.set_visible(filing);
         if (!filing) {
@@ -154,14 +178,32 @@ export class BhKontenView extends Adw.Bin {
                 'Needed to check and send to ELSTER. Official builds include ERiC; otherwise install it yourself (ELSTER developer area). Empty = ERIC_HOME, bundled ERiC or the default location.',
             ),
         );
-        loadEricStatus(this.entity)
-            .then((status) => {
-                this._eric_banner.set_revealed(false);
-                this.fillEric(status);
-            })
-            .catch((err: unknown) =>
-                this.ericBanner(fmt(_('ERiC status not available: {error}'), { error: msg(err) })),
-            );
+        if (invalidate) clearEricStatusCache();
+        try {
+            const probeStart = performance.now();
+            const probe = await probeEricStatusForEntity(this.entity);
+            timeLog('konten-view.probeEricStatus', performance.now() - probeStart);
+            this._eric_banner.set_revealed(false);
+            this.fillEric(probe);
+
+            // Load the native binding after the current paint, not during view construction.
+            this.cancelEricIdle();
+            this.ericIdleSource = GLib.idle_add(GLib.PRIORITY_LOW, () => {
+                void (async () => {
+                    try {
+                        const nativeStart = performance.now();
+                        const status = await loadEricStatus(this.entity);
+                        timeLog('konten-view.loadEricStatus', performance.now() - nativeStart);
+                        this.fillEric(status);
+                    } catch (err: unknown) {
+                        this.ericBanner(fmt(_('ERiC status not available: {error}'), { error: msg(err) }));
+                    }
+                })();
+                return GLib.SOURCE_REMOVE;
+            });
+        } catch (err: unknown) {
+            this.ericBanner(fmt(_('ERiC status not available: {error}'), { error: msg(err) }));
+        }
     }
 
     private fillEric(status: EricStatusView): void {
@@ -177,6 +219,11 @@ export class BhKontenView extends Adw.Bin {
                 ),
             );
             statusRow.add_suffix(ericPill(true, _('available')));
+        } else if (status.nativePending) {
+            statusRow.set_subtitle(
+                markup(fmt(_('found at {path} — reading version'), { path: displayPath(status.ericHome) })),
+            );
+            statusRow.add_suffix(ericPill(false, _('checking')));
         } else {
             const detail = status.ffiMissing
                 ? fmt(_('The native FFI module of this installation is missing, so ERiC cannot be loaded: {error}'), {
@@ -377,7 +424,7 @@ export class BhKontenView extends Adw.Bin {
 
         // Re-run the status check (e.g. after installing ERiC without changing the path).
         const check = new Adw.ButtonRow({ title: _('Check') });
-        check.connect('activated', () => this.refreshEricStatus());
+        check.connect('activated', () => this.refreshEricStatus(true));
         this.eric.add(check);
     }
 
