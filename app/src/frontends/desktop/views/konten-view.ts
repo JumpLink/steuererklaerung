@@ -728,7 +728,7 @@ export class BhKontenView extends Adw.Bin {
     private applyAddAccountHook(): void {
         const page = process.env.STEUER_APP_ADD_ACCOUNT;
         if (!page) return;
-        const dialog = new BhAddAccountDialog(() => {});
+        const dialog = new BhAddAccountDialog(() => {}, this);
         dialog.openPage(page);
         dialog.present(this);
     }
@@ -771,7 +771,7 @@ export class BhKontenView extends Adw.Bin {
             clearYearCache();
             this.reloadConnections();
             this.activate_action('win.setup-changed', null);
-        });
+        }, this);
         dialog.present(this);
     }
 

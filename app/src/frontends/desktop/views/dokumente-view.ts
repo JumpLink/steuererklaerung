@@ -111,13 +111,19 @@ export class BhDokumenteView extends Adw.Bin {
     private onEditDocument(doc: DmsDocument): void {
         const entity = this.entity;
         if (!entity) return;
-        const dialog = new BhBelegMetadatenDialog(doc, entity, this.docs.map(prefillRecordOf), (message, changed) => {
-            showToast(message);
-            if (!changed) return;
-            // The amounts and the date are what the EÜR joins on, so the shared aggregate is stale.
-            appSession().invalidate(entity.id, this.year);
-            this.reload(entity, this.year);
-        });
+        const dialog = new BhBelegMetadatenDialog(
+            doc,
+            entity,
+            this.docs.map(prefillRecordOf),
+            (message, changed) => {
+                showToast(message);
+                if (!changed) return;
+                // The amounts and the date are what the EÜR joins on, so the shared aggregate is stale.
+                appSession().invalidate(entity.id, this.year);
+                this.reload(entity, this.year);
+            },
+            this,
+        );
         dialog.present(this);
     }
 

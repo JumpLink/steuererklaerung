@@ -33,6 +33,7 @@ import { loadUserSettings, updateUserSettings } from '../../../core/config/user-
 import { defaultManifestPath } from '../../../core/paths.ts';
 import { ISSUES_URL } from '../constants.ts';
 import { _, fmt } from '../i18n.ts';
+import { phoneDialogScroller, phoneSizeDialog } from '../widgets/responsive.ts';
 import { markup } from './util.ts';
 
 /** What the person chose, handed to the window, which owns restarts and the setup assistant. */
@@ -48,17 +49,24 @@ export class BhWelcome extends Adw.Dialog {
     private ai: boolean;
     private readonly onFinish: (choice: WelcomeChoice) => void;
     private readonly onLater?: () => void;
+    private readonly narrowSource: Gtk.Widget;
 
-    constructor(onFinish: (choice: WelcomeChoice) => void, onLater?: () => void) {
+    constructor(
+        onFinish: (choice: WelcomeChoice) => void,
+        onLater: (() => void) | undefined,
+        narrowSource: Gtk.Widget,
+    ) {
         super();
         this.onFinish = onFinish;
         this.onLater = onLater;
+        this.narrowSource = narrowSource;
         // Opt-in: an answer given before counts, otherwise the switch starts off.
         this.ai = loadUserSettings().aiAssistant ?? false;
         this.set_title(_('Welcome'));
         this.set_content_width(560);
         this.set_content_height(620);
         this.set_child(this.nav);
+        phoneSizeDialog(this, 620, this.narrowSource);
         this.nav.push(this.pageIntro());
         this.applyStartPageHook();
     }
@@ -85,6 +93,7 @@ export class BhWelcome extends Adw.Dialog {
 
         const scroller = new Gtk.ScrolledWindow({ hexpand: true, vexpand: true });
         scroller.set_child(body);
+        phoneDialogScroller(scroller, this.narrowSource);
         toolbar.set_content(scroller);
 
         const bottom = new Gtk.Box({

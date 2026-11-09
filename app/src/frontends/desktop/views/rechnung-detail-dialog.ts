@@ -49,6 +49,7 @@ import { displayInvoiceStatus, invoiceStatusLabel, normalizeInvoiceStatus } from
 import { verdachtTitel, zahlungZeile } from '../../../core/invoices/doppelzahlung-text.ts';
 import { GroupRows, LoadToken, amountLabel, markup } from './util.ts';
 import { confirmDialog, errorDialog } from './dialogs.ts';
+import { phoneDialogScroller, phoneSizeDialog } from '../widgets/responsive.ts';
 import { BhRechnungFormDialog } from './rechnung-form-dialog.ts';
 import { BhRechnungVersandDialog } from './rechnung-versand-dialog.ts';
 import { showToast } from '../toast.ts';
@@ -63,10 +64,12 @@ function msg(err: unknown): string {
 function pickDialog(
     parent: Gtk.Widget,
     opts: { title: string; empty: string; items: { title: string; sub: string }[]; onPick: (index: number) => void },
+    narrowSource?: Gtk.Widget,
 ): void {
     const dlg = new Adw.Dialog();
     dlg.set_content_width(520);
     dlg.set_content_height(480);
+    phoneSizeDialog(dlg, 480, narrowSource ?? parent);
     const header = new Adw.HeaderBar();
     header.set_title_widget(new Adw.WindowTitle({ title: opts.title, subtitle: '' }));
     const page = new Adw.PreferencesPage();
@@ -128,6 +131,7 @@ export class BhRechnungDetailDialog {
     private detail: OutgoingInvoiceDetail | null = null;
     /** Called after a mutation (finalize/storno/paid) so the caller reloads. */
     onChanged: (() => void) | null = null;
+    private narrowSource!: Gtk.Widget;
     private historyBox: Gtk.Box | null = null;
     private historyGroup: Adw.PreferencesGroup | null = null;
     private doppelBox: Gtk.Box | null = null;
@@ -144,6 +148,8 @@ export class BhRechnungDetailDialog {
         this.summary = summary;
         this.caps = caps;
         this.parent = parent;
+        this.narrowSource = parent;
+        phoneSizeDialog(this.dialog, 640, this.narrowSource);
 
         const today = new Date().toISOString().slice(0, 10);
         const disp = displayInvoiceStatus(summary.status, summary.dueDate, today);
@@ -182,6 +188,7 @@ export class BhRechnungDetailDialog {
             vexpand: true,
             child: clamp,
         });
+        phoneDialogScroller(scroller, this.narrowSource);
         return { page: scroller, box };
     }
 
@@ -275,24 +282,28 @@ export class BhRechnungDetailDialog {
         });
         set.set_sensitive(projects.length > 0);
         set.connect('clicked', () =>
-            pickDialog(this.dialog, {
-                title: _('Choose project'),
-                empty: _('No projects yet.'),
-                items: projects.map((p) => ({
-                    title: p.name,
-                    sub: _('The invoice counts toward this project with its full net amount.'),
-                })),
-                onPick: (i) => {
-                    try {
-                        setRechnungProjekt(this.entity.id, invoiceId, projects[i].id, 'app');
-                        showToast(fmt(_('Invoice now belongs to “{name}”'), { name: projects[i].name }));
-                        this.onChanged?.();
-                        this.reload();
-                    } catch (err) {
-                        void errorDialog(this.dialog, _('Could not assign'), msg(err));
-                    }
+            pickDialog(
+                this.dialog,
+                {
+                    title: _('Choose project'),
+                    empty: _('No projects yet.'),
+                    items: projects.map((p) => ({
+                        title: p.name,
+                        sub: _('The invoice counts toward this project with its full net amount.'),
+                    })),
+                    onPick: (i) => {
+                        try {
+                            setRechnungProjekt(this.entity.id, invoiceId, projects[i].id, 'app');
+                            showToast(fmt(_('Invoice now belongs to “{name}”'), { name: projects[i].name }));
+                            this.onChanged?.();
+                            this.reload();
+                        } catch (err) {
+                            void errorDialog(this.dialog, _('Could not assign'), msg(err));
+                        }
+                    },
                 },
-            }),
+                this.narrowSource,
+            ),
         );
         row.add_suffix(set);
         if (a.direkt) {
@@ -416,22 +427,26 @@ export class BhRechnungDetailDialog {
     private async pickAndereRechnung(txId: string): Promise<void> {
         try {
             const open = await loadOpenInvoicesForPicker(this.entity.id, this.summary.id);
-            pickDialog(this.dialog, {
-                title: _('Belongs to which invoice?'),
-                empty: _('No other open invoice.'),
-                items: open.map((i) => ({
-                    title: `${i.number ? `${fmt(_('No. {number}'), { number: i.number })} · ` : ''}${i.customerName ?? ''}`,
-                    sub: [i.issueDate ? deDate(i.issueDate) : '', i.total != null ? eur(i.total) : '']
-                        .filter(Boolean)
-                        .join(' · '),
-                })),
-                onPick: (n) =>
-                    void this.decide(
-                        txId,
-                        { art: 'andere_rechnung', rechnungId: open[n].id },
-                        _('Assigned to the other invoice'),
-                    ),
-            });
+            pickDialog(
+                this.dialog,
+                {
+                    title: _('Belongs to which invoice?'),
+                    empty: _('No other open invoice.'),
+                    items: open.map((i) => ({
+                        title: `${i.number ? `${fmt(_('No. {number}'), { number: i.number })} · ` : ''}${i.customerName ?? ''}`,
+                        sub: [i.issueDate ? deDate(i.issueDate) : '', i.total != null ? eur(i.total) : '']
+                            .filter(Boolean)
+                            .join(' · '),
+                    })),
+                    onPick: (n) =>
+                        void this.decide(
+                            txId,
+                            { art: 'andere_rechnung', rechnungId: open[n].id },
+                            _('Assigned to the other invoice'),
+                        ),
+                },
+                this.narrowSource,
+            );
         } catch (err) {
             await errorDialog(this.dialog, _('Could not load invoices'), msg(err));
         }
@@ -440,16 +455,22 @@ export class BhRechnungDetailDialog {
     private pickRueckzahlung(r: OffeneRueckzahlung): void {
         try {
             const debits = loadRueckzahlungKandidaten(this.entity.id, r.amount ?? 0);
-            pickDialog(this.dialog, {
-                title: _('Which transfer was the refund?'),
-                empty: _('No debit found. If the refund was paid outside the accounts, choose “Refunded elsewhere”.'),
-                items: debits.map((d) => {
-                    const z = zahlungZeile(d);
-                    return { title: `${z.title}`, sub: z.sub || d.accountKey };
-                }),
-                onPick: (n) =>
-                    void this.decide(r.txId, { art: 'rueckzahlung', refundTxId: debits[n].id }, _('Refund linked')),
-            });
+            pickDialog(
+                this.dialog,
+                {
+                    title: _('Which transfer was the refund?'),
+                    empty: _(
+                        'No debit found. If the refund was paid outside the accounts, choose “Refunded elsewhere”.',
+                    ),
+                    items: debits.map((d) => {
+                        const z = zahlungZeile(d);
+                        return { title: `${z.title}`, sub: z.sub || d.accountKey };
+                    }),
+                    onPick: (n) =>
+                        void this.decide(r.txId, { art: 'rueckzahlung', refundTxId: debits[n].id }, _('Refund linked')),
+                },
+                this.narrowSource,
+            );
         } catch (err) {
             void errorDialog(this.dialog, _('Could not load debits'), msg(err));
         }
@@ -640,6 +661,7 @@ export class BhRechnungDetailDialog {
         const today = new Date().toISOString().slice(0, 10);
         const dlg = new Adw.Dialog();
         dlg.set_content_width(520);
+        phoneSizeDialog(dlg, 480, this.narrowSource);
         const header = new Adw.HeaderBar();
         header.set_title_widget(new Adw.WindowTitle({ title: _('Mark as paid'), subtitle: '' }));
         const page = new Adw.PreferencesPage();

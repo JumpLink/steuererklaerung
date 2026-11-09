@@ -18,6 +18,7 @@ import { _, _n, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
 import type { AppEntity } from '../entities.ts';
 import { markup } from './util.ts';
+import { phoneSizeDialog } from '../widgets/responsive.ts';
 
 export interface ProjektOption {
     id: string;
@@ -32,6 +33,7 @@ export class BhProjektZuordnenDialog extends Adw.Dialog {
     private readonly stack = new Gtk.Stack();
     private readonly banner = new Adw.Banner({ revealed: false });
     private readonly options: string[];
+    private readonly narrowSource: Gtk.Widget;
     private combo: Adw.ComboRow | null = null;
     private ruleSwitch: Adw.SwitchRow | null = null;
     private musterRow: Adw.EntryRow | null = null;
@@ -54,8 +56,10 @@ export class BhProjektZuordnenDialog extends Adw.Dialog {
         private readonly projekte: ProjektOption[],
         private readonly erlaubeKein: boolean,
         private readonly saved: (message: string, ids: string[]) => void,
+        narrowSource?: Gtk.Widget,
     ) {
         super();
+        this.narrowSource = narrowSource ?? this;
         this.set_title(_('Assign to project'));
         this.set_content_width(560);
         this.set_content_height(640);
@@ -65,6 +69,7 @@ export class BhProjektZuordnenDialog extends Adw.Dialog {
         toolbar.add_top_bar(new Adw.HeaderBar());
         toolbar.set_content(this.projekte.length === 0 ? this.leer() : this.build());
         this.set_child(toolbar);
+        phoneSizeDialog(this, 640, this.narrowSource);
     }
 
     private leer(): Gtk.Widget {

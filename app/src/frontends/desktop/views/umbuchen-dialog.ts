@@ -26,6 +26,7 @@ import type { AppEntity } from '../entities.ts';
 import { markup } from './util.ts';
 import { _, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
+import { phoneDialogScroller, phoneSizeDialog } from '../widgets/responsive.ts';
 
 /** The booking being reclassified — the subset both call sites can supply. */
 export interface UmbuchenTarget {
@@ -52,6 +53,7 @@ export class BhUmbuchenDialog extends Adw.Dialog {
     private readonly year: number;
     private readonly target: UmbuchenTarget;
     private readonly done: UmbuchenResult;
+    private readonly narrowSource: Gtk.Widget;
 
     private readonly stack = new Gtk.Stack();
     private readonly banner = new Adw.Banner({ revealed: false });
@@ -62,12 +64,19 @@ export class BhUmbuchenDialog extends Adw.Dialog {
     private pattern = '';
     private categories: string[] = [];
 
-    constructor(entity: AppEntity, year: number, target: UmbuchenTarget, done: UmbuchenResult) {
+    constructor(
+        entity: AppEntity,
+        year: number,
+        target: UmbuchenTarget,
+        done: UmbuchenResult,
+        narrowSource?: Gtk.Widget,
+    ) {
         super();
         this.entity = entity;
         this.year = year;
         this.target = target;
         this.done = done;
+        this.narrowSource = narrowSource ?? this;
 
         this.set_title(_('Mark as transfer'));
         this.set_content_width(520);
@@ -87,6 +96,7 @@ export class BhUmbuchenDialog extends Adw.Dialog {
         toolbar.add_top_bar(new Adw.HeaderBar());
         toolbar.set_content(this.stack);
         this.set_child(toolbar);
+        phoneSizeDialog(this, 520, this.narrowSource);
 
         void this.load();
     }
@@ -190,6 +200,7 @@ export class BhUmbuchenDialog extends Adw.Dialog {
 
         const scroller = new Gtk.ScrolledWindow({ hexpand: true, vexpand: true });
         scroller.set_child(box);
+        phoneDialogScroller(scroller, this.narrowSource);
 
         const wrapper = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL });
         wrapper.append(scroller);

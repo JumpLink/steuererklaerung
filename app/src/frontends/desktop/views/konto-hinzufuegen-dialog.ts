@@ -45,6 +45,7 @@ import { loadManifest, type Manifest } from '../../../core/config/index.ts';
 import { _, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
 import { navigateTo } from '../nav.ts';
+import { phoneDialogScroller, phoneSizeDialog } from '../widgets/responsive.ts';
 import { markup } from './util.ts';
 
 /** Report the outcome; the caller toasts it and refreshes the account list. */
@@ -96,10 +97,16 @@ class BhAddAccountPage extends Adw.NavigationPage {
         );
     }
 
-    constructor(title: string, body: Gtk.Widget, primary?: { label: string; run: () => void }) {
+    constructor(
+        title: string,
+        body: Gtk.Widget,
+        primary: { label: string; run: () => void } | undefined,
+        narrowSource: Gtk.Widget,
+    ) {
         super();
         this.set_title(title);
         this._scroller.set_child(body);
+        phoneDialogScroller(this._scroller, narrowSource);
         if (primary) {
             this._primary_button.set_label(primary.label);
             this._primary_button.connect('clicked', primary.run);
@@ -122,10 +129,12 @@ export class BhAddAccountDialog extends Adw.Dialog {
     private readonly done: AddAccountResult;
     /** Read once, never written by the dialog itself; null without a workspace (nothing to assign to). */
     private readonly manifest: Manifest | null;
+    private readonly narrowSource: Gtk.Widget;
 
-    constructor(done: AddAccountResult) {
+    constructor(done: AddAccountResult, narrowSource: Gtk.Widget) {
         super();
         this.done = done;
+        this.narrowSource = narrowSource;
         let manifest: Manifest | null = null;
         try {
             manifest = loadManifest();
@@ -133,6 +142,7 @@ export class BhAddAccountDialog extends Adw.Dialog {
             // No workspace yet — the account still lands in the store, it just cannot be routed.
         }
         this.manifest = manifest;
+        phoneSizeDialog(this, 600, this.narrowSource);
         this.nav.push(this.pageChoose());
     }
 
@@ -159,7 +169,7 @@ export class BhAddAccountDialog extends Adw.Dialog {
     // ── Shell ─────────────────────────────────────────────────────────────────────────────────
 
     private page(title: string, body: Gtk.Widget, primary?: { label: string; run: () => void }): Adw.NavigationPage {
-        return new BhAddAccountPage(title, body, primary);
+        return new BhAddAccountPage(title, body, primary, this.narrowSource);
     }
 
     private column(): Gtk.Box {

@@ -449,3 +449,15 @@ export function receiptInboxPhoneLayout(narrow: boolean, splitCollapsed: boolean
         reopenQueueAfterConfirm: narrow,
     };
 }
+
+/**
+ * Dialog content height on a phone.
+ *
+ * `Adw.Dialog` sizes to its content when `content_height` is `-1`, which is what a bottom sheet
+ * should do: a three-row dialog that covers the whole screen hides the page behind it. On a desktop
+ * the fixed height stays, because a floating dialog without one would resize with every content
+ * change and feel unstable.
+ */
+export function dialogContentHeight(narrow: boolean, desktopHeight: number): number {
+    return narrow ? -1 : desktopHeight;
+}

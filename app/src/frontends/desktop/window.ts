@@ -288,6 +288,7 @@ export class MainWindow extends Adw.ApplicationWindow {
         new BhWelcome(
             (choice) => this.onWelcomeFinished(choice),
             () => this.refreshBanner(),
+            this,
         ).present(this);
     }
 
@@ -458,7 +459,7 @@ export class MainWindow extends Adw.ApplicationWindow {
             this.loadData();
             this.renderNav();
             this.restoreInitialView();
-        });
+        }, this);
         assistant.present(this);
     }
 

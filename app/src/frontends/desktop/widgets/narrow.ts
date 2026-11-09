@@ -42,20 +42,26 @@ function narrowRoot(widget: Gtk.Widget): NarrowRoot | null {
  * so a view can treat it as the single place its layout is decided instead of setting a wide
  * default and then waiting for a correction.
  *
+ * `source` is for widgets that are not rooted in the main window themselves, such as the contents
+ * of an `Adw.Dialog`: the dialog's own root is the dialog (or its internal host), which has no
+ * `narrow` property. Passing the widget the dialog was presented from lets the subscription follow
+ * the real window instead.
+ *
  * The subscriptions die with the widget: both are made on objects the widget outlives or owns, and
  * GJS drops them when it is finalized.
  */
-export function onNarrow(widget: Gtk.Widget, apply: (narrow: boolean) => void): void {
-    let source: NarrowRoot | null = null;
+export function onNarrow(widget: Gtk.Widget, apply: (narrow: boolean) => void, source?: Gtk.Widget): void {
+    let active: NarrowRoot | null = null;
     let handler = 0;
 
     const rebind = () => {
-        if (source && handler) source.disconnect(handler);
-        source = narrowRoot(widget);
-        handler = source ? source.connect('notify::narrow', () => apply(source?.narrow ?? false)) : 0;
-        apply(source?.narrow ?? false);
+        if (active && handler) active.disconnect(handler);
+        active = narrowRoot(source ?? widget);
+        handler = active ? active.connect('notify::narrow', () => apply(active?.narrow ?? false)) : 0;
+        apply(active?.narrow ?? false);
     };
 
-    widget.connect('notify::root', rebind);
+    const target = source ?? widget;
+    target.connect('notify::root', rebind);
     rebind();
 }

@@ -118,10 +118,16 @@ async function openBeleg(parent: Gtk.Widget, ctx: HinweisKontext, id: string): P
     const doc = docs.find((d) => d.id === id);
     if (!doc) throw new Error(_('The receipt was not found in this year.'));
     const done = changed(ctx);
-    new BhBelegMetadatenDialog(doc, ctx.entity, docs.map(prefillRecordOf), (message, didChange) => {
-        showToast(message);
-        if (didChange) done();
-    }).present(parent);
+    new BhBelegMetadatenDialog(
+        doc,
+        ctx.entity,
+        docs.map(prefillRecordOf),
+        (message, didChange) => {
+            showToast(message);
+            if (didChange) done();
+        },
+        parent,
+    ).present(parent);
 }
 
 async function dispatch(
@@ -197,7 +203,7 @@ async function dispatch(
                     appSession().invalidate();
                     done();
                 }
-            });
+            }, parent);
             dialog.openPage('file');
             dialog.present(parent);
             return;

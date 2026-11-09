@@ -23,6 +23,7 @@ import {
     contextTitle,
     demoBannerVariant,
     descriptionCap,
+    dialogContentHeight,
     explainerPlacement,
     headerActionPlan,
     kpiBlockMode,
@@ -300,6 +301,18 @@ export default async () => {
 
         await it('pins the action bar and reopens the queue only on a phone window', async () => {
             expect(layout(true, false)).toBe('-/bar/reopen');
+        });
+    });
+
+    await describe('phone-rules: dialog content height (step 10)', async () => {
+        await it('sizes dialogs to content on a phone', async () => {
+            expect(dialogContentHeight(true, 680)).toBe(-1);
+            expect(dialogContentHeight(true, 720)).toBe(-1);
+        });
+
+        await it('keeps the fixed desktop height on a wide window', async () => {
+            expect(dialogContentHeight(false, 680)).toBe(680);
+            expect(dialogContentHeight(false, 720)).toBe(720);
         });
     });
 

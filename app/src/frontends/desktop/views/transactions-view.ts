@@ -392,17 +392,25 @@ export class BhTransactionsView extends Adw.Bin {
         if (!entity || this.marked.size === 0) return;
         const projekte = loadEntityProjects(entity.id).map((p) => ({ id: p.id, name: p.name }));
         const ids = [...this.marked];
-        new BhProjektZuordnenDialog(entity, this.year, ids, projekte, true, (message, geaendert) => {
-            appSession().invalidate(entity.id, this.year);
-            this.reload(entity, this.year);
-            if (geaendert.length === 0) return showToast(message);
-            showUndoToast(message, () => {
-                void nimmProjektZuordnungZurueck(appSession(), entity, this.year, geaendert).then((r) => {
-                    showToast(r.zurueckgenommen[0]?.danach ?? _('Assignment taken back'));
-                    this.reload(entity, this.year);
+        new BhProjektZuordnenDialog(
+            entity,
+            this.year,
+            ids,
+            projekte,
+            true,
+            (message, geaendert) => {
+                appSession().invalidate(entity.id, this.year);
+                this.reload(entity, this.year);
+                if (geaendert.length === 0) return showToast(message);
+                showUndoToast(message, () => {
+                    void nimmProjektZuordnungZurueck(appSession(), entity, this.year, geaendert).then((r) => {
+                        showToast(r.zurueckgenommen[0]?.danach ?? _('Assignment taken back'));
+                        this.reload(entity, this.year);
+                    });
                 });
-            });
-        }).present(this);
+            },
+            this,
+        ).present(this);
     }
 
     /** One booking row: counterparty + date·purpose·category, an "ohne Beleg" badge, the signed amount, → detail. */

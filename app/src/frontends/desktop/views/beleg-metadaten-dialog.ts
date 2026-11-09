@@ -43,6 +43,7 @@ import { markup } from './util.ts';
 import { parseGermanInput } from '../../../core/lib/parsing.ts';
 import { _, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
+import { phoneDialogScroller, phoneSizeDialog } from '../widgets/responsive.ts';
 
 /** Report the outcome; the caller toasts it and reloads. */
 export type MetadataResult = (message: string, changed: boolean) => void;
@@ -103,12 +104,21 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
     private readonly rate: Adw.ComboRow;
     private readonly banner = new Adw.Banner({ revealed: false });
 
-    constructor(doc: DmsDocument, entity: AppEntity, history: readonly PrefillRecord[], done: MetadataResult) {
+    private readonly narrowSource: Gtk.Widget;
+
+    constructor(
+        doc: DmsDocument,
+        entity: AppEntity,
+        history: readonly PrefillRecord[],
+        done: MetadataResult,
+        narrowSource?: Gtk.Widget,
+    ) {
         super();
         this.doc = doc;
         this.entity = entity;
         this.history = history;
         this.done = done;
+        this.narrowSource = narrowSource ?? this;
 
         this.direction = new Adw.ComboRow({
             title: _('Direction'),
@@ -133,6 +143,7 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
         this.set_child(this.build());
         this.fillFrom(doc);
         this.applyPrefill(doc);
+        phoneSizeDialog(this, 800, this.narrowSource);
     }
 
     // ── Layout ────────────────────────────────────────────────────────────────────────────────
@@ -194,6 +205,7 @@ export class BhBelegMetadatenDialog extends Adw.Dialog {
 
         const scroller = new Gtk.ScrolledWindow({ hexpand: true, vexpand: true });
         scroller.set_child(box);
+        phoneDialogScroller(scroller, this.narrowSource);
         toolbar.set_content(scroller);
 
         const bottom = new Gtk.Box({

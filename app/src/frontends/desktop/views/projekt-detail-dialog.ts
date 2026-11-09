@@ -27,6 +27,7 @@ import { errorText } from '../error-text.ts';
 import type { AppEntity } from '../entities.ts';
 import { showToast } from '../toast.ts';
 import { BhGlossaryHelp, lernmodusOn } from '../widgets/glossary-help.ts';
+import { phoneSizeDialog } from '../widgets/responsive.ts';
 import { errorDialog } from './dialogs.ts';
 import { amountLabel, markup } from './util.ts';
 
@@ -38,6 +39,7 @@ export class BhProjektDetailDialog {
     private onChanged: () => void = () => {};
     private page: Adw.PreferencesPage | null = null;
     private shownGroups: Adw.PreferencesGroup[] = [];
+    private narrowSource!: Gtk.Widget;
 
     open(
         parent: Gtk.Widget,
@@ -50,7 +52,9 @@ export class BhProjektDetailDialog {
         this.year = year;
         this.projectId = projectId;
         this.onChanged = hooks.onChanged;
+        this.narrowSource = parent;
         this.dialog = new Adw.Dialog({ title: _('Project'), contentWidth: 600, contentHeight: 720 });
+        phoneSizeDialog(this.dialog, 720, this.narrowSource);
 
         const toolbar = new Adw.ToolbarView();
         const header = new Adw.HeaderBar();
