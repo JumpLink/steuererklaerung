@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # The phone-width guard is now the 360×760 slice of responsive-check.sh (one case list, not two).
 #
-#   app/dev/mobile-width-check.sh [case …]     case = view[:tab] or view@ENVVAR (default: all)
+#   app/dev/mobile-width-check.sh [case …]     case = view[/tab] or view@ENVVAR[=value] (default: all)
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 export HEADLESS_RUN="${HEADLESS_RUN:-$HERE/../../../../scripts/headless-run}"
