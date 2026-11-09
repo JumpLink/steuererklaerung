@@ -515,6 +515,20 @@ is unit-tested without GTK. Unknown, empty or no-longer-visible stored values fa
 that is visible for the entity. No layout changed — the only window change is saving the current
 view on every row selection and running a restore pass after the nav is rebuilt.
 
+**Built (step 12), with deviations.** The 360 px pass of `metainfo-screenshots.sh` now covers the
+receipt inbox, transactions and invoices, the reports table, the small step-8b pages with Accounts,
+and the four dialogs (transaction detail, invoice detail, link receipt, add account) — every dialog
+launched through the same `STEUER_APP_*` hook `screenshot.sh` documents, on the review tabs named
+explicitly because the hooks are read by the tab views, not by `review` itself. The same naming
+matters for the responsive check: its dialog cases had pointed at `review` and `settings`, whose
+default pages never read those hooks, so the guard passed while its screenshot showed only the page
+behind — now they aim at `review/offen`, `review/alle` and `konten`, and the tab travels through
+`STEUER_APP_TAB`. The store listing stays at one phone shot (the overview): the extra phone figures
+exist as files with their German twins, ready to be promoted into `gjsify.ship`, but a listing of
+twenty screenshots would bury the Flathub carousel. Contacts, projects and contracts did not get
+phone shots — they took only the shared helpers (steps 2, 3, 7) and their desktop figures already
+demonstrate the row rules.
+
 ## Implementation plan
 
 Ordered so each step is a reviewable PR that leaves the app working, and so the steps that help
@@ -534,7 +548,7 @@ every page come before the ones that help one.
 | 9 | **Receipt inbox polish** *(done)* | Queue toggle into the header, re-open the queue after confirming, `Check & confirm` in a pinned `Gtk.ActionBar`. | Behavioural, needs the review flow's own tests. |
 | 10 | **Dialog sizing** *(done)* | Sheets size to content; group headers follow the row rule. | Small, affects every dialog, safest last. |
 | 11 | **Remember the last section** *(done)* | Persist `NavViewId` per entity in `GSettings`. | Pure convenience; worth nothing until 5 exists. |
-| 12 | **Mobile screenshots** | Extend `app/dev/metainfo-screenshots.sh` to cover the reworked pages; add the 360 px pass to the screenshot docs. | Proves the result and feeds the Flathub listing. |
+| 12 | **Mobile screenshots** *(done)* | Extend `app/dev/metainfo-screenshots.sh` to cover the reworked pages; add the 360 px pass to the screenshot docs. | Proves the result and feeds the Flathub listing. |
 
 **Verification for every step:** `gjsify run check` in `app/`, plus a 360 × 760 screenshot of each
 touched page under `scripts/headless-run`, compared against the same page at 1280 × 860 to show
