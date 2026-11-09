@@ -8,7 +8,13 @@
  * install per machine, so a workspace-/env-level home may fit better later.
  */
 
-import { applyEricHome, getEricStatus, type EricStatus } from '../../../core/actions/elster/eric-status.ts';
+import {
+    applyEricHome,
+    getEricStatus,
+    invalidateEricStatus,
+    probeEricStatus,
+    type EricStatus,
+} from '../../../core/actions/elster/eric-status.ts';
 import {
     saveEricHome as coreSaveEricHome,
     saveKeystorePath as coreSaveKeystorePath,
@@ -47,6 +53,23 @@ export async function loadEricStatus(entity: AppEntity | null): Promise<EricStat
     applyEricHome({ eric_home: configuredHome });
     const status = await getEricStatus();
     return { ...status, configuredHome };
+}
+
+/**
+ * Fast file-system probe for the active entity: read its configured `eric_home`, then run
+ * {@link probeEricStatus}. Never loads the native binding; use this when the UI must paint
+ * immediately and the version lookup will be scheduled afterwards.
+ */
+export async function probeEricStatusForEntity(entity: AppEntity | null): Promise<EricStatusView> {
+    const configuredHome = entity?.elster?.eric_home;
+    applyEricHome({ eric_home: configuredHome });
+    const status = await probeEricStatus();
+    return { ...status, configuredHome };
+}
+
+/** Force the next {@link loadEricStatus} to re-run the native binding probe. */
+export function clearEricStatusCache(): void {
+    invalidateEricStatus();
 }
 
 /** Persist the ERiC home path into the active entity's ELSTER config (blank clears it). */

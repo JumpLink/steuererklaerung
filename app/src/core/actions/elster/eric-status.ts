@@ -16,6 +16,16 @@
 import { ericPlatformKnown, setConfiguredEricHome, type EricHomeSource } from '@steuererklaerung/eric';
 
 import { outdatedWarning, releaseForLibrary, type EricWarning } from './eric-warnings.ts';
+import { timeAsync, timeLog, timeSync } from '../../lib/timing.ts';
+
+/** In-memory cache of fully-resolved ERiC status, keyed by resolved ERiC home directory. */
+const ericStatusCache = new Map<string, EricStatus>();
+
+/** Drop every cached ERiC status. Call this whenever a re-probe is requested ("Check" button,
+ * changed ERIC_HOME, changed path). The next {@link getEricStatus} will load the native binding. */
+export function invalidateEricStatus(): void {
+    ericStatusCache.clear();
+}
 
 /** Machine-readable ERiC availability snapshot for one resolved home directory. */
 export interface EricStatus {
@@ -57,6 +67,12 @@ export interface EricStatus {
      * instead of asking the user to download something that would not be used.
      */
     platformSupported: boolean;
+    /**
+     * True when the file-system probe succeeded but the native binding has not been loaded/verified
+     * yet. Used by the Konten view to show a "checking" state before the (potentially slower)
+     * initializeEric + getVersion pass runs on idle.
+     */
+    nativePending: boolean;
 }
 
 /** Whether ELSTER submission through ERiC can work on this OS at all (see {@link EricStatus.platformSupported}). */
@@ -74,25 +90,11 @@ export function applyEricHome(config: { eric_home?: string }): void {
     setConfiguredEricHome(config.eric_home);
 }
 
-/**
- * Probe ERiC for a given home directory.
- *
- * Resolution: an explicit `ericHome` wins (registered as the configured folder so the eric
- * package's path helpers pick it up); otherwise whatever {@link applyEricHome} registered, then the
- * `ERIC_HOME` env, the bundled copy and the defaults. First does the pure-fs availability + verification probe; only if the files are
- * present does it try to actually load the binding and read the version — wrapped so a load failure
- * (unbuilt binding, missing LD_LIBRARY_PATH, arch mismatch) yields `available:false` + `error`
- * instead of throwing.
- */
-export async function getEricStatus(ericHome?: string): Promise<EricStatus> {
-    const explicit = ericHome?.trim();
-    if (explicit) setConfiguredEricHome(explicit);
-
-    const eric = await import('@steuererklaerung/eric');
-    const paths = eric.getEricPaths();
-    const verification = eric.verifyInstallation();
-
-    const base: EricStatus = {
+function buildEricStatusBase(
+    paths: { home: string; lib: string; logs: string; source: EricHomeSource },
+    verification: { missing: string[]; pluginCount: number; pluginNames: string[] },
+): EricStatus {
+    return {
         available: false,
         version: null,
         release: null,
@@ -106,34 +108,101 @@ export async function getEricStatus(ericHome?: string): Promise<EricStatus> {
         plugins: verification.pluginNames,
         warnings: [],
         platformSupported: ericPlatformSupported(),
+        nativePending: false,
     };
+}
 
-    if (!eric.isEricAvailable()) return base;
+function filesLookComplete(eric: {
+    isEricAvailable: () => boolean;
+    verifyInstallation: () => { missing: string[] };
+}): boolean {
+    return eric.isEricAvailable() && eric.verifyInstallation().missing.length === 0;
+}
+
+/**
+ * Fast file-system probe: resolves the home directory, checks required files and counts plugins,
+ * but never loads the native binding. Returns an {@link EricStatus} with `available: false` and
+ * `nativePending: true` when the runtime files look complete, so a UI can paint immediately and
+ * schedule the slower native version read separately.
+ */
+export async function probeEricStatus(ericHome?: string): Promise<EricStatus> {
+    const explicit = ericHome?.trim();
+    if (explicit) setConfiguredEricHome(explicit);
+
+    const eric = await timeAsync('eric.import', () => import('@steuererklaerung/eric'));
+    const paths = timeSync('eric.getEricPaths', () => eric.getEricPaths());
+    const verification = timeSync('eric.verifyInstallation', () => eric.verifyInstallation());
+    const base = buildEricStatusBase(paths, verification);
+
+    const complete = filesLookComplete(eric);
+    timeLog(complete ? 'eric.probeEricStatus: files-complete' : 'eric.probeEricStatus: files-missing', 0);
+    return { ...base, nativePending: complete };
+}
+
+/**
+ * Full ERiC status for a given home directory, with caching.
+ *
+ * Resolution: an explicit `ericHome` wins (registered as the configured folder so the eric
+ * package's path helpers pick it up); otherwise whatever {@link applyEricHome} registered, then the
+ * `ERIC_HOME` env, the bundled copy and the defaults. A cached result for the resolved home is
+ * returned without touching the native binding again; call {@link invalidateEricStatus} to force a
+ * re-probe.
+ *
+ * If the files are present, this function loads the native binding and reads the version — wrapped
+ * so a load failure (unbuilt binding, missing LD_LIBRARY_PATH, arch mismatch) yields
+ * `available:false` + `error` instead of throwing.
+ */
+export async function getEricStatus(ericHome?: string): Promise<EricStatus> {
+    const explicit = ericHome?.trim();
+    if (explicit) setConfiguredEricHome(explicit);
+
+    const eric = await timeAsync('eric.import', () => import('@steuererklaerung/eric'));
+    const paths = timeSync('eric.getEricPaths', () => eric.getEricPaths());
+
+    const cached = ericStatusCache.get(paths.home);
+    if (cached) {
+        timeLog('eric.getEricStatus: cached', 0);
+        return cached;
+    }
+
+    const verification = timeSync('eric.verifyInstallation', () => eric.verifyInstallation());
+    const base = buildEricStatusBase(paths, verification);
+
+    if (!filesLookComplete(eric)) {
+        timeLog('eric.getEricStatus: available=false', 0);
+        ericStatusCache.set(paths.home, base);
+        return base;
+    }
 
     // Files are present — try to load the native binding and read the version. Any failure here is
     // reported (not thrown): the lib is on disk but not usable in this runtime/environment.
     try {
-        eric.initializeEric();
-        const version = parseEricVersion(eric.getVersion());
+        timeSync('eric.initializeEric', () => eric.initializeEric());
+        const version = timeSync('eric.getVersion', () => parseEricVersion(eric.getVersion()));
         const outdated = outdatedWarning(version);
-        return {
+        const full: EricStatus = {
             ...base,
             available: true,
             version,
             release: version ? releaseForLibrary(version) : null,
             warnings: outdated ? [outdated] : [],
         };
+        ericStatusCache.set(paths.home, full);
+        timeLog('eric.getEricStatus: available=true', 0);
+        return full;
     } catch (err) {
-        return {
+        const failed: EricStatus = {
             ...base,
             available: false,
             error: err instanceof eric.EricFfiError ? err.cause : err instanceof Error ? err.message : String(err),
             ...(err instanceof eric.EricBindingError ? { bindingBroken: true } : {}),
             ...(err instanceof eric.EricFfiError ? { ffiMissing: true } : {}),
         };
+        ericStatusCache.set(paths.home, failed);
+        return failed;
     } finally {
         try {
-            eric.shutdownEric();
+            timeSync('eric.shutdownEric', () => eric.shutdownEric());
         } catch {
             /* best-effort teardown */
         }
