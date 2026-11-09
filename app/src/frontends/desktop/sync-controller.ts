@@ -90,10 +90,22 @@ export class SyncController {
             void this.auto();
             return GLib.SOURCE_CONTINUE;
         });
-        GLib.idle_add(GLib.PRIORITY_LOW, () => {
-            void this.auto();
-            return GLib.SOURCE_REMOVE;
-        });
+        // Start-up sync is deferred until the header button (and therefore the window) has mapped,
+        // so it cannot contend with first paint and the open view loads without a freeze.
+        const runStartupAutoSync = (): void => {
+            GLib.idle_add(GLib.PRIORITY_LOW, () => {
+                void this.auto();
+                return GLib.SOURCE_REMOVE;
+            });
+        };
+        if (button.get_mapped()) {
+            runStartupAutoSync();
+        } else {
+            const mapHandler = button.connect('map', () => {
+                button.disconnect(mapHandler);
+                runStartupAutoSync();
+            });
+        }
     }
 
     private request() {
