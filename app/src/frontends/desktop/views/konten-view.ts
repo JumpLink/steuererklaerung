@@ -11,6 +11,7 @@
 import { keyringNote } from '../data/elster-secret.ts';
 import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
+import GLib from '@girs/glib-2.0';
 import GObject from '@girs/gobject-2.0';
 import Pango from '@girs/pango-1.0';
 
@@ -99,6 +100,8 @@ export class BhKontenView extends Adw.Bin {
     private submitterFilling = false;
     /** The connections row's probe button — the header menu drives it rather than duplicating it. */
     private probeBtn: Gtk.Button | null = null;
+    /** Idle source that loads the native ERiC binding after the first paint; cancelled on disposal. */
+    private ericIdleSource = 0;
 
     /**
      * What the content header offers on a phone: connect an account, check the connections.
@@ -120,7 +123,15 @@ export class BhKontenView extends Adw.Bin {
     constructor() {
         super();
         this.eric = new GroupRows(this._eric_group);
+        this.connect('unrealize', () => this.cancelEricIdle());
         timeLog('konten-view.constructor', performance.now() - viewConstructionStart);
+    }
+
+    private cancelEricIdle(): void {
+        if (this.ericIdleSource) {
+            GLib.source_remove(this.ericIdleSource);
+            this.ericIdleSource = 0;
+        }
     }
 
     // The account list is global (every entity); the entity is used only by the ERiC card below.
@@ -151,8 +162,9 @@ export class BhKontenView extends Adw.Bin {
 
     /**
      * Re-probe ERiC for the active entity and rebuild the card. Runs independently of the account
-     * load. The native binding is only loaded on explicit request (Check button) or by other
-     * callers such as submission; the Konten view itself never blocks the mainloop with it.
+     * load. The file-system probe paints immediately; the potentially slower native init (cached
+     * per `eric_home`) is scheduled on a low-priority idle source so the first paint is not blocked.
+     * The Check button invalidates the cache and runs the same path.
      */
     private async refreshEricStatus(invalidate = false): Promise<void> {
         const filing = this.entity?.capabilities.electronicFiling ?? true;
@@ -166,27 +178,29 @@ export class BhKontenView extends Adw.Bin {
                 'Needed to check and send to ELSTER. Official builds include ERiC; otherwise install it yourself (ELSTER developer area). Empty = ERIC_HOME, bundled ERiC or the default location.',
             ),
         );
-        // Demo mode never touches the native ERiC binding; hide the card entirely.
-        if (isDemoMode()) {
-            this._eric_group.set_visible(false);
-            return;
-        }
         if (invalidate) clearEricStatusCache();
         try {
+            const probeStart = performance.now();
             const probe = await probeEricStatusForEntity(this.entity);
+            timeLog('konten-view.probeEricStatus', performance.now() - probeStart);
             this._eric_banner.set_revealed(false);
-            const fillStart = performance.now();
-            this.fillEric({ ...probe, nativePending: false });
-            timeLog('konten-view.fillEric', performance.now() - fillStart);
+            this.fillEric(probe);
 
-            // Native initializeEric/getVersion can block the mainloop for seconds; run it only when
-            // the user explicitly asked for a full check.
-            if (invalidate) {
-                const nativeFillStart = performance.now();
-                const status = await loadEricStatus(this.entity);
-                this.fillEric(status);
-                timeLog('konten-view.fillEricNative', performance.now() - nativeFillStart);
-            }
+            // Load the native binding after the current paint, not during view construction.
+            this.cancelEricIdle();
+            this.ericIdleSource = GLib.idle_add(GLib.PRIORITY_LOW, () => {
+                void (async () => {
+                    try {
+                        const nativeStart = performance.now();
+                        const status = await loadEricStatus(this.entity);
+                        timeLog('konten-view.loadEricStatus', performance.now() - nativeStart);
+                        this.fillEric(status);
+                    } catch (err: unknown) {
+                        this.ericBanner(fmt(_('ERiC status not available: {error}'), { error: msg(err) }));
+                    }
+                })();
+                return GLib.SOURCE_REMOVE;
+            });
         } catch (err: unknown) {
             this.ericBanner(fmt(_('ERiC status not available: {error}'), { error: msg(err) }));
         }
