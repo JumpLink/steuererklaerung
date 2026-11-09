@@ -133,5 +133,37 @@ export default async () => {
                 else process.env.ERIC_HOME = savedEnv;
             }
         });
+
+        await it('emits no timing output when STEUER_DEBUG_TIMING is unset', async () => {
+            const savedTiming = process.env.STEUER_DEBUG_TIMING;
+            const savedEnv = process.env.ERIC_HOME;
+            const home = createFakeEricHome();
+            const originalWrite = process.stderr.write.bind(process.stderr);
+            const captured: string[] = [];
+            process.stderr.write = (chunk: string | Uint8Array) => {
+                captured.push(String(chunk));
+                return true;
+            };
+            try {
+                delete process.env.STEUER_DEBUG_TIMING;
+                delete process.env.ERIC_HOME;
+                setConfiguredEricHome(undefined);
+                invalidateEricStatus();
+                process.env.ERIC_HOME = home;
+
+                await getEricStatus();
+
+                expect(captured.some((line) => line.includes('[timing]'))).toBe(false);
+            } finally {
+                process.stderr.write = originalWrite;
+                cleanup(home);
+                setConfiguredEricHome(undefined);
+                invalidateEricStatus();
+                if (savedTiming === undefined) delete process.env.STEUER_DEBUG_TIMING;
+                else process.env.STEUER_DEBUG_TIMING = savedTiming;
+                if (savedEnv === undefined) delete process.env.ERIC_HOME;
+                else process.env.ERIC_HOME = savedEnv;
+            }
+        });
     });
 };
