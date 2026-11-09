@@ -25,7 +25,13 @@
 #     touch-target check cannot pass by looking at nothing.
 #
 # Views are switched inside ONE app instance per size with `win.navigate`; dialog cases need their own
-# launch (an env var opens them at startup). Demo data only (STEUER_DEMO=1) and throw-away XDG dirs —
+# launch (an env var opens them at startup). A dialog case names the view the hook lives in — NOT the
+# view you navigate to visually: STEUER_APP_LINK_DIALOG is read by the Open-receipts tab, the
+# add-account hook by the Accounts view, so `review` or `settings` alone starts the app on a page
+# that never reads the variable and the screenshot shows exactly that page, no dialog. With a tab
+# (`review/offen`), start_app passes the tab through STEUER_APP_TAB, the same inline hook the manual
+# documents (docs/app/README.md, "Die Bilder neu erzeugen").
+# Demo data only (STEUER_DEMO=1) and throw-away XDG dirs —
 # no real manifest, no fints-data, no transactions-data.
 set -uo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -41,7 +47,7 @@ ALLOW="$HERE/responsive.allow.json"
 NAV_CASES=(home review review/offen review/alle transactions rechnungen zeiten kontakte
   auswertungen fristen steuer steuer/euer steuer/anlagen steuer/ustva steuer/steuerkonto projekte vertraege konten settings)
 DIALOG_CASES=(transactions@STEUER_APP_TX_DETAIL rechnungen@STEUER_APP_INVOICE_DETAIL=RE-2025-0004
-  review@STEUER_APP_EDIT_DOC review@STEUER_APP_LINK_DIALOG settings@STEUER_APP_ADD_ACCOUNT=choose)
+  review/alle@STEUER_APP_EDIT_DOC review/offen@STEUER_APP_LINK_DIALOG konten@STEUER_APP_ADD_ACCOUNT=choose)
 
 INNER=""; if [ "${1:-}" = "--inner" ]; then INNER=1; shift; fi
 
@@ -88,9 +94,13 @@ wait_responsive() {
   [ $((SECONDS - t0)) -lt 10 ] || echo "note $what: the UI was unresponsive for $((SECONDS - t0)) s"
 }
 
-# start_app <WxH> <view> <logfile> [ENV=value …]
+# start_app <WxH> <view[/tab]> <logfile> [ENV=value …]
+#   A `view/tab` goes out as STEUER_APP_VIEW=view + STEUER_APP_TAB=tab — the tab hook is read when
+#   the hub is built (views/tab-hub.ts, configure()), while STEUER_APP_VIEW itself ignores slashes.
 start_app() {
   local size="$1" view="$2" log="$3"; shift 3
+  local base="${view%%/*}" tab=""
+  [ "$view" != "$base" ] && tab="${view#*/}"
   APP_ID="eu.jumplink.Steuererklaerung.Resp$$x${RANDOM}"
   OBJ="/$(printf '%s' "$APP_ID" | tr . /)/devtools"
   mkdir -p "$TMP/xdg/data" "$TMP/xdg/config" "$TMP/xdg/cache"
@@ -98,8 +108,8 @@ start_app() {
   rm -rf "$TMP/demo" && cp -r "$APP/demo" "$TMP/demo"
   # setsid: the trap can reap the whole tree (subshell → gjsify → gjs), see screenshot.sh.
   setsid env -u BUCHHALTUNG_WORKSPACE -u STEUER_WORKSPACE \
-    GJSIFY_DEVTOOLS=1 STEUER_DEMO=1 "STEUER_DEMO_DIR=$TMP/demo" "STEUER_APP_ID=$APP_ID" "STEUER_APP_VIEW=$view" \
-    "STEUER_APP_SIZE=${size%x*} ${size#*x}" \
+    GJSIFY_DEVTOOLS=1 STEUER_DEMO=1 "STEUER_DEMO_DIR=$TMP/demo" "STEUER_APP_ID=$APP_ID" "STEUER_APP_VIEW=$base" \
+    ${tab:+"STEUER_APP_TAB=$tab"} "STEUER_APP_SIZE=${size%x*} ${size#*x}" \
     "XDG_DATA_HOME=$TMP/xdg/data" "XDG_CONFIG_HOME=$TMP/xdg/config" "XDG_CACHE_HOME=$TMP/xdg/cache" \
     "$@" bash -c "cd \"$APP\" && exec \"$GJSIFY\" run start:app" >"$log" 2>&1 &
   APP_PID=$!

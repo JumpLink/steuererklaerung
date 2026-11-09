@@ -463,6 +463,15 @@ Breakpoint bei 1180 px überschreitet — also **erst** die Größe setzen, dann
 Kopfzeile per `ActivateWidget` schließen, dann auslösen. Und `pkill -f steuer-app` trifft die
 eigene Shell mit; zum Beenden `ActivateAction 'app' 'quit'` verwenden.
 
+Alle diese Aufnahmen erzeugt ein Skript von selbst: [`app/dev/metainfo-screenshots.sh`](../../app/dev/metainfo-screenshots.sh)
+nimmt die Aufnahmen für Metainfo und Handbuch — 1000×700 auf dem Desktop, und dazu einen
+**360-px-Durchlauf** (`mobile-*.png`), der jede überarbeitete Seite bei 360×760 zeigt: Beleg-Eingang,
+Buchungen und Rechnungen, die Berichte-Tabelle, die kleinen Seiten (Zeit, Fristen, EÜR,
+Einstellungen, Konten) und die vier Dialoge (Buchungs-Detail, Rechnungs-Detail, Beleg-verknüpfen,
+Konto hinzufügen) über dieselben `STEUER_APP_*`-Haken wie die Liste oben. Englisch zuerst, jede
+Aufnahme mit deutschem Zwilling (`-de.png`), Pass für Pass (`STEUER_SHOT_PASS=mobile` für nur
+die Telefonreihe).
+
 - [PDF-Kontoauszüge per FinTS ins DMS](fints-kontoauszuege.md)
 - [macOS und Windows: Pakete, Geheimnisse, Grenzen](plattformen.md)
 - [Telefon-Breite: Entwurf für 360 × 760](mobile-layout.md)
