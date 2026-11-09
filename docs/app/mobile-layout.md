@@ -529,17 +529,15 @@ twenty screenshots would bury the Flathub carousel. Contacts, projects and contr
 phone shots — they took only the shared helpers (steps 2, 3, 7) and their desktop figures already
 demonstrate the row rules.
 
-**Built (step 13), with deviations.** The recurring-invoice block on `rechnungen` kept overflowing
-its card at desktop widths when a subtitle was long enough to need one line but not long enough to
-wrap, because an unwrapped label reports its full width as the row's minimum and pushes the suffix
-cluster over the right edge (#76). `boundRowText()` now takes `narrowTitleLines` /
-`narrowSubtitleLines` alongside the existing desktop defaults, so the recurring rows cap the
-subtitle at one line on desktop (keeping the cluster on the row) and at two lines on a phone
-(`phoneSubtitleLines(true)`), matching the rest of the list pages. The phone expander for the block
-already existed from step 6; the fix only changes the rows inside it. A dev/testing hook
-`STEUER_APP_EXPAND_RECURRING=1` opens the expander at build time so the expanded state can be
-screenshotted without synthesising a tap. Verification at 360 × 760, 600 × 860 and 1280 × 860
-confirmed the overflow is gone and the desktop layout is unchanged; this closes #76.
+**Built (step 13), with deviations.** Verification of #76 with deliberately long recurring-invoice
+texts (customer name, description, a six-figure amount) at 360 × 760, 600 × 860 and 1280 × 860.
+Nothing overflows its row at any of the three widths; on desktop the rows already bound title and
+subtitle to one line each, so the suffix cluster stays on the row. The one defect left was on the
+phone: the expanded block let a long subtitle wrap to six lines. `boundRowText()` now takes
+`narrowTitleLines` / `narrowSubtitleLines` next to the desktop defaults, and the recurring rows cap
+the phone subtitle at two lines (`phoneSubtitleLines(true)`), as on the other list pages. The desktop
+layout is unchanged. A dev/testing hook `STEUER_APP_EXPAND_RECURRING=1` opens the phone expander at
+build time so the expanded state can be screenshotted without synthesising a tap. This closes #76.
 
 ## Implementation plan
 
