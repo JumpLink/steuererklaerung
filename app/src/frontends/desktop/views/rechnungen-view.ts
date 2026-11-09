@@ -47,7 +47,7 @@ import {
     wrapButtonLabel,
 } from '../widgets/responsive.ts';
 import { onNarrow } from '../widgets/narrow.ts';
-import { recurringSummaryParts } from '../widgets/phone-rules.ts';
+import { phoneSubtitleLines, recurringSummaryParts } from '../widgets/phone-rules.ts';
 import { headerActionsChanged } from '../widgets/header-actions.ts';
 import type { ViewAction } from '../view.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
@@ -169,7 +169,9 @@ export class BhRechnungenView extends Adw.Bin {
 
     /** Bound a row's text and register the switch, in the view's current width state. */
     private pinRowText(list: 'recurring' | 'invoices', row: Adw.ActionRow): void {
-        const pin = boundRowText(row);
+        // Cap the subtitle at two lines on a phone so a long description does not make the row
+        // taller than the content is worth; the desktop keeps one line so the suffix cluster fits.
+        const pin = boundRowText(row, { narrowSubtitleLines: phoneSubtitleLines(true) });
         pin(this.narrow);
         this.textPins[list].push(pin);
     }
@@ -265,6 +267,9 @@ export class BhRechnungenView extends Adw.Bin {
                     .join(' · '),
             ),
         });
+        // Dev/testing hook: screenshot the expanded state of the recurring block without having to
+        // synthesise a tap through the devtools control plane.
+        if (process.env.STEUER_APP_EXPAND_RECURRING === '1') expander.set_expanded(true);
         for (const e of entries) expander.add_row(this.recurringRow(e));
         this.recurring.add(expander);
     }

@@ -153,11 +153,11 @@ export function rowActions(children: Gtk.Widget[]): Adw.WrapBox {
  */
 export function boundRowText(
     row: Adw.ActionRow | Adw.ExpanderRow,
-    opts: { titleLines?: number; subtitleLines?: number } = {},
+    opts: { titleLines?: number; subtitleLines?: number; narrowTitleLines?: number; narrowSubtitleLines?: number } = {},
 ): (narrow: boolean) => void {
     const apply = (narrow: boolean): void => {
-        row.set_title_lines(narrow ? 0 : (opts.titleLines ?? 1));
-        row.set_subtitle_lines(narrow ? 0 : (opts.subtitleLines ?? 1));
+        row.set_title_lines(narrow ? (opts.narrowTitleLines ?? 0) : (opts.titleLines ?? 1));
+        row.set_subtitle_lines(narrow ? (opts.narrowSubtitleLines ?? 0) : (opts.subtitleLines ?? 1));
     };
     apply(false);
     return apply;

@@ -529,6 +529,18 @@ twenty screenshots would bury the Flathub carousel. Contacts, projects and contr
 phone shots — they took only the shared helpers (steps 2, 3, 7) and their desktop figures already
 demonstrate the row rules.
 
+**Built (step 13), with deviations.** The recurring-invoice block on `rechnungen` kept overflowing
+its card at desktop widths when a subtitle was long enough to need one line but not long enough to
+wrap, because an unwrapped label reports its full width as the row's minimum and pushes the suffix
+cluster over the right edge (#76). `boundRowText()` now takes `narrowTitleLines` /
+`narrowSubtitleLines` alongside the existing desktop defaults, so the recurring rows cap the
+subtitle at one line on desktop (keeping the cluster on the row) and at two lines on a phone
+(`phoneSubtitleLines(true)`), matching the rest of the list pages. The phone expander for the block
+already existed from step 6; the fix only changes the rows inside it. A dev/testing hook
+`STEUER_APP_EXPAND_RECURRING=1` opens the expander at build time so the expanded state can be
+screenshotted without synthesising a tap. Verification at 360 × 760, 600 × 860 and 1280 × 860
+confirmed the overflow is gone and the desktop layout is unchanged; this closes #76.
+
 ## Implementation plan
 
 Ordered so each step is a reviewable PR that leaves the app working, and so the steps that help
@@ -549,6 +561,7 @@ every page come before the ones that help one.
 | 10 | **Dialog sizing** *(done)* | Sheets size to content; group headers follow the row rule. | Small, affects every dialog, safest last. |
 | 11 | **Remember the last section** *(done)* | Persist `NavViewId` per entity in `GSettings`. | Pure convenience; worth nothing until 5 exists. |
 | 12 | **Mobile screenshots** *(done)* | Extend `app/dev/metainfo-screenshots.sh` to cover the reworked pages; add the 360 px pass to the screenshot docs. | Proves the result and feeds the Flathub listing. |
+| 13 | **Recurring-invoice overflow** *(done)* | Cap recurring-row subtitles at one line on desktop and two on phone via `boundRowText()`; verify #76 is closed at 360/600/1280 px. | Follow-up to step 6; fixes the row overflow that the initial mobile sweep left behind. |
 
 **Verification for every step:** `gjsify run check` in `app/`, plus a 360 × 760 screenshot of each
 touched page under `scripts/headless-run`, compared against the same page at 1280 × 860 to show
