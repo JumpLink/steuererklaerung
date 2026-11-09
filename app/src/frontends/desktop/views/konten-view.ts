@@ -31,11 +31,13 @@ import { errorDialog } from './dialogs.ts';
 import { BhAddAccountDialog } from './konto-hinzufuegen-dialog.ts';
 import {
     clearElsterPin,
+    clearEricStatusCache,
     keyringAvailable,
     loadEricStatus,
     loadKeystorePath,
     loadSubmitter,
     lookupElsterPin,
+    probeEricStatusForEntity,
     saveEricHome,
     saveKeystore,
     saveSubmitter,
@@ -48,6 +50,8 @@ import { displayPath } from '../../../core/paths.ts';
 import { applyScrollHook, GroupRows, LoadToken, amountLabel, loadIntoStack, markup } from './util.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
+import { timeLog } from '../../../core/lib/timing.ts';
+import { isDemoMode } from '../../../core/config/demo.ts';
 import { ericSourceLabel, ericVersionLabel } from '../../../core/actions/elster/eric-warnings.ts';
 import { ericWarningRow } from './eric-warning-rows.ts';
 import { showToast } from '../toast.ts';
@@ -62,6 +66,9 @@ const SOURCE_LABEL: Record<string, string> = {
     camt: _('CAMT file'),
     paypal: 'PayPal',
 };
+
+/** Module-load time marker for view construction-to-first-paint measurement. */
+const viewConstructionStart = performance.now();
 
 export class BhKontenView extends Adw.Bin {
     declare private _scroller: Gtk.ScrolledWindow;
@@ -114,24 +121,30 @@ export class BhKontenView extends Adw.Bin {
     constructor() {
         super();
         this.eric = new GroupRows(this._eric_group);
+        timeLog('konten-view.constructor', performance.now() - viewConstructionStart);
     }
 
     // The account list is global (every entity); the entity is used only by the ERiC card below.
     reload(entity: AppEntity, _year: number): void {
         this.entity = entity;
+        const t0 = performance.now();
         loadIntoStack({
             stack: this._stack,
             errorPage: this._error_page,
             token: this.token,
             errorContext: _('Accounts could not be loaded'),
             load: () => loadConnections(),
-            fill: (accounts) => this.fill(accounts),
+            fill: (accounts) => this.fill(accounts, t0),
         });
     }
 
-    private fill(accounts: ConnectionInfo[]): void {
+    private fill(accounts: ConnectionInfo[], reloadStart?: number): void {
+        if (reloadStart != null) timeLog('konten-view.loadConnections', performance.now() - reloadStart);
+        const fillStart = performance.now();
         this.fillConnections(accounts);
-        this.refreshEricStatus(); // independent async probe — must not block the account list
+        timeLog('konten-view.fillConnections', performance.now() - fillStart);
+        // independent async probe — must not block the account list
+        void this.refreshEricStatus();
         if (process.env.STEUER_APP_DEBUG) console.error(`[app] Konten ok: ${accounts.length} Konten`);
     }
 
@@ -139,10 +152,10 @@ export class BhKontenView extends Adw.Bin {
 
     /**
      * Re-probe ERiC for the active entity and rebuild the card. Runs independently of the account
-     * load (the version read touches the native binding, which may be slower than the fs probe). Any
-     * failure surfaces in the banner; it never crashes the view.
+     * load. The native binding is only loaded on explicit request (Check button) or by other
+     * callers such as submission; the Konten view itself never blocks the mainloop with it.
      */
-    private refreshEricStatus(): void {
+    private async refreshEricStatus(invalidate = false): Promise<void> {
         const filing = this.entity?.capabilities.electronicFiling ?? true;
         this._eric_group.set_visible(filing);
         if (!filing) {
@@ -154,14 +167,30 @@ export class BhKontenView extends Adw.Bin {
                 'Needed to check and send to ELSTER. Official builds include ERiC; otherwise install it yourself (ELSTER developer area). Empty = ERIC_HOME, bundled ERiC or the default location.',
             ),
         );
-        loadEricStatus(this.entity)
-            .then((status) => {
-                this._eric_banner.set_revealed(false);
+        // Demo mode never touches the native ERiC binding; hide the card entirely.
+        if (isDemoMode()) {
+            this._eric_group.set_visible(false);
+            return;
+        }
+        if (invalidate) clearEricStatusCache();
+        try {
+            const probe = await probeEricStatusForEntity(this.entity);
+            this._eric_banner.set_revealed(false);
+            const fillStart = performance.now();
+            this.fillEric({ ...probe, nativePending: false });
+            timeLog('konten-view.fillEric', performance.now() - fillStart);
+
+            // Native initializeEric/getVersion can block the mainloop for seconds; run it only when
+            // the user explicitly asked for a full check.
+            if (invalidate) {
+                const nativeFillStart = performance.now();
+                const status = await loadEricStatus(this.entity);
                 this.fillEric(status);
-            })
-            .catch((err: unknown) =>
-                this.ericBanner(fmt(_('ERiC status not available: {error}'), { error: msg(err) })),
-            );
+                timeLog('konten-view.fillEricNative', performance.now() - nativeFillStart);
+            }
+        } catch (err: unknown) {
+            this.ericBanner(fmt(_('ERiC status not available: {error}'), { error: msg(err) }));
+        }
     }
 
     private fillEric(status: EricStatusView): void {
@@ -177,6 +206,11 @@ export class BhKontenView extends Adw.Bin {
                 ),
             );
             statusRow.add_suffix(ericPill(true, _('available')));
+        } else if (status.nativePending) {
+            statusRow.set_subtitle(
+                markup(fmt(_('found at {path} — reading version'), { path: displayPath(status.ericHome) })),
+            );
+            statusRow.add_suffix(ericPill(false, _('checking')));
         } else {
             const detail = status.ffiMissing
                 ? fmt(_('The native FFI module of this installation is missing, so ERiC cannot be loaded: {error}'), {
@@ -377,7 +411,7 @@ export class BhKontenView extends Adw.Bin {
 
         // Re-run the status check (e.g. after installing ERiC without changing the path).
         const check = new Adw.ButtonRow({ title: _('Check') });
-        check.connect('activated', () => this.refreshEricStatus());
+        check.connect('activated', () => this.refreshEricStatus(true));
         this.eric.add(check);
     }
 
