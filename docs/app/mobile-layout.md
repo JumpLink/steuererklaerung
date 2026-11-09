@@ -495,6 +495,16 @@ phone-sized (≤480 px); on desktop the buttons stay inline above the form. Re-o
 after a confirm is also phone-only, so a desktop user keeps the always-visible list. The layout
 decisions are isolated in `receiptInboxPhoneLayout()` and tested without GTK.
 
+**Built (step 10), with deviations.** Dialogs that already had group-header actions got the same
+overflow treatment as list rows in earlier commits (`phoneRowActions` on the suffix box). The
+remaining work was sheet sizing for `BhWelcome`, `BhSetupAssistant` and `BhAddAccountDialog`:
+`phoneSizeDialog(dialog, desktopHeight, parent)` sets `content-height: -1` while the window is
+narrow, and `phoneDialogScroller(scroller, parent)` stops the inner `Gtk.ScrolledWindow` from
+claiming `vexpand` on a phone so the sheet opens at its content height instead of full height.
+The presenting main-window widget is passed as `narrowSource` so `onNarrow()` follows the real
+window; the dialog's own root has no `narrow` property. These three dialogs use primary-action
+bottom bars rather than group-header suffixes, so no further overflow folding was needed.
+
 **Built (step 11), with deviations.** The last `NavViewId` is persisted per entity and restored
 both on a cold start and when the active entity changes. Storage is a real `GSettings` schema
 (`eu.jumplink.Steuererklaerung`) when it is compiled and installed; in development or any other
@@ -522,8 +532,8 @@ every page come before the ones that help one.
 | 8 | **Reports table** *(done)* | Frozen item column, horizontal scroll, month chips defaulting to the current month. | The only genuinely new widget work; isolated, so it can take its time. |
 | 8b | **Time, Deadlines, Tax, Settings** *(done)* | One-row timer form + 48 px Play button; sentence-capped group descriptions behind an expander + 48 px `Paid`/`Filed`; EÜR PDF button into the header menu; middle-cut path subtitles. | Helper-only work on four small pages — slotted in before the reports table. |
 | 9 | **Receipt inbox polish** *(done)* | Queue toggle into the header, re-open the queue after confirming, `Check & confirm` in a pinned `Gtk.ActionBar`. | Behavioural, needs the review flow's own tests. |
-| 10 | **Dialog sizing** | Sheets size to content; group headers follow the row rule. | Small, affects every dialog, safest last. |
-| 11 | **Remember the last section** | Persist `NavViewId` per entity in `GSettings`. | Pure convenience; worth nothing until 5 exists. |
+| 10 | **Dialog sizing** *(done)* | Sheets size to content; group headers follow the row rule. | Small, affects every dialog, safest last. |
+| 11 | **Remember the last section** *(done)* | Persist `NavViewId` per entity in `GSettings`. | Pure convenience; worth nothing until 5 exists. |
 | 12 | **Mobile screenshots** | Extend `app/dev/metainfo-screenshots.sh` to cover the reworked pages; add the 360 px pass to the screenshot docs. | Proves the result and feeds the Flathub listing. |
 
 **Verification for every step:** `gjsify run check` in `app/`, plus a 360 × 760 screenshot of each
