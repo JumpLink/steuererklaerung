@@ -16,7 +16,17 @@
 import { ericPlatformKnown, setConfiguredEricHome, type EricHomeSource } from '@steuererklaerung/eric';
 
 import { outdatedWarning, releaseForLibrary, type EricWarning } from './eric-warnings.ts';
-import { timeAsync, timeLog, timeSync } from '../../lib/timing.ts';
+import { timed } from '@steuererklaerung/shared';
+
+/** Measure an async function and return its result. */
+function timeAsync<T>(label: string, fn: () => Promise<T>): Promise<T> {
+    return timed(label, fn);
+}
+
+/** Measure the synchronous execution time of `fn` and return its result. */
+function timeSync<T>(label: string, fn: () => T): T {
+    return timed(label, fn);
+}
 
 /** In-memory cache of fully-resolved ERiC status, keyed by resolved ERiC home directory. */
 const ericStatusCache = new Map<string, EricStatus>();
@@ -134,9 +144,7 @@ export async function probeEricStatus(ericHome?: string): Promise<EricStatus> {
     const verification = timeSync('eric.verifyInstallation', () => eric.verifyInstallation());
     const base = buildEricStatusBase(paths, verification);
 
-    const complete = filesLookComplete(eric);
-    timeLog(complete ? 'eric.probeEricStatus: files-complete' : 'eric.probeEricStatus: files-missing', 0);
-    return { ...base, nativePending: complete };
+    return { ...base, nativePending: filesLookComplete(eric) };
 }
 
 /**
@@ -160,16 +168,12 @@ export async function getEricStatus(ericHome?: string): Promise<EricStatus> {
     const paths = timeSync('eric.getEricPaths', () => eric.getEricPaths());
 
     const cached = ericStatusCache.get(paths.home);
-    if (cached) {
-        timeLog('eric.getEricStatus: cached', 0);
-        return cached;
-    }
+    if (cached) return cached;
 
     const verification = timeSync('eric.verifyInstallation', () => eric.verifyInstallation());
     const base = buildEricStatusBase(paths, verification);
 
     if (!filesLookComplete(eric)) {
-        timeLog('eric.getEricStatus: available=false', 0);
         ericStatusCache.set(paths.home, base);
         return base;
     }
@@ -188,7 +192,6 @@ export async function getEricStatus(ericHome?: string): Promise<EricStatus> {
             warnings: outdated ? [outdated] : [],
         };
         ericStatusCache.set(paths.home, full);
-        timeLog('eric.getEricStatus: available=true', 0);
         return full;
     } catch (err) {
         const failed: EricStatus = {
