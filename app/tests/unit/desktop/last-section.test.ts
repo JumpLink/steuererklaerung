@@ -5,7 +5,6 @@
  */
 
 import Gio from '@girs/gio-2.0';
-import GLib from '@girs/glib-2.0';
 import { describe, expect, it } from '@gjsify/unit';
 
 import type { NavViewId } from '../../../src/frontends/desktop/nav.ts';
