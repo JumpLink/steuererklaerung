@@ -15402,6 +15402,14 @@ msgstr "ELSTER"
 msgid "EÜR"
 msgstr "EÜR"
 
+#: src/frontends/desktop/views/konten-view.ts:211
+msgid "found at {path} — reading version"
+msgstr "gefunden unter {path} — Version wird gelesen"
+
+#: src/frontends/desktop/views/konten-view.ts:213
+msgid "checking"
+msgstr "wird geprüft"
+
 #~ msgid "Assistant engine"
 #~ msgstr "Modus"
 
