@@ -100,6 +100,44 @@ the same gjsify/GJS stack and registers as its own MCP server. Nothing in this p
   under gjs — addressed upstream by gjsify#508, which adds the missing `node:zlib`
   streaming classes).
 
+## Page-switch responsiveness
+
+The desktop app targets a **200 ms warm-switch budget** (time until content is
+visible again when returning to a page) and a **200 ms mainloop-stall budget**
+(no single synchronous chunk of work may block the GTK loop for more than that
+in the measured window). These are local development checks, run with:
+
+```bash
+scripts/headless-run -- app/dev/page-switch-check.sh
+```
+
+### Measured demo-data timings on `origin/main`
+
+Measured on 2026-11-10 with demo data; numbers are single-run, not averages.
+
+| Page | Cold ready (ms) | Warm ready (ms) | Mainloop stall (ms) |
+|------|----------------:|----------------:|--------------------:|
+| Home (startup) | 734.8 | 0 (already visible) | 592.3 |
+| Review | 27.4 | 26.1 | — |
+| Transactions | 55.6 | 47.2 | — |
+| Rechnungen | 11.2 | 21.2 | — |
+| Zeiten | 20.7 | 22.5 | — |
+| Kontakte | 24.7 | 23.8 | — |
+| Auswertungen | 85.6 | 101.2 | — |
+| Fristen | 20.2 | 11.4 | — |
+| Steuer | 54.3 | 67.2 | — |
+| Projekte | 38.8 | 15.1 | — |
+| Verträge | 75.9 | 101.6 | — |
+| Konten | 8.4 | 8.8 | — |
+| Settings | — | 0 (already visible) | — |
+
+All warm switches are below the 200 ms budget on `origin/main`. The cold-startup
+mainloop stall of ~592 ms is a known open issue: it happens while the first
+overview view is being prepared, not during a user-triggered page switch. The
+script keeps this separate (`PAGE_SWITCH_COLD_STALL_MS`, default 900 ms =
+measured 592 ms × 1.5 rounded up) so the warm-switch gate stays honest and does
+not silently accept a UI freeze as a "cold load".
+
 ## Support matrix
 
 | Area | GJS status |
