@@ -13,7 +13,7 @@ export default async () => {
             expect(lines).toContain('5 documents processed');
             expect(lines).toContain('3 updated');
             expect(lines).toContain('2 changed');
-            expect(lines).toContain('1 skipped');
+            expect(lines).toContain('1 document skipped');
             expect(lines).toContain('1 error');
         });
 
@@ -22,7 +22,7 @@ export default async () => {
             expect(lines).toContain('1 document processed');
             expect(lines).toContain('1 updated');
             expect(lines).toContain('1 changed');
-            expect(lines).toContain('1 skipped');
+            expect(lines).toContain('1 document skipped');
         });
 
         await it('omits the error line when there are none', () => {

@@ -27,7 +27,7 @@ import { GroupRows, LoadToken, amountLabel, emptyState, loadIntoStack, markup } 
 import { onNarrow } from '../widgets/narrow.ts';
 import { pinnableCluster, rowActions } from '../widgets/responsive.ts';
 import { _, _n, fmt } from '../i18n.ts';
-import { BhAiJobDialog } from '../widgets/ai-job-dialog.ts';
+import { BhAiJobDialog, type AiJobResult } from '../widgets/ai-job-dialog.ts';
 import { aiJobSummaryLines } from '../widgets/ai-job-summary.ts';
 import { classifyDocuments } from '../../../core/actions/paperless/classify-documents.ts';
 import { reviewMetadata } from '../../../core/actions/paperless/review-metadata.ts';
@@ -269,7 +269,7 @@ export class BhDokumenteView extends Adw.Bin {
                 title: _('Classify documents'),
                 loadingDescription: _('Reading each document and choosing the best document type …'),
                 safeHint: _('Documents already processed keep their changes when you cancel.'),
-                run: () => new Promise(() => {}),
+                run: () => new Promise<AiJobResult>(() => {}),
             });
         }
     }
