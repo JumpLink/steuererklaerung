@@ -573,7 +573,7 @@ export class BhRechnungenView extends Adw.Bin {
             body: _(
                 'The content of the matching outgoing invoices will be sent to the configured AI provider, and invoice fields of matching Paperless documents will be changed. Documents already processed keep their changes if you cancel.',
             ),
-            confirmLabel: _('Start'),
+            confirmLabel: _p('button', 'Start'),
         });
         if (!confirmed) return;
         const config = loadPaperlessConfig();

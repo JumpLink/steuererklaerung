@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-11-10 15:17+0100\n"
+"POT-Creation-Date: 2026-11-10 15:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -6301,7 +6301,7 @@ msgstr ""
 #: src/frontends/desktop/views/dokumente-view.ts:163
 #: src/frontends/desktop/views/dokumente-view.ts:183
 #: src/frontends/desktop/views/rechnungen-view.ts:576
-#: src/frontends/desktop/views/vertrag-detail-dialog.ts:213
+msgctxt "button"
 msgid "Start"
 msgstr ""
 
@@ -9345,6 +9345,14 @@ msgstr ""
 #: src/frontends/desktop/views/konten-view.ts:199
 #: src/frontends/desktop/views/konten-view.ts:205
 msgid "ERiC status not available: {error}"
+msgstr ""
+
+#: src/frontends/desktop/views/konten-view.ts:224
+msgid "found at {path} — reading version"
+msgstr ""
+
+#: src/frontends/desktop/views/konten-view.ts:226
+msgid "checking"
 msgstr ""
 
 #: src/frontends/desktop/views/konten-view.ts:229
@@ -12922,6 +12930,10 @@ msgstr ""
 msgid "does not renew automatically"
 msgstr ""
 
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:213
+msgid "Start"
+msgstr ""
+
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:214
 msgid "Term"
 msgstr ""
@@ -14473,14 +14485,6 @@ msgstr ""
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:116
 msgid "ELSTER"
-msgstr ""
-
-#: src/frontends/desktop/views/konten-view.ts:224
-msgid "found at {path} — reading version"
-msgstr ""
-
-#: src/frontends/desktop/views/konten-view.ts:226
-msgid "checking"
 msgstr ""
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:117

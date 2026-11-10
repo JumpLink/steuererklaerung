@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-11-10 15:17+0100\n"
+"POT-Creation-Date: 2026-11-10 15:26+0100\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -6958,9 +6958,9 @@ msgstr ""
 #: src/frontends/desktop/views/dokumente-view.ts:163
 #: src/frontends/desktop/views/dokumente-view.ts:183
 #: src/frontends/desktop/views/rechnungen-view.ts:576
-#: src/frontends/desktop/views/vertrag-detail-dialog.ts:213
+msgctxt "button"
 msgid "Start"
-msgstr "Beginn"
+msgstr "Starten"
 
 #: src/frontends/desktop/views/dokumente-view.ts:168
 #: src/frontends/desktop/views/dokumente-view.ts:270
@@ -6995,7 +6995,8 @@ msgstr "Titel, Korrespondenten und Daten für jeden Beleg prüfen …"
 #: src/frontends/desktop/views/dokumente-view.ts:190
 #: src/frontends/desktop/views/dokumente-view.ts:271
 msgid "Documents already processed keep their changes when you cancel."
-msgstr "Bereits verarbeitete Belege behalten ihre Änderungen, wenn du abbrichst."
+msgstr ""
+"Bereits verarbeitete Belege behalten ihre Änderungen, wenn du abbrichst."
 
 #: src/frontends/desktop/views/dokumente-view.ts:241
 #: src/frontends/desktop/views/transactions-view.ts:309
@@ -10139,7 +10140,13 @@ msgstr ""
 msgid "ERiC status not available: {error}"
 msgstr "ERiC-Status nicht verfügbar: {error}"
 
+#: src/frontends/desktop/views/konten-view.ts:224
+msgid "found at {path} — reading version"
+msgstr "gefunden unter {path} — Version wird gelesen"
 
+#: src/frontends/desktop/views/konten-view.ts:226
+msgid "checking"
+msgstr "wird geprüft"
 
 #: src/frontends/desktop/views/konten-view.ts:229
 msgid ""
@@ -13877,6 +13884,10 @@ msgstr "läuft unbefristet"
 msgid "does not renew automatically"
 msgstr "verlängert sich nicht automatisch"
 
+#: src/frontends/desktop/views/vertrag-detail-dialog.ts:213
+msgid "Start"
+msgstr "Beginn"
+
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:214
 msgid "Term"
 msgstr "Laufzeit"
@@ -15555,19 +15566,9 @@ msgstr "Buchhaltung"
 msgid "ELSTER"
 msgstr "ELSTER"
 
-#: src/frontends/desktop/views/konten-view.ts:224
-msgid "found at {path} — reading version"
-msgstr "gefunden unter {path} — Version wird gelesen"
-
-#: src/frontends/desktop/views/konten-view.ts:226
-msgid "checking"
-msgstr "wird geprüft"
-
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:117
 msgid "EÜR"
 msgstr "EÜR"
-
-
 
 #~ msgid "Assistant engine"
 #~ msgstr "Modus"

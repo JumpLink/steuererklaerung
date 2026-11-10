@@ -26,7 +26,7 @@ import { rechnungsartLabel } from './rechnungsart-row.ts';
 import { GroupRows, LoadToken, amountLabel, emptyState, loadIntoStack, markup } from './util.ts';
 import { onNarrow } from '../widgets/narrow.ts';
 import { pinnableCluster, rowActions } from '../widgets/responsive.ts';
-import { _, _n, fmt } from '../i18n.ts';
+import { _, _n, _p, fmt } from '../i18n.ts';
 import { BhAiJobDialog, type AiJobResult } from '../widgets/ai-job-dialog.ts';
 import { aiJobSummaryLines } from '../widgets/ai-job-summary.ts';
 import { classifyDocuments } from '../../../core/actions/paperless/classify-documents.ts';
@@ -160,7 +160,7 @@ export class BhDokumenteView extends Adw.Bin {
             body: _(
                 'The content of the matching documents will be sent to the configured AI provider, and the document type of matching Paperless documents will be changed. Documents already processed keep their changes if you cancel.',
             ),
-            confirmLabel: _('Start'),
+            confirmLabel: _p('button', 'Start'),
         });
         if (!confirmed) return;
         this.aiJobDialog.open(this, {
@@ -180,7 +180,7 @@ export class BhDokumenteView extends Adw.Bin {
             body: _(
                 'The content of the matching documents will be sent to the configured AI provider, and titles, correspondents, dates and tags of matching Paperless documents will be changed. Documents already processed keep their changes if you cancel.',
             ),
-            confirmLabel: _('Start'),
+            confirmLabel: _p('button', 'Start'),
         });
         if (!confirmed) return;
         const config = loadPaperlessConfig();
