@@ -15,7 +15,7 @@
  * bundle — it is shipped next to it, and nowhere else would be right.
  */
 
-import { existsSync, readFileSync } from 'node:fs';
+import { accessSync, constants, existsSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -141,12 +141,35 @@ export function resolveEricHome(ericHome?: string): string {
   return resolveEricHomeWithSource(ericHome).home;
 }
 
+/** Whether `dir` exists and the current user may create entries in it. */
+function isWritableDir(dir: string): boolean {
+  try {
+    accessSync(dir, constants.W_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Where ERiC writes its logs for a runtime at `home`. Beside the runtime (`<home>/../logs`) when
+ * that is writable, so a checkout keeps its logs next to `elster/runtime`; otherwise in the user's
+ * data directory. A bundled copy sits in a root-owned prefix, and a folder the file-chooser portal
+ * handed to a sandboxed app lives in a document-portal mount whose parent cannot take new entries:
+ * in both, creating the sibling `logs` directory would fail before ERiC even starts.
+ */
+function logDirFor(home: string, source: EricHomeSource): string {
+  const beside = join(dirname(home), 'logs');
+  if (source === 'bundled') return join(appDataDir(), 'logs');
+  if (existsSync(beside) ? isWritableDir(beside) : isWritableDir(dirname(home))) return beside;
+  return join(appDataDir(), 'logs');
+}
+
 /** Build all relevant paths from the ERiC home directory. */
 export function getEricPaths(platform: EricPlatform | null = ericPlatform()): EricPaths {
   const { home, source } = resolveEricHomeWithSource();
   const libDir = platform?.libDir ?? 'lib';
-  // A bundled copy sits in a root-owned prefix: its logs belong in the user's data directory.
-  const logs = source === 'bundled' ? join(appDataDir(), 'logs') : join(dirname(home), 'logs');
+  const logs = logDirFor(home, source);
   return {
     home,
     lib: join(home, libDir),
