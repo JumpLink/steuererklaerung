@@ -17,6 +17,7 @@ import { appSession } from '../data/session.ts';
 import { showToast } from '../toast.ts';
 import { BhBelegMetadatenDialog } from './beleg-metadaten-dialog.ts';
 import { pickAndStoreReceipts, presentUploadFailures, summarizeUpload } from './beleg-upload.ts';
+import { confirmDialog } from './dialogs.ts';
 import { humanizeKey } from '../../../core/lib/qonto-categories.ts';
 import type { AppEntity } from '../entities.ts';
 import { deDate, eur } from '../../../core/lib/format.ts';
@@ -153,7 +154,15 @@ export class BhDokumenteView extends Adw.Bin {
         ];
     }
 
-    private classifyDocuments(): void {
+    private async classifyDocuments(): Promise<void> {
+        const confirmed = await confirmDialog(this, {
+            heading: _('Classify documents?'),
+            body: _(
+                'The content of the matching documents will be sent to the configured AI provider, and the document type of matching Paperless documents will be changed. Documents already processed keep their changes if you cancel.',
+            ),
+            confirmLabel: _('Start'),
+        });
+        if (!confirmed) return;
         this.aiJobDialog.open(this, {
             title: _('Classify documents'),
             loadingDescription: _('Reading each document and choosing the best document type …'),
@@ -165,12 +174,20 @@ export class BhDokumenteView extends Adw.Bin {
         });
     }
 
-    private reviewMetadata(): void {
+    private async reviewMetadata(): Promise<void> {
+        const confirmed = await confirmDialog(this, {
+            heading: _('Review metadata?'),
+            body: _(
+                'The content of the matching documents will be sent to the configured AI provider, and titles, correspondents, dates and tags of matching Paperless documents will be changed. Documents already processed keep their changes if you cancel.',
+            ),
+            confirmLabel: _('Start'),
+        });
+        if (!confirmed) return;
         const config = loadPaperlessConfig();
         this.aiJobDialog.open(this, {
             title: _('Review metadata'),
             loadingDescription: _('Reviewing titles, correspondents and dates for each document …'),
-            safeHint: _('Nothing is saved until the review finishes successfully.'),
+            safeHint: _('Documents already processed keep their changes when you cancel.'),
             run: (signal) =>
                 reviewMetadata(config, { signal }).then((result) => ({
                     summary: aiJobSummaryLines(result),
@@ -244,6 +261,17 @@ export class BhDokumenteView extends Adw.Bin {
         // so the form can be captured. An Adw.Dialog renders inside the window and shows up in the
         // devtools screenshot — unlike a popover.
         if (process.env.STEUER_APP_EDIT_DOC === '1' && shown[0]) this.onEditDocument(shown[0]);
+
+        // STEUER_APP_AI_JOB_DIALOG=1 (dev/testing hook): open the AI-job runner on a fake run that
+        // never finishes, so the loading/cancel state can be captured.
+        if (process.env.STEUER_APP_AI_JOB_DIALOG === '1') {
+            this.aiJobDialog.open(this, {
+                title: _('Classify documents'),
+                loadingDescription: _('Reading each document and choosing the best document type …'),
+                safeHint: _('Documents already processed keep their changes when you cancel.'),
+                run: () => new Promise(() => {}),
+            });
+        }
     }
 
     private buildRow(d: DmsDocument): Adw.ActionRow {

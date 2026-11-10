@@ -54,6 +54,7 @@ import { aiJobSummaryLines } from '../widgets/ai-job-summary.ts';
 import type { ViewAction } from '../view.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
+import { confirmDialog } from './dialogs.ts';
 import { extractInvoiceFields } from '../../../core/actions/paperless/extract-invoice.ts';
 import { loadPaperlessConfig } from '../../../core/config/index.ts';
 
@@ -566,7 +567,15 @@ export class BhRechnungenView extends Adw.Bin {
     }
 
     /** Run AI extraction over outgoing invoices. */
-    private extractOutgoingInvoiceFields(): void {
+    private async extractOutgoingInvoiceFields(): Promise<void> {
+        const confirmed = await confirmDialog(this, {
+            heading: _('Extract invoice fields?'),
+            body: _(
+                'The content of the matching outgoing invoices will be sent to the configured AI provider, and invoice fields of matching Paperless documents will be changed. Documents already processed keep their changes if you cancel.',
+            ),
+            confirmLabel: _('Start'),
+        });
+        if (!confirmed) return;
         const config = loadPaperlessConfig();
         const documentTypeId = config.document_type_ids.outgoing_invoice;
         this.aiJobDialog.open(this, {
