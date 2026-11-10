@@ -7,7 +7,7 @@
  */
 
 import { describe, expect, it } from '@gjsify/unit';
-import { chmodSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { accessSync, chmodSync, constants, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -78,8 +78,15 @@ export default async () => {
                     setConfiguredEricHome(join(parent, 'eric'));
                     expect(getEricPaths().logs).toBe(join(parent, 'logs'));
                     chmodSync(parent, 0o555);
-                    // root ignores the permission bits; the assertion only holds for a normal user
-                    if (process.getuid?.() !== 0) {
+                    // root (the CI container) ignores the permission bits, and GJS has no
+                    // process.getuid: ask the kernel whether the mode is enforced instead
+                    let enforced = false;
+                    try {
+                        accessSync(parent, constants.W_OK);
+                    } catch {
+                        enforced = true;
+                    }
+                    if (enforced) {
                         expect(getEricPaths().logs).toBe(join(data, 'steuererklaerung', 'logs'));
                     }
                 });
