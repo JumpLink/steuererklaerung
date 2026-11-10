@@ -4,6 +4,7 @@ import { extractInvoiceFields } from '../../../core/actions/paperless/extract-in
 import { resolveDefaultElster, getPeriodDateRange } from '../../../core/config/index.ts';
 import { loadPaperlessConfig } from '../../../core/config/index.ts';
 import { INTERACTIVE_TTY_MESSAGE, onDocumentProcessedInteractive } from './render.ts';
+import { exitFromCliError, withAbortSignal } from './cancel.ts';
 
 function runExtractInvoiceFields(documentTypeKey: 'incoming_invoice' | 'outgoing_invoice') {
     return async (argv: Record<string, unknown>) => {
@@ -34,20 +35,23 @@ function runExtractInvoiceFields(documentTypeKey: 'incoming_invoice' | 'outgoing
         }
         const config = loadPaperlessConfig();
         const documentTypeId = config.document_type_ids[documentTypeKey];
-        const result = await extractInvoiceFields(config, documentTypeId, {
-            onlyMissing,
-            dryRun,
-            from,
-            to,
-            onDocumentProcessed: auto
-                ? (info) => {
-                      const label = info.fileName || info.title || `#${info.documentId}`;
-                      const status = info.updated ? 'updated' : dryRun ? 'would update' : 'skipped';
-                      console.log(`Document ${info.documentId}: ${label} – ${status}`);
-                      return Promise.resolve();
-                  }
-                : onDocumentProcessedInteractive,
-        });
+        const result = await withAbortSignal((signal) =>
+            extractInvoiceFields(config, documentTypeId, {
+                onlyMissing,
+                dryRun,
+                from,
+                to,
+                signal,
+                onDocumentProcessed: auto
+                    ? (info) => {
+                          const label = info.fileName || info.title || `#${info.documentId}`;
+                          const status = info.updated ? 'updated' : dryRun ? 'would update' : 'skipped';
+                          console.log(`Document ${info.documentId}: ${label} – ${status}`);
+                          return Promise.resolve();
+                      }
+                    : onDocumentProcessedInteractive,
+            }),
+        );
         console.log(
             `Processed ${result.processed}, updated ${result.updated}, skipped ${result.skipped}, errors ${result.errors}`,
         );
@@ -109,8 +113,7 @@ export const extractInvoiceFieldsIncomingSubcommand: CommandModule = {
         try {
             await runExtractInvoiceFields('incoming_invoice')(argv as Record<string, unknown>);
         } catch (err) {
-            console.error(err instanceof Error ? err.message : err);
-            process.exit(1);
+            exitFromCliError(err);
         }
     },
 };
@@ -132,8 +135,7 @@ export const extractInvoiceFieldsOutgoingSubcommand: CommandModule = {
         try {
             await runExtractInvoiceFields('outgoing_invoice')(argv as Record<string, unknown>);
         } catch (err) {
-            console.error(err instanceof Error ? err.message : err);
-            process.exit(1);
+            exitFromCliError(err);
         }
     },
 };

@@ -7,6 +7,7 @@ import { loadPaperlessConfig } from '../../../core/config/index.ts';
 import { interactivePrompts } from '../../../core/lib/interactive-prompts.ts';
 import { pickArgv, runAndExit } from '../output.ts';
 import { INTERACTIVE_TTY_MESSAGE } from './render.ts';
+import { exitFromCliError, withAbortSignal } from './cancel.ts';
 
 export const importAmazonSubcommand: CommandModule = {
     command: 'import-amazon <docDir> <csvPath>',
@@ -105,50 +106,52 @@ export const reviewMetadataSubcommand: CommandModule = {
                 const id = config.document_type_ids[documentTypeKey];
                 if (id > 0) documentTypeIds = [...new Set([...documentTypeIds, id])];
             }
-            const result = await reviewMetadata(config, {
-                force: Boolean(raw.force),
-                auto: Boolean(raw.auto),
-                dryRun: Boolean(raw['dry-run']),
-                from: raw.from as string | undefined,
-                to: raw.to as string | undefined,
-                documentTypeIds: documentTypeIds.length > 0 ? documentTypeIds : undefined,
-                limit: raw.limit as number | undefined,
-                query: raw.query as string | undefined,
-                onDocumentProcessed: raw.auto
-                    ? async (info) => {
-                          const status = info.updated ? 'saved' : 'no changes';
-                          const changeSummary =
-                              info.changes.length > 0
-                                  ? `: ${info.changes.slice(0, 2).join('; ')}${info.changes.length > 2 ? '…' : ''}`
-                                  : '';
-                          console.log(`Document #${info.documentId} ${status}${changeSummary}`);
-                      }
-                    : process.stdin.isTTY
-                      ? async (info) => {
-                            console.log('');
-                            console.log(`--- Document #${info.documentId} ---`);
-                            if (info.changes.length > 0) {
-                                for (const line of info.changes) {
-                                    console.log(`  ${line}`);
+            const result = await withAbortSignal((signal) =>
+                reviewMetadata(config, {
+                    force: Boolean(raw.force),
+                    auto: Boolean(raw.auto),
+                    dryRun: Boolean(raw['dry-run']),
+                    from: raw.from as string | undefined,
+                    to: raw.to as string | undefined,
+                    documentTypeIds: documentTypeIds.length > 0 ? documentTypeIds : undefined,
+                    limit: raw.limit as number | undefined,
+                    query: raw.query as string | undefined,
+                    signal,
+                    onDocumentProcessed: raw.auto
+                        ? async (info) => {
+                              const status = info.updated ? 'saved' : 'no changes';
+                              const changeSummary =
+                                  info.changes.length > 0
+                                      ? `: ${info.changes.slice(0, 2).join('; ')}${info.changes.length > 2 ? '…' : ''}`
+                                      : '';
+                              console.log(`Document #${info.documentId} ${status}${changeSummary}`);
+                          }
+                        : process.stdin.isTTY
+                          ? async (info) => {
+                                console.log('');
+                                console.log(`--- Document #${info.documentId} ---`);
+                                if (info.changes.length > 0) {
+                                    for (const line of info.changes) {
+                                        console.log(`  ${line}`);
+                                    }
+                                } else {
+                                    console.log('  (no changes)');
                                 }
-                            } else {
-                                console.log('  (no changes)');
+                                console.log(info.updated ? '  → Saved to Paperless.' : '  → Dry-run (not saved).');
+                                console.log('');
+                                const { input } = await interactivePrompts();
+                                await input({ message: 'Press Enter to continue', default: '' });
                             }
-                            console.log(info.updated ? '  → Saved to Paperless.' : '  → Dry-run (not saved).');
-                            console.log('');
-                            const { input } = await interactivePrompts();
-                            await input({ message: 'Press Enter to continue', default: '' });
-                        }
-                      : undefined,
-            });
+                          : undefined,
+                }),
+            );
             console.log(
                 `Processed ${result.processed}, updated ${result.updated}, skipped ${result.skipped}, errors ${result.errors}`,
             );
             if (result.errors > 0) process.exit(1);
             process.exit(0);
         } catch (err) {
-            console.error(err instanceof Error ? err.message : err);
-            process.exit(1);
+            exitFromCliError(err);
         }
     },
 };
@@ -183,33 +186,35 @@ export const classifyDocumentsSubcommand: CommandModule = {
         const raw = argv as Record<string, unknown>;
         const dryRun = Boolean(raw['dry-run']);
         try {
-            const result = await classifyDocuments({
-                documentTypeId: raw['document-type-id'] as number | undefined,
-                unclassified: Boolean(raw.unclassified),
-                onlyWrong: Boolean(raw['only-wrong']),
-                dryRun,
-                limit: raw.limit as number | undefined,
-                onDocumentProcessed: async (info) => {
-                    const prefix = dryRun ? '[dry-run] ' : '';
-                    if (info.changed) {
-                        console.log(
-                            `${prefix}Document ${info.documentId}: ${info.fileName ?? info.title ?? '?'} – ${info.previousTypeName ?? 'none'} → ${info.newTypeName ?? 'none'} (${info.confidence}: ${info.reason})`,
-                        );
-                    } else {
-                        console.log(
-                            `${prefix}Document ${info.documentId}: ${info.fileName ?? info.title ?? '?'} – kept ${info.previousTypeName ?? 'none'} (${info.confidence}: ${info.reason})`,
-                        );
-                    }
-                },
-            });
+            const result = await withAbortSignal((signal) =>
+                classifyDocuments({
+                    documentTypeId: raw['document-type-id'] as number | undefined,
+                    unclassified: Boolean(raw.unclassified),
+                    onlyWrong: Boolean(raw['only-wrong']),
+                    dryRun,
+                    limit: raw.limit as number | undefined,
+                    signal,
+                    onDocumentProcessed: async (info) => {
+                        const prefix = dryRun ? '[dry-run] ' : '';
+                        if (info.changed) {
+                            console.log(
+                                `${prefix}Document ${info.documentId}: ${info.fileName ?? info.title ?? '?'} – ${info.previousTypeName ?? 'none'} → ${info.newTypeName ?? 'none'} (${info.confidence}: ${info.reason})`,
+                            );
+                        } else {
+                            console.log(
+                                `${prefix}Document ${info.documentId}: ${info.fileName ?? info.title ?? '?'} – kept ${info.previousTypeName ?? 'none'} (${info.confidence}: ${info.reason})`,
+                            );
+                        }
+                    },
+                }),
+            );
             console.log(
                 `\nProcessed ${result.processed}, changed ${result.changed}, unchanged ${result.unchanged}, skipped ${result.skipped}, errors ${result.errors}`,
             );
             if (result.errors > 0) process.exit(1);
             process.exit(0);
         } catch (err) {
-            console.error(err instanceof Error ? err.message : err);
-            process.exit(1);
+            exitFromCliError(err);
         }
     },
 };
