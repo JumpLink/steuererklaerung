@@ -23,7 +23,16 @@ import { deDate, eur } from '../../../core/lib/format.ts';
 import { prefillRecordOf } from '../../../core/invoices/e-rechnung/index.ts';
 import { rechnungsartLabel } from './rechnungsart-row.ts';
 import { GroupRows, LoadToken, amountLabel, emptyState, loadIntoStack, markup } from './util.ts';
+import { onNarrow } from '../widgets/narrow.ts';
+import { pinnableCluster, rowActions } from '../widgets/responsive.ts';
 import { _, _n, fmt } from '../i18n.ts';
+import { BhAiJobDialog } from '../widgets/ai-job-dialog.ts';
+import { aiJobSummaryLines } from '../widgets/ai-job-summary.ts';
+import { classifyDocuments } from '../../../core/actions/paperless/classify-documents.ts';
+import { reviewMetadata } from '../../../core/actions/paperless/review-metadata.ts';
+import { loadPaperlessConfig } from '../../../core/config/index.ts';
+import type { ViewAction } from '../view.ts';
+import { headerActionsChanged } from '../widgets/header-actions.ts';
 
 /** Cap the rendered rows — a non-virtualised boxed list stays snappy up to a few hundred. */
 const MAX_ROWS = 400;
@@ -50,6 +59,7 @@ export class BhDokumenteView extends Adw.Bin {
     private readonly token = new LoadToken();
     private readonly summary: GroupRows;
     private readonly list: GroupRows;
+    private readonly aiJobDialog = new BhAiJobDialog();
 
     constructor() {
         super();
@@ -59,12 +69,20 @@ export class BhDokumenteView extends Adw.Bin {
 
     private entity: AppEntity | null = null;
     private year = 0;
+    private paperlessReady = false;
     /** The list as last rendered — the dialog suggests values from the sender's earlier invoices. */
     private docs: DmsDocument[] = [];
 
     reload(entity: AppEntity, year: number): void {
         this.entity = entity;
         this.year = year;
+        try {
+            loadPaperlessConfig();
+            this.paperlessReady = true;
+        } catch {
+            this.paperlessReady = false;
+        }
+        headerActionsChanged(this);
         loadIntoStack({
             stack: this._stack,
             errorPage: this._error_page,
@@ -104,7 +122,60 @@ export class BhDokumenteView extends Adw.Bin {
             add.connect('clicked', () => void this.onAddReceipts());
             row.add_suffix(add);
         }
+        if (this.paperlessReady) {
+            const classify = new Gtk.Button({ label: _('Classify'), valign: Gtk.Align.CENTER });
+            classify.set_tooltip_text(_('Classify documents by their content using AI'));
+            classify.connect('clicked', () => this.classifyDocuments());
+            const review = new Gtk.Button({ label: _('Review metadata'), valign: Gtk.Align.CENTER });
+            review.set_tooltip_text(_('Review titles, correspondents and dates with AI'));
+            review.connect('clicked', () => this.reviewMetadata());
+            const cluster = rowActions([classify, review]);
+            const pin = pinnableCluster(cluster);
+            onNarrow(cluster, (narrow) => pin(narrow));
+            row.add_suffix(cluster);
+        }
         this.summary.add(row);
+    }
+
+    headerActions(): ViewAction[] {
+        if (!this.paperlessReady) return [];
+        return [
+            {
+                label: _('Classify documents'),
+                iconName: 'folder-documents-symbolic',
+                run: () => this.classifyDocuments(),
+            },
+            {
+                label: _('Review metadata'),
+                iconName: 'document-edit-symbolic',
+                run: () => this.reviewMetadata(),
+            },
+        ];
+    }
+
+    private classifyDocuments(): void {
+        this.aiJobDialog.open(this, {
+            title: _('Classify documents'),
+            loadingDescription: _('Reading each document and choosing the best document type …'),
+            safeHint: _('Document types are only changed when the AI is confident enough.'),
+            run: (signal) =>
+                classifyDocuments({ signal }).then((result) => ({
+                    summary: aiJobSummaryLines({ ...result, changed: result.changed }),
+                })),
+        });
+    }
+
+    private reviewMetadata(): void {
+        const config = loadPaperlessConfig();
+        this.aiJobDialog.open(this, {
+            title: _('Review metadata'),
+            loadingDescription: _('Reviewing titles, correspondents and dates for each document …'),
+            safeHint: _('Nothing is saved until the review finishes successfully.'),
+            run: (signal) =>
+                reviewMetadata(config, { signal }).then((result) => ({
+                    summary: aiJobSummaryLines(result),
+                })),
+        });
     }
 
     /** Open the metadata editor for one document; reload when it saved. */
