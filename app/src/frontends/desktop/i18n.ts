@@ -31,12 +31,11 @@
 
 import GLib from '@girs/glib-2.0';
 import { initLocale } from '@gjsify/adwaita-app';
-import Gettext from 'gettext';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-/** The gettext domain. Deliberately a literal — see the note above about `STEUER_APP_ID`. */
-export const TEXT_DOMAIN = 'eu.jumplink.Steuererklaerung';
+import { TEXT_DOMAIN, _p } from './i18n-helpers.ts';
+export { TEXT_DOMAIN, _p, _, _n, fmt } from './i18n-helpers.ts';
 
 /**
  * Bind the catalogue directory and make {@link TEXT_DOMAIN} the default domain.
@@ -61,41 +60,6 @@ function devLocaleDir(): string | undefined {
     // bundled: <app>/dist/app/steuer-app.gjs.mjs → <app>/dist/locale
     const dir = join(dirname(fileURLToPath(fileUrl)), '..', 'locale');
     return GLib.file_test(dir, GLib.FileTest.IS_DIR) ? dir : undefined;
-}
-
-/** Translate one string. */
-export function _(msgid: string): string {
-    return Gettext.dgettext(TEXT_DOMAIN, msgid);
-}
-
-/**
- * Translate a counted string, letting the target language pick its own plural form.
- *
- * Never build this from an `n === 1` check: German agrees with English here, but the rule is a
- * property of the language and belongs in the catalogue, not in a call site.
- */
-export function _n(singular: string, plural: string, n: number): string {
-    return Gettext.dngettext(TEXT_DOMAIN, singular, plural, n);
-}
-
-/**
- * Translate with a disambiguating context.
- *
- * For the case where one English word is two different German ones — "Export" the noun and
- * "Export" the button — which a translator cannot resolve from the string alone.
- */
-export function _p(context: string, msgid: string): string {
-    return Gettext.dpgettext(TEXT_DOMAIN, context, msgid);
-}
-
-/**
- * Fill `{name}` placeholders in an already translated string.
- *
- * Named, not `%s`, so a translation can reorder them — German puts the verb last and the count
- * elsewhere than English. `dev/check-i18n.js` verifies that every msgstr keeps the msgid's names.
- */
-export function fmt(template: string, values: Record<string, string | number>): string {
-    return template.replace(/\{(\w+)\}/g, (whole, name: string) => (name in values ? String(values[name]) : whole));
 }
 
 /**
