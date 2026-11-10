@@ -11,6 +11,7 @@
 #   STEUER_APP_SETUP_PAGE=  entity|dms|finish — open the assistant on that page
 #   STEUER_APP_ADD_ACCOUNT= choose|file|qonto|fints — open the Konto-hinzufügen dialog there
 #   STEUER_APP_EDIT_DOC=1   open the Beleg-Metadaten editor on the first document
+#   STEUER_APP_AI_JOB_DIALOG=1 open the AI-job runner on a fake never-ending run (review/alle)
 #   STEUER_APP_LINK_DIALOG=1 open the Beleg-verknüpfen picker on the first gap booking
 #   STEUER_APP_INVOICE_DETAIL=RE-2025-0004  open that invoice's detail dialog (view rechnungen); the demo
 #                           has a full duplicate on RE-2025-0004 and a partial overpayment on RE-2026-0003

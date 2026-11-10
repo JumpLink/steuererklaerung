@@ -49,9 +49,14 @@ import {
 import { onNarrow } from '../widgets/narrow.ts';
 import { phoneSubtitleLines, recurringSummaryParts } from '../widgets/phone-rules.ts';
 import { headerActionsChanged } from '../widgets/header-actions.ts';
+import { BhAiJobDialog } from '../widgets/ai-job-dialog.ts';
+import { aiJobSummaryLines } from '../widgets/ai-job-summary.ts';
 import type { ViewAction } from '../view.ts';
 import { _, _n, _p, fmt } from '../i18n.ts';
 import { errorText } from '../error-text.ts';
+import { confirmDialog } from './dialogs.ts';
+import { extractInvoiceFields } from '../../../core/actions/paperless/extract-invoice.ts';
+import { loadPaperlessConfig } from '../../../core/config/index.ts';
 
 /** Status label + colour class for a recurring reminder. */
 const DUE_META: Record<string, { label: string; css: string }> = {
@@ -117,9 +122,11 @@ export class BhRechnungenView extends Adw.Bin {
     private detailHookDone = false;
     private readonly recurring: GroupRows;
     private readonly invoices: GroupRows;
+    private readonly aiJobDialog = new BhAiJobDialog();
     private entity: AppEntity | null = null;
     private year = new Date().getFullYear();
     private capabilities: InvoiceCapabilities | null = null;
+    private paperlessReady = false;
     /** Kept so a resize across the phone width can rebuild the block without a reload. */
     private recurringEntries: RecurringDueEntry[] | null = null;
     private phone = false;
@@ -193,6 +200,12 @@ export class BhRechnungenView extends Adw.Bin {
             this.capabilities = loadCapabilities(entity.id);
         } catch {
             this.capabilities = null;
+        }
+        try {
+            loadPaperlessConfig();
+            this.paperlessReady = true;
+        } catch {
+            this.paperlessReady = false;
         }
         // Whether this entity can create a draft at all is what headerActions() answers, and the
         // window asked before this line ran.
@@ -511,11 +524,21 @@ export class BhRechnungenView extends Adw.Bin {
      * created, which is why {@link reload} calls `headerActionsChanged` once it knows.
      */
     headerActions(): ViewAction[] {
-        if (!this.capabilities?.createDraft) return [];
-        return [{ label: _('New invoice'), primary: true, run: () => this.newInvoice() }];
+        const actions: ViewAction[] = [];
+        if (this.capabilities?.createDraft) {
+            actions.push({ label: _('New invoice'), primary: true, run: () => this.newInvoice() });
+        }
+        if (this.paperlessReady) {
+            actions.push({
+                label: _('Extract invoice fields'),
+                iconName: 'document-edit-symbolic',
+                run: () => this.extractOutgoingInvoiceFields(),
+            });
+        }
+        return actions;
     }
 
-    /** The invoices-group header suffix: the status filter + a capability-gated "Neue Rechnung". */
+    /** The invoices-group header suffix: the status filter + capability-gated action buttons. */
     private buildHeaderSuffix(): Gtk.Box {
         const box = new Gtk.Box({ spacing: 8, valign: Gtk.Align.CENTER });
         box.append(chipScroller(this.buildFilterToggle()));
@@ -529,7 +552,41 @@ export class BhRechnungenView extends Adw.Bin {
             // The chips have the row to themselves on a phone; the button is in the header bar.
             box.append(hideOnPhone(wrapButtonLabel(btn)));
         }
+        if (this.paperlessReady) {
+            const extract = new Gtk.Button({
+                label: _('Extract invoice fields'),
+                iconName: 'document-edit-symbolic',
+                valign: Gtk.Align.CENTER,
+            });
+            extract.add_css_class('flat');
+            extract.set_tooltip_text(_('Extract invoice fields from outgoing invoices with AI'));
+            extract.connect('clicked', () => this.extractOutgoingInvoiceFields());
+            box.append(hideOnPhone(wrapButtonLabel(extract)));
+        }
         return box;
+    }
+
+    /** Run AI extraction over outgoing invoices. */
+    private async extractOutgoingInvoiceFields(): Promise<void> {
+        const confirmed = await confirmDialog(this, {
+            heading: _('Extract invoice fields?'),
+            body: _(
+                'The content of the matching outgoing invoices will be sent to the configured AI provider, and invoice fields of matching Paperless documents will be changed. Documents already processed keep their changes if you cancel.',
+            ),
+            confirmLabel: _p('button', 'Start'),
+        });
+        if (!confirmed) return;
+        const config = loadPaperlessConfig();
+        const documentTypeId = config.document_type_ids.outgoing_invoice;
+        this.aiJobDialog.open(this, {
+            title: _('Extract invoice fields'),
+            loadingDescription: _('Reading invoice numbers, dates and amounts from the outgoing invoices …'),
+            safeHint: _('Existing values are only overwritten when the AI returns a valid value.'),
+            run: (signal) =>
+                extractInvoiceFields(config, documentTypeId, { signal }).then((result) => ({
+                    summary: aiJobSummaryLines(result),
+                })),
+        });
     }
 
     /** Open the create form; refresh the list on save. */

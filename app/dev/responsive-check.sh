@@ -47,7 +47,7 @@ ALLOW="$HERE/responsive.allow.json"
 NAV_CASES=(home review review/offen review/alle transactions rechnungen zeiten kontakte
   auswertungen fristen steuer steuer/euer steuer/anlagen steuer/ustva steuer/steuerkonto projekte vertraege konten settings)
 DIALOG_CASES=(transactions@STEUER_APP_TX_DETAIL rechnungen@STEUER_APP_INVOICE_DETAIL=RE-2025-0004
-  review/alle@STEUER_APP_EDIT_DOC review/offen@STEUER_APP_LINK_DIALOG konten@STEUER_APP_ADD_ACCOUNT=choose)
+  review/alle@STEUER_APP_EDIT_DOC review/alle@STEUER_APP_AI_JOB_DIALOG=1 review/offen@STEUER_APP_LINK_DIALOG konten@STEUER_APP_ADD_ACCOUNT=choose)
 
 INNER=""; if [ "${1:-}" = "--inner" ]; then INNER=1; shift; fi
 

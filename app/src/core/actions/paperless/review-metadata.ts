@@ -24,6 +24,7 @@ import {
 } from '@steuererklaerung/paperless';
 import { z } from 'zod';
 import { completeJson, getLLMProvider, type LLMProvider } from '../../clients/llm/index.ts';
+import { AiJobError } from '../../clients/llm/job-error.ts';
 import { optionalNumber, optionalNumbers, optionalText } from '../../lib/ai-schema.ts';
 import { isDateInRange, toDateOnly } from '@steuererklaerung/shared';
 import { DEFAULTS } from '../../constants.ts';
@@ -437,6 +438,7 @@ async function reviewSingleDocument(
         resp = result.value;
         model = result.model ?? provider.model;
     } catch (e) {
+        if (e instanceof AiJobError && e.kind === 'cancelled') throw e;
         log.error(`LLM failed for document ${id}: ${e instanceof Error ? e.message : e}`);
         return { outcome: 'error', changes: [] };
     }
