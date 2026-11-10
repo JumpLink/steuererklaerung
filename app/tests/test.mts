@@ -17,8 +17,11 @@ import builtinDmsNoPaperless from './unit/elster/builtin-dms-no-paperless.test.t
 import selfLaunch from './unit/actions/self-launch.test.ts';
 import desktopMarkup from './unit/desktop/markup.test.ts';
 import desktopErrorText from './unit/desktop/error-text.test.ts';
+import desktopAiJobDialog from './unit/frontends/desktop/ai-job-dialog.test.ts';
 import desktopReadClient from './unit/desktop/read-client.test.ts';
 import desktopReadQueries from './unit/desktop/read-queries.test.ts';
+import cliCancel from './unit/frontends/cli/cancel.test.ts';
+import paperlessCancel from './unit/core/actions/paperless/cancel.test.ts';
 import launchModeSuite from './unit/desktop/launch-mode.test.ts';
 import breakpointOrder from './unit/desktop/breakpoint-order.test.ts';
 import phoneRules from './unit/desktop/phone-rules.test.ts';
@@ -480,8 +483,11 @@ run({
     selfLaunch,
     desktopMarkup,
     desktopErrorText,
+    desktopAiJobDialog,
     desktopReadClient,
     desktopReadQueries,
+    cliCancel,
+    paperlessCancel,
     launchModeSuite,
     breakpointOrder,
     phoneRules,
