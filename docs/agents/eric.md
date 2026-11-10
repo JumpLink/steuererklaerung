@@ -23,3 +23,23 @@ Moved out of AGENTS.md. The one rule that stays there: ERiC is never committed t
 - **ERiC is OPTIONAL** — everything except validate/submit works without it, and the
   loader degrades to an actionable message (no GI crash). Schemas/examples ship under
   `app/elster/ERiC-*` (gitignored); `app/elster/README.md` documents the local layout.
+
+## Flathub build: user-provided ERiC in the sandbox (#172)
+
+The Flathub build ships no ERiC and no Hersteller-ID (licence § 4). It does ship our GJS binding
+(`libsteuereric.so` + typelib, built by the `steuererklaerung` module through `meson`; no ERiC is
+needed to build it), otherwise a user-provided ERiC could never be loaded. The CI job `flatpak`
+asserts that the binding is in the build and that no `libericapi*` is. Status of the checklist:
+
+| Checkpoint | Evidence | Status |
+|---|---|---|
+| Binding is in the ERiC-less Flatpak | manifest builds it; CI step "The build carries the ERiC binding"; `meson install` into a prefix checked locally | ok (real Flatpak build not run here, CI is the gate) |
+| `ericDataDir()` lands in `~/.var/app/<id>/data/steuererklaerung/eric` | `eric-sandbox.test.ts` with the sandbox's `XDG_DATA_HOME` | ok (path logic); filling it by `elster setup` in the sandbox: offen |
+| Lookup order, source reported (`config`, `env`, `data`) | `eric-runtime.test.ts`, `eric-sandbox.test.ts` | ok |
+| `ERIC_HOME` via `flatpak override --env --filesystem` | path logic as above; the override itself never ran | offen |
+| Folder from the file-chooser portal (`/run/user/…/doc/…`) | source `config` and path handling tested; ERiC logs now fall back to the data dir when the folder's parent cannot take a `logs/` entry | `dlopen` of `libericapi.so` + `lib/plugins` and ERiC writing logs through the portal: offen |
+| Own Hersteller-ID used; placeholder blocks before ERiC | `submit.test.ts` (`hasPlaceholderHerstellerId`, readiness blocker) | ok |
+| No ERiC → "not available", no crash, XML export works | `eric-sandbox.test.ts` (`getEricStatus`), `eric-binding.test.ts`; XML export needs no ERiC | ok (in-app status text in the sandbox: offen) |
+| Demo XML validates, privacy dialog before send, with a user-provided ERiC | needs a real ERiC in a running sandbox | offen |
+
+The issue stays open until the offen rows ran in a real sandbox.
