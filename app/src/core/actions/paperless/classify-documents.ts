@@ -12,6 +12,7 @@ import {
 } from '@steuererklaerung/paperless';
 import { z } from 'zod';
 import { completeJson, getLLMProvider } from '../../clients/llm/index.ts';
+import { AiJobError } from '../../clients/llm/job-error.ts';
 import { DEFAULTS } from '../../constants.ts';
 import { getLogger } from '../../lib/logger.ts';
 import { fetchAllPages } from '@steuererklaerung/paperless';
@@ -128,6 +129,7 @@ export async function classifyDocuments(options: ClassifyDocumentsOptions = {}):
                 })
             ).value;
         } catch (e) {
+            if (e instanceof AiJobError && e.kind === 'cancelled') throw e;
             log.error(`LLM failed for document ${doc.id}: ${e instanceof Error ? e.message : e}`);
             result.errors += 1;
             continue;

@@ -29,6 +29,7 @@ import {
 } from '../../invoices/e-rechnung/index.ts';
 import { z } from 'zod';
 import { completeJson, getLLMProvider } from '../../clients/llm/index.ts';
+import { AiJobError } from '../../clients/llm/job-error.ts';
 import { lenientNumber, optionalBoolean, optionalText } from '../../lib/ai-schema.ts';
 import { isDateInRangeStrict, normalizeDateValue, toDateOnly } from '@steuererklaerung/shared';
 import { DEFAULTS } from '../../constants.ts';
@@ -530,6 +531,7 @@ export async function extractInvoiceFields(
         try {
             runResult = await runInvoiceExtractionForDocument(doc, config, direction, { signal: options.signal });
         } catch (e) {
+            if (e instanceof AiJobError && e.kind === 'cancelled') throw e;
             log.error(`Extraction failed for document ${id}: ${e instanceof Error ? e.message : e}`);
             result.errors += 1;
             continue;
