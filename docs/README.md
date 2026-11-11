@@ -57,6 +57,7 @@ Aus [`AGENTS.md`](../AGENTS.md) ausgelagerte Details — dort bleiben nur die ha
 | [adr/0002-all-ai-through-lotse-and-opencode.md](adr/0002-all-ai-through-lotse-and-opencode.md) | Alle KI-Funktionen über lotse und den mitgelieferten opencode, eine Anmeldung |
 | [adr/0003-backend-agnostic-dms-inbox-tools.md](adr/0003-backend-agnostic-dms-inbox-tools.md) | Backend-unabhängige `dms_*`-Tools für den Eingangs-Workflow |
 | [adr/0004-contracts.md](adr/0004-contracts.md) | Verträge: eigene Tabellen im Ledger, Abgleich mit Buchungen, Kündigungsfristen |
+| [adr/0005-assistant-writes-in-two-tiers.md](adr/0005-assistant-writes-in-two-tiers.md) | Der Assistent darf schreiben: zwei Freigabestufen, Sicherung je Sitzung, Änderungsprotokoll |
 | [architecture/country-inventory.md](architecture/country-inventory.md) | Jede Stelle im Code, die deutsches Steuerrecht annimmt — Grundlage von ADR 0001 |
 | [architecture/ai-jobs-study.md](architecture/ai-jobs-study.md) | Studie: KI-Aufrufe ohne Chat (Belegauswertung) unter dem lotse/opencode-Ansatz |
 
