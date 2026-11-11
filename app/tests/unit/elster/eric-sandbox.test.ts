@@ -76,7 +76,9 @@ export default async () => {
                 const data = join(root, 'data');
                 await withEnv({ XDG_DATA_HOME: data, HOME: root }, () => {
                     setConfiguredEricHome(join(parent, 'eric'));
-                    expect(getEricPaths().logs).toBe(join(parent, 'logs'));
+                    const linux = ericPlatform('linux', 'x64');
+                    const paths = getEricPaths(linux);
+                    expect(paths.logs).toBe(join(parent, 'logs'));
                     chmodSync(parent, 0o555);
                     // root (the CI container) ignores the permission bits, and GJS has no
                     // process.getuid: ask the kernel whether the mode is enforced instead
@@ -87,7 +89,7 @@ export default async () => {
                         enforced = true;
                     }
                     if (enforced) {
-                        expect(getEricPaths().logs).toBe(join(data, 'steuererklaerung', 'logs'));
+                        expect(getEricPaths(linux).logs).toBe(join(data, 'steuererklaerung', 'logs'));
                     }
                 });
             } finally {
