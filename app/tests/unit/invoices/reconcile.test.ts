@@ -67,6 +67,39 @@ export default async () => {
             expect(schedules[0].nextPeriod.start).toBe('2027-01-01');
         });
 
+        await it('takes the period from the back-end invoice, not from the recorded one', async () => {
+            const stale = { start: '2026-02-01', end: '2026-02-28' };
+            const { schedules, changes } = reconcileLastInvoices(
+                [schedule({ ...draftLast, period: stale })],
+                [invoice({})],
+            );
+            expect(schedules[0].lastInvoice!.period).toStrictEqual(period);
+            expect(changes[0].outcome).toBe('updated');
+        });
+
+        await it('keeps the recorded period when the back-end invoice carries none', async () => {
+            const { schedules } = reconcileLastInvoices(
+                [schedule(draftLast)],
+                [invoice({ performanceStart: null, performanceEnd: null })],
+            );
+            expect(schedules[0].lastInvoice!.period).toStrictEqual(period);
+        });
+
+        await it('takes the replacement period from the replacement invoice', async () => {
+            const replacement = invoice({
+                id: 'inv-2',
+                number: 'RE-0002',
+                issueDate: '2026-02-01',
+                performanceStart: period.start,
+                performanceEnd: period.end,
+            });
+            const { schedules } = reconcileLastInvoices(
+                [schedule({ ...draftLast, number: 'RE-0001' })],
+                [invoice({ status: 'canceled' }), replacement],
+            );
+            expect(schedules[0].lastInvoice!.period).toStrictEqual(period);
+        });
+
         await it('reports unchanged and returns the very same schedule', async () => {
             const s = schedule({ ...draftLast, number: 'RE-0001', url: 'https://example.invalid/inv-1.pdf' });
             const { schedules, changes } = reconcileLastInvoices([s], [invoice({})]);

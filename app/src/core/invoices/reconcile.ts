@@ -36,12 +36,23 @@ export interface ReconcileResult {
     changes: ReconcileChange[];
 }
 
+/**
+ * The service period the back-end invoice itself carries. The recorded one can be stale (it was
+ * written when the draft was created and the draft may have been edited since), so the invoice
+ * wins; without both dates there is nothing better than what was recorded.
+ */
+function periodOf(inv: OutgoingInvoiceSummary, fallback: LastInvoice['period']): LastInvoice['period'] {
+    if (inv.performanceStart && inv.performanceEnd) return { start: inv.performanceStart, end: inv.performanceEnd };
+    return fallback;
+}
+
 /** The fields of `lastInvoice` that describe one specific invoice, from a back-end summary. */
 function fromInvoice(inv: OutgoingInvoiceSummary, base: LastInvoice): LastInvoice {
+    const period = periodOf(inv, base.period);
     return {
         ...(inv.number ? { number: inv.number } : {}),
         issueDate: inv.issueDate ?? base.issueDate,
-        ...(base.period ? { period: base.period } : {}),
+        ...(period ? { period } : {}),
         providerId: inv.id,
         ...(inv.url ? { url: inv.url } : {}),
     };
@@ -49,8 +60,10 @@ function fromInvoice(inv: OutgoingInvoiceSummary, base: LastInvoice): LastInvoic
 
 /** The same invoice, refreshed: keeps the mail log, since that mail went out for this very invoice. */
 function refresh(inv: OutgoingInvoiceSummary, last: LastInvoice): LastInvoice {
+    const period = periodOf(inv, last.period);
     return {
         ...last,
+        ...(period ? { period } : {}),
         ...(inv.number ? { number: inv.number } : {}),
         issueDate: inv.issueDate ?? last.issueDate,
         ...(inv.url ? { url: inv.url } : {}),
@@ -114,7 +127,11 @@ export function reconcileLastInvoices(
         }
         const refreshed = refresh(invoice, last);
         const changed =
-            refreshed.number !== last.number || refreshed.issueDate !== last.issueDate || refreshed.url !== last.url;
+            refreshed.number !== last.number ||
+            refreshed.issueDate !== last.issueDate ||
+            refreshed.url !== last.url ||
+            refreshed.period?.start !== last.period?.start ||
+            refreshed.period?.end !== last.period?.end;
         if (!changed) {
             record('unchanged');
             return schedule;
