@@ -32,13 +32,14 @@ extract)
         --add-comments=TRANSLATORS \
         --package-name="$DOMAIN" \
         --msgid-bugs-address='https://github.com/JumpLink/steuererklaerung/issues'
-    # The store text lives in the committed metainfo (`dev/metainfo.sh`); xgettext has an AppStream
-    # reader, so it joins the same catalogue and the site and `gjsify ship` find German in one place.
+    # The store text lives in the committed metainfo (`dev/metainfo.sh`). xgettext has an AppStream
+    # reader, but the ITS rules shipped with the macOS gettext toolchain omit release descriptions
+    # and keywords, so we use our own rules to keep Linux and macOS extraction identical.
     xgettext \
         --join-existing \
         --output="$POT" \
         --from-code=UTF-8 \
-        --language=appdata \
+        --its=dev/metainfo.its \
         --package-name="$DOMAIN" \
         --msgid-bugs-address='https://github.com/JumpLink/steuererklaerung/issues' \
         "data/$DOMAIN.metainfo.xml"

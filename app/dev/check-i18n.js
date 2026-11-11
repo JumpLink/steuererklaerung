@@ -120,13 +120,14 @@ try {
         process.exit(1);
     }
     // The store text in the committed metainfo, as `dev/i18n.sh extract` joins it.
+    // Use the same custom ITS rules so macOS extracts release descriptions and keywords too.
     const meta = spawnSync(
         'xgettext',
         [
             '--join-existing',
             `--output=${join(tmp, 'fresh.pot')}`,
             '--from-code=UTF-8',
-            '--language=appdata',
+            '--its=dev/metainfo.its',
             `data/${DOMAIN}.metainfo.xml`,
         ],
         { cwd: ROOT, encoding: 'utf8' },

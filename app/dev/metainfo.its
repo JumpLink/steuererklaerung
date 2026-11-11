@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+  ITS rules for AppStream / metainfo files used by dev/i18n.sh and dev/check-i18n.js.
+
+  The metainfo.its shipped with the macOS gettext toolchain only marks name, summary,
+  description, developer_name and screenshot captions as translatable. Flathub and the
+  app store also need release descriptions and keywords, so this file extends the default
+  rules with those two selectors. Using the same file on Linux keeps extraction identical
+  across platforms.
+-->
+<its:rules xmlns:its="http://www.w3.org/2005/11/its"
+           xmlns:gt="https://www.gnu.org/s/gettext/ns/its/extensions/1.0"
+           xmlns:metainfo="https://specifications.freedesktop.org/metainfo/1.0"
+           version="2.0">
+
+  <its:translateRule selector="/component" translate="no"/>
+  <its:translateRule selector="/component/name |
+                               /component/summary |
+                               /component/description |
+                               /component/developer_name |
+                               /component/screenshots/screenshot/caption |
+                               /component/releases/release/description |
+                               /component/keywords/keyword"
+                     translate="yes"/>
+
+  <!-- Duplicate rules for files that use the metainfo namespace. -->
+  <its:translateRule selector="/metainfo:component" translate="no"/>
+  <its:translateRule selector="/metainfo:component/metainfo:name |
+                               /metainfo:component/metainfo:summary |
+                               /metainfo:component/metainfo:description |
+                               /metainfo:component/metainfo:developer_name |
+                               /metainfo:component/metainfo:screenshots/metainfo:screenshot/metainfo:caption |
+                               /metainfo:component/metainfo:releases/metainfo:release/metainfo:description |
+                               /metainfo:component/metainfo:keywords/metainfo:keyword"
+                     translate="yes"/>
+
+  <gt:escapeRule selector="/component" escape="no"/>
+</its:rules>

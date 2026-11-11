@@ -158,18 +158,26 @@ function isWritableDir(dir: string): boolean {
  * handed to a sandboxed app lives in a document-portal mount whose parent cannot take new entries:
  * in both, creating the sibling `logs` directory would fail before ERiC even starts.
  */
-function logDirFor(home: string, source: EricHomeSource): string {
+function logDirFor(home: string, source: EricHomeSource, platform: string = process.platform): string {
   const beside = join(dirname(home), 'logs');
-  if (source === 'bundled') return join(appDataDir(), 'logs');
+  if (source === 'bundled') return join(appDataDir(platform), 'logs');
   if (existsSync(beside) ? isWritableDir(beside) : isWritableDir(dirname(home))) return beside;
-  return join(appDataDir(), 'logs');
+  return join(appDataDir(platform), 'logs');
+}
+
+/** Map an ERiC platform id to the Node `process.platform` string `logDirFor` expects. */
+function nodePlatformFromEric(p: EricPlatform | null): string {
+  if (!p) return process.platform;
+  if (p.id === 'Linux-x86_64') return 'linux';
+  if (p.id === 'Windows-x86_64') return 'win32';
+  return 'darwin';
 }
 
 /** Build all relevant paths from the ERiC home directory. */
 export function getEricPaths(platform: EricPlatform | null = ericPlatform()): EricPaths {
   const { home, source } = resolveEricHomeWithSource();
   const libDir = platform?.libDir ?? 'lib';
-  const logs = logDirFor(home, source);
+  const logs = logDirFor(home, source, nodePlatformFromEric(platform));
   return {
     home,
     lib: join(home, libDir),
