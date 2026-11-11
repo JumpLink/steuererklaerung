@@ -5,7 +5,7 @@ import { _ } from './i18n.ts';
  *
  * Every build is open source and says so. A build bought in a store says one thing more: that the
  * purchase supported the project. A free build must never claim a purchase, so `isPurchased` is the
- * `purchased()` capability of `@gjsify/distribution` — never a channel-name comparison, never
+ * `pricing()` capability of `@gjsify/distribution` — never a channel-name comparison, never
  * anything the user can toggle. Wording is "Support", never "donation", and no word about tax.
  */
 export type EditionBadgeId = 'open-source' | 'purchased';

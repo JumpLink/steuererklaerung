@@ -5,7 +5,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from '@gjsify/unit';
-import { donationsAllowedFor, type Channel } from '@gjsify/distribution';
+import { supportPathFor, type Channel } from '@gjsify/distribution';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -24,14 +24,14 @@ export default async () => {
         await it('free channels allow it, store channels and unset builds never do', async () => {
             const allowed: Channel[] = ['flathub', 'web'];
             const blocked: Channel[] = ['microsoft-store', 'apple-app-store', 'unknown'];
-            for (const c of allowed) expect(donationsAllowedFor(c)).toBe(true);
-            for (const c of blocked) expect(donationsAllowedFor(c)).toBe(false);
+            for (const c of allowed) expect(supportPathFor(c) === 'external-link').toBe(true);
+            for (const c of blocked) expect(supportPathFor(c) === 'external-link').toBe(false);
         });
 
         await it('a blocked channel never prompts, even for a year not yet shown', async () => {
-            expect(shouldPromptSupport(donationsAllowedFor('microsoft-store'), [], 2025)).toBe(false);
-            expect(shouldPromptSupport(donationsAllowedFor('unknown'), undefined, 2025)).toBe(false);
-            expect(shouldPromptSupport(donationsAllowedFor('flathub'), [], 2025)).toBe(true);
+            expect(shouldPromptSupport(supportPathFor('microsoft-store') === 'external-link', [], 2025)).toBe(false);
+            expect(shouldPromptSupport(supportPathFor('unknown') === 'external-link', undefined, 2025)).toBe(false);
+            expect(shouldPromptSupport(supportPathFor('flathub') === 'external-link', [], 2025)).toBe(true);
         });
     });
 
