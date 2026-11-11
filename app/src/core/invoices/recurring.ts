@@ -8,6 +8,7 @@
 import { shiftDate } from '@steuererklaerung/shared';
 import { _n, _p, fmt } from '../lib/i18n.ts';
 import { round2 } from '../lib/money.ts';
+import { deDate } from '../lib/format.ts';
 import { dueDateOf, type LastInvoice, type RecurringInvoice, type RecurringItem } from '../config/index.ts';
 
 /** Parse a decimal that may be a number or a German/period string ("108", "108,00", "1.5"). */
@@ -28,6 +29,22 @@ export interface InvoiceTotals {
     net: number;
     vat: number;
     gross: number;
+}
+
+const periodText = (p: { start: string; end: string }): string => `${deDate(p.start)} – ${deDate(p.end)}`;
+
+/**
+ * Render a recurring item description at draft time. A literal description is kept as-is for
+ * backwards compatibility; only the `{periode}` placeholder is replaced by the current service
+ * period, so advancing the schedule and drafting again shows the new dates without rewriting the
+ * stored item.
+ */
+export function renderRecurringItemDescription(
+    description: string | undefined,
+    period: { start: string; end: string },
+): string | undefined {
+    if (!description) return description;
+    return description.replace(/\{\s*periode\s*\}/gi, periodText(period));
 }
 
 /** Sum a schedule's line items into net / VAT / gross totals (rounded to cents). */
