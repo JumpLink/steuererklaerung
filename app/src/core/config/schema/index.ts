@@ -15,7 +15,14 @@ export {
     type FinanzierungUnterlage,
     type FinanzierungUnterlageStatus,
 } from './finanzierung.ts';
-export { MailAccountSchema, MailTemplateSchema, type MailAccountConfig, type MailTemplate } from './mail.ts';
+export {
+    MailAccountSchema,
+    MailImapSchema,
+    MailTemplateSchema,
+    type MailAccountConfig,
+    type MailImapConfig,
+    type MailTemplate,
+} from './mail.ts';
 export { PaperlessSectionSchema, SyncConfigLenientSchema, type PaperlessSection } from './paperless.ts';
 export { FinTSSectionSchema, FinTSConfigSchema, type FinTSSection } from './fints.ts';
 export {

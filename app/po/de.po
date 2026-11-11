@@ -4673,6 +4673,15 @@ msgstr "Grußformel nach Du/Sie"
 msgid "name of the issuer"
 msgstr "Name des Ausstellers"
 
+#: src/core/mail/sent-copy.ts:90
+msgid "No Sent folder found on the mail server."
+msgstr "Auf dem Mailserver wurde kein Ordner für Gesendete gefunden."
+
+#: src/core/mail/sent-copy.ts:98
+msgid "Could not save a copy in the Sent folder: {error}"
+msgstr ""
+"Eine Kopie im Ordner für Gesendete konnte nicht gespeichert werden: {error}"
+
 #: src/core/presenters/aufteilung.ts:75 src/core/presenters/erstattungen.ts:217
 #: src/core/presenters/erstattungen.ts:245
 msgid "Booking {id} does not belong to {entity} {year}."
@@ -4953,7 +4962,7 @@ msgstr "Frage zu deinen Zahlen …"
 #. TRANSLATORS: Tooltip on the button that sends the question
 #: src/frontends/desktop/assistent-panel.blp:117
 #: src/frontends/desktop/fints-interaction.ts:59
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:371
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:384
 msgid "Send"
 msgstr "Senden"
 
@@ -7328,14 +7337,14 @@ msgstr "Benutzer"
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:61
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:122
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:55
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:101
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:113
 msgid "Password (saved)"
 msgstr "Passwort (gespeichert)"
 
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:61
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:165
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:55
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:140
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:152
 msgid "Password"
 msgstr "Passwort"
 
@@ -7360,7 +7369,7 @@ msgid "Server and user are required."
 msgstr "Server und Benutzer sind nötig."
 
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:90
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:78
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:83
 msgid "The port is invalid."
 msgstr "Der Port ist ungültig."
 
@@ -7373,7 +7382,7 @@ msgid "Mailbox not saved"
 msgstr "Postfach nicht gespeichert"
 
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:119
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:98
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:110
 msgid "The password could not be saved in the keyring."
 msgstr "Das Passwort ließ sich nicht im Schlüsselbund speichern."
 
@@ -7395,12 +7404,12 @@ msgid "Fetch failed"
 msgstr "Abruf fehlgeschlagen"
 
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:156
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:128
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:140
 msgid "Delete the saved password"
 msgstr "Gespeichertes Passwort löschen"
 
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:160
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:132
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:144
 msgid "No password is saved"
 msgstr "Es ist kein Passwort gespeichert"
 
@@ -7409,7 +7418,7 @@ msgid "The password could not be deleted"
 msgstr "Passwort ließ sich nicht löschen"
 
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:166
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:141
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:153
 msgid "Password deleted"
 msgstr "Passwort gelöscht"
 
@@ -8249,39 +8258,43 @@ msgstr "folgt mit @gjsify/system-accounts"
 msgid "Sender address"
 msgstr "Absenderadresse"
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:77
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:58
+msgid "Sent folder (fallback)"
+msgstr "Gesendete (Fallback-Ordner)"
+
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:82
 msgid "Server, user and sender address are required."
 msgstr "Server, Benutzer und Absenderadresse sind nötig."
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:82
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:94
 msgid "Save account"
 msgstr "Konto speichern"
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:90
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:102
 msgid "Account not saved"
 msgstr "Konto nicht gespeichert"
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:107
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:119
 msgid "Test the connection"
 msgstr "Verbindung testen"
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:115
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:127
 msgid "The password is missing."
 msgstr "Das Passwort fehlt."
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:118
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:130
 msgid "Signed in to the mail server"
 msgstr "Anmeldung am Mailserver erfolgreich"
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:120
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:132
 msgid "Connection failed"
 msgstr "Verbindung fehlgeschlagen"
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:136
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:148
 msgid "Password not deleted"
 msgstr "Passwort nicht gelöscht"
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:136
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:148
 msgid "The keyring could not be reached."
 msgstr "Der Schlüsselbund ließ sich nicht erreichen."
 
@@ -8322,7 +8335,7 @@ msgid "Empty = the du variant applies to Sie as well."
 msgstr "Leer = die Du-Variante gilt auch für Sie."
 
 #: src/frontends/desktop/views/einstellungen/mail-vorlagen.ts:112
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:195
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:197
 msgid "Placeholders"
 msgstr "Platzhalter"
 
@@ -11027,7 +11040,7 @@ msgid "Drafting …"
 msgstr "Entwurf wird erstellt …"
 
 #: src/frontends/desktop/views/mahnung-dialog.ts:143
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:363
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:376
 msgid "Subject: {value}"
 msgstr "Betreff: {value}"
 
@@ -11672,7 +11685,7 @@ msgstr "Leistungszeitraum"
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:238
 #: src/frontends/desktop/views/rechnung-form-dialog.ts:124
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:47
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:49
 msgid "Recipient"
 msgstr "Empfänger"
 
@@ -11838,17 +11851,17 @@ msgstr "Noch nicht per E-Mail gesendet."
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:538
 #: src/frontends/desktop/views/rechnungen-view.ts:685
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:211
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:213
 msgid "sent"
 msgstr "gesendet"
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:538
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:211
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:213
 msgid "failed"
 msgstr "fehlgeschlagen"
 
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:541
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:214
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:216
 msgid "to {recipients}"
 msgstr "an {recipients}"
 
@@ -12196,7 +12209,7 @@ msgid "issued {date}"
 msgstr "ausgestellt {date}"
 
 #: src/frontends/desktop/views/rechnungen-view.ts:686
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:390
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:411
 msgid "Sending failed"
 msgstr "Versand fehlgeschlagen"
 
@@ -12335,88 +12348,88 @@ msgstr "Bitte prüfen"
 msgid "Draft saved"
 msgstr "Entwurf gespeichert"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:48
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:50
 msgid "Subject"
 msgstr "Betreff"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:56
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:58
 msgid "Template"
 msgstr "Vorlage"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:57
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:311
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:59
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:313
 #: src/frontends/desktop/views/vertrag-detail-dialog.ts:154
 #: src/frontends/desktop/views/vertrag-form-dialog.ts:181
 msgid "Note"
 msgstr "Hinweis"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:92
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:94
 msgid "Cannot send"
 msgstr "Versand nicht möglich"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:97
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:99
 msgid "Invoice by email"
 msgstr "Rechnung per E-Mail"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:113
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:115
 msgid "Sending account"
 msgstr "Versandkonto"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:117
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:119
 msgid "Caution: already sent on {date} to {recipients}"
 msgstr "Achtung: schon gesendet am {date} an {recipients}"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:124
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:126
 msgid "Last sent on {date} to {recipients}"
 msgstr "Zuletzt gesendet am {date} an {recipients}"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:132
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:134
 msgid "From: {sender} (SMTP)"
 msgstr "Von: {sender} (SMTP)"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:138
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:140
 msgid "The sending account’s password is missing"
 msgstr "Das Passwort des Versandkontos fehlt"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:139
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:141
 msgid "No sending account set up"
 msgstr "Kein Versandkonto eingerichtet"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:140
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:142
 msgid "Settings → Connections → Email sending"
 msgstr "Einstellungen → Anbindungen → E-Mail-Versand"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:142
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:144
 msgid "Set up sending account"
 msgstr "Versandkonto einrichten"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:154
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:156
 msgid "Message"
 msgstr "Nachricht"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:156
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:158
 msgid "Invoice {number} is attached as a PDF. Subject and text can be changed."
 msgstr ""
 "Rechnung {number} wird als PDF angehängt. Betreff und Text lassen sich "
 "ändern."
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:196
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:198
 msgid "A click inserts the placeholder at the cursor"
 msgstr "Klick fügt den Platzhalter an der Cursor-Stelle ein"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:207
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:209
 msgid "Previous sends"
 msgstr "Bisherige Versendungen"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:223
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:225
 msgid "Preview and send …"
 msgstr "Vorschau und Senden …"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:275
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:277
 msgid "Discard your changes?"
 msgstr "Eigene Änderungen verwerfen?"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:276
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:278
 msgid ""
 "Subject and text were edited by hand. Another template discards those "
 "changes."
@@ -12424,50 +12437,54 @@ msgstr ""
 "Betreff und Text wurden von Hand geändert. Mit einer anderen Vorlage gehen "
 "die Änderungen verloren."
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:277
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:279
 msgid "Discard"
 msgstr "Verwerfen"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:307
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:309
 msgid "Unknown placeholders: {list}"
 msgstr "Unbekannte Platzhalter: {list}"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:309
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:311
 msgid "Missing values: {list}"
 msgstr "Fehlende Werte: {list}"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:329
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:331
 msgid "The sending account is not set up."
 msgstr "Das Versandkonto ist nicht eingerichtet."
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:359
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:372
 msgid "Send invoice now?"
 msgstr "Rechnung jetzt senden?"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:361
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:374
 msgid "To: {value}"
 msgstr "An: {value}"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:362
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:375
 msgid "From: {value}"
 msgstr "Von: {value}"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:364
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:377
 msgid "Attachment: {file} ({size})"
 msgstr "Anhang: {file} ({size})"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:380
-msgid "Sent, but not recorded"
-msgstr "Gesendet, aber nicht vermerkt"
-
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:381
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:394
 msgid ""
 "The mail was sent. The note on the invoice could not be written: {error}"
 msgstr ""
 "Die Mail wurde gesendet. Der Vermerk an der Rechnung ließ sich nicht "
 "schreiben: {error}"
 
-#: src/frontends/desktop/views/rechnung-versand-dialog.ts:386
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:402
+msgid "Sent, but with warnings"
+msgstr "Gesendet, aber mit Warnungen"
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:403
+msgid "Sent, but with a warning"
+msgstr "Gesendet, aber mit einer Warnung"
+
+#: src/frontends/desktop/views/rechnung-versand-dialog.ts:407
 msgid "Invoice sent"
 msgstr "Rechnung gesendet"
 
@@ -15578,6 +15595,9 @@ msgstr "ELSTER"
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:117
 msgid "EÜR"
 msgstr "EÜR"
+
+#~ msgid "Sent, but not recorded"
+#~ msgstr "Gesendet, aber nicht vermerkt"
 
 #~ msgid "Assistant engine"
 #~ msgstr "Modus"

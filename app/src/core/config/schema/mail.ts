@@ -9,6 +9,19 @@
 
 import { z } from 'zod';
 
+export const MailImapSchema = z.object({
+    /** IMAP server host name; defaults to the SMTP host. */
+    host: z.string().min(1).optional(),
+    port: z.number().int().min(1).max(65535).default(993),
+    /** `tls`: TLS from the first byte (993). `none`: loopback only — a password never crosses a network in the clear. */
+    security: z.enum(['tls', 'none']).default('tls'),
+    /** Login name; defaults to the SMTP username. */
+    username: z.string().min(1).optional(),
+    /** Folder to append sent mail to when the server has no `\\Sent` SPECIAL-USE mailbox. */
+    sentFolder: z.string().min(1).optional(),
+});
+export type MailImapConfig = z.infer<typeof MailImapSchema>;
+
 export const MailAccountSchema = z.object({
     /** SMTP server host name. */
     host: z.string().min(1),
@@ -19,6 +32,8 @@ export const MailAccountSchema = z.object({
     username: z.string().min(1),
     /** Sender address (`local@host`) written into the From header. */
     from: z.string().min(3),
+    /** Optional IMAP settings for keeping a copy of sent mail in the Sent folder. */
+    imap: MailImapSchema.optional(),
 });
 export type MailAccountConfig = z.infer<typeof MailAccountSchema>;
 

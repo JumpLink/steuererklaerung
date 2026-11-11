@@ -5,7 +5,13 @@
  */
 import { describe, it, expect } from '@gjsify/unit';
 import { ImapError, ImapSession, type RawTransport } from '../../../src/core/clients/imap/client.ts';
-import { encodeMutf7, parseSearchUids, quoteImapString } from '../../../src/core/clients/imap/protocol.ts';
+import {
+    decodeMutf7,
+    encodeMutf7,
+    parseMailboxList,
+    parseSearchUids,
+    quoteImapString,
+} from '../../../src/core/clients/imap/protocol.ts';
 
 const enc = new TextEncoder();
 
@@ -53,6 +59,19 @@ export default async () => {
             expect(encodeMutf7('INBOX')).toBe('INBOX');
             expect(encodeMutf7('Büro')).toBe('B&APw-ro');
             expect(encodeMutf7('Rechnungen & Belege')).toBe('Rechnungen &- Belege');
+        });
+
+        await it('decodes wire names back and reads a LIST answer without double encoding', async () => {
+            expect(decodeMutf7('B&APw-ro')).toBe('Büro');
+            expect(decodeMutf7('Rechnungen &- Belege')).toBe('Rechnungen & Belege');
+            for (const name of ['INBOX', 'Büro', 'Éléments envoyés', 'Rechnungen & Belege'])
+                expect(decodeMutf7(encodeMutf7(name))).toBe(name);
+            const list =
+                '* LIST (\\HasNoChildren \\Sent) "/" "&AMk-l&AOk-ments envoy&AOk-s"\n* LIST () "/" INBOX\na1 OK fertig';
+            expect(parseMailboxList(list)).toStrictEqual([
+                { name: 'Éléments envoyés', specialUse: ['\\HasNoChildren', '\\Sent'] },
+                { name: 'INBOX', specialUse: [] },
+            ]);
         });
 
         await it('reads a SEARCH answer ascending and without duplicates', async () => {
