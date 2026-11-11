@@ -102,7 +102,7 @@ export interface SendInvoiceEmailDeps {
     recordSent?(log: SentLog): Promise<void> | void;
     /** Append one attempt (sent or failed) to the invoice's mail history. */
     recordAttempt?(attempt: MailAttempt): Promise<void> | void;
-    /** Append a byte-identical copy to the account's IMAP Sent folder; failures become warnings. */
+    /** Append a copy of the sent message to the account's IMAP Sent folder; failures become warnings. */
     appendSentCopy?(message: OutgoingMessage & { messageId: string }): Promise<SentCopyResult>;
     now?(): Date;
 }

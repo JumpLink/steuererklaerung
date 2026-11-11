@@ -81,13 +81,16 @@ export function buildMailGroup(host: SettingsHost, entity: AppEntity, parent: Gt
         const sentFolder = sentFolderRow.get_text().trim() || undefined;
         if (!server || !username || !from) throw new Error(_('Server, user and sender address are required.'));
         if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error(_('The port is invalid.'));
+        // Keep IMAP host, port and login that were set in the manifest; this row owns only the folder.
+        const { sentFolder: _previous, ...imapRest } = account?.imap ?? { port: 993, security: 'tls' as const };
+        const imap = sentFolder ? { ...imapRest, sentFolder } : account?.imap ? imapRest : undefined;
         return {
             host: server,
             port,
             security: SECURITY[securityRow.get_selected()],
             username,
             from,
-            ...(sentFolder ? { imap: { sentFolder, port: 993, security: 'tls' as const } } : {}),
+            ...(imap ? { imap } : {}),
         };
     };
 

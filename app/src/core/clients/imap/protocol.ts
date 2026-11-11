@@ -53,6 +53,17 @@ export function encodeMutf7(name: string): string {
     return out;
 }
 
+/** The inverse of {@link encodeMutf7}: a wire name from LIST back to the name a person reads. */
+export function decodeMutf7(wire: string): string {
+    return wire.replace(/&([^-]*)-/g, (_m, b64: string) => {
+        if (!b64) return '&';
+        const bytes = Buffer.from(b64.replace(/,/g, '/'), 'base64');
+        let out = '';
+        for (let i = 0; i + 1 < bytes.length; i += 2) out += String.fromCharCode((bytes[i] << 8) | bytes[i + 1]);
+        return out;
+    });
+}
+
 /** What EXAMINE tells about a mailbox. */
 export interface MailboxInfo {
     uidValidity: number | null;
@@ -115,11 +126,8 @@ export function parseMailboxList(text: string): MailboxListEntry[] {
     return entries;
 }
 
-/** The mailbox name part of a LIST line: quoted string or a literal placeholder. */
+/** The mailbox name part of a LIST line (quoted or an atom), decoded from the wire's modified UTF-7. */
 function parseMailboxName(raw: string): string {
     const quoted = /^"((?:[^"\\]|\\.)*)"/.exec(raw);
-    if (quoted) return quoted[1].replace(/\\(.)/g, '$1');
-    // A literal placeholder produced by `readResponse` looks like `…<literal> rest`.
-    // In practice the name is short; if it was literal, we keep the trailing text.
-    return raw.trim();
+    return decodeMutf7(quoted ? quoted[1].replace(/\\(.)/g, '$1') : raw.trim());
 }

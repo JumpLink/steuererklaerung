@@ -1,8 +1,9 @@
 /**
- * Keep a byte-identical copy of a sent invoice mail in the sending account's Sent folder.
+ * Keep a copy of a sent invoice mail in the sending account's Sent folder.
  *
- * This is a pure, testable seam: it builds the exact RFC 822 message that went out (through
- * `@curlew/smtp`), opens the account's IMAP server, discovers the `\Sent` SPECIAL-USE mailbox
+ * This is a pure, testable seam: it rebuilds the RFC 822 message from the same inputs and the same
+ * Message-ID as the send (through `@curlew/smtp`; the Date header and MIME boundaries differ
+ * from the copy that went out), opens the account's IMAP server, discovers the `\Sent` SPECIAL-USE mailbox
  * and APPENDs the message with `\Seen`. Any failure is returned as a warning string; the SMTP
  * send itself stays successful.
  */

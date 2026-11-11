@@ -282,8 +282,9 @@ export class ImapSession implements MailSource {
     }
 
     async listFolders(): Promise<MailboxListEntry[]> {
-        // Extended LIST (RFC 5258) asking for SPECIAL-USE; most servers fall back to plain LIST.
-        const r = await this.command(['LIST "" "*" RETURN (SPECIAL-USE)']);
+        // SPECIAL-USE (RFC 6154) first; a server without it answers BAD, then plain LIST still names the folders.
+        let r = await this.command(['LIST "" "*" RETURN (SPECIAL-USE)']);
+        if (!r.ok) r = await this.command(['LIST "" "*"']);
         if (!r.ok) throw new ImapError(`Die Ordnerliste ließ sich nicht abrufen${this.reply(r.text)}`, 'protocol');
         return parseMailboxList(r.text);
     }
