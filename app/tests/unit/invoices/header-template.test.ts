@@ -9,6 +9,7 @@ import {
     DEFAULT_HEADER_TEMPLATE_SIE,
     GREETING_MISSING,
     HEADER_PLACEHOLDERS,
+    intervalText,
     joinGerman,
     pickHeaderTemplate,
     renderHeader,
@@ -290,6 +291,35 @@ export default async () => {
         await it('pickHeaderTemplate beachtet die Form', () => {
             expect(pickHeaderTemplate(sie(), entity)).toBe('SIE {kunde}');
             expect(pickHeaderTemplate(schedule(), entity)).toBe('DU {kunde}');
+        });
+    });
+
+    await describe('Abrechnungsintervall ({intervall})', async () => {
+        await it('intervalText wählt das Intervall passend', () => {
+            expect(intervalText(12)).toBe('yearly');
+            expect(intervalText(24)).toBe('every two years');
+            expect(intervalText(18)).toBe('for the term of 18 months');
+            expect(intervalText(1)).toBe('for the term of 1 months');
+        });
+
+        await it('12 Monate: Standardvorlage sagt „yearly"', () => {
+            const out = renderHeader(DEFAULT_HEADER_TEMPLATE, ctx({ intervalMonths: 12 }));
+            expect(out.includes('Die Abrechnung erfolgt yearly im Voraus')).toBe(true);
+        });
+
+        await it('24 Monate: Standardvorlage sagt „every two years"', () => {
+            const out = renderHeader(DEFAULT_HEADER_TEMPLATE, ctx({ intervalMonths: 24 }));
+            expect(out.includes('Die Abrechnung erfolgt every two years im Voraus')).toBe(true);
+        });
+
+        await it('18 Monate: Standardvorlage nennt die Laufzeit', () => {
+            const out = renderHeader(DEFAULT_HEADER_TEMPLATE, ctx({ intervalMonths: 18 }));
+            expect(out.includes('Die Abrechnung erfolgt for the term of 18 months im Voraus')).toBe(true);
+        });
+
+        await it('Sie-Vorlage verwendet ebenfalls das Intervall', () => {
+            const out = renderHeader(DEFAULT_HEADER_TEMPLATE_SIE, ctx({ formality: 'sie', intervalMonths: 24 }));
+            expect(out.includes('Das Hosting wird every two years im Voraus abgerechnet')).toBe(true);
         });
     });
 
