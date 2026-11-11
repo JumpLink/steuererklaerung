@@ -71,13 +71,13 @@ export default async () => {
     });
 
     await describe('provider capabilities', async () => {
-        await it('exposes Qonto capabilities (hosted PDF, no form create/edit/finalize/markPaid/storno)', async () => {
+        await it('exposes Qonto capabilities (hosted PDF, finalize only; no form create/edit/markPaid/storno)', async () => {
             const caps = new QontoOutgoingInvoiceProvider().capabilities;
             expect(caps.pdf).toBe('hosted');
             // The interactive form + edit are Qonto-incompatible → must be false so the UIs hide them.
             expect(caps.createDraft).toBe(false);
             expect(caps.editDraft).toBe(false);
-            expect(caps.finalize).toBe(false);
+            expect(caps.finalize).toBe(true);
             expect(caps.markPaid).toBe(false);
             expect(caps.cancelStorno).toBe(false);
         });

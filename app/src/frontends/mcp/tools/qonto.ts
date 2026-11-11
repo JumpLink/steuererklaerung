@@ -14,6 +14,7 @@ import {
     getDefaultBankAccountId,
 } from '../../../core/clients/qonto/index.ts';
 import type { CreateClientBody, InvoiceSpec } from '../../../core/clients/qonto/index.ts';
+import { qontoFinalizeInvoice } from '../../../core/actions/qonto.ts';
 import { createOutgoingInvoiceDraft } from '../../../core/actions/outgoing-invoices.ts';
 import { mcpError, mcpErrorFrom, mcpSuccess } from '../types.ts';
 
@@ -252,6 +253,29 @@ export function registerQontoTools(server: McpServer, _ctx: AppContext): void {
                         : null,
                     preview: result.dryRun ? result.input : undefined,
                 });
+            } catch (err) {
+                return mcpErrorFrom(err);
+            }
+        },
+    );
+
+    // ── qonto_finalize_invoice (write — gated by mcp.allowWrite) ──
+
+    server.registerTool(
+        'qonto_finalize_invoice',
+        {
+            title: 'Finalize Qonto Invoice',
+            description:
+                'Finalize a DRAFT Qonto client invoice (draft -> unpaid): Qonto assigns the final number and freezes it. IRREVERSIBLE. Previews by default; pass confirm=true only after the person approved. Afterwards the recurring schedule that recorded the invoice is reconciled so the PROFORMA number is replaced. Does not send anything.',
+            inputSchema: {
+                id: z.string().describe('Draft client invoice id'),
+                confirm: z.boolean().optional().describe('true = really finalize; omitted/false = preview only'),
+            },
+            annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
+        },
+        async ({ id, confirm }) => {
+            try {
+                return mcpSuccess(await qontoFinalizeInvoice(id, { confirm: confirm === true }));
             } catch (err) {
                 return mcpErrorFrom(err);
             }

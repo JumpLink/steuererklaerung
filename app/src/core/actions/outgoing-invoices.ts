@@ -20,6 +20,7 @@ import {
     reserveTimeForDraft,
     settleTimeOnFinalize,
 } from './time-invoice.ts';
+import { reconcileAfterFinalize } from './recurring-invoices.ts';
 import { clearRechnungProjekt, setRechnungProjekt } from './rechnung-projekt.ts';
 import { requireInvoicingBackend } from '../invoices/backend-gate.ts';
 import {
@@ -270,6 +271,8 @@ export async function finalizeOutgoingInvoice(
     checkTimeBeforeFinalize(entityId, id);
     const summary = await provider.finalize(id);
     settleTimeOnFinalize(entityId, id);
+    // Qonto assigns the final number only now; follow it on the schedule instead of waiting for a sync.
+    if (provider.type === 'qonto') await reconcileAfterFinalize(id, path);
     return summary;
 }
 
