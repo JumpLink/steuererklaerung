@@ -4,6 +4,7 @@
  * (`*.invalid` / `*.example` addresses, a PDF that is only a few lines of text).
  */
 import type { FetchedMessage, MailConnector, MailFolderInfo, MailSource } from '../../src/core/clients/imap/client.ts';
+import type { MailboxListEntry } from '../../src/core/clients/imap/protocol.ts';
 
 const CRLF = '\r\n';
 
@@ -76,6 +77,12 @@ export interface FakeMailboxState {
     messages: Map<number, Uint8Array>;
 }
 
+export interface AppendedMessage {
+    folder: string;
+    bytes: Uint8Array;
+    flags: string[];
+}
+
 /** An IMAP server in a map. Records what was asked of it, so a test can prove what was NOT asked. */
 export class FakeMailbox implements MailConnector {
     uidValidity = 1;
@@ -83,10 +90,13 @@ export class FakeMailbox implements MailConnector {
     readonly messages = new Map<number, Uint8Array>();
     readonly fetched: number[] = [];
     readonly searches: Array<{ lastUid: number; sender?: string }> = [];
+    readonly appended: AppendedMessage[] = [];
+    folders: MailboxListEntry[] = [];
     connects = 0;
     closed = 0;
     lastPassword: string | null = null;
     failConnect: string | null = null;
+    failAppend: string | null = null;
     /** Sizes to report instead of the real one, for the too-large path. */
     readonly sizes = new Map<number, number>();
 
@@ -123,6 +133,11 @@ export class FakeMailbox implements MailConnector {
                 this.fetched.push(uid);
                 return { kind: 'ok', bytes };
             },
+            appendMessage: async (folder: string, bytes: Uint8Array, flags: string[]): Promise<void> => {
+                if (this.failAppend) throw new Error(this.failAppend);
+                this.appended.push({ folder, bytes, flags });
+            },
+            listFolders: async (): Promise<MailboxListEntry[]> => this.folders,
             close: async (): Promise<void> => {
                 this.closed++;
             },

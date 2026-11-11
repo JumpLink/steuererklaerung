@@ -21,7 +21,8 @@ import {
     type InvoiceMailSetup,
 } from '../../../core/actions/send-invoice-email.ts';
 import type { OutgoingInvoiceDetail, OutgoingInvoiceSummary } from '../../../core/presenters/rechnungen.ts';
-import { smtpAccountFor } from '../../../core/mail/mail-sender.ts';
+import { smtpAccountFor, type OutgoingMessage } from '../../../core/mail/mail-sender.ts';
+import { appendSentCopy } from '../../../core/mail/sent-copy.ts';
 import {
     BUILTIN_TEMPLATE_ID,
     BUILTIN_TEMPLATE_NAME,
@@ -29,6 +30,7 @@ import {
     unknownMailPlaceholders,
     type MailPlaceholder,
 } from '../../../core/mail/invoice-mail.ts';
+import { gioMailConnector } from '../../../core/clients/imap/index.ts';
 import { deDateTime } from '../../../core/lib/format.ts';
 import type { AppEntity } from '../entities.ts';
 import { navigateTo } from '../nav.ts';
@@ -352,7 +354,18 @@ export class BhRechnungVersandDialog {
         let attempted = false;
         try {
             const req = this.request();
-            const deps = defaultInvoiceMailDeps(req, desktopMailSender);
+            const mail = this.setup.account!;
+            const password = this.storedPassword!;
+            const deps = {
+                ...defaultInvoiceMailDeps(req, desktopMailSender),
+                appendSentCopy: (message: OutgoingMessage & { messageId: string }) =>
+                    appendSentCopy({
+                        connector: gioMailConnector,
+                        account: mail,
+                        password,
+                        message,
+                    }),
+            };
             const result = await sendInvoiceEmail(req, { confirm: false }, deps);
             const p = result.preview;
             const ok = await confirmDialog(this.dialog, {
@@ -374,13 +387,21 @@ export class BhRechnungVersandDialog {
             attempted = true;
             const sent = await sendInvoiceEmail(req, { confirm: true }, deps);
             if (sent.status !== 'sent') return;
-            if (sent.logError) {
+            if (sent.logError || sent.sentCopyWarning) {
+                const parts: string[] = [];
+                if (sent.logError)
+                    parts.push(
+                        fmt(_('The mail was sent. The note on the invoice could not be written: {error}'), {
+                            error: sent.logError,
+                        }),
+                    );
+                if (sent.sentCopyWarning) parts.push(sent.sentCopyWarning);
                 await errorDialog(
                     this.dialog,
-                    _('Sent, but not recorded'),
-                    fmt(_('The mail was sent. The note on the invoice could not be written: {error}'), {
-                        error: sent.logError,
-                    }),
+                    sent.logError && sent.sentCopyWarning
+                        ? _('Sent, but with warnings')
+                        : _('Sent, but with a warning'),
+                    parts.join('\n\n'),
                 );
             } else {
                 showToast(_('Invoice sent'));

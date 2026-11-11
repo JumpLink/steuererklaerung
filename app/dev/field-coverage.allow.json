@@ -138,7 +138,6 @@
             "reason": "providerId und messageId vergeben das Backend (Qonto) und der Mailserver beim Anlegen bzw. Versenden einer Rechnung; nextDueDate setzt der Core beim Weiterschalten eines Vertrags (core/invoices/recurring.ts), sonst gilt der Beginn von nextPeriod, den der Vertragsdialog pflegt. Keins davon ist eine Eingabe.",
             "fields": [
                 "recurring.ts:providerId",
-                "recurring.ts:messageId",
                 "recurring.ts:nextDueDate"
             ]
         },

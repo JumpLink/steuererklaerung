@@ -88,3 +88,38 @@ export function parseMessageSize(text: string): number | null {
     const m = /RFC822\.SIZE\s+(\d+)/i.exec(text);
     return m ? Number.parseInt(m[1], 10) : null;
 }
+
+/** One mailbox as returned by LIST (RFC 3501 + RFC 6154 SPECIAL-USE). */
+export interface MailboxListEntry {
+    name: string;
+    /** SPECIAL-USE attributes such as `\Sent`; empty when the server does not announce them. */
+    specialUse: string[];
+}
+
+/**
+ * Parse extended LIST responses, keeping only the name and SPECIAL-USE flags.
+ * Lines look like `* LIST (\HasNoChildren \Sent) "/" Sent` or, with MUTF7,
+ * `* LIST (\Noselect) "/" "B&APw-ro"`.
+ */
+export function parseMailboxList(text: string): MailboxListEntry[] {
+    const entries: MailboxListEntry[] = [];
+    for (const line of text.split('\n')) {
+        const trimmed = line.trim();
+        const m = /^\*\s+LIST\s+\(([^)]*)\)\s+\S+\s+(.+)$/i.exec(trimmed);
+        if (!m) continue;
+        const flags = m[1].split(/\s+/).filter(Boolean);
+        const specialUse = flags.filter((f) => f.startsWith('\\'));
+        const name = parseMailboxName(m[2]);
+        entries.push({ name, specialUse });
+    }
+    return entries;
+}
+
+/** The mailbox name part of a LIST line: quoted string or a literal placeholder. */
+function parseMailboxName(raw: string): string {
+    const quoted = /^"((?:[^"\\]|\\.)*)"/.exec(raw);
+    if (quoted) return quoted[1].replace(/\\(.)/g, '$1');
+    // A literal placeholder produced by `readResponse` looks like `…<literal> rest`.
+    // In practice the name is short; if it was literal, we keep the trailing text.
+    return raw.trim();
+}
