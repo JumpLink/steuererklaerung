@@ -37,7 +37,7 @@
     "@gjsify/adwaita-web@0.64.26",
     "@gjsify/app-settings@0.64.26",
     "@gjsify/devtools@0.64.26",
-    "@gjsify/distribution@0.64.26",
+    "@gjsify/distribution@0.64.29",
     "@gjsify/node-gi@0.64.26",
     "@gjsify/node-globals@0.64.26",
     "@gjsify/rolldown-native@0.64.26",
@@ -1516,9 +1516,9 @@
       "integrity": "sha512-OrPZGjtheDQqcyFpM42kij2yAMM59GDKIihE8iVwZktkDZJUdh4yGu4j8DnMBAxlCBXxiUEaBUxCZwmRhsFbiw=="
     },
     "node_modules/@gjsify/distribution": {
-      "version": "0.64.26",
-      "resolved": "https://registry.npmjs.org/@gjsify/distribution/-/distribution-0.64.26.tgz",
-      "integrity": "sha512-C8cs2HeHgOPVXO47icdVMynQ1HI/HHEVthNaMrZ5//f3YeG+TWAiZHJsVJtpAHrfwIa+83AzpxXNReOMEdmZOA=="
+      "version": "0.64.29",
+      "resolved": "https://registry.npmjs.org/@gjsify/distribution/-/distribution-0.64.29.tgz",
+      "integrity": "sha512-Ui2GgzC81nogJkcayznp2ooqyofgZFFZOj77VMdYWSgkT5BXeayhWhYIEHow2K+YyskpHHi0FwvhWmCJ3Y1VXA=="
     },
     "node_modules/@gjsify/dns": {
       "version": "0.64.26",
