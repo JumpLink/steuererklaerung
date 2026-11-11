@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-11-10 15:26+0100\n"
+"POT-Creation-Date: 2026-11-10 15:47+0100\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -1968,7 +1968,7 @@ msgstr ""
 "Das Muster „{pattern}“ gibt es für mehrere Projekte ({projects}) — Projekt "
 "angeben."
 
-#: src/core/actions/recurring-invoices.ts:351
+#: src/core/actions/recurring-invoices.ts:352
 msgid ""
 "There is no issued invoice for “{id}” yet. Create one first: steuer invoices "
 "recurring create {id}"
@@ -3409,6 +3409,7 @@ msgid "twice a year"
 msgstr "halbjährlich"
 
 #: src/core/elster/laufende-kosten.ts:72
+#: src/core/invoices/header-template.ts:101
 #: src/frontends/desktop/views/wiederkehrend-dialog.ts:50
 msgid "yearly"
 msgstr "jährlich"
@@ -4401,6 +4402,14 @@ msgstr "Position {n}: ungültiger Einzelpreis."
 msgid "Item {n}: invalid VAT rate."
 msgstr "Position {n}: ungültiger USt-Satz."
 
+#: src/core/invoices/header-template.ts:102
+msgid "every two years"
+msgstr "alle zwei Jahre"
+
+#: src/core/invoices/header-template.ts:103
+msgid "for the term of {n} months"
+msgstr "für die Laufzeit von {n} Monaten"
+
 #: src/core/invoices/mahnung-text.ts:21
 msgid "Payment reminder"
 msgstr "Zahlungserinnerung"
@@ -4523,24 +4532,24 @@ msgstr ""
 msgid "The invoice file at Qonto is not a PDF ({type})."
 msgstr "Die Rechnungsdatei bei Qonto ist kein PDF ({type})."
 
-#: src/core/invoices/recurring.ts:218
+#: src/core/invoices/recurring.ts:235
 msgid "{n} invoice open, {amount}"
 msgid_plural "{n} invoices open, {amount}"
 msgstr[0] "{n} Rechnung offen, {amount}"
 msgstr[1] "{n} Rechnungen offen, {amount}"
 
-#: src/core/invoices/recurring.ts:223
+#: src/core/invoices/recurring.ts:240
 msgid " — the oldest for {n} day"
 msgid_plural " — the oldest for {n} days"
 msgstr[0] " — älteste seit {n} Tag"
 msgstr[1] " — älteste seit {n} Tagen"
 
-#: src/core/invoices/recurring.ts:229
+#: src/core/invoices/recurring.ts:246
 msgctxt "reminder"
 msgid "OVERDUE"
 msgstr "ÜBERFÄLLIG"
 
-#: src/core/invoices/recurring.ts:230
+#: src/core/invoices/recurring.ts:247
 msgctxt "reminder"
 msgid "due soon"
 msgstr "bald fällig"
