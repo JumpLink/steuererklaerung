@@ -296,7 +296,10 @@ export function resolveLotsmanAgentIn(context: ResolveContext, source: AgentSour
  *
  * `gatherResolveContext(paths, false)` — no `--version` spawn, nothing waits on a child process.
  */
-export function resolveLotsmanAgent(paths: LotsmanPaths, source: AgentSource = resolveAgentSource()): DefaultResolution {
+export function resolveLotsmanAgent(
+    paths: LotsmanPaths,
+    source: AgentSource = resolveAgentSource(),
+): DefaultResolution {
     return resolveLotsmanAgentIn(gatherResolveContext(paths, false), source);
 }
 
