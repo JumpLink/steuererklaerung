@@ -13,11 +13,13 @@ import { join } from 'node:path';
 
 import {
     denyFreeHostedModels,
+    hostConfirmed,
     isFreeModel,
     lotsePathsUnder,
     type AgentDetection,
     type McpServer,
     type ResolveContext,
+    type ToolRef,
 } from '@lotse/core';
 
 import {
@@ -38,9 +40,18 @@ import {
     DEFAULT_AGENT_SOURCE,
     type LotseEmbedOptions,
 } from '../../../src/core/actions/assistant/lotse-embed.ts';
+import {
+    TIER_A_HOST_CONFIRMED,
+    TIER_A_TOOLS,
+    TIER_B_TOOLS,
+    writeTierOf,
+} from '../../../src/core/actions/assistant/write-tiers.ts';
+import type { AppContext } from '../../../src/core/context.ts';
+import { describeMcpTools } from '../../../src/frontends/mcp/server.ts';
 import { MCP_SERVER_NAME, resolveMcpLaunch, type McpInstallation } from '../../../src/core/actions/mcp-clients.ts';
 import { MCP_READONLY_ENV, readOnlyRequested, restrictMcpToReadOnly } from '../../../src/core/config/mcp-readonly.ts';
 import { defaultAppSettings } from '../../../src/core/config/schema/app-settings.ts';
+import { DEFAULT_SYNC_CONFIG } from '../../../src/core/config/schema/paperless.ts';
 import { UserSettingsSchema, type UserSettings } from '../../../src/core/config/user-settings.ts';
 
 const APP_DATA = '/home/someone/.local/share/steuererklaerung';
@@ -256,6 +267,86 @@ export default async () => {
             expect(assistantGateAnswer({ tool: 'webfetch', kind: 'fetch' })).toBe('ask');
             // An unknown kind is a question, not an approval — there is no value that approves.
             expect(assistantGateAnswer({ tool: 'something-new', kind: 'other' })).toBe('ask');
+        });
+    });
+
+    await describe('assistantGateAnswer — tiers decide this app’s own write tools, not the ACP kind', async () => {
+        // Registration only reads `ctx.config`, and the handlers are never invoked.
+        const writeTools = describeMcpTools({ config: DEFAULT_SYNC_CONFIG } as unknown as AppContext)
+            .flatMap((group) => group.tools)
+            .filter((tool) => !tool.readOnly)
+            .map((tool) => tool.name);
+
+        await it('finds the write tools by the same registration code the server runs', async () => {
+            // `describeMcpTools` swallows a group that throws while registering; a context too bare
+            // for `crossSystem` would silently drop its tools, so both ends are checked.
+            expect(writeTools.includes('submit_filing')).toBe(true);
+            expect(writeTools.includes('push_document_to_qonto')).toBe(true);
+        });
+
+        await it('puts every write tool in exactly one tier, and nothing else in either', async () => {
+            const tiered = [...TIER_A_TOOLS, ...TIER_B_TOOLS];
+            expect(new Set(tiered).size).toBe(tiered.length);
+            for (const name of writeTools) expect(writeTierOf(name) === null).toBe(false);
+            expect([...writeTools].sort().join(',')).toBe([...tiered].sort().join(','));
+        });
+
+        await it('names tier A as the ADR does, and no read tool is classified', async () => {
+            expect([...TIER_A_TOOLS].sort().join(',')).toBe(
+                [
+                    'submit_filing',
+                    'elster_lock_period',
+                    'sign_off_filing',
+                    'revoke_signoff',
+                    'remove_filing',
+                    'remove_contact',
+                    'invoices_delete_draft',
+                    'invoices_cancel',
+                    'detach_filing_document',
+                ]
+                    .sort()
+                    .join(','),
+            );
+            expect(writeTierOf('paperless_list_tags')).toBe(null);
+        });
+
+        await it('never lets a tier A tool reach lotse’s own approval', async () => {
+            const policy = { hostConfirmed: TIER_A_HOST_CONFIRMED };
+            const refFor = (tool: string): ToolRef => ({
+                title: tool,
+                kind: 'edit',
+                names: [tool, `${MCP_SERVER_NAME}.${tool}`],
+            });
+            for (const tool of TIER_A_TOOLS) {
+                // lotse routes it to the app's dialog, which skips lotse's gate and dialog entirely…
+                expect(hostConfirmed(policy, refFor(tool))).toBe(true);
+                // …and if the routing were ever missing, the gate itself refuses.
+                for (const name of [tool, `${MCP_SERVER_NAME}.${tool}`, `${MCP_SERVER_NAME}_${tool}`.toUpperCase()]) {
+                    for (const kind of ['edit', 'other', 'read']) {
+                        expect(assistantGateAnswer({ tool: name, kind })).toBe('decline');
+                    }
+                }
+            }
+            for (const tool of TIER_B_TOOLS) expect(hostConfirmed(policy, refFor(tool))).toBe(false);
+        });
+
+        await it('asks about every tier B tool, whatever kind the agent reports', async () => {
+            for (const tool of TIER_B_TOOLS) {
+                for (const kind of ['edit', 'write', 'execute', 'other']) {
+                    expect(assistantGateAnswer({ tool, kind })).toBe('ask');
+                    expect(assistantGateAnswer({ tool: `${MCP_SERVER_NAME}_${tool}`, kind })).toBe('ask');
+                }
+            }
+        });
+
+        await it('answers only ask or decline, for every tool and kind', async () => {
+            const tools = [...TIER_A_TOOLS, ...TIER_B_TOOLS, 'bash', 'read', '', 'unknown-tool'];
+            for (const tool of tools) {
+                for (const kind of ['read', 'edit', 'delete', 'move', 'write', 'execute', 'fetch', 'other', '']) {
+                    const answer: string = assistantGateAnswer({ tool, kind });
+                    expect(answer === 'ask' || answer === 'decline').toBe(true);
+                }
+            }
         });
     });
 
