@@ -249,6 +249,7 @@ import invoiceStatus from './unit/invoices/status.test.ts';
 import invoiceForm from './unit/invoices/form.test.ts';
 import invoiceActions from './unit/invoices/actions.test.ts';
 import ohneKi from './unit/ai/ohne-ki.test.ts';
+import engineConnection from './unit/ai/engine-connection.test.ts';
 
 import timeStoreRepo from './unit/time/store-repo.test.ts';
 import timeImport from './unit/actions/time-import.test.ts';
@@ -264,6 +265,7 @@ run({
     qontoExportParser,
     llmFactory,
     opencodeProvider,
+    engineConnection,
     qontoRequest,
     requestTimeouts,
     fintsInteraction,
