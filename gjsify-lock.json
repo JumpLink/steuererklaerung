@@ -4,9 +4,9 @@
     "@gjsify/cli@0.64.26",
     "@gjsify/site@0.64.26",
     "@gjsify/web-worker@0.64.26",
-    "@lotsman/core@^0.5.0",
-    "@lotsman/session@^0.5.0",
-    "@lotsman/widget@^0.5.0",
+    "@lotsman/core@^0.6.0",
+    "@lotsman/session@^0.6.0",
+    "@lotsman/widget@^0.6.0",
     "@curlew/smtp@0.1.0",
     "@hono/node-server@^2.1.4",
     "comlink@^4.4.2",
@@ -4525,44 +4525,80 @@
       }
     },
     "node_modules/@lotsman/acp": {
-      "version": "0.5.0",
-      "resolved": "https://registry.npmjs.org/@lotsman/acp/-/acp-0.5.0.tgz",
-      "integrity": "sha512-WOV/dKDdEZr6mrG99HerkOF339qJ13kmcYRk6poHZYkqD+BKv21Dmmi8GZWTgvXWLYcLhpwnpzcQZNeDvTAimA=="
+      "version": "0.6.0",
+      "resolved": "https://registry.npmjs.org/@lotsman/acp/-/acp-0.6.0.tgz",
+      "integrity": "sha512-pw8N0M3nqak8jtTBptSrO2qKgVdxzep/NTLpyFNPn1zXYzQX1/GLUlQTnZnG/G4pVX496Xr4kx2OOpW8XzxLiQ=="
     },
     "node_modules/@lotsman/core": {
-      "version": "0.5.0",
-      "resolved": "https://registry.npmjs.org/@lotsman/core/-/core-0.5.0.tgz",
-      "integrity": "sha512-R2LejN73Uys3W0ukXsz9peaLB09s1sepotZUWUeYsl0Ga3BPyFb3k1mwiknsPOt23MH5s1DTlliWrEum5fJaZw==",
+      "version": "0.6.0",
+      "resolved": "https://registry.npmjs.org/@lotsman/core/-/core-0.6.0.tgz",
+      "integrity": "sha512-u/USa8+a73TkOkmJ5cBejYp5MpLdnpT7h5s1A2GQ0JADp9PR92zpcsbiwmslSRR2JpHPCM8AP5E00hYadS95bw==",
       "dependencies": {
-        "@lotsman/acp": "^0.5.0",
-        "@lotsman/session": "^0.5.0",
-        "@modelcontextprotocol/sdk": "^1.30.0"
+        "@lotsman/acp": "^0.6.0",
+        "@lotsman/session": "^0.6.0",
+        "@modelcontextprotocol/sdk": "^1.32.2"
+      }
+    },
+    "node_modules/@lotsman/core/node_modules/@modelcontextprotocol/sdk": {
+      "version": "1.32.2",
+      "resolved": "https://registry.npmjs.org/@modelcontextprotocol/sdk/-/sdk-1.32.2.tgz",
+      "integrity": "sha512-SWsVtH/0vULSQStoZ6xxH2K09Li8fXYTMC64ZeogCdpZ3XSi1eCPOByV1OpuJxuI3OcmHhosDWYyii07tpPsLw==",
+      "dependencies": {
+        "ajv": "^8.17.1",
+        "zod": "^3.25 || ^4.0",
+        "cors": "^2.8.5",
+        "hono": "^4.11.4",
+        "jose": "^6.1.3",
+        "express": "^5.2.1",
+        "raw-body": "^3.0.0",
+        "ajv-formats": "^3.0.1",
+        "cross-spawn": "^7.0.5",
+        "eventsource": "^3.0.2",
+        "content-type": "^1.0.5",
+        "pkce-challenge": "^5.0.0",
+        "@hono/node-server": "^1.19.9 || ^2.0.5",
+        "json-schema-typed": "^8.0.2",
+        "eventsource-parser": "^3.0.0",
+        "express-rate-limit": "^8.2.1",
+        "zod-to-json-schema": "^3.25.1"
+      },
+      "peerDependencies": {
+        "zod": "^3.25 || ^4.0",
+        "@cfworker/json-schema": "^4.1.1"
+      },
+      "peerDependenciesMeta": {
+        "zod": {
+          "optional": false
+        },
+        "@cfworker/json-schema": {
+          "optional": true
+        }
       }
     },
     "node_modules/@lotsman/session": {
-      "version": "0.5.0",
-      "resolved": "https://registry.npmjs.org/@lotsman/session/-/session-0.5.0.tgz",
-      "integrity": "sha512-sGyYn0QKFOauPB9hjoAy0krEQELNagPAD2q6BFlEv22Z3kSjptZJnzFQ3skYLc6C9ObCi5y5cSTv22gZY6aiLQ==",
+      "version": "0.6.0",
+      "resolved": "https://registry.npmjs.org/@lotsman/session/-/session-0.6.0.tgz",
+      "integrity": "sha512-UJmXU+tpzdN7ny5G63p83j8VgWvC4pxGJ0EmIH63ktMqLeaT73gTmOImoBaBYuZ0nDXd+e1AyH8UjZlt5Q+PVA==",
       "dependencies": {
-        "@lotsman/acp": "^0.5.0"
+        "@lotsman/acp": "^0.6.0"
       }
     },
     "node_modules/@lotsman/widget": {
-      "version": "0.5.0",
-      "resolved": "https://registry.npmjs.org/@lotsman/widget/-/widget-0.5.0.tgz",
-      "integrity": "sha512-6ZzxZd8EyGgSL1kcgSQ68J1JEfjty440A+tJQvipf3aPlRD4zd4d5G5ZYrzXiNHnkyxw9VD2DBpo33Htl6lEJw==",
+      "version": "0.6.0",
+      "resolved": "https://registry.npmjs.org/@lotsman/widget/-/widget-0.6.0.tgz",
+      "integrity": "sha512-u34hgond4sTpQuxOMEgIJ2sd7WgMGGCspuYM8Y8/LvxnkiwTmLrT1C/nDCqcPrf7+cuXmd1thdZ2izKt1KwYJg==",
       "dependencies": {
-        "@lotsman/acp": "^0.5.0",
-        "@lotsman/core": "^0.5.0",
-        "@lotsman/session": "^0.5.0"
+        "@lotsman/acp": "^0.6.0",
+        "@lotsman/core": "^0.6.0",
+        "@lotsman/session": "^0.6.0"
       },
       "peerDependencies": {
-        "@girs/adw-1": "^5.4.0",
-        "@girs/gdk-4.0": "^5.4.0",
-        "@girs/gtk-4.0": "^5.4.0",
-        "@girs/glib-2.0": "^5.4.0",
-        "@girs/pango-1.0": "^5.4.0",
-        "@girs/gobject-2.0": "^5.4.0"
+        "@girs/adw-1": "^5.5.0",
+        "@girs/gdk-4.0": "^5.5.0",
+        "@girs/gtk-4.0": "^5.5.0",
+        "@girs/glib-2.0": "^5.5.0",
+        "@girs/pango-1.0": "^5.5.0",
+        "@girs/gobject-2.0": "^5.5.0"
       }
     },
     "node_modules/@marcj/ts-clone-node": {

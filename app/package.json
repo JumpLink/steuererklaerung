@@ -60,9 +60,9 @@
     },
     "dependencies": {
         "@gjsify/web-worker": "0.64.26",
-        "@lotsman/core": "^0.5.0",
-        "@lotsman/session": "^0.5.0",
-        "@lotsman/widget": "^0.5.0",
+        "@lotsman/core": "^0.6.0",
+        "@lotsman/session": "^0.6.0",
+        "@lotsman/widget": "^0.6.0",
         "@steuererklaerung/charts": "*",
         "@steuererklaerung/dms": "*",
         "@steuererklaerung/eric": "*",
