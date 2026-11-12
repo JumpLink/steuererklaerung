@@ -11,6 +11,8 @@
  * that answers proves nothing about credentials, and credentials are what actually fail here.
  */
 
+import type { AgentCommand, LoginSession } from '@lotse/core';
+
 import { getLLMProvider } from '../../clients/llm/index.ts';
 
 export interface EngineStatus {
@@ -31,6 +33,49 @@ export function engineStatus(): EngineStatus {
         model: provider.model,
         source: configured ? 'env' : 'default',
     };
+}
+
+/**
+ * Whether the engine has a provider connected — asked without running a job.
+ *
+ * - `connected`: at least one provider (or a local custom one) is logged in.
+ * - `none`: the agent answered and nobody is logged in; the free hosted models still work.
+ * - `unknown`: this engine has no cheap way to tell, or the question failed. Say nothing then —
+ *   the probe button is the honest answer for those.
+ */
+export type EngineConnection = 'connected' | 'none' | 'unknown';
+
+export interface EngineConnectionDeps {
+    /** Test seam: the real login server is never opened in a test. */
+    probe?: {
+        open?: (agent: AgentCommand) => Promise<LoginSession>;
+        reason?: (agent: AgentCommand) => string | null;
+        timeoutMs?: number;
+    };
+    command?: AgentCommand;
+}
+
+/**
+ * Only the `opencode` engine can say: lotse reads the provider catalog off a private login server
+ * that is closed again at once. `claude` authenticates inside the Agent SDK and `scaleway` is a bare
+ * API key, so neither has a question cheaper than {@link probeEngine} — they are `unknown`.
+ */
+export async function engineConnection(deps: EngineConnectionDeps = {}): Promise<EngineConnection> {
+    try {
+        if ((process.env.LLM_PROVIDER ?? '').trim().toLowerCase() !== 'opencode') return 'unknown';
+        const lotse = await import('@lotse/core');
+        let command = deps.command;
+        if (!command) {
+            const embed = await import('./lotse-embed.ts');
+            const { agent } = embed.resolveLotseAgent(lotse.lotsePathsUnder(embed.lotseDataRoot()));
+            if (!agent) return 'unknown';
+            command = agent.command;
+        }
+        const facts = await lotse.probeConnections(command, deps.probe);
+        return facts.kind === 'connected' || facts.kind === 'none' ? facts.kind : 'unknown';
+    } catch {
+        return 'unknown';
+    }
 }
 
 export interface EngineProbeResult {

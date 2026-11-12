@@ -18,7 +18,12 @@
  * the tax views recompute; a failure shows in the banner (never crashes), a success toasts.
  */
 
-import { engineStatus, probeEngine, type EngineStatus } from '../../../core/actions/assistant/engine-status.ts';
+import {
+    engineConnection,
+    engineStatus,
+    probeEngine,
+    type EngineStatus,
+} from '../../../core/actions/assistant/engine-status.ts';
 import Adw from '@girs/adw-1';
 import Gtk from '@girs/gtk-4.0';
 import GObject from '@girs/gobject-2.0';
@@ -167,20 +172,31 @@ export class BhEinstellungenView extends Adw.Bin {
             // An unknown LLM_PROVIDER throws in the factory. The row still belongs here — saying
             // "not configured" is the point of it.
         }
-        const row = new Adw.ActionRow({
-            title: _('AI engine'),
-            subtitle: markup(
-                status
-                    ? `${status.provider} · ${status.model}` +
-                          ` · ${status.source === 'env' ? _('set via LLM_PROVIDER') : _('default')}`
-                    : _('Not configured — check LLM_PROVIDER.'),
-            ),
-        });
+        const plain = status
+            ? `${status.provider} · ${status.model}` +
+              ` · ${status.source === 'env' ? _('set via LLM_PROVIDER') : _('default')}`
+            : _('Not configured — check LLM_PROVIDER.');
+        const row = new Adw.ActionRow({ title: _('AI engine'), subtitle: markup(plain) });
         row.set_subtitle_lines(0);
+
+        // Asked after the row is on screen: the answer comes from a login server that has to start.
+        // A test result that arrived first is the more recent fact and stays.
+        let tested = false;
+        if (status) {
+            engineConnection().then((connection) => {
+                if (connection === 'unknown' || tested) return;
+                const line =
+                    connection === 'connected'
+                        ? _('A provider is connected.')
+                        : _('No provider is connected — log in from the assistant.');
+                row.set_subtitle(markup(`${plain} · ${line}`));
+            });
+        }
 
         const test = new Gtk.Button({ label: _('Test connection'), valign: Gtk.Align.CENTER });
         test.set_tooltip_text(_('Asks the model a tiny question — costs a few tokens.'));
         test.connect('clicked', () => {
+            tested = true;
             test.set_sensitive(false);
             test.set_label(_('Testing …'));
             probeEngine()
