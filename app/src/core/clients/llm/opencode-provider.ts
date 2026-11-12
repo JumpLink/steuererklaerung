@@ -1,23 +1,23 @@
 /**
- * LLMProvider backed by lotse's headless job API (`runJob`) — ADR 0002, step 4.
+ * LLMProvider backed by lotsman's headless job API (`runJob`) — ADR 0002, step 4.
  *
  * Each call is one job: a fresh agent process, one session, one turn, closed on every path. It
- * runs against the same agent, data directory and login as the lotse assistant pane
- * (`actions/assistant/lotse-embed.ts`), under the same model policy: a free hosted model is refused
- * before the prompt leaves this machine. Permissions stay lotse's default, deny-all — a job reads
+ * runs against the same agent, data directory and login as the lotsman assistant pane
+ * (`actions/assistant/lotsman-embed.ts`), under the same model policy: a free hosted model is refused
+ * before the prompt leaves this machine. Permissions stay lotsman's default, deny-all — a job reads
  * the text it is given and needs no tool.
  *
- * lotse is loaded lazily, like the Agent SDK in `claude-agent-provider.ts`: building this provider
+ * lotsman is loaded lazily, like the Agent SDK in `claude-agent-provider.ts`: building this provider
  * (engine status, the factory) must not cost the agent's import, and nothing spawns until a job runs.
  *
- * **Failures are `AiJobError`s built from lotse's `JobError.kind` alone.** `JobError.output` (the
+ * **Failures are `AiJobError`s built from lotsman's `JobError.kind` alone.** `JobError.output` (the
  * model's answer) and `JobError.cause` (the parser's complaint) describe a private document and
  * are dropped here, so no log line downstream can print them.
  */
 
 import { z, type ZodType } from 'zod';
 
-import type { AgentCommand, AgentHandle, OpenAgentOptions } from '@lotse/core';
+import type { AgentCommand, AgentHandle, OpenAgentOptions } from '@lotsman/core';
 
 import { AiJobError, isAiJobErrorKind } from './job-error.ts';
 import { emptyTelemetry } from './types.ts';
@@ -56,25 +56,25 @@ export class OpencodeProvider implements LLMProvider {
 
     async completeJson<T>(opts: LLMJsonOptions<T>): Promise<LLMJsonResult<T>> {
         const started = Date.now();
-        const lotse = await import('@lotse/core');
-        const embed = await import('../../actions/assistant/lotse-embed.ts');
+        const lotsman = await import('@lotsman/core');
+        const embed = await import('../../actions/assistant/lotsman-embed.ts');
         let command = this.options.command;
         if (!command) {
-            const paths = lotse.lotsePathsUnder(embed.lotseDataRoot());
-            const { agent } = embed.resolveLotseAgent(paths);
+            const paths = lotsman.lotsmanPathsUnder(embed.lotsmanDataRoot());
+            const { agent } = embed.resolveLotsmanAgent(paths);
             if (!agent) throw new AiJobError('no-agent');
             command = agent.command;
         }
         const model = opts.model || this.configuredModel;
         const schema: ZodType<T> = opts.schema;
         try {
-            const result = await lotse.runJob({
+            const result = await lotsman.runJob({
                 command,
-                cwd: this.options.cwd ?? embed.ensureLotseDataRoot(embed.lotseDataRoot()),
+                cwd: this.options.cwd ?? embed.ensureLotsmanDataRoot(embed.lotsmanDataRoot()),
                 prompt: `${opts.system}\n\n${opts.user}`,
                 parse: (value) => schema.parse(value),
                 schema: z.toJSONSchema(schema, { io: 'input' }),
-                modelPolicy: embed.LOTSE_MODEL_POLICY,
+                modelPolicy: embed.LOTSMAN_MODEL_POLICY,
                 ...(model ? { model } : {}),
                 ...(opts.signal ? { signal: opts.signal } : {}),
                 ...(this.options.open ? { open: this.options.open } : {}),
@@ -84,7 +84,7 @@ export class OpencodeProvider implements LLMProvider {
             telemetry.durationMs = Date.now() - started;
             return { value: result.value, telemetry, model: result.model };
         } catch (error) {
-            if (error instanceof lotse.JobError) {
+            if (error instanceof lotsman.JobError) {
                 throw new AiJobError(isAiJobErrorKind(error.kind) ? error.kind : 'agent');
             }
             // Only a programmer error (runJob's TypeError) gets here; it carries no job data.

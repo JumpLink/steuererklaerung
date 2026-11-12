@@ -1,9 +1,9 @@
 using Gtk 4.0;
 using Adw 1;
 
-// The chrome around one LotseChat — everything except the chat itself, which is built in
+// The chrome around one LotsmanChat — everything except the chat itself, which is built in
 // TypeScript from the embed plan and dropped into `chat_bin`.
-template $BhLotsePanel: Gtk.Box {
+template $BhLotsmanPanel: Gtk.Box {
   orientation: vertical;
   width-request: 320;
 
@@ -49,12 +49,12 @@ template $BhLotsePanel: Gtk.Box {
   }
 }
 
-// Declared OUTSIDE the template, like lotse's own shell does it: the chat parents this page into
+// Declared OUTSIDE the template, like lotsman's own shell does it: the chat parents this page into
 // its `no-agent` slot, so it must not already have a parent here. A top-level object is still an
-// internal child — bound by id and kept alive by the builder (lotse's window.blp records the
+// internal child — bound by id and kept alive by the builder (lotsman's window.blp records the
 // measurement).
 //
-// The page is HERE and not inside the widget on purpose: lotse hands a host the sentences
+// The page is HERE and not inside the widget on purpose: lotsman hands a host the sentences
 // (`emptyStateView`) and lets the host say them in its own frame, because the copy around a chat
 // belongs to whatever surrounds it. Title, description and the command are filled in TypeScript —
 // never written twice.
@@ -79,7 +79,7 @@ Adw.StatusPage no_agent_page {
       styles ["monospace", "card"]
     }
 
-    // Shown only where lotse's pinned opencode can be downloaded for this person; the label carries
+    // Shown only where lotsman's pinned opencode can be downloaded for this person; the label carries
     // the size so the click is an informed one (a confirmation dialog follows).
     Gtk.Button no_agent_install {
       visible: false;

@@ -60,9 +60,9 @@
     },
     "dependencies": {
         "@gjsify/web-worker": "0.64.26",
-        "@lotse/core": "^0.5.0",
-        "@lotse/session": "^0.5.0",
-        "@lotse/widget": "^0.5.0",
+        "@lotsman/core": "^0.5.0",
+        "@lotsman/session": "^0.5.0",
+        "@lotsman/widget": "^0.5.0",
         "@steuererklaerung/charts": "*",
         "@steuererklaerung/dms": "*",
         "@steuererklaerung/eric": "*",
@@ -255,7 +255,7 @@
                 {
                     "version": "0.1.2",
                     "date": "2026-10-22",
-                    "description": "The AI assistant is optional and can be connected through the built-in MCP server — every provider supported by Lotse can be used, and free hosted models stay refused. The Linux packages ship their database libraries and the Flatpak carries the demo workspace, so install and first run work out of the box."
+                    "description": "The AI assistant is optional and can be connected through the built-in MCP server — every provider supported by Lotsman can be used, and free hosted models stay refused. The Linux packages ship their database libraries and the Flatpak carries the demo workspace, so install and first run work out of the box."
                 },
                 {
                     "version": "0.1.1",

@@ -3,18 +3,18 @@
 - Status: **Proposed**
 - Date: 2026-11-11
 - Deciders: Pascal Garber
-- Related: [ADR 0002](0002-all-ai-through-lotse-and-opencode.md),
+- Related: [ADR 0002](0002-all-ai-through-lotsman-and-opencode.md),
   [ADR 0003](0003-backend-agnostic-dms-inbox-tools.md),
   [backup](../app/backup.md), issues #95 (this record) and #96 (its last step),
-  [lotse `host-tools.ts`](https://github.com/JumpLink/lotse/blob/main/packages/core/src/host-tools.ts)
+  [lotsman `host-tools.ts`](https://github.com/JumpLink/lotsman/blob/main/packages/core/src/host-tools.ts)
 
 ## Context
 
-The app ships two assistants. The old built-in engine calls an LLM provider in process; the lotse
+The app ships two assistants. The old built-in engine calls an LLM provider in process; the lotsman
 pane starts a bundled opencode and hands it this app's own MCP tools. `aiEngine` decides, and it
 defaults to `builtin`, so the pane is the thing nobody sees.
 
-The pane is read-only twice over. `lotseMcpLaunch` sets `STEUER_MCP_READONLY`, which drops every
+The pane is read-only twice over. `lotsmanMcpLaunch` sets `STEUER_MCP_READONLY`, which drops every
 tool annotated `readOnlyHint: false` — 46 of them, from `buchung_bestaetigen` to `submit_filing` —
 and `assistantGateAnswer` declines the ACP kinds `delete`, `move`, `edit`, `write` and `execute`
 without asking. Both were right while nothing guarded a write: the agent explains a Buchung, and
@@ -25,8 +25,8 @@ classification, splitting a booking, applying inbox metadata, finalizing an invo
 that may not touch any of it demonstrates nothing, and the person who would most benefit from
 being walked through a tax year is exactly the one who does not know which button comes next.
 
-lotse 0.5 brings the three pieces that were missing. `HostToolPolicy.hostConfirmed` marks tools
-lotse may **never** approve — not from its dialog, not from an always-allow, not from a grant left
+lotsman 0.5 brings the three pieces that were missing. `HostToolPolicy.hostConfirmed` marks tools
+lotsman may **never** approve — not from its dialog, not from an always-allow, not from a grant left
 over earlier in the session — and routes them to the host's own dialog instead. `alwaysAllow:
 'session'` answers the agent's narrower `allow_once` on the wire and keeps the always in memory,
 keyed by the ACP session, so no promise outlives the conversation. `toolPresenter` lets the app
@@ -40,17 +40,17 @@ refuses German-tax tools for an entity whose module is off. And the read-only `*
 
 ## Decision
 
-- **lotse is the assistant.** `aiEngine`, `AI_ENGINE_ENV` and `DEFAULT_AI_ENGINE` go away: AI on
-  means the lotse pane. `isAssistantEnabled()` stays the only consent, and `lotseEmbedPlan`
+- **lotsman is the assistant.** `aiEngine`, `AI_ENGINE_ENV` and `DEFAULT_AI_ENGINE` go away: AI on
+  means the lotsman pane. `isAssistantEnabled()` stays the only consent, and `lotsmanEmbedPlan`
   returns `null` without it, so "no AI" keeps meaning no process.
-- **The pane gets the write catalogue.** `lotseMcpLaunch` stops setting the read-only marker; the
+- **The pane gets the write catalogue.** `lotsmanMcpLaunch` stops setting the read-only marker; the
   agent sees what `mcp.groups` and `mcp.allowWrite` expose. `STEUER_MCP_READONLY` and
   `restrictMcpToReadOnly` stay — they are how an externally registered client is held to a
   manifest decision, and they remain the default for unattended jobs.
 - **Two tiers, and every write tool is in exactly one.** The tier is a property of the tool, not
   of a mood:
-  - **Tier A — the app's own dialog, one call, never an always.** Passed to lotse as
-    `hostTools.hostConfirmed` by MCP name (`steuererklaerung.submit_filing`), so lotse's negative
+  - **Tier A — the app's own dialog, one call, never an always.** Passed to lotsman as
+    `hostTools.hostConfirmed` by MCP name (`steuererklaerung.submit_filing`), so lotsman's negative
     guarantee carries it: `submit_filing` (the app asks for the keystore PIN itself and never
     hands it to an agent), `elster_lock_period` (Festschreibung, not reversible),
     `sign_off_filing` and `revoke_signoff` (a signature in someone's name), every tool that
@@ -59,7 +59,7 @@ refuses German-tax tools for an entity whose module is off. And the read-only `*
     before one exists, any tool that moves money. The app has no such tool today;
     `generate_sepa_qr` draws a code the person scans, and FinTS answers an agent's TAN prompt with
     the refusing interaction (`startMcpServer`).
-  - **Tier B — lotse's dialog, approval per call, always-allow scoped to the session.** Everything
+  - **Tier B — lotsman's dialog, approval per call, always-allow scoped to the session.** Everything
     else with `readOnlyHint: false`: the confirmations, splits, links, metadata, drafts and
     classifications that are the daily work. `assistantGateAnswer` answers `'ask'` for them
     instead of `'decline'`, and keeps declining nothing — the catalogue and the tiers decide, not
@@ -99,7 +99,7 @@ refuses German-tax tools for an entity whose module is off. And the read-only `*
   back. Ledger writes keep appending to `audit_log`; the agent log points at it rather than
   duplicating it.
 - **Free models and demo mode stay as ADR 0002 amended them.** The pane passes no `modelPolicy`,
-  lotse's warning card shows while a free model is selected, and the person decides; unattended
+  lotsman's warning card shows while a free model is selected, and the person decides; unattended
   jobs keep `denyFreeHostedModels` because a card nobody reads is not a warning. The demo entity
   plus a free model must carry the full flow, writes included — that is the acceptance test for
   this record, not a nice extra.
@@ -108,12 +108,12 @@ refuses German-tax tools for an entity whose module is off. And the read-only `*
 
 1. **Tiers and the gate, with the pane still read-only.** The tier tables, `assistantGateAnswer`
    rewritten against them, the `check:assistant-tiers` gate, and unit tests: every write tool has a
-   tier, no tier A name reaches lotse's own approval, `assistantGateAnswer` answers `'ask'` and
+   tier, no tier A name reaches lotsman's own approval, `assistantGateAnswer` answers `'ask'` and
    never approves. Nothing changes for the person yet, so the guard is reviewable on its own.
 2. **Backup and the change log**, both behind the still-closed gate: the once-per-session snapshot
    with its failure path, the NDJSON writer, its state-manifest entry, and tests that the first
    write snapshots and the second does not.
-3. **Open the pane.** Drop the read-only marker from `lotseMcpLaunch`, pass `hostTools`
+3. **Open the pane.** Drop the read-only marker from `lotsmanMcpLaunch`, pass `hostTools`
    (`hostConfirmed` + `alwaysAllow: 'session'`) and the app's confirmation callback, wire the
    ELSTER PIN dialog and the deletion dialogs to it. Keep `STEUER_MCP_READONLY` for external
    clients and jobs.
@@ -135,7 +135,7 @@ commit that changes what an agent may do, and it is small because 1 and 2 did th
 
 ## Consequences
 
-- The pane's third invariant in `lotse-embed.ts` ("the tools it gets are read-only") is replaced by
+- The pane's third invariant in `lotsman-embed.ts` ("the tools it gets are read-only") is replaced by
   the tier policy, and that file's header must say so — it is the one place the pane's rules are
   written down, and a stale header there is worse than none.
 - A write reaches the store on the agent's turn, so the window has to notice: the views refresh
@@ -152,7 +152,7 @@ commit that changes what an agent may do, and it is small because 1 and 2 did th
 
 - **Scope of an always-allow.** `alwaysAllow: 'session'` is one scope for the whole policy, so a
   session-long yes to `buchung_bestaetigen` is also a session-long yes to `dms_apply_metadata`.
-  Per-tool scoping would have to come from lotse. Is one scope enough for the first release?
+  Per-tool scoping would have to come from lotsman. Is one scope enough for the first release?
 - **The locked-period refusal** contradicts issue #95's wording. Confirmed as decided here?
 - **Backup on failure.** A declined call because the snapshot failed blocks the whole session's
   writes. Should a person be able to proceed without one, once, with a sentence they have to read?

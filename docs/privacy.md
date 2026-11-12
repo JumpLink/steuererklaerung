@@ -47,7 +47,7 @@ An AI model is called only when you use an AI function: reading invoice fields, 
 
 - `claude`: the Claude Agent SDK, with no tools allowed ([claude-agent-provider.ts](https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/clients/llm/claude-agent-provider.ts)). The prompt goes to Anthropic under your own account.
 - `scaleway`: `api.scaleway.ai`, with your API key ([chat.ts](https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/clients/scaleway/chat.ts)).
-- `opencode`: a coding agent started as a local process by lotse. Free hosted models are refused for background jobs ([lotse-embed.ts](https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/actions/assistant/lotse-embed.ts)).
+- `opencode`: a coding agent started as a local process by lotsman. Free hosted models are refused for background jobs ([lotsman-embed.ts](https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/actions/assistant/lotsman-embed.ts)).
 
 What is sent is the text of the document or your question. The assistant receives only summed-up figures, no IBANs or tax numbers ([chat.ts](https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/actions/assistant/chat.ts)). These providers process the data under their own terms; the developer sees none of it. Without AI, you can enter everything by hand.
 

@@ -44,15 +44,15 @@
     "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
     "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
   },
-  "@lotse/core": {
+  "@lotsman/core": {
     "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
     "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
   },
-  "@lotse/session": {
+  "@lotsman/session": {
     "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
     "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
   },
-  "@lotse/widget": {
+  "@lotsman/widget": {
     "route": "eigenes Paket, LGPL-3.0-or-later, Quelltext öffentlich",
     "note": "Vom selben Autor, unverändert eingebunden. Der vollständige Quelltext dieses Programms samt Build-Anweisung ist öffentlich; die Bibliothek lässt sich also ersetzen und neu bauen."
   }
