@@ -4369,7 +4369,7 @@ msgstr ""
 #. TRANSLATORS: Title of the side panel holding the external coding agent
 #. TRANSLATORS: Tooltip on the button revealing the AI assistant side panel
 #: src/frontends/desktop/assistent-panel.blp:30
-#: src/frontends/desktop/lotse-panel.blp:26
+#: src/frontends/desktop/lotsman-panel.blp:26
 #: src/frontends/desktop/views/einstellungen-view.blp:55
 #: src/frontends/desktop/views/tab-hub.ts:209
 #: src/frontends/desktop/window.blp:248
@@ -4378,7 +4378,7 @@ msgstr ""
 
 #. TRANSLATORS: Tooltip on the button that hides the assistant panel
 #: src/frontends/desktop/assistent-panel.blp:40
-#: src/frontends/desktop/lotse-panel.blp:36
+#: src/frontends/desktop/lotsman-panel.blp:36
 #: src/frontends/desktop/views/beleg-upload.ts:131
 #: src/frontends/desktop/views/konten-view.ts:801
 #: src/frontends/desktop/widgets/ai-job-dialog.ts:61
@@ -4623,7 +4623,7 @@ msgid "No window is open in which the bank could ask."
 msgstr ""
 
 #: src/frontends/desktop/fints-interaction.ts:58
-#: src/frontends/desktop/lotse-panel.ts:128
+#: src/frontends/desktop/lotsman-panel.ts:128
 #: src/frontends/desktop/views/absenden-dialog.ts:78
 #: src/frontends/desktop/views/absenden-dialog.ts:275
 #: src/frontends/desktop/views/datenschutz-dialog.ts:77
@@ -4673,30 +4673,30 @@ msgid "en"
 msgstr ""
 
 #. TRANSLATORS: Link to the coding agent's own documentation
-#: src/frontends/desktop/lotse-panel.blp:103
+#: src/frontends/desktop/lotsman-panel.blp:103
 msgid "Documentation"
 msgstr ""
 
-#: src/frontends/desktop/lotse-panel.ts:120
+#: src/frontends/desktop/lotsman-panel.ts:120
 msgid "Download {agent}?"
 msgstr ""
 
-#: src/frontends/desktop/lotse-panel.ts:123
+#: src/frontends/desktop/lotsman-panel.ts:123
 msgid ""
 "{agent} {version} ({size} MB) is downloaded from registry.npmjs.org, checked "
 "against a fixed checksum and stored in this app’s own data folder. Nothing "
 "outside it is changed."
 msgstr ""
 
-#: src/frontends/desktop/lotse-panel.ts:129
+#: src/frontends/desktop/lotsman-panel.ts:129
 msgid "Download"
 msgstr ""
 
-#: src/frontends/desktop/lotse-panel.ts:140
+#: src/frontends/desktop/lotsman-panel.ts:140
 msgid "Downloading {agent}…"
 msgstr ""
 
-#: src/frontends/desktop/lotse-panel.ts:182
+#: src/frontends/desktop/lotsman-panel.ts:182
 msgid "Install {agent} ({size} MB)"
 msgstr ""
 
@@ -14493,7 +14493,7 @@ msgstr ""
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:95
 msgid ""
 "The AI assistant is optional and can be connected through the built-in MCP "
-"server — every provider supported by Lotse can be used, and free hosted "
+"server — every provider supported by Lotsman can be used, and free hosted "
 "models stay refused. The Linux packages ship their database libraries and "
 "the Flatpak carries the demo workspace, so install and first run work out of "
 "the box."

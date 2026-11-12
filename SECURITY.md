@@ -72,7 +72,7 @@ Der Assistent bekommt **nur aggregierte Kennzahlen**, keine IBANs, keine Steuern
 keine Dokumentinhalte; der Kontext wird in `app/src/core/actions/assistant/chat.ts`
 zusammengebaut und ist dort vollständig nachlesbar. Anbieter und Modell wählst du über
 `LLM_PROVIDER` / `LLM_MODEL`. Mit `LLM_PROVIDER=opencode` laufen die drei Dokument-Aufgaben
-über lotse (`runJob`): ohne Werkzeugrechte, und ein kostenloses gehostetes Modell wird
+über lotsman (`runJob`): ohne Werkzeugrechte, und ein kostenloses gehostetes Modell wird
 abgelehnt, bevor der Prompt den Rechner verlässt. Scheitert eine Aufgabe, wird weder die
 Antwort des Modells noch die Fehlermeldung des Parsers protokolliert.
 

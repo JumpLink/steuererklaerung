@@ -2,7 +2,7 @@
  * Pluggable LLM engine — provider factory.
  *
  * Select the engine via env:
- *   LLM_PROVIDER = claude (default) | scaleway | opencode (lotse's runJob, ADR 0002)
+ *   LLM_PROVIDER = claude (default) | scaleway | opencode (lotsman's runJob, ADR 0002)
  *   LLM_MODEL    = model id override (provider-specific)
  *
  * Existing call sites keep using their concrete clients; new code (e.g. the
@@ -86,7 +86,7 @@ export function getLLMProvider(opts: GetLLMProviderOptions = {}): LLMProvider {
 /**
  * One completion whose answer is a value of `opts.schema`, or an {@link AiJobError}.
  *
- * The opencode provider validates inside lotse's `runJob`. The others answer with text, which is
+ * The opencode provider validates inside lotsman's `runJob`. The others answer with text, which is
  * read the way it always was (fences, prose, `jsonrepair`) and then held to the same schema — so
  * every provider fails the same way: `'malformed'` for no JSON, `'invalid'` for the wrong shape.
  * Neither error keeps the answer or the schema's complaint; both are about a private document.

@@ -11,9 +11,9 @@
  *
  * **Where the prompt may go.** The job runs through `getLLMProvider()` + `completeJson()`, the one
  * path every one-shot job uses (ADR 0002). With `LLM_PROVIDER=opencode` that is `OpencodeProvider`,
- * which hands {@link LOTSE_MODEL_POLICY} (`denyFreeHostedModels`) to lotse's `runJob`, and `runJob`
+ * which hands {@link LOTSMAN_MODEL_POLICY} (`denyFreeHostedModels`) to lotsman's `runJob`, and `runJob`
  * checks the policy BEFORE the prompt leaves this machine: a free hosted model fails as
- * `JobError('denied')`, a model lotse cannot identify as `'unknown-model'`, and both arrive here as
+ * `JobError('denied')`, a model lotsman cannot identify as `'unknown-model'`, and both arrive here as
  * an `AiJobError` of the same kind. A contract document names the counterparty, the account it is
  * paid from and often an IBAN — exactly the data that must not become somebody's free tier.
  *

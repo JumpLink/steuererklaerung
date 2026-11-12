@@ -18,7 +18,7 @@ import {
     type AgentSource,
     agentSourceLockedToBundled,
     resolveAgentSource,
-} from '../../../../core/actions/assistant/lotse-embed.ts';
+} from '../../../../core/actions/assistant/lotsman-embed.ts';
 import { configuredBackupRoot } from '../../../../core/actions/backup.ts';
 import { assistantOffered } from '../../../../core/config/assistant-offered.ts';
 import { isAssistantEnabled } from '../../../../core/config/assistant-preference.ts';

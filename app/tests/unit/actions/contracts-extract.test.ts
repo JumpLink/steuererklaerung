@@ -233,7 +233,7 @@ export default async () => {
     });
 
     await describe('Vertrag aus Dokument — kein Gratis-Modell', async () => {
-        // The guarantee the module header makes, run: the policy is lotse's, checked in `runJob`
+        // The guarantee the module header makes, run: the policy is lotsman's, checked in `runJob`
         // before the prompt leaves this machine. The fake agent answers a perfectly valid reading —
         // it must still never be asked.
         const answer = JSON.stringify({ counterparty: read('Beispiel Versorger AG') });
@@ -268,8 +268,8 @@ export default async () => {
         });
 
         await it('the known limit, run rather than implied: an unlisted model is allowed', async () => {
-            // `denyFreeHostedModels` catches lotse's maintained free ids and the `-free` suffix. An
-            // id it has never heard of is ALLOWED on purpose (lotse's model-policy.ts: denying
+            // `denyFreeHostedModels` catches lotsman's maintained free ids and the `-free` suffix. An
+            // id it has never heard of is ALLOWED on purpose (lotsman's model-policy.ts: denying
             // everything unknown denies ~400 paid models and leaves no model to pick). So a free
             // model shipped without either marker is not caught here — the gate is the person's
             // model choice, and an allowlist policy is what a stricter host would pass instead.

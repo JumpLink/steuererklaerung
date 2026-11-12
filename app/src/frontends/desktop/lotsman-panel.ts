@@ -1,30 +1,30 @@
 /**
- * BhLotsePanel — the side panel that holds a coding agent instead of the in-process assistant.
+ * BhLotsmanPanel — the side panel that holds a coding agent instead of the in-process assistant.
  *
  * The second of two assistant panes. `BhAssistentPanel` calls an LLM provider in-process and can
- * propose writes into the person's ESt data; this one embeds lotse's `LotseChat`, which starts
+ * propose writes into the person's ESt data; this one embeds lotsman's `LotsmanChat`, which starts
  * **opencode as a subprocess** over ACP and reaches this app only through this app's own MCP
  * server. Which of the two the window builds is `aiEngine` (Settings → Allgemein), and whether it
  * builds either at all is the AI opt-in.
  *
  * **Nothing happens until the panel is constructed, and it is only constructed from a plan.** Every
  * decision — is AI on, is this the chosen engine, where may it write, which servers does it get,
- * what does the gate refuse — lives in `core/actions/assistant/lotse-embed.ts` and is testable
+ * what does the gate refuse — lives in `core/actions/assistant/lotsman-embed.ts` and is testable
  * without a display. This file is the surface: it builds the chat, fills the host's own no-agent
- * page from lotse's sentences, and hands `shutdown()` to the window.
+ * page from lotsman's sentences, and hands `shutdown()` to the window.
  *
  * Three things here are policy rather than chrome:
- *   - No `modelPolicy` (issue #95): a free hosted model may answer, and lotse's warning card above
+ *   - No `modelPolicy` (issue #95): a free hosted model may answer, and lotsman's warning card above
  *     the message field says where the text goes while one is selected. Background jobs keep the
- *     hard block (`LOTSE_MODEL_POLICY`), because nobody is there to read a card.
- *   - `providerOnboarding: true` — with no provider connected, the pane offers lotse's login dialog
- *     for every provider lotse supports (ADR 0002: one login, in the widget). lotse stores no
+ *     hard block (`LOTSMAN_MODEL_POLICY`), because nobody is there to read a card.
+ *   - `providerOnboarding: true` — with no provider connected, the pane offers lotsman's login dialog
+ *     for every provider lotsman supports (ADR 0002: one login, in the widget). lotsman stores no
  *     credential and this panel reads none; the login lives in the agent's own store.
  *   - `gate` — `assistantGateAnswer` declines the destructive tool kinds and asks about the rest.
  *     It sees tool calls only; it cannot see which model answers.
  *
  * GJS-GUI → headless not verifiable (Sandbox Exit 144); build-verified. The wiring underneath is
- * covered by `tests/unit/assistant/lotse-embed.test.ts` on both runtimes.
+ * covered by `tests/unit/assistant/lotsman-embed.test.ts` on both runtimes.
  */
 
 import Adw from '@girs/adw-1';
@@ -32,28 +32,28 @@ import GLib from '@girs/glib-2.0';
 import GObject from '@girs/gobject-2.0';
 import Gtk from '@girs/gtk-4.0';
 
-import { DEFAULT_AGENT, emptyStateView, gatherResolveContext, requireLauncher, resolveRecorded } from '@lotse/core';
-import { createSessionStore } from '@lotse/session';
-import { LotseChat } from '@lotse/widget';
+import { DEFAULT_AGENT, emptyStateView, gatherResolveContext, requireLauncher, resolveRecorded } from '@lotsman/core';
+import { createSessionStore } from '@lotsman/session';
+import { LotsmanChat } from '@lotsman/widget';
 
 import {
     agentInstallOffer,
     assistantGateAnswer,
-    ensureLotseDataRoot,
+    ensureLotsmanDataRoot,
     installOfferedAgent,
-    resolveLotseAgent,
+    resolveLotsmanAgent,
     type AgentInstallOffer,
-    type LotseEmbedPlan,
-} from '../../core/actions/assistant/lotse-embed.ts';
+    type LotsmanEmbedPlan,
+} from '../../core/actions/assistant/lotsman-embed.ts';
 import { _, fmt } from './i18n.ts';
-import Template from './lotse-panel.blp';
+import Template from './lotsman-panel.blp';
 
-export class BhLotsePanel extends Gtk.Box {
+export class BhLotsmanPanel extends Gtk.Box {
     /** Called by the window to hide the panel (the header toggle owns the state). */
     onClose: (() => void) | null = null;
 
-    private chat: LotseChat | null = null;
-    private plan: LotseEmbedPlan | null = null;
+    private chat: LotsmanChat | null = null;
+    private plan: LotsmanEmbedPlan | null = null;
     private offer: AgentInstallOffer | null = null;
 
     declare private _chat_bin: Gtk.Box;
@@ -66,7 +66,7 @@ export class BhLotsePanel extends Gtk.Box {
     static {
         GObject.registerClass(
             {
-                GTypeName: 'BhLotsePanel',
+                GTypeName: 'BhLotsmanPanel',
                 Template,
                 InternalChildren: [
                     'chat_bin',
@@ -91,10 +91,10 @@ export class BhLotsePanel extends Gtk.Box {
      * owns the latter, and because a plan is the only thing that may produce a chat.
      *
      * `gatherResolveContext(paths, false)` — no `--version` spawn, so the pane appears without
-     * waiting on a child process, exactly as lotse's own window does it.
+     * waiting on a child process, exactly as lotsman's own window does it.
      */
-    build(plan: LotseEmbedPlan): void {
-        ensureLotseDataRoot(plan.dataRoot);
+    build(plan: LotsmanEmbedPlan): void {
+        ensureLotsmanDataRoot(plan.dataRoot);
         this.plan = plan;
         this.mountChat(plan);
     }
@@ -107,7 +107,7 @@ export class BhLotsePanel extends Gtk.Box {
     /**
      * Ask, download, resolve again. The download is a program fetched from the network, so the
      * person confirms first (size and source named); nothing is fetched on its own. On success the
-     * chat is built anew — `resolveLotseAgent` now finds the per-user copy — on failure lotse's
+     * chat is built anew — `resolveLotsmanAgent` now finds the per-user copy — on failure lotsman's
      * sentence stays on the page and the button works again.
      */
     private async installOffered(): Promise<void> {
@@ -149,7 +149,7 @@ export class BhLotsePanel extends Gtk.Box {
     }
 
     /** Replace the chat with a fresh one built from the same plan. */
-    private async remountChat(plan: LotseEmbedPlan): Promise<void> {
+    private async remountChat(plan: LotsmanEmbedPlan): Promise<void> {
         const old = this.chat;
         this.chat = null;
         if (old) {
@@ -162,9 +162,9 @@ export class BhLotsePanel extends Gtk.Box {
         this.mountChat(plan);
     }
 
-    private mountChat(plan: LotseEmbedPlan): void {
+    private mountChat(plan: LotsmanEmbedPlan): void {
         const store = createSessionStore(plan.paths.sessionsFile);
-        const { agent, note } = resolveLotseAgent(plan.paths);
+        const { agent, note } = resolveLotsmanAgent(plan.paths);
         const empty = emptyStateView({ agent });
         this.offer = null;
         if (empty.kind === 'no-agent') {
@@ -182,9 +182,9 @@ export class BhLotsePanel extends Gtk.Box {
                 fmt(_('Install {agent} ({size} MB)'), { agent: this.offer.agent.title, size: this.offer.megabytes }),
             );
         }
-        if (note) console.error(`[lotse] ${note}`);
+        if (note) console.error(`[lotsman] ${note}`);
 
-        const chat = new LotseChat({
+        const chat = new LotsmanChat({
             // A command is required even when nothing resolved; `noAgent` then switches Send off.
             agent: agent?.command ?? requireLauncher(DEFAULT_AGENT),
             agentSource: agent?.source ?? 'host',
@@ -198,7 +198,7 @@ export class BhLotsePanel extends Gtk.Box {
             noAgentPage: this._no_agent_page,
             providerOnboarding: true,
             gate: (question) => assistantGateAnswer(question.view),
-            onNotice: (message) => console.error(`[lotse] ${message}`),
+            onNotice: (message) => console.error(`[lotsman] ${message}`),
         });
         chat.set_vexpand(true);
         this._chat_bin.append(chat);

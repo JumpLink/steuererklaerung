@@ -124,11 +124,11 @@ Found with a real contract; prior art from the public Aboalarm / Volders feature
   finding (`latestFinding` in the presenter) and shows it only when it is the single finding —
   otherwise one stale import makes every row read the same.
 - Reading a document (step 5) sends contract text to a model, so it goes through the one AI path of
-  ADR 0002 and inherits its model policy: `OpencodeProvider` hands lotse's `denyFreeHostedModels`
+  ADR 0002 and inherits its model policy: `OpencodeProvider` hands lotsman's `denyFreeHostedModels`
   to `runJob`, which checks it BEFORE the prompt leaves the machine — a free hosted model fails as
   `denied`, an agent that reports no model at all as `unknown-model`. A contract names the
   counterparty, the account it is paid from and often an IBAN; none of that may become somebody's
-  free tier. The known limit is lotse's own and deliberate: a free model that is neither on its
+  free tier. The known limit is lotsman's own and deliberate: a free model that is neither on its
   maintained list nor suffixed `-free` is not recognised as free (denying every unknown id would
   deny every paid one too), so the model choice stays the person's. Run in
   `tests/unit/actions/contracts-extract.test.ts`.
