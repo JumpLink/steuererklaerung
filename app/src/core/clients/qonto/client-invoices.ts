@@ -212,3 +212,27 @@ export async function sendClientInvoice(invoiceId: string, body: SendClientInvoi
         'X-Qonto-Idempotency-Key': idempotencyKey(),
     });
 }
+
+/** Throws unless the invoice is still a draft; Qonto finalizes drafts only. Pure (no network). */
+export function assertFinalizable(invoice: Pick<ClientInvoice, 'id' | 'status'>): void {
+    if (invoice.status !== 'draft') {
+        throw new Error(
+            `Only a draft invoice can be finalized; invoice ${invoice.id} has status "${invoice.status ?? 'unknown'}"`,
+        );
+    }
+}
+
+/**
+ * Finalize a DRAFT client invoice (draft -> unpaid): Qonto assigns the final number and freezes the
+ * invoice. Irreversible. The status is read first so a non-draft fails with a clear message instead
+ * of an opaque API error. Requires QONTO_SIGN_IN and QONTO_SECRET_KEY.
+ */
+export async function finalizeClientInvoice(invoiceId: string): Promise<ClientInvoice> {
+    assertFinalizable(await getClientInvoice(invoiceId));
+    const res = await post<{ client_invoice?: ClientInvoice } | undefined>(
+        `client_invoices/${invoiceId}/finalize`,
+        {},
+        { 'X-Qonto-Idempotency-Key': idempotencyKey() },
+    );
+    return res?.client_invoice ?? (await getClientInvoice(invoiceId));
+}

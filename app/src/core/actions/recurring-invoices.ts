@@ -304,6 +304,25 @@ export async function reconcileRecurringInvoices(opts: ReconcileRecurringOptions
 }
 
 /**
+ * Reconcile the schedule that recorded this invoice, right after it was finalized, so the PROFORMA
+ * number is replaced at once. Best effort: the finalize already happened and cannot be rolled back,
+ * so a failing reconcile is reported to the caller instead of thrown. Nothing to do (null) when no
+ * schedule recorded the invoice.
+ */
+export async function reconcileAfterFinalize(
+    providerId: string,
+    path?: string,
+): Promise<{ result: ReconcileRecurringResult | null; error: string | null }> {
+    const schedule = loadRecurringInvoices(path).find((i) => i.lastInvoice?.providerId === providerId);
+    if (!schedule) return { result: null, error: null };
+    try {
+        return { result: await reconcileRecurringInvoices({ entityId: schedule.entityId, path }), error: null };
+    } catch (err) {
+        return { result: null, error: err instanceof Error ? err.message : String(err) };
+    }
+}
+
+/**
  * Render a subscribable iCalendar feed of reminders for all ACTIVE schedules (overdue, due-soon
  * and upcoming), each alarmed `reminderLeadDays` ahead. Subscribe to the written file in GNOME
  * Calendar / a phone for active push notifications.

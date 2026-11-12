@@ -16,9 +16,14 @@ import {
     listClientInvoices,
     updateClientInvoice,
     sendClientInvoice,
+    finalizeClientInvoice,
+    getClientInvoice,
+    assertFinalizable,
     buildClientInvoiceBody,
     buildSendInvoiceBody,
 } from '../clients/qonto/index.ts';
+import { reconcileAfterFinalize } from './recurring-invoices.ts';
+import { checkTimeBeforeFinalize, settleTimeOnFinalize } from './time-invoice.ts';
 import type {
     ListTransactionsParams,
     ListStatementsParams,
@@ -107,4 +112,40 @@ export async function qontoSendInvoice(invoiceId: string, spec: SendInvoiceSpec,
     }
     const result = await sendClientInvoice(invoiceId, body);
     return { sent: true, invoiceId, body, result };
+}
+
+/**
+ * Finalize a DRAFT invoice (draft -> unpaid, final number). Irreversible, so it only runs when
+ * opts.confirm is true; otherwise it returns a preview of the invoice that would be frozen. After
+ * finalizing, the recurring schedule that recorded the invoice is reconciled so its PROFORMA number
+ * is replaced right away. With `entityId`, the time entries the draft reserved are checked first and
+ * billed afterwards, exactly like the desktop path; without it there is no entity to look them up under.
+ */
+export async function qontoFinalizeInvoice(
+    invoiceId: string,
+    opts: { confirm?: boolean; path?: string; entityId?: string } = {},
+) {
+    const current = await getClientInvoice(invoiceId);
+    assertFinalizable(current);
+    if (!opts.confirm) {
+        return {
+            finalized: false,
+            note: 'Preview only — re-run with --confirm to finalize. This assigns the final number and cannot be undone.',
+            invoiceId,
+            number: current.number ?? null,
+            status: current.status,
+        };
+    }
+    if (opts.entityId) checkTimeBeforeFinalize(opts.entityId, invoiceId);
+    const invoice = await finalizeClientInvoice(invoiceId);
+    if (opts.entityId) settleTimeOnFinalize(opts.entityId, invoiceId);
+    const { result, error } = await reconcileAfterFinalize(invoiceId, opts.path);
+    return {
+        finalized: true,
+        invoiceId,
+        number: invoice.number ?? null,
+        status: invoice.status,
+        reconcile: result ? { changes: result.changes, rewritten: result.rewritten } : null,
+        reconcileError: error,
+    };
 }

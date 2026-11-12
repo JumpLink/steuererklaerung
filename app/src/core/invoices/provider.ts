@@ -10,6 +10,7 @@ import {
     buildClientInvoiceBody,
     createClientInvoice,
     getClientInvoice,
+    finalizeClientInvoice,
     type InvoiceItemSpec,
     listClientInvoices,
     normalizeAmount,
@@ -226,7 +227,7 @@ export const QONTO_CAPABILITIES: InvoiceCapabilities = {
     createDraft: false,
     editDraft: false,
     deleteDraft: false,
-    finalize: false,
+    finalize: true,
     markPaid: false,
     cancelStorno: false,
     pdf: 'hosted',
@@ -297,6 +298,26 @@ function invoiceClientName(client: ClientInvoice['client']): string | null {
     return full || null;
 }
 
+/** One Qonto client invoice as the provider-neutral summary. */
+function qontoSummary(inv: ClientInvoice): OutgoingInvoiceSummary {
+    return {
+        id: inv.id,
+        number: inv.number ?? null,
+        status: inv.status ?? 'draft',
+        // The list endpoint embeds the full client object (no flat client_id) — read both.
+        clientId: inv.client?.id ?? inv.client_id ?? null,
+        customerName: invoiceClientName(inv.client),
+        issueDate: inv.issue_date ?? null,
+        dueDate: inv.due_date ?? null,
+        total: parseMoney(inv.total_amount?.value),
+        currency: inv.total_amount?.currency ?? inv.currency ?? null,
+        url: inv.invoice_url ?? null,
+        performanceStart: inv.performance_start_date ?? null,
+        performanceEnd: inv.performance_end_date ?? null,
+        provider: 'qonto',
+    };
+}
+
 /** Qonto back-end: drafts a client invoice via POST /v2/client_invoices (status=draft). */
 export class QontoOutgoingInvoiceProvider implements OutgoingInvoiceProvider {
     readonly name = 'Qonto';
@@ -359,22 +380,7 @@ export class QontoOutgoingInvoiceProvider implements OutgoingInvoiceProvider {
 
     async listInvoices(opts: ListOutgoingInvoicesOptions = {}): Promise<OutgoingInvoiceSummary[]> {
         const invoices = await listClientInvoices(opts.status ? { status: opts.status } : {});
-        const summaries = invoices.map((inv): OutgoingInvoiceSummary => ({
-            id: inv.id,
-            number: inv.number ?? null,
-            status: inv.status ?? 'draft',
-            // The list endpoint embeds the full client object (no flat client_id) — read both.
-            clientId: inv.client?.id ?? inv.client_id ?? null,
-            customerName: invoiceClientName(inv.client),
-            issueDate: inv.issue_date ?? null,
-            dueDate: inv.due_date ?? null,
-            total: parseMoney(inv.total_amount?.value),
-            currency: inv.total_amount?.currency ?? inv.currency ?? null,
-            url: inv.invoice_url ?? null,
-            performanceStart: inv.performance_start_date ?? null,
-            performanceEnd: inv.performance_end_date ?? null,
-            provider: 'qonto',
-        }));
+        const summaries = invoices.map(qontoSummary);
         // Newest first by issue date (Qonto returns oldest-first); undated rows sink to the bottom.
         return summaries.sort((a, b) => (b.issueDate ?? '').localeCompare(a.issueDate ?? ''));
     }
@@ -405,6 +411,11 @@ export class QontoOutgoingInvoiceProvider implements OutgoingInvoiceProvider {
         // The number may hold a slash ("2026/001"), which a file name must not.
         const name = (inv.number ?? id).replace(/[^\w.-]+/g, '_');
         return { kind: 'bytes', bytes: new Uint8Array(bytes), filename: `${name}.pdf` };
+    }
+
+    /** Draft -> unpaid via Qonto's finalize endpoint: the final number is assigned there. */
+    async finalize(id: string): Promise<OutgoingInvoiceSummary> {
+        return qontoSummary(await finalizeClientInvoice(id));
     }
 
     /** Qonto hosts the PDF — return its URL (the UI opens it) rather than bytes. */

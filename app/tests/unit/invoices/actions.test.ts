@@ -3,7 +3,6 @@ import { writeFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import {
     getInvoiceCapabilities,
-    finalizeOutgoingInvoice,
     markOutgoingInvoicePaid,
     cancelOutgoingInvoice,
 } from '../../../src/core/actions/outgoing-invoices.ts';
@@ -43,7 +42,7 @@ export default async () => {
         await it('reports the back-end + capabilities per entity', async () => {
             const q = getInvoiceCapabilities('q', path);
             expect(q.providerType).toBe('qonto');
-            expect(q.capabilities.finalize).toBe(false);
+            expect(q.capabilities.finalize).toBe(true);
             expect(q.capabilities.createDraft).toBe(false); // Qonto form create is not offered
 
             const s = getInvoiceCapabilities('s', path);
@@ -61,7 +60,6 @@ export default async () => {
                     return e instanceof Error ? e.message : String(e);
                 }
             };
-            expect(await grab(() => finalizeOutgoingInvoice('q', 'x', path))).toContain('unterstützt');
             expect(await grab(() => markOutgoingInvoicePaid('q', 'x', { path }))).toContain('unterstützt');
             expect(await grab(() => cancelOutgoingInvoice('q', 'x', { path }))).toContain('unterstützt');
         });

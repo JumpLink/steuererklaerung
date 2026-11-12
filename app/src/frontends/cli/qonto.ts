@@ -14,6 +14,7 @@ import {
     qontoClientInvoices,
     qontoUpdateInvoice,
     qontoSendInvoice,
+    qontoFinalizeInvoice,
 } from '../../core/actions/qonto.ts';
 import type { CreateInvoiceInput } from '../../core/actions/qonto.ts';
 import { createOutgoingInvoiceDraft } from '../../core/actions/outgoing-invoices.ts';
@@ -175,11 +176,11 @@ export const qontoCommand: CommandModule = {
             })
             .command({
                 command: 'invoice',
-                describe: 'Outgoing client invoices (read/create): create, update, send.',
+                describe: 'Outgoing client invoices (read/create): create, update, send, finalize.',
                 handler: () => {},
                 builder: (iy) =>
                     iy
-                        .demandCommand(1, 'Choose a subcommand: create, update, send')
+                        .demandCommand(1, 'Choose a subcommand: create, update, send, finalize')
                         .command({
                             command: 'create <file>',
                             describe:
@@ -325,6 +326,37 @@ export const qontoCommand: CommandModule = {
                                         { sendTo: to, subject, body, copyToSelf: cc !== false },
                                         { confirm },
                                     );
+                                });
+                            },
+                        })
+                        .command({
+                            command: 'finalize <id>',
+                            describe:
+                                'Finalize a DRAFT invoice (assigns the final number, irreversible) and refresh the recurring schedule. Preview by default; pass --confirm to execute.',
+                            builder: (y) =>
+                                y
+                                    .positional('id', {
+                                        type: 'string',
+                                        demandOption: true,
+                                        describe: 'Draft client invoice id',
+                                    })
+                                    .option('confirm', {
+                                        type: 'boolean',
+                                        default: false,
+                                        describe: 'Actually finalize (otherwise preview only)',
+                                    })
+                                    .option('entity', {
+                                        type: 'string',
+                                        describe: 'Entity id of the draft: bills the time entries it reserved',
+                                    }),
+                            handler: (argv) => {
+                                const raw = argv as Record<string, unknown>;
+                                const id = pickArgv<string>(raw, 'id');
+                                const confirm = pickArgv<boolean>(raw, 'confirm') === true;
+                                const entityId = pickArgv<string>(raw, 'entity');
+                                runAndExit(() => {
+                                    if (!id) throw new Error('Invoice id is required');
+                                    return qontoFinalizeInvoice(id, { confirm, entityId });
                                 });
                             },
                         }),

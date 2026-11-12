@@ -75,6 +75,7 @@ import importBatches from './unit/actions/import-batches.test.ts';
 import classificationRules from './unit/actions/classification-rules.test.ts';
 import recurringPeriod from './unit/actions/recurring-period.test.ts';
 import recurringEmail from './unit/actions/recurring-email.test.ts';
+import qontoFinalize from './unit/actions/qonto-finalize.test.ts';
 import reconcileInvoices from './unit/invoices/reconcile.test.ts';
 import recurringSchedules from './unit/actions/recurring-schedules.test.ts';
 import sendInvoiceEmail from './unit/actions/send-invoice-email.test.ts';
@@ -300,6 +301,7 @@ run({
     classificationRules,
     recurringPeriod,
     recurringEmail,
+    qontoFinalize,
     reconcileInvoices,
     recurringSchedules,
     sendInvoiceEmail,
