@@ -61,6 +61,7 @@ import backup from './unit/actions/backup.test.ts';
 import entitySetup from './unit/actions/entity-setup.test.ts';
 import assistantExamples from './unit/actions/assistant-examples.test.ts';
 import lotsmanEmbed from './unit/assistant/lotsman-embed.test.ts';
+import writeGuard from './unit/assistant/write-guard.test.ts';
 import restartCommand from './unit/assistant/restart-command.test.ts';
 import setupGaps from './unit/actions/setup-gaps.test.ts';
 import mcpClients from './unit/actions/mcp-clients.test.ts';
@@ -290,6 +291,7 @@ run({
     assistantExamples,
     lotsmanEmbed,
     restartCommand,
+    writeGuard,
     setupGaps,
     mcpClients,
     configLifecycle,

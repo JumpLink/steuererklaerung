@@ -53,6 +53,7 @@ import { DatabaseSync } from 'node:sqlite';
 
 import { getStoreDir, ledgerDbPath } from '@steuererklaerung/store';
 import { userDataDir } from '../paths.ts';
+import { CHANGE_LOG_FILE, changeLogPath } from './assistant/change-log.ts';
 import type { ErrorDetail } from '../lib/errors.ts';
 import { getManifestPath, LEGACY_MANIFEST_FILENAME, MANIFEST_FILENAME } from '../config/manifest.ts';
 import { setBeforeMigrationWrite } from '../config/migrate-forward.ts';
@@ -367,6 +368,13 @@ function writeBackup(opts: CreateBackupOptions): BackupResult {
             out.files.push('ledger.db');
             out.databases.push('ledger.db');
             out.bytes += statSync(dest).size;
+        }
+
+        // 5. The assistant's change log: the trail of what its writes touched, next to the snapshots.
+        const changeLog = changeLogPath();
+        if (existsSync(changeLog)) {
+            out.bytes += copyPrivateFile(changeLog, join(work, CHANGE_LOG_FILE));
+            out.files.push(CHANGE_LOG_FILE);
         }
 
         const meta: BackupMeta = {
