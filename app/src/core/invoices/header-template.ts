@@ -12,6 +12,7 @@
 import type { Project } from '../config/schema/project.ts';
 import type { RecurringInvoice } from '../config/schema/recurring.ts';
 import { deDate } from '../lib/format.ts';
+import { _, fmt } from '../lib/i18n.ts';
 
 /** How a customer is addressed. Unset means `du`. */
 export type Formality = 'du' | 'sie';
@@ -35,6 +36,7 @@ export const HEADER_PLACEHOLDERS = {
     periode: 'Leistungszeitraum, z. B. 01.01.2026 – 31.12.2026',
     vorperiode: 'Zeitraum der letzten Rechnung; leer, solange es keine gibt',
     paket: 'Titel der Positionen, mit „und" verbunden',
+    intervall: 'Abrechnungsintervall, z. B. „jährlich", „alle zwei Jahre" oder „für die Laufzeit von N Monaten"',
     gruss: 'Grußformel (customer.closing, sonst Standard der Entität je Anrede-Form, sonst „Beste Grüße" bzw. „Mit freundlichen Grüßen")',
     aussteller: 'Name des Ausstellers (Signatur); leer, wenn keiner konfiguriert ist',
 } as const;
@@ -43,7 +45,7 @@ export type HeaderPlaceholder = keyof typeof HEADER_PLACEHOLDERS;
 /** The default cover letter — shipped in the example manifest and the docs; every schedule may override it. */
 export const DEFAULT_HEADER_TEMPLATE = `Hallo {anrede},
 
-anbei die Rechnung für das Hosting {domain} für die Serviceperiode {periode}. Im Paket enthalten sind {paket}. Die Abrechnung erfolgt jährlich im Voraus, die Kündigungsfrist beträgt vier Wochen vor Ende der Laufzeit.
+anbei die Rechnung für das Hosting {domain} für die Serviceperiode {periode}. Im Paket enthalten sind {paket}. Die Abrechnung erfolgt {intervall} im Voraus, die Kündigungsfrist beträgt vier Wochen vor Ende der Laufzeit.
 
 {gruss}
 {aussteller}`;
@@ -51,7 +53,7 @@ anbei die Rechnung für das Hosting {domain} für die Serviceperiode {periode}. 
 /** The default cover letter for customers addressed with Sie. */
 export const DEFAULT_HEADER_TEMPLATE_SIE = `Guten Tag {anrede},
 
-anbei erhalten Sie die Rechnung für das Hosting {domain} für die Serviceperiode {periode} ({paket}). Das Hosting wird jährlich im Voraus abgerechnet, eine Kündigung ist bis vier Wochen vor Ende der Laufzeit möglich.
+anbei erhalten Sie die Rechnung für das Hosting {domain} für die Serviceperiode {periode} ({paket}). Das Hosting wird {intervall} im Voraus abgerechnet, eine Kündigung ist bis vier Wochen vor Ende der Laufzeit möglich.
 
 {gruss}
 {aussteller}`;
@@ -74,6 +76,8 @@ export interface HeaderContext {
     previousPeriod?: { start: string; end: string };
     itemTitles: readonly string[];
     issuerName?: string;
+    /** Billing interval in months; drives the wording of `{intervall}`. */
+    intervalMonths?: number;
 }
 
 const clean = (s: string | undefined): string => (s ?? '').trim();
@@ -92,6 +96,13 @@ export function joinGerman(parts: readonly string[]): string {
 
 const periodText = (p: { start: string; end: string }): string => `${deDate(p.start)} – ${deDate(p.end)}`;
 
+/** Wording for the billing interval: 12 → yearly, 24 → every two years, otherwise "for N months". */
+export function intervalText(months: number | undefined): string {
+    if (months === 12) return _('yearly');
+    if (months === 24) return _('every two years');
+    return fmt(_('for the term of {n} months'), { n: months ?? 12 });
+}
+
 /** The value of each placeholder for one context, with fallbacks so no sentence is left broken. */
 export function headerValues(ctx: HeaderContext): Record<HeaderPlaceholder, string> {
     const kunde = clean(ctx.customerName);
@@ -102,6 +113,7 @@ export function headerValues(ctx: HeaderContext): Record<HeaderPlaceholder, stri
         periode: periodText(ctx.period),
         vorperiode: ctx.previousPeriod ? periodText(ctx.previousPeriod) : '',
         paket: joinGerman(ctx.itemTitles),
+        intervall: intervalText(ctx.intervalMonths),
         gruss: clean(ctx.closing) || defaultClosingFor(ctx.formality),
         aussteller: clean(ctx.issuerName),
     };
@@ -241,6 +253,7 @@ export function headerContextFor(
         previousPeriod: inv.lastInvoice?.period,
         itemTitles: inv.items.map((i) => i.title),
         issuerName: defaults.issuerName,
+        intervalMonths: inv.intervalMonths,
     };
 }
 

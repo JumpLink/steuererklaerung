@@ -21,6 +21,7 @@ import {
     type DashboardOptions,
     computeItemTotals,
     isActionable,
+    renderRecurringItemDescription,
     type RecurringDueEntry,
 } from '../invoices/recurring.ts';
 import { type Addressing, buildHeaderWithWarnings, resolveAddressing } from '../invoices/header-template.ts';
@@ -73,7 +74,7 @@ export function recurringDashboard(opts: DashboardActionOptions = {}): Recurring
 function toItemSpecs(inv: RecurringInvoice): InvoiceItemSpec[] {
     return inv.items.map((it) => ({
         title: it.title,
-        ...(it.description ? { description: it.description } : {}),
+        description: renderRecurringItemDescription(it.description, inv.nextPeriod),
         quantity: it.quantity,
         ...(it.unit ? { unit: it.unit } : {}),
         unit_price: it.unitPrice,

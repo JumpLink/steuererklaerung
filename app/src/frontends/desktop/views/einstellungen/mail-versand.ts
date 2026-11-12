@@ -54,12 +54,16 @@ export function buildMailGroup(host: SettingsHost, entity: AppEntity, parent: Gt
     const userRow = new Adw.EntryRow({ title: _('User') });
     const passwordRow = new Adw.PasswordEntryRow({ title: storedPassword ? _('Password (saved)') : _('Password') });
     const fromRow = new Adw.EntryRow({ title: _('Sender address') });
+    const sentFolderRow = new Adw.EntryRow({
+        title: _('Sent folder (fallback)'),
+    });
 
     hostRow.set_text(account?.host ?? '');
     securityRow.set_selected(Math.max(0, SECURITY.indexOf(account?.security ?? 'tls')));
     portRow.set_text(String(account?.port ?? DEFAULT_PORT[SECURITY[securityRow.get_selected()]]));
     userRow.set_text(account?.username ?? '');
     fromRow.set_text(account?.from ?? '');
+    sentFolderRow.set_text(account?.imap?.sentFolder ?? '');
 
     // Follow the encryption choice with its usual port, unless the person typed another one.
     securityRow.connect('notify::selected', () => {
@@ -67,16 +71,27 @@ export function buildMailGroup(host: SettingsHost, entity: AppEntity, parent: Gt
         if (!portRow.get_text() || known.includes(portRow.get_text()))
             portRow.set_text(String(DEFAULT_PORT[SECURITY[securityRow.get_selected()]]));
     });
-    for (const row of [hostRow, portRow, securityRow, userRow, passwordRow, fromRow]) group.add(row);
+    for (const row of [hostRow, portRow, securityRow, userRow, passwordRow, fromRow, sentFolderRow]) group.add(row);
 
     const accountConfig = (): MailAccountConfig => {
         const server = hostRow.get_text().trim();
         const username = userRow.get_text().trim();
         const from = fromRow.get_text().trim();
         const port = Number.parseInt(portRow.get_text().trim(), 10);
+        const sentFolder = sentFolderRow.get_text().trim() || undefined;
         if (!server || !username || !from) throw new Error(_('Server, user and sender address are required.'));
         if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error(_('The port is invalid.'));
-        return { host: server, port, security: SECURITY[securityRow.get_selected()], username, from };
+        // Keep IMAP host, port and login that were set in the manifest; this row owns only the folder.
+        const { sentFolder: _previous, ...imapRest } = account?.imap ?? { port: 993, security: 'tls' as const };
+        const imap = sentFolder ? { ...imapRest, sentFolder } : account?.imap ? imapRest : undefined;
+        return {
+            host: server,
+            port,
+            security: SECURITY[securityRow.get_selected()],
+            username,
+            from,
+            ...(imap ? { imap } : {}),
+        };
     };
 
     const save = new Adw.ButtonRow({ title: _('Save account') });

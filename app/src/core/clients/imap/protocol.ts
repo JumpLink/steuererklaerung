@@ -53,6 +53,17 @@ export function encodeMutf7(name: string): string {
     return out;
 }
 
+/** The inverse of {@link encodeMutf7}: a wire name from LIST back to the name a person reads. */
+export function decodeMutf7(wire: string): string {
+    return wire.replace(/&([^-]*)-/g, (_m, b64: string) => {
+        if (!b64) return '&';
+        const bytes = Buffer.from(b64.replace(/,/g, '/'), 'base64');
+        let out = '';
+        for (let i = 0; i + 1 < bytes.length; i += 2) out += String.fromCharCode((bytes[i] << 8) | bytes[i + 1]);
+        return out;
+    });
+}
+
 /** What EXAMINE tells about a mailbox. */
 export interface MailboxInfo {
     uidValidity: number | null;
@@ -87,4 +98,36 @@ export function parseSearchUids(text: string): number[] {
 export function parseMessageSize(text: string): number | null {
     const m = /RFC822\.SIZE\s+(\d+)/i.exec(text);
     return m ? Number.parseInt(m[1], 10) : null;
+}
+
+/** One mailbox as returned by LIST (RFC 3501 + RFC 6154 SPECIAL-USE). */
+export interface MailboxListEntry {
+    name: string;
+    /** SPECIAL-USE attributes such as `\Sent`; empty when the server does not announce them. */
+    specialUse: string[];
+}
+
+/**
+ * Parse extended LIST responses, keeping only the name and SPECIAL-USE flags.
+ * Lines look like `* LIST (\HasNoChildren \Sent) "/" Sent` or, with MUTF7,
+ * `* LIST (\Noselect) "/" "B&APw-ro"`.
+ */
+export function parseMailboxList(text: string): MailboxListEntry[] {
+    const entries: MailboxListEntry[] = [];
+    for (const line of text.split('\n')) {
+        const trimmed = line.trim();
+        const m = /^\*\s+LIST\s+\(([^)]*)\)\s+\S+\s+(.+)$/i.exec(trimmed);
+        if (!m) continue;
+        const flags = m[1].split(/\s+/).filter(Boolean);
+        const specialUse = flags.filter((f) => f.startsWith('\\'));
+        const name = parseMailboxName(m[2]);
+        entries.push({ name, specialUse });
+    }
+    return entries;
+}
+
+/** The mailbox name part of a LIST line (quoted or an atom), decoded from the wire's modified UTF-7. */
+function parseMailboxName(raw: string): string {
+    const quoted = /^"((?:[^"\\]|\\.)*)"/.exec(raw);
+    return decodeMutf7(quoted ? quoted[1].replace(/\\(.)/g, '$1') : raw.trim());
 }

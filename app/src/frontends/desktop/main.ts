@@ -24,7 +24,7 @@ import './i18n-init.ts';
 import 'dotenv/config';
 import Gtk from '@girs/gtk-4.0';
 import { AdwaitaApp, runApplication } from '@gjsify/adwaita-app';
-import { donationsAllowed } from '@gjsify/distribution';
+import { supportPath } from '@gjsify/distribution';
 import { readClient } from './read/index.ts';
 import { installMigrationBackup, runConfiguredBackup } from '../../core/actions/backup.ts';
 import { applyDemoEnv } from '../../core/config/demo.ts';
@@ -128,7 +128,7 @@ if (mode === 'cli') {
         // "Support", never "Donate": business income, nothing here implies a tax deduction. A store
         // channel shows no donation UI at all.
         links: [
-            ...(donationsAllowed() ? [{ title: _('Support'), url: localizedSupportUrl() }] : []),
+            ...(supportPath() === 'external-link' ? [{ title: _('Support'), url: localizedSupportUrl() }] : []),
             { title: _('Privacy'), url: localizedSitePageUrl('privacy') },
             { title: _('Legal Notice'), url: localizedSitePageUrl('legal-notice') },
         ],

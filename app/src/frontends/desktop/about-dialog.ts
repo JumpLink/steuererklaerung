@@ -1,7 +1,7 @@
 import Adw from '@girs/adw-1';
 import Gio from '@girs/gio-2.0';
 import Gtk from '@girs/gtk-4.0';
-import { purchased } from '@gjsify/distribution';
+import { pricing } from '@gjsify/distribution';
 import { editionBadges } from '../../core/lib/edition-badges.ts';
 
 /**
@@ -32,7 +32,7 @@ function findByCssClass(widget: Gtk.Widget, cssClass: string): Gtk.Widget | null
 /** One badge: the name as a pill, the sentence that explains it underneath. */
 function buildBadges(): Gtk.Box {
     const box = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 12, marginTop: 6 });
-    for (const badge of editionBadges(purchased())) {
+    for (const badge of editionBadges(pricing() === 'paid')) {
         const group = new Gtk.Box({ orientation: Gtk.Orientation.VERTICAL, spacing: 3 });
         group.append(new Gtk.Label({ label: badge.title, halign: Gtk.Align.CENTER, cssClasses: ['edition-badge'] }));
         group.append(
@@ -94,7 +94,7 @@ export function createAboutDialog(o: AboutOptions): Adw.AboutDialog {
     const mapped = dialog.connect('map', () => {
         dialog.disconnect(mapped);
         if (!addBadges(dialog)) {
-            const notice = editionBadges(purchased())
+            const notice = editionBadges(pricing() === 'paid')
                 .map((b) => `${b.title} · ${b.detail}`)
                 .join('\n');
             dialog.comments = `${notice}\n\n${dialog.comments}`;

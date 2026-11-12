@@ -36,6 +36,7 @@ import {
 } from '@steuererklaerung/store';
 import type { MailTemplate } from '../config/schema/mail.ts';
 import type { MailSender, OutgoingMessage, SendResult, SmtpAccount } from '../mail/mail-sender.ts';
+import { resolveSentMessageId, type SentCopyResult } from '../mail/sent-copy.ts';
 import {
     BUILTIN_TEMPLATE_ID,
     buildInvoiceMail,
@@ -88,6 +89,8 @@ export type SendInvoiceEmailResult =
           log: SentLog;
           /** The server accepted the mail, but the log could not be written; do NOT send again. */
           logError?: string;
+          /** The mail went out, but the IMAP copy in the Sent folder failed; the send itself is still successful. */
+          sentCopyWarning?: string;
           rejected: string[];
       };
 
@@ -99,6 +102,8 @@ export interface SendInvoiceEmailDeps {
     recordSent?(log: SentLog): Promise<void> | void;
     /** Append one attempt (sent or failed) to the invoice's mail history. */
     recordAttempt?(attempt: MailAttempt): Promise<void> | void;
+    /** Append a copy of the sent message to the account's IMAP Sent folder; failures become warnings. */
+    appendSentCopy?(message: OutgoingMessage & { messageId: string }): Promise<SentCopyResult>;
     now?(): Date;
 }
 
@@ -163,6 +168,7 @@ export async function sendInvoiceEmail(
         text: req.text,
         attachments: [{ filename: pdf.filename, content: pdf.bytes, contentType: 'application/pdf' }],
     };
+    message.messageId = resolveSentMessageId(message);
     let sent: SendResult;
     try {
         sent = await deps.sender.send(req.account, message);
@@ -183,6 +189,16 @@ export async function sendInvoiceEmail(
             // The failure itself is what the caller must see.
         }
         throw new Error(`Versand fehlgeschlagen: ${reason}`);
+    }
+
+    let sentCopyWarning: string | undefined;
+    if (deps.appendSentCopy) {
+        try {
+            const copy = await deps.appendSentCopy(message as OutgoingMessage & { messageId: string });
+            if (!copy.ok && copy.warning) sentCopyWarning = copy.warning;
+        } catch (err) {
+            sentCopyWarning = redact(err instanceof Error ? err.message : String(err), req.account);
+        }
     }
 
     const log: SentLog = {
@@ -212,7 +228,14 @@ export async function sendInvoiceEmail(
         }),
     );
     const logError = errors.length ? errors.join('; ') : undefined;
-    return { status: 'sent', preview, log, rejected: sent.rejected, ...(logError ? { logError } : {}) };
+    return {
+        status: 'sent',
+        preview,
+        log,
+        rejected: sent.rejected,
+        ...(logError ? { logError } : {}),
+        ...(sentCopyWarning ? { sentCopyWarning } : {}),
+    };
 }
 
 /** The schedule whose `lastInvoice` is this invoice, by back-end id or, failing that, by number. */

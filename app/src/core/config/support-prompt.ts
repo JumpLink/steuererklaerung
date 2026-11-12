@@ -8,7 +8,7 @@
  * a crash or a force-quit must not turn one missed prompt into a prompt on every start.
  */
 
-import { donationsAllowed } from '@gjsify/distribution';
+import { supportPath } from '@gjsify/distribution';
 
 import { loadUserSettings, updateUserSettings } from './user-settings.ts';
 
@@ -50,7 +50,7 @@ export function shouldPromptSupport(
  * whether the caller should show the prompt. Never throws: a settings file that cannot be written
  * must not break a filing, it only means the prompt may come again.
  */
-export function claimSupportPrompt(year: number, allowed: boolean = donationsAllowed()): boolean {
+export function claimSupportPrompt(year: number, allowed: boolean = supportPath() === 'external-link'): boolean {
     try {
         if (!shouldPromptSupport(allowed, loadUserSettings().supportPromptYears, year)) return false;
         updateUserSettings((s) => {

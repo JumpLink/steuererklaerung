@@ -123,6 +123,66 @@ export default async () => {
             expect(res.status).toBe('sent');
         });
 
+        await it('sets the message id before sending so SMTP and Sent copy share it', async () => {
+            const sender = new FakeSender();
+            const appended: { messageId: string }[] = [];
+            await sendInvoiceEmail(
+                request,
+                { confirm: true },
+                {
+                    sender,
+                    loadPdf: pdf,
+                    appendSentCopy: async (m) => {
+                        appended.push(m);
+                        return { ok: true };
+                    },
+                },
+            );
+            expect(sender.sent[0].message.messageId).toBeDefined();
+            expect(sender.sent[0].message.messageId).toBe(appended[0].messageId);
+            expect(sender.sent[0].message.messageId!.startsWith('<')).toBe(true);
+        });
+
+        await it('warns when the Sent copy fails, but keeps the send successful', async () => {
+            const sender = new FakeSender();
+            const res = await sendInvoiceEmail(
+                request,
+                { confirm: true },
+                {
+                    sender,
+                    loadPdf: pdf,
+                    now,
+                    appendSentCopy: async () => ({ ok: false, warning: 'IMAP Sent folder failed' }),
+                },
+            );
+            expect(res.status).toBe('sent');
+            if (res.status === 'sent') {
+                expect(res.sentCopyWarning).toBe('IMAP Sent folder failed');
+                expect(res.logError).toBeUndefined();
+            }
+            expect(sender.sent.length).toBe(1);
+        });
+
+        await it('warns when appendSentCopy throws, without exposing the password', async () => {
+            const sender = new FakeSender();
+            const res = await sendInvoiceEmail(
+                request,
+                { confirm: true },
+                {
+                    sender,
+                    loadPdf: pdf,
+                    appendSentCopy: async () => {
+                        throw new Error(`append failed ${PASSWORD}`);
+                    },
+                },
+            );
+            expect(res.status).toBe('sent');
+            if (res.status === 'sent') {
+                expect(res.sentCopyWarning?.includes('append failed')).toBe(true);
+                expect(res.sentCopyWarning?.includes(PASSWORD)).toBe(false);
+            }
+        });
+
         await it('treats anything but boolean true as "do not send"', async () => {
             const sender = new FakeSender();
             const res = await sendInvoiceEmail(

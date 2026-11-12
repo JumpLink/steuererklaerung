@@ -3,6 +3,7 @@ import { rmSync } from 'node:fs';
 import { buildCreateInput } from '../../../src/core/actions/recurring-invoices.ts';
 import { buildClientInvoiceBody } from '../../../src/core/clients/qonto/client-invoices.ts';
 import { loadRecurringInvoices } from '../../../src/core/config/index.ts';
+import { advanceSchedule } from '../../../src/core/invoices/recurring.ts';
 import { writeManifestFixture } from '../../helpers/manifest-fixture.ts';
 
 const year = { start: '2026-01-01', end: '2026-12-31' };
@@ -55,6 +56,108 @@ export default async () => {
             expect(input.items[0].description).toBe(undefined);
             expect(input.performanceStart).toBe('2026-01-01');
             expect(input.performanceEnd).toBe('2026-12-31');
+            for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true });
+        });
+
+        await it('renders {periode} in the item description at draft time', async () => {
+            const made = writeManifestFixture({
+                entities: [
+                    {
+                        id: 'demo',
+                        accounts: ['qonto:demo*'],
+                        invoicing: { type: 'qonto', iban: 'DE02120300000000202051' },
+                        recurring: [
+                            {
+                                id: 'demo-hosting',
+                                entityId: 'demo',
+                                customer: { name: 'Demo Kunde', qontoClientId: 'client-1' },
+                                nextPeriod: { start: '2026-01-01', end: '2026-12-31' },
+                                items: [
+                                    {
+                                        title: 'Hosting',
+                                        description: 'Serviceperiode {periode}',
+                                        unitPrice: 100,
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            });
+            dirs.push(made.dir);
+            const inv = loadRecurringInvoices(made.path)[0];
+            const input = buildCreateInput(inv, { path: made.path, today: '2026-01-05' }).input;
+            expect(input.items[0].description).toBe('Serviceperiode 01.01.2026 – 31.12.2026');
+            for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true });
+        });
+
+        await it('after advance, the next draft shows the new period in the item', async () => {
+            const made = writeManifestFixture({
+                entities: [
+                    {
+                        id: 'demo',
+                        accounts: ['qonto:demo*'],
+                        invoicing: { type: 'qonto', iban: 'DE02120300000000202051' },
+                        recurring: [
+                            {
+                                id: 'demo-hosting',
+                                entityId: 'demo',
+                                customer: { name: 'Demo Kunde', qontoClientId: 'client-1' },
+                                nextPeriod: { start: '2026-01-01', end: '2026-12-31' },
+                                intervalMonths: 12,
+                                items: [
+                                    {
+                                        title: 'Hosting',
+                                        description: 'Serviceperiode {periode}',
+                                        unitPrice: 100,
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            });
+            dirs.push(made.dir);
+            const inv = loadRecurringInvoices(made.path)[0];
+            const advanced = advanceSchedule(inv, {
+                number: 'RE-1',
+                issueDate: '2026-01-05',
+                providerId: 'draft-1',
+            });
+            const input = buildCreateInput(advanced, { path: made.path, today: '2026-01-05' }).input;
+            expect(input.items[0].description).toBe('Serviceperiode 01.01.2027 – 31.12.2027');
+            for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true });
+        });
+
+        await it('keeps a literal legacy description unchanged', async () => {
+            const made = writeManifestFixture({
+                entities: [
+                    {
+                        id: 'demo',
+                        accounts: ['qonto:demo*'],
+                        invoicing: { type: 'qonto', iban: 'DE02120300000000202051' },
+                        recurring: [
+                            {
+                                id: 'demo-hosting',
+                                entityId: 'demo',
+                                customer: { name: 'Demo Kunde', qontoClientId: 'client-1' },
+                                nextPeriod: { start: '2026-01-01', end: '2026-12-31' },
+                                items: [
+                                    {
+                                        title: 'Hosting',
+                                        description: 'Serviceperiode 01.01.2025 – 31.12.2025',
+                                        unitPrice: 100,
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            });
+            dirs.push(made.dir);
+            const inv = loadRecurringInvoices(made.path)[0];
+            const input = buildCreateInput(inv, { path: made.path, today: '2026-01-05' }).input;
+            expect(input.items[0].description).toBe('Serviceperiode 01.01.2025 – 31.12.2025');
             for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true });
         });
     });

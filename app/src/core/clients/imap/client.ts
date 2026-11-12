@@ -17,10 +17,12 @@ import {
     encodeMutf7,
     isQuotable,
     parseMailboxInfo,
+    parseMailboxList,
     parseMessageSize,
     parseSearchUids,
     quoteImapString,
     type MailboxInfo,
+    type MailboxListEntry,
 } from './protocol.ts';
 
 /** The socket as the client sees it: bytes in, bytes out. `read` resolves null at end of stream. */
@@ -51,12 +53,16 @@ export type FetchedMessage =
     | { kind: 'too-large'; size: number }
     | { kind: 'missing' };
 
-/** An authenticated, read-only session on one server — the port `core/actions/mail-eingang.ts` fetches through. */
+/** An authenticated session on one server — the port `core/actions/mail-eingang.ts` fetches through. */
 export interface MailSource {
     openFolder(folder: string): Promise<MailFolderInfo>;
     /** UIDs above `lastUid`, ascending; with `sender`, only messages whose From contains it. */
     uidsAbove(lastUid: number, sender?: string): Promise<number[]>;
     fetchMessage(uid: number, maxBytes: number): Promise<FetchedMessage>;
+    /** Append a full RFC 822 message to a folder, with the given IMAP flags. */
+    appendMessage(folder: string, bytes: Uint8Array, flags: string[]): Promise<void>;
+    /** List all mailboxes with their SPECIAL-USE attributes (RFC 6154). */
+    listFolders(): Promise<MailboxListEntry[]>;
     close(): Promise<void>;
 }
 
@@ -266,6 +272,21 @@ export class ImapSession implements MailSource {
         if (!r.ok) throw new ImapError(`Nachricht ${uid} ließ sich nicht laden${this.reply(r.text)}`, 'protocol');
         const bytes = r.literals[0];
         return bytes ? { kind: 'ok', bytes } : { kind: 'missing' };
+    }
+
+    async appendMessage(folder: string, bytes: Uint8Array, flags: string[]): Promise<void> {
+        const flagPart = flags.length ? ` (${flags.join(' ')})` : '';
+        const r = await this.command(['APPEND ', ...argument(encodeMutf7(folder)), flagPart, ' ', { literal: bytes }]);
+        if (!r.ok)
+            throw new ImapError(`Der Ordner „${folder}“ ließ sich nicht beschreiben${this.reply(r.text)}`, 'protocol');
+    }
+
+    async listFolders(): Promise<MailboxListEntry[]> {
+        // SPECIAL-USE (RFC 6154) first; a server without it answers BAD, then plain LIST still names the folders.
+        let r = await this.command(['LIST "" "*" RETURN (SPECIAL-USE)']);
+        if (!r.ok) r = await this.command(['LIST "" "*"']);
+        if (!r.ok) throw new ImapError(`Die Ordnerliste ließ sich nicht abrufen${this.reply(r.text)}`, 'protocol');
+        return parseMailboxList(r.text);
     }
 
     async close(): Promise<void> {
