@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Every write tool of the MCP server has an approval tier (ADR 0005).
 //
-// The lotse assistant may one day call this app's write tools, and what it has to ask the person
-// first depends on the tool: tier A (the app's own dialog, one call) or tier B (lotse's dialog,
+// The lotsman assistant may one day call this app's write tools, and what it has to ask the person
+// first depends on the tool: tier A (the app's own dialog, one call) or tier B (lotsman's dialog,
 // per call). The tiers are written out in `src/core/actions/assistant/write-tiers.ts`; this gate
 // makes sure that list cannot fall behind the tools. It reads `registerTool(` calls by source text,
 // like the other `check:*` gates, and a write tool is one annotated `readOnlyHint: false`.

@@ -208,7 +208,7 @@ jobs:
   # The Flatpak: the manifest must keep the sandbox narrow and carry the bundled opencode, and the
   # whole thing must build offline from gjsify-sources.json. No --filesystem and no
   # org.freedesktop.Flatpak, ever: files go through the portal, and `aiAgentSource: host` is
-  # unavailable in the sandbox by design (docs/app/lotse-entwicklung.md).
+  # unavailable in the sandbox by design (docs/app/lotsman-entwicklung.md).
   flatpak:
     runs-on: ubuntu-latest
     container:

@@ -26,4 +26,4 @@ install -Dm644 app/data/eu.jumplink.Steuererklaerung.desktop \
 Das `Exec=steuer-app` in der `.desktop`-Datei setzt einen Starter im `PATH` voraus — ein
 Zweizeiler, der `gjsify run start:app` im Projektverzeichnis aufruft. Das Flatpak
 (`eu.jumplink.Steuererklaerung`, Metainfo in dieser Mappe) baut aus `eu.jumplink.Steuererklaerung.json`;
-Details und Grenzen in `docs/app/lotse-entwicklung.md`.
+Details und Grenzen in `docs/app/lotsman-entwicklung.md`.

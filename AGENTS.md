@@ -14,10 +14,10 @@ Feststellung). The same actions back three frontends: the CLI, an **MCP server**
 |**One git repo, two gjsify workspaces:** `app/` + `packages/eric/` (our ERiC wrapper) are plain
 DIRECTORIES, NOT nested submodules; the only submodules are `refs/*`
 |install with `gjsify install`, never `npm install` (it prunes the gjsify-managed deps)
-|`@lotse/*` comes from npm (`^0.3.0`, `gjsify-lock.json`): `gjsify install --immutable` works, in
-CI too; for UNRELEASED lotse only `gjsify link ../lotse`, and `gjsify unlink` +
+|`@lotsman/*` comes from npm (`^0.3.0`, `gjsify-lock.json`): `gjsify install --immutable` works, in
+CI too; for UNRELEASED lotsman only `gjsify link ../lotsman`, and `gjsify unlink` +
 `gjsify install --immutable` before committing (`--immutable` refuses while `.gjsify-link.json`
-exists) — traps: [`docs/app/lotse-entwicklung.md`](docs/app/lotse-entwicklung.md)
+exists) — traps: [`docs/app/lotsman-entwicklung.md`](docs/app/lotsman-entwicklung.md)
 |this repo is a **submodule of werkstatt**: commit here on `main`, then bump the pointer in the
 parent (`chore: bump steuererklaerung (…)`); never stage across that boundary in one commit
 |conventional commits (`feat(scope): …`, `fix(eric): …`); check + test + format first; never

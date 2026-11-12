@@ -11,7 +11,7 @@
  * that answers proves nothing about credentials, and credentials are what actually fail here.
  */
 
-import type { AgentCommand, LoginSession } from '@lotse/core';
+import type { AgentCommand, LoginSession } from '@lotsman/core';
 
 import { getLLMProvider } from '../../clients/llm/index.ts';
 
@@ -56,22 +56,22 @@ export interface EngineConnectionDeps {
 }
 
 /**
- * Only the `opencode` engine can say: lotse reads the provider catalog off a private login server
+ * Only the `opencode` engine can say: lotsman reads the provider catalog off a private login server
  * that is closed again at once. `claude` authenticates inside the Agent SDK and `scaleway` is a bare
  * API key, so neither has a question cheaper than {@link probeEngine} — they are `unknown`.
  */
 export async function engineConnection(deps: EngineConnectionDeps = {}): Promise<EngineConnection> {
     try {
         if ((process.env.LLM_PROVIDER ?? '').trim().toLowerCase() !== 'opencode') return 'unknown';
-        const lotse = await import('@lotse/core');
+        const lotsman = await import('@lotsman/core');
         let command = deps.command;
         if (!command) {
-            const embed = await import('./lotse-embed.ts');
-            const { agent } = embed.resolveLotseAgent(lotse.lotsePathsUnder(embed.lotseDataRoot()));
+            const embed = await import('./lotsman-embed.ts');
+            const { agent } = embed.resolveLotsmanAgent(lotsman.lotsmanPathsUnder(embed.lotsmanDataRoot()));
             if (!agent) return 'unknown';
             command = agent.command;
         }
-        const facts = await lotse.probeConnections(command, deps.probe);
+        const facts = await lotsman.probeConnections(command, deps.probe);
         return facts.kind === 'connected' || facts.kind === 'none' ? facts.kind : 'unknown';
     } catch {
         return 'unknown';

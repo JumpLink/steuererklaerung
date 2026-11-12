@@ -1,5 +1,5 @@
 /**
- * Which approval each write tool of this app's MCP server needs when the lotse assistant calls it
+ * Which approval each write tool of this app's MCP server needs when the lotsman assistant calls it
  * (ADR 0005). Every tool annotated `readOnlyHint: false` is in exactly ONE of the two lists below;
  * `dev/check-assistant-tiers.js` (`check:assistant-tiers`) fails the build for a write tool in
  * neither, so adding one forces the decision in the commit that adds it.
@@ -8,15 +8,15 @@
  * `mcp.groups` plus each tool's own `readOnlyHint` (ADR 0003), so there is no second list of reads
  * to drift. A tier is a judgement about consequences and cannot be derived from an annotation.
  *
- * Plain data on purpose — no `@lotse/*` import, so this file is not an AI site for `check:ai` and
+ * Plain data on purpose — no `@lotsman/*` import, so this file is not an AI site for `check:ai` and
  * the gate script can read the arrays without loading TypeScript. {@link TIER_A_HOST_CONFIRMED}
- * is shaped like lotse's `HostToolMatch` so the pane can hand it over as `hostTools.hostConfirmed`.
+ * is shaped like lotsman's `HostToolMatch` so the pane can hand it over as `hostTools.hostConfirmed`.
  */
 
 import { MCP_SERVER_NAME } from '../mcp-clients.ts';
 
 /**
- * Tier A — the app's own dialog, one call, never an always. Lotse may never approve these, not from
+ * Tier A — the app's own dialog, one call, never an always. Lotsman may never approve these, not from
  * its dialog and not from an always-allow left over from earlier in the session.
  *
  * What lands here is irreversible or in someone's name: a submission (the keystore PIN is the app's
@@ -37,7 +37,7 @@ export const TIER_A_TOOLS = [
 ] as const;
 
 /**
- * Tier B — lotse's dialog, approval per call, an always-allow only for the rest of the session.
+ * Tier B — lotsman's dialog, approval per call, an always-allow only for the rest of the session.
  * The daily work: confirmations, splits, links, metadata, drafts and classifications.
  */
 export const TIER_B_TOOLS = [
@@ -107,7 +107,7 @@ export function writeTierOf(name: string): WriteTier | null {
     return TIER_OF.get(key) ?? null;
 }
 
-/** Tier A by the MCP name lotse matches on (`steuererklaerung.submit_filing`), for `hostTools.hostConfirmed`. */
+/** Tier A by the MCP name lotsman matches on (`steuererklaerung.submit_filing`), for `hostTools.hostConfirmed`. */
 export const TIER_A_HOST_CONFIRMED: readonly { readonly name: string }[] = TIER_A_TOOLS.map((tool) => ({
     name: `${MCP_SERVER_NAME}.${tool}`,
 }));

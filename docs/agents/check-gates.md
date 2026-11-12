@@ -11,5 +11,5 @@ All run inside `gjsify run check`.
   Weg ohne KI in `app/dev/ai-boundary.allow.json` (`ohneKi`, ggf. `idee`); veraltete Einträge sind rot.
 - **`check:assistant-tiers`** verlangt für jedes MCP-Schreibwerkzeug (`readOnlyHint: false`) genau eine
   Stufe in `app/src/core/actions/assistant/write-tiers.ts`: A (eigener Dialog der App, nie vom
-  Assistenten bestätigt) oder B (Dialog von lotse). Neues Schreibwerkzeug → Stufe im selben Commit
+  Assistenten bestätigt) oder B (Dialog von lotsman). Neues Schreibwerkzeug → Stufe im selben Commit
   eintragen; ein Name ohne Werkzeug dahinter ist rot (ADR 0005).

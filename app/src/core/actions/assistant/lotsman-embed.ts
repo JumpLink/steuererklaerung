@@ -1,39 +1,40 @@
 /**
- * The decisions behind the lotse assistant pane — every one of them, and none of the GTK.
+ * The decisions behind the lotsman assistant pane — every one of them, and none of the GTK.
  *
- * lotse is an ACP client: it starts a coding agent (opencode) as a SUBPROCESS and talks to it over
+ * lotsman is an ACP client: it starts a coding agent (opencode) as a SUBPROCESS and talks to it over
  * stdio. That is a different animal from the built-in assistant, which calls an LLM provider
  * in-process, and the difference is exactly why the choice is explicit and why this file exists
  * apart from the widget. Five things have to be true before a single process is spawned, and all
  * five are decided here so a test can check them without a display:
  *
  *   1. **AI is on.** `isAssistantEnabled()` is the person's consent, unchanged. With it off,
- *      {@link lotseEmbedPlan} returns `null`, the pane is never built, and nothing is started —
+ *      {@link lotsmanEmbedPlan} returns `null`, the pane is never built, and nothing is started —
  *      "no AI" stays an option in the literal sense, not as a hidden-but-running one.
  *   2. **This engine was chosen.** `aiEngine` defaults to `builtin`, so an existing installation
- *      sees no change until someone picks lotse in Settings.
- *   3. **The agent writes under OUR data directory**, not into `$XDG_DATA_HOME/lotse`. A session
+ *      sees no change until someone picks lotsman in Settings.
+ *   3. **The agent writes under OUR data directory**, not into `$XDG_DATA_HOME/lotsman`. A session
  *      file holds the text of conversations about this person's tax data; it belongs with the rest
  *      of that data, in a 0700 directory, declared as `state` in `.werkstatt-state.json` — not
- *      mixed into another app's history. `lotsePathsUnder` is lotse's seam for precisely this.
+ *      mixed into another app's history. `lotsmanPathsUnder` is lotsman's seam for precisely this.
  *   4. **The tools it gets are read-only.** The agent reaches this app through this app's own MCP
  *      server, started with {@link MCP_READONLY_ENV} — see `core/config/mcp-readonly.ts` for why
  *      the manifest's `allowWrite` is the wrong switch for an agent the app spawned itself.
  *   5. **A free hosted model may answer — with a warning, not a block** (issue #95, ADR 0002). The
- *      pane passes no `modelPolicy`, so `LotseChat` shows its warning card above the message field
+ *      pane passes no `modelPolicy`, so `LotsmanChat` shows its warning card above the message field
  *      while a free model is selected: the provider may store and train on what is sent. Everything
  *      this pane can read arrives through the MCP server above, so the person sees where it goes
- *      and decides. {@link LOTSE_MODEL_POLICY} stays for unattended jobs, which show no card.
+ *      and decides. {@link LOTSMAN_MODEL_POLICY} stays for unattended jobs, which show no card.
  *
  * **What the gate can and cannot do.** {@link assistantGateAnswer} answers the agent's
  * `session/request_permission`: it declines tier A tools and the agent's own destructive kinds
- * outright and asks the person about tier B and everything else. It is a RESTRICTION — `HostGateAnswer` has no value that approves, so no
- * answer from here can widen what lotse would otherwise allow. It sees tool calls and nothing
+ * outright and asks the person about tier B and everything else. It is a RESTRICTION —
+ * `HostGateAnswer` has no value that approves, so no answer from here can widen what lotsman would
+ * otherwise allow. It sees tool calls and nothing
  * else: it cannot see, and therefore cannot police, which MODEL the agent uses. That is point 5's
  * job, and it must not be claimed of the gate.
  *
  * Pure: no GTK, no spawning, and the only disk it touches is the one `mkdir` in
- * {@link ensureLotseDataRoot}. The panel builds the widget from a plan; everything above is here.
+ * {@link ensureLotsmanDataRoot}. The panel builds the widget from a plan; everything above is here.
  */
 
 import { chmodSync, mkdirSync } from 'node:fs';
@@ -47,16 +48,16 @@ import {
     gatherResolveContext,
     installAgent,
     isInstalled,
-    lotsePathsUnder,
+    lotsmanPathsUnder,
     resolveDefaultWithNote,
     type AgentChoice,
     type BundledAgent,
     type DefaultResolution,
     type ResolveContext,
-    type LotsePaths,
+    type LotsmanPaths,
     type McpServer,
     type ModelPolicy,
-} from '@lotse/core';
+} from '@lotsman/core';
 
 import { isAssistantEnabled } from '../../config/assistant-preference.ts';
 import { MCP_READONLY_ENV } from '../../config/mcp-readonly.ts';
@@ -65,13 +66,13 @@ import { userDataDir } from '../../paths.ts';
 import { MCP_SERVER_NAME, resolveMcpLaunch, type McpInstallation, type McpLaunch } from '../mcp-clients.ts';
 import { writeTierOf } from './write-tiers.ts';
 
-/** Subdirectory of the app's data directory that is lotse's alone. */
-export const LOTSE_DATA_DIR_NAME = 'assistant-agent';
+/** Subdirectory of the app's data directory that is lotsman's alone. */
+export const LOTSMAN_DATA_DIR_NAME = 'assistant-agent';
 
 /** Dev hook: pick the engine without touching the person's settings. */
 export const AI_ENGINE_ENV = 'STEUER_APP_AI_ENGINE';
 
-export type AiEngine = 'builtin' | 'lotse';
+export type AiEngine = 'builtin' | 'lotsman';
 
 /** What an installation from before `aiEngine` existed has — the assistant it has always had. */
 export const DEFAULT_AI_ENGINE: AiEngine = 'builtin';
@@ -85,13 +86,13 @@ export function resolveAiEngine(
     env: Record<string, string | undefined> = process.env,
 ): AiEngine {
     const raw = env[AI_ENGINE_ENV]?.trim().toLowerCase();
-    if (raw === 'builtin' || raw === 'lotse') return raw;
+    if (raw === 'builtin' || raw === 'lotsman') return raw;
     return settings.aiEngine ?? DEFAULT_AI_ENGINE;
 }
 
-/** `<app data dir>/assistant-agent` — the root lotse resolves all of its paths under. */
-export function lotseDataRoot(appDataDir: string = userDataDir()): string {
-    return join(appDataDir, LOTSE_DATA_DIR_NAME);
+/** `<app data dir>/assistant-agent` — the root lotsman resolves all of its paths under. */
+export function lotsmanDataRoot(appDataDir: string = userDataDir()): string {
+    return join(appDataDir, LOTSMAN_DATA_DIR_NAME);
 }
 
 /**
@@ -100,12 +101,12 @@ export function lotseDataRoot(appDataDir: string = userDataDir()): string {
  * The one place `readOnly` is set to true. `mcpClientSnippets` keeps the installation untouched, so
  * what an externally-configured client is handed does not change by a byte.
  */
-export function lotseMcpLaunch(inst: McpInstallation): McpLaunch {
+export function lotsmanMcpLaunch(inst: McpInstallation): McpLaunch {
     return resolveMcpLaunch({ ...inst, readOnly: true });
 }
 
-/** The launch as lotse wants it: one stdio `McpServer`, its env as name/value pairs. */
-export function lotseMcpServers(launch: McpLaunch, name: string = MCP_SERVER_NAME): McpServer[] {
+/** The launch as lotsman wants it: one stdio `McpServer`, its env as name/value pairs. */
+export function lotsmanMcpServers(launch: McpLaunch, name: string = MCP_SERVER_NAME): McpServer[] {
     return [
         {
             name,
@@ -129,7 +130,7 @@ export function lotseMcpServers(launch: McpLaunch, name: string = MCP_SERVER_NAM
  * and for `submit_filing` alike; the tier tables decide those (see {@link assistantGateAnswer}).
  *
  * `fetch` is deliberately NOT here. It is how an agent looks up a Gesetzestext or a BMF page, which
- * is useful; the person sees the URL in the dialog and decides. The kinds are lotse's own
+ * is useful; the person sees the URL in the dialog and decides. The kinds are lotsman's own
  * vocabulary (`PermissionView.kind`), not the agent's wording.
  */
 const DECLINED_TOOL_KINDS: ReadonlySet<string> = new Set(['delete', 'move', 'edit', 'write', 'execute']);
@@ -138,10 +139,10 @@ const DECLINED_TOOL_KINDS: ReadonlySet<string> = new Set(['delete', 'move', 'edi
  * `'decline'` or `'ask'` — never an approval; `HostGateAnswer` has no such value by design.
  *
  * A write tool of this app is judged by its tier (ADR 0005), not by its kind:
- *   - tier A is declined. Lotse may never approve it; the app's own dialog does, and lotse routes
+ *   - tier A is declined. Lotsman may never approve it; the app's own dialog does, and lotsman routes
  *     such a call there (`hostTools.hostConfirmed`) without consulting this gate. A tier A name that
  *     reaches the gate anyway means that routing is missing, and the one safe answer is no.
- *   - tier B is asked, so lotse's dialog puts it to the person.
+ *   - tier B is asked, so lotsman's dialog puts it to the person.
  * Anything else falls back to the kind: the agent's own writes and commands stay declined. The name
  * is read off `tool`, which is the agent's own sentence and may not carry the MCP name; an unrecognised
  * one is declined by its kind, never asked about because of it.
@@ -154,17 +155,17 @@ export function assistantGateAnswer(view: { tool: string; kind: string }): 'ask'
 }
 
 /**
- * Which models an UNATTENDED job may reach (`runJob` in `opencode-provider.ts`) — lotse's
- * ready-made rule, unmodified. The interactive pane does not use it: there the person sees lotse's
+ * Which models an UNATTENDED job may reach (`runJob` in `opencode-provider.ts`) — lotsman's
+ * ready-made rule, unmodified. The interactive pane does not use it: there the person sees lotsman's
  * warning card and decides; a background job has nobody to warn, so it stays closed.
  *
- * `denyFreeHostedModels` is `isFreeModel`'s answer turned into a policy: anything lotse
+ * `denyFreeHostedModels` is `isFreeModel`'s answer turned into a policy: anything lotsman
  * recognises as free (an id ending in `-free`, plus `opencode/big-pickle`), and an empty id. The widget hides those
  * models from the dropdown and REFUSES a prompt while one is selected; it never switches the model
- * for the person, so the choice stays theirs and is only narrowed. Fail-closed on both edges lotse
- * documents: a policy that throws is a deny, and so is a model lotse cannot identify.
+ * for the person, so the choice stays theirs and is only narrowed. Fail-closed on both edges lotsman
+ * documents: a policy that throws is a deny, and so is a model lotsman cannot identify.
  *
- * **It narrows models, not providers.** The pane offers every provider lotse supports
+ * **It narrows models, not providers.** The pane offers every provider lotsman supports
  * (`providerOnboarding: true`), and a provider that serves both paid and free models stays usable
  * with the paid ones. A free model is refused however it got selected — through the login dialog, a
  * provider the person connected earlier, or an agent config that names one.
@@ -177,20 +178,20 @@ export function assistantGateAnswer(view: { tool: string; kind: string }): 'ask'
  * the one concrete case measured so far: `opencode/fledge-alpha-free`, what an opencode with no
  * provider connected answers with by default.
  */
-export const LOTSE_MODEL_POLICY: ModelPolicy = denyFreeHostedModels;
+export const LOTSMAN_MODEL_POLICY: ModelPolicy = denyFreeHostedModels;
 
 /** Everything the panel needs to build a chat — and proof that it is allowed to. */
-export interface LotseEmbedPlan {
-    /** lotse's data root, under the app's own. Created by {@link ensureLotseDataRoot}. */
+export interface LotsmanEmbedPlan {
+    /** lotsman's data root, under the app's own. Created by {@link ensureLotsmanDataRoot}. */
     dataRoot: string;
-    paths: LotsePaths;
+    paths: LotsmanPaths;
     /** This app's MCP server, read-only, as the only server the agent gets. */
     mcpServers: McpServer[];
     /** The directory a new conversation runs in — the data root, never a source checkout. */
     cwd: string;
 }
 
-export interface LotseEmbedOptions {
+export interface LotsmanEmbedOptions {
     installation: McpInstallation;
     settings?: UserSettings;
     env?: Record<string, string | undefined>;
@@ -205,17 +206,17 @@ export interface LotseEmbedOptions {
  * `null` is the whole contract of point 1 above — the caller has nothing to build from, so there is
  * no path on which a process starts.
  */
-export function lotseEmbedPlan(options: LotseEmbedOptions): LotseEmbedPlan | null {
+export function lotsmanEmbedPlan(options: LotsmanEmbedOptions): LotsmanEmbedPlan | null {
     const settings = options.settings ?? loadUserSettings();
     const enabled = options.assistantEnabled ?? isAssistantEnabled(settings);
     if (!enabled) return null;
-    if (resolveAiEngine(settings, options.env ?? process.env) !== 'lotse') return null;
+    if (resolveAiEngine(settings, options.env ?? process.env) !== 'lotsman') return null;
 
-    const dataRoot = lotseDataRoot(options.appDataDir ?? userDataDir());
+    const dataRoot = lotsmanDataRoot(options.appDataDir ?? userDataDir());
     return {
         dataRoot,
-        paths: lotsePathsUnder(dataRoot),
-        mcpServers: lotseMcpServers(lotseMcpLaunch(options.installation)),
+        paths: lotsmanPathsUnder(dataRoot),
+        mcpServers: lotsmanMcpServers(lotsmanMcpLaunch(options.installation)),
         cwd: dataRoot,
     };
 }
@@ -225,13 +226,13 @@ export function lotseEmbedPlan(options: LotseEmbedOptions): LotseEmbedPlan | nul
  * masked by the umask and an existing directory ignores it entirely. Same shape as
  * `saveUserSettings`.
  */
-export function ensureLotseDataRoot(root: string): string {
+export function ensureLotsmanDataRoot(root: string): string {
     mkdirSync(root, { recursive: true, mode: 0o700 });
     chmodSync(root, 0o700);
     return root;
 }
 
-/** What the "no agent" page may offer: lotse's pinned opencode, downloaded for this person on request. */
+/** What the "no agent" page may offer: lotsman's pinned opencode, downloaded for this person on request. */
 export interface AgentInstallOffer {
     agent: BundledAgent;
     /** Download size in whole megabytes, rounded up — what the consent dialog names. */
@@ -243,11 +244,11 @@ export interface AgentInstallOffer {
  * pin for this platform, or the pinned copy is already there (then the agent resolved, or the
  * failure is something else a download would not fix).
  *
- * Only the pin in lotse's catalog is ever fetched — no "latest", no URL from this app. The person
+ * Only the pin in lotsman's catalog is ever fetched — no "latest", no URL from this app. The person
  * is asked first; the offer only describes what asking would be about.
  */
 export function agentInstallOffer(
-    paths: LotsePaths,
+    paths: LotsmanPaths,
     platform: NodeJS.Platform = process.platform,
     arch: string = process.arch,
 ): AgentInstallOffer | null {
@@ -260,12 +261,12 @@ export function agentInstallOffer(
 
 /**
  * Download and unpack the offered agent under `<dataDir>/agent-binaries`. Resolves with `null` on
- * success and with lotse's own message on failure, so the caller shows a sentence rather than a
+ * success and with lotsman's own message on failure, so the caller shows a sentence rather than a
  * stack. Anything that is not an {@link AgentInstallError} is a bug and is rethrown.
  */
 export async function installOfferedAgent(
     offer: AgentInstallOffer,
-    paths: LotsePaths,
+    paths: LotsmanPaths,
     options: { fetch?: typeof fetch } = {},
 ): Promise<string | null> {
     try {
@@ -297,12 +298,12 @@ export function resolveAgentSource(settings: UserSettings = loadUserSettings()):
 }
 
 /**
- * The agent the pane AND the one-shot jobs start. The choice is always passed to lotse explicitly —
- * without one lotse prefers a host install, which would put the person's own login behind an app
- * default. A choice that cannot be honoured falls back per lotse and comes back as `note` (and
+ * The agent the pane AND the one-shot jobs start. The choice is always passed to lotsman explicitly —
+ * without one lotsman prefers a host install, which would put the person's own login behind an app
+ * default. A choice that cannot be honoured falls back per lotsman and comes back as `note` (and
  * `agent: null` when nothing runs, which is the pane's no-agent page / a job's `no-agent`).
  */
-export function resolveLotseAgentIn(context: ResolveContext, source: AgentSource): DefaultResolution {
+export function resolveLotsmanAgentIn(context: ResolveContext, source: AgentSource): DefaultResolution {
     const setting: AgentChoice = { id: 'opencode', source };
     return resolveDefaultWithNote(context, setting);
 }
@@ -313,8 +314,11 @@ export function resolveLotseAgentIn(context: ResolveContext, source: AgentSource
  *
  * `gatherResolveContext(paths, false)` — no `--version` spawn, nothing waits on a child process.
  */
-export function resolveLotseAgent(paths: LotsePaths, source: AgentSource = resolveAgentSource()): DefaultResolution {
-    return resolveLotseAgentIn(gatherResolveContext(paths, false), source);
+export function resolveLotsmanAgent(
+    paths: LotsmanPaths,
+    source: AgentSource = resolveAgentSource(),
+): DefaultResolution {
+    return resolveLotsmanAgentIn(gatherResolveContext(paths, false), source);
 }
 
 /** Whether a launch really carries the read-only marker — what the test asserts on. */
