@@ -23,6 +23,7 @@ import {
     buildSendInvoiceBody,
 } from '../clients/qonto/index.ts';
 import { reconcileAfterFinalize } from './recurring-invoices.ts';
+import { checkTimeBeforeFinalize, settleTimeOnFinalize } from './time-invoice.ts';
 import type {
     ListTransactionsParams,
     ListStatementsParams,
@@ -117,9 +118,13 @@ export async function qontoSendInvoice(invoiceId: string, spec: SendInvoiceSpec,
  * Finalize a DRAFT invoice (draft -> unpaid, final number). Irreversible, so it only runs when
  * opts.confirm is true; otherwise it returns a preview of the invoice that would be frozen. After
  * finalizing, the recurring schedule that recorded the invoice is reconciled so its PROFORMA number
- * is replaced right away.
+ * is replaced right away. With `entityId`, the time entries the draft reserved are checked first and
+ * billed afterwards, exactly like the desktop path; without it there is no entity to look them up under.
  */
-export async function qontoFinalizeInvoice(invoiceId: string, opts: { confirm?: boolean; path?: string } = {}) {
+export async function qontoFinalizeInvoice(
+    invoiceId: string,
+    opts: { confirm?: boolean; path?: string; entityId?: string } = {},
+) {
     const current = await getClientInvoice(invoiceId);
     assertFinalizable(current);
     if (!opts.confirm) {
@@ -131,7 +136,9 @@ export async function qontoFinalizeInvoice(invoiceId: string, opts: { confirm?: 
             status: current.status,
         };
     }
+    if (opts.entityId) checkTimeBeforeFinalize(opts.entityId, invoiceId);
     const invoice = await finalizeClientInvoice(invoiceId);
+    if (opts.entityId) settleTimeOnFinalize(opts.entityId, invoiceId);
     const { result, error } = await reconcileAfterFinalize(invoiceId, opts.path);
     return {
         finalized: true,

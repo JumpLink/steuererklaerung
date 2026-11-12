@@ -270,12 +270,13 @@ export function registerQontoTools(server: McpServer, _ctx: AppContext): void {
             inputSchema: {
                 id: z.string().describe('Draft client invoice id'),
                 confirm: z.boolean().optional().describe('true = really finalize; omitted/false = preview only'),
+                entity: z.string().optional().describe('Entity id of the draft: bills the time entries it reserved'),
             },
             annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
         },
-        async ({ id, confirm }) => {
+        async ({ id, confirm, entity }) => {
             try {
-                return mcpSuccess(await qontoFinalizeInvoice(id, { confirm: confirm === true }));
+                return mcpSuccess(await qontoFinalizeInvoice(id, { confirm: confirm === true, entityId: entity }));
             } catch (err) {
                 return mcpErrorFrom(err);
             }

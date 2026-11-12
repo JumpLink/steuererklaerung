@@ -1,5 +1,15 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from '@gjsify/unit';
 import { rmSync } from 'node:fs';
+import { join } from 'node:path';
+import {
+    getTimeEntry,
+    ledgerDbPath,
+    migrate,
+    openLedger,
+    upsertTimeEntry,
+    type TimeEntry,
+} from '@steuererklaerung/store';
+import { reserveTimeForDraft } from '../../../src/core/actions/time-invoice.ts';
 import { assertFinalizable } from '../../../src/core/clients/qonto/client-invoices.ts';
 import { qontoFinalizeInvoice } from '../../../src/core/actions/qonto.ts';
 import { RecurringInvoiceSchema } from '../../../src/core/config/schema/recurring.ts';
@@ -82,7 +92,9 @@ export default async () => {
             return made.path;
         };
 
+        let ledgerBefore: string | undefined;
         beforeEach(() => {
+            ledgerBefore = process.env.LEDGER_DB_PATH;
             process.env.QONTO_ENV = 'production';
             process.env.QONTO_SIGN_IN = 'org-id';
             process.env.QONTO_SECRET_KEY = 'secret';
@@ -92,6 +104,8 @@ export default async () => {
             delete process.env.QONTO_ENV;
             delete process.env.QONTO_SIGN_IN;
             delete process.env.QONTO_SECRET_KEY;
+            if (ledgerBefore === undefined) delete process.env.LEDGER_DB_PATH;
+            else process.env.LEDGER_DB_PATH = ledgerBefore;
             for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true });
         });
 
@@ -125,6 +139,49 @@ export default async () => {
             const post = calls.find((c) => c.method === 'POST');
             expect(post?.url.endsWith('/client_invoices/inv-1/finalize')).toBe(true);
             expect(loadRecurringInvoices(path)[0].lastInvoice?.number).toBe('RE-0001');
+        });
+
+        await it('with an entity, bills the time entries the draft reserved', async () => {
+            const path = fixture();
+            process.env.LEDGER_DB_PATH = join(dirs[dirs.length - 1], 'ledger.db');
+            const at = '2026-05-01T08:00:00.000Z';
+            const entry: TimeEntry = {
+                id: 't1',
+                entityId: 'demo',
+                contactId: null,
+                project: 'Demo',
+                projectId: null,
+                description: 'Konzept',
+                startedAt: '2026-03-02T12:00:00.000Z',
+                endedAt: '2026-03-02T13:00:00.000Z',
+                durationSeconds: 3600,
+                billable: true,
+                invoiceId: null,
+                source: 'manual',
+                externalId: null,
+                note: null,
+                createdAt: at,
+                updatedAt: at,
+            };
+            const billedTo = () => {
+                const db = openLedger(ledgerDbPath());
+                try {
+                    return getTimeEntry(db, 't1')?.invoiceId ?? null;
+                } finally {
+                    db.close();
+                }
+            };
+            const db = openLedger(ledgerDbPath());
+            try {
+                migrate(db);
+                upsertTimeEntry(db, entry, at);
+            } finally {
+                db.close();
+            }
+            reserveTimeForDraft('demo', 'inv-1', ['t1']);
+            fakeQonto(qontoInvoice({}));
+            await qontoFinalizeInvoice('inv-1', { confirm: true, path, entityId: 'demo' });
+            expect(billedTo()).toBe('inv-1');
         });
     });
 };

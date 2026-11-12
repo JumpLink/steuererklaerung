@@ -344,14 +344,19 @@ export const qontoCommand: CommandModule = {
                                         type: 'boolean',
                                         default: false,
                                         describe: 'Actually finalize (otherwise preview only)',
+                                    })
+                                    .option('entity', {
+                                        type: 'string',
+                                        describe: 'Entity id of the draft: bills the time entries it reserved',
                                     }),
                             handler: (argv) => {
                                 const raw = argv as Record<string, unknown>;
                                 const id = pickArgv<string>(raw, 'id');
                                 const confirm = pickArgv<boolean>(raw, 'confirm') === true;
+                                const entityId = pickArgv<string>(raw, 'entity');
                                 runAndExit(() => {
                                     if (!id) throw new Error('Invoice id is required');
-                                    return qontoFinalizeInvoice(id, { confirm });
+                                    return qontoFinalizeInvoice(id, { confirm, entityId });
                                 });
                             },
                         }),
