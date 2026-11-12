@@ -1,6 +1,6 @@
 # 5. The assistant writes, in two tiers of approval
 
-- Status: **Proposed**
+- Status: **Accepted**
 - Date: 2026-11-11
 - Deciders: Pascal Garber
 - Related: [ADR 0002](0002-all-ai-through-lotse-and-opencode.md),
@@ -148,13 +148,12 @@ commit that changes what an agent may do, and it is small because 1 and 2 did th
   0600, in the data directory, in the backups, and deletable in Settings along with the
   conversation history.
 
-## Open questions
+## Resolved questions
 
-- **Scope of an always-allow.** `alwaysAllow: 'session'` is one scope for the whole policy, so a
-  session-long yes to `buchung_bestaetigen` is also a session-long yes to `dms_apply_metadata`.
-  Per-tool scoping would have to come from lotse. Is one scope enough for the first release?
-- **The locked-period refusal** contradicts issue #95's wording. Confirmed as decided here?
-- **Backup on failure.** A declined call because the snapshot failed blocks the whole session's
-  writes. Should a person be able to proceed without one, once, with a sentence they have to read?
-- **Scaleway.** ADR 0002 step 2 never probed whether opencode can connect it. Removing the old
-  engine in #96 removes the only Scaleway path with it; nobody has asked for it back.
+- **Scope of an always-allow.** One scope per session is enough for the first release. Per-tool
+  scoping waits for a lotse that offers it.
+- **The locked-period refusal** stands as written here, and #95's wording yields: a write into a
+  locked period is refused, not confirmed by a dialog.
+- **Backup on failure.** No write without a successful backup. The only way out is switching the
+  assistant off; there is no "proceed once without one".
+- **Scaleway.** #96 removes the old engine, and Scaleway with it, without probing opencode first.
