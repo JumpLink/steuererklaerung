@@ -60,7 +60,7 @@ import appIcons from './unit/config/app-icons.test.ts';
 import backup from './unit/actions/backup.test.ts';
 import entitySetup from './unit/actions/entity-setup.test.ts';
 import assistantExamples from './unit/actions/assistant-examples.test.ts';
-import lotseEmbed from './unit/assistant/lotse-embed.test.ts';
+import lotsmanEmbed from './unit/assistant/lotsman-embed.test.ts';
 import restartCommand from './unit/assistant/restart-command.test.ts';
 import setupGaps from './unit/actions/setup-gaps.test.ts';
 import mcpClients from './unit/actions/mcp-clients.test.ts';
@@ -288,7 +288,7 @@ run({
     backup,
     entitySetup,
     assistantExamples,
-    lotseEmbed,
+    lotsmanEmbed,
     restartCommand,
     setupGaps,
     mcpClients,

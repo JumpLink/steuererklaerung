@@ -73,7 +73,7 @@ app/po/POTFILES.in
 *.d.blp.ts
 
 # `gjsify link` writes this when a sibling checkout is linked in for development (see
-# docs/app/lotse-entwicklung.md). It names an absolute path on one machine, and
+# docs/app/lotsman-entwicklung.md). It names an absolute path on one machine, and
 # `gjsify install --immutable` refuses to run while it exists.
 .gjsify-link.json
 shots/

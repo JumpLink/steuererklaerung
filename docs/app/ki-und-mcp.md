@@ -16,8 +16,8 @@ genau einen Schalter.
 | **MCP-Server für externe Agenten** | Einstellungen → MCP, Web: Einstellungen | Manifest (`steuererklaerung.json` → `app.mcp`) | Welche Werkzeuge `steuer mcp` nach außen anbietet (Gruppen, Schreibzugriff) |
 
 Ist der Assistent **eingeschaltet**, gibt es zusätzlich eine Wahl, *welcher* Assistent im Panel
-sitzt — der eingebaute oder „lotse". Das ist keine dritte Einwilligung, sondern eine Auswahl
-innerhalb der ersten: [siehe unten](#der-zweite-assistent--lotse).
+sitzt — der eingebaute oder „lotsman". Das ist keine dritte Einwilligung, sondern eine Auswahl
+innerhalb der ersten: [siehe unten](#der-zweite-assistent--lotsman).
 
 ## Warum der Assistent pro Benutzer gilt
 
@@ -46,7 +46,7 @@ die Zahlen des gewählten Jahres und, wenn Paperless eingerichtet ist, eine **le
 Belegsuche. Schreibwerkzeuge bekommt er nie; Vorschläge übernimmt nur ein Klick der Person. Wer den
 MCP-Server abschaltet, nimmt dem eingebauten Assistenten also nichts weg — und umgekehrt.
 
-## Der zweite Assistent — lotse
+## Der zweite Assistent — lotsman
 
 **Einstellungen → Allgemein → KI-Assistent → Modus.** Die Auswahl hat zwei Werte; voreingestellt
 ist **Eingebaut**, eine bestehende Installation ändert sich also nicht von selbst.
@@ -54,7 +54,7 @@ ist **Eingebaut**, eine bestehende Installation ändert sich also nicht von selb
 | Modus | Was im Panel läuft |
 |---|---|
 | **Eingebaut** (Voreinstellung) | wie bisher: die App ruft einen KI-Anbieter **im eigenen Prozess** auf |
-| **lotse** | die App startet einen **Coding-Agenten als eigenen Prozess** ([opencode](https://opencode.ai)) und spricht mit ihm über das [Agent Client Protocol](https://agentclientprotocol.com) |
+| **lotsman** | die App startet einen **Coding-Agenten als eigenen Prozess** ([opencode](https://opencode.ai)) und spricht mit ihm über das [Agent Client Protocol](https://agentclientprotocol.com) |
 
 Der Unterschied ist nicht das Modell, sondern **wer** arbeitet: ein Agent führt Werkzeuge aus,
 fragt nach, arbeitet mehrschrittig. Darum ist die Wahl ausdrücklich und nicht automatisch.
@@ -66,10 +66,10 @@ nichts auszuwählen.
 **Welches opencode?** Zeile **Coding-Agent** direkt darunter (gilt ab dem nächsten Start, für das
 Panel *und* die Einmal-Aufträge). Voreinstellung: **Mitgeliefertes opencode** mit eigener, isolierter
 Konfiguration. Wer **Eigenes opencode (globale Konfiguration)** wählt, nutzt sein installiertes
-opencode samt eigener Anmeldung und Modellen. Kostenlose Fremdmodelle lösen in beiden Fällen die Warnkarte aus. Fehlt die gewählte Variante, nimmt lotse die andere und die App schreibt einen Hinweis;
+opencode samt eigener Anmeldung und Modellen. Kostenlose Fremdmodelle lösen in beiden Fällen die Warnkarte aus. Fehlt die gewählte Variante, nimmt lotsman die andere und die App schreibt einen Hinweis;
 gibt es gar keine, erscheint die Hinweisseite.
 
-### Was lotse hier bekommt — und was nicht
+### Was lotsman hier bekommt — und was nicht
 
 - **Kein Agent installiert, kein Panel.** Findet die App keinen opencode, zeigt sie eine
   Hinweisseite mit dem fehlenden Schritt, statt einen Chat vorzutäuschen.
@@ -77,8 +77,8 @@ gibt es gar keine, erscheint die Hinweisseite.
   startet sie für diesen Zweck **lesend** — unabhängig davon, was im Manifest unter `app.mcp`
   steht. Ein extern eingerichteter Client (Claude, Cursor …) bekommt davon nichts ab; dessen
   Konfiguration bleibt unverändert.
-- **Eigenes Datenverzeichnis.** lotse schreibt seine Sitzungen **nicht** nach
-  `$XDG_DATA_HOME/lotse`, sondern in ein Unterverzeichnis des Datenverzeichnisses *dieser* App
+- **Eigenes Datenverzeichnis.** lotsman schreibt seine Sitzungen **nicht** nach
+  `$XDG_DATA_HOME/lotsman`, sondern in ein Unterverzeichnis des Datenverzeichnisses *dieser* App
   (`assistant-agent`, Modus `0700`). Ein Sitzungsprotokoll enthält den Text von Gesprächen über
   Steuerdaten; es gehört zu diesen Daten und nicht in die Historie eines anderen Programms.
 - **Rückfragen: ablehnen oder fragen, nie von selbst erlauben.** Will der Agent löschen,
@@ -89,18 +89,18 @@ gibt es gar keine, erscheint die Hinweisseite.
   BMF-Seite nach. Die URL steht in der Rückfrage.
 - **Kostenlose Fremdmodelle: warnen statt sperren.** Zum Ausprobieren darf auch ein kostenloses
   Modell antworten. Solange eines ausgewählt ist, steht über dem Eingabefeld eine **Warnkarte**
-  (lotses): der Anbieter kann speichern und damit trainieren, was gesendet wird. Die Modellwahl
+  (lotsmans): der Anbieter kann speichern und damit trainieren, was gesendet wird. Die Modellwahl
   bleibt die der Person; umgeschaltet wird nie. Das Panel übergibt dafür bewusst keine Modellregel.
   **Einmal-Aufträge** (Hintergrund, ohne Person davor) behalten die harte Regel
   (`denyFreeHostedModels`, fail-closed): niemand läge vor der Karte, die sie lesen könnte. Die
   Rückfrage-Logik hat damit nichts zu tun; sie sieht Werkzeugaufrufe und kann ein Modell gar nicht
   erkennen. Ist noch kein Anbieter verbunden, bietet das Panel die Anmeldung bei **jedem Anbieter
-  an, den lotse unterstützt** (`providerOnboarding` an).
+  an, den lotsman unterstützt** (`providerOnboarding` an).
 - **opencode fehlt?** Ohne mitgeliefertes und ohne eigenes opencode zeigt die Hinweisseite den Knopf
   **opencode installieren (… MB)**. Nach einer Rückfrage mit Größe und Quelle lädt die App genau
-  die in lotse festgelegte Version (Prüfsumme und Größe werden vor dem Entpacken geprüft) in ihren
+  die in lotsman festgelegte Version (Prüfsumme und Größe werden vor dem Entpacken geprüft) in ihren
   eigenen Datenordner; sonst wird nichts geändert. Nur Linux (x86_64, aarch64); anderswo bleibt
   die Anleitung.
 
-Technisch: die Pakete `@lotse/*` kommen von npm; ein Entwicklungs-Link auf einen lokalen Checkout
-ist optional — [lotse einbinden](lotse-entwicklung.md).
+Technisch: die Pakete `@lotsman/*` kommen von npm; ein Entwicklungs-Link auf einen lokalen Checkout
+ist optional — [lotsman einbinden](lotsman-entwicklung.md).

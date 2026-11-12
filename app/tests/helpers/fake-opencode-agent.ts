@@ -1,10 +1,10 @@
 /**
  * A fake `opencode acp` agent for the provider tests: nothing is spawned, no socket is opened and
  * no document is read. It answers one canned string, so a test can check what `OpencodeProvider`
- * makes of an answer — and, with `models`/`current`, what lotse's model policy makes of a model
+ * makes of an answer — and, with `models`/`current`, what lotsman's model policy makes of a model
  * before any prompt is sent.
  */
-import type { AgentHandle, OpenAgentOptions } from '@lotse/core';
+import type { AgentHandle, OpenAgentOptions } from '@lotsman/core';
 
 import { OpencodeProvider } from '../../src/core/clients/llm/index.ts';
 
@@ -16,7 +16,7 @@ export interface FakeAgentOptions {
     failNewSession?: Error;
     /** The turn never ends: only a timeout or an abort stops the job. */
     hang?: boolean;
-    /** The agent reports no model control at all, so lotse cannot tell where a prompt would go. */
+    /** The agent reports no model control at all, so lotsman cannot tell where a prompt would go. */
     noModelOption?: boolean;
 }
 

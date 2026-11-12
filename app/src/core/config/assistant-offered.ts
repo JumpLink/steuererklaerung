@@ -5,7 +5,7 @@
  *
  * 0.1.0 ships without it. Not "off by default" but not offered: no pane, no toggle, no setting,
  * no welcome page, and no background job that could start a provider. The code stays exactly
- * where it is — bringing the assistant back for 0.2 (lotse, issue #95) is this one constant.
+ * where it is — bringing the assistant back for 0.2 (lotsman, issue #95) is this one constant.
  *
  * Above the person's own switch, never instead of it: an installation whose `settings.json` says
  * `aiAssistant: true` is read as before and left untouched, so it takes effect again the day this

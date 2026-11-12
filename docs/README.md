@@ -54,12 +54,12 @@ Aus [`AGENTS.md`](../AGENTS.md) ausgelagerte Details — dort bleiben nur die ha
 |----------|-------------|
 | [adr/README.md](adr/README.md) | Architekturentscheidungen (ADR): Format, Nummerierung, Status, Liste |
 | [adr/0001-country-modules-and-per-entity-tax-switch.md](adr/0001-country-modules-and-per-entity-tax-switch.md) | Ländermodule und ein Schalter je Entität für die deutschen Steuerfunktionen |
-| [adr/0002-all-ai-through-lotse-and-opencode.md](adr/0002-all-ai-through-lotse-and-opencode.md) | Alle KI-Funktionen über lotse und den mitgelieferten opencode, eine Anmeldung |
+| [adr/0002-all-ai-through-lotsman-and-opencode.md](adr/0002-all-ai-through-lotsman-and-opencode.md) | Alle KI-Funktionen über lotsman und den mitgelieferten opencode, eine Anmeldung |
 | [adr/0003-backend-agnostic-dms-inbox-tools.md](adr/0003-backend-agnostic-dms-inbox-tools.md) | Backend-unabhängige `dms_*`-Tools für den Eingangs-Workflow |
 | [adr/0004-contracts.md](adr/0004-contracts.md) | Verträge: eigene Tabellen im Ledger, Abgleich mit Buchungen, Kündigungsfristen |
 | [adr/0005-assistant-writes-in-two-tiers.md](adr/0005-assistant-writes-in-two-tiers.md) | Der Assistent darf schreiben: zwei Freigabestufen, Sicherung je Sitzung, Änderungsprotokoll |
 | [architecture/country-inventory.md](architecture/country-inventory.md) | Jede Stelle im Code, die deutsches Steuerrecht annimmt — Grundlage von ADR 0001 |
-| [architecture/ai-jobs-study.md](architecture/ai-jobs-study.md) | Studie: KI-Aufrufe ohne Chat (Belegauswertung) unter dem lotse/opencode-Ansatz |
+| [architecture/ai-jobs-study.md](architecture/ai-jobs-study.md) | Studie: KI-Aufrufe ohne Chat (Belegauswertung) unter dem lotsman/opencode-Ansatz |
 | [architecture/support-per-channel.md](architecture/support-per-channel.md) | Welche Unterstützungs-Links ein Vertriebskanal zeigen darf (#62) |
 
 ## Oberflächen
@@ -72,7 +72,7 @@ Aus [`AGENTS.md`](../AGENTS.md) ausgelagerte Details — dort bleiben nur die ha
 | [app/backup.md](app/backup.md) | Sicherung (App, `steuer backup`, automatisch vor Migrationen): was hineinkommt, wo sie liegt, wie man von Hand wiederherstellt |
 | [app/ki-und-mcp.md](app/ki-und-mcp.md) | Eingebauter KI-Assistent (pro Benutzer) und MCP-Server für externe Agenten (Manifest): zwei unabhängige Schalter und warum sie dort liegen |
 | [app/mcp-clients.md](app/mcp-clients.md) | Externe Agenten verbinden: Startbefehl je Installation (Flatpak, Paket, Checkout) und das Konfigurationsformat von Claude Desktop/Code, opencode, Cursor, VS Code |
-| [app/lotse-entwicklung.md](app/lotse-entwicklung.md) | `@lotse/*` kommt von npm; `gjsify link ../lotse` als optionaler Dev-Weg (und Entlinken vor `--immutable`), `preserveSymlinks`, geplanter, noch nicht gebauter Flatpak |
+| [app/lotsman-entwicklung.md](app/lotsman-entwicklung.md) | `@lotsman/*` kommt von npm; `gjsify link ../lotsman` als optionaler Dev-Weg (und Entlinken vor `--immutable`), `preserveSymlinks`, geplanter, noch nicht gebauter Flatpak |
 | [app/i18n-status.md](app/i18n-status.md) | Übersetzung der Oberfläche (Englisch/Deutsch): übersetzte und offene Ansichten, Terminologie, was Deutsch bleibt |
 | [app/mobile-layout.md](app/mobile-layout.md) | Entwurf für die Telefon-Breite (360 × 760): Navigationsmodell, gemeinsame Bausteine, Ansicht für Ansicht, Umsetzungsplan |
 | [ideen-nutzerfuehrung.md](ideen-nutzerfuehrung.md) | Ideenliste nach Priorität: einfacher bedienen, früher warnen, ohne KI nutzbar (Konzepte, keine Aufträge) |

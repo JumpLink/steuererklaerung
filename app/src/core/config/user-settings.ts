@@ -71,11 +71,11 @@ export const UserSettingsSchema = z.looseObject({
     aiAssistant: z.boolean().optional(),
     /**
      * WHICH assistant the desktop shows once {@link aiAssistant} says yes: the in-process one that
-     * has always been there (`builtin`) or a coding agent lotse starts as a subprocess (`lotse`).
+     * has always been there (`builtin`) or a coding agent lotsman starts as a subprocess (`lotsman`).
      * UNSET is `builtin`, so no existing installation changes. Never a replacement for the opt-in:
      * with AI off neither pane is built and no agent is ever spawned.
      */
-    aiEngine: z.enum(['builtin', 'lotse']).optional(),
+    aiEngine: z.enum(['builtin', 'lotsman']).optional(),
     /**
      * WHICH opencode the coding-agent assistant (pane and one-shot jobs) starts: the copy shipped with
      * the app in its own isolated config (`bundled`) or the person's own installed one with their

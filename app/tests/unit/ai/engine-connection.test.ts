@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from '@gjsify/unit';
-import type { AgentCommand, LoginProvider, LoginSession } from '@lotse/core';
+import type { AgentCommand, LoginProvider, LoginSession } from '@lotsman/core';
 
 import { engineConnection } from '../../../src/core/actions/assistant/engine-status.ts';
 

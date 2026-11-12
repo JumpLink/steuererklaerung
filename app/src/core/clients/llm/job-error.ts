@@ -1,10 +1,10 @@
 /**
  * Why a structured AI job failed — one kind per remedy, one translated sentence per kind.
  *
- * The kinds are lotse's `JobErrorKind` plus `no-agent`, so the opencode path hands its failures
+ * The kinds are lotsman's `JobErrorKind` plus `no-agent`, so the opencode path hands its failures
  * through unchanged and the other providers reuse `malformed` / `invalid` for the same two cases.
  *
- * **Nothing about the input or the answer is kept.** lotse's `JobError` carries the model's raw
+ * **Nothing about the input or the answer is kept.** lotsman's `JobError` carries the model's raw
  * answer (`output`) and the parser's complaint (`cause`), both about a private document. This error
  * is built from the kind alone, so no log line or toast downstream can print either of them.
  */
@@ -74,7 +74,7 @@ export class AiJobError extends Error {
     }
 }
 
-/** Whether a string names a kind — for mapping lotse's `JobError.kind` without importing lotse. */
+/** Whether a string names a kind — for mapping lotsman's `JobError.kind` without importing lotsman. */
 export function isAiJobErrorKind(kind: string): kind is AiJobErrorKind {
     return KINDS.has(kind);
 }

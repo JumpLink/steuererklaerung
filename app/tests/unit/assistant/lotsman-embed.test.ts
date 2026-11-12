@@ -1,5 +1,5 @@
 /**
- * The five promises `lotse-embed.ts` makes, each as a test that would fail without it.
+ * The five promises `lotsman-embed.ts` makes, each as a test that would fail without it.
  *
  * The interesting one is the first: "no AI" has to mean no process, and the only way to check that
  * without a display is to check that the caller is handed NOTHING to build from. A test that
@@ -14,30 +14,30 @@ import { join } from 'node:path';
 import {
     denyFreeHostedModels,
     isFreeModel,
-    lotsePathsUnder,
+    lotsmanPathsUnder,
     type AgentDetection,
     type McpServer,
     type ResolveContext,
-} from '@lotse/core';
+} from '@lotsman/core';
 
 import {
     agentInstallOffer,
     AI_ENGINE_ENV,
     assistantGateAnswer,
-    ensureLotseDataRoot,
+    ensureLotsmanDataRoot,
     installOfferedAgent,
     launchIsReadOnly,
-    lotseDataRoot,
-    lotseEmbedPlan,
-    lotseMcpLaunch,
-    LOTSE_DATA_DIR_NAME,
-    LOTSE_MODEL_POLICY,
+    lotsmanDataRoot,
+    lotsmanEmbedPlan,
+    lotsmanMcpLaunch,
+    LOTSMAN_DATA_DIR_NAME,
+    LOTSMAN_MODEL_POLICY,
     resolveAgentSource,
     resolveAiEngine,
-    resolveLotseAgentIn,
+    resolveLotsmanAgentIn,
     DEFAULT_AGENT_SOURCE,
-    type LotseEmbedOptions,
-} from '../../../src/core/actions/assistant/lotse-embed.ts';
+    type LotsmanEmbedOptions,
+} from '../../../src/core/actions/assistant/lotsman-embed.ts';
 import { MCP_SERVER_NAME, resolveMcpLaunch, type McpInstallation } from '../../../src/core/actions/mcp-clients.ts';
 import { MCP_READONLY_ENV, readOnlyRequested, restrictMcpToReadOnly } from '../../../src/core/config/mcp-readonly.ts';
 import { defaultAppSettings } from '../../../src/core/config/schema/app-settings.ts';
@@ -62,7 +62,7 @@ const installation: McpInstallation = {
  *
  * `McpServer` is a union whose members all carry ACP's `[key: string]: unknown`, so `env` is
  * `unknown` on every branch and `'env' in server` narrows nothing — the type says "an opaque object
- * lotse forwards", which is exactly what it is. So read it as data instead of casting it.
+ * lotsman forwards", which is exactly what it is. So read it as data instead of casting it.
  */
 const envPairs = (server: McpServer | undefined): { name: string; value: string }[] => {
     const raw = server?.env;
@@ -74,10 +74,10 @@ const envPairs = (server: McpServer | undefined): { name: string; value: string 
 };
 
 /** A plan built with everything said yes — the baseline the other cases differ from. */
-const plan = (patch: Partial<LotseEmbedOptions> = {}) =>
-    lotseEmbedPlan({
+const plan = (patch: Partial<LotsmanEmbedOptions> = {}) =>
+    lotsmanEmbedPlan({
         installation,
-        settings: settings({ aiEngine: 'lotse' }),
+        settings: settings({ aiEngine: 'lotsman' }),
         env: {},
         appDataDir: APP_DATA,
         assistantEnabled: true,
@@ -85,13 +85,13 @@ const plan = (patch: Partial<LotseEmbedOptions> = {}) =>
     });
 
 export default async () => {
-    await describe('lotseEmbedPlan — nothing to build from means nothing is started', async () => {
+    await describe('lotsmanEmbedPlan — nothing to build from means nothing is started', async () => {
         await it('returns null with the AI switch off, whatever the engine says', async () => {
             expect(plan({ assistantEnabled: false })).toBe(null);
             expect(
-                lotseEmbedPlan({
+                lotsmanEmbedPlan({
                     installation,
-                    settings: settings({ aiAssistant: false, aiEngine: 'lotse' }),
+                    settings: settings({ aiAssistant: false, aiEngine: 'lotsman' }),
                     env: {},
                     appDataDir: APP_DATA,
                 }),
@@ -104,45 +104,45 @@ export default async () => {
         });
 
         await it('ignores the engine env hook unless it names an engine', async () => {
-            expect(plan({ settings: settings(), env: { [AI_ENGINE_ENV]: 'lotse' } })).not.toBe(null);
+            expect(plan({ settings: settings(), env: { [AI_ENGINE_ENV]: 'lotsman' } })).not.toBe(null);
             // A typo falls back to the setting (builtin), it does not become a default yes.
             expect(plan({ settings: settings(), env: { [AI_ENGINE_ENV]: 'lotze' } })).toBe(null);
         });
     });
 
-    await describe('lotseEmbedPlan — the agent writes under the app, not beside it', async () => {
-        await it('puts every lotse path under the app data directory', async () => {
+    await describe('lotsmanEmbedPlan — the agent writes under the app, not beside it', async () => {
+        await it('puts every lotsman path under the app data directory', async () => {
             const built = plan();
             expect(built).not.toBe(null);
             if (!built) return;
-            expect(built.dataRoot).toBe(join(APP_DATA, LOTSE_DATA_DIR_NAME));
+            expect(built.dataRoot).toBe(join(APP_DATA, LOTSMAN_DATA_DIR_NAME));
             expect(built.cwd).toBe(built.dataRoot);
             for (const path of Object.values(built.paths)) {
                 expect(path.startsWith(`${built.dataRoot}/`)).toBe(true);
             }
         });
 
-        await it('never resolves into the personal lotse directory', async () => {
+        await it('never resolves into the personal lotsman directory', async () => {
             const built = plan();
             if (!built) return;
-            expect(built.paths.sessionsFile.includes('/.local/share/lotse/')).toBe(false);
-            expect(lotseDataRoot(APP_DATA)).toBe(`${APP_DATA}/${LOTSE_DATA_DIR_NAME}`);
+            expect(built.paths.sessionsFile.includes('/.local/share/lotsman/')).toBe(false);
+            expect(lotsmanDataRoot(APP_DATA)).toBe(`${APP_DATA}/${LOTSMAN_DATA_DIR_NAME}`);
         });
 
         await it('creates the data root 0700 even when it already exists wider', async () => {
-            const parent = mkdtempSync(join(tmpdir(), 'steuer-lotse-'));
+            const parent = mkdtempSync(join(tmpdir(), 'steuer-lotsman-'));
             try {
-                const root = ensureLotseDataRoot(lotseDataRoot(parent));
+                const root = ensureLotsmanDataRoot(lotsmanDataRoot(parent));
                 expect(statSync(root).mode & 0o777).toBe(0o700);
                 // Idempotent, and a second call re-asserts the mode rather than trusting the umask.
-                expect(statSync(ensureLotseDataRoot(root)).mode & 0o777).toBe(0o700);
+                expect(statSync(ensureLotsmanDataRoot(root)).mode & 0o777).toBe(0o700);
             } finally {
                 rmSync(parent, { recursive: true, force: true });
             }
         });
     });
 
-    await describe('lotseEmbedPlan — one server, read-only', async () => {
+    await describe('lotsmanEmbedPlan — one server, read-only', async () => {
         await it('hands the agent this app’s MCP server and no other', async () => {
             const built = plan();
             if (!built) return;
@@ -158,11 +158,11 @@ export default async () => {
             expect(envPairs(built.mcpServers[0]).some((e) => e.name === MCP_READONLY_ENV && e.value === '1')).toBe(
                 true,
             );
-            expect(launchIsReadOnly(lotseMcpLaunch(installation))).toBe(true);
+            expect(launchIsReadOnly(lotsmanMcpLaunch(installation))).toBe(true);
         });
 
         await it('carries it as an --env flag in a Flatpak, where the env block is filtered', async () => {
-            const launch = lotseMcpLaunch({
+            const launch = lotsmanMcpLaunch({
                 ...installation,
                 flatpakId: 'eu.jumplink.Steuererklaerung',
             });
@@ -179,23 +179,23 @@ export default async () => {
     });
 
     await describe('free hosted models — warned about in the pane, blocked in unattended jobs', async () => {
-        await it('keeps lotse’s rule unmodified for background jobs', async () => {
+        await it('keeps lotsman’s rule unmodified for background jobs', async () => {
             // Not a copy of the rule that could drift from it.
-            expect(LOTSE_MODEL_POLICY).toBe(denyFreeHostedModels);
+            expect(LOTSMAN_MODEL_POLICY).toBe(denyFreeHostedModels);
         });
 
-        await it('denies what lotse recognises as free, an empty id too, and allows a paid id', async () => {
+        await it('denies what lotsman recognises as free, an empty id too, and allows a paid id', async () => {
             for (const id of ['opencode/big-pickle', 'opencode/fledge-alpha-free', 'x/any-free']) {
                 expect(isFreeModel(id)).toBe(true);
-                expect(LOTSE_MODEL_POLICY(id)).toBe('deny');
+                expect(LOTSMAN_MODEL_POLICY(id)).toBe('deny');
             }
-            expect(LOTSE_MODEL_POLICY('')).toBe('deny');
-            expect(LOTSE_MODEL_POLICY('   ')).toBe('deny');
+            expect(LOTSMAN_MODEL_POLICY('')).toBe('deny');
+            expect(LOTSMAN_MODEL_POLICY('   ')).toBe('deny');
             // The documented gap, asserted rather than left implied: an unrecognised id is allowed.
-            expect(LOTSE_MODEL_POLICY('anthropic/claude-opus-5')).toBe('allow');
+            expect(LOTSMAN_MODEL_POLICY('anthropic/claude-opus-5')).toBe('allow');
         });
 
-        await it('the plan carries no policy, so the pane shows lotse’s warning card instead', async () => {
+        await it('the plan carries no policy, so the pane shows lotsman’s warning card instead', async () => {
             const built = plan();
             if (!built) return;
             expect('modelPolicy' in built).toBe(false);
@@ -208,15 +208,15 @@ export default async () => {
          * keep passing one, since nobody is there to read a card.
          */
         await it('the pane passes no modelPolicy, the unattended job still does', async () => {
-            const panel = readFileSync(join(process.cwd(), 'src/frontends/desktop/lotse-panel.ts'), 'utf-8');
+            const panel = readFileSync(join(process.cwd(), 'src/frontends/desktop/lotsman-panel.ts'), 'utf-8');
             expect(panel.includes('modelPolicy:')).toBe(false);
             const job = readFileSync(join(process.cwd(), 'src/core/clients/llm/opencode-provider.ts'), 'utf-8');
-            expect(job.includes('modelPolicy: embed.LOTSE_MODEL_POLICY')).toBe(true);
+            expect(job.includes('modelPolicy: embed.LOTSMAN_MODEL_POLICY')).toBe(true);
         });
     });
 
-    await describe('agentInstallOffer — the "no agent" page offers lotse’s pin, never a "latest"', async () => {
-        const paths = lotsePathsUnder(mkdtempSync(join(tmpdir(), 'lotse-offer-')));
+    await describe('agentInstallOffer — the "no agent" page offers lotsman’s pin, never a "latest"', async () => {
+        const paths = lotsmanPathsUnder(mkdtempSync(join(tmpdir(), 'lotsman-offer-')));
 
         await it('offers the pinned opencode on a platform the catalog has a pin for, with its size', async () => {
             const offer = agentInstallOffer(paths, 'linux', 'x64');
@@ -231,7 +231,7 @@ export default async () => {
             expect(agentInstallOffer(paths, 'linux', 'riscv64')).toBe(null);
         });
 
-        await it('reports a failed download as lotse’s sentence and leaves nothing behind', async () => {
+        await it('reports a failed download as lotsman’s sentence and leaves nothing behind', async () => {
             const offer = agentInstallOffer(paths, 'linux', 'x64');
             if (!offer) return;
             const failing = (() => Promise.resolve(new Response('', { status: 503 }))) as unknown as typeof fetch;
@@ -290,11 +290,11 @@ export default async () => {
         await it('lets the env hook win over the setting, in either direction', async () => {
             expect(
                 resolveAiEngine(settings({ aiEngine: 'builtin' }), {
-                    [AI_ENGINE_ENV]: 'LOTSE',
+                    [AI_ENGINE_ENV]: 'LOTSMAN',
                 }),
-            ).toBe('lotse');
+            ).toBe('lotsman');
             expect(
-                resolveAiEngine(settings({ aiEngine: 'lotse' }), {
+                resolveAiEngine(settings({ aiEngine: 'lotsman' }), {
                     [AI_ENGINE_ENV]: 'builtin',
                 }),
             ).toBe('builtin');
@@ -332,28 +332,28 @@ export default async () => {
         });
 
         await it('keeps a host install out of the way while bundled is chosen', async () => {
-            const r = resolveLotseAgentIn(context({ host: true, bundled: true }), 'bundled');
+            const r = resolveLotsmanAgentIn(context({ host: true, bundled: true }), 'bundled');
             expect(r.agent?.source).toBe('bundled');
             expect(r.note).toBe(null);
         });
 
         await it('starts the host install only when asked for it', async () => {
-            const r = resolveLotseAgentIn(context({ host: true, bundled: true }), 'host');
+            const r = resolveLotsmanAgentIn(context({ host: true, bundled: true }), 'host');
             expect(r.agent?.source).toBe('host');
         });
 
         await it('says so when the choice is unavailable, and has no agent when nothing is', async () => {
-            const fallback = resolveLotseAgentIn(context({ host: true, bundled: false }), 'bundled');
+            const fallback = resolveLotsmanAgentIn(context({ host: true, bundled: false }), 'bundled');
             expect(fallback.note === null).toBe(false);
-            const none = resolveLotseAgentIn(context({ host: false, bundled: false }), 'host');
+            const none = resolveLotsmanAgentIn(context({ host: false, bundled: false }), 'host');
             expect(none.agent).toBe(null);
             expect(none.note === null).toBe(false);
         });
 
         await it('is the one resolver both the pane and the jobs call', async () => {
-            for (const file of ['frontends/desktop/lotse-panel.ts', 'core/clients/llm/opencode-provider.ts']) {
+            for (const file of ['frontends/desktop/lotsman-panel.ts', 'core/clients/llm/opencode-provider.ts']) {
                 const text = readFileSync(join(process.cwd(), 'src', file), 'utf-8');
-                expect(text.includes('resolveLotseAgent(')).toBe(true);
+                expect(text.includes('resolveLotsmanAgent(')).toBe(true);
                 expect(text.includes('resolveDefaultWithNote')).toBe(false);
             }
         });

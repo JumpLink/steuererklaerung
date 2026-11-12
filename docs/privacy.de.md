@@ -47,7 +47,7 @@ Ein KI-Modell wird nur aufgerufen, wenn du eine KI-Funktion nutzt: Rechnungsfeld
 
 - `claude`: das Claude Agent SDK, ohne erlaubte Werkzeuge ([claude-agent-provider.ts](https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/clients/llm/claude-agent-provider.ts)). Der Prompt geht mit deinem eigenen Konto an Anthropic.
 - `scaleway`: `api.scaleway.ai`, mit deinem API-Schlüssel ([chat.ts](https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/clients/scaleway/chat.ts)).
-- `opencode`: ein Coding-Agent, den lotse als lokalen Prozess startet. Kostenlose gehostete Modelle werden für Hintergrundaufgaben abgelehnt ([lotse-embed.ts](https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/actions/assistant/lotse-embed.ts)).
+- `opencode`: ein Coding-Agent, den lotsman als lokalen Prozess startet. Kostenlose gehostete Modelle werden für Hintergrundaufgaben abgelehnt ([lotsman-embed.ts](https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/actions/assistant/lotsman-embed.ts)).
 
 Gesendet wird der Text des Dokuments oder deine Frage. Der Assistent erhält nur zusammengefasste Kennzahlen, keine IBANs oder Steuernummern ([chat.ts](https://github.com/JumpLink/steuererklaerung/blob/main/app/src/core/actions/assistant/chat.ts)). Diese Anbieter verarbeiten die Daten nach ihren eigenen Bedingungen; der Entwickler sieht nichts davon. Ohne KI kannst du alles von Hand eintragen.
 
