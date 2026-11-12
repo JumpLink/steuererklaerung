@@ -12,9 +12,10 @@
     },
     "scripts": {
         "start": "gjsify run dist/steuer.gjs.mjs",
-        "check": "gjsify tsc --noEmit && gjsify run check:glossary && gjsify run check:fields && gjsify run check:ai && gjsify run check:cli-commands && gjsify run check:blp-handlers && gjsify run check:breakpoints && gjsify run check:markup && gjsify run check:gtk-markup && gjsify run check:i18n",
+        "check": "gjsify tsc --noEmit && gjsify run check:glossary && gjsify run check:fields && gjsify run check:ai && gjsify run check:assistant-tiers && gjsify run check:cli-commands && gjsify run check:blp-handlers && gjsify run check:breakpoints && gjsify run check:markup && gjsify run check:gtk-markup && gjsify run check:i18n",
         "check:fields": "node dev/check-field-coverage.js",
         "check:ai": "node dev/check-ai-boundary.js",
+        "check:assistant-tiers": "node dev/check-assistant-tiers.js",
         "check:cli-commands": "node dev/check-cli-commands.js",
         "check:markup": "node dev/check-adwaita-markup.js",
         "check:gtk-markup": "node dev/check-gtk-markup.js",

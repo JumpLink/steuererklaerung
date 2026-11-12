@@ -37,7 +37,7 @@ Aus [`AGENTS.md`](../AGENTS.md) ausgelagerte Details — dort bleiben nur die ha
 | [agents/eric.md](agents/eric.md) | ERiC: Lizenz, wie Release-Builds es mitliefern, Setup, Suchreihenfolge, warum optional |
 | [agents/api-clients.md](agents/api-clients.md) | Konvention für handgeschriebene REST-Clients (Qonto) und Ablauf für einen neuen Endpoint |
 | [agents/ai-enrichment.md](agents/ai-enrichment.md) | Ein Prompt-Quelle, `ai_note`, `dms_*`- und `contracts_*`-Tools, registrierte MCP-Prompts |
-| [agents/check-gates.md](agents/check-gates.md) | `check:fields` und `check:ai`: was sie prüfen und wie man Ausnahmen einträgt |
+| [agents/check-gates.md](agents/check-gates.md) | `check:fields`, `check:ai` und `check:assistant-tiers`: was sie prüfen und wie man Ausnahmen einträgt |
 
 ## Referenzen
 

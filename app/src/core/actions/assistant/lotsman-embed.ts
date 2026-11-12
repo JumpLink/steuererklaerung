@@ -26,9 +26,10 @@
  *      and decides. {@link LOTSMAN_MODEL_POLICY} stays for unattended jobs, which show no card.
  *
  * **What the gate can and cannot do.** {@link assistantGateAnswer} answers the agent's
- * `session/request_permission`: it declines the destructive kinds outright and asks the person
- * about everything else. It is a RESTRICTION — `HostGateAnswer` has no value that approves, so no
- * answer from here can widen what lotsman would otherwise allow. It sees tool calls and nothing
+ * `session/request_permission`: it declines tier A tools and the agent's own destructive kinds
+ * outright and asks the person about tier B and everything else. It is a RESTRICTION —
+ * `HostGateAnswer` has no value that approves, so no answer from here can widen what lotsman would
+ * otherwise allow. It sees tool calls and nothing
  * else: it cannot see, and therefore cannot police, which MODEL the agent uses. That is point 5's
  * job, and it must not be claimed of the gate.
  *
@@ -63,6 +64,7 @@ import { MCP_READONLY_ENV } from '../../config/mcp-readonly.ts';
 import { loadUserSettings, type UserSettings } from '../../config/user-settings.ts';
 import { userDataDir } from '../../paths.ts';
 import { MCP_SERVER_NAME, resolveMcpLaunch, type McpInstallation, type McpLaunch } from '../mcp-clients.ts';
+import { writeTierOf } from './write-tiers.ts';
 
 /** Subdirectory of the app's data directory that is lotsman's alone. */
 export const LOTSMAN_DATA_DIR_NAME = 'assistant-agent';
@@ -119,11 +121,13 @@ export function lotsmanMcpServers(launch: McpLaunch, name: string = MCP_SERVER_N
 }
 
 /**
- * Tool kinds the person is never asked about, because there is no good answer. The agent is here to
- * read and explain this person's bookkeeping; a write of any shape is out of scope for it, and the
- * read-only MCP server already refuses the mutating tools. Declining is the honest echo of that:
- * the agent is told no straight away instead of making someone dismiss a dialog for a tool that
- * could not have worked.
+ * Tool kinds the person is never asked about when the call is NOT one of this app's own write
+ * tools: the agent's built-in file edits and shell commands. The agent is here to work on this
+ * person's bookkeeping through the MCP server, not on the machine, so declining is the honest
+ * answer — it is told no straight away instead of making someone dismiss a dialog.
+ *
+ * The kind is NOT how this app's writes are told apart. ACP says `edit` for `buchung_bestaetigen`
+ * and for `submit_filing` alike; the tier tables decide those (see {@link assistantGateAnswer}).
  *
  * `fetch` is deliberately NOT here. It is how an agent looks up a Gesetzestext or a BMF page, which
  * is useful; the person sees the URL in the dialog and decides. The kinds are lotsman's own
@@ -131,8 +135,22 @@ export function lotsmanMcpServers(launch: McpLaunch, name: string = MCP_SERVER_N
  */
 const DECLINED_TOOL_KINDS: ReadonlySet<string> = new Set(['delete', 'move', 'edit', 'write', 'execute']);
 
-/** `'decline'` or `'ask'` — never an approval; `HostGateAnswer` has no such value by design. */
+/**
+ * `'decline'` or `'ask'` — never an approval; `HostGateAnswer` has no such value by design.
+ *
+ * A write tool of this app is judged by its tier (ADR 0005), not by its kind:
+ *   - tier A is declined. Lotsman may never approve it; the app's own dialog does, and lotsman routes
+ *     such a call there (`hostTools.hostConfirmed`) without consulting this gate. A tier A name that
+ *     reaches the gate anyway means that routing is missing, and the one safe answer is no.
+ *   - tier B is asked, so lotsman's dialog puts it to the person.
+ * Anything else falls back to the kind: the agent's own writes and commands stay declined. The name
+ * is read off `tool`, which is the agent's own sentence and may not carry the MCP name; an unrecognised
+ * one is declined by its kind, never asked about because of it.
+ */
 export function assistantGateAnswer(view: { tool: string; kind: string }): 'ask' | 'decline' {
+    const tier = writeTierOf(view.tool);
+    if (tier === 'A') return 'decline';
+    if (tier === 'B') return 'ask';
     return DECLINED_TOOL_KINDS.has(view.kind.trim().toLowerCase()) ? 'decline' : 'ask';
 }
 
