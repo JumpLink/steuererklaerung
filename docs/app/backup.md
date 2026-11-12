@@ -11,6 +11,7 @@ kopiert genau das in einen eigenen Ordner. Code: `app/src/core/actions/backup.ts
 - **CLI:** `steuer backup create [--dir <ordner>] [--keep <n>]` und `steuer backup list`.
 - **Automatisch:** bevor eine Migration die Konfiguration umschreibt (`config migrate`, oder ein
   Speichern, das ein älteres Manifest auf die aktuelle Schema-Version hebt). Schlägt diese Sicherung fehl, bricht die Migration ab.
+- **Assistent:** vor der ersten Änderung einer Assistenten-Sitzung, einmal je Sitzung. Schlägt sie fehl, macht der Assistent in dieser Sitzung keine Änderung — ohne Sicherung gibt es keine Ausnahme.
 
 Die App sichert im Hintergrund: „Jetzt sichern" startet einen Kindprozess
 (`<app> --internal-backup manual`, `app/src/frontends/desktop/background-backup.ts`), das Fenster
@@ -38,6 +39,7 @@ Steuernummern und Bankdaten wie das Original):
 | `invoices/` | `invoices/` neben dem Manifest |
 | `transactions-data/` | der Buchungsspeicher; jede SQLite-Datenbank als konsistenter Schnappschuss (`VACUUM INTO`, geprüft mit `PRAGMA integrity_check`) |
 | `ledger.db` | nur wenn `LEDGER_DB_PATH` außerhalb des Speichers liegt |
+| `assistant-changes.ndjson` | das Änderungsprotokoll des Assistenten aus dem Datenverzeichnis (falls vorhanden): Zeit, Sitzung, Werkzeug, Ergebnis und die Namen der Felder — keine Werte |
 | `backup.json` | Zeitpunkt, Anlass (`manual`, `before-migration`), Quellpfade, Dateiliste |
 
 **Nicht** gesichert: `.env` (Zugangsdaten gehören in einen Passwortmanager), `fints-data/`,

@@ -27,12 +27,21 @@ import { registerContactsTools } from './tools/contacts.ts';
 import { registerContractsTools } from './tools/contracts.ts';
 import { registerMcpPrompts } from './prompts.ts';
 import { guardTaxOnlyTools } from './tax-guard.ts';
+import { guardAssistantWrites } from './write-guard.ts';
+import { ACP_SESSION_ENV } from '../../core/actions/assistant/change-log.ts';
+import { SessionBackupGate } from '../../core/actions/assistant/session-backup.ts';
+import { runConfiguredBackup } from '../../core/actions/backup.ts';
 import { createHttpMcpServer, DEFAULT_MCP_HOST } from './http-server.ts';
 import { loadAppSettings, MCP_GROUPS, restrictMcpToReadOnly, type McpGroup } from '../../core/config/index.ts';
 import { refusingFinTSInteraction, setFinTSInteraction } from '../../core/clients/fints/interaction.ts';
 
 const SERVER_NAME = 'steuererklaerung';
 const SERVER_VERSION = '0.1.1';
+
+/** One per process: the child serves one assistant session, and a second HTTP connection must not snapshot again. */
+const sessionBackups = new SessionBackupGate(() => {
+    runConfiguredBackup({ reason: 'assistant-session' });
+});
 
 /** Group → its tool-registration function. The single source for what each group exposes. */
 const GROUP_REGISTRARS: Record<McpGroup, (server: McpServer, ctx: AppContext) => void> = {
@@ -132,6 +141,8 @@ function createMcpServerWithTools(ctx: AppContext): McpServer {
                 : (orig as (...a: unknown[]) => unknown)(name, config, ...rest)) as typeof server.registerTool;
     }
     guardTaxOnlyTools(server);
+    const session = process.env[ACP_SESSION_ENV]?.trim();
+    if (session) guardAssistantWrites(server, { session, gate: sessionBackups });
 
     for (const group of MCP_GROUPS) if (mcp.groups[group]) GROUP_REGISTRARS[group](server, ctx);
 
