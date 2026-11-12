@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-11-10 15:47+0100\n"
+"POT-Creation-Date: 2026-11-11 17:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1710,7 +1710,7 @@ msgid ""
 "project."
 msgstr ""
 
-#: src/core/actions/recurring-invoices.ts:352
+#: src/core/actions/recurring-invoices.ts:371
 msgid ""
 "There is no issued invoice for “{id}” yet. Create one first: steuer invoices "
 "recurring create {id}"
@@ -3921,72 +3921,72 @@ msgstr ""
 msgid "The invoice is not due yet."
 msgstr ""
 
-#: src/core/invoices/provider.ts:257
+#: src/core/invoices/provider.ts:258
 msgid "Issue date (issueDate) is missing."
 msgstr ""
 
-#: src/core/invoices/provider.ts:258
+#: src/core/invoices/provider.ts:259
 msgid "Due date (dueDate) is missing."
 msgstr ""
 
-#: src/core/invoices/provider.ts:259
+#: src/core/invoices/provider.ts:260
 msgid "Currency (currency) is missing."
 msgstr ""
 
-#: src/core/invoices/provider.ts:261
+#: src/core/invoices/provider.ts:262
 msgid "At least one invoice item is required."
 msgstr ""
 
-#: src/core/invoices/provider.ts:266
+#: src/core/invoices/provider.ts:267
 msgid "Item {n}: the title is missing."
 msgstr ""
 
-#: src/core/invoices/provider.ts:269
+#: src/core/invoices/provider.ts:270
 msgid "Item {n}: invalid quantity “{value}”."
 msgstr ""
 
-#: src/core/invoices/provider.ts:274
+#: src/core/invoices/provider.ts:275
 msgid "Item {n}: invalid unit price “{value}”."
 msgstr ""
 
-#: src/core/invoices/provider.ts:279
+#: src/core/invoices/provider.ts:280
 msgid "Item {n}: invalid VAT rate “{value}”."
 msgstr ""
 
-#: src/core/invoices/provider.ts:309
+#: src/core/invoices/provider.ts:330
 msgid ""
 "Qonto back-end: no payment IBAN configured (invoicing.iban or QONTO_IBAN)."
 msgstr ""
 
-#: src/core/invoices/provider.ts:314
+#: src/core/invoices/provider.ts:335
 msgid "Item {n}: title longer than {max} characters (Qonto limit)."
 msgstr ""
 
-#: src/core/invoices/provider.ts:328
+#: src/core/invoices/provider.ts:349
 msgid ""
 "Qonto back-end: customer.qontoClientId is missing. Create the customer in "
 "Qonto (or put the client id into recurring-invoices.json) before you create "
 "the invoice."
 msgstr ""
 
-#: src/core/invoices/provider.ts:334
+#: src/core/invoices/provider.ts:355
 msgid ""
 "Invoice invalid:\n"
 "- {problems}"
 msgstr ""
 
-#: src/core/invoices/provider.ts:389
+#: src/core/invoices/provider.ts:395
 msgid ""
 "A draft has no final PDF yet. The invoice has to be finalised in Qonto first."
 msgstr ""
 
-#: src/core/invoices/provider.ts:394
+#: src/core/invoices/provider.ts:400
 msgid ""
 "Qonto has not generated the PDF for this invoice yet (that takes a few "
 "seconds after finalising). Please try again in a moment."
 msgstr ""
 
-#: src/core/invoices/provider.ts:401
+#: src/core/invoices/provider.ts:407
 msgid "The invoice file at Qonto is not a PDF ({type})."
 msgstr ""
 
@@ -4125,11 +4125,11 @@ msgstr ""
 msgid "name of the issuer"
 msgstr ""
 
-#: src/core/mail/sent-copy.ts:90
+#: src/core/mail/sent-copy.ts:91
 msgid "No Sent folder found on the mail server."
 msgstr ""
 
-#: src/core/mail/sent-copy.ts:98
+#: src/core/mail/sent-copy.ts:99
 msgid "Could not save a copy in the Sent folder: {error}"
 msgstr ""
 
@@ -6653,14 +6653,14 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:61
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:122
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:55
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:113
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:116
 msgid "Password (saved)"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:61
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:165
 #: src/frontends/desktop/views/einstellungen/mail-versand.ts:55
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:152
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:155
 msgid "Password"
 msgstr ""
 
@@ -6698,7 +6698,7 @@ msgid "Mailbox not saved"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:119
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:110
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:113
 msgid "The password could not be saved in the keyring."
 msgstr ""
 
@@ -6719,12 +6719,12 @@ msgid "Fetch failed"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:156
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:140
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:143
 msgid "Delete the saved password"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:160
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:144
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:147
 msgid "No password is saved"
 msgstr ""
 
@@ -6733,7 +6733,7 @@ msgid "The password could not be deleted"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/belege-mail.ts:166
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:153
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:156
 msgid "Password deleted"
 msgstr ""
 
@@ -7329,8 +7329,8 @@ msgid "The Kindergeld claim is not a number."
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/kinder.ts:215
-#: src/frontends/desktop/views/einstellungen-view.ts:316
-#: src/frontends/desktop/views/einstellungen-view.ts:433
+#: src/frontends/desktop/views/einstellungen-view.ts:327
+#: src/frontends/desktop/views/einstellungen-view.ts:444
 #: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:237
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:255
 #: src/frontends/desktop/views/umbuchen-dialog.ts:263
@@ -7545,35 +7545,35 @@ msgstr ""
 msgid "Server, user and sender address are required."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:94
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:97
 msgid "Save account"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:102
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:105
 msgid "Account not saved"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:119
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:122
 msgid "Test the connection"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:127
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:130
 msgid "The password is missing."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:130
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:133
 msgid "Signed in to the mail server"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:132
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:135
 msgid "Connection failed"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:148
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:151
 msgid "Password not deleted"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen/mail-versand.ts:148
+#: src/frontends/desktop/views/einstellungen/mail-versand.ts:151
 msgid "The keyring could not be reached."
 msgstr ""
 
@@ -8060,121 +8060,129 @@ msgstr ""
 msgid "Invoices (self)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:171
-msgid "AI engine"
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen-view.ts:175
+#: src/frontends/desktop/views/einstellungen-view.ts:172
 msgid "set via LLM_PROVIDER"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:175
+#: src/frontends/desktop/views/einstellungen-view.ts:172
 msgid "default"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:176
+#: src/frontends/desktop/views/einstellungen-view.ts:173
 msgid "Not configured — check LLM_PROVIDER."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:181
-#: src/frontends/desktop/views/einstellungen-view.ts:194
-msgid "Test connection"
-msgstr ""
-
-#: src/frontends/desktop/views/einstellungen-view.ts:182
-msgid "Asks the model a tiny question — costs a few tokens."
+#: src/frontends/desktop/views/einstellungen-view.ts:174
+msgid "AI engine"
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen-view.ts:185
+msgid "A provider is connected."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen-view.ts:186
+msgid "No provider is connected — log in from the assistant."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen-view.ts:191
+#: src/frontends/desktop/views/einstellungen-view.ts:205
+msgid "Test connection"
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen-view.ts:192
+msgid "Asks the model a tiny question — costs a few tokens."
+msgstr ""
+
+#: src/frontends/desktop/views/einstellungen-view.ts:196
 msgid "Testing …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:190
+#: src/frontends/desktop/views/einstellungen-view.ts:201
 msgid "AI engine does not respond: {message}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:209
+#: src/frontends/desktop/views/einstellungen-view.ts:220
 msgid "Settings not available: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:216
+#: src/frontends/desktop/views/einstellungen-view.ts:227
 msgid "Learning mode"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:217
+#: src/frontends/desktop/views/einstellungen-view.ts:228
 msgid ""
 "Shows a “?” next to technical terms — Overview, Reports, USt-VA (VAT return) "
 "and the master data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:226
+#: src/frontends/desktop/views/einstellungen-view.ts:237
 msgid "Sync automatically"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:227
+#: src/frontends/desktop/views/einstellungen-view.ts:238
 msgid "At start-up and then at fixed intervals, without blocking the view"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:235
+#: src/frontends/desktop/views/einstellungen-view.ts:246
 msgid "Invoices (Qonto)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:235
-#: src/frontends/desktop/views/einstellungen-view.ts:237
+#: src/frontends/desktop/views/einstellungen-view.ts:246
+#: src/frontends/desktop/views/einstellungen-view.ts:248
 msgid "Minutes, at least 5; 0 = off"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:236
+#: src/frontends/desktop/views/einstellungen-view.ts:247
 msgid "Transactions (Qonto)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:236
+#: src/frontends/desktop/views/einstellungen-view.ts:247
 msgid "Minutes, at least 15 (rate limit); 0 = off"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:237
+#: src/frontends/desktop/views/einstellungen-view.ts:248
 msgid "Receipts (Paperless)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:249
+#: src/frontends/desktop/views/einstellungen-view.ts:260
 msgid "MCP server for external agents"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:250
+#: src/frontends/desktop/views/einstellungen-view.ts:261
 msgid "Claude, Cursor, VS Code … — your own client, connected to this app"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:259
+#: src/frontends/desktop/views/einstellungen-view.ts:270
 msgid "Allow writing tools"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:260
+#: src/frontends/desktop/views/einstellungen-view.ts:271
 msgid "Expose mutating MCP tools (default: read-only)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:267
+#: src/frontends/desktop/views/einstellungen-view.ts:278
 msgid "Connect an external agent …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:344
+#: src/frontends/desktop/views/einstellungen-view.ts:355
 msgid "Could not read connections: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:367
+#: src/frontends/desktop/views/einstellungen-view.ts:378
 msgid "Could not read the ELSTER configuration: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:391
+#: src/frontends/desktop/views/einstellungen-view.ts:402
 msgid "Could not read the ESt (income tax) configuration: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:418
+#: src/frontends/desktop/views/einstellungen-view.ts:429
 msgid ""
 "The configuration was changed from outside in the meantime (CLI, MCP or a "
 "second window). The view is reloaded — please repeat the input."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:431
+#: src/frontends/desktop/views/einstellungen-view.ts:442
 msgid "Saved"
 msgstr ""
 
