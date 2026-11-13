@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-11-11 17:05+0100\n"
+"POT-Creation-Date: 2026-11-12 17:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4771,7 +4771,7 @@ msgid "timer & unbilled hours"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:59
-#: src/frontends/desktop/views/einstellungen-view.ts:78
+#: src/frontends/desktop/views/einstellungen-view.ts:83
 #: src/frontends/desktop/views/kontakte-view.ts:179
 msgid "Contacts"
 msgstr ""
@@ -4797,7 +4797,7 @@ msgid "dates · payments · open items"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:68
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:114
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:115
 msgid "Tax"
 msgstr ""
 
@@ -4815,7 +4815,7 @@ msgid "customer · costs · result"
 msgstr ""
 
 #: src/frontends/desktop/nav.ts:79
-#: src/frontends/desktop/views/einstellungen-view.ts:79
+#: src/frontends/desktop/views/einstellungen-view.ts:84
 #: src/frontends/desktop/views/vertraege-view.blp:90
 msgid "Contracts"
 msgstr ""
@@ -6857,7 +6857,7 @@ msgstr ""
 #: src/frontends/desktop/views/einstellungen/betrieb-ust.ts:228
 #: src/frontends/desktop/views/setup-assistant.ts:403
 #: src/frontends/desktop/views/zeit-rechnung-dialog.ts:49
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:118
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:119
 msgid "VAT"
 msgstr ""
 
@@ -7329,8 +7329,8 @@ msgid "The Kindergeld claim is not a number."
 msgstr ""
 
 #: src/frontends/desktop/views/einstellungen/kinder.ts:215
-#: src/frontends/desktop/views/einstellungen-view.ts:327
-#: src/frontends/desktop/views/einstellungen-view.ts:444
+#: src/frontends/desktop/views/einstellungen-view.ts:332
+#: src/frontends/desktop/views/einstellungen-view.ts:449
 #: src/frontends/desktop/views/projekt-zuordnen-dialog.ts:237
 #: src/frontends/desktop/views/regel-aus-auswahl-dialog.ts:255
 #: src/frontends/desktop/views/umbuchen-dialog.ts:263
@@ -8038,151 +8038,151 @@ msgstr ""
 msgid "Which groups are visible to the outside."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:69
+#: src/frontends/desktop/views/einstellungen-view.ts:74
 msgid "Documents (DMS)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:72
+#: src/frontends/desktop/views/einstellungen-view.ts:77
 msgctxt "MCP tool group"
 msgid "Transactions"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:73
+#: src/frontends/desktop/views/einstellungen-view.ts:78
 msgctxt "auto-matching"
 msgid "Matching"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:74
+#: src/frontends/desktop/views/einstellungen-view.ts:79
 msgid "Document workflow"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:77
+#: src/frontends/desktop/views/einstellungen-view.ts:82
 msgid "Invoices (self)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:172
+#: src/frontends/desktop/views/einstellungen-view.ts:177
 msgid "set via LLM_PROVIDER"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:172
+#: src/frontends/desktop/views/einstellungen-view.ts:177
 msgid "default"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:173
+#: src/frontends/desktop/views/einstellungen-view.ts:178
 msgid "Not configured — check LLM_PROVIDER."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:174
+#: src/frontends/desktop/views/einstellungen-view.ts:179
 msgid "AI engine"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:185
+#: src/frontends/desktop/views/einstellungen-view.ts:190
 msgid "A provider is connected."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:186
+#: src/frontends/desktop/views/einstellungen-view.ts:191
 msgid "No provider is connected — log in from the assistant."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:191
-#: src/frontends/desktop/views/einstellungen-view.ts:205
+#: src/frontends/desktop/views/einstellungen-view.ts:196
+#: src/frontends/desktop/views/einstellungen-view.ts:210
 msgid "Test connection"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:192
+#: src/frontends/desktop/views/einstellungen-view.ts:197
 msgid "Asks the model a tiny question — costs a few tokens."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:196
+#: src/frontends/desktop/views/einstellungen-view.ts:201
 msgid "Testing …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:201
+#: src/frontends/desktop/views/einstellungen-view.ts:206
 msgid "AI engine does not respond: {message}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:220
+#: src/frontends/desktop/views/einstellungen-view.ts:225
 msgid "Settings not available: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:227
+#: src/frontends/desktop/views/einstellungen-view.ts:232
 msgid "Learning mode"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:228
+#: src/frontends/desktop/views/einstellungen-view.ts:233
 msgid ""
 "Shows a “?” next to technical terms — Overview, Reports, USt-VA (VAT return) "
 "and the master data"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:237
+#: src/frontends/desktop/views/einstellungen-view.ts:242
 msgid "Sync automatically"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:238
+#: src/frontends/desktop/views/einstellungen-view.ts:243
 msgid "At start-up and then at fixed intervals, without blocking the view"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:246
+#: src/frontends/desktop/views/einstellungen-view.ts:251
 msgid "Invoices (Qonto)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:246
-#: src/frontends/desktop/views/einstellungen-view.ts:248
+#: src/frontends/desktop/views/einstellungen-view.ts:251
+#: src/frontends/desktop/views/einstellungen-view.ts:253
 msgid "Minutes, at least 5; 0 = off"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:247
+#: src/frontends/desktop/views/einstellungen-view.ts:252
 msgid "Transactions (Qonto)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:247
+#: src/frontends/desktop/views/einstellungen-view.ts:252
 msgid "Minutes, at least 15 (rate limit); 0 = off"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:248
+#: src/frontends/desktop/views/einstellungen-view.ts:253
 msgid "Receipts (Paperless)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:260
+#: src/frontends/desktop/views/einstellungen-view.ts:265
 msgid "MCP server for external agents"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:261
+#: src/frontends/desktop/views/einstellungen-view.ts:266
 msgid "Claude, Cursor, VS Code … — your own client, connected to this app"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:270
+#: src/frontends/desktop/views/einstellungen-view.ts:275
 msgid "Allow writing tools"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:271
+#: src/frontends/desktop/views/einstellungen-view.ts:276
 msgid "Expose mutating MCP tools (default: read-only)"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:278
+#: src/frontends/desktop/views/einstellungen-view.ts:283
 msgid "Connect an external agent …"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:355
+#: src/frontends/desktop/views/einstellungen-view.ts:360
 msgid "Could not read connections: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:378
+#: src/frontends/desktop/views/einstellungen-view.ts:383
 msgid "Could not read the ELSTER configuration: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:402
+#: src/frontends/desktop/views/einstellungen-view.ts:407
 msgid "Could not read the ESt (income tax) configuration: {error}"
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:429
+#: src/frontends/desktop/views/einstellungen-view.ts:434
 msgid ""
 "The configuration was changed from outside in the meantime (CLI, MCP or a "
 "second window). The view is reloaded — please repeat the input."
 msgstr ""
 
-#: src/frontends/desktop/views/einstellungen-view.ts:442
+#: src/frontends/desktop/views/einstellungen-view.ts:447
 msgid "Saved"
 msgstr ""
 
@@ -10777,7 +10777,7 @@ msgstr ""
 #: src/frontends/desktop/views/rechnung-detail-dialog.ts:157
 #: src/frontends/desktop/views/rechnungen-view.ts:672
 #: src/frontends/desktop/views/zeiten-view.ts:321
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:119
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:120
 msgid "Invoice"
 msgstr ""
 
@@ -14405,58 +14405,64 @@ msgstr ""
 
 #: data/eu.jumplink.Steuererklaerung.metainfo.xml:12
 msgid ""
+"The interface adapts to the screen: the same app works on phones, tablets "
+"and desktop monitors, with touch, mouse and keyboard."
+msgstr ""
+
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:13
+msgid ""
 "AI is optional: everything works without it. If you want help from an AI "
 "assistant, switch on the built-in MCP server and connect the assistant of "
 "your choice. It can read your books and, only if you allow it, make changes."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:13
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:14
 msgid ""
 "The tax logic follows German law, so the interface keeps the official German "
 "terms."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:14
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:15
 msgid ""
 "The app is an early version and a preparation aid, not tax advice: check "
 "every return before you send it."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:24
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:25
 msgid "Overview with key figures and what to do next"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:29
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:30
 msgid "Receipts, linked to transactions"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:34
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:35
 msgid "All transactions of all accounts, searchable"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:39
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:40
 msgid "Outgoing invoices with status and recurring billing"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:44
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:45
 msgid "Anlage EÜR, every line down to its transactions"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:49
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:50
 msgid "Tax return with checks before filing"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:54
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:55
 msgid "The same overview on a phone"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:65
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:66
 msgid ""
 "The macOS disk images pass Apple's signature check again: the umlaut in the "
 "app name no longer breaks the seal of the app inside the image."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:70
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:71
 msgid ""
 "The macOS packages are now signed and notarised by Apple, and the macOS and "
 "Windows packages include GTK, so the app starts without a separately "
@@ -14464,33 +14470,33 @@ msgid ""
 "ERiC, monthly periods included. Empty totals no longer show a minus sign."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:75
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:76
 msgid ""
 "The About dialog now links to the privacy policy and the legal notice. The "
 "MCP server binds to loopback by default."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:80
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:81
 msgid ""
 "The README now names which parts of the app are written with AI. The Flatpak "
 "from Flathub comes without ERiC: export the return as XML and upload it in "
 "Mein ELSTER."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:85
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:86
 msgid ""
 "The Flatpak bundle on the GitHub release page includes ERiC, so validating "
 "and submitting a return through ELSTER works from that download too."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:90
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:91
 msgid ""
 "Restarting into the demo workspace works on macOS again, and the Flatpak "
 "builds with the current assistant libraries. The AI assistant stays switched "
 "off in this release."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:95
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:96
 msgid ""
 "The AI assistant is optional and can be connected through the built-in MCP "
 "server — every provider supported by Lotsman can be used, and free hosted "
@@ -14499,27 +14505,27 @@ msgid ""
 "the box."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:100
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:101
 msgid ""
 "Commands work in the installed app on Windows and macOS, Back up now no "
 "longer opens a second window, and error messages follow the interface "
 "language."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:105
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:106
 msgid ""
 "First public release: receipts, transactions and invoices, the EÜR and VAT "
 "returns, and filing through ELSTER."
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:115
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:116
 msgid "Accounting"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:116
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:117
 msgid "ELSTER"
 msgstr ""
 
-#: data/eu.jumplink.Steuererklaerung.metainfo.xml:117
+#: data/eu.jumplink.Steuererklaerung.metainfo.xml:118
 msgid "EÜR"
 msgstr ""
