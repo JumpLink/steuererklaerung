@@ -6,7 +6,7 @@ name: Release
 # seconds and a package that builds proves nothing. The point is the two steps after it: INSTALL the
 # package with the system package manager, and START what it installed. Both findings that cost the
 # most in this project's packaging were invisible until then — `ship` staged the test bundles beside
-# the app, and the `Gda` typelib (the whole database layer) had no declared dependency, so the
+# the app, and the SQLite library (the whole database layer) had no declared dependency, so the
 # package would have installed cleanly and died at the first import on a stranger's machine.
 on:
   push:
@@ -38,38 +38,8 @@ permissions:
   contents: write
 
 jobs:
-  # libgda 6 for the .deb (#148). Ubuntu 26.04 ships libgda 5 only, so the deb carries its own build
-  # (app/dev/ship-gda-deb.sh). It has to be built where the deb's libraries live — libgda links
-  # libxml2.so.16 on Ubuntu, Fedora has .so.2 — so this is Ubuntu, not the Fedora container below.
-  # Cached on the recipe: the build takes minutes, and its inputs are the script and the pinned
-  # tarball digest inside it.
-  gda-deb:
-    if: ${{ !inputs.tag }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache the libgda build
-        id: cache
-        uses: actions/cache@v4
-        with:
-          path: app/.gda-stage
-          key: gda-deb-${{ hashFiles('app/dev/ship-gda-deb.sh') }}
-
-      - name: Build libgda for the deb
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: docker run --rm -v "$PWD":/w -w /w ubuntu:26.04 app/dev/ship-gda-deb.sh --install-deps
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: gda-deb-stage
-          path: app/.gda-stage
-          include-hidden-files: true
-          retention-days: 7
-
   package:
     if: ${{ !inputs.tag }}
-    needs: gda-deb
     runs-on: ubuntu-latest
     outputs:
       eric: ${{ steps.eric.outputs.fetched }}
@@ -85,7 +55,7 @@ jobs:
           git tar xz findutils
           gjs
           libsoup3 json-glib gnutls libnghttp2
-          libgda libgda-sqlite
+          sqlite-libs
           pango cairo librsvg2
           gettext
           squashfs-tools file
@@ -142,12 +112,6 @@ jobs:
 
       - name: Third-party licences are all decided
         run: cd app && gjsify run check:licenses
-
-      # The libgda the deb carries (`gjsify.ship.formats.deb`), built by the job above.
-      - uses: actions/download-artifact@v4
-        with:
-          name: gda-deb-stage
-          path: app/.gda-stage
 
       # ERiC for the Linux package: the slim runtime plus the GJS binding that loads it. The binding
       # needs no ERiC to build (it dlopens it at run time), so it is built only when ERiC is bundled.
@@ -207,8 +171,8 @@ jobs:
             fi
           done
 
-      # The rpm install proof is NOT here: this container carries the build prerequisites (libgda,
-      # libgda-sqlite, ...), so an undeclared `Requires:` would be satisfied by accident. It runs in
+      # The rpm install proof is NOT here: this container carries the build prerequisites (sqlite-libs,
+      # ...), so an undeclared `Requires:` would be satisfied by accident. It runs in
       # the clean `prove-rpm` job below (#152).
 
       - uses: actions/upload-artifact@v4
@@ -233,8 +197,8 @@ jobs:
           gh release upload -R "$GITHUB_REPOSITORY" "$tag" app/ship/out/* --clobber
 
   # The rpm install proof, in a CLEAN Fedora container: nothing but the rpm and what `dnf` resolves
-  # from its `Requires:`. The `package` job's container has libgda and libgda-sqlite installed as
-  # build prerequisites, which is how an rpm that did not require libgda-sqlite passed (#152).
+  # from its `Requires:`. The `package` job's container has sqlite-libs installed as
+  # a build prerequisite, which is how an rpm that did not require its SQLite library passed (#152).
   # Skipped for a build that contains ERiC, for the same reason as `prove-deb`.
   prove-rpm:
     needs: package
@@ -253,11 +217,11 @@ jobs:
       - name: Install the package
         run: |
           set -eu
-          if rpm -q libgda libgda-sqlite; then echo "::error::libgda is already installed - the proof would not test the rpm's Requires"; exit 1; fi
+          if rpm -q sqlite-libs; then echo "::error::sqlite-libs is already installed - the proof would not test the rpm's Requires"; exit 1; fi
           dnf install -y --setopt=install_weak_deps=False ./packages/*.rpm
-          rpm -q libgda libgda-sqlite
+          rpm -q sqlite-libs
 
-      # The demo store opens SQLite through libgda's provider, so a missing libgda-sqlite fails here.
+      # The demo store opens SQLite through libsqlite3, so a missing sqlite-libs fails here.
       # Over MCP because it needs no display; the tool count is the proof that the server came up.
       - name: The installed app answers over MCP
         run: |
@@ -312,7 +276,7 @@ jobs:
           xvfb-run -a dbus-run-session -- /tmp/prove.sh
 
   # The deb install proof, the twin of the rpm one above, on the distribution the deb is for:
-  # Ubuntu 26.04 has gjs 1.88 and no libgda 6, which is exactly what the bundled libgda answers.
+  # Ubuntu 26.04 has gjs 1.88; the deb's only database dependency is libsqlite3-0.
   # Skipped for a build that contains ERiC: its artifact is not uploaded (it would be readable by
   # anyone), so there is nothing to download.
   prove-deb:
@@ -327,15 +291,14 @@ jobs:
           name: packages
           path: packages
 
-      # `apt-get install ./x.deb` resolves every `Depends:` the package declares, and no libgda is
-      # named in them: an undeclared library fails here instead of on a user's machine.
+      # `apt-get install ./x.deb` resolves every `Depends:` the package declares: an undeclared
+      # library fails here instead of on a user's machine.
       - name: Install the package
         run: |
           set -eu
           export DEBIAN_FRONTEND=noninteractive
           apt-get update -qq
           apt-get install -y --no-install-recommends ./packages/*.deb
-          if dpkg -l | grep -E 'libgda|gir1.2-gda'; then echo "::error::a system libgda was installed - the proof would not test the bundled one"; exit 1; fi
 
       - name: Install the runtime the start proof needs
         run: >
@@ -366,8 +329,8 @@ jobs:
           kill "$APP" 2>/dev/null || true
           exit 1
           SH
-          # STEUER_DEMO seeds the demo store, which opens SQLite through libgda's provider: a deb
-          # whose libgda is half there fails here, not at the first window.
+          # STEUER_DEMO seeds the demo store, which opens SQLite through libsqlite3: a deb
+          # missing it fails here, not at the first window.
           xvfb-run -a dbus-run-session -- sh /tmp/prove.sh
 
   # macOS packages: a `.zip` and a `.dmg` per arch, signed and notarised. They carry the NODE bundle

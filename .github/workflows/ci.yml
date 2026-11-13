@@ -9,9 +9,10 @@ on:
 # (native backend, from gjsify-lock.json), `gjsify tsc`, `gjsify build`, and the GJS test
 # bundle all run on gjs. Node is present only to bootstrap the gjsify CLI (its published
 # bin is Node; its work targets gjs). Runs in a Fedora container that ships `gjs` (which the
-# gjsify toolchain spawns) plus the system typelibs the bundles import at load: libgda +
-# libgda-sqlite for the store. The GOA/EDS typelibs moved out with the mail code, which now
-# lives in its own project (curlew). The 0.12-era all-Node workaround
+# gjsify toolchain spawns) plus the system libraries the bundles load. The store needs only
+# libsqlite3 (sqlite-libs), which the sqlite-native prebuild links. The GOA/EDS typelibs moved
+# out with the mail code, which now lives in its own project (curlew). The 0.12-era all-Node
+# workaround
 # (bundler crash + test segfault, node-tsc fallback) is fixed upstream in gjsify 0.13.
 #
 # EVERY system library is named explicitly — nothing may arrive transitively. `fedora:44` is a
@@ -30,13 +31,13 @@ on:
 #  1) Native prebuilds, via their DT_NEEDED set:
 #     for so in $(find node_modules/@gjsify -name '*.so'); do objdump -p "$so" | awk '/NEEDED/{print $2}'; done | sort -u
 #     → libsoup-3.0 (libsoup3) · libjson-glib-1.0 (json-glib) · libgnutls.so.30 (gnutls)
-#       · libnghttp2.so.14 (libnghttp2) · glib/gio/gobject (come with gjs)
+#       · libnghttp2.so.14 (libnghttp2) · libsqlite3.so.0 (sqlite-libs) · glib/gio/gobject (come with gjs)
 #
 #  2) Typelibs the code imports. `gi://Namespace` is the ESM form and greppable, but
 #     packages/invoice-pdf uses GJS's LEGACY dynamic form (`imports.gi.PangoCairo`,
 #     `imports.cairo`), which no static search for `gi://` finds. It cost a CI round to
 #     notice: three PDF tests failed with "Requiring PangoCairo … not found".
-#     → Gda/GdaSqlite (libgda, libgda-sqlite) · Soup (libsoup3) · PangoCairo (pango, + cairo)
+#     → Soup (libsoup3) · PangoCairo (pango, + cairo)
 #     Search BOTH forms after a change:  grep -rn "gi://\|imports\.gi\.\|imports\.cairo" src packages
 #
 # Re-run both after a gjsify bump or a new native dep and extend the list if it grew.
@@ -54,7 +55,7 @@ jobs:
           git tar xz findutils
           gjs
           libsoup3 json-glib gnutls libnghttp2
-          libgda libgda-sqlite
+          sqlite-libs
           pango cairo
           gettext appstream
 
@@ -150,7 +151,7 @@ jobs:
           git tar xz findutils
           gjs
           libsoup3 json-glib gnutls libnghttp2
-          libgda libgda-sqlite
+          sqlite-libs
           pango cairo gtk4 libadwaita glib2
           mutter dbus-daemon libglvnd-gles libglvnd-egl mesa-dri-drivers
           adwaita-icon-theme adwaita-sans-fonts google-noto-sans-fonts
