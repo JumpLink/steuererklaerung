@@ -197,8 +197,9 @@ jobs:
           gh release upload -R "$GITHUB_REPOSITORY" "$tag" app/ship/out/* --clobber
 
   # The rpm install proof, in a CLEAN Fedora container: nothing but the rpm and what `dnf` resolves
-  # from its `Requires:`. The `package` job's container has sqlite-libs installed as
-  # a build prerequisite, which is how an rpm that did not require its SQLite library passed (#152).
+  # from its `Requires:`. The `package` job's container has the build prerequisites installed,
+  # which is how an rpm that did not require libgda-sqlite passed (#152). sqlite-libs ships in
+  # every Fedora image, so for it the proof is the declared `Requires:`, not a missing install.
   # Skipped for a build that contains ERiC, for the same reason as `prove-deb`.
   prove-rpm:
     needs: package
@@ -217,11 +218,13 @@ jobs:
       - name: Install the package
         run: |
           set -eu
-          if rpm -q sqlite-libs; then echo "::error::sqlite-libs is already installed - the proof would not test the rpm's Requires"; exit 1; fi
+          # sqlite-libs is part of every Fedora image (rpm itself needs libsqlite3.so.0), so the
+          # install below can never fail on it: the declaration is asserted on the package instead.
+          rpm -qp --requires ./packages/*.rpm | grep -Eq '^sqlite-libs( |$)' \
+            || { echo "::error::the rpm does not declare Requires: sqlite-libs"; exit 1; }
           dnf install -y --setopt=install_weak_deps=False ./packages/*.rpm
-          rpm -q sqlite-libs
 
-      # The demo store opens SQLite through libsqlite3, so a missing sqlite-libs fails here.
+      # The demo store opens SQLite through libsqlite3, so a broken sqlite binding fails here.
       # Over MCP because it needs no display; the tool count is the proof that the server came up.
       - name: The installed app answers over MCP
         run: |
