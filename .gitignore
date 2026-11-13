@@ -78,6 +78,3 @@ app/po/POTFILES.in
 .gjsify-link.json
 shots/
 .eric-stage/
-
-# libgda built for the .deb (app/dev/ship-gda-deb.sh)
-app/.gda-stage/
