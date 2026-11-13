@@ -616,7 +616,7 @@ Buchung wird (noch) nichts persistiert/festgeschrieben, bis die Buchhaltung gepr
 
 DB-Datei: `transactions-data/ledger.db` (gitignored; überschreibbar via `LEDGER_DB_PATH`).
 Speicher ist das eingebaute **`node:sqlite`** (`DatabaseSync`) — unter GJS liefert gjsify
-(`@gjsify/sqlite`, libgda-backed) dasselbe Modul, derselbe Code läuft also auf **GJS und Node**
+(`@gjsify/sqlite` über `@gjsify/sqlite-native` und die System-`libsqlite3`) dasselbe Modul, derselbe Code läuft also auf **GJS und Node**
 ohne Abstraktion. (Hinweis: Schema-DDL wird statementweise ausgeführt, nicht als ein
 Multi-Statement-String — gjsifys `exec()`-Splitter verträgt eingebettete SQL-Kommentare nicht.)
 

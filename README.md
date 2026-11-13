@@ -79,7 +79,7 @@ A current Linux with GNOME libraries, all taken from your distribution:
 - gjs 1.86 or newer (Fedora 43+, Ubuntu 25.10+)
 - GTK 4 and libadwaita for the native app
 - libsoup3, json-glib, gnutls, libnghttp2
-- libgda and libgda-sqlite
+- libsqlite3 (sqlite-libs on Fedora, libsqlite3-0 on Debian/Ubuntu)
 - pango and cairo
 - blueprint-compiler, only to build the app UI
 - optional: libsecret (ELSTER PIN in the keyring), poppler-glib (receipt preview)
@@ -88,7 +88,7 @@ On Fedora:
 
 ```bash
 sudo dnf install gjs gtk4 libadwaita libsoup3 json-glib gnutls libnghttp2 \
-                 libgda libgda-sqlite pango cairo blueprint-compiler
+                 sqlite-libs pango cairo blueprint-compiler
 ```
 
 ## Install and build
