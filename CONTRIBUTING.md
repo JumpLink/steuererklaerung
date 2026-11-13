@@ -29,6 +29,18 @@ gjsify run build
 Register a new `*.test.ts` in `app/tests/test.mts`. If you change tax logic, rebuild before
 trying the CLI, since it runs off the bundle.
 
+## Trying your change as a Flatpak
+
+```bash
+app/dev/flatpak-dev.sh --run   # builds the working tree and installs it as branch `dev`
+```
+
+The release manifest builds `git HEAD`; this script builds your tracked files as they are on disk
+(`git add` new ones) into `~/.cache/steuererklaerung-flatpak-dev`. The first run downloads the
+whole dependency set, later runs reuse the cache. It needs `flatpak-builder`, `jq` and `rsync`.
+The `dev` branch installs next to a release build and shares its data in
+`~/.var/app/eu.jumplink.Steuererklaerung`.
+
 ## Translations
 
 The desktop UI is written with English source strings; German comes from `app/po/de.po`.
