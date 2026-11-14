@@ -74,6 +74,7 @@ Aus [`AGENTS.md`](../AGENTS.md) ausgelagerte Details — dort bleiben nur die ha
 | [app/mcp-clients.md](app/mcp-clients.md) | Externe Agenten verbinden: Startbefehl je Installation (Flatpak, Paket, Checkout) und das Konfigurationsformat von Claude Desktop/Code, opencode, Cursor, VS Code |
 | [app/lotsman-entwicklung.md](app/lotsman-entwicklung.md) | `@lotsman/*` kommt von npm; `gjsify link ../lotsman` als optionaler Dev-Weg (und Entlinken vor `--immutable`), `preserveSymlinks`, geplanter, noch nicht gebauter Flatpak |
 | [app/i18n-status.md](app/i18n-status.md) | Übersetzung der Oberfläche (Englisch/Deutsch): übersetzte und offene Ansichten, Terminologie, was Deutsch bleibt |
+| [android/target-gap.md](android/target-gap.md) | Android-Port: gemessene Lücken des NativeScript-Ziels (Blueprints, Widgets, Enums), Stand und Messbefehl |
 | [app/mobile-layout.md](app/mobile-layout.md) | Entwurf für die Telefon-Breite (360 × 760): Navigationsmodell, gemeinsame Bausteine, Ansicht für Ansicht, Umsetzungsplan |
 | [ideen-nutzerfuehrung.md](ideen-nutzerfuehrung.md) | Ideenliste nach Priorität: einfacher bedienen, früher warnen, ohne KI nutzbar (Konzepte, keine Aufträge) |
 
