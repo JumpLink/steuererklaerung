@@ -2,7 +2,7 @@
  * Where the phone keeps its Paperless connection: the address in app-settings (not secret),
  * the token in the Keystore-backed store of secrets.ts. Nothing comes from an environment.
  */
-import { Settings } from '@gjsify/app-settings';
+import { Settings } from '@gjsify/app-settings/nativescript';
 import type { PaperlessCreds } from './paperless.ts';
 import { deleteSecret, getSecret, setSecret } from './secrets.ts';
 

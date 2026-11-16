@@ -42,7 +42,7 @@ export function setSecret(name: string, value: string): void {
 }
 
 export function getSecret(name: string): string | null {
-    const raw = prefs().getString(name, null);
+    const raw = prefs().getString(name, null as unknown as string);
     if (!raw) return null;
     const [iv, ct] = raw.split(':');
     const c = javax.crypto.Cipher.getInstance('AES/GCM/NoPadding');
