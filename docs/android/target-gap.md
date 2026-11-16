@@ -106,3 +106,23 @@ not which APIs gjsify has to add.
    `GtkSearchEntry`, `GtkLinkButton`.
 3. **P4** splits the desktop-only files with `.android.ts` suffixes; the D-Bus / subprocess rows
    above are the list.
+
+## Measured on the emulator (P4 step 1, API 36 tablet, gjsify-dev link)
+
+The main window runs as a template class: three panes, the sidebar, the settings form and
+the inbox setup state render, and the logcat shows no builder refusal and no FATAL.
+
+- The entity-switcher popover opens on tap and closes on a tap outside. It appears at the
+  window's top-left corner, over the status bar, not under its anchor.
+- The inbox without a token shows the clean "Connect Paperless" status page. A real token
+  and the document list are not measured.
+- `styleClasses` takes a string at runtime (`widgets/style-classes.ts:83`,
+  `value.split`), but the declared type is `string[]`. An array crashes the constructor with
+  `e.split is not a function`; a string fails `tsc`. The app passes strings.
+- With the link, `tsc` also reports `marginTop` on `Gtk.Box`, `connect` on `Gtk.Button` /
+  `Adw.ActionRow` and `visible` on `Gtk.Label`. Their declarations are missing there; the
+  build (vite) does not type-check and is green.
+- Visual gaps in the screenshot: the `Adw.EntryRow` titles are missing, the sidebar rows
+  have no padding and their icons overlap the text, and the buttons render flat.
+- Not on Android v1: no gettext catalogue (msgids stay English), the assistant panel is
+  a shell, and the year switcher is hidden.

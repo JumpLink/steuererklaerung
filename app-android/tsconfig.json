@@ -10,7 +10,8 @@
     "noEmitHelpers": true,
     "noEmitOnError": true,
     "skipLibCheck": true,
-    "types": ["@gjsify/rolldown-plugin-gjsify/types"],
+    "preserveSymlinks": true,
+    "types": ["@gjsify/rolldown-plugin-gjsify/types", "node"],
     "lib": ["ESNext", "dom"],
     "paths": {
       "~/*": ["./app/*"],

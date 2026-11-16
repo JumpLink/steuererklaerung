@@ -29,3 +29,6 @@ tmp/
 
 # mdx results
 app/mdx/*.xml
+
+# Copied out of @gjsify/adwaita-nativescript by `sync:theme` before every build
+app/adwaita.css
