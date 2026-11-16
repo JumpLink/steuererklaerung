@@ -68,3 +68,11 @@ Until #2679/#2680 are released the app depends on the `gjsify-dev` link; the pin
 `gjsify-dev` at origin/main (`8fce6b0072`), screenshots `/tmp/steuer16-{window,popover}.png`: titles, sidebar rows, buttons and the popover under the avatar all hold.
 
 Start time on `NsGi_API_36` (debug APK, `am start -W -S`, process killed before each run): `TotalTime` 2920 ms (first run after install), then 1328 ms and 1164 ms.
+
+### Paperless connection on the emulator (real server)
+
+- Saving the connection first threw `ReferenceError: javax is not defined`: the NativeScript metadata whitelist (`data/Android/native-api-usage.json`) lacked `java.security`, `javax.crypto`, `android.security.keystore` and `SharedPreferences`. Fixed there; the Keystore-backed token store now works.
+- The token row is masked (`password` input), the address row is plain text.
+- The inbox loads over HTTPS: a list of rows (title plus date), about 25 per page, ends in a rounded card, scrolls smoothly in both directions, no errors in logcat.
+- Gaps: rows do not react to a tap (no detail view exists yet), and there is no paging beyond the first page.
+- Input note: `adb input text` appends to existing field text, so clear the app data before retyping, or the address ends up doubled.
