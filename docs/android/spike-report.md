@@ -62,3 +62,9 @@ Measured on `NsGi_API_36` (2560x1600, 2 dp = 1 px scale 2.0), screenshots before
 Re-measured on the emulator with both core fixes merged locally into `gjsify-dev`: titles
 "Paperless address" / "API token" show, and the entity popover opens centred below the avatar.
 Until #2679/#2680 are released the app depends on the `gjsify-dev` link; the pins stay 0.64.44.
+
+### Re-check with the merged core fixes (#2679, #2680)
+
+`gjsify-dev` at origin/main (`8fce6b0072`), screenshots `/tmp/steuer16-{window,popover}.png`: titles, sidebar rows, buttons and the popover under the avatar all hold.
+
+Start time on `NsGi_API_36` (debug APK, `am start -W -S`, process killed before each run): `TotalTime` 2920 ms (first run after install), then 1328 ms and 1164 ms.
