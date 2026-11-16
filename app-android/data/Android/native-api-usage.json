@@ -98,6 +98,12 @@
     "android.graphics.drawable:RippleDrawable",
     "android.graphics.drawable:BitmapDrawable",
     "android.graphics.drawable:ColorDrawable",
-    "android.content.res:TypedArray"
+    "android.content.res:TypedArray",
+    "java.security:*",
+    "javax.crypto:*",
+    "javax.crypto.spec:*",
+    "android.security.keystore:*",
+    "android.content:SharedPreferences",
+    "android.content:SharedPreferences.Editor"
   ]
 }
