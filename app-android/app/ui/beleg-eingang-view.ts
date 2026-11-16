@@ -20,7 +20,7 @@ export function documentSubtitle(doc: Document): string {
  */
 export class BelegEingangView extends Gtk.Box {
   private readonly stack = new Gtk.Stack({ vexpand: true });
-  private readonly list = new Gtk.ListBox({ selectionMode: "none", styleClasses: ["boxed-list"] });
+  private readonly list = new Gtk.ListBox({ selectionMode: "none", styleClasses: "boxed-list" });
   private readonly empty = new Adw.StatusPage({
     iconName: "emblem-ok-symbolic",
     title: "Inbox is empty",
@@ -42,7 +42,7 @@ export class BelegEingangView extends Gtk.Box {
     scroll.child = holder;
 
     const settingsButton = (label: string) => {
-      const button = new Gtk.Button({ label, halign: "center", styleClasses: ["suggested-action", "pill"] });
+      const button = new Gtk.Button({ label, halign: "center", styleClasses: "suggested-action pill" });
       button.connect("clicked", () => this.handlers.onOpenSettings());
       return button;
     };

@@ -32,7 +32,7 @@ export class BhEntitySwitcher extends Adw.Bin {
     this._name_label.label = name;
     this._sub_label.label = sub;
     const box = new Gtk.Box({ orientation: "vertical", spacing: 8, marginTop: 6, marginBottom: 6, marginStart: 6, marginEnd: 6 });
-    const list = new Gtk.ListBox({ selectionMode: "none", styleClasses: ["boxed-list"] });
+    const list = new Gtk.ListBox({ selectionMode: "none", styleClasses: "boxed-list" });
     const row = new Adw.ActionRow({ title: name, subtitle: sub, activatable: true });
     row.add_prefix(new Gtk.Image({ iconName: "preferences-system-symbolic" }));
     row.connect("activated", () => {
