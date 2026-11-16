@@ -1,0 +1,54 @@
+using Gtk 4.0;
+using Adw 1;
+
+// The phone's Paperless connection form: static, so it is a blueprint. What it does on save is
+// settings-view.ts.
+template $BhPaperlessSettings: Gtk.Box {
+  orientation: vertical;
+  spacing: 18;
+  margin-top: 18;
+  margin-bottom: 18;
+  margin-start: 12;
+  margin-end: 12;
+
+  Gtk.Label {
+    // TRANSLATORS: Explains the phone's Paperless connection form
+    label: _("The phone talks to your Paperless-ngx directly. The token stays in the Android Keystore.");
+    wrap: true;
+    xalign: 0;
+
+    styles ["dim-label"]
+  }
+
+  Gtk.ListBox {
+    selection-mode: none;
+
+    styles ["boxed-list"]
+
+    Adw.EntryRow url_row {
+      // TRANSLATORS: Label of the Paperless address field
+      title: _("Paperless address");
+    }
+
+    Adw.PasswordEntryRow token_row {
+      // TRANSLATORS: Label of the Paperless API token field
+      title: _("API token");
+    }
+  }
+
+  Gtk.Label status_label {
+    wrap: true;
+    xalign: 0;
+    visible: false;
+  }
+
+  Gtk.Button save_button {
+    // TRANSLATORS: Button that stores the Paperless address and token
+    label: _("Save");
+    halign: center;
+
+    styles ["suggested-action", "pill"]
+
+    clicked => $_onSaveClicked();
+  }
+}
