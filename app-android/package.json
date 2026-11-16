@@ -6,8 +6,9 @@
   "description": "Android shell (NativeScript, route D) for the Steuererklärung app: spike",
   "main": "app/app.ts",
   "scripts": {
-    "build": "ns build android",
-    "start": "ns run android"
+    "sync:theme": "cp node_modules/@gjsify/adwaita-nativescript/src/theme/adwaita.css app/adwaita.css",
+    "build": "npm run sync:theme && ns build android",
+    "start": "npm run sync:theme && ns run android"
   },
   "dependencies": {
     "@gjsify/adwaita-gobject-native": "^0.64.44",
