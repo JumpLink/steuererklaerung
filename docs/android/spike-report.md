@@ -48,3 +48,17 @@ gap below was measured one at a time; the spike cuts it in `app-android/app/view
 - P4 builds the window as a template class (5, 6) and decides the workspace layout.
 - Before the first enum PR: spike whether a numeric enum and the port's string value agree on
   route D.
+
+## P4 step 1: emulator findings and their causes
+
+Measured on `NsGi_API_36` (2560x1600, 2 dp = 1 px scale 2.0), screenshots before/after in `/tmp`.
+
+| Finding | Cause | Fix |
+|---|---|---|
+| Flat buttons, sidebar rows without padding, icons over text | The app never loaded the Adwaita stylesheet (no `app.css`) | `app/app.css` imports `~/adwaita.css`; `sync:theme` copies it out of `@gjsify/adwaita-nativescript` before `build`/`start` (the copy is gitignored). Commit `bca932ed` |
+| `Adw.EntryRow` titles missing | gjsify core: the large placeholder title (`empty_title`) was never given the row's title; `_applyLabels` filled only the small label | gjsify PR #2679 (auto-merge) |
+| Popover top-left over the status bar | gjsify core, two defects: the card sat in a star cell and measured 1484 dp wide (child 184 dp), and its margins, written after the first layout pass, were ignored on Android | gjsify PR #2680 (auto-merge): auto cells + `translateX/Y`. Anchor rect was correct (130, 79, 34x34) |
+
+Re-measured on the emulator with both core fixes merged locally into `gjsify-dev`: titles
+"Paperless address" / "API token" show, and the entity popover opens centred below the avatar.
+Until #2679/#2680 are released the app depends on the `gjsify-dev` link; the pins stay 0.64.44.
