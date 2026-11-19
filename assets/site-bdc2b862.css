@@ -335,9 +335,9 @@ h1 {
   border-radius: var(--radius);
 }
 
-/* Only a CTA with the toggle beside it gives up its right corners: without a release there is no
- * split, just the button to the source or the releases. */
-.download-split .download-cta {
+/* Only a CTA with the toggle beside it gives up its right corners: with no build to offer (an
+ * "All download options" button alone) there is no split, and a flat edge would read as clipped. */
+.download-split .download-cta:not(:last-child) {
   border-radius: var(--radius) 0 0 var(--radius);
 }
 
@@ -1185,6 +1185,226 @@ app-support {
   overflow-wrap: anywhere;
 }
 
+/* Extension page: a store listing in the site's own tokens */
+
+.ext-short {
+  margin: 0.5rem 0 0;
+  max-width: 40rem;
+  opacity: 0.9;
+}
+
+.ext-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 17rem;
+  gap: 2rem;
+  align-items: start;
+}
+
+.ext-facts {
+  grid-column: 2;
+  grid-row: 1;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.ext-main {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+}
+
+.ext-facts h2 {
+  margin-block: 0 0.75rem;
+  font-size: 1.05rem;
+}
+
+.ext-facts dl {
+  margin: 0;
+}
+
+.ext-fact + .ext-fact {
+  margin-block-start: 0.75rem;
+}
+
+.ext-fact dt {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.ext-fact dd {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-wrap: anywhere;
+}
+
+.pair .card {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  text-decoration: none;
+  color: inherit;
+}
+
+.pair .card:hover {
+  background: color-mix(in srgb, var(--fg) 6%, var(--surface));
+}
+
+.pair .link-external {
+  margin-inline-start: auto;
+  flex: none;
+}
+
+.ext-section {
+  margin-block-start: 2rem;
+}
+
+.pair + .ext-section {
+  margin-block-start: 1.5rem;
+}
+
+.ext-section h3 {
+  font-size: 1rem;
+  margin-block: 1.25rem 0.5rem;
+}
+
+.ext-note {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-block: 0 0.5rem;
+}
+
+.ext-perms {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.ext-perm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.65rem 1rem;
+  background: var(--surface);
+}
+
+.ext-perm + .ext-perm {
+  border-top: 1px solid var(--line);
+}
+
+.ext-perm code {
+  align-self: flex-start;
+  font-size: 0.8rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.ext-perm-why,
+.ext-perm-only {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.ext-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ext-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.9rem;
+}
+
+.ext-chip small {
+  color: var(--muted);
+}
+
+/* The store switcher: links to one page per store, so it needs no script. */
+.ext-stores {
+  padding-block: 1rem 0;
+}
+
+.ext-stores ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ext-stores a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.ext-stores a[aria-current='page'] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+.ext-stores a[data-suggested] {
+  border-style: dashed;
+}
+
+.ext-suggest {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.component-more {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 760px) {
+  .ext-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .ext-facts,
+  .ext-main {
+    grid-column: 1;
+  }
+
+  .ext-facts {
+    grid-row: 1;
+  }
+
+  .ext-main {
+    grid-row: 2;
+  }
+}
+
 /* Footer */
 
 .footer {
@@ -1716,5 +1936,83 @@ app-support {
   .tag {
     border-color: #999;
     background: none;
+  }
+}
+
+/* Brand icons (platforms and browsers). Every part is a `.b1…bN` path filled from `--c1…--c6`.
+ * At rest those are `currentColor`; hovering or focusing the control around the icon (or the icon
+ * itself) switches them to the brand's own colours `--brand-1…6`. The selected OS tab stays plain:
+ * its background is the accent colour, which the marks would clash with. Forced colours and touch
+ * screens without hover keep everything on `currentColor`. */
+.icon-brand {
+  --c1: currentColor;
+  --c2: currentColor;
+  --c3: currentColor;
+  --c4: currentColor;
+  --c5: currentColor;
+  --c6: currentColor;
+}
+
+.icon-brand .b1 { fill: var(--c1); }
+.icon-brand .b2 { fill: var(--c2); }
+.icon-brand .b3 { fill: var(--c3); }
+.icon-brand .b4 { fill: var(--c4); }
+.icon-brand .b5 { fill: var(--c5); }
+.icon-brand .b6 { fill: var(--c6); }
+
+.icon-brand [class^="b"] {
+  transition: fill 150ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon-brand [class^="b"] {
+    transition: none;
+  }
+}
+
+.icon-chromium { --brand-1: #ea4335; --brand-2: #34a853; --brand-3: #fbbc04; --brand-4: #4285f4; }
+.icon-firefox { --brand-1: #ff9500; --brand-2: #7542e5; }
+
+/* Fox and globe share `currentColor` at rest and would merge into one blob, so the globe stays
+ * translucent until the brand colours switch on. */
+.icon-firefox .b2 { fill-opacity: var(--globe-opacity, 0.35); transition: fill 150ms ease, fill-opacity 150ms ease; }
+.icon-macos { --brand-1: #61bb46; --brand-2: #fdb827; --brand-3: #f5821f; --brand-4: #e03a3e; --brand-5: #963d97; --brand-6: #009ddc; }
+.icon-windows { --brand-1: #f25022; --brand-2: #7fba00; --brand-3: #00a4ef; --brand-4: #ffb900; }
+.icon-safari { --brand-1: #1b9ef0; --brand-2: #ff3b30; --brand-3: #9a9aa0; }
+.icon-edge { --brand-1: #0a7fd6; --brand-2: #35c1f1; }
+.icon-android { --brand-1: #3ddc84; }
+.icon-linux { --brand-1: #1c1c1c; --brand-2: #f4f4f4; --brand-3: #f5a000; }
+
+/* Marks that are dark by nature need a lighter shade on a dark page. */
+@media (prefers-color-scheme: dark) {
+  .icon-safari { --brand-3: #e8e8e8; }
+  .icon-linux { --brand-1: #8a8a96; }
+}
+
+@media (forced-colors: none) {
+  .icon-brand.is-colour,
+  :is(a, button, .ext-chip, .os-tab):focus-visible .icon-brand,
+  .icon-brand:focus-visible {
+    --c1: var(--brand-1);
+    --c2: var(--brand-2, currentColor);
+    --c3: var(--brand-3, currentColor);
+    --c4: var(--brand-4, currentColor);
+    --c5: var(--brand-5, currentColor);
+    --c6: var(--brand-6, currentColor);
+    --globe-opacity: 1;
+  }
+
+  @media (hover: hover) {
+    :is(a, button, .ext-chip):hover .icon-brand,
+    .os-tab:not([aria-selected="true"]):hover .icon-brand,
+    .icon-brand.platform:hover {
+      --c1: var(--brand-1);
+      --c2: var(--brand-2, currentColor);
+      --c3: var(--brand-3, currentColor);
+      --c4: var(--brand-4, currentColor);
+      --c5: var(--brand-5, currentColor);
+      --c6: var(--brand-6, currentColor);
+    --globe-opacity: 1;
+    }
   }
 }
