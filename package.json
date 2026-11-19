@@ -11,8 +11,8 @@
   "packages/*"
  ],
  "devDependencies": {
-  "@gjsify/cli": "0.64.26",
-  "@gjsify/site": "0.64.26"
+  "@gjsify/cli": "0.64.48",
+  "@gjsify/site": "0.64.48"
  },
  "gjsify": {
   "site": {
