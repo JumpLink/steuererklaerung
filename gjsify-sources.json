@@ -1198,6 +1198,13 @@
   },
   {
     "type": "file",
+    "url": "https://registry.npmjs.org/@gjsify/site/-/site-0.64.48.tgz",
+    "dest": "flatpak-gjsify-cache/gjsify/tarballs/v1/sha512/4b",
+    "dest-filename": "4bb95bf063897605945c731811b23ca5e147328236210f2fdbd98d14cace4cf182b97e3c7c5b3723eb66bf0f4302b06967dc94caace2fd30ee6ac6f1f956b66e.tgz",
+    "sha512": "4bb95bf063897605945c731811b23ca5e147328236210f2fdbd98d14cace4cf182b97e3c7c5b3723eb66bf0f4302b06967dc94caace2fd30ee6ac6f1f956b66e"
+  },
+  {
+    "type": "file",
     "url": "https://registry.npmjs.org/@gjsify/sqlite-native-darwin-arm64/-/sqlite-native-darwin-arm64-0.64.48.tgz",
     "dest": "flatpak-gjsify-cache/gjsify/tarballs/v1/sha512/66",
     "dest-filename": "66c47ff444717e0f167c81ac83a7b9eb48234f6047833354a329ccb84d8146eea727ee6b2e101c39794f19e3d6332fc406867d37a160893b55c567b3336dd9c7.tgz",
@@ -4268,6 +4275,13 @@
     "dest": "flatpak-gjsify-cache/gjsify/tarballs/v1/sha512/9b",
     "dest-filename": "9bb28e8deee3671ae6bad6a79644b575a8f5752eb3e8182c97339799c484a48942c4cdd5247ee51b940b79c93fea1805e85e1cac57f4d54b5098db097f079303.tgz",
     "sha512": "9bb28e8deee3671ae6bad6a79644b575a8f5752eb3e8182c97339799c484a48942c4cdd5247ee51b940b79c93fea1805e85e1cac57f4d54b5098db097f079303"
+  },
+  {
+    "type": "file",
+    "url": "https://registry.npmjs.org/qrcode-generator/-/qrcode-generator-2.0.4.tgz",
+    "dest": "flatpak-gjsify-cache/gjsify/tarballs/v1/sha512/99",
+    "dest-filename": "9994a23fa4676c7978c4bd80a791df9232e79b17ca70f5a959efdcfb95f10ae7ad11e9ea98d15fd451ff7ed5cf0ad146e7f4c3a1b8ec8f3eac48d2f44abf19f6.tgz",
+    "sha512": "9994a23fa4676c7978c4bd80a791df9232e79b17ca70f5a959efdcfb95f10ae7ad11e9ea98d15fd451ff7ed5cf0ad146e7f4c3a1b8ec8f3eac48d2f44abf19f6"
   },
   {
     "type": "file",
