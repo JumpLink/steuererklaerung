@@ -146,16 +146,55 @@ jobs:
       # `appimage` is opt-in through `--target` because it needs a tool the CLI does not carry
       # (ADR 0024). Naming the targets means a missing `appimagetool` fails loudly instead of
       # quietly shipping one format fewer.
-      - name: Pack deb, rpm and AppImage
-        run: cd app && gjsify ship linux --skip-build --target deb,rpm,appimage
+      #
+      # `linux-tar-flatpak` is the tarball a FlatPark package downloads: FlatPark pins it by checksum
+      # and wraps it as extra-data, so the user's machine fetches it from THIS release. It comes out
+      # of the same stage as the other formats, so it carries ERiC exactly when they do (licence § 4
+      # Abs. 1: "direkt oder indirekt zu verbreiten ... öffentlich zugänglich zu machen", as one
+      # product with our software). FlatPark hosts nothing and gets no right of its own (§ 4 Abs. 3).
+      - name: Pack deb, rpm, AppImage and the FlatPark tarball
+        run: cd app && gjsify ship linux --skip-build --target deb,rpm,appimage,linux-tar-flatpak
 
-      - name: The AppImage arrived
+      # The record is asserted too: the FlatPark package is generated from it.
+      - name: The AppImage, the tarball and its record arrived
         run: |
           set -eu
           ls -la app/ship/out
           version=$(node -p "require('./app/package.json').version")
-          f="app/ship/out/steuererklaerung-${version}-1.x86_64.AppImage"
-          [ -s "$f" ] || { echo "::error::missing or empty artifact: $f"; exit 1; }
+          for f in \
+            "app/ship/out/steuererklaerung-${version}-1.x86_64.AppImage" \
+            "app/ship/out/steuererklaerung-${version}-linux-x86_64-flatpak.tar.gz" \
+            "app/ship/out/steuererklaerung-${version}-linux-x86_64-flatpak.tar.gz.gjsify-release.json"; do
+            [ -s "$f" ] || { echo "::error::missing or empty artifact: $f"; exit 1; }
+          done
+
+      # What must never be in a package a stranger installs: local data, backups, opencode (0.1.x
+      # does not offer the built-in assistant). Only the synthetic demo workspace (`demo/`) may carry
+      # a manifest or transaction data. ERiC and its binding must be there exactly when ERiC was
+      # fetched, and the CI staging directory must not leak into the payload.
+      - name: The tarball holds what the product holds, and nothing local
+        env:
+          ERIC_FETCHED: ${{ steps.eric.outputs.fetched }}
+        run: |
+          set -eu
+          tar -tzf app/ship/out/*-flatpak.tar.gz > /tmp/list.txt
+          wc -l /tmp/list.txt
+          if grep -E '(^|/)(\.env|buchhaltung\.json|fints-data)|\.json\.bak-|opencode|\.eric-stage' /tmp/list.txt; then
+            echo "::error::the tarball holds a file that belongs to no public package"; exit 1
+          fi
+          if grep -E '(^|/)(steuererklaerung\.json|transactions-data)(/|$)' /tmp/list.txt | grep -v '/demo/'; then
+            echo "::error::a manifest or transaction data outside demo/"; exit 1
+          fi
+          if [ "$ERIC_FETCHED" = "true" ]; then
+            grep -q 'lib/steuererklaerung/eric/Linux-x86_64/.*libericapi\.so' /tmp/list.txt \
+              || { echo "::error::ERiC was fetched but is not in the tarball"; exit 1; }
+            grep -q 'libsteuereric\.so' /tmp/list.txt && grep -q 'SteuerEric-1\.0\.typelib' /tmp/list.txt \
+              || { echo "::error::the ERiC binding is not in the tarball"; exit 1; }
+          else
+            if grep -E 'libericapi|lib/steuererklaerung/eric/|hersteller-id' /tmp/list.txt; then
+              echo "::error::ERiC in a build that fetched none"; exit 1
+            fi
+          fi
 
       # The package must contain the APP and nothing else. `ship` stages every file beside the
       # bundle, so a stray build output next to it silently becomes part of the release — this is
@@ -930,7 +969,10 @@ jobs:
             [ ! -e "$d" ] || { echo "::error::ERiC in a build that fetched none"; exit 1; }
           fi
 
+      # Same rule as in `package`: a build that contains ERiC never becomes a workflow artifact
+      # (readable by anyone who can read this public repo); it goes to the release only.
       - uses: actions/upload-artifact@v4
+        if: steps.eric.outputs.fetched != 'true'
         with:
           name: packages-flatpak
           path: flatpak-out/*.flatpak
@@ -952,92 +994,3 @@ jobs:
             || gh release create -R "$GITHUB_REPOSITORY" "$tag" --verify-tag --title "Steuererklärung ${tag#v}" --notes "" \
             || gh release view -R "$GITHUB_REPOSITORY" "$tag" >/dev/null
           gh release upload -R "$GITHUB_REPOSITORY" "$tag" flatpak-out/*.flatpak --clobber
-
-  # The tarball a FlatPark package downloads (`-flatpak.tar.gz` plus its `.gjsify-release.json`
-  # record, which the package is generated from). FlatPark pins this file by checksum and wraps it
-  # as extra-data, so the user's machine fetches it from THIS release. Built in a job of its own
-  # and WITHOUT ERiC: the licence allows ERiC only inside our own official builds, and a tarball
-  # that FlatPark re-wraps for strangers is not one. Like the Flathub manifest, it also carries no
-  # `opencode` (0.1.x does not offer the built-in assistant). Built from a clean checkout, never
-  # from a developer machine: the app directory there holds real books and backups.
-  package-flatpark:
-    if: ${{ !inputs.tag }}
-    runs-on: ubuntu-latest
-    container:
-      image: quay.io/fedora/fedora:44
-    steps:
-      # `glib2-devel` brings `glib-compile-schemas`, the one host tool this format needs.
-      - name: Install build prerequisites
-        run: >
-          dnf install -y --setopt=install_weak_deps=False
-          git tar xz findutils gjs gettext glib2-devel gh
-
-      - uses: actions/checkout@v4
-
-      - name: Set up Node 24
-        uses: actions/setup-node@v4
-        with:
-          node-version: "24"
-
-      - name: Bootstrap the gjsify CLI
-        run: |
-          VERSION=$(node -p "require('./app/package.json').devDependencies['@gjsify/cli']")
-          npm install -g "@gjsify/cli@$VERSION"
-
-      - name: Install dependencies
-        run: gjsify install --immutable
-
-      - name: Compile the translation catalogues
-        run: cd app && gjsify run i18n:compile
-
-      - name: Build the app bundle
-        run: cd app && gjsify run build:app
-
-      - name: Package the FlatPark tarball
-        run: cd app && gjsify ship linux --skip-build --target linux-tar-flatpak
-
-      # The record is asserted too: the FlatPark package is generated from it.
-      - name: The tarball and its record arrived
-        run: |
-          set -eu
-          ls -la app/ship/out
-          version=$(node -p "require('./app/package.json').version")
-          for f in \
-            "app/ship/out/steuererklaerung-${version}-linux-x86_64-flatpak.tar.gz" \
-            "app/ship/out/steuererklaerung-${version}-linux-x86_64-flatpak.tar.gz.gjsify-release.json"; do
-            [ -s "$f" ] || { echo "::error::missing or empty artifact: $f"; exit 1; }
-          done
-
-      # What must never be in a package a stranger installs. Only the synthetic demo workspace
-      # (`demo/`) may carry a manifest or transaction data; ERiC and opencode belong to other builds.
-      - name: Nothing local, nothing licensed reaches the tarball
-        run: |
-          set -eu
-          tar -tzf app/ship/out/*-flatpak.tar.gz > /tmp/list.txt
-          wc -l /tmp/list.txt
-          if grep -E '(^|/)(\.env|buchhaltung\.json|fints-data)|\.json\.bak-|(^|/)eric(/|-)|opencode|\.eric-stage' /tmp/list.txt; then
-            echo "::error::the tarball holds a file that belongs to no public package"; exit 1
-          fi
-          if grep -E '(^|/)(steuererklaerung\.json|transactions-data)(/|$)' /tmp/list.txt | grep -v '/demo/'; then
-            echo "::error::a manifest or transaction data outside demo/"; exit 1
-          fi
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: packages-flatpark
-          path: |
-            app/ship/out/*-flatpak.tar.gz
-            app/ship/out/*-flatpak.tar.gz.gjsify-release.json
-          compression-level: 0
-
-      - name: Attach to the release
-        if: startsWith(github.ref, 'refs/tags/v')
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -eu
-          tag="${GITHUB_REF_NAME}"
-          gh release view -R "$GITHUB_REPOSITORY" "$tag" >/dev/null 2>&1 \
-            || gh release create -R "$GITHUB_REPOSITORY" "$tag" --verify-tag --title "Steuererklärung ${tag#v}" --notes "" \
-            || gh release view -R "$GITHUB_REPOSITORY" "$tag" >/dev/null
-          gh release upload -R "$GITHUB_REPOSITORY" "$tag" app/ship/out/*-flatpak.tar.gz app/ship/out/*-flatpak.tar.gz.gjsify-release.json --clobber
