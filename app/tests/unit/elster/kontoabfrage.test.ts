@@ -30,7 +30,7 @@ const config: ElsterConfig = {
     entity_id: 'artcode',
     account_labels: {},
     gesellschafter: [],
-    hersteller_id: '39542',
+    hersteller_id: '12345',
     datenlieferant: 'Meier & Schulz GbR',
 };
 
