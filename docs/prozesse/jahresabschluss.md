@@ -73,7 +73,8 @@ Jedes Formular hat `report` (Zusammenfassung, `--pdf` = Prüf-Datenblatt), `gene
 | **Einkommensteuer** (privat) | ❌ offen (Schema `E10`, siehe [references/elster-schemas.md](../references/elster-schemas.md)) | Web-Formular; `elster est report` liefert die Schätzung. |
 
 > ⚠ **Warum trotz XML das Web-Formular?** Der Portal-Import akzeptiert nur die USt-VA; der direkte
-> ERiC-Versand (`elster submit`) ist mangels **Hersteller-ID** gesperrt. Das XML dient daher als
+> ERiC-Versand (`elster submit`) war beim Schreiben dieser Notiz mangels **Hersteller-ID** gesperrt; die Release-Builds
+> tragen inzwischen eine eigene (Stand: [eric.md](../agents/eric.md)). Das XML dient hier als
 > *Plausibilitätsprüfung* (`validate-eric`) und Grundlage des Prüf-Datenblatts — eingetragen wird
 > von Hand. Siehe Memory `elster-manual-xml-upload`.
 

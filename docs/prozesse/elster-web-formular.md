@@ -4,7 +4,7 @@ Wie ein Jahresformular aus unserem Prüf-Datenblatt in **Mein ELSTER** eingetrag
 Tooling dabei *nicht* liefert, und welche Werte man **nicht** blind aus der Config übernehmen darf.
 
 Warum überhaupt von Hand: der Portal-XML-Import kann nur die USt-VA, und der direkte ERiC-Versand
-ist mangels **Hersteller-ID** gesperrt (siehe [jahresabschluss.md](jahresabschluss.md) und Memory
+war beim Schreiben mangels **Hersteller-ID** gesperrt (die Release-Builds tragen inzwischen eine eigene, Stand in [eric.md](../agents/eric.md); siehe [jahresabschluss.md](jahresabschluss.md) und Memory
 `elster-manual-xml-upload`). Das XML dient als Plausi-Prüfung (`validate-eric`) und als Grundlage
 des Prüfblatts — eingetragen wird im Browser.
 
