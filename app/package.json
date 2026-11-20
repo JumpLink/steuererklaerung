@@ -132,6 +132,18 @@
         },
         "ship": {
             "channel": "web",
+            "flatpak": {
+                "runtime": "gnome",
+                "runtimeVersion": "51",
+                "finishArgs": [
+                    "--device=dri",
+                    "--share=ipc",
+                    "--share=network",
+                    "--socket=fallback-x11",
+                    "--socket=wayland",
+                    "--talk-name=org.freedesktop.secrets"
+                ]
+            },
             "bundle": {
                 "linux": "dist/app/steuer-app.gjs.mjs",
                 "darwin": "dist/app/steuer-app.node.mjs",
