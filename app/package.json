@@ -1,7 +1,7 @@
 {
     "name": "steuererklaerung-cli",
     "description": "CLI for steuererklaerung: Qonto, Paperless-NGX, ELSTER, FinTS",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "license": "AGPL-3.0-or-later",
     "author": "Pascal Garber",
     "private": true,
@@ -211,6 +211,11 @@
             },
             "contentRating": "oars-1.1",
             "releases": [
+                {
+                    "version": "0.1.9",
+                    "date": "2026-11-20",
+                    "description": "Invoices can show the billing period in recurring items, draft invoices can be finalised in Qonto, and a copy of each sent invoice is filed in the IMAP Sent folder. The app adapts to phone-sized windows, the larger views load without freezing the window, and AI actions in the documents and invoices views can be cancelled."
+                },
                 {
                     "version": "0.1.8",
                     "date": "2026-10-31",
