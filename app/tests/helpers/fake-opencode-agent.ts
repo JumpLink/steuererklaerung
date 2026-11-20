@@ -65,11 +65,19 @@ export function fakeAgent(fake: FakeAgentOptions): (options: OpenAgentOptions) =
 
 /** The provider as the app builds it, but talking to {@link fakeAgent} instead of a real agent. */
 export function fakeAgentProvider(fake: FakeAgentOptions, model?: string, timeoutMs = 5_000): OpencodeProvider {
-    return new OpencodeProvider({
-        model,
-        command: { command: 'fake-agent', args: [] } as never,
-        cwd: '/tmp',
-        open: fakeAgent(fake),
-        timeoutMs,
-    });
+    // The constructor falls back to LLM_MODEL from a developer's `.env`; the fake does not offer that
+    // model, so every job would fail as `unknown-model` locally while CI (no `.env`) stays green.
+    const saved = process.env.LLM_MODEL;
+    delete process.env.LLM_MODEL;
+    try {
+        return new OpencodeProvider({
+            model,
+            command: { command: 'fake-agent', args: [] } as never,
+            cwd: '/tmp',
+            open: fakeAgent(fake),
+            timeoutMs,
+        });
+    } finally {
+        if (saved !== undefined) process.env.LLM_MODEL = saved;
+    }
 }
