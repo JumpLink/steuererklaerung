@@ -21,10 +21,10 @@ ERiC is a C library provided free of charge by the Bayerisches Landesamt für St
 
 Official release builds also carry the app's own 5-digit ELSTER Hersteller-ID: written from
 the `ERIC_HERSTELLER_ID` secret as a `hersteller-id` file next to the bundled runtime, read
-by `packages/eric/src/paths.ts`. It marks submissions on the wire as this software. It never
-appears in the source repository (it does sit in the public release artifacts, so it is not a
-secret: the licence nowhere declares it confidential, §14 covers trade secrets only, and it is
-sent with every submission), and the Flathub build ships without it (a person's own
+by `packages/eric/src/paths.ts`. It marks submissions on the wire as this software. It is kept
+out of the source repository (tests use a dummy), but it does sit in the public release
+artifacts and in every exported ELSTER record, so it cannot be treated as secret. The Flathub
+build ships without it (a person's own
 identifier from the settings overrides it, and registering one is free in the ELSTER
 developer area).
 
@@ -73,7 +73,7 @@ If the application uses RABE (reference-based document retrieval), additional ob
 ## Confidentiality
 
 - Confidentiality obligations apply mutually and survive termination of the agreement (§14).
-- Do **not** publish: API keys, LfSt support contact details, or other non-public information from the developer portal. The Hersteller-ID is not in that list: the licence does not mark it confidential and it travels in every submission; we only keep it out of the repository because misuse can get it blocked (§9).
+- Do **not** publish: API keys, LfSt support contact details, or other non-public information from the developer portal. The licence does not place the Hersteller-ID under §14: it is an identifier assigned to us, not an internum of the LfSt, and §7 (3) shows the licence names publication bans where it wants them. It is also in every exported ELSTER record and in the public release artifacts, so it cannot be treated as secret. We still keep it out of the repository because it attributes submissions to us: misuse by others falls back on our ID (§9), and §5 (3) binds us to the developer documentation, which we have not audited for a handling rule.
 
 ## Liability and Compliance
 
@@ -94,5 +94,5 @@ If the application uses RABE (reference-based document retrieval), additional ob
 | ELSTER logo | Only in ERiC documentation |
 | Confidentiality | Do not publish developer portal internals |
 | Support | Your responsibility, not LfSt's |
-| Hersteller-ID | Keep out of the repo (private config), but not a secret: it ships in the release artifacts; can be revoked on violation (§9) |
+| Hersteller-ID | Not confidential under the licence (§14 does not cover it), but attributable: keep out of the repo; can be blocked on violation (§9) |
 | Reuse from bundles | ERiC and the bundled Hersteller-ID are product-bound; extraction for other software is a licence violation (§4 (3), §9) |

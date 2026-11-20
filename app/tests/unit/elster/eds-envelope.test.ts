@@ -44,7 +44,7 @@ export default async () => {
                 datenArt: 'EUER',
                 vorgang: 'send-Auth',
                 testMode: true,
-                herstellerId: '39542',
+                herstellerId: '12345',
                 datenLieferant: 'Meier & Schulz GbR',
                 empfaenger: '2318',
                 nutzdaten: '                <Payload />\n',

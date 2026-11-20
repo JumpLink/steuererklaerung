@@ -112,9 +112,9 @@ export default async () => {
             // unterscheiden sich". Kz09 was hardcoded '00000' while the envelope carried the
             // configured id, so validate-eric failed for every entity that sets one — invisible
             // for as long as the returns went out through the Mein-ELSTER XML import.
-            const xml = buildUstvaEds(aggregate, { ...config, hersteller_id: '39542' });
-            expect(xml).toContain('<HerstellerID>39542</HerstellerID>');
-            expect(xml).toContain('<Kz09>39542</Kz09>');
+            const xml = buildUstvaEds(aggregate, { ...config, hersteller_id: '12345' });
+            expect(xml).toContain('<HerstellerID>12345</HerstellerID>');
+            expect(xml).toContain('<Kz09>12345</Kz09>');
             // The discriminator: the placeholder must be gone, not merely joined by the real id.
             expect(xml).not.toContain('<Kz09>00000</Kz09>');
         });

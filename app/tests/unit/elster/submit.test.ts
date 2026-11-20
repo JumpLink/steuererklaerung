@@ -228,7 +228,7 @@ export default async function () {
             // answered "Die übergebene Datenartversion ist unbekannt" and no USt-VA could be sent.
             const eds =
                 '<Elster><TransferHeader><DatenArt>UStVA</DatenArt>' +
-                '<Testmerker>700000004</Testmerker><HerstellerID>39542</HerstellerID>' +
+                '<Testmerker>700000004</Testmerker><HerstellerID>12345</HerstellerID>' +
                 '</TransferHeader><DatenTeil>' +
                 '<Anmeldungssteuern xmlns="http://finkonsens.de/elster/elsteranmeldung/ustva/v2026">' +
                 '</Anmeldungssteuern></DatenTeil></Elster>';
