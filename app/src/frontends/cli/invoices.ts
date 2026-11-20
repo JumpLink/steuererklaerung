@@ -14,6 +14,7 @@ import {
     getInvoiceCapabilities,
     getOutgoingInvoice,
     getOutgoingInvoicePdf,
+    getOutgoingInvoicePdfBytes,
     getOutgoingInvoiceXml,
     listOutgoingInvoicesFor,
     markOutgoingInvoicePaid,
@@ -617,7 +618,9 @@ const selfCommand: CommandModule = {
                     const raw = argv as Record<string, unknown>;
                     const out = pickArgv<string>(raw, 'out');
                     runAndExit(async () => {
-                        const file = await getOutgoingInvoicePdf(String(raw.entity), String(raw.id));
+                        const file = out
+                            ? await getOutgoingInvoicePdfBytes(String(raw.entity), String(raw.id))
+                            : await getOutgoingInvoicePdf(String(raw.entity), String(raw.id));
                         if (!file) return { message: 'Kein PDF verfügbar.' };
                         if (file.kind === 'url') return { url: file.url };
                         if (out) {
