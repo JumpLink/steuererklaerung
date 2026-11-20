@@ -994,3 +994,19 @@ jobs:
             || gh release create -R "$GITHUB_REPOSITORY" "$tag" --verify-tag --title "Steuererklärung ${tag#v}" --notes "" \
             || gh release view -R "$GITHUB_REPOSITORY" "$tag" >/dev/null
           gh release upload -R "$GITHUB_REPOSITORY" "$tag" flatpak-out/*.flatpak --clobber
+
+  # Tells FlatPark the release is live, so its package picks up the new `-linux-x86_64-flatpak.tar.gz`
+  # within minutes instead of at the twice-daily sweep. The release is created by THIS workflow with
+  # the default token, so GitHub starts no `on: release` run for it; the tarball is attached by the
+  # `package` job, hence `needs: package`. No secret is involved, and `continue-on-error` keeps a
+  # FlatPark hiccup from failing a release that is complete.
+  flatpark:
+    needs: package
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: flatpark/publish-action@v1
+        with:
+          app-id: eu.jumplink.Steuererklaerung
+          tag: ${{ github.ref_name }}
