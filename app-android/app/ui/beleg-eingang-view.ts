@@ -1,5 +1,7 @@
 import { Adw, Gtk } from "@gjsify/adwaita-nativescript";
 import { createPaperlessClient, type Document, type PaperlessCreds } from "../data/paperless.ts";
+import { documentDetail } from "../data/document-detail.ts";
+import { BelegDetailView } from "./beleg-detail-view.ts";
 
 /** What the owner decides when the list cannot be shown: Paperless is not set up, or it answered badly. */
 export interface BelegEingangHandlers {
@@ -32,6 +34,11 @@ export class BelegEingangView extends Gtk.Box {
     title: "Connect Paperless",
     description: "Enter the address and API token of your Paperless-ngx.",
   });
+  // A real Adw.NavigationView, not a Gtk.Stack page: gjsify routes Android's system Back key to
+  // the innermost visible navigation view's pop; a stack page would let Back leave the app.
+  private readonly navigation = new Adw.NavigationView({ vexpand: true });
+  private readonly detail = new BelegDetailView(() => void this.navigation.pop());
+  private readonly detailPage = new Adw.NavigationPage({ title: "Document", tag: "detail" });
   private generation = 0;
   private documents: Document[] = [];
   private client: ReturnType<typeof createPaperlessClient> | null = null;
@@ -59,7 +66,11 @@ export class BelegEingangView extends Gtk.Box {
     this.stack.add_named(this.empty, "empty");
     this.stack.add_named(this.failure, "error");
     this.stack.add_named(this.setup, "setup");
-    this.append(this.stack);
+    const listPage = new Adw.NavigationPage({ title: "Document inbox", tag: "list" });
+    listPage.set_child(this.stack);
+    this.detailPage.set_child(this.detail);
+    this.navigation.add(listPage);
+    this.append(this.navigation);
   }
 
   /** Fetches page one of the inbox (more pages follow on demand); a newer call wins over a slower older one. */
@@ -88,7 +99,9 @@ export class BelegEingangView extends Gtk.Box {
   private show(): void {
     this.list.remove_all();
     for (const doc of this.documents) {
-      this.list.append(new Adw.ActionRow({ title: documentTitle(doc), subtitle: documentSubtitle(doc) }));
+      const row = new Adw.ActionRow({ title: documentTitle(doc), subtitle: documentSubtitle(doc), activatable: true });
+      row.connect("activated", () => void this.open(doc));
+      this.list.append(row);
     }
     if (this.nextPage !== null) {
       const row = new Adw.ButtonRow({ title: this.loadingMore ? "Loading…" : "Load more", sensitive: !this.loadingMore });
@@ -96,6 +109,19 @@ export class BelegEingangView extends Gtk.Box {
       this.list.append(row);
     }
     this.stack.set_visible_child_name(this.documents.length ? "list" : "empty");
+  }
+
+  private async open(doc: Document): Promise<void> {
+    const client = this.client;
+    if (!client) return;
+    try {
+      const [tags, correspondents] = await Promise.all([client.tagNames(), client.correspondentNames()]);
+      this.detail.show(documentDetail(doc, tags, correspondents));
+    } catch {
+      // Names are a nicety: show the document with raw ids rather than not at all.
+      this.detail.show(documentDetail(doc, new Map(), new Map()));
+    }
+    this.navigation.push(this.detailPage);
   }
 
   private async loadMore(): Promise<void> {
