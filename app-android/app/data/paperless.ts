@@ -53,6 +53,7 @@ export function createPaperlessClient(creds: PaperlessCreds) {
     const get = <T>(path: string, q: Record<string, unknown> = {}) =>
         requestJson<T>(`${base}${path}${buildQuery(q)}`, { method: 'GET', headers: auth }, TIMEOUT_MS, 'Paperless');
 
+    let inboxTagId: number | undefined;
     const listTags = async (): Promise<Tag[]> => (await get<Page<Tag>>('/api/tags/', { page_size: 500 })).results;
     return {
         listTags,
@@ -66,7 +67,8 @@ export function createPaperlessClient(creds: PaperlessCreds) {
             }),
         /** Documents carrying the inbox tag; empty page when the tag does not exist. */
         async listInbox(page = 1): Promise<Page<Document>> {
-            const tag = (await listTags()).find((t) => t.name === INBOX_TAG);
+            inboxTagId ??= (await listTags()).find((t) => t.name === INBOX_TAG)?.id;
+            const tag = inboxTagId == null ? undefined : { id: inboxTagId };
             if (!tag) return { count: 0, next: null, results: [] };
             return get<Page<Document>>('/api/documents/', { tags__id__all: tag.id, page, page_size: 25, ordering: '-added' });
         },

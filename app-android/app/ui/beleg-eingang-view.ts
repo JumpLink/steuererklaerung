@@ -33,6 +33,10 @@ export class BelegEingangView extends Gtk.Box {
     description: "Enter the address and API token of your Paperless-ngx.",
   });
   private generation = 0;
+  private documents: Document[] = [];
+  private client: ReturnType<typeof createPaperlessClient> | null = null;
+  private nextPage: number | null = null;
+  private loadingMore = false;
 
   constructor(private readonly handlers: BelegEingangHandlers) {
     super({ orientation: "vertical" });
@@ -58,7 +62,7 @@ export class BelegEingangView extends Gtk.Box {
     this.append(this.stack);
   }
 
-  /** Fetches page one of the inbox; a newer call wins over a slower older one. */
+  /** Fetches page one of the inbox (more pages follow on demand); a newer call wins over a slower older one. */
   async reload(creds: PaperlessCreds | null): Promise<void> {
     const mine = ++this.generation;
     if (!creds) {
@@ -67,9 +71,13 @@ export class BelegEingangView extends Gtk.Box {
     }
     this.stack.set_visible_child_name("loading");
     try {
-      const page = await createPaperlessClient(creds).listInbox();
+      const client = createPaperlessClient(creds);
+      const page = await client.listInbox();
       if (mine !== this.generation) return;
-      this.show(page.results);
+      this.client = client;
+      this.documents = page.results;
+      this.nextPage = page.next ? 2 : null;
+      this.show();
     } catch (error) {
       if (mine !== this.generation) return;
       this.failure.description = error instanceof Error ? error.message : String(error);
@@ -77,11 +85,39 @@ export class BelegEingangView extends Gtk.Box {
     }
   }
 
-  private show(documents: Document[]): void {
+  private show(): void {
     this.list.remove_all();
-    for (const doc of documents) {
+    for (const doc of this.documents) {
       this.list.append(new Adw.ActionRow({ title: documentTitle(doc), subtitle: documentSubtitle(doc) }));
     }
-    this.stack.set_visible_child_name(documents.length ? "list" : "empty");
+    if (this.nextPage !== null) {
+      const row = new Adw.ButtonRow({ title: this.loadingMore ? "Loading…" : "Load more", sensitive: !this.loadingMore });
+      row.connect("activated", () => void this.loadMore());
+      this.list.append(row);
+    }
+    this.stack.set_visible_child_name(this.documents.length ? "list" : "empty");
+  }
+
+  private async loadMore(): Promise<void> {
+    const client = this.client;
+    const page = this.nextPage;
+    if (!client || page === null || this.loadingMore) return;
+    const mine = this.generation;
+    this.loadingMore = true;
+    this.show();
+    try {
+      const result = await client.listInbox(page);
+      if (mine !== this.generation) return;
+      this.documents = [...this.documents, ...result.results];
+      this.nextPage = result.next ? page + 1 : null;
+    } catch (error) {
+      if (mine !== this.generation) return;
+      this.failure.description = error instanceof Error ? error.message : String(error);
+      this.stack.set_visible_child_name("error");
+      return;
+    } finally {
+      this.loadingMore = false;
+    }
+    this.show();
   }
 }
