@@ -134,8 +134,8 @@ jobs:
 
   # The Android shell (app-android/, NativeScript): not a workspace member, so it has its own
   # gjsify-lock.json and its own install. Nothing here needs gjs, so no Fedora container: the stock
-  # runner already carries the Android SDK, which `ns prepare android` insists on (it checks the
-  # build-tools) even though it runs no Gradle. It produces the Vite bundle (bundle.mjs) and stops
+  # runner already carries the Android SDK and, with setup-java, the JDK that `ns prepare android`
+  # checks for, though it runs no Gradle. It produces the Vite bundle (bundle.mjs) and stops
   # before any APK. A break in the Android code used to reach main unnoticed.
   android:
     runs-on: ubuntu-latest
@@ -178,8 +178,13 @@ jobs:
       - name: Unit tests
         run: gjsify run test
 
+      # NS_SKIP_ENV_CHECK: the CLI's doctor fails the whole run when the `emulator` binary is
+      # missing (nothing here starts an emulator). The SDK platform and the JDK it checked before
+      # that are present on the runner.
       - name: Build the NativeScript bundle (no Gradle)
-        run: gjsify run build:bundle -- --log trace
+        env:
+          NS_SKIP_ENV_CHECK: "1"
+        run: gjsify run build:bundle
 
       - name: Assert the bundle arrived
         run: test -s platforms/android/app/src/main/assets/app/bundle.mjs
