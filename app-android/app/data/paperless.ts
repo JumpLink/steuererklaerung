@@ -5,6 +5,7 @@
  */
 import { buildMultipart } from './multipart.ts';
 import { buildQuery, requestJson } from './http.ts';
+import { cachedOnce, nameMap, type Named } from './lookup.ts';
 
 export const PAPERLESS_API_VERSION = '9';
 const TIMEOUT_MS = 60_000;
@@ -19,6 +20,7 @@ export interface Document {
     id: number;
     title: string | null;
     tags: number[];
+    correspondent?: number | null;
     created: string | null;
     added: string | null;
     original_file_name: string | null;
@@ -55,8 +57,14 @@ export function createPaperlessClient(creds: PaperlessCreds) {
 
     let inboxTagId: number | undefined;
     const listTags = async (): Promise<Tag[]> => (await get<Page<Tag>>('/api/tags/', { page_size: 500 })).results;
+    const listCorrespondents = async (): Promise<Named[]> =>
+        (await get<Page<Named>>('/api/correspondents/', { page_size: 500 })).results;
     return {
         listTags,
+        listCorrespondents,
+        /** id → name tables, fetched once per client. */
+        tagNames: cachedOnce(async () => nameMap(await listTags())),
+        correspondentNames: cachedOnce(async () => nameMap(await listCorrespondents())),
         listDocuments: (p: { page?: number; page_size?: number; ordering?: string; tag_ids?: number[]; query?: string } = {}) =>
             get<Page<Document>>('/api/documents/', {
                 page: p.page,
