@@ -7,6 +7,9 @@
   "main": "app/app.ts",
   "scripts": {
     "sync:theme": "cp node_modules/@gjsify/adwaita-nativescript/src/theme/adwaita.css app/adwaita.css",
+    "check": "tsc --noEmit",
+    "test": "node --test app/data/*.test.ts",
+    "build:bundle": "npm run sync:theme && ns prepare android",
     "build": "npm run sync:theme && ns build android",
     "start": "npm run sync:theme && ns run android"
   },
