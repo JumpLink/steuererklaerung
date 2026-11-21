@@ -1,5 +1,6 @@
 /** Tiny fetch wrapper: timeout, error snippet, JSON. No node:* and no process.env. */
 import { describeNetworkError } from './network-error.ts';
+import { isOffline } from './connectivity.ts';
 
 function hostOf(url: string): string {
     return /^[a-z][a-z0-9+.-]*:\/\/([^/?#]+)/i.exec(url)?.[1] ?? url;
@@ -14,7 +15,7 @@ export async function requestJson<T>(url: string, init: RequestInit, timeoutMs: 
             res = await fetch(url, ctl ? { ...init, signal: ctl.signal } : init);
         } catch (e) {
             if ((e as { name?: string })?.name === 'AbortError') throw e;
-            throw new Error(describeNetworkError(e, hostOf(url), label), { cause: e });
+            throw new Error(describeNetworkError(e, hostOf(url), label, await isOffline()), { cause: e });
         }
         const text = await res.text();
         if (!res.ok) throw new Error(`${label}: HTTP ${res.status}: ${text.slice(0, 120)}`);

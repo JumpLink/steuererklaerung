@@ -34,8 +34,14 @@ export function classifyNetworkError(error: unknown): NetworkFailure {
 }
 
 /** The user-visible text; `host` is the `host[:port]` of the request. */
-export function describeNetworkError(error: unknown, host: string, label: string): string {
-    switch (classifyNetworkError(error)) {
+export function describeNetworkError(error: unknown, host: string, label: string, offline = false): string {
+    const kind = classifyNetworkError(error);
+    // NativeScript's fetch rejects with a bare "Network request failed" and drops the JVM cause, so the
+    // only honest signal left is whether the device has any connection at all.
+    if (offline && (kind === 'unknown' || kind === 'unreachable')) {
+        return `${label}: the device is offline. Check your internet connection.`;
+    }
+    switch (kind) {
         case 'host-not-found':
             return `${label}: host ${host} was not found. Check the address and your internet connection.`;
         case 'refused':

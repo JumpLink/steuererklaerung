@@ -17,6 +17,12 @@ test('the message names host and cause, and keeps the raw text when the cause is
     assert.match(describeNetworkError(new Error('Network request failed'), 'p.example.org', 'Paperless'), /p\.example\.org failed \(Network request failed\)/);
 });
 
+test('an unknown failure on an offline device says the device is offline', () => {
+    assert.match(describeNetworkError(new Error('Network request failed'), 'p.example.org', 'Paperless', true), /device is offline/);
+    assert.match(describeNetworkError(new Error('Network request failed'), 'p.example.org', 'Paperless', false), /request to p\.example\.org failed/);
+    assert.match(describeNetworkError(new Error('java.net.ConnectException'), 'p.example.org', 'Paperless', true), /refused the connection/);
+});
+
 test('requestJson reports the cause of a failed fetch and still maps aborts to a timeout', async () => {
     const real = globalThis.fetch;
     try {
