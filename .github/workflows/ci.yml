@@ -179,7 +179,7 @@ jobs:
         run: gjsify run test
 
       - name: Build the NativeScript bundle (no Gradle)
-        run: gjsify run build:bundle
+        run: gjsify run build:bundle -- --log trace
 
       - name: Assert the bundle arrived
         run: test -s platforms/android/app/src/main/assets/app/bundle.mjs
