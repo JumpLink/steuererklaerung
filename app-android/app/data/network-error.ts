@@ -6,6 +6,8 @@
  * specific survives, say so honestly instead of guessing.
  */
 
+import { _, fmt } from '../../../app/src/core/lib/i18n.ts';
+
 export type NetworkFailure = 'host-not-found' | 'refused' | 'tls' | 'unreachable' | 'unknown';
 
 /** Every message in the error's `cause` chain, joined; bounded so a cyclic chain cannot loop. */
@@ -39,20 +41,20 @@ export function describeNetworkError(error: unknown, host: string, label: string
     // NativeScript's fetch rejects with a bare "Network request failed" and drops the JVM cause, so the
     // only honest signal left is whether the device has any connection at all.
     if (offline && (kind === 'unknown' || kind === 'unreachable')) {
-        return `${label}: the device is offline. Check your internet connection.`;
+        return fmt(_('{label}: the device is offline. Check your internet connection.'), { label });
     }
     switch (kind) {
         case 'host-not-found':
-            return `${label}: host ${host} was not found. Check the address and your internet connection.`;
+            return fmt(_('{label}: host {host} was not found. Check the address and your internet connection.'), { label, host });
         case 'refused':
-            return `${label}: ${host} refused the connection. Check the port and that the server is running.`;
+            return fmt(_('{label}: {host} refused the connection. Check the port and that the server is running.'), { label, host });
         case 'tls':
-            return `${label}: could not establish a secure connection to ${host} (certificate or TLS error).`;
+            return fmt(_('{label}: could not establish a secure connection to {host} (certificate or TLS error).'), { label, host });
         case 'unreachable':
-            return `${label}: ${host} is not reachable from this network.`;
+            return fmt(_('{label}: {host} is not reachable from this network.'), { label, host });
         default: {
             const raw = error instanceof Error ? error.message : String(error);
-            return `${label}: request to ${host} failed (${raw}).`;
+            return fmt(_('{label}: request to {host} failed ({error}).'), { label, host, error: raw });
         }
     }
 }

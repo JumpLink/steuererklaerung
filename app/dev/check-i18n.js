@@ -88,18 +88,22 @@ const names = (s) =>
         .join(',');
 const percents = (s) => (s.match(/%[sd]/g) ?? []).length;
 
-function* walk(dir) {
+function* walk(dir, skip = '.spec.ts') {
     for (const entry of readdirSync(dir)) {
         const path = join(dir, entry);
-        if (statSync(path).isDirectory()) yield* walk(path);
-        else if (/\.(ts|blp)$/.test(path) && !path.endsWith('.spec.ts')) yield path;
+        if (statSync(path).isDirectory()) yield* walk(path, skip);
+        else if (/\.(ts|blp)$/.test(path) && !path.endsWith(skip)) yield path;
     }
 }
 
 const tmp = mkdtempSync(join(tmpdir(), 'check-i18n-'));
 const problems = [];
 try {
-    const files = [...walk(join(ROOT, 'src'))].map((f) => relative(ROOT, f)).sort();
+    // Same file set as `dev/i18n.sh extract`: the desktop sources plus the Android shell, whose unit
+    // tests are `*.test.ts`.
+    const files = [...walk(join(ROOT, 'src')), ...walk(join(ROOT, '..', 'app-android', 'app'), '.test.ts')]
+        .map((f) => relative(ROOT, f))
+        .sort();
     writeFileSync(join(tmp, 'POTFILES'), files.join('\n') + '\n');
     const res = spawnSync(
         'xgettext',

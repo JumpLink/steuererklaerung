@@ -155,6 +155,10 @@ jobs:
           distribution: temurin
           java-version: "17"
 
+      # The locale option of vite-plugin-gjsify compiles app/po to .mo assets with msgfmt.
+      - name: Install gettext
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq gettext
+
       - name: Cache gjsify tarball store
         uses: actions/cache@v4
         with:

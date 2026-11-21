@@ -1,5 +1,6 @@
 import { Adw, Gtk } from "@gjsify/adwaita-nativescript";
 import * as GObject from "@gjsify/adwaita-nativescript/gobject";
+import { _ } from "../../../app/src/core/lib/i18n.ts";
 import tree from "./settings-view.blp?shared-tree";
 import type { PaperlessCreds } from "../data/paperless.ts";
 import { normalizePaperlessUrl } from "../data/paperless-url.ts";
@@ -34,8 +35,8 @@ export class BhPaperlessSettings extends Gtk.Box {
   _onSaveClicked(): void {
     const url = normalizePaperlessUrl(this._url_row.text);
     const token = this._token_row.text.trim();
-    if (!url) return this.report("Enter an http:// or https:// address.");
-    if (!token) return this.report("Enter the API token.");
+    if (!url) return this.report(_("Enter an http:// or https:// address."));
+    if (!token) return this.report(_("Enter the API token."));
     this._token_row.text = "";
     this.report("");
     this.onSaved?.({ url, token });
