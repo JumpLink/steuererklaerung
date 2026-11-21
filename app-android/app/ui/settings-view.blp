@@ -28,6 +28,9 @@ template $BhPaperlessSettings: Gtk.Box {
     Adw.EntryRow url_row {
       // TRANSLATORS: Label of the Paperless address field
       title: _("Paperless address");
+      // A URL, not prose: no capitalised first letter, no autocorrect, no emoji key.
+      input-purpose: url;
+      input-hints: no_spellcheck | no_emoji;
     }
 
     Adw.PasswordEntryRow token_row {
