@@ -39,7 +39,7 @@ export class BelegEingangView extends Gtk.Box {
   // the innermost visible navigation view's pop; a stack page would let Back leave the app.
   private readonly navigation = new Adw.NavigationView({ vexpand: true });
   private readonly detail = new BelegDetailView(() => void this.navigation.pop());
-  private readonly detailPage = new Adw.NavigationPage({ title: "Document", tag: "detail" });
+  private readonly detailPage = new Adw.NavigationPage({ title: _("Document"), tag: "detail" });
   private generation = 0;
   private documents: Document[] = [];
   private client: ReturnType<typeof createPaperlessClient> | null = null;
@@ -67,7 +67,7 @@ export class BelegEingangView extends Gtk.Box {
     this.stack.add_named(this.empty, "empty");
     this.stack.add_named(this.failure, "error");
     this.stack.add_named(this.setup, "setup");
-    const listPage = new Adw.NavigationPage({ title: "Document inbox", tag: "list" });
+    const listPage = new Adw.NavigationPage({ title: _("Document inbox"), tag: "list" });
     listPage.set_child(this.stack);
     this.detailPage.set_child(this.detail);
     this.navigation.add(listPage);
