@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu.jumplink.Steuererklaerung\n"
 "Report-Msgid-Bugs-To: https://github.com/JumpLink/steuererklaerung/issues\n"
-"POT-Creation-Date: 2026-11-13 10:11+0100\n"
+"POT-Creation-Date: 2026-11-20 08:34+0100\n"
 "PO-Revision-Date: 2026-10-09 19:00+0200\n"
 "Last-Translator: Steuererklärung contributors\n"
 "Language-Team: German\n"
@@ -11,6 +11,170 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../app-android/app/data/http.ts:22
+msgid "{label}: HTTP {status}: {body}"
+msgstr "{label}: HTTP {status}: {body}"
+
+#: ../app-android/app/data/http.ts:26
+msgid "{label} did not answer within {seconds} s"
+msgstr "{label} hat nicht innerhalb von {seconds} s geantwortet"
+
+#: ../app-android/app/data/network-error.ts:44
+msgid "{label}: the device is offline. Check your internet connection."
+msgstr "{label}: Das Gerät ist offline. Prüfe deine Internetverbindung."
+
+#: ../app-android/app/data/network-error.ts:48
+msgid ""
+"{label}: host {host} was not found. Check the address and your internet "
+"connection."
+msgstr "{label}: Der Host {host} wurde nicht gefunden. Prüfe die Adresse und deine Internetverbindung."
+
+#: ../app-android/app/data/network-error.ts:50
+msgid ""
+"{label}: {host} refused the connection. Check the port and that the server "
+"is running."
+msgstr "{label}: {host} hat die Verbindung abgelehnt. Prüfe den Port und ob der Server läuft."
+
+#: ../app-android/app/data/network-error.ts:52
+msgid ""
+"{label}: could not establish a secure connection to {host} (certificate or "
+"TLS error)."
+msgstr "{label}: Es konnte keine sichere Verbindung zu {host} hergestellt werden (Zertifikats- oder TLS-Fehler)."
+
+#: ../app-android/app/data/network-error.ts:54
+msgid "{label}: {host} is not reachable from this network."
+msgstr "{label}: {host} ist aus diesem Netzwerk nicht erreichbar."
+
+#: ../app-android/app/data/network-error.ts:57
+msgid "{label}: request to {host} failed ({error})."
+msgstr "{label}: Die Anfrage an {host} ist fehlgeschlagen ({error})."
+
+#: ../app-android/app/ui/beleg-detail-view.ts:11
+msgid "Back"
+msgstr "Zurück"
+
+#: ../app-android/app/ui/beleg-detail-view.ts:20
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:86
+#: src/frontends/desktop/views/tx-detail-dialog.ts:351
+msgid "Title"
+msgstr "Titel"
+
+#: ../app-android/app/ui/beleg-detail-view.ts:21
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:87
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:364
+msgid "Correspondent"
+msgstr "Korrespondent"
+
+#: ../app-android/app/ui/beleg-detail-view.ts:22
+msgid "Created"
+msgstr "Erstellt"
+
+#: ../app-android/app/ui/beleg-detail-view.ts:23
+msgid "Tags"
+msgstr "Tags"
+
+#: ../app-android/app/ui/beleg-eingang-view.ts:29
+msgid "Inbox is empty"
+msgstr "Der Eingang ist leer"
+
+#: ../app-android/app/ui/beleg-eingang-view.ts:30
+msgid "No document carries the tag {tag}."
+msgstr "Kein Dokument trägt das Tag {tag}."
+
+#: ../app-android/app/ui/beleg-eingang-view.ts:32
+msgid "Could not load the inbox"
+msgstr "Der Eingang konnte nicht geladen werden"
+
+#: ../app-android/app/ui/beleg-eingang-view.ts:35
+msgid "Connect Paperless"
+msgstr "Paperless verbinden"
+
+#: ../app-android/app/ui/beleg-eingang-view.ts:36
+msgid "Enter the address and API token of your Paperless-ngx."
+msgstr "Gib die Adresse und das API-Token deines Paperless-ngx ein."
+
+#: ../app-android/app/ui/beleg-eingang-view.ts:57
+#: src/core/actions/elster/wizard.ts:261 src/core/actions/elster/wizard.ts:347
+#: src/core/actions/elster/wizard.ts:526
+msgid "Open settings"
+msgstr "Einstellungen öffnen"
+
+#: ../app-android/app/ui/beleg-eingang-view.ts:58
+msgid "Check settings"
+msgstr "Einstellungen prüfen"
+
+#: ../app-android/app/ui/beleg-eingang-view.ts:101
+msgid "Loading…"
+msgstr "Lädt …"
+
+#: ../app-android/app/ui/beleg-eingang-view.ts:101
+msgid "Load more"
+msgstr "Mehr laden"
+
+#. TRANSLATORS: Explains the phone's Paperless connection form
+#: ../app-android/app/ui/settings-view.blp:16
+msgid ""
+"The phone talks to your Paperless-ngx directly. The token stays in the "
+"Android Keystore."
+msgstr "Das Telefon spricht direkt mit deinem Paperless-ngx. Das Token bleibt im Android-Keystore."
+
+#. TRANSLATORS: Label of the Paperless address field
+#: ../app-android/app/ui/settings-view.blp:30
+msgid "Paperless address"
+msgstr "Paperless-Adresse"
+
+#. TRANSLATORS: Label of the Paperless API token field
+#: ../app-android/app/ui/settings-view.blp:38
+#: src/frontends/desktop/views/setup-assistant.ts:584
+msgid "API token"
+msgstr "API-Token"
+
+#. TRANSLATORS: Button that stores the Paperless address and token
+#: ../app-android/app/ui/settings-view.blp:50
+#: src/frontends/desktop/views/aufteilen-dialog.ts:113
+#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:220
+#: src/frontends/desktop/views/einstellungen/kinder.ts:170
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:210
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:304
+#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:409
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:84
+#: src/frontends/desktop/views/kontakt-form-dialog.ts:120
+#: src/frontends/desktop/views/konten-view.ts:971
+#: src/frontends/desktop/views/projekt-form-dialog.ts:136
+#: src/frontends/desktop/views/projekt-form-dialog.ts:174
+#: src/frontends/desktop/views/rechnung-detail-dialog.ts:488
+#: src/frontends/desktop/views/umbuchen-dialog.ts:216
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:103
+#: src/frontends/desktop/views/vertrag-form-dialog.ts:384
+#: src/frontends/desktop/views/wiederkehrend-dialog.ts:194
+#: src/frontends/desktop/views/zeit-projekt-dialog.ts:41
+msgid "Save"
+msgstr "Speichern"
+
+#: ../app-android/app/ui/settings-view.ts:38
+msgid "Enter an http:// or https:// address."
+msgstr "Gib eine Adresse mit http:// oder https:// ein."
+
+#: ../app-android/app/ui/settings-view.ts:39
+msgid "Enter the API token."
+msgstr "Gib das API-Token ein."
+
+#: ../app-android/app/window.ts:76
+msgid "Connection saved"
+msgstr "Verbindung gespeichert"
+
+#: ../app-android/app/window.ts:79
+msgid "Document inbox"
+msgstr "Belegeingang"
+
+#: ../app-android/app/window.ts:80
+msgid "Paperless connection"
+msgstr "Paperless-Verbindung"
+
+#: ../app-android/app/window.ts:102
+msgid "Not connected"
+msgstr "Nicht verbunden"
 
 #: src/core/actions/classification-rules.ts:42
 msgid "Own accounts"
@@ -1381,11 +1545,6 @@ msgstr "Ohne Jahresabschluss-Anpassungen — ELSTER-Config fehlt."
 #: src/core/actions/elster/wizard.ts:260
 msgid "The figures are a raw cash view (no AfA/§24/private share)."
 msgstr "Die Zahlen sind eine rohe Kassensicht (ohne AfA/§24/Privatanteil)."
-
-#: src/core/actions/elster/wizard.ts:261 src/core/actions/elster/wizard.ts:347
-#: src/core/actions/elster/wizard.ts:526
-msgid "Open settings"
-msgstr "Einstellungen öffnen"
 
 #: src/core/actions/elster/wizard.ts:272
 msgid "All {n} booking classified."
@@ -6200,26 +6359,6 @@ msgstr "Konnte nicht aufheben"
 msgid "Parts"
 msgstr "Teile"
 
-#: src/frontends/desktop/views/aufteilen-dialog.ts:113
-#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:220
-#: src/frontends/desktop/views/einstellungen/kinder.ts:170
-#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:210
-#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:304
-#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:409
-#: src/frontends/desktop/views/kontakt-form-dialog.ts:84
-#: src/frontends/desktop/views/kontakt-form-dialog.ts:120
-#: src/frontends/desktop/views/konten-view.ts:971
-#: src/frontends/desktop/views/projekt-form-dialog.ts:136
-#: src/frontends/desktop/views/projekt-form-dialog.ts:174
-#: src/frontends/desktop/views/rechnung-detail-dialog.ts:488
-#: src/frontends/desktop/views/umbuchen-dialog.ts:216
-#: src/frontends/desktop/views/vertrag-form-dialog.ts:103
-#: src/frontends/desktop/views/vertrag-form-dialog.ts:384
-#: src/frontends/desktop/views/wiederkehrend-dialog.ts:194
-#: src/frontends/desktop/views/zeit-projekt-dialog.ts:41
-msgid "Save"
-msgstr "Speichern"
-
 #: src/frontends/desktop/views/aufteilen-dialog.ts:125
 msgid "Split transaction"
 msgstr "Buchung aufteilen"
@@ -6694,16 +6833,6 @@ msgstr "Eingang (Ausgabe)"
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:58
 msgid "Outgoing (income)"
 msgstr "Ausgang (Einnahme)"
-
-#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:86
-#: src/frontends/desktop/views/tx-detail-dialog.ts:351
-msgid "Title"
-msgstr "Titel"
-
-#: src/frontends/desktop/views/beleg-metadaten-dialog.ts:87
-#: src/frontends/desktop/views/einstellungen/klassifizierung.ts:364
-msgid "Correspondent"
-msgstr "Korrespondent"
 
 #: src/frontends/desktop/views/beleg-metadaten-dialog.ts:88
 #: src/frontends/desktop/views/einstellungen/vorsteuer-ohne-zahlung.ts:74
@@ -12831,10 +12960,6 @@ msgstr ""
 #: src/frontends/desktop/views/setup-assistant.ts:581
 msgid "URL"
 msgstr "URL"
-
-#: src/frontends/desktop/views/setup-assistant.ts:584
-msgid "API token"
-msgstr "API-Token"
 
 #: src/frontends/desktop/views/setup-assistant.ts:637
 msgid "German tax features on"

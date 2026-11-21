@@ -1,5 +1,6 @@
 import { Adw, Gtk } from "@gjsify/adwaita-nativescript";
-import { createPaperlessClient, type Document, type PaperlessCreds } from "../data/paperless.ts";
+import { _, fmt } from "../../../app/src/core/lib/i18n.ts";
+import { INBOX_TAG, createPaperlessClient, type Document, type PaperlessCreds } from "../data/paperless.ts";
 import { documentDetail } from "../data/document-detail.ts";
 import { BelegDetailView } from "./beleg-detail-view.ts";
 
@@ -25,14 +26,14 @@ export class BelegEingangView extends Gtk.Box {
   private readonly list = new Gtk.ListBox({ selectionMode: "none", styleClasses: "boxed-list" });
   private readonly empty = new Adw.StatusPage({
     iconName: "emblem-ok-symbolic",
-    title: "Inbox is empty",
-    description: "No document carries the tag Neu.",
+    title: _("Inbox is empty"),
+    description: fmt(_("No document carries the tag {tag}."), { tag: INBOX_TAG }),
   });
-  private readonly failure = new Adw.StatusPage({ iconName: "dialog-error-symbolic", title: "Could not load the inbox" });
+  private readonly failure = new Adw.StatusPage({ iconName: "dialog-error-symbolic", title: _("Could not load the inbox") });
   private readonly setup = new Adw.StatusPage({
     iconName: "preferences-system-symbolic",
-    title: "Connect Paperless",
-    description: "Enter the address and API token of your Paperless-ngx.",
+    title: _("Connect Paperless"),
+    description: _("Enter the address and API token of your Paperless-ngx."),
   });
   private readonly detail = new BelegDetailView(() => this.stack.set_visible_child_name("list"));
   private generation = 0;
@@ -53,8 +54,8 @@ export class BelegEingangView extends Gtk.Box {
       button.connect("clicked", () => this.handlers.onOpenSettings());
       return button;
     };
-    this.setup.child = settingsButton("Open settings");
-    this.failure.child = settingsButton("Check settings");
+    this.setup.child = settingsButton(_("Open settings"));
+    this.failure.child = settingsButton(_("Check settings"));
 
     const loading = new Adw.Spinner({ halign: "center", valign: "center", widthRequest: 48, heightRequest: 48 });
     this.stack.add_named(loading, "loading");
@@ -97,7 +98,7 @@ export class BelegEingangView extends Gtk.Box {
       this.list.append(row);
     }
     if (this.nextPage !== null) {
-      const row = new Adw.ButtonRow({ title: this.loadingMore ? "Loading…" : "Load more", sensitive: !this.loadingMore });
+      const row = new Adw.ButtonRow({ title: this.loadingMore ? _("Loading…") : _("Load more"), sensitive: !this.loadingMore });
       row.connect("activated", () => void this.loadMore());
       this.list.append(row);
     }

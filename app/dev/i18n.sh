@@ -19,7 +19,12 @@ case "${1:-}" in
 extract)
     # `--from-code` matters: without it xgettext refuses any non-ASCII msgid, and German source
     # strings that have not been converted yet are full of them.
-    find src -type f \( -name '*.ts' -o -name '*.blp' \) -not -name '*.spec.ts' | sort > po/POTFILES.in
+    # The Android shell (`../app-android/app`) shares the catalogue: one domain, one German file. Its
+    # unit tests are `*.test.ts`; they hold English fixtures, not UI strings.
+    {
+        find src -type f \( -name '*.ts' -o -name '*.blp' \) -not -name '*.spec.ts'
+        find ../app-android/app -type f \( -name '*.ts' -o -name '*.blp' \) -not -name '*.test.ts'
+    } | sort > po/POTFILES.in
     xgettext \
         --files-from=po/POTFILES.in \
         --output="$POT" \

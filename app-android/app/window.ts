@@ -1,6 +1,7 @@
 import { Adw, Gtk } from "@gjsify/adwaita-nativescript";
 import * as GObject from "@gjsify/adwaita-nativescript/gobject";
 import windowTree from "../../app/src/frontends/desktop/window.blp?shared-tree";
+import { _ } from "../../app/src/core/lib/i18n.ts";
 import { clearPaperlessCreds, loadPaperlessCreds, savePaperlessCreds, savedPaperlessUrl } from "./data/config.ts";
 import { paperlessHost } from "./data/paperless-url.ts";
 import { BhAssistentPanel } from "./ui/assistent-panel.ts";
@@ -72,11 +73,11 @@ export class BhMainWindow extends Adw.ApplicationWindow {
     this.settings.onSaved = (creds) => {
       savePaperlessCreds(creds);
       this.updateIdentity();
-      this.toast("Connection saved");
+      this.toast(_("Connection saved"));
       this.show("beleg-eingang");
     };
-    this.addSection("beleg-eingang", "Document inbox", "mail-unread-symbolic", this.inbox);
-    this.addSection("settings", "Paperless connection", "preferences-system-symbolic", this.settings);
+    this.addSection("beleg-eingang", _("Document inbox"), "mail-unread-symbolic", this.inbox);
+    this.addSection("settings", _("Paperless connection"), "preferences-system-symbolic", this.settings);
 
     this._entity_switcher.onManage = () => this.show("settings");
     this.updateIdentity();
@@ -98,7 +99,7 @@ export class BhMainWindow extends Adw.ApplicationWindow {
 
   private updateIdentity(): void {
     const url = savedPaperlessUrl();
-    this._entity_switcher.setIdentity("Paperless-ngx", url ? paperlessHost(url) : "Not connected");
+    this._entity_switcher.setIdentity("Paperless-ngx", url ? paperlessHost(url) : _("Not connected"));
   }
 
   private show(id: SectionId): void {
