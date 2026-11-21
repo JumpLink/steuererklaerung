@@ -1,5 +1,7 @@
 import { Adw, Gtk } from "@gjsify/adwaita-nativescript";
 import { createPaperlessClient, type Document, type PaperlessCreds } from "../data/paperless.ts";
+import { documentDetail } from "../data/document-detail.ts";
+import { BelegDetailView } from "./beleg-detail-view.ts";
 
 /** What the owner decides when the list cannot be shown: Paperless is not set up, or it answered badly. */
 export interface BelegEingangHandlers {
@@ -32,6 +34,7 @@ export class BelegEingangView extends Gtk.Box {
     title: "Connect Paperless",
     description: "Enter the address and API token of your Paperless-ngx.",
   });
+  private readonly detail = new BelegDetailView(() => this.stack.set_visible_child_name("list"));
   private generation = 0;
   private documents: Document[] = [];
   private client: ReturnType<typeof createPaperlessClient> | null = null;
@@ -56,6 +59,7 @@ export class BelegEingangView extends Gtk.Box {
     const loading = new Adw.Spinner({ halign: "center", valign: "center", widthRequest: 48, heightRequest: 48 });
     this.stack.add_named(loading, "loading");
     this.stack.add_named(scroll, "list");
+    this.stack.add_named(this.detail, "detail");
     this.stack.add_named(this.empty, "empty");
     this.stack.add_named(this.failure, "error");
     this.stack.add_named(this.setup, "setup");
@@ -88,7 +92,9 @@ export class BelegEingangView extends Gtk.Box {
   private show(): void {
     this.list.remove_all();
     for (const doc of this.documents) {
-      this.list.append(new Adw.ActionRow({ title: documentTitle(doc), subtitle: documentSubtitle(doc) }));
+      const row = new Adw.ActionRow({ title: documentTitle(doc), subtitle: documentSubtitle(doc), activatable: true });
+      row.connect("activated", () => void this.open(doc));
+      this.list.append(row);
     }
     if (this.nextPage !== null) {
       const row = new Adw.ButtonRow({ title: this.loadingMore ? "Loading…" : "Load more", sensitive: !this.loadingMore });
@@ -96,6 +102,19 @@ export class BelegEingangView extends Gtk.Box {
       this.list.append(row);
     }
     this.stack.set_visible_child_name(this.documents.length ? "list" : "empty");
+  }
+
+  private async open(doc: Document): Promise<void> {
+    const client = this.client;
+    if (!client) return;
+    try {
+      const [tags, correspondents] = await Promise.all([client.tagNames(), client.correspondentNames()]);
+      this.detail.show(documentDetail(doc, tags, correspondents));
+    } catch {
+      // Names are a nicety: show the document with raw ids rather than not at all.
+      this.detail.show(documentDetail(doc, new Map(), new Map()));
+    }
+    this.stack.set_visible_child_name("detail");
   }
 
   private async loadMore(): Promise<void> {
