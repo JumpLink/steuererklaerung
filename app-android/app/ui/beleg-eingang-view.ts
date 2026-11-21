@@ -34,7 +34,11 @@ export class BelegEingangView extends Gtk.Box {
     title: "Connect Paperless",
     description: "Enter the address and API token of your Paperless-ngx.",
   });
-  private readonly detail = new BelegDetailView(() => this.stack.set_visible_child_name("list"));
+  // A real Adw.NavigationView, not a Gtk.Stack page: gjsify routes Android's system Back key to
+  // the innermost visible navigation view's pop; a stack page would let Back leave the app.
+  private readonly navigation = new Adw.NavigationView({ vexpand: true });
+  private readonly detail = new BelegDetailView(() => void this.navigation.pop());
+  private readonly detailPage = new Adw.NavigationPage({ title: "Document", tag: "detail" });
   private generation = 0;
   private documents: Document[] = [];
   private client: ReturnType<typeof createPaperlessClient> | null = null;
@@ -59,11 +63,14 @@ export class BelegEingangView extends Gtk.Box {
     const loading = new Adw.Spinner({ halign: "center", valign: "center", widthRequest: 48, heightRequest: 48 });
     this.stack.add_named(loading, "loading");
     this.stack.add_named(scroll, "list");
-    this.stack.add_named(this.detail, "detail");
     this.stack.add_named(this.empty, "empty");
     this.stack.add_named(this.failure, "error");
     this.stack.add_named(this.setup, "setup");
-    this.append(this.stack);
+    const listPage = new Adw.NavigationPage({ title: "Document inbox", tag: "list" });
+    listPage.set_child(this.stack);
+    this.detailPage.set_child(this.detail);
+    this.navigation.add(listPage);
+    this.append(this.navigation);
   }
 
   /** Fetches page one of the inbox (more pages follow on demand); a newer call wins over a slower older one. */
@@ -114,7 +121,7 @@ export class BelegEingangView extends Gtk.Box {
       // Names are a nicety: show the document with raw ids rather than not at all.
       this.detail.show(documentDetail(doc, new Map(), new Map()));
     }
-    this.stack.set_visible_child_name("detail");
+    this.navigation.push(this.detailPage);
   }
 
   private async loadMore(): Promise<void> {
