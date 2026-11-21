@@ -132,6 +132,63 @@ jobs:
       - name: Tests (GJS test bundle under gjs)
         run: cd app && gjsify run test
 
+  # The Android shell (app-android/, NativeScript): not a workspace member, so it has its own
+  # gjsify-lock.json and its own install. Nothing here needs gjs, so no Fedora container: the stock
+  # runner already carries the Android SDK and, with setup-java, the JDK that `ns prepare android`
+  # checks for, though it runs no Gradle. It produces the Vite bundle (bundle.mjs) and stops
+  # before any APK. A break in the Android code used to reach main unnoticed.
+  android:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app-android
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Cache gjsify tarball store
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/gjsify/tarballs
+          key: gjsify-tarballs-android-${{ hashFiles('app-android/gjsify-lock.json') }}
+          restore-keys: |
+            gjsify-tarballs-android-
+
+      # Same bootstrap as build-and-test: the CLI version is the one the repo pins.
+      - name: Bootstrap the gjsify CLI
+        run: |
+          VERSION=$(node -p "require('../package.json').devDependencies['@gjsify/cli']")
+          npm install -g "@gjsify/cli@$VERSION"
+
+      - name: Install dependencies
+        run: gjsify install --immutable
+
+      - name: Type check
+        run: gjsify run check
+
+      - name: Unit tests
+        run: gjsify run test
+
+      # NS_SKIP_ENV_CHECK: the CLI's doctor fails the whole run when the `emulator` binary is
+      # missing (nothing here starts an emulator). The SDK platform and the JDK it checked before
+      # that are present on the runner.
+      - name: Build the NativeScript bundle (no Gradle)
+        env:
+          NS_SKIP_ENV_CHECK: "1"
+        run: gjsify run build:bundle
+
+      - name: Assert the bundle arrived
+        run: test -s platforms/android/app/src/main/assets/app/bundle.mjs
+
   # The GTK app at four window sizes (phone, one pixel above the phone breakpoint, tablet, desktop):
   # every page, hub tab and main dialog on the demo data, asserting no "exceeds … width" warning, the
   # real window width, no widget allocated less width than its minimum, and the phone/desktop
