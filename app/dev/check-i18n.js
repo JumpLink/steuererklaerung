@@ -101,10 +101,7 @@ const problems = [];
 try {
     // Same file set as `dev/i18n.sh extract`: the desktop sources plus the Android shell, whose unit
     // tests are `*.test.ts`.
-    const files = [
-        ...walk(join(ROOT, 'src')),
-        ...walk(join(ROOT, '..', 'app-android', 'app'), '.test.ts'),
-    ]
+    const files = [...walk(join(ROOT, 'src')), ...walk(join(ROOT, '..', 'app-android', 'app'), '.test.ts')]
         .map((f) => relative(ROOT, f))
         .sort();
     writeFileSync(join(tmp, 'POTFILES'), files.join('\n') + '\n');
