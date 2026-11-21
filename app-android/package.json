@@ -7,20 +7,23 @@
   "main": "app/app.ts",
   "scripts": {
     "sync:theme": "cp node_modules/@gjsify/adwaita-nativescript/src/theme/adwaita.css app/adwaita.css",
+    "check": "tsc --noEmit",
+    "test": "node --test app/data/*.test.ts",
+    "build:bundle": "npm run sync:theme && ns prepare android",
     "build": "npm run sync:theme && ns build android",
     "start": "npm run sync:theme && ns run android"
   },
   "dependencies": {
-    "@gjsify/adwaita-gobject-native": "^0.64.44",
-    "@gjsify/adwaita-nativescript": "^0.64.44",
-    "@gjsify/app-settings": "^0.64.44",
-    "@gjsify/gi-runtime-android": "^0.64.44",
-    "@gjsify/node-gi": "^0.64.44",
+    "@gjsify/adwaita-gobject-native": "^0.64.54",
+    "@gjsify/adwaita-nativescript": "^0.64.54",
+    "@gjsify/app-settings": "^0.64.54",
+    "@gjsify/gi-runtime-android": "^0.64.54",
+    "@gjsify/node-gi": "^0.64.54",
     "@nativescript/core": "9.1.0-alpha.11"
   },
   "devDependencies": {
-    "@gjsify/nativescript-vite": "^0.64.44",
-    "@gjsify/vite-plugin-blueprint": "^0.64.44",
+    "@gjsify/nativescript-vite": "^0.64.54",
+    "@gjsify/vite-plugin-blueprint": "^0.64.54",
     "@nativescript/android": "9.1.1",
     "@nativescript/types": "~9.0.0",
     "@nativescript/vite": "8.0.0-alpha.57",
